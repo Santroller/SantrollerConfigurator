@@ -1,11 +1,11 @@
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
+using SantrollerConfiguratorBranded.NetCore.ViewModels;
 
-namespace SantrollerConfiguratorBuilder.NetCore.Views;
+namespace SantrollerConfiguratorBranded.NetCore.Views;
 
-public partial class MainView : ReactiveUserControl<MainViewModel>
+public partial class MainView : ReactiveUserControl<BrandedMainViewModel>
 {
     public MainView()
     {

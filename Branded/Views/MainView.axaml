@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:viewModels="clr-namespace:SantrollerConfiguratorBranded.NetCore.ViewModels"
+             xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
+             xmlns:netCore1="clr-namespace:GuitarConfigurator.NetCore;assembly=SantrollerConfigurator"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SantrollerConfiguratorBranded.NetCore.Views.MainView"
+             x:DataType="viewModels:BrandedMainViewModel"
+             x:CompileBindings="True"
+             Background="Transparent">
+    <UserControl.Resources>
+        <netCore1:EnumToStringConverter x:Key="EnumToStringConverter" />
+        <DataTemplate x:Key="EnumToStringTemplate" DataType="system:Object">
+            <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter }}" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <Panel>
+        <DockPanel HorizontalAlignment="Stretch">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                
+            </StackPanel>
+        </DockPanel>
+    </Panel>
+</UserControl>

@@ -6,18 +6,19 @@ using Avalonia.ReactiveUI;
 using GuitarConfigurator.NetCore.ViewModels;
 using GuitarConfigurator.NetCore.Views;
 using ReactiveUI;
+using SantrollerConfiguratorBranded.NetCore.ViewModels;
 
-namespace SantrollerConfiguratorBuilder.NetCore.Views;
+namespace SantrollerConfiguratorBranded.NetCore.Views;
 
-public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
+public partial class MainWindow : ReactiveWindow<BrandedMainWindowViewModel>
 {
     public MainWindow()
     {
-        this.WhenActivated(disposables =>
-        {
-            disposables(ViewModel!.ShowYesNoDialog.RegisterHandler(DoShowYesNoDialogAsync));
-            ViewModel!.Begin();
-        });
+        // this.WhenActivated(disposables =>
+        // {
+        //     disposables(ViewModel!.ShowYesNoDialog.RegisterHandler(DoShowYesNoDialogAsync));
+        //     ViewModel!.Begin();
+        // });
         AvaloniaXamlLoader.Load(this);
 #if DEBUG
         this.AttachDevTools();

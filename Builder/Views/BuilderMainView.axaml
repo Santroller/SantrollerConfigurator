@@ -1,0 +1,144 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:viewModels="clr-namespace:SantrollerConfiguratorBuilder.NetCore.ViewModels"
+             xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SantrollerConfiguratorBuilder.NetCore.Views.BuilderMainView"
+             x:DataType="viewModels:BuilderMainViewModel"
+             x:CompileBindings="True"
+             Background="Transparent">
+    <UserControl.Resources>
+        <netCore:EnumToStringConverter x:Key="EnumToStringConverter" />
+        <DataTemplate x:Key="EnumToStringTemplate" DataType="system:Object">
+            <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter }}" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <Panel>
+        <DockPanel HorizontalAlignment="Stretch">
+            <ExperimentalAcrylicBorder DockPanel.Dock="Bottom" Height="50">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial TintColor="Black" MaterialOpacity="0.85" TintOpacity="1" />
+                </ExperimentalAcrylicBorder.Material>
+                <StackPanel>
+                    <WrapPanel HorizontalAlignment="Center">
+                        <TextBlock Text="{x:Static netCore:Resources.StatusLabel}" />
+                        <TextBlock Text="{Binding BuilderMain.Message}" />
+                    </WrapPanel>
+                    <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True"
+                                 Foreground="{Binding BuilderMain.ProgressbarColor}" Name="RunProgress"
+                                 Value="{Binding BuilderMain.Progress}" IsIndeterminate="False" Minimum="0"
+                                 Maximum="100"
+                                 Height="30" />
+                </StackPanel>
+            </ExperimentalAcrylicBorder>
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock FontSize="30" HorizontalAlignment="Center"
+                           Text="{x:Static viewModels:Resources.WelcomeDesc}" Margin="0 0 0 20" />
+                <StackPanel IsVisible="{Binding BuilderMain.HasUpdate}" HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            Margin="0 0 0 20">
+                    <Label Content="{Binding BuilderMain.UpdateMessage}" VerticalAlignment="Center"
+                           VerticalContentAlignment="Center" />
+                    <Button Command="{Binding BuilderMain.OpenReleasesPageCommand}"
+                            Content="{x:Static netCore:Resources.UpdateDesc}" />
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static viewModels:Resources.SelectedToolLabel}">
+
+                        </Label>
+                        <ComboBox HorizontalAlignment="Stretch" IsEnabled="false"
+                                  IsVisible="{Binding !BuilderMain.Config.Configurations.Count}"
+                                  SelectedIndex="0">
+                            <ComboBoxItem Content="{x:Static viewModels:Resources.NoConfigurations}"></ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox HorizontalAlignment="Stretch"
+                                  IsVisible="{Binding BuilderMain.Config.Configurations.Count}"
+                                  SelectedItem="{Binding BuilderMain.SelectedTool}"
+                                  ItemsSource="{Binding BuilderMain.Config.Configurations}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ToolName}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Content="Create Tool" Command="{Binding BuilderMain.AddConfigCommand}" />
+                        <Button Content="Delete Tool" Command="{Binding BuilderMain.RemoveConfigCommand}"
+                                IsEnabled="{Binding BuilderMain.Config.Configurations.Count}" />
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding BuilderMain.Config.Configurations.Count}">
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.SelectedToolNameLabel}">
+                            </Label>
+                            <TextBox Text="{Binding BuilderMain.SelectedTool.ToolName}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceHelpLabel}">
+                            </Label>
+                            <TextBox Text="{Binding BuilderMain.SelectedTool.HelpText}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceTypeLabel}">
+
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch" IsEnabled="false"
+                                      IsVisible="{Binding !BuilderMain.SelectedTool.Configurations.Count}"
+                                      SelectedIndex="0">
+                                <ComboBoxItem Content="{x:Static viewModels:Resources.NoDevices}"></ComboBoxItem>
+                            </ComboBox>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}"
+                                      SelectedItem="{Binding BuilderMain.Selected}"
+                                      ItemsSource="{Binding BuilderMain.SelectedTool.Configurations}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ProductName}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Button Content="Create Device Type" Command="{Binding BuilderMain.AddDeviceCommand}" />
+                            <Button Content="Delete Device Type" Command="{Binding BuilderMain.RemoveDeviceCommand}"
+                                    IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" />
+                        </StackPanel>
+                        <StackPanel IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}">
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceNameLabel}">
+                                </Label>
+                                <TextBox Text="{Binding BuilderMain.Selected.ProductName}"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceVendorLabel}">
+                                </Label>
+                                <TextBox Text="{Binding BuilderMain.Selected.VendorName}"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static viewModels:Resources.ConfigureSelectedDevice}">
+                                </Label>
+                                <Button Content="{x:Static viewModels:Resources.ConfigureSelectedDevice}" Command="{Binding BuilderMain.StartConfiguringCommand}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+            </StackPanel>
+        </DockPanel>
+    </Panel>
+</UserControl>

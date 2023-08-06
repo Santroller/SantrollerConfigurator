@@ -3,21 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:SantrollerConfiguratorBuilder.NetCore.Views"
         xmlns:viewModels="clr-namespace:SantrollerConfiguratorBuilder.NetCore.ViewModels"
-        xmlns:netCore="clr-namespace:SantrollerConfiguratorBuilder.NetCore"
+        xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
+        xmlns:viewModels1="clr-namespace:GuitarConfigurator.NetCore.ViewModels"
+        xmlns:views="clr-namespace:GuitarConfigurator.NetCore.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="SantrollerConfiguratorBuilder.NetCore.Views.MainWindow"
+        x:Class="SantrollerConfiguratorBuilder.NetCore.Views.BuilderMainWindow"
         TransparencyLevelHint="AcrylicBlur"
         Icon="/Assets/avalonia-logo.ico"
-        Title="{x:Static netCore:Resources.ToolName}"
+        Title="{x:Static viewModels:Resources.ToolName}"
         Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"
-        x:DataType="viewModels:MainWindowViewModel"
+        x:DataType="viewModels:BuilderMainWindowViewModel"
         x:CompileBindings="True">
     <Window.Resources>
         <netCore:OutputTemplateSelector x:Key="SidebarTemplate">
-            <DataTemplate DataType="viewModels:ConfigViewModel">
+            <DataTemplate DataType="viewModels1:ConfigViewModel">
                 <ExperimentalAcrylicBorder DockPanel.Dock="Left" Width="300">
                     <ExperimentalAcrylicBorder.Material>
                         <ExperimentalAcrylicMaterial TintColor="Black" MaterialOpacity="0.85" TintOpacity="1"

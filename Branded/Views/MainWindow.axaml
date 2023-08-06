@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:rxui="clr-namespace:Avalonia.ReactiveUI;assembly=Avalonia.ReactiveUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:SantrollerConfiguratorBranded.NetCore.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="SantrollerConfiguratorBranded.NetCore.Views.MainWindow"
+        TransparencyLevelHint="AcrylicBlur"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="{x:Static viewModels:Resources.ToolName}"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        x:DataType="viewModels:BrandedMainWindowViewModel"
+        x:CompileBindings="True">
+    <DockPanel>
+        <DockPanel Height="30" DockPanel.Dock="Top" IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder>
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial TintColor="#222222" MaterialOpacity="0.85" TintOpacity="1"
+                                                 BackgroundSource="Digger" />
+                </ExperimentalAcrylicBorder.Material>
+            </ExperimentalAcrylicBorder>
+        </DockPanel>
+        <ExperimentalAcrylicBorder>
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial TintColor="#222222" MaterialOpacity="0.85" TintOpacity="1"
+                                             BackgroundSource="Digger" />
+            </ExperimentalAcrylicBorder.Material>
+            <rxui:RoutedViewHost VerticalAlignment="Stretch" Router="{Binding Router}" />
+        </ExperimentalAcrylicBorder>
+
+    </DockPanel>
+</Window>

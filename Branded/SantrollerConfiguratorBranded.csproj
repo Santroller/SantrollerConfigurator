@@ -14,15 +14,18 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <RootNamespace>SantrollerConfiguratorBuilder.NetCore</RootNamespace>
+        <RootNamespace>SantrollerConfiguratorBranded.NetCore</RootNamespace>
         <AvaloniaVersion>11.0.2</AvaloniaVersion>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
         <PublishReadyToRun>true</PublishReadyToRun>
+        <StartupObject>SantrollerConfiguratorBranded.NetCore.Program</StartupObject>
+
         <!--        <PublishTrimmed>true</PublishTrimmed>-->
         <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">Windows</DefineConstants>
         <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">$(DefineConstants);POSIX</DefineConstants>
         <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+        <DefineConstants Condition="'$(PublishSingleFile)' == 'true'">$(DefineConstants);SINGLE_FILE</DefineConstants>
         <LangVersion>latestmajor</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <CFBundleName>SantrollerConfigurator</CFBundleName> <!-- Also defines .app file name -->
@@ -38,7 +41,7 @@
         <NSHighResolutionCapable>true</NSHighResolutionCapable>
         <Company>TangentMC</Company>
         <Copyright>Copyright © 2023</Copyright>
-        <RepositoryUrl>https://github.com/sanjay900/guitar-configurator</RepositoryUrl>
+        <RepositoryUrl>https://github.com/sanjay900/GuitarConfiguratorBranded</RepositoryUrl>
         <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
@@ -55,10 +58,6 @@
     </ItemGroup>
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
-        <AvaloniaResource Include="Assets\firmware.tar.xz" />
-        <AvaloniaResource Include="Assets\platformio.tar.xz" />
-        <AvaloniaResource Include="Assets\firmware.version" />
-        <AvaloniaResource Include="Assets\platformio.version" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
@@ -118,12 +117,8 @@
       <UpToDateCheckInput Remove="Assets\99-santroller.rules" />
       <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
     </ItemGroup>
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
-        <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' " />
-        <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
-    </Target>
-    <Target Name="ZipOutputPath" BeforeTargets="ResolveReferences">
-        <Builder Parameter1="$(TargetDir)" Parameter2="$(MSBuildProjectDirectory)" />
-    </Target>
+    <ItemGroup>
+      <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj" />
+    </ItemGroup>
 
 </Project>

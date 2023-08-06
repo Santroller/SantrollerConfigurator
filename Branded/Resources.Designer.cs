@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
+namespace SantrollerConfiguratorBranded.NetCore.ViewModels {
     using System;
     
     
@@ -28,7 +28,7 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
         public static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("SantrollerConfiguratorBuilder.NetCore.Resources", typeof(Resources).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("SantrollerConfiguratorBranded.NetCore.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
