@@ -1,9 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels"
-             xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
-             xmlns:views="clr-namespace:GuitarConfigurator.NetCore.Views"
+             xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels;assembly=SantrollerConfigurator"
+             xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore;assembly=SantrollerConfigurator"
+             xmlns:views="clr-namespace:GuitarConfigurator.NetCore.Views;assembly=SantrollerConfigurator"
+             xmlns:viewModels1="clr-namespace:SantrollerConfiguratorBuilder.NetCore.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" x:DataType="viewModels:ConfigViewModel"
              x:Class="SantrollerConfiguratorBuilder.NetCore.ViewModels.BuilderConfigView"
              x:CompileBindings="True"
@@ -109,16 +110,28 @@
                         </ToggleButton>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Button Content="{x:Static netCore:Resources.SaveConfigurationLabel}"
+                        <Label Content="{x:Static netCore:Resources.SelectedDeviceLabel}" VerticalAlignment="Center"></Label>
+                        <ComboBox HorizontalAlignment="Stretch" IsEnabled="false"
+                                  IsVisible="{Binding !Main.Devices.Count}"
+                                  SelectedIndex="0" VerticalAlignment="Center">
+                            <ComboBoxItem Content="{x:Static netCore:Resources.NoSupportedDeviceFoundLabel}"></ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox HorizontalAlignment="Stretch" IsVisible="{Binding Main.Devices.Count}" VerticalAlignment="Center"
+                                  ItemsSource="{Binding Main.Devices}"
+                                  SelectedItem="{Binding Main.SelectedDevice}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Content="{x:Static viewModels1:Resources.WriteConfig}"
                                 Command="{Binding WriteConfigCommand}"
                                 IsVisible="{Binding !Main.HasChanges}" />
-                        <Button Content="{x:Static netCore:Resources.SaveConfigurationLabel}" Background="#FFd7cb00"
+                        <Button Content="{x:Static viewModels1:Resources.WriteConfig}" Background="#FFd7cb00"
                                 Foreground="Black"
                                 Command="{Binding WriteConfigCommand}" IsVisible="{Binding Main.HasChanges}" />
-                        <Button IsVisible="{Binding SupportsReset}"
-                                Content="{x:Static netCore:Resources.RevertArduinoLabel}"
-                                Command="{Binding ResetCommand}" />
-                        <Button Content="{x:Static netCore:Resources.GoBackLabel}" Command="{Binding GoBackCommand}" />
+                        <Button Content="{x:Static viewModels1:Resources.SaveAndReturn}" Command="{Binding GoBackCommand}" />
                     </StackPanel>
                 </DockPanel>
                 <TextBlock IsVisible="{Binding WriteToolTip, Converter={x:Static ObjectConverters.IsNotNull}}"

@@ -81,6 +81,12 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
             }
         }
         
+        public static string SelectedDeviceHelpLabel {
+            get {
+                return ResourceManager.GetString("SelectedDeviceHelpLabel", resourceCulture);
+            }
+        }
+        
         public static string SelectedDeviceTypeLabel {
             get {
                 return ResourceManager.GetString("SelectedDeviceTypeLabel", resourceCulture);
@@ -99,15 +105,45 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
             }
         }
         
-        public static string SelectedDeviceHelpLabel {
-            get {
-                return ResourceManager.GetString("SelectedDeviceHelpLabel", resourceCulture);
-            }
-        }
-        
         public static string ConfigureSelectedDevice {
             get {
                 return ResourceManager.GetString("ConfigureSelectedDevice", resourceCulture);
+            }
+        }
+        
+        public static string WriteConfig {
+            get {
+                return ResourceManager.GetString("WriteConfig", resourceCulture);
+            }
+        }
+        
+        public static string SaveAndReturn {
+            get {
+                return ResourceManager.GetString("SaveAndReturn", resourceCulture);
+            }
+        }
+        
+        public static string SaveConfigTool {
+            get {
+                return ResourceManager.GetString("SaveConfigTool", resourceCulture);
+            }
+        }
+        
+        public static string PackageTool {
+            get {
+                return ResourceManager.GetString("PackageTool", resourceCulture);
+            }
+        }
+        
+        public static string CreateVariant {
+            get {
+                return ResourceManager.GetString("CreateVariant", resourceCulture);
+            }
+        }
+        
+        public static string RemoveVariant {
+            get {
+                return ResourceManager.GetString("RemoveVariant", resourceCulture);
             }
         }
     }

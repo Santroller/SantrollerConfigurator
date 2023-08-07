@@ -28,13 +28,27 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
             SelectedTool = Config.Configurations.First();
         }
 
-        Router.Navigate.Execute(new BuilderMainViewModel(this));
+        Router.NavigateAndReset.Execute(new BuilderMainViewModel(this));
+        this.WhenAnyValue(s => s.SelectedDevice).Subscribe(s =>
+        {
+            if (Selected != null && SelectedDevice != null)
+            {
+                Selected.Model.Device = SelectedDevice;
+            }
+        });
+        this.WhenAnyValue(s => s.SelectedTool).Subscribe(s =>
+        {
+            if (SelectedTool != null && SelectedTool.Configurations.Any())
+            {
+                Selected = SelectedTool.Configurations.First();
+            }
+        });
     }
 
     [RelayCommand]
     public void AddConfig()
     {
-        var item = new BrandedConfigurationStore("Tool Name", "Provide Help");
+        var item = new BrandedConfigurationStore("Tool Name", "Get support by visiting example.com");
         Config.Configurations.Add(item);
         SelectedTool = item;
     }
@@ -67,8 +81,18 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
     [RelayCommand]
     public void StartConfiguring()
     {
-        Console.WriteLine("Configure!");
         if (SelectedTool == null || Selected == null) return;
         Router.Navigate.Execute(Selected.Model);
+    }
+    
+    [RelayCommand]
+    public void Save()
+    {
+        Config.Save();
+    }
+    [RelayCommand]
+    public void Package()
+    {
+        
     }
 }

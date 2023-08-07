@@ -36,24 +36,42 @@
         <value>No Device Types Created</value>
     </data>
     <data name="SelectedToolLabel" xml:space="preserve">
-        <value>Selected Tool</value>
+        <value>Current Tool</value>
     </data>
     <data name="SelectedToolNameLabel" xml:space="preserve">
-        <value>Selected Tool Name</value>
-    </data>
-    <data name="SelectedDeviceTypeLabel" xml:space="preserve">
-        <value>Selected Device Type</value>
-    </data>
-    <data name="SelectedDeviceNameLabel" xml:space="preserve">
-        <value>Selected Device Type Name</value>
-    </data>
-    <data name="SelectedDeviceVendorLabel" xml:space="preserve">
-        <value>Selected Device Vendor</value>
+        <value>Tool Name</value>
     </data>
     <data name="SelectedDeviceHelpLabel" xml:space="preserve">
-        <value>Tool Help Link</value>
+        <value>Tool Support Information</value>
+    </data>
+    <data name="SelectedDeviceTypeLabel" xml:space="preserve">
+        <value>Current Variant</value>
+    </data>
+    <data name="SelectedDeviceNameLabel" xml:space="preserve">
+        <value>Variant Name</value>
+    </data>
+    <data name="SelectedDeviceVendorLabel" xml:space="preserve">
+        <value>Variant Device Vendor</value>
     </data>
     <data name="ConfigureSelectedDevice" xml:space="preserve">
-        <value>Configure Device Type</value>
+        <value>Configure Variant</value>
+    </data>
+    <data name="WriteConfig" xml:space="preserve">
+        <value>Write Configuration to device</value>
+    </data>
+    <data name="SaveAndReturn" xml:space="preserve">
+        <value>Save changes and return</value>
+    </data>
+    <data name="SaveConfigTool" xml:space="preserve">
+        <value>Save Configuration</value>
+    </data>
+    <data name="PackageTool" xml:space="preserve">
+        <value>Package Tool</value>
+    </data>
+    <data name="CreateVariant" xml:space="preserve">
+        <value>Create Variant</value>
+    </data>
+    <data name="RemoveVariant" xml:space="preserve">
+        <value>Remove Variant</value>
     </data>
 </root>

@@ -27,6 +27,8 @@ public class BuilderConfig
     public void Save()
     {
         var path = Path.Combine(AssetUtils.GetAppDataFolder(), "Builder", "config.bin");
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        File.Delete(path);
         using var stream = File.OpenWrite(path);
         Serializer.Serialize(stream, new SerialisedBuilderConfig(this));
     }

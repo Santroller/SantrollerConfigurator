@@ -9,7 +9,6 @@ public class BuilderMainViewModel : ReactiveObject, IRoutableViewModel
     {
         BuilderMain = screen;
         HostScreen = screen;
-        Console.WriteLine(screen);
     }
 
     public BuilderMainWindowViewModel BuilderMain { get; }

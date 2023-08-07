@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <UsingTask TaskName="Builder" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
         <ParameterGroup>
-            <Parameter1 ParameterType="System.String" />
-            <Parameter2 ParameterType="System.String" />
+            <Parameter1 ParameterType="System.String"/>
+            <Parameter2 ParameterType="System.String"/>
         </ParameterGroup>
         <Task>
-            <Using Namespace="System.Text" />
-            <Using Namespace="System.Text.Json" />
-            <Code Type="Class" Language="cs" Source="santroller-configurator/Builder.cs" />
+            <Using Namespace="System.Text"/>
+            <Using Namespace="System.Text.Json"/>
+            <Code Type="Class" Language="cs" Source="../santroller-configurator/Builder.cs"/>
         </Task>
     </UsingTask>
     <PropertyGroup>
@@ -45,49 +45,41 @@
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
     <ItemGroup>
-        <TrimmableAssembly Include="Avalonia.DesignerSupport" />
+        <TrimmableAssembly Include="Avalonia.DesignerSupport"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="Resources\icon.icns">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="libusb-1.0.dylib" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
+        <AvaloniaResource Include="santroller-configurator\Assets\**"/>
+        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets\firmware.tar.xz"/>
+        <AvaloniaResource Include="Assets\platformio.tar.xz"/>
+        <AvaloniaResource Include="Assets\firmware.version"/>
+        <AvaloniaResource Include="Assets\platformio.version"/>
     </ItemGroup>
     <ItemGroup>
-        <AvaloniaResource Include="santroller-configurator\Assets\**" />
-        <AvaloniaResource Include="Assets\**" />
-        <AvaloniaResource Include="Assets\firmware.tar.xz" />
-        <AvaloniaResource Include="Assets\platformio.tar.xz" />
-        <AvaloniaResource Include="Assets\firmware.version" />
-        <AvaloniaResource Include="Assets\platformio.version" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
-        <PackageReference Include="Microsoft.Net.ILLink.Tasks" Version="8.0.100-1.23067.1" />
-        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.0.2" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.2" />
+        <PackageReference Include="Dotnet.Bundle" Version="0.9.13"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
+        <PackageReference Include="Microsoft.Net.ILLink.Tasks" Version="8.0.100-1.23067.1"/>
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.0.2"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.2"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.2" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.2" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.2" />
-        <PackageReference Include="Joveler.Compression.XZ" Version="4.2.1" />
-        <PackageReference Include="LibUsbDotNet" Version="2.2.29" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.2"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.2"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.2"/>
+        <PackageReference Include="Joveler.Compression.XZ" Version="4.2.1"/>
+        <PackageReference Include="LibUsbDotNet" Version="2.2.29"/>
         <PackageReference Include="Microsoft.Build.Framework" Version="17.6.3">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.6.3">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview" />
-        <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.14.305" />
-        <PackageReference Include="protobuf-net" Version="3.2.26" />
-        <PackageReference Include="ReactiveUI.Fody" Version="19.3.2" />
-        <PackageReference Include="System.IO.Ports" Version="8.0.0-preview.7.23357.4" />
-        <PackageReference Include="SemanticVersioning" Version="2.0.2" />
-        <PackageReference Include="System.Text.Json" Version="8.0.0-preview.7.23357.4" />
+        <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview"/>
+        <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.14.305"/>
+        <PackageReference Include="protobuf-net" Version="3.2.26"/>
+        <PackageReference Include="ReactiveUI.Fody" Version="19.3.2"/>
+        <PackageReference Include="System.IO.Ports" Version="8.0.0-preview.7.23357.4"/>
+        <PackageReference Include="SemanticVersioning" Version="2.0.2"/>
+        <PackageReference Include="System.Text.Json" Version="8.0.0-preview.7.23357.4"/>
         <PackageReference Include="GitVersion.MsBuild" Version="5.6.10*">
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
@@ -106,38 +98,60 @@
             <SubType>Code</SubType>
         </Compile>
         <Compile Update="Resources.Designer.cs">
-          <DesignTime>True</DesignTime>
-          <AutoGen>True</AutoGen>
-          <DependentUpon>Resources.resx</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
         <Compile Update="ViewModels\BuilderConfigView.axaml.cs">
-          <DependentUpon>BuilderConfigView.axaml</DependentUpon>
-          <SubType>Code</SubType>
+            <DependentUpon>BuilderConfigView.axaml</DependentUpon>
+            <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Update="Resources.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+        <EmbeddedResource Update="Resources.resx">
+            <Generator>PublicResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
 
         <EmbeddedResource Update="santroller-configurator\Resources.resx">
             <LogicalName>GuitarConfigurator.NetCore.Resources.resources</LogicalName>
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
-      <UpToDateCheckInput Remove="Assets\99-santroller.rules" />
-      <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
+        <UpToDateCheckInput Remove="Assets\99-santroller.rules"/>
+        <UpToDateCheckInput Remove="Assets\avalonia-logo.ico"/>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj" />
+        <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj">
+            <IncludeAssets>true</IncludeAssets>
+        </ProjectReference>
     </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
-        <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' " />
-        <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
+        <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' "/>
+        <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' "/>
     </Target>
     <Target Name="ZipOutputPath" BeforeTargets="ResolveReferences">
-        <Builder Parameter1="$(TargetDir)" Parameter2="$(MSBuildProjectDirectory)" />
+        <Builder Parameter1="$(TargetDir)" Parameter2="$(MSBuildProjectDirectory)"/>
     </Target>
+    <Target Name="IncludeBranded" BeforeTargets="ResolveReferences" Condition="'$(PublishSingleFile)' == 'true'">
+        <MSBuild Projects="..\Branded\SantrollerConfiguratorBranded.csproj" Targets="Publish" Properties="Configuration=$(Configuration);PublishSingleFile=$(PublishSingleFile);RuntimeIdentifier=$(RuntimeIdentifier);SelfContained=$(SelfContained)">
+            <Output TaskParameter="TargetOutputs" ItemName="SantrollerConfiguratorBrandedOutput" />
+        </MSBuild>
+        <MSBuild Projects="..\Branded\SantrollerConfiguratorBranded.csproj" Targets="GetPublishDir" Properties="Configuration=$(Configuration);PublishSingleFile=$(PublishSingleFile);RuntimeIdentifier=$(RuntimeIdentifier);SelfContained=$(SelfContained)">
+            <Output TaskParameter="TargetOutputs" ItemName="BrandedPublishDir" />
+        </MSBuild>
+        <MSBuild Projects="..\Branded\SantrollerConfiguratorBranded.csproj" Targets="GetPublishExecutable" Properties="Configuration=$(Configuration);PublishSingleFile=$(PublishSingleFile);RuntimeIdentifier=$(RuntimeIdentifier);SelfContained=$(SelfContained)">
+            <Output TaskParameter="TargetOutputs" ItemName="BrandedPublishExecutable" />
+        </MSBuild>
+        <PropertyGroup>
+            <BrandedSource>@(BrandedPublishDir)@(BrandedPublishExecutable)</BrandedSource>
+            <BrandedTarget>$(MSBuildProjectDirectory)\Assets\@(BrandedPublishExecutable)</BrandedTarget>
+        </PropertyGroup>
+        <Copy SourceFiles="$(BrandedSource)" DestinationFolder="$(MSBuildProjectDirectory)\Assets"/>
+        <ItemGroup>
+            <AvaloniaResource Include="$(BrandedTarget)" />
+        </ItemGroup>
+    </Target>
+
 
 </Project>
