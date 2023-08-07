@@ -133,25 +133,4 @@
     <Target Name="ZipOutputPath" BeforeTargets="ResolveReferences">
         <Builder Parameter1="$(TargetDir)" Parameter2="$(MSBuildProjectDirectory)"/>
     </Target>
-    <Target Name="IncludeBranded" BeforeTargets="ResolveReferences" Condition="'$(PublishSingleFile)' == 'true'">
-        <MSBuild Projects="..\Branded\SantrollerConfiguratorBranded.csproj" Targets="Publish" Properties="Configuration=$(Configuration);PublishSingleFile=$(PublishSingleFile);RuntimeIdentifier=$(RuntimeIdentifier);SelfContained=$(SelfContained)">
-            <Output TaskParameter="TargetOutputs" ItemName="SantrollerConfiguratorBrandedOutput" />
-        </MSBuild>
-        <MSBuild Projects="..\Branded\SantrollerConfiguratorBranded.csproj" Targets="GetPublishDir" Properties="Configuration=$(Configuration);PublishSingleFile=$(PublishSingleFile);RuntimeIdentifier=$(RuntimeIdentifier);SelfContained=$(SelfContained)">
-            <Output TaskParameter="TargetOutputs" ItemName="BrandedPublishDir" />
-        </MSBuild>
-        <MSBuild Projects="..\Branded\SantrollerConfiguratorBranded.csproj" Targets="GetPublishExecutable" Properties="Configuration=$(Configuration);PublishSingleFile=$(PublishSingleFile);RuntimeIdentifier=$(RuntimeIdentifier);SelfContained=$(SelfContained)">
-            <Output TaskParameter="TargetOutputs" ItemName="BrandedPublishExecutable" />
-        </MSBuild>
-        <PropertyGroup>
-            <BrandedSource>@(BrandedPublishDir)@(BrandedPublishExecutable)</BrandedSource>
-            <BrandedTarget>$(MSBuildProjectDirectory)\Assets\@(BrandedPublishExecutable)</BrandedTarget>
-        </PropertyGroup>
-        <Copy SourceFiles="$(BrandedSource)" DestinationFolder="$(MSBuildProjectDirectory)\Assets"/>
-        <ItemGroup>
-            <AvaloniaResource Include="$(BrandedTarget)" />
-        </ItemGroup>
-    </Target>
-
-
 </Project>

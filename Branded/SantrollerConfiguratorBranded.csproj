@@ -112,11 +112,4 @@
     <ItemGroup>
       <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj" />
     </ItemGroup>
-    <Target Name="GetPublishDir" AfterTargets="AfterPublish" Outputs="$(_NormalizedPublishDir)">
-        <Message Text="$(PackageName) BeforePublish" Importance="high" />
-    </Target>
-    <Target Name="GetPublishExecutable" AfterTargets="AfterPublish" Outputs="$(AssemblyName)$(_NativeExecutableExtension)">
-        <Message Text="$(PackageName) BeforePublish" Importance="high" />
-    </Target>
-
 </Project>
