@@ -160,7 +160,7 @@ jobs:
           cd Builder
           cp ../windows/*.exe Assets
           cp ../linux/* Assets
-          cp ../macos/*.dmg Assets
+          cp ../mac/*.dmg Assets
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
           mkdir out_stage
           mkdir out
@@ -210,9 +210,6 @@ jobs:
           name: linux
       - name: Install dependencies
         run: dotnet restore
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
       - name: Build
         run: |
           cd Builder
@@ -256,15 +253,12 @@ jobs:
           dotnet-version: "7.0"
       - name: Install dependencies
         run: dotnet restore
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
       - name: Build
         run: |
           cd Builder
           cp ../windows/*.exe Assets
           cp ../linux/* Assets
-          cp ../macos/*.dmg Assets
+          cp ../mac/*.dmg Assets
           dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
           mkdir out
           cp bin/Release/net7.0/win-x64/publish/SantrollerConfiguratorBuilder.exe out/SantrollerConfiguratorBuilder-win-64.exe
