@@ -10,6 +10,7 @@ using ReactiveUI;
 using SantrollerConfiguratorBuilder.NetCore.ViewModels;
 using SantrollerConfiguratorBuilder.NetCore.Views;
 using Splat;
+using BuilderConfigView = SantrollerConfiguratorBuilder.NetCore.Views.BuilderConfigView;
 
 namespace SantrollerConfiguratorBuilder.NetCore;
 

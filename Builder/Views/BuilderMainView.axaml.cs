@@ -10,12 +10,7 @@ public partial class BuilderMainView : ReactiveUserControl<BuilderMainViewModel>
 {
     public BuilderMainView()
     {
-        InitializeComponent();
-    }
-
-    private void InitializeComponent()
-    {
         this.WhenActivated(disposables => { });
-        AvaloniaXamlLoader.Load(this);
+        InitializeComponent();
     }
 }

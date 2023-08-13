@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
@@ -5,16 +6,11 @@ using SantrollerConfiguratorBranded.NetCore.ViewModels;
 
 namespace SantrollerConfiguratorBranded.NetCore.Views;
 
-public partial class MainView : ReactiveUserControl<BrandedMainViewModel>
+public partial class BrandedMainView : ReactiveUserControl<BrandedMainViewModel>
 {
-    public MainView()
-    {
-        InitializeComponent();
-    }
-
-    private void InitializeComponent()
+    public BrandedMainView()
     {
         this.WhenActivated(disposables => { });
-        AvaloniaXamlLoader.Load(this);
+        InitializeComponent();
     }
 }

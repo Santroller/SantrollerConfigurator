@@ -81,29 +81,31 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Update="Views\MainView.axaml.cs">
-            <DependentUpon>MainView.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Views\MainWindow.axaml.cs">
-            <DependentUpon>MainWindow.axaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
         <Compile Update="App.axaml.cs">
             <DependentUpon>App.axaml</DependentUpon>
             <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\BrandedConfigView.axaml.cs">
+          <DependentUpon>BrandedConfigView.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\BrandedMainWindow.axaml.cs">
+          <DependentUpon>BrandedMainWindow.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\BrandedMainView.axaml.cs">
+          <DependentUpon>BrandedMainView.axaml</DependentUpon>
+          <SubType>Code</SubType>
         </Compile>
         <Compile Update="Resources.Designer.cs">
           <DesignTime>True</DesignTime>
           <AutoGen>True</AutoGen>
           <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
-    </ItemGroup>
-    <ItemGroup>
-      <EmbeddedResource Update="Resources.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+        <Compile Update="Views\BrandedSidebar.axaml.cs">
+          <DependentUpon>BuilderSidebar.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
       <UpToDateCheckInput Remove="Assets\99-santroller.rules" />
@@ -111,5 +113,11 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Update="Resources.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 </Project>

@@ -1,27 +1,94 @@
+using System;
 using System.Linq;
-using System.Reactive;
-using GuitarConfigurator.NetCore.ViewModels;
+using System.Reactive.Linq;
+using Avalonia.Controls.Shapes;
+using CommunityToolkit.Mvvm.Input;
+using DynamicData;
+using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
+using GuitarConfigurator.NetCore.Devices;
 using ReactiveUI;
+using Path = System.IO.Path;
 
 namespace SantrollerConfiguratorBranded.NetCore.ViewModels;
 
-public partial class BrandedMainWindowViewModel : MainWindowViewModel
+public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.ViewModels.MainWindowViewModel
 {
-    public BrandedMainWindowViewModel()
+    public BrandedConfigurationStore Config { get; }
+
+    public BrandedConfiguration SelectedConfig { get; set; }
+
+    private bool _writing = false;
+
+    public BrandedMainWindowViewModel() : base(true)
     {
-        GoBack = ReactiveCommand.CreateFromObservable(() =>
-            Router.NavigateAndReset.Execute(Router.NavigationStack.First()));
-        Router.Navigate.Execute(new BrandedMainViewModel(this));
+        Config = BrandedConfigurationStore.LoadBranding(this);
+        SelectedConfig = Config.Configurations.First();
+        Router.NavigateAndReset.Execute(new BrandedMainViewModel(this));
+        AvailableDevices.Connect().ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
+        {
+            foreach (var change in s)
+                switch (change.Reason)
+                {
+                    case ListChangeReason.Add:
+                        DeviceAdded(change.Item.Current);
+                        break;
+                    case ListChangeReason.Remove:
+                        DeviceRemoved(change.Item.Current);
+                        break;
+                }
+        });
     }
 
-    public Interaction<(string yesText, string noText, string text), AreYouSureWindowViewModel>
-        ShowYesNoDialog { get; } = new();
+    public void DeviceAdded(IConfigurableDevice device)
+    {
+        if (!_writing) return;
+        switch (device)
+        {
+            case PicoDevice pico:
+                Progress = 50;
+                Message = "Writing";
+                SelectedConfig.BuildUf2(Path.Combine(pico.GetPath(), "firmware.uf2"));
+                SelectedDevice = device;
+                break;
+            case Santroller santroller when santroller.Manufacturer ==
+                SelectedConfig.VendorName && santroller.Product == SelectedConfig.ProductName:
+                SelectedDevice = device;
+                Complete(100);
+                Router.Navigate.Execute(SelectedConfig.Model);
+                break;
+        }
+    }
 
-    // The command that navigates a user back.
-    public ReactiveCommand<Unit, IRoutableViewModel> GoBack { get; }
+    public void DeviceRemoved(IConfigurableDevice device)
+    {
+    }
 
+    [RelayCommand]
+    public void Overwrite()
+    {
+        _writing = true;
+        StartWorking();
+        Progress = 0;
+        Message = "Looking for pico";
+        if (SelectedDevice is not PicoDevice)
+        {
+            SelectedDevice!.Bootloader();
+        }
+        else
+        {
+            DeviceAdded(SelectedDevice);
+        }
+    }
 
-    // The Router associated with this Screen.
-    // Required by the IScreen interface.
-    public RoutingState Router { get; } = new();
+    [RelayCommand]
+    public void ConfigureBranded()
+    {
+        if (SelectedDevice is not Santroller santroller) return;
+        SelectedConfig = Config.Configurations.First(s =>
+            s.VendorName == santroller.Manufacturer && s.ProductName == santroller.Product);
+        // TODO: gotta do a bit more than this, need to merge the two configs together
+        // because, if someone releases a new version, then the indexes may move around.
+        santroller.LoadConfiguration(SelectedConfig.Model);
+        Router.Navigate.Execute(SelectedConfig.Model);
+    }
 }

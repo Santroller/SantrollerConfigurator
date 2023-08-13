@@ -102,9 +102,9 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
-        <Compile Update="ViewModels\BuilderConfigView.axaml.cs">
-            <DependentUpon>BuilderConfigView.axaml</DependentUpon>
-            <SubType>Code</SubType>
+        <Compile Update="Views\BuilderConfigView.axaml.cs">
+          <DependentUpon>BuilderConfigView.axaml</DependentUpon>
+          <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
     <ItemGroup>
@@ -125,6 +125,9 @@
         <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj">
             <IncludeAssets>true</IncludeAssets>
         </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <AdditionalFiles Include="Views\BuilderConfigView.axaml" />
     </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
         <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' "/>

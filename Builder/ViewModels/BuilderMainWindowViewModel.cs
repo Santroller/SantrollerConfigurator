@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
 using ReactiveUI;
@@ -20,7 +21,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
     [Reactive]
     public BrandedConfiguration? Selected { get; set; }
 
-    public BuilderMainWindowViewModel()
+    public BuilderMainWindowViewModel(): base(true)
     {
         Config = new BuilderConfig(this);
         if (Config.Configurations.Any())
@@ -91,8 +92,21 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         Config.Save();
     }
     [RelayCommand]
-    public void Package()
+    public async Task Package()
     {
-        
+        if (SelectedTool == null) return;
+        var start = 0;
+        var steps = 100 / SelectedTool.Configurations.Count;
+        foreach (var config in SelectedTool.Configurations)
+        {
+            config.Model.Variant = config.ProductName;
+            await Write(config.Model, config.ExtraConfig(), start, steps);
+            config.LoadUf2();
+            start += steps;
+            Progress = start;
+        }
+
+        SelectedTool!.WriteBranding("test", "out.bin");
+        Complete(100);
     }
 }
