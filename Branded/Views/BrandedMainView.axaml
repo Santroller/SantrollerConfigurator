@@ -37,7 +37,12 @@
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock FontSize="30" HorizontalAlignment="Center"
-                           Text="{Binding WelcomeText}" Margin="0 0 0 20" />
+                           Text="{Binding WelcomeText}" />
+                <StackPanel IsVisible="{Binding BrandedMain.ReadyToConfigure}">
+                    <Label HorizontalAlignment="Center" IsVisible="{Binding !Configurable}"
+                           Content="{Binding EraseText}" />
+                </StackPanel>
+                <Panel Margin="0 0 0 20"></Panel>
                 <StackPanel HorizontalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
@@ -59,32 +64,46 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </StackPanel>
-                    
-                    <Label HorizontalAlignment="Center" IsVisible="{Binding !Configurable}"
-                           Content="{Binding EraseText}" />
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !Configurable}">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="Device Variant">
-                        </Label>
-                        <ComboBox HorizontalAlignment="Stretch"
-                                  ItemsSource="{Binding BrandedMain.Config.Configurations}"
-                                  SelectedItem="{Binding BrandedMain.SelectedConfig}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding ProductName}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+
+                    <StackPanel IsVisible="{Binding BrandedMain.ReadyToConfigure}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding !Configurable}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="Device Variant">
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      ItemsSource="{Binding BrandedMain.Config.Configurations}"
+                                      SelectedItem="{Binding BrandedMain.SelectedConfig}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ProductName}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button IsVisible="{Binding Configurable}"
+                                    Content="{x:Static netCore:Resources.ConfigureButtonLabel}"
+                                    Command="{Binding BrandedMain.ConfigureBrandedCommand}"
+                                    IsEnabled="{Binding BrandedMain.ReadyToConfigure}" HorizontalAlignment="Center"
+                                    Margin="0 20 0 0" />
+                            <Button IsVisible="{Binding Configurable}"
+                                    Content="{x:Static viewModels:Resources.ResetFactoryButtonLabel}"
+                                    Command="{Binding BrandedMain.ResetBrandedCommand}"
+                                    IsEnabled="{Binding BrandedMain.ReadyToConfigure}" HorizontalAlignment="Center"
+                                    Margin="0 20 0 0" />
+                            <Button IsVisible="{Binding !Configurable}"
+                                    Content="{x:Static viewModels:Resources.EraseButtonLabel}"
+                                    Command="{Binding BrandedMain.OverwriteCommand}"
+                                    IsEnabled="{Binding BrandedMain.ReadyToConfigure}" HorizontalAlignment="Center"
+                                    Margin="0 20 0 0" />
+                        </StackPanel>
                     </StackPanel>
-                    <Button IsVisible="{Binding Configurable}" Content="{x:Static netCore:Resources.ConfigureButtonLabel}"
-                            Command="{Binding BrandedMain.ConfigureBrandedCommand}"
-                            IsEnabled="{Binding BrandedMain.ReadyToConfigure}" HorizontalAlignment="Center"
-                            Margin="0 20 0 0" />
-                    <Button IsVisible="{Binding !Configurable}" Content="{x:Static viewModels:Resources.EraseButtonLabel}"
-                            Command="{Binding BrandedMain.OverwriteCommand}"
-                            IsEnabled="{Binding BrandedMain.ReadyToConfigure}" HorizontalAlignment="Center"
-                            Margin="0 20 0 0" />
+                    <StackPanel IsVisible="{Binding !BrandedMain.ReadyToConfigure}">
+                        <Button Content="{x:Static netCore:Resources.ConfigureButtonLabel}"
+                                IsEnabled="false" HorizontalAlignment="Center"
+                                Margin="0 20 0 0" />
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </DockPanel>

@@ -33,4 +33,7 @@
     <data name="WelcomeText" xml:space="preserve">
         <value>Welcome to the {0} Configuration Tool!</value>
     </data>
+    <data name="ResetFactoryButtonLabel" xml:space="preserve">
+        <value>Reset to factory</value>
+    </data>
 </root>

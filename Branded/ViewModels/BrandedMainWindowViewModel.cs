@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Reactive.Linq;
-using Avalonia.Controls.Shapes;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
@@ -90,5 +89,11 @@ public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         // because, if someone releases a new version, then the indexes may move around.
         santroller.LoadConfiguration(SelectedConfig.Model);
         Router.Navigate.Execute(SelectedConfig.Model);
+    }
+    [RelayCommand]
+    public void ResetBranded()
+    {
+        if (SelectedDevice is not Santroller) return;
+        SelectedDevice.Bootloader();
     }
 }

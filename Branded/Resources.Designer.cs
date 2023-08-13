@@ -62,5 +62,11 @@ namespace SantrollerConfiguratorBranded.NetCore.ViewModels {
                 return ResourceManager.GetString("WelcomeText", resourceCulture);
             }
         }
+        
+        public static string ResetFactoryButtonLabel {
+            get {
+                return ResourceManager.GetString("ResetFactoryButtonLabel", resourceCulture);
+            }
+        }
     }
 }
