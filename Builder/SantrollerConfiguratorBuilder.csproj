@@ -48,8 +48,9 @@
         <TrimmableAssembly Include="Avalonia.DesignerSupport"/>
     </ItemGroup>
     <ItemGroup>
-        <AvaloniaResource Include="santroller-configurator\Assets\**"/>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="santroller-configurator\Assets\icons\*"/>
+        <AvaloniaResource Include="santroller-configurator\Assets\images\*"/>
+        <AvaloniaResource Include="santroller-configurator\Assets\99-santroller.rules"/>
         <AvaloniaResource Include="Assets\firmware.tar.xz"/>
         <AvaloniaResource Include="Assets\platformio.tar.xz"/>
         <AvaloniaResource Include="Assets\firmware.version"/>
