@@ -112,7 +112,9 @@
       <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj" />
+      <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj" >
+        <Properties>SkipAssets=Skip</Properties>
+      </ProjectReference>
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Update="Resources.resx">

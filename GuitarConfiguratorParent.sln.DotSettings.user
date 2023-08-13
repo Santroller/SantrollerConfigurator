@@ -4,6 +4,8 @@
   &lt;Assembly Path="/home/sanjay/.nuget/packages/discutils.dmg/0.16.13/lib/net5.0/DiscUtils.Dmg.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=SantrollerConfiguratorBranded_002FResources/@EntryIndexedValue">True</s:Boolean>
+	
+	
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=SantrollerConfiguratorBuilder_002FResources/@EntryIndexedValue">False</s:Boolean>
 	
 	

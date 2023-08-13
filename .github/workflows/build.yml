@@ -257,7 +257,7 @@ jobs:
           done
           codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder"
           codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app"
-          zip -r ../out/SantrollerConfiguratorBranded-macOS.zip SantrollerConfiguratorBranded.app
+          zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip SantrollerConfiguratorBuilder.app
           cd ..
           mv out ..
       - uses: actions/upload-artifact@v1
