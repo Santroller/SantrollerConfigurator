@@ -1,27 +1,26 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Avalonia.Platform;
 using CommunityToolkit.Mvvm.Input;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
+using ProtoBuf;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-#if Windows
-using Microsoft.Win32;
-#endif
 
 namespace SantrollerConfiguratorBuilder.NetCore.ViewModels;
 
 public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.ViewModels.MainWindowViewModel
 {
     public BuilderConfig Config { get; }
-    
-    [Reactive]
-    public BrandedConfigurationStore? SelectedTool { get; set; }
-    [Reactive]
-    public BrandedConfiguration? Selected { get; set; }
 
-    public BuilderMainWindowViewModel(): base(true)
+    [Reactive] public BrandedConfigurationStore? SelectedTool { get; set; }
+    [Reactive] public BrandedConfiguration? Selected { get; set; }
+
+    public BuilderMainWindowViewModel() : base(true)
     {
         Config = new BuilderConfig(this);
         if (Config.Configurations.Any())
@@ -61,6 +60,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         Config.Configurations.Remove(SelectedTool);
         SelectedTool = Config.Configurations.Any() ? Config.Configurations.First() : null;
     }
+
     [RelayCommand]
     public void AddDevice()
     {
@@ -85,12 +85,13 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         if (SelectedTool == null || Selected == null) return;
         Router.Navigate.Execute(Selected.Model);
     }
-    
+
     [RelayCommand]
     public void Save()
     {
         Config.Save();
     }
+
     [RelayCommand]
     public async Task Package()
     {
@@ -105,7 +106,23 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
             start += steps;
             Progress = start;
         }
-
+        
+        var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
+        var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");
+        await using var linuxOutput = File.Open(SelectedTool.ToolName+"-linux-64", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        await using var linuxInput = AssetLoader.Open(uri);
+        await linuxInput.CopyToAsync(linuxOutput).ConfigureAwait(false);
+        await using var linuxWriter = new BinaryWriter(linuxOutput);
+        Serializer.Serialize(linuxOutput, this);
+        linuxWriter.Write((int)linuxInput.Length);
+        uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
+        await using var windowsOutput = File.Open(SelectedTool.ToolName+"-win-64", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        await using var windowsInput = AssetLoader.Open(uri);
+        await windowsInput.CopyToAsync(windowsOutput).ConfigureAwait(false);
+        await using var windowsWriter = new BinaryWriter(windowsOutput);
+        Serializer.Serialize(windowsOutput, this);
+        windowsWriter.Write((int)windowsInput.Length);
+        // TODO: build a macos zip file, and then throw a branding.bin file into that
         SelectedTool!.WriteBranding("test", "out.bin");
         Complete(100);
     }

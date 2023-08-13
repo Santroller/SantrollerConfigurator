@@ -21,7 +21,6 @@ jobs:
           keychain-password: ${{ github.run_id }}
       - name: Install Libs
         run: |
-          npm i -g appdmg
           brew install pkgconfig
           brew install libusb
       - name: Setup .NET Core SDK
@@ -47,8 +46,7 @@ jobs:
           done
           codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded"
           codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBranded.app"
-          appdmg appdmg.json ../out/SantrollerConfiguratorBranded-macOS.dmg
-          codesign --entitlements entitlements.xml --options=runtime --sign "guitar-configurator" "../out/SantrollerConfiguratorBranded-macOS.dmg"
+          zip -r ../out/SantrollerConfiguratorBranded.zip SantrollerConfiguratorBranded.app
           cd ..
           mv out ..
       - uses: actions/upload-artifact@v1
@@ -84,7 +82,7 @@ jobs:
           name: linux
           path: out
   build-windows:
-    name: Build (Windows)
+    name: Build Builder (Windows)
     runs-on: windows-latest
     steps:
       - name: git configure long path
@@ -114,77 +112,8 @@ jobs:
           name: windows
           path: out
   
-  
-  build-mac-builder:
-    name: Build (macOS)
-    needs: [build-linux, build-mac, build-windows]
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-          fetch-depth: 0
-      - name: codesign
-        id: codesign
-        uses: apple-actions/import-codesign-certs@master
-        with:
-          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-          keychain: ${{ github.run_id }}
-          keychain-password: ${{ github.run_id }}
-      - name: Install Libs
-        run: |
-          npm i -g appdmg
-          brew install pkgconfig
-          brew install libusb
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "7.0"
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: windows
-      - name: Download macOS Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: mac
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: linux
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: |
-          cd Builder
-          cp ../windows/*.exe Assets
-          cp ../linux/* Assets
-          cp ../mac/*.dmg Assets
-          dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
-          mkdir out_stage
-          mkdir out
-          cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBuilder.app out_stage
-          cp Resources/* out_stage
-          cd out_stage
-          find "SantrollerConfiguratorBuilder.app/Contents/MacOS" | while read fname; do
-            if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder" ]; then
-            echo "[INFO] Signing $fname"
-            codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname"
-            fi
-          done
-          codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder"
-          codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app"
-          appdmg appdmg.json ../out/SantrollerConfiguratorBuilder-macOS.dmg
-          codesign --entitlements entitlements.xml --options=runtime --sign "guitar-configurator" "../out/SantrollerConfiguratorBuilder-macOS.dmg"
-          cd ..
-          mv out ..
-      - uses: actions/upload-artifact@v1
-        with:
-          name: mac-builder
-          path: out
   build-linux-builder:
-    name: Build (Linux)
+    name: Build Builder (Linux)
     needs: [build-linux, build-mac, build-windows]
     runs-on: ubuntu-20.04
     steps:
@@ -215,7 +144,7 @@ jobs:
           cd Builder
           cp ../windows/*.exe Assets
           cp ../linux/* Assets
-          cp ../mac/*.dmg Assets
+          cp ../mac/*.zip Assets
           dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
           mkdir out
           cp bin/Release/net7.0/linux-x64/publish/SantrollerConfiguratorBuilder out/SantrollerConfiguratorBuilder-linux-64
@@ -258,7 +187,7 @@ jobs:
           cd Builder
           cp ../windows/*.exe Assets
           cp ../linux/* Assets
-          cp ../mac/*.dmg Assets
+          cp ../mac/*.zip Assets
           dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
           mkdir out
           cp bin/Release/net7.0/win-x64/publish/SantrollerConfiguratorBuilder.exe out/SantrollerConfiguratorBuilder-win-64.exe
