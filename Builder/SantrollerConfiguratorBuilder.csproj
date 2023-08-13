@@ -27,14 +27,14 @@
         <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
         <LangVersion>latestmajor</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <CFBundleName>SantrollerConfigurator</CFBundleName> <!-- Also defines .app file name -->
-        <CFBundleDisplayName>SantrollerConfigurator</CFBundleDisplayName>
+        <CFBundleName>SantrollerConfiguratorBuilder</CFBundleName> <!-- Also defines .app file name -->
+        <CFBundleDisplayName>SantrollerConfiguratorBuilder</CFBundleDisplayName>
         <CFBundleIdentifier>net.tangentmc</CFBundleIdentifier>
         <CFBundleVersion>1.0.0</CFBundleVersion>
         <CFBundleShortVersionString>1.0.0</CFBundleShortVersionString>
         <CFBundlePackageType>APPL</CFBundlePackageType>
         <CFBundleSignature>sanc</CFBundleSignature>
-        <CFBundleExecutable>SantrollerConfigurator</CFBundleExecutable>
+        <CFBundleExecutable>SantrollerConfiguratorBuilder</CFBundleExecutable>
         <CFBundleIconFile>Resources/icon.icns</CFBundleIconFile> <!-- Will be copied from output directory -->
         <NSPrincipalClass>NSApplication</NSPrincipalClass>
         <NSHighResolutionCapable>true</NSHighResolutionCapable>
