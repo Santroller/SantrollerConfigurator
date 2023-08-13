@@ -54,7 +54,7 @@
         <AvaloniaResource Include="Assets\platformio.tar.xz"/>
         <AvaloniaResource Include="Assets\firmware.version"/>
         <AvaloniaResource Include="Assets\platformio.version"/>
-        <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-macOS.dmg"/>
+        <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-macOS.zip"/>
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-linux-64"/>
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-win-64.exe"/>
     </ItemGroup>

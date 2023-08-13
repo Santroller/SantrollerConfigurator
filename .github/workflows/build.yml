@@ -82,7 +82,7 @@ jobs:
           name: linux
           path: out
   build-windows:
-    name: Build Builder (Windows)
+    name: Build (Windows)
     runs-on: windows-latest
     steps:
       - name: git configure long path
@@ -154,7 +154,7 @@ jobs:
           name: linux-builder
           path: out
   build-windows-builder:
-    name: Build (Windows)
+    name: Build Builder (Windows)
     needs: [build-linux, build-mac, build-windows]
     runs-on: windows-latest
     steps:
@@ -199,7 +199,7 @@ jobs:
   
   
   build-mac-builder:
-    name: Build (macOS)
+    name: Build Builder (macOS)
     needs: [ build-linux, build-mac, build-windows ]
     runs-on: macos-latest
     steps:
