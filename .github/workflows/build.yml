@@ -215,7 +215,7 @@ jobs:
           cd Builder
           cp ../windows/*.exe Assets
           cp ../linux/* Assets
-          cp ../macos/*.dmg Assets
+          cp ../mac/*.dmg Assets
           dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
           mkdir out
           cp bin/Release/net7.0/linux-x64/publish/SantrollerConfiguratorBuilder out/SantrollerConfiguratorBuilder-linux-64
