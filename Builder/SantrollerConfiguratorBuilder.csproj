@@ -1,15 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <UsingTask TaskName="Builder" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
-        <ParameterGroup>
-            <Parameter1 ParameterType="System.String"/>
-            <Parameter2 ParameterType="System.String"/>
-        </ParameterGroup>
-        <Task>
-            <Using Namespace="System.Text"/>
-            <Using Namespace="System.Text.Json"/>
-            <Code Type="Class" Language="cs" Source="../santroller-configurator/Builder.cs"/>
-        </Task>
-    </UsingTask>
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
@@ -48,9 +37,7 @@
         <TrimmableAssembly Include="Avalonia.DesignerSupport"/>
     </ItemGroup>
     <ItemGroup>
-        <AvaloniaResource Include="santroller-configurator\Assets\icons\*"/>
-        <AvaloniaResource Include="santroller-configurator\Assets\images\*"/>
-        <AvaloniaResource Include="santroller-configurator\Assets\99-santroller.rules"/>
+        <AvaloniaResource Include="Assets\avalonia-logo.ico"/>
         <AvaloniaResource Include="Assets\firmware.tar.xz"/>
         <AvaloniaResource Include="Assets\platformio.tar.xz"/>
         <AvaloniaResource Include="Assets\firmware.version"/>
@@ -136,8 +123,5 @@
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
         <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' "/>
         <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' "/>
-    </Target>
-    <Target Name="ZipOutputPath" BeforeTargets="ResolveReferences">
-        <Builder Parameter1="$(TargetDir)" Parameter2="$(MSBuildProjectDirectory)"/>
     </Target>
 </Project>

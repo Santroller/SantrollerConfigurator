@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.Input;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
+using GuitarConfigurator.NetCore.Configuration.Serialization;
 using ProtoBuf;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -109,21 +111,30 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
         var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");
-        await using var linuxOutput = File.Open(SelectedTool.ToolName+"-linux-64", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        await using var linuxOutput = File.Open(SelectedTool.ToolName+"-linux-64", FileMode.Create, FileAccess.ReadWrite);
         await using var linuxInput = AssetLoader.Open(uri);
+        var len = linuxInput.Length;
         await linuxInput.CopyToAsync(linuxOutput).ConfigureAwait(false);
         await using var linuxWriter = new BinaryWriter(linuxOutput);
-        Serializer.Serialize(linuxOutput, this);
-        linuxWriter.Write((int)linuxInput.Length);
+        Serializer.Serialize(linuxOutput, new SerialisedBrandedConfigurationStore(SelectedTool));
+        linuxWriter.Write((int)len);
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
-        await using var windowsOutput = File.Open(SelectedTool.ToolName+"-win-64", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        await using var windowsOutput = File.Open(SelectedTool.ToolName+"-win-64", FileMode.Create, FileAccess.ReadWrite);
         await using var windowsInput = AssetLoader.Open(uri);
+        len = windowsInput.Length;
         await windowsInput.CopyToAsync(windowsOutput).ConfigureAwait(false);
         await using var windowsWriter = new BinaryWriter(windowsOutput);
-        Serializer.Serialize(windowsOutput, this);
-        windowsWriter.Write((int)windowsInput.Length);
-        // TODO: build a macos zip file, and then throw a branding.bin file into that
-        SelectedTool!.WriteBranding("test", "out.bin");
+        Serializer.Serialize(windowsOutput, new SerialisedBrandedConfigurationStore(SelectedTool));
+        windowsWriter.Write((int)len);
+        uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-macOS.zip");
+        await using var macosOutput = File.Open(SelectedTool.ToolName+"-macOS.zip", FileMode.Create, FileAccess.ReadWrite);
+        await using var macosInput = AssetLoader.Open(uri);
+        await macosInput.CopyToAsync(macosOutput).ConfigureAwait(false);
+        macosOutput.Seek(0, SeekOrigin.Begin);
+        using var archive = new ZipArchive(macosOutput, ZipArchiveMode.Update);
+        var entry = archive.CreateEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/branding.bin");
+        await using var branding = entry.Open();
+        Serializer.Serialize(branding, new SerialisedBrandedConfigurationStore(SelectedTool));
         Complete(100);
     }
 }

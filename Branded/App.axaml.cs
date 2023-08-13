@@ -30,7 +30,10 @@ public class App : Application
         Locator.CurrentMutable.Register<IViewFor<InitialConfigViewModel>>(() => new InitialConfigureView());
         Locator.CurrentMutable.Register<IViewFor<BrandedMainViewModel>>(() => new BrandedMainView());
         lifetime.MainWindow = new BrandedMainWindow {DataContext = Locator.Current.GetService<IScreen>()};
-        lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
+        lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;lifetime.Exit += (_, _) =>
+        {
+            Environment.Exit(0);
+        };
         base.OnFrameworkInitializationCompleted();
     }
 }
