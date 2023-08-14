@@ -146,5 +146,17 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
                 return ResourceManager.GetString("RemoveVariant", resourceCulture);
             }
         }
+        
+        public static string ConfigIncomplete {
+            get {
+                return ResourceManager.GetString("ConfigIncomplete", resourceCulture);
+            }
+        }
+        
+        public static string UniqueName {
+            get {
+                return ResourceManager.GetString("UniqueName", resourceCulture);
+            }
+        }
     }
 }

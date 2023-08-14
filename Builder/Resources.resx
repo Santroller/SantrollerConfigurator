@@ -74,4 +74,10 @@
     <data name="RemoveVariant" xml:space="preserve">
         <value>Remove Variant</value>
     </data>
+    <data name="ConfigIncomplete" xml:space="preserve">
+        <value>The configuration for "{0}" is incomplete!</value>
+    </data>
+    <data name="UniqueName" xml:space="preserve">
+        <value>You have created variants with duplicate names. Please make sure each variant has a unique name.</value>
+    </data>
 </root>
