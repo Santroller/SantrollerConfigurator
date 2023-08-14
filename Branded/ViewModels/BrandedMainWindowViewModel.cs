@@ -47,6 +47,7 @@ public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.Vie
                 Progress = 50;
                 Message = "Writing";
                 SelectedConfig.BuildUf2(Path.Combine(pico.GetPath(), "firmware.uf2"));
+                SelectedConfig.BuildUf2("firmware.uf2");
                 SelectedDevice = device;
                 break;
             case Santroller santroller when santroller.Manufacturer ==

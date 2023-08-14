@@ -119,7 +119,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         Serializer.SerializeWithLengthPrefix(linuxOutput, new SerialisedBrandedConfigurationStore(SelectedTool), PrefixStyle.Base128);
         linuxWriter.Write((int)len);
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
-        await using var windowsOutput = File.Open(SelectedTool.ToolName+"-win-64", FileMode.Create, FileAccess.ReadWrite);
+        await using var windowsOutput = File.Open(SelectedTool.ToolName+"-win-64.exe", FileMode.Create, FileAccess.ReadWrite);
         await using var windowsInput = AssetLoader.Open(uri);
         len = windowsInput.Length;
         await windowsInput.CopyToAsync(windowsOutput).ConfigureAwait(false);
