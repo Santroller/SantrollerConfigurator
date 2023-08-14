@@ -1,0 +1,2 @@
+#!/bin/bash
+dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --self-contained true --verbosity normal && cp bin/Release/net7.0/linux-x64/publish/SantrollerConfiguratorBranded ../Builder/Assets/SantrollerConfiguratorBranded-linux-64 

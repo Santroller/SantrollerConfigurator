@@ -116,7 +116,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         var len = linuxInput.Length;
         await linuxInput.CopyToAsync(linuxOutput).ConfigureAwait(false);
         await using var linuxWriter = new BinaryWriter(linuxOutput);
-        Serializer.Serialize(linuxOutput, new SerialisedBrandedConfigurationStore(SelectedTool));
+        Serializer.SerializeWithLengthPrefix(linuxOutput, new SerialisedBrandedConfigurationStore(SelectedTool), PrefixStyle.Base128);
         linuxWriter.Write((int)len);
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
         await using var windowsOutput = File.Open(SelectedTool.ToolName+"-win-64", FileMode.Create, FileAccess.ReadWrite);
@@ -124,7 +124,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         len = windowsInput.Length;
         await windowsInput.CopyToAsync(windowsOutput).ConfigureAwait(false);
         await using var windowsWriter = new BinaryWriter(windowsOutput);
-        Serializer.Serialize(windowsOutput, new SerialisedBrandedConfigurationStore(SelectedTool));
+        Serializer.SerializeWithLengthPrefix(windowsOutput, new SerialisedBrandedConfigurationStore(SelectedTool), PrefixStyle.Base128);
         windowsWriter.Write((int)len);
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-macOS.zip");
         await using var macosOutput = File.Open(SelectedTool.ToolName+"-macOS.zip", FileMode.Create, FileAccess.ReadWrite);
@@ -134,7 +134,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         using var archive = new ZipArchive(macosOutput, ZipArchiveMode.Update);
         var entry = archive.CreateEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/branding.bin");
         await using var branding = entry.Open();
-        Serializer.Serialize(branding, new SerialisedBrandedConfigurationStore(SelectedTool));
+        Serializer.SerializeWithLengthPrefix(branding, new SerialisedBrandedConfigurationStore(SelectedTool), PrefixStyle.Base128);
         Complete(100);
     }
 }
