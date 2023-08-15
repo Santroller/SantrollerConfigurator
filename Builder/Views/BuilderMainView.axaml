@@ -27,11 +27,15 @@
                         <TextBlock Text="{x:Static netCore:Resources.StatusLabel}" />
                         <TextBlock Text="{Binding BuilderMain.Message}" />
                     </WrapPanel>
-                    <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True"
-                                 Foreground="{Binding BuilderMain.ProgressbarColor}" Name="RunProgress"
-                                 Value="{Binding BuilderMain.Progress}" IsIndeterminate="False" Minimum="0"
-                                 Maximum="100"
-                                 Height="30" />
+                    <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True" Name="RunProgress"
+                                 Foreground="{Binding BuilderMain.ProgressbarColor}" Value="{Binding BuilderMain.Progress}"
+                                 IsIndeterminate="False" Minimum="0" Maximum="100" Height="30" Classes.darkText="{Binding BuilderMain.ProgressBarShouldUseDarkTextColor}">
+                        <ProgressBar.Styles>
+                            <Style Selector="ProgressBar.darkText /template/ TextBlock">
+                                <Setter Property="Foreground" Value="#000000" />
+                            </Style>
+                        </ProgressBar.Styles>
+                    </ProgressBar>
                 </StackPanel>
             </ExperimentalAcrylicBorder>
 
@@ -86,6 +90,30 @@
                                    Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceHelpLabel}">
                             </Label>
                             <TextBox Width="300" Text="{Binding BuilderMain.SelectedTool.HelpText}"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.PrimaryColorLabel}">
+                            </Label>
+                            <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"
+                                         Color="{Binding BuilderMain.SelectedTool.PrimaryColor}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.WarningColorLabel}">
+                            </Label>
+                            <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"
+                                         Color="{Binding BuilderMain.SelectedTool.WarningColor}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.ErrorColorLabel}">
+                            </Label>
+                            <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"
+                                         Color="{Binding BuilderMain.SelectedTool.ErrorColor}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"

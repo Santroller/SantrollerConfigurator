@@ -127,7 +127,13 @@
                 </WrapPanel>
                 <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True" Name="RunProgress"
                              Foreground="{Binding Main.ProgressbarColor}" Value="{Binding Main.Progress}"
-                             IsIndeterminate="False" Minimum="0" Maximum="100" Height="30" />
+                             IsIndeterminate="False" Minimum="0" Maximum="100" Height="30" Classes.darkText="{Binding Main.ProgressBarShouldUseDarkTextColor}">
+                    <ProgressBar.Styles>
+                        <Style Selector="ProgressBar.darkText /template/ TextBlock">
+                            <Setter Property="Foreground" Value="#000000" />
+                        </Style>
+                    </ProgressBar.Styles>
+                </ProgressBar>
             </StackPanel>
             <views:ConfigModelView />
         </DockPanel>

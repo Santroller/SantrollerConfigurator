@@ -116,7 +116,8 @@
                                   SelectedIndex="0" VerticalAlignment="Center">
                             <ComboBoxItem Content="{x:Static netCore:Resources.NoSupportedDeviceFoundLabel}"></ComboBoxItem>
                         </ComboBox>
-                        <ComboBox HorizontalAlignment="Stretch" IsVisible="{Binding Main.Devices.Count}" VerticalAlignment="Center"
+                        <ComboBox HorizontalAlignment="Stretch" IsVisible="{Binding Main.Devices.Count}"
+                                  VerticalAlignment="Center"
                                   ItemsSource="{Binding Main.Devices}"
                                   SelectedItem="{Binding Main.SelectedDevice}">
                             <ComboBox.ItemTemplate>
@@ -126,12 +127,14 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                         <Button Content="{x:Static viewModels1:Resources.WriteConfig}"
-                                Command="{Binding WriteConfigCommand}"
-                                IsVisible="{Binding !Main.HasChanges}" />
-                        <Button Content="{x:Static viewModels1:Resources.WriteConfig}" Background="#FFd7cb00"
-                                Foreground="Black"
-                                Command="{Binding WriteConfigCommand}" IsVisible="{Binding Main.HasChanges}" />
-                        <Button Content="{x:Static viewModels1:Resources.SaveAndReturn}" Command="{Binding GoBackCommand}" />
+                                Command="{Binding WriteConfigCommand}" />
+                        <Button IsVisible="{Binding Main.HasChanges}"
+                                Content="{x:Static viewModels1:Resources.SaveAndReturn}"
+                                Foreground="{Binding WarningTextColor}" Background="{Binding WarningColor}"
+                                Command="{Binding GoBackCommand}" />
+                        <Button IsVisible="{Binding !Main.HasChanges}"
+                                Content="{x:Static viewModels1:Resources.SaveAndReturn}"
+                                Command="{Binding GoBackCommand}" />
                     </StackPanel>
                 </DockPanel>
                 <TextBlock IsVisible="{Binding WriteToolTip, Converter={x:Static ObjectConverters.IsNotNull}}"
@@ -142,7 +145,13 @@
                 </WrapPanel>
                 <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True" Name="RunProgress"
                              Foreground="{Binding Main.ProgressbarColor}" Value="{Binding Main.Progress}"
-                             IsIndeterminate="False" Minimum="0" Maximum="100" Height="30" />
+                             IsIndeterminate="False" Minimum="0" Maximum="100" Height="30" Classes.darkText="{Binding Main.ProgressBarShouldUseDarkTextColor}">
+                    <ProgressBar.Styles>
+                        <Style Selector="ProgressBar.darkText /template/ TextBlock">
+                            <Setter Property="Foreground" Value="#000000" />
+                        </Style>
+                    </ProgressBar.Styles>
+                </ProgressBar>
             </StackPanel>
             <views:ConfigModelView />
         </DockPanel>

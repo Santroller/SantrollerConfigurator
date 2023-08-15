@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using Avalonia.Media;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.Input;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
@@ -52,7 +53,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
     [RelayCommand]
     public void AddConfig()
     {
-        var item = new BrandedConfigurationStore("Tool Name", "Get support by visiting example.com");
+        var item = new BrandedConfigurationStore("Tool Name", "Get support by visiting example.com", Color.Parse("#FF0078D7"), Color.Parse("#FFd7cb00"), Color.Parse("red"));
         Config.Configurations.Add(item);
         SelectedTool = item;
     }
@@ -88,6 +89,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
     {
         if (SelectedTool == null || Selected == null) return;
         Router.Navigate.Execute(Selected.Model);
+        Selected.Model.SetUpDiff();
     }
 
     [RelayCommand]
@@ -104,7 +106,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         var names = SelectedTool.Configurations.Select(s => s.ProductName).ToList();
         if (names.ToHashSet().Count != names.Count)
         {
-            ProgressbarColor = "red";
+            ProgressbarColor = ProgressBarError;
             Complete(100);
             Message = Resources.UniqueName;
             return;
@@ -117,7 +119,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         {
             if (config.Model.HasError)
             {
-                ProgressbarColor = "red";
+                ProgressbarColor = ProgressBarError;
                 Complete(100);
                 Message = string.Format(Resources.ConfigIncomplete, config.ProductName);
                 return;
@@ -202,5 +204,23 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         }
 
         Complete(100);
+    }
+
+    public override void SetDifference(bool difference)
+    {
+        HasChanges = difference;
+        if (!Working)
+        {
+            if (!difference)
+            {
+                ProgressbarColor = ProgressBarPrimary;
+                Complete(100);
+            }
+            else
+            {
+                ProgressbarColor = ProgressBarWarning;
+                Message = "You have unsaved changes, click `Save Changes and return` to save them";
+            }
+        }
     }
 }

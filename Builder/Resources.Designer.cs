@@ -87,6 +87,24 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
             }
         }
         
+        public static string PrimaryColorLabel {
+            get {
+                return ResourceManager.GetString("PrimaryColorLabel", resourceCulture);
+            }
+        }
+        
+        public static string WarningColorLabel {
+            get {
+                return ResourceManager.GetString("WarningColorLabel", resourceCulture);
+            }
+        }
+        
+        public static string ErrorColorLabel {
+            get {
+                return ResourceManager.GetString("ErrorColorLabel", resourceCulture);
+            }
+        }
+        
         public static string SelectedDeviceTypeLabel {
             get {
                 return ResourceManager.GetString("SelectedDeviceTypeLabel", resourceCulture);

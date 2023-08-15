@@ -44,6 +44,15 @@
     <data name="SelectedDeviceHelpLabel" xml:space="preserve">
         <value>Tool Support Information</value>
     </data>
+    <data name="PrimaryColorLabel" xml:space="preserve">
+        <value>Primary Colour</value>
+    </data>
+    <data name="WarningColorLabel" xml:space="preserve">
+        <value>Warning Colour</value>
+    </data>
+    <data name="ErrorColorLabel" xml:space="preserve">
+        <value>Error Colour</value>
+    </data>
     <data name="SelectedDeviceTypeLabel" xml:space="preserve">
         <value>Current Variant</value>
     </data>

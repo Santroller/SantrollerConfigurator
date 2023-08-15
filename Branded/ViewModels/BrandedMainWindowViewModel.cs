@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
 using CommunityToolkit.Mvvm.Input;
@@ -18,9 +19,20 @@ public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.Vie
 
     private bool _writing = false;
 
+    private string ColorToHex(Avalonia.Media.Color color)
+    {
+        return ColorTranslator.ToHtml(Color.FromArgb(color.A, color.R, color.G, color.B));
+    }
+
     public BrandedMainWindowViewModel() : base(true)
     {
         Config = BrandedConfigurationStore.LoadBranding(this);
+        ProgressBarPrimary = ColorToHex(Config.PrimaryColor);
+        ProgressBarWarning = ColorToHex(Config.WarningColor);
+        ProgressBarError = ColorToHex(Config.ErrorColor);
+        ProgressBarPrimary = "#00FF00";
+        ProgressbarColor = ProgressBarPrimary;
+        Console.WriteLine(ShouldUseDarkTextColorForBackground(ProgressbarColor));
         SelectedConfig = Config.Configurations.First();
         Router.NavigateAndReset.Execute(new BrandedMainViewModel(this));
         AvailableDevices.Connect().ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
@@ -90,6 +102,7 @@ public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         // because, if someone releases a new version, then the indexes may move around.
         santroller.LoadConfiguration(SelectedConfig.Model);
         Router.Navigate.Execute(SelectedConfig.Model);
+        SelectedConfig.Model.SetUpDiff();
     }
     [RelayCommand]
     public void ResetBranded()
