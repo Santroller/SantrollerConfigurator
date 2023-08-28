@@ -109,9 +109,6 @@
             <IncludeAssets>true</IncludeAssets>
         </ProjectReference>
     </ItemGroup>
-    <ItemGroup>
-      <AdditionalFiles Include="Views\BuilderConfigView.axaml" />
-    </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
         <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' "/>
         <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' "/>

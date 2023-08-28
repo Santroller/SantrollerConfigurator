@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build-mac:
     name: Build (macOS)
-    runs-on: macos-latest
+    runs-on: [self-hosted, macos]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -55,7 +55,7 @@ jobs:
           path: out
   build-linux:
     name: Build (Linux)
-    runs-on: ubuntu-20.04
+    runs-on: [self-hosted, linux]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -83,7 +83,7 @@ jobs:
           path: out
   build-windows:
     name: Build (Windows)
-    runs-on: windows-latest
+    runs-on: [self-hosted, windows]
     steps:
       - name: git configure long path
         run: git config --global core.longpaths true
@@ -115,7 +115,7 @@ jobs:
   build-linux-builder:
     name: Build Builder (Linux)
     needs: [build-linux, build-mac, build-windows]
-    runs-on: ubuntu-20.04
+    runs-on: [self-hosted, linux]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -156,7 +156,7 @@ jobs:
   build-windows-builder:
     name: Build Builder (Windows)
     needs: [build-linux, build-mac, build-windows]
-    runs-on: windows-latest
+    runs-on: [self-hosted, windows]
     steps:
       - name: git configure long path
         run: git config --global core.longpaths true
@@ -201,7 +201,7 @@ jobs:
   build-mac-builder:
     name: Build Builder (macOS)
     needs: [ build-linux, build-mac, build-windows ]
-    runs-on: macos-latest
+    runs-on: [self-hosted, macos]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -267,7 +267,7 @@ jobs:
   release:
     if: contains(github.ref, 'tags/v')
     name: Release Build
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     needs: [build-linux, build-mac, build-windows, build-linux-builder, build-mac-builder, build-windows-builder]
     steps:
       - name: Checkout
@@ -314,7 +314,7 @@ jobs:
   
   pre-release:
     name: Release Preview Build
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     needs: [build-linux, build-mac, build-windows, build-mac-builder, build-linux-builder, build-windows-builder]
     steps:
       - name: Checkout
