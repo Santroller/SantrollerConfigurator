@@ -14,6 +14,7 @@
         <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">Windows</DefineConstants>
         <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">$(DefineConstants);POSIX</DefineConstants>
         <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <LangVersion>latestmajor</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <CFBundleName>SantrollerConfiguratorBuilder</CFBundleName> <!-- Also defines .app file name -->
