@@ -119,11 +119,11 @@
                         <Button Content="{x:Static netCore:Resources.GoBackLabel}" Command="{Binding GoBackCommand}" />
                     </StackPanel>
                 </DockPanel>
-                <TextBlock IsVisible="{Binding WriteToolTip, Converter={x:Static ObjectConverters.IsNotNull}}"
-                           Foreground="Red" HorizontalAlignment="Center" Text="{Binding WriteToolTip}" />
                 <WrapPanel HorizontalAlignment="Center">
                     <TextBlock Text="{x:Static netCore:Resources.StatusLabel}" />
-                    <TextBlock Text="{Binding Main.Message}" />
+                    <TextBlock IsVisible="{Binding !HasError}" Text="{Binding Main.Message}" />
+                    <TextBlock IsVisible="{Binding HasError}"
+                               Foreground="Red" HorizontalAlignment="Center" Text="{x:Static netCore:Resources.ConfigurationErrorLabel}" />
                 </WrapPanel>
                 <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True" Name="RunProgress"
                              Foreground="{Binding Main.ProgressbarColor}" Value="{Binding Main.Progress}"

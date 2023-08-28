@@ -27,12 +27,11 @@ public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.Vie
     public BrandedMainWindowViewModel() : base(true)
     {
         Config = BrandedConfigurationStore.LoadBranding(this);
+        Logo = Config.Logo;
         ProgressBarPrimary = ColorToHex(Config.PrimaryColor);
         ProgressBarWarning = ColorToHex(Config.WarningColor);
         ProgressBarError = ColorToHex(Config.ErrorColor);
-        ProgressBarPrimary = "#00FF00";
         ProgressbarColor = ProgressBarPrimary;
-        Console.WriteLine(ShouldUseDarkTextColorForBackground(ProgressbarColor));
         SelectedConfig = Config.Configurations.First();
         Router.NavigateAndReset.Execute(new BrandedMainViewModel(this));
         AvailableDevices.Connect().ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
@@ -98,9 +97,7 @@ public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         if (SelectedDevice is not Santroller santroller) return;
         SelectedConfig = Config.Configurations.First(s =>
             s.VendorName == santroller.Manufacturer && s.ProductName == santroller.Product);
-        // TODO: gotta do a bit more than this, need to merge the two configs together
-        // because, if someone releases a new version, then the indexes may move around.
-        santroller.LoadConfiguration(SelectedConfig.Model);
+        santroller.LoadConfiguration(SelectedConfig.Model, true);
         Router.Navigate.Execute(SelectedConfig.Model);
         SelectedConfig.Model.SetUpDiff();
     }

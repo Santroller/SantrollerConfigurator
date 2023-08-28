@@ -40,8 +40,7 @@
             </ExperimentalAcrylicBorder>
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock FontSize="30" HorizontalAlignment="Center"
-                           Text="{Binding WelcomeText}" />
+                <Image Source="{Binding BrandedMain.Logo}" Width="200" Margin="0 0 0 40" />
                 <StackPanel IsVisible="{Binding BrandedMain.ReadyToConfigure}">
                     <Label HorizontalAlignment="Center" IsVisible="{Binding !Configurable}"
                            Content="{Binding EraseText}" />

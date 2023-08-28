@@ -72,8 +72,8 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <Button Content="Create Tool" Command="{Binding BuilderMain.AddConfigCommand}" />
-                        <Button Content="Delete Tool" Command="{Binding BuilderMain.RemoveConfigCommand}"
+                        <Button Width="125" HorizontalContentAlignment="Center" Content="Create Tool" Command="{Binding BuilderMain.AddConfigCommand}" />
+                        <Button Width="125" HorizontalContentAlignment="Center" Content="Delete Tool" Command="{Binding BuilderMain.RemoveConfigCommand}"
                                 IsEnabled="{Binding BuilderMain.Config.Configurations.Count}" />
                     </StackPanel>
                     <StackPanel IsVisible="{Binding BuilderMain.Config.Configurations.Count}">
@@ -118,6 +118,15 @@
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.LogoLabel}">
+                            </Label>
+                            <Image Source="{Binding BuilderMain.SelectedTool.Logo}" Width="300"></Image>
+                            <Button Width="125" HorizontalContentAlignment="Center" Content="{x:Static viewModels:Resources.LogoButtonLabel}" Command="{Binding BuilderMain.SelectLogoCommand}"/>
+                            
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static viewModels:Resources.PackageTool}">
                             </Label>
                             <Button Width="300" Content="{x:Static viewModels:Resources.PackageTool}" Command="{Binding BuilderMain.PackageCommand}"/>
@@ -143,8 +152,8 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <Button Content="{x:Static viewModels:Resources.CreateVariant}" Command="{Binding BuilderMain.AddDeviceCommand}" />
-                            <Button Content="{x:Static viewModels:Resources.RemoveVariant}" Command="{Binding BuilderMain.RemoveDeviceCommand}"
+                            <Button Width="125" HorizontalContentAlignment="Center" Content="{x:Static viewModels:Resources.CreateVariant}" Command="{Binding BuilderMain.AddDeviceCommand}" />
+                            <Button Width="125" HorizontalContentAlignment="Center" Content="{x:Static viewModels:Resources.RemoveVariant}" Command="{Binding BuilderMain.RemoveDeviceCommand}"
                                     IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" />
                         </StackPanel>
                         <StackPanel IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}">

@@ -1,0 +1,137 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels;assembly=SantrollerConfigurator"
+             xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore;assembly=SantrollerConfigurator"
+             xmlns:views="clr-namespace:GuitarConfigurator.NetCore.Views;assembly=SantrollerConfigurator"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:viewModels1="clr-namespace:SantrollerConfiguratorBuilder.NetCore.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" x:DataType="viewModels:ConfigViewModel"
+             x:Class="SantrollerConfiguratorBuilder.NetCore.Views.BuilderSidebarView"
+             x:CompileBindings="True"
+             Background="Transparent">
+    <UserControl.Styles>
+        <Style Selector="ComboBoxItem">
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="ComboBoxItem TextBlock">
+            <Setter Property="Padding" Value="{DynamicResource ComboBoxItemThemePadding}" />
+        </Style>
+    </UserControl.Styles>
+    <UserControl.Resources>
+        <netCore:EnumToStringConverter x:Key="EnumToStringConverter" />
+        <netCore:PinToStringConverter x:Key="PinToStringConverter" />
+        <netCore:ControllerEnumConverter x:Key="ControllerEnumConverter" />
+        <netCore:SidebarHeightConverter x:Key="SidebarHeightConverter" />
+        <DataTemplate x:Key="PinToStringTemplate" DataType="system:Object">
+            <TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource PinToStringConverter }">
+                        <Binding />
+                        <Binding Path="$parent[UserControl].DataContext" />
+                        <Binding Path="$parent[ComboBox].SelectedItem" />
+                        <Binding Path="$parent[ComboBox].DataContext" />
+                        <Binding Path="$parent[ComboBoxItem]" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="ControllerEnumTemplate" DataType="system:Object">
+            <TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource ControllerEnumConverter }">
+                        <Binding />
+                        <Binding Path="$parent[views:SidebarView].Model.DeviceControllerType" />
+                        <Binding Path="$parent[views:SidebarView].Model.LegendType" />
+                        <Binding Path="$parent[views:SidebarView].Model.SwapSwitchFaceButtons" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="EnumToStringTemplate" DataType="system:Object">
+            <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter }}" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <Panel>
+        <ScrollViewer VerticalAlignment="Center">
+            <StackPanel Margin="0 0 0 40">
+                <Image Source="{Binding Main.Logo}" Width="200" Margin="40 5 40 40"
+                       IsVisible="{Binding $parent[Window].Height, Converter={StaticResource SidebarHeightConverter }}" />
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"
+                               Text="{x:Static netCore:Resources.ModeLabel}"
+                               TextAlignment="Center" />
+                    <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0"
+                              SelectedItem="{Binding Mode}"
+                              ItemTemplate="{StaticResource EnumToStringTemplate}"
+                              ItemsSource="{Binding ModeTypes}" />
+                </StackPanel>
+
+                <StackPanel IsVisible="{Binding IsController}">
+                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"
+                               Text="{x:Static netCore:Resources.ControllerViewTypeLabel}"
+                               TextAlignment="Center" />
+                    <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0"
+                              SelectedItem="{Binding LegendType}"
+                              ItemTemplate="{StaticResource EnumToStringTemplate}"
+                              ItemsSource="{Binding LegendTypes}" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"
+                               Text="{x:Static netCore:Resources.SelectedDeviceLabel}"
+                               TextAlignment="Center" />
+                    <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0" IsEnabled="false"
+                              IsVisible="{Binding !Main.Devices.Count}"
+                              SelectedIndex="0" VerticalAlignment="Center">
+                        <ComboBoxItem Content="{x:Static netCore:Resources.NoSupportedDeviceFoundLabel}"></ComboBoxItem>
+                    </ComboBox>
+                    <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0"  IsVisible="{Binding Main.Devices.Count}"
+                              ItemsSource="{Binding Main.Devices}"
+                              SelectedItem="{Binding Main.SelectedDevice}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <Button Command="{Binding AddOutputCommand}" HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                        Content="{x:Static netCore:Resources.AddBindingLabel}" />
+                <Button Content="{x:Static viewModels1:Resources.WriteConfig}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                        Command="{Binding WriteConfigCommand}" />
+                
+                <Button Content="{x:Static viewModels1:Resources.SaveUF2Label}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                        Command="{Binding WriteUf2Command}" />
+
+                <Button Command="{Binding ResetWithConfirmationCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                        Content="{x:Static netCore:Resources.ResetSettingsLabel}" />
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="20 5 20 0">
+                    <Button Command="{Binding LoadConfigCommand}"
+                            HorizontalAlignment="Stretch" Width="130" HorizontalContentAlignment="Center"
+                            Content="{x:Static netCore:Resources.ImportConfigLabel}" />
+                    <Button Command="{Binding SaveConfigCommand}"
+                            HorizontalAlignment="Stretch" Width="130" HorizontalContentAlignment="Center"
+                            Content="{x:Static netCore:Resources.ExportConfigLabel}" />
+                </StackPanel>
+                <Button Command="{Binding BindAllCommand}" HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                        Content="{x:Static netCore:Resources.ConfigureAllInputsLabel}" />
+                <Button IsVisible="{Binding Main.HasChanges}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                        Content="{x:Static viewModels1:Resources.SaveAndReturn}"
+                        Foreground="{Binding WarningTextColor}" Background="{Binding WarningColor}"
+                        Command="{Binding GoBackCommand}" />
+                <Button IsVisible="{Binding !Main.HasChanges}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                        Content="{x:Static viewModels1:Resources.SaveAndReturn}"
+                        Command="{Binding GoBackCommand}" />
+            </StackPanel>
+        </ScrollViewer>
+    </Panel>
+</UserControl>

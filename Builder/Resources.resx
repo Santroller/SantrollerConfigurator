@@ -53,6 +53,15 @@
     <data name="ErrorColorLabel" xml:space="preserve">
         <value>Error Colour</value>
     </data>
+    <data name="LogoLabel" xml:space="preserve">
+        <value>Logo</value>
+    </data>
+    <data name="LogoButtonLabel" xml:space="preserve">
+        <value>Change Logo</value>
+    </data>
+    <data name="SaveUF2Label" xml:space="preserve">
+        <value>Export UF2</value>
+    </data>
     <data name="SelectedDeviceTypeLabel" xml:space="preserve">
         <value>Current Variant</value>
     </data>

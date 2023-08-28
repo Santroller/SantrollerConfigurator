@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using GuitarConfigurator.NetCore.ViewModels;
 using GuitarConfigurator.NetCore.Views;
@@ -19,9 +21,35 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
         {
             disposables(ViewModel!.ShowYesNoDialog.RegisterHandler(DoShowYesNoDialogAsync));
             disposables(ViewModel!.ShowIssueDialog.RegisterHandler(DoShowIssueDialogAsync));
+            disposables(ViewModel!.LoadConfig.RegisterHandler(LoadImageAsync));
+            disposables(ViewModel!.SaveUf2Handler.RegisterHandler(SaveUf2Async));
             ViewModel!.Begin(true);
         });
         InitializeComponent();
+    }
+    
+    private async Task LoadImageAsync(InteractionContext<BuilderMainWindowViewModel, IStorageFile?> obj)
+    {
+        var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            AllowMultiple = false,
+            FileTypeFilter = new[] {new FilePickerFileType("Image File") {Patterns = new[] {"*.jpg", "*.png"}}}
+        });
+        if (!file.Any())
+        {
+            obj.SetOutput(null);
+            return;
+        }
+        obj.SetOutput(file[0]);
+    }
+    private async Task SaveUf2Async(InteractionContext<BuilderMainWindowViewModel, IStorageFile?> obj)
+    {
+        var file = await ((Window) VisualRoot!).StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            FileTypeChoices = new[] {new FilePickerFileType("UF2 File") {Patterns = new[] {"*.jpg", "*.png"}}},
+            SuggestedFileName = "firmware.uf2"
+        });
+        obj.SetOutput(file);
     }
     private async Task DoShowIssueDialogAsync(
         InteractionContext<(string _platformIOText, ConfigViewModel), RaiseIssueWindowViewModel?> interaction)

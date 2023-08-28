@@ -7,6 +7,7 @@
         xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore;assembly=SantrollerConfigurator"
         xmlns:viewModels1="clr-namespace:GuitarConfigurator.NetCore.ViewModels;assembly=SantrollerConfigurator"
         xmlns:views="clr-namespace:GuitarConfigurator.NetCore.Views;assembly=SantrollerConfigurator"
+        xmlns:views1="clr-namespace:SantrollerConfiguratorBuilder.NetCore.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="SantrollerConfiguratorBuilder.NetCore.Views.BuilderMainWindow"
         TransparencyLevelHint="AcrylicBlur"
@@ -24,7 +25,7 @@
                         <ExperimentalAcrylicMaterial TintColor="Black" MaterialOpacity="0.85" TintOpacity="1"
                                                      BackgroundSource="Digger" />
                     </ExperimentalAcrylicBorder.Material>
-                    <views:SidebarView />
+                    <views1:BuilderSidebarView />
                 </ExperimentalAcrylicBorder>
             </DataTemplate>
             <DataTemplate />

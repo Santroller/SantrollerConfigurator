@@ -3,15 +3,20 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.Input;
+using GuitarConfigurator.NetCore;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
+using GuitarConfigurator.NetCore.ViewModels;
 using ProtoBuf;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -24,6 +29,15 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
 
     [Reactive] public BrandedConfigurationStore? SelectedTool { get; set; }
     [Reactive] public BrandedConfiguration? Selected { get; set; }
+
+    public Interaction<BuilderMainWindowViewModel, IStorageFile?>
+        LoadConfig { get; } =
+        new();
+
+    public Interaction<BuilderMainWindowViewModel, IStorageFile?>
+        SaveUf2Handler { get; } =
+        new();
+
 
     public BuilderMainWindowViewModel() : base(true)
     {
@@ -53,7 +67,8 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
     [RelayCommand]
     public void AddConfig()
     {
-        var item = new BrandedConfigurationStore("Tool Name", "Get support by visiting example.com", Color.Parse("#FF0078D7"), Color.Parse("#FFd7cb00"), Color.Parse("red"));
+        var item = new BrandedConfigurationStore("Tool Name", "Get support by visiting example.com",
+            Color.Parse("#FF0078D7"), Color.Parse("#FFd7cb00"), Color.Parse("red"));
         Config.Configurations.Add(item);
         SelectedTool = item;
     }
@@ -96,6 +111,38 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
     public void Save()
     {
         Config.Save();
+    }
+
+    [RelayCommand]
+    public async Task SelectLogo()
+    {
+        if (SelectedTool == null) return;
+        var output = await LoadConfig.Handle(this);
+        if (output != null)
+        {
+            SelectedTool.Logo = new Bitmap(await output.OpenReadAsync());
+        }
+    }
+
+    private async void SaveUf2File()
+    {
+        Complete(100);
+        var output = await SaveUf2Handler.Handle(this);
+        if (output == null) return;
+        var uf2File = Path.Combine(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", "pico",
+            "firmware.uf2");
+        var fileStream = File.OpenRead(uf2File);
+        await fileStream.CopyToAsync(await output.OpenWriteAsync());
+    }
+
+    public override IObservable<PlatformIo.PlatformIoState> SaveUf2(ConfigViewModel model)
+    {
+        if (Selected == null) return Observable.Return(new PlatformIo.PlatformIoState(100, "Done", null));
+        var state = Write(model, Selected.ExtraConfig());
+
+        state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, SaveUf2File);
+
+        return state;
     }
 
     [RelayCommand]
@@ -164,7 +211,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         await using var macosInput = AssetLoader.Open(uri);
         await macosInput.CopyToAsync(macosOutput).ConfigureAwait(false);
         macosOutput.Seek(0, SeekOrigin.Begin);
-        
+
         // Edit zip file, copying in the branding.bin, as macos isn't single file so we don't need to append.
         using var archive = new ZipArchive(macosOutput, ZipArchiveMode.Update);
         var entry = archive.CreateEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/branding.bin");
@@ -172,7 +219,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         Serializer.SerializeWithLengthPrefix(branding, new SerialisedBrandedConfigurationStore(SelectedTool),
             PrefixStyle.Base128);
         branding.Close();
-        
+
         // Modify info.plist with the tools name
         entry = archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Info.plist")!;
         await using var info = entry.Open();
@@ -190,7 +237,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         stream.Seek(0, SeekOrigin.Begin);
         await stream.CopyToAsync(info);
         info.Close();
-        
+
         // Now rename SantrollerConfiguratorBranded.app in the zip file to the tool name.
         foreach (var oldEntry in archive.Entries.ToList())
         {

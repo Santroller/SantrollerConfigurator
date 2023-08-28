@@ -1,5 +1,3 @@
-using System;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
 using SantrollerConfiguratorBuilder.NetCore.ViewModels;

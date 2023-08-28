@@ -19,6 +19,7 @@
     <UserControl.Resources>
         <netCore:EnumToStringConverter x:Key="EnumToStringConverter" />
         <netCore:PinToStringConverter x:Key="PinToStringConverter" />
+        <netCore:SidebarHeightConverter x:Key="SidebarHeightConverter" />
         <DataTemplate x:Key="PinToStringTemplate" DataType="system:Object">
             <TextBlock>
                 <TextBlock.Text>
@@ -39,103 +40,27 @@
     <Panel>
         <ScrollViewer VerticalAlignment="Center">
             <StackPanel Margin="0 0 0 40">
-                <StackPanel IsVisible="{Binding IsBluetooth}" Orientation="Vertical">
-                    <CheckBox HorizontalAlignment="Stretch" Margin="40 5 40 0" IsChecked="{Binding Connected}"
-                              IsEnabled="False" Content="{x:Static netCore:Resources.ConnectedToReceiverLabel}" />
-                    <StackPanel>
-                        <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0" Text="{x:Static netCore:Resources.LocalAddressLabel}"
-                                   TextAlignment="Center" />
-                        <TextBlock Margin="20 5 20 0" Text="{Binding LocalAddress}" HorizontalAlignment="Stretch" />
-                    </StackPanel>
-                </StackPanel>
-                
-                <StackPanel IsVisible="{Binding IsKeyboard}">
-                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0" Text="{x:Static netCore:Resources.MouseMovementTypeLabel}"
-                               TextAlignment="Center" />
-                    <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0"
-                              SelectedItem="{Binding MouseMovementType}"
-                              ItemTemplate="{StaticResource EnumToStringTemplate}"
-                              ItemsSource="{Binding MouseMovementTypes}" />
-                </StackPanel>
+                <Image Source="{Binding Main.Logo}" Width="200" Margin="40 5 40 40" IsVisible="{Binding $parent[Window].Height, Converter={StaticResource SidebarHeightConverter }}"/>
                 <StackPanel IsVisible="{Binding IsController}">
-                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0" Text="{x:Static netCore:Resources.ControllerViewTypeLabel}"
+                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"
+                               Text="{x:Static netCore:Resources.ControllerViewTypeLabel}"
                                TextAlignment="Center" />
                     <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0"
                               SelectedItem="{Binding LegendType}"
                               ItemTemplate="{StaticResource EnumToStringTemplate}"
                               ItemsSource="{Binding LegendTypes}" />
                 </StackPanel>
-
-                <StackPanel>
-                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0" Text="{x:Static netCore:Resources.WindowsControllerModeLabel}"
-                               TextAlignment="Center" />
-                    <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0"
-                              SelectedIndex="{Binding XInputOnWindows}">
-                        <ComboBoxItem Content="{x:Static netCore:Resources.HIDGameControllerLabel}" />
-                        <ComboBoxItem Content="{x:Static netCore:Resources.XInputLabel}" />
-                    </ComboBox>
-
-                </StackPanel>
-                <StackPanel IsVisible="{Binding !Deque}">
-                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0" Text="{Binding PollRateLabel}"
-                               TextAlignment="Center" />
-                    <NumericUpDown FormatString="{}{0:#,0}" Margin="20 5 20 0" Value="{Binding PollRate}"
-                                   Minimum="0"
-                                   Maximum="10" HorizontalAlignment="Stretch" />
-                </StackPanel>
-                <StackPanel IsVisible="{Binding Deque}">
-                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0" Text="{Binding PollRateLabel}"
-                               TextAlignment="Center" />
-                    <NumericUpDown FormatString="{}{0:#,0}" Margin="20 5 20 0" Value="{Binding PollRate}"
-                                   Minimum="1"
-                                   Maximum="10" HorizontalAlignment="Stretch" />
-                </StackPanel>
-                <StackPanel IsVisible="{Binding !IsAdvancedMode}">
-                    <StackPanel IsVisible="{Binding IsGuitar}">
-                        <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0" Text="{x:Static netCore:Resources.QueueBasedInputsLabel}"
-                                   TextAlignment="Center" />
-                        <ToggleSwitch HorizontalAlignment="Center" Margin="20 5 20 0"
-                                      HorizontalContentAlignment="Center" IsChecked="{Binding Deque}"
-                                      OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                      OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                    </StackPanel>
-                    <TextBlock IsVisible="{Binding !Deque}" HorizontalAlignment="Stretch" Margin="40 5 40 0"
-                               Text="{x:Static netCore:Resources.DebounceExtraLabel}"
-                               TextAlignment="Center" />
-                    <TextBlock IsVisible="{Binding Deque}" HorizontalAlignment="Stretch" Margin="40 5 40 0"
-                               Text="{x:Static netCore:Resources.DebounceLabel}"
-                               TextAlignment="Center" />
-                    <NumericUpDown IsVisible="{Binding Deque}" Margin="20 5 20 0" Value="{Binding DebounceDisplay}"
-                                   Minimum="0.5"
-                                   Increment="0.1"
-                                   Maximum="25" HorizontalAlignment="Stretch" />
-                    <NumericUpDown FormatString="{}{0:#,0}" IsVisible="{Binding !Deque}" Margin="20 5 20 0"
-                                   Value="{Binding DebounceDisplay}"
-                                   Minimum="0"
-                                   Increment="1"
-                                   Maximum="25" HorizontalAlignment="Stretch" />
-                </StackPanel>
-                <StackPanel IsVisible="{Binding IsGuitar}">
-                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0" Text="{x:Static netCore:Resources.StrumDebounceLabel}"
-                               TextAlignment="Center" />
-                    <DockPanel Margin="20 5 20 0">
-                        <NumericUpDown Width="110" FormatString="{}{0:#,0}" Value="{Binding StrumDebounceDisplay}"
-                                       Minimum="0"
-                                       Maximum="25" HorizontalAlignment="Stretch" />
-                        <ToggleSwitch HorizontalAlignment="Right"
-                                      HorizontalContentAlignment="Right" IsChecked="{Binding CombinedStrumDebounce}"
-                                      OnContent="{x:Static netCore:Resources.StrumCombinedLabel}"
-                                      OffContent="{x:Static netCore:Resources.StrumIndividualLabel}" />
-                    </DockPanel>
-                </StackPanel>
-                    <StackPanel>
-                        <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0" Text="{x:Static netCore:Resources.SwapSwitchFaceButtonLabel}"
-                                   TextAlignment="Center" />
-                        <ToggleSwitch HorizontalAlignment="Center" Margin="20 5 20 0"
-                                      HorizontalContentAlignment="Center" IsChecked="{Binding SwapSwitchFaceButtons}"
-                                      OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                      OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                    </StackPanel>
+                <Button Content="{x:Static netCore:Resources.SaveConfigurationLabel}" Background="#FFd7cb00"
+                        Foreground="Black"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                        Command="{Binding WriteConfigCommand}" IsVisible="{Binding Main.HasChanges}" />
+                <Button Content="{x:Static netCore:Resources.SaveConfigurationLabel}"
+                        Command="{Binding WriteConfigCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                        IsVisible="{Binding !Main.HasChanges}" />
+                
+                <Button Content="{x:Static netCore:Resources.GoBackLabel}" Command="{Binding GoBackCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0" />
             </StackPanel>
         </ScrollViewer>
     </Panel>
