@@ -27,9 +27,8 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "7.0"
-          cache: true
       - name: Install dependencies
-        run: dotnet restore --locked-mode
+        run: dotnet restore
       - name: Build
         run: |
           cd Branded
@@ -66,9 +65,8 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "7.0"
-          cache: true
       - name: Install dependencies
-        run: dotnet restore --locked-mode
+        run: dotnet restore
       - uses: actions/checkout@v3
         with:
           submodules: true
@@ -97,7 +95,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "7.0"
-          cache: true
       - name: Install dependencies
         run: dotnet restore
       - uses: actions/checkout@v3
@@ -128,7 +125,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "7.0"
-          cache: true
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -142,7 +138,7 @@ jobs:
         with:
           name: linux
       - name: Install dependencies
-        run: dotnet restore --locked-mode
+        run: dotnet restore
       - name: Build
         run: |
           cd Builder
@@ -184,9 +180,8 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "7.0"
-          cache: true
       - name: Install dependencies
-        run: dotnet restore --locked-mode
+        run: dotnet restore
       - name: Build
         run: |
           cd Builder
@@ -228,7 +223,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "7.0"
-          cache: true
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -242,7 +236,7 @@ jobs:
         with:
           name: linux
       - name: Install dependencies
-        run: dotnet restore --locked-mode
+        run: dotnet restore
       - name: Build
         run: |
           cd Builder

@@ -15,7 +15,6 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <RootNamespace>SantrollerConfiguratorBranded.NetCore</RootNamespace>
-        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <AvaloniaVersion>11.0.2</AvaloniaVersion>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
