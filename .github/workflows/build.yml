@@ -13,6 +13,14 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: dotnet restore
+      - name: codesign
+        id: codesign
+        uses: apple-actions/import-codesign-certs@master
+        with:
+          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+          keychain: ${{ github.run_id }}
+          keychain-password: ${{ github.run_id }}
       - name: Build
         run: |
           cd Branded
