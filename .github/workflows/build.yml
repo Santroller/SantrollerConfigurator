@@ -11,22 +11,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: codesign
-        id: codesign
-        uses: apple-actions/import-codesign-certs@master
-        with: 
-          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-          keychain: ${{ github.run_id }}
-          keychain-password: ${{ github.run_id }}
-      - name: Install Libs
-        run: |
-          brew install pkgconfig
-          brew install libusb
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "7.0"
       - name: Install dependencies
         run: dotnet restore
       - name: Build
@@ -61,10 +45,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "7.0"
       - name: Install dependencies
         run: dotnet restore
       - uses: actions/checkout@v3
@@ -91,10 +71,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "7.0"
       - name: Install dependencies
         run: dotnet restore
       - uses: actions/checkout@v3
@@ -121,10 +97,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "7.0"
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -176,10 +148,6 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: linux
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "7.0"
       - name: Install dependencies
         run: dotnet restore
       - name: Build
@@ -215,14 +183,6 @@ jobs:
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
           keychain: ${{ github.run_id }}
           keychain-password: ${{ github.run_id }}
-      - name: Install Libs
-        run: |
-          brew install pkgconfig
-          brew install libusb
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "7.0"
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v1
         with:
