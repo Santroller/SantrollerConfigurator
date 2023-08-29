@@ -46,8 +46,8 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir $RUN_ID
-          mv out $RUN_ID/windows 
-          scp -r $RUN_ID sanjay@192.168.0.79:./artifacts/$RUN_ID
+          mv out $RUN_ID/macos 
+          scp -r $RUN_ID sanjay@192.168.0.79:./artifacts
   build-linux:
     name: Build (Linux)
     runs-on: [self-hosted, linux]
@@ -101,9 +101,9 @@ jobs:
         env:
           RUN_ID: ${{ github.run_id }}
         run: |
-          mkdir $RUN_ID
-          mv out $RUN_ID/windows 
-          scp -r $RUN_ID sanjay@192.168.0.79:./artifacts/$RUN_ID
+          mkdir $Env:RUN_ID
+          mv out $Env:RUN_ID/windows 
+          scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
   
   build-linux-builder:
     name: Build Builder (Linux)
