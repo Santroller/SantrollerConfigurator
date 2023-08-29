@@ -49,6 +49,7 @@ jobs:
           mkdir $RUN_ID
           mv out $RUN_ID/macos 
           rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
+
   build-linux:
     name: Build (Linux)
     runs-on: [self-hosted, linux]
