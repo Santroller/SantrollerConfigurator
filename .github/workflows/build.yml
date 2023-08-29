@@ -28,11 +28,13 @@ jobs:
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app out_stage
           cp Resources/* out_stage
           cd out_stage
+          N=5
           find "SantrollerConfiguratorBranded.app/Contents/MacOS" | while read fname; do
-            (if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded" ]; then
+            ((i=i%N)); ((i++==0)) && wait
+            if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded" ]; then
             echo "[INFO] Signing $fname"
-            codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname"
-            fi) &
+            codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname" &
+            fi
           done
           wait
           codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded"
@@ -189,12 +191,15 @@ jobs:
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBuilder.app out_stage
           cp Resources/* out_stage
           cd out_stage
+          N=5
           find "SantrollerConfiguratorBuilder.app/Contents/MacOS" | while read fname; do
-            (if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder" ]; then
+            ((i=i%N)); ((i++==0)) && wait
+            if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder" ]; then
             echo "[INFO] Signing $fname"
-            codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname"
-            fi) &
+            codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname" &
+            fi
           done
+          wait
           codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder"
           codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app"
           zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip SantrollerConfiguratorBuilder.app
