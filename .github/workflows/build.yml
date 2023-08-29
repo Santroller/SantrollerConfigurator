@@ -103,11 +103,7 @@ jobs:
         run: |
           mkdir $Env:RUN_ID
           mv out $Env:RUN_ID/windows 
-      - name: Copy artifacts 2
-        env:
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
+          scp -v -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
   
   build-linux-builder:
     name: Build Builder (Linux)
