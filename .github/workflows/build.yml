@@ -114,34 +114,27 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: windows
-      - name: Download macOS Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: mac
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: linux
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          cp ~/artifacts/$RUN_ID/windows/*.exe Builder/Assets
+          cp ~/artifacts/$RUN_ID/linux/* Builder/Assets
+          cp ~/artifacts/$RUN_ID/mac/*.zip Builder/Assets
       - name: Install dependencies
         run: dotnet restore
       - name: Build
         run: |
           cd Builder
-          cp ../windows/*.exe Assets
-          cp ../linux/* Assets
-          cp ../mac/*.zip Assets
           dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
           mkdir out
           cp bin/Release/net7.0/linux-x64/publish/SantrollerConfiguratorBuilder out/SantrollerConfiguratorBuilder-linux-64
           mv out ..
-      - uses: actions/upload-artifact@v1
-        with:
-          name: linux-builder
-          path: out
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mv out ~/artifacts/$RUN_ID/linux-builder
   build-windows-builder:
     name: Build Builder (Windows)
     needs: [build-linux, build-mac, build-windows]
@@ -153,34 +146,30 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: windows
-      - name: Download macOS Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: mac
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: linux
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          scp -r sanjay@192.168.0.79:./artifacts/$Env:RUN_ID .
+          cp $Env:RUN_ID/windows/*.exe Builder/Assets
+          cp $Env:RUN_ID/linux/* Builder/Assets
+          cp $Env:RUN_ID/mac/*.zip Builder/Assets
       - name: Install dependencies
         run: dotnet restore
       - name: Build
         run: |
           cd Builder
-          cp ../windows/*.exe Assets
-          cp ../linux/* Assets
-          cp ../mac/*.zip Assets
           dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
           mkdir out
           cp bin/Release/net7.0/win-x64/publish/SantrollerConfiguratorBuilder.exe out/SantrollerConfiguratorBuilder-win-64.exe
           mv out ..
-      - uses: actions/upload-artifact@v1
-        with:
-          name: windows-builder
-          path: out
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mkdir $Env:RUN_ID
+          mv out $Env:RUN_ID/windows-builder 
+          scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
   
   
   build-mac-builder:
@@ -192,26 +181,19 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: windows
-      - name: Download macOS Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: mac
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: linux
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          scp -r sanjay@192.168.0.79:./artifacts/$RUN_ID .
+          cp $RUN_ID/windows/*.exe Builder/Assets
+          cp $RUN_ID/linux/* Builder/Assets
+          cp $RUN_ID/mac/*.zip Builder/Assets
       - name: Install dependencies
         run: dotnet restore
       - name: Build
         run: |
           cd Builder
-          cp ../windows/*.exe Assets
-          cp ../linux/* Assets
-          cp ../mac/*.zip Assets
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
           mkdir out_stage
           mkdir out
@@ -229,44 +211,25 @@ jobs:
           zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip SantrollerConfiguratorBuilder.app
           cd ..
           mv out ..
-      - uses: actions/upload-artifact@v1
-        with:
-          name: mac-builder
-          path: out
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mkdir $RUN_ID
+          mv out $RUN_ID/macos-builder 
+          scp -r $RUN_ID sanjay@192.168.0.79:./artifacts
   release:
     if: contains(github.ref, 'tags/v')
     name: Release Build
     runs-on: [self-hosted, linux]
     needs: [build-linux, build-mac, build-windows, build-linux-builder, build-mac-builder, build-windows-builder]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: windows
-      - name: Download macOS Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: mac  
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: linux
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: windows-builder
-      - name: Download macOS Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: mac-builder
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: linux-builder
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          cp -r ~/artifacts/$RUN_ID/* .
+          rm -rf ~/artifacts/$RUN_ID
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -286,42 +249,20 @@ jobs:
     runs-on: [self-hosted, linux]
     needs: [build-linux, build-mac, build-windows, build-mac-builder, build-linux-builder, build-windows-builder]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: windows
-      - name: Download macOS Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: mac  
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: linux
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: windows-builder
-      - name: Download macOS Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: mac-builder
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: linux-builder
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          cp -r ~/artifacts/$RUN_ID/* .
+          rm -rf ~/artifacts/$RUN_ID
       - uses: dev-drprasad/delete-tag-and-release@v0.2.1
         with:
           delete_release: true
           tag_name: preview
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Sleep for 5 seconds
-        run: sleep 5s
+      - name: Sleep for 10 seconds
+        run: sleep 10s
         shell: bash
       - name: Release
         uses: softprops/action-gh-release@v1
