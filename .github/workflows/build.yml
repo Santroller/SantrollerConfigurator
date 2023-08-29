@@ -41,10 +41,13 @@ jobs:
           zip -r ../out/SantrollerConfiguratorBranded-macOS.zip SantrollerConfiguratorBranded.app
           cd ..
           mv out ..
-      - uses: actions/upload-artifact@v1
-        with:
-          name: mac
-          path: out
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mkdir $RUN_ID
+          mv out $RUN_ID/windows 
+          scp -r $RUN_ID sanjay@192.168.0.79:./artifacts/$RUN_ID
   build-linux:
     name: Build (Linux)
     runs-on: [self-hosted, linux]
@@ -65,10 +68,13 @@ jobs:
           mkdir out
           cp bin/Release/net7.0/linux-x64/publish/SantrollerConfiguratorBranded out/SantrollerConfiguratorBranded-linux-64
           mv out ..
-      - uses: actions/upload-artifact@v1
-        with:
-          name: linux
-          path: out
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mkdir $RUN_ID
+          mkdir -p ~/artifacts/$RUN_ID
+          mv out ~/artifacts/$RUN_ID/linux 
   build-windows:
     name: Build (Windows)
     runs-on: [self-hosted, windows]
@@ -91,10 +97,13 @@ jobs:
           mkdir out
           cp bin/Release/net7.0/win-x64/publish/SantrollerConfiguratorBranded.exe out/SantrollerConfiguratorBranded-win-64.exe
           mv out ..
-      - uses: actions/upload-artifact@v1
-        with:
-          name: windows
-          path: out
+      - name: Copy artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mkdir $RUN_ID
+          mv out $RUN_ID/windows 
+          scp -r $RUN_ID sanjay@192.168.0.79:./artifacts/$RUN_ID
   
   build-linux-builder:
     name: Build Builder (Linux)
