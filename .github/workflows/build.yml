@@ -48,7 +48,7 @@ jobs:
         run: |
           mkdir $RUN_ID
           mv out $RUN_ID/macos 
-          scp -r $RUN_ID sanjay@192.168.0.79:./artifacts
+          rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
   build-linux:
     name: Build (Linux)
     runs-on: [self-hosted, linux]
@@ -208,7 +208,7 @@ jobs:
         run: |
           mkdir -p $RUN_ID
           mv out $RUN_ID/macos-builder 
-          scp -r $RUN_ID sanjay@192.168.0.79:./artifacts
+          rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
   release:
     if: contains(github.ref, 'tags/v')
     name: Release Build
