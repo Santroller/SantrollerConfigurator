@@ -129,7 +129,6 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mv out ~/artifacts/$RUN_ID/linux-builder
-          
   build-windows-builder:
     name: Build Builder (Windows)
     needs: [build-linux, build-mac, build-windows]
