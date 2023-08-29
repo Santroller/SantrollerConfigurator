@@ -104,7 +104,6 @@ jobs:
           mkdir $Env:RUN_ID
           mv out $Env:RUN_ID/windows 
           scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
-  
   build-linux-builder:
     name: Build Builder (Linux)
     needs: [build-linux, build-mac, build-windows]
