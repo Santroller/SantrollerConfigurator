@@ -162,9 +162,7 @@ jobs:
         run: |
           mkdir -Force $Env:RUN_ID
           mv out $Env:RUN_ID/windows-builder 
-          scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
-  
-  
+          scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts  
   build-mac-builder:
     name: Build Builder (macOS)
     needs: [ build-linux, build-mac, build-windows ]
