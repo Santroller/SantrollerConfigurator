@@ -120,7 +120,7 @@ jobs:
         run: |
           cp ~/artifacts/$RUN_ID/windows/*.exe Builder/Assets
           cp ~/artifacts/$RUN_ID/linux/* Builder/Assets
-          cp ~/artifacts/$RUN_ID/mac/*.zip Builder/Assets
+          cp ~/artifacts/$RUN_ID/macos/*.zip Builder/Assets
       - name: Install dependencies
         run: dotnet restore
       - name: Build
@@ -153,7 +153,7 @@ jobs:
           scp -r sanjay@192.168.0.79:./artifacts/$Env:RUN_ID .
           cp $Env:RUN_ID/windows/*.exe Builder/Assets
           cp $Env:RUN_ID/linux/* Builder/Assets
-          cp $Env:RUN_ID/mac/*.zip Builder/Assets
+          cp $Env:RUN_ID/macos/*.zip Builder/Assets
       - name: Install dependencies
         run: dotnet restore
       - name: Build
@@ -188,7 +188,7 @@ jobs:
           scp -r sanjay@192.168.0.79:./artifacts/$RUN_ID .
           cp $RUN_ID/windows/*.exe Builder/Assets
           cp $RUN_ID/linux/* Builder/Assets
-          cp $RUN_ID/mac/*.zip Builder/Assets
+          cp $RUN_ID/macos/*.zip Builder/Assets
       - name: Install dependencies
         run: dotnet restore
       - name: Build
@@ -236,10 +236,10 @@ jobs:
         with:
           files: |
             ./windows/*.exe
-            ./mac/*
+            ./macos/*
             ./linux/*
             ./windows-builder/*.exe
-            ./mac-builder/*
+            ./macos-builder/*
             ./linux-builder/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -273,10 +273,10 @@ jobs:
           body: "This build is not yet ready for use, the pipeline only exists for pipeline testing and does not actually function."
           files: |
             ./windows/*.exe
-            ./mac/*
+            ./macos/*
             ./linux/*
             ./windows-builder/*.exe
-            ./mac-builder/*
+            ./macos-builder/*
             ./linux-builder/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
