@@ -11,8 +11,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Install dependencies
-        run: dotnet restore
       - name: codesign
         id: codesign
         uses: apple-actions/import-codesign-certs@master
@@ -31,11 +29,12 @@ jobs:
           cp Resources/* out_stage
           cd out_stage
           find "SantrollerConfiguratorBranded.app/Contents/MacOS" | while read fname; do
-            if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded" ]; then
+            (if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded" ]; then
             echo "[INFO] Signing $fname"
             codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname"
-            fi
+            fi) &
           done
+          wait
           codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded"
           codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBranded.app"
           zip -r ../out/SantrollerConfiguratorBranded-macOS.zip SantrollerConfiguratorBranded.app
@@ -56,8 +55,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Install dependencies
-        run: dotnet restore
       - uses: actions/checkout@v3
         with:
           submodules: true
@@ -85,8 +82,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-      - name: Install dependencies
-        run: dotnet restore
       - uses: actions/checkout@v3
         with:
           submodules: true
@@ -120,8 +115,6 @@ jobs:
           cp ~/artifacts/$RUN_ID/windows/*.exe Builder/Assets
           cp ~/artifacts/$RUN_ID/linux/* Builder/Assets
           cp ~/artifacts/$RUN_ID/macos/*.zip Builder/Assets
-      - name: Install dependencies
-        run: dotnet restore
       - name: Build
         run: |
           cd Builder
@@ -154,8 +147,6 @@ jobs:
           cp $Env:RUN_ID/windows/*.exe Builder/Assets
           cp $Env:RUN_ID/linux/* Builder/Assets
           cp $Env:RUN_ID/macos/*.zip Builder/Assets
-      - name: Install dependencies
-        run: dotnet restore
       - name: Build
         run: |
           cd Builder
@@ -189,8 +180,6 @@ jobs:
           cp $RUN_ID/windows/*.exe Builder/Assets
           cp $RUN_ID/linux/* Builder/Assets
           cp $RUN_ID/macos/*.zip Builder/Assets
-      - name: Install dependencies
-        run: dotnet restore
       - name: Build
         run: |
           cd Builder
@@ -201,10 +190,10 @@ jobs:
           cp Resources/* out_stage
           cd out_stage
           find "SantrollerConfiguratorBuilder.app/Contents/MacOS" | while read fname; do
-            if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder" ]; then
+            (if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder" ]; then
             echo "[INFO] Signing $fname"
             codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname"
-            fi
+            fi) &
           done
           codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder"
           codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app"
