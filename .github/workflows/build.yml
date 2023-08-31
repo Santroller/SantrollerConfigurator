@@ -74,6 +74,7 @@ jobs:
           mkdir $RUN_ID
           mkdir -p ~/artifacts/$RUN_ID
           mv out ~/artifacts/$RUN_ID/linux 
+          
   build-windows:
     name: Build (Windows)
     runs-on: [self-hosted, windows]
