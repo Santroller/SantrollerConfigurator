@@ -85,10 +85,6 @@
             <DependentUpon>App.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
-        <Compile Update="Views\BrandedConfigView.axaml.cs">
-          <DependentUpon>BrandedConfigView.axaml</DependentUpon>
-          <SubType>Code</SubType>
-        </Compile>
         <Compile Update="Views\BrandedMainWindow.axaml.cs">
           <DependentUpon>BrandedMainWindow.axaml</DependentUpon>
           <SubType>Code</SubType>

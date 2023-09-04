@@ -97,6 +97,8 @@ public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         if (SelectedDevice is not Santroller santroller) return;
         SelectedConfig = Config.Configurations.First(s =>
             s.VendorName == santroller.Manufacturer && s.ProductName == santroller.Product);
+        SelectedConfig.Model.Device = SelectedDevice;
+        SelectedConfig.Model.UpdateBluetoothAddress();
         santroller.LoadConfiguration(SelectedConfig.Model, true);
         Router.Navigate.Execute(SelectedConfig.Model);
         SelectedConfig.Model.SetUpDiff();
