@@ -4,8 +4,10 @@ using System.Linq;
 using System.Reactive.Linq;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
+using GuitarConfigurator.NetCore;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
 using GuitarConfigurator.NetCore.Devices;
+using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
 using Path = System.IO.Path;
 
@@ -65,13 +67,22 @@ public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.Vie
                 SelectedConfig.VendorName && santroller.Product == SelectedConfig.ProductName:
                 SelectedDevice = device;
                 Complete(100);
+                SelectedConfig.Model.Device = SelectedDevice;
                 Router.Navigate.Execute(SelectedConfig.Model);
+                SelectedConfig.Model.UpdateBluetoothAddress();
+                SelectedConfig.Model.SetUpDiff();
                 break;
         }
     }
 
     public void DeviceRemoved(IConfigurableDevice device)
     {
+    }
+
+    public override IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, string extra = "", int startingPercentage = 0, int endingPercentage = 100)
+    {
+        Overwrite();
+        return Observable.Return(new PlatformIo.PlatformIoState(0, "", ""));
     }
 
     [RelayCommand]
