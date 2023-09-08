@@ -66,7 +66,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
     private async Task DoShowYesNoDialogAsync(
         InteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
     {
-        var model = new AreYouSureWindowViewModel(interaction.Input.yesText, interaction.Input.noText,
+        var model = new AreYouSureWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input.yesText, interaction.Input.noText,
             interaction.Input.text);
         var dialog = new AreYouSureWindow
         {
