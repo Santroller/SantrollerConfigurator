@@ -87,13 +87,6 @@
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceHelpLabel}">
-                            </Label>
-                            <TextBox Width="300" Text="{Binding BuilderMain.SelectedTool.HelpText}"></TextBox>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static viewModels:Resources.PrimaryColorLabel}">
                             </Label>
                             <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"

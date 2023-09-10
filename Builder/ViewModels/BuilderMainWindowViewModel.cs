@@ -67,7 +67,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
     [RelayCommand]
     public void AddConfig()
     {
-        var item = new BrandedConfigurationStore("Tool Name", "Get support by visiting example.com",
+        var item = new BrandedConfigurationStore("Tool Name",
             Color.Parse("#FF0078D7"), Color.Parse("#FFd7cb00"), Color.Parse("red"));
         Config.Configurations.Add(item);
         SelectedTool = item;
