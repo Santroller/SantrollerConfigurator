@@ -13,8 +13,8 @@ public class Builder : Task
 {
     public string Parameter1 { get; set; } = "";
     public string Parameter2 { get; set; } = "";
-    
-    private bool 
+
+    private bool IsResharper => Environment.GetEnvironmentVariable("RESHARPER_FUS_BUILD") != null;
 
     public override bool Execute()
     {
@@ -24,9 +24,10 @@ public class Builder : Task
         if (platform == "linux")
         {
             // No idea how to fix this in rider so here we are
-            if (Environment.GetEnvironmentVariable("RESHARPER_FUS_BUILD") != null)
+            if (IsResharper)
             {
-                Environment.SetEnvironmentVariable("SSH_AUTH_SOCK", Path.Combine(Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR")!, "ssh-agent.socket"));
+                Environment.SetEnvironmentVariable("SSH_AUTH_SOCK",
+                    Path.Combine(Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR")!, "ssh-agent.socket"));
             }
         }
 
@@ -41,24 +42,27 @@ public class Builder : Task
 
     private void CopyFile(params string[] file)
     {
-        if (Environment.GetEnvironmentVariable("RESHARPER_FUS_BUILD") != null)
+        if (IsResharper)
         {
-            file = new[] {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "artifacts"}.Concat(file).ToArray();
+            file = new[] {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "artifacts"}.Concat(file)
+                .ToArray();
             File.Copy(Path.Combine(file), Path.Combine(Parameter2, "Assets", file.Last()), true);
-        } else
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             file = new[] {".", "artifacts"}.Concat(file).ToArray();
-            Console.WriteLine($"sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}");
+            Console.WriteLine(
+                $"sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}");
             Start("scp",
-                $"sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}").WaitForExit();
+                    $"sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}")
+                .WaitForExit();
         }
         else
         {
             file = new[] {".", "artifacts"}.Concat(file).ToArray();
             Start("rsync",
-                $"-avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}").WaitForExit();
+                    $"-avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}")
+                .WaitForExit();
         }
     }
 }
