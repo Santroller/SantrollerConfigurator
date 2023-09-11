@@ -49,8 +49,6 @@ public class Builder : Task
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             file = new[] {".", "artifacts"}.Concat(file).ToArray();
-            Console.WriteLine(
-                $"sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}");
             Start("scp",
                     $"sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}")
                 .WaitForExit();

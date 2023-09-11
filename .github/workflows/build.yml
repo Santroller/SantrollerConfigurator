@@ -252,7 +252,7 @@ jobs:
             ./macos/SantrollerConfigurator-macOS.zip
             ./linux/SantrollerConfigurator-linux-64
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -266,7 +266,7 @@ jobs:
             ./macos-builder/*
             ./linux-builder/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
   
   pre-release:
     name: Release Preview Build
@@ -278,14 +278,18 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           cp -r ~/artifacts/$RUN_ID/* .
-          rm -rf ~/artifacts/$RUN_ID
       - uses: dev-drprasad/delete-tag-and-release@v0.2.1
         with:
           delete_release: true
           tag_name: preview
           repo: sanjay900/SantrollerConfiguratorBinaries
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
+      - name: Delete old artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          rm -rf ~/artifacts/$RUN_ID
       - name: Sleep for 10 seconds
         run: sleep 10s
         shell: bash
@@ -304,4 +308,4 @@ jobs:
             ./macos-builder/*
             ./linux-builder/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
