@@ -65,6 +65,6 @@ public class Builder : Task
     private void CopyFileRunner(params string[] file)
     {
         file = new[] {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "artifacts"}.Concat(file).ToArray();
-        File.Copy(Path.Combine(file), Path.Combine(Parameter2, "Assets", file.Last()));
+        File.Copy(Path.Combine(file), Path.Combine(Parameter2, "Assets", file.Last()), true);
     }
 }
