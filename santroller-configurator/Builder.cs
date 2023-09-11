@@ -49,11 +49,19 @@ public class Builder : Task
 
     private void CopyFile(params string[] file)
     {
-        file = new[] {".", "artifacts"}.Concat(file).ToArray();
-        Console.WriteLine($"calling rsync: rsync -avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}");
-        Start("rsync",
-            $"-avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}").WaitForExit();
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            Start("scp",
+                $"-r sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}").WaitForExit();
+        }
+        else
+        {
+            file = new[] {".", "artifacts"}.Concat(file).ToArray();
+            Start("rsync",
+                $"-avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}").WaitForExit();
+        }
     }
+    
     private void CopyFileRunner(params string[] file)
     {
         file = new[] {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "artifacts"}.Concat(file).ToArray();
