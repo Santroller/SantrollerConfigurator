@@ -9,7 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: true
           fetch-depth: 0
       - name: Unlock Keychain
         env:
@@ -38,6 +37,29 @@ jobs:
           zip -r ../out/SantrollerConfiguratorBranded-macOS.zip SantrollerConfiguratorBranded.app
           cd ..
           mv out ..
+      - name: Build2
+        run: |
+          cd santroller-configurator
+          dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
+          mkdir out_stage
+          mkdir out
+          cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfigurator.app out_stage
+          cp Resources/* out_stage
+          cd out_stage
+          N=5
+          find "SantrollerConfigurator.app/Contents/MacOS" | while read fname; do
+            ((i=i%N)); ((i++==0)) && wait
+            if [[ -f $fname ]] && [ "$fname" != "SantrollerConfigurator.app/Contents/MacOS/SantrollerConfigurator" ]; then
+            echo "[INFO] Signing $fname"
+            codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname" &
+            fi
+          done
+          wait
+          codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfigurator.app/Contents/MacOS/SantrollerConfigurator"
+          codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfigurator.app"
+          zip -r ../out/SantrollerConfigurator-macOS.zip SantrollerConfigurator.app
+          cd ..
+          mv out/SantrollerConfigurator-macOS.zip ../out
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -51,11 +73,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: true
           fetch-depth: 0
       - uses: actions/checkout@v3
         with:
-          submodules: true
       - name: Build
         run: |
           cd Branded
@@ -63,6 +83,11 @@ jobs:
           mkdir out
           cp bin/Release/net7.0/linux-x64/publish/SantrollerConfiguratorBranded out/SantrollerConfiguratorBranded-linux-64
           mv out ..
+      - name: Build2
+        run: |
+          cd santroller-configurator
+          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          cp bin/Release/net7.0/win-x64/publish/SantrollerConfigurator ../out/SantrollerConfigurator-linux-64
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -78,7 +103,6 @@ jobs:
         run: git config --global core.longpaths true
       - uses: actions/checkout@v3
         with:
-          submodules: true
           fetch-depth: 0
       - name: Build
         run: |
@@ -87,6 +111,11 @@ jobs:
           mkdir out
           cp bin/Release/net7.0/win-x64/publish/SantrollerConfiguratorBranded.exe out/SantrollerConfiguratorBranded-win-64.exe
           mv out ..
+      - name: Build2
+        run: |
+          cd santroller-configurator
+          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          cp bin/Release/net7.0/win-x64/publish/SantrollerConfigurator.exe ../out/SantrollerConfigurator-win-64.exe
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -101,7 +130,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: true
           fetch-depth: 0
       - name: Copy artifacts
         env:
@@ -131,7 +159,6 @@ jobs:
         run: git config --global core.longpaths true
       - uses: actions/checkout@v3
         with:
-          submodules: true
           fetch-depth: 0
       - name: Copy artifacts
         env:
@@ -162,7 +189,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: true
           fetch-depth: 0
       - name: Unlock Keychain
         env:
