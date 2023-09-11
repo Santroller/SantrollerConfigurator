@@ -13,7 +13,7 @@ using Path = System.IO.Path;
 
 namespace SantrollerConfiguratorBranded.NetCore.ViewModels;
 
-public partial class BrandedMainWindowViewModel : GuitarConfigurator.NetCore.ViewModels.MainWindowViewModel
+public partial class BrandedMainWindowViewModel : MainWindowViewModel
 {
     public BrandedConfigurationStore Config { get; }
 
