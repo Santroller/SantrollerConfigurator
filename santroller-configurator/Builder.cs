@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -18,24 +19,39 @@ public class Builder : Task
         var platform = "linux";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) platform = "windows";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) platform = "macos";
-        // No idea how to fix this in rider so here we are
-        if (Environment.GetEnvironmentVariable("SSH_AUTH_SOCK") == null)
+        var copyFunc = CopyFile;
+        if (platform == "linux")
         {
-            Environment.SetEnvironmentVariable("SSH_AUTH_SOCK", "/run/user/1000/ssh-agent.socket");
+            // No idea how to fix this in rider so here we are
+            if (Environment.GetEnvironmentVariable("RESHARPER_FUS_BUILD") != null)
+            {
+                Environment.SetEnvironmentVariable("SSH_AUTH_SOCK", Path.Combine(Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR")!, "ssh-agent.socket"));
+            }
+            else
+            {
+                copyFunc = CopyFileRunner;
+            }
         }
+
         Console.WriteLine("Copying firmware");
-        CopyFile("firmware", "firmware.tar.xz");
-        CopyFile("firmware", "firmware.version");
+        copyFunc("firmware", "firmware.tar.xz");
+        copyFunc("firmware", "firmware.version");
         Console.WriteLine("Copying platformio");
-        CopyFile($"libs", platform, "platformio.tar.xz");
-        CopyFile($"libs", platform, "platformio.version");
+        copyFunc("libs", platform, "platformio.tar.xz");
+        copyFunc("libs", platform, "platformio.version");
         return true;
     }
 
     private void CopyFile(params string[] file)
     {
         file = new[] {".", "artifacts"}.Concat(file).ToArray();
+        Console.WriteLine($"calling rsync: rsync -avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}");
         Start("rsync",
             $"-avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}").WaitForExit();
+    }
+    private void CopyFileRunner(params string[] file)
+    {
+        file = new[] {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "artifacts"}.Concat(file).ToArray();
+        File.Copy(Path.Combine(file), Path.Combine(Parameter2, "Assets", file.Last()));
     }
 }
