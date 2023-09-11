@@ -14,8 +14,6 @@ public class Builder : Task
     public string Parameter1 { get; set; } = "";
     public string Parameter2 { get; set; } = "";
 
-    private bool IsResharper => Environment.GetEnvironmentVariable("RESHARPER_FUS_BUILD") != null;
-
     public override bool Execute()
     {
         var platform = "linux";
@@ -24,7 +22,7 @@ public class Builder : Task
         if (platform == "linux")
         {
             // No idea how to fix this in rider so here we are
-            if (IsResharper)
+            if (Environment.GetEnvironmentVariable("RESHARPER_FUS_BUILD") != null)
             {
                 Environment.SetEnvironmentVariable("SSH_AUTH_SOCK",
                     Path.Combine(Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR")!, "ssh-agent.socket"));
@@ -42,7 +40,7 @@ public class Builder : Task
 
     private void CopyFile(params string[] file)
     {
-        if (IsResharper)
+        if (Environment.GetEnvironmentVariable("GITHUB_ACTIONS") != null)
         {
             file = new[] {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "artifacts"}.Concat(file)
                 .ToArray();
