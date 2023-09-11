@@ -246,6 +246,18 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          repository: sanjay900/Santroller
+          files: |
+            ./windows/SantrollerConfigurator-win-64.exe
+            ./macos/SantrollerConfigurator-macOS.zip
+            ./linux/SantrollerConfigurator-linux-64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          repository: sanjay900/Santroller
           files: |
             ./windows/*.exe
             ./macos/*
@@ -271,6 +283,7 @@ jobs:
         with:
           delete_release: true
           tag_name: preview
+          repo: sanjay900/SantrollerConfiguratorBinaries
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Sleep for 10 seconds
@@ -281,8 +294,8 @@ jobs:
         with:
           tag_name: preview
           prerelease: true
+          repository: sanjay900/SantrollerConfiguratorBinaries
           name: "Preview Build"
-          body: "This build is not yet ready for use, the pipeline only exists for pipeline testing and does not actually function."
           files: |
             ./windows/*.exe
             ./macos/*
