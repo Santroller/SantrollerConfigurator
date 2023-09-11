@@ -19,7 +19,6 @@ public class Builder : Task
         var platform = "linux";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) platform = "windows";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) platform = "macos";
-        var copyFunc = CopyFile;
         if (platform == "linux")
         {
             // No idea how to fix this in rider so here we are
@@ -29,16 +28,22 @@ public class Builder : Task
             }
             else
             {
-                copyFunc = CopyFileRunner;
+                Console.WriteLine("Copying firmware");
+                CopyFileRunner("firmware", "firmware.tar.xz");
+                CopyFileRunner("firmware", "firmware.version");
+                Console.WriteLine("Copying platformio");
+                CopyFileRunner("libs", platform, "platformio.tar.xz");
+                CopyFileRunner("libs", platform, "platformio.version");
+                return true;
             }
         }
 
         Console.WriteLine("Copying firmware");
-        copyFunc("firmware", "firmware.tar.xz");
-        copyFunc("firmware", "firmware.version");
+        CopyFile("firmware", "firmware.tar.xz");
+        CopyFile("firmware", "firmware.version");
         Console.WriteLine("Copying platformio");
-        copyFunc("libs", platform, "platformio.tar.xz");
-        copyFunc("libs", platform, "platformio.version");
+        CopyFile("libs", platform, "platformio.tar.xz");
+        CopyFile("libs", platform, "platformio.version");
         return true;
     }
 
