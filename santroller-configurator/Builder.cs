@@ -17,34 +17,15 @@ public class Builder : Task
         var platform = "linux";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) platform = "windows";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) platform = "macos";
-        const string firmwareUrl = "https://github.com/sanjay900/Santroller/releases/download/latest/firmware.tar.xz";
-        var platformIoUrl =
-            $"https://github.com/sanjay900/SantrollerLibs/releases/download/latest/platformio-{platform}.tar.xz";
-        var firmwareFileLoc = Path.Combine(Parameter2, "Assets", "firmware.version");
-        var platformioFileLoc = Path.Combine(Parameter2, "Assets", "platformio.version");
-        var firmwareCommit = GetCommit("Santroller");
-        var platformIoCommit = GetCommit("SantrollerLibs");
-        var firmwareChanged =
-            !File.Exists(firmwareFileLoc) || !File.ReadAllText(firmwareFileLoc).Equals(firmwareCommit);
-        var platformioChanged = !File.Exists(platformioFileLoc) ||
-                                !File.ReadAllText(platformioFileLoc).Equals(platformIoCommit);
-        var webClient = new HttpClient();
-        webClient.Timeout = TimeSpan.FromMinutes(120);
-        if (firmwareChanged)
+        if (Environment.GetEnvironmentVariable("SSH_AUTH_SOCK") == null)
         {
-            Console.WriteLine("Builder: Downloading Santroller firmware...");
-            var result = webClient.GetByteArrayAsync(firmwareUrl).Result;
-            File.WriteAllBytes(Path.Combine(Parameter2, "Assets", "firmware.tar.xz"), result);
-            File.WriteAllText(firmwareFileLoc, firmwareCommit);
+            Environment.SetEnvironmentVariable("SSH_AUTH_SOCK", "/run/user/1000/ssh-agent.socket");
         }
-
-        if (!platformioChanged) return true;
-        Console.WriteLine("Builder: Downloading SantrollerLibs...");
-        var result2 = webClient.GetByteArrayAsync(platformIoUrl).Result;
-        File.WriteAllBytes(Path.Combine(Parameter2, "Assets", "platformio.tar.xz"), result2);
-        File.WriteAllText(platformioFileLoc, platformIoCommit);
-
-        return true;
+        Console.WriteLine("Copying firmware");
+        System.Diagnostics.Process.Start("rsync",
+            $"-avPr sanjay@192.168.0.79:./artifacts/firmware/firmware.tar.xz {Path.Combine(Parameter2, "Assets", "firmware.tar.xz")}").WaitForExit();
+        Console.WriteLine("Copying platformio");
+        System.Diagnostics.Process.Start("rsync",$"-avPr sanjay@192.168.0.79:./artifacts/libs/{platform}/platformio.tar.xz {Path.Combine(Parameter2, "Assets", "platformio.tar.xz")}").WaitForExit(); return true;
     }
 
     private string GetCommit(string project)
