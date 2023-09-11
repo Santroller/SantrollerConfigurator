@@ -40,7 +40,7 @@ public class Builder : Task
 
     private void CopyFile(params string[] file)
     {
-        if (Environment.GetEnvironmentVariable("GITHUB_ACTIONS") != null)
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && Environment.GetEnvironmentVariable("GITHUB_ACTIONS") != null)
         {
             file = new[] {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "artifacts"}.Concat(file)
                 .ToArray();
