@@ -85,7 +85,7 @@ jobs:
         run: |
           cd santroller-configurator
           dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
-          cp bin/Release/net7.0/win-x64/publish/SantrollerConfigurator ../out/SantrollerConfigurator-linux-64
+          cp bin/Release/net7.0/linux-x64/publish/SantrollerConfigurator ../out/SantrollerConfigurator-linux-64
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
