@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using Microsoft.Build.Utilities;
+using static System.Diagnostics.Process;
 
 namespace GuitarConfigurator.NetCore;
 
@@ -17,24 +18,24 @@ public class Builder : Task
         var platform = "linux";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) platform = "windows";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) platform = "macos";
+        // No idea how to fix this in rider so here we are
         if (Environment.GetEnvironmentVariable("SSH_AUTH_SOCK") == null)
         {
             Environment.SetEnvironmentVariable("SSH_AUTH_SOCK", "/run/user/1000/ssh-agent.socket");
         }
         Console.WriteLine("Copying firmware");
-        System.Diagnostics.Process.Start("rsync",
-            $"-avPr sanjay@192.168.0.79:./artifacts/firmware/firmware.tar.xz {Path.Combine(Parameter2, "Assets", "firmware.tar.xz")}").WaitForExit();
+        CopyFile("firmware", "firmware.tar.xz");
+        CopyFile("firmware", "firmware.version");
         Console.WriteLine("Copying platformio");
-        System.Diagnostics.Process.Start("rsync",$"-avPr sanjay@192.168.0.79:./artifacts/libs/{platform}/platformio.tar.xz {Path.Combine(Parameter2, "Assets", "platformio.tar.xz")}").WaitForExit(); return true;
+        CopyFile($"libs", platform, "platformio.tar.xz");
+        CopyFile($"libs", platform, "platformio.version");
+        return true;
     }
 
-    private string GetCommit(string project)
+    private void CopyFile(params string[] file)
     {
-        using var client = new HttpClient();
-        client.BaseAddress = new Uri("https://github.com");
-        var response = client.GetAsync($"sanjay900/{project}/info/refs?service=git-upload-pack").Result;
-        response.EnsureSuccessStatusCode();
-        var res = response.Content.ReadAsStringAsync().Result;
-        return res.Split('\n').First(s => s.EndsWith($"refs/tags/latest")).Split(' ')[0].Substring(4);
+        file = new[] {".", "artifacts"}.Concat(file).ToArray();
+        Start("rsync",
+            $"-avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}").WaitForExit();
     }
 }
