@@ -1,0 +1,52 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels"
+        xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="GuitarConfigurator.NetCore.Views.RaiseIssueWindow"
+        TransparencyLevelHint="AcrylicBlur"
+        WindowStartupLocation="CenterOwner"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="{x:Static netCore:Resources.ToolName}"
+        Background="Transparent"
+        Width="800"
+        Height="600"
+        MinWidth="800"
+        MinHeight="600"
+        SystemDecorations="BorderOnly"
+        CanResize="False"
+        x:CompileBindings="True"
+        x:DataType="viewModels:RaiseIssueWindowViewModel"
+        ExtendClientAreaToDecorationsHint="True">
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <Panel Margin="40">
+            <DockPanel HorizontalAlignment="Stretch">
+                <StackPanel Height="50" Orientation="Horizontal" DockPanel.Dock="Bottom">
+                    <Button Command="{Binding RaiseIssueCommand}" Content="{x:Static netCore:Resources.RaiseIssueLabel}"></Button>
+                    <Button Command="{Binding CloseWindowCommand}" Content="{x:Static netCore:Resources.CloseLabel}"></Button>
+                </StackPanel>
+                <ScrollViewer>
+                    <StackPanel>
+                        <Label Content="{x:Static netCore:Resources.RaiseIssueDesc1}"></Label>
+                        <Label Content="{x:Static netCore:Resources.RaiseIssueDesc2}"></Label>
+                        <Label />
+                        <Label Content="{x:Static netCore:Resources.RaiseIssueDesc3}"></Label>
+                        <Label Content="{Binding IncludedInfo}" />
+                        <TextBox IsReadOnly="True" Text="{Binding Text}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+        </Panel>
+    </Panel>
+</Window>

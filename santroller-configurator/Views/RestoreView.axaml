@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels"
+             xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="GuitarConfigurator.NetCore.Views.RestoreView"
+             x:DataType="viewModels:RestoreViewModel"
+             x:CompileBindings="True"
+             Background="Transparent">
+    <UserControl.Resources>
+        <netCore:EnumToStringConverter x:Key="EnumToStringConverter" />
+        <DataTemplate x:Key="EnumToStringTemplate" DataType="system:Object">
+            <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter }}" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <Panel>
+        <DockPanel HorizontalAlignment="Stretch">
+            <ExperimentalAcrylicBorder DockPanel.Dock="Bottom" Height="50">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial TintColor="Black" MaterialOpacity="0.85" TintOpacity="1" />
+                </ExperimentalAcrylicBorder.Material>
+                <StackPanel>
+                    <WrapPanel HorizontalAlignment="Center">
+                        <TextBlock Text="{x:Static netCore:Resources.StatusLabel}" />
+                        <TextBlock Text="{Binding Main.Message}" />
+                    </WrapPanel>
+                    <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True" Name="RunProgress"
+                                 Foreground="{Binding Main.ProgressbarColor}" Value="{Binding Main.Progress}"
+                                 IsIndeterminate="False" Minimum="0" Maximum="100" Height="30" Classes.darkText="{Binding Main.ProgressBarShouldUseDarkTextColor}">
+                        <ProgressBar.Styles>
+                            <Style Selector="ProgressBar.darkText /template/ TextBlock">
+                                <Setter Property="Foreground" Value="#000000" />
+                            </Style>
+                        </ProgressBar.Styles>
+                    </ProgressBar>
+                </StackPanel>
+            </ExperimentalAcrylicBorder>
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock HorizontalAlignment="Center"
+                           Text="{x:Static netCore:Resources.RestoringLabel}" Margin="0 0 0 20" />
+                <Button Content="{x:Static netCore:Resources.ReturnButtonLabel}" Command="{Binding GoBack}"
+                        HorizontalAlignment="Center"
+                        Margin="0 20 0 0" />
+            </StackPanel>
+        </DockPanel>
+    </Panel>
+</UserControl>

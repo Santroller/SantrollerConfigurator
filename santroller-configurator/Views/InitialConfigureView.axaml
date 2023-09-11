@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels"
+             xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="GuitarConfigurator.NetCore.Views.InitialConfigureView"
+             x:DataType="viewModels:InitialConfigViewModel"
+             x:CompileBindings="True"
+             Background="Transparent">
+    <UserControl.Resources>
+        <netCore:EnumToStringConverter x:Key="EnumToStringConverter" />
+        <DataTemplate x:Key="EnumToStringTemplate" DataType="system:Object">
+            <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter }}" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <Panel>
+        <DockPanel HorizontalAlignment="Stretch">
+            <ExperimentalAcrylicBorder DockPanel.Dock="Bottom" Height="50">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial TintColor="Black" MaterialOpacity="0.85" TintOpacity="1" />
+                </ExperimentalAcrylicBorder.Material>
+                <StackPanel>
+                    <WrapPanel HorizontalAlignment="Center">
+                        <TextBlock Text="Status: " />
+                        <TextBlock Text="{Binding Main.Message}" />
+                    </WrapPanel>
+                    <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True"
+                                 Foreground="{Binding Main.ProgressbarColor}" Name="RunProgress"
+                                 Value="{Binding Main.Progress}" IsIndeterminate="False" Minimum="0" Maximum="100"
+                                 Height="30" />
+                </StackPanel>
+            </ExperimentalAcrylicBorder>
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Image Source="{Binding Main.Logo}" Width="200" Margin="0 0 0 40" />
+                <TextBlock IsVisible="{Binding IsPeripheral}" HorizontalAlignment="Center"
+                           Text="{x:Static netCore:Resources.InitialConfigPeripheralDesc}" Margin="0 0 0 20" />
+                <TextBlock IsVisible="{Binding !IsPeripheral}" HorizontalAlignment="Center"
+                           Text="{x:Static netCore:Resources.InitialConfigDesc}" Margin="0 0 0 20" />
+                <TextBlock IsVisible="{Binding HasDfuImage}" HorizontalAlignment="Center"
+                           Text="{x:Static netCore:Resources.UnoBridgeDesc}" Margin="0 0 0 20" />
+                <Image IsVisible="{Binding HasDfuImage}" Source="{Binding DfuImage}" Margin="0 0 0 20" MaxHeight="500" />
+                <Button IsVisible="{Binding IsPeripheral}" Content="{x:Static netCore:Resources.ReturnButtonLabel}" Command="{Binding ConfigureCommand}"
+                        HorizontalAlignment="Center"
+                        Margin="0 20 0 0" />
+                <Button IsVisible="{Binding !IsPeripheral}" Content="{x:Static netCore:Resources.ConfigureButtonLabel}" Command="{Binding ConfigureCommand}"
+                        HorizontalAlignment="Center"
+                        Margin="0 20 0 0" />
+            </StackPanel>
+        </DockPanel>
+    </Panel>
+</UserControl>

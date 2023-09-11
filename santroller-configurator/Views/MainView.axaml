@@ -1,0 +1,170 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels"
+             xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="GuitarConfigurator.NetCore.Views.MainView"
+             x:DataType="viewModels:MainViewModel"
+             x:CompileBindings="True"
+             Background="Transparent">
+    <UserControl.Resources>
+        <netCore:EnumToStringConverter x:Key="EnumToStringConverter" />
+        <netCore:PinToStringConverterPico x:Key="PinToStringConverterPico" />
+        <DataTemplate x:Key="EnumToStringTemplate" DataType="system:Object">
+            <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter }}" />
+        </DataTemplate>
+        <DataTemplate x:Key="PinToStringTemplateTwi" DataType="system:Object">
+            <TextBlock Text="{Binding Converter={StaticResource PinToStringConverterPico }}" />
+        </DataTemplate>
+    </UserControl.Resources>
+    <Panel>
+        <DockPanel HorizontalAlignment="Stretch">
+            <ExperimentalAcrylicBorder DockPanel.Dock="Bottom" Height="50">
+                <ExperimentalAcrylicBorder.Material>
+                    <ExperimentalAcrylicMaterial TintColor="Black" MaterialOpacity="0.85" TintOpacity="1" />
+                </ExperimentalAcrylicBorder.Material>
+                <StackPanel>
+                    <WrapPanel HorizontalAlignment="Center">
+                        <TextBlock Text="{x:Static netCore:Resources.StatusLabel}" />
+                        <TextBlock Text="{Binding Main.Message}" />
+                    </WrapPanel>
+                    <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True" Name="RunProgress"
+                                 Foreground="{Binding Main.ProgressbarColor}" Value="{Binding Main.Progress}"
+                                 IsIndeterminate="False" Minimum="0" Maximum="100" Height="30" Classes.darkText="{Binding Main.ProgressBarShouldUseDarkTextColor}">
+                        <ProgressBar.Styles>
+                            <Style Selector="ProgressBar.darkText /template/ TextBlock">
+                                <Setter Property="Foreground" Value="#000000" />
+                            </Style>
+                        </ProgressBar.Styles>
+                    </ProgressBar>
+                </StackPanel>
+            </ExperimentalAcrylicBorder>
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Image Source="{Binding Main.Logo}" Width="200" Margin="0 0 0 40" />
+                <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  />
+                <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse2}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  />
+                <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse3}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 40"  />
+                <StackPanel IsVisible="{Binding Main.HasUpdate}" HorizontalAlignment="Center" Orientation="Horizontal"
+                            Margin="0 0 0 20">
+                    <Label Content="{Binding Main.UpdateMessage}" VerticalAlignment="Center"
+                           VerticalContentAlignment="Center" />
+                    <Button Command="{Binding Main.OpenReleasesPageCommand}" Content="{x:Static netCore:Resources.UpdateDesc}" />
+                </StackPanel>
+                <TextBlock IsVisible="{Binding !Main.MigrationSupported}"
+                           Text="{x:Static netCore:Resources.FirmwareTooOldDesc}" />
+                <Label IsVisible="{Binding Main.IsGeneric}" VerticalAlignment="Center"
+                       VerticalContentAlignment="Center" Content="{x:Static netCore:Resources.UnknownBoardDesc}">
+                    
+                </Label>
+                <StackPanel HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.SelectedDeviceLabel}">
+                            
+                        </Label>
+                        <ComboBox HorizontalAlignment="Stretch" IsEnabled="false"
+                                  IsVisible="{Binding !Main.Devices.Count}"
+                                  SelectedIndex="0">
+                            <ComboBoxItem Content="{x:Static netCore:Resources.NoSupportedDeviceFoundLabel}"></ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox HorizontalAlignment="Stretch" IsVisible="{Binding Main.Devices.Count}"
+                                  ItemsSource="{Binding Main.Devices}"
+                                  SelectedItem="{Binding Main.SelectedDevice}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel IsVisible="{Binding Main.NewDevice}">
+                        <StackPanel IsVisible="{Binding Main.IsUnoMega}" Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.ArduinoUnoMegaType}">
+                                
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      SelectedItem="{Binding Main.UnoMegaType}"
+                                      ItemsSource="{Binding Main.UnoMegaTypes}"
+                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        </StackPanel>
+                        <StackPanel IsVisible="{Binding Main.Is32U4}" Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.Atmega32U4Type}">
+                                
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch" IsVisible="{Binding Main.Is32U4}"
+                                      SelectedItem="{Binding Main.Arduino32U4Type}"
+                                      ItemsSource="{Binding Main.Arduino32U4Types}"
+                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        </StackPanel>
+                        <StackPanel IsVisible="{Binding Main.IsGeneric}" Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.ArduinoType}">
+                                
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch" IsVisible="{Binding Main.IsGeneric}"
+                                      SelectedItem="{Binding Main.AvrType}"
+                                      ItemsSource="{Binding Main.AvrTypes}"
+                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding Main.NewDevice}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.InputTypeLabel}">
+                                
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      SelectedItem="{Binding Main.DeviceInputType}"
+                                      ItemsSource="{Binding Main.DeviceInputTypes}"
+                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        </StackPanel>
+                        <StackPanel IsVisible="{Binding Main.IsPeripheral}" Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                            <ComboBox VerticalAlignment="Center"
+                                      SelectedItem="{Binding Main.PeripheralScl}"
+                                      ItemsSource="{Binding Main.AvailableSclPins}"
+                                      ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                      Width="200" />
+                        </StackPanel>
+                        <StackPanel IsVisible="{Binding Main.IsPeripheral}" Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                            <ComboBox VerticalAlignment="Center"
+                                      SelectedItem="{Binding Main.PeripheralSda}"
+                                      ItemsSource="{Binding Main.AvailableSdaPins}"
+                                      ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                      Width="200" />
+                        </StackPanel>
+                        <Label Foreground="Red"
+                               Content="{Binding Main.PeripheralErrorText}"
+                               HorizontalAlignment="Center"
+                               IsVisible="{Binding Main.PeripheralErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    </StackPanel>
+                    <TextBlock IsVisible="{Binding !Main.IsSantroller}" Foreground="#FFFF461C" Text="{x:Static netCore:Resources.IncorrectTool}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 20 0 0"  />
+                    <TextBlock IsVisible="{Binding !Main.IsSantroller}" Foreground="#FFFF461C" Text="{x:Static netCore:Resources.IncorrectTool2}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  />
+                    <Button IsVisible="{Binding !Main.NewDeviceOrArdwiino}" Content="{x:Static netCore:Resources.ConfigureButtonLabel}"
+                            Command="{Binding Main.ConfigureCommand}"
+                            IsEnabled="{Binding Main.ReadyToConfigure}" HorizontalAlignment="Center"
+                            Margin="0 20 0 0" />
+                    <Button IsVisible="{Binding Main.NewDeviceOrArdwiino}" Content="{x:Static netCore:Resources.ConfigureButtonLabel}"
+                            Command="{Binding Main.InitialConfigureCommand}"
+                            IsEnabled="{Binding Main.ReadyToConfigure}" HorizontalAlignment="Center"
+                            Margin="0 20 0 0" />
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+    </Panel>
+</UserControl>

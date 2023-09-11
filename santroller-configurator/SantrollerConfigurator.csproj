@@ -1,0 +1,161 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <UsingTask TaskName="Builder" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+        <ParameterGroup>
+            <Parameter1 ParameterType="System.String" />
+            <Parameter2 ParameterType="System.String" />
+        </ParameterGroup>
+        <Task>
+            <Using Namespace="System.Text" />
+            <Using Namespace="System.Text.Json" />
+            <Code Type="Class" Language="cs" Source="Builder.cs" />
+        </Task>
+    </UsingTask>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <RootNamespace>GuitarConfigurator.NetCore</RootNamespace>
+        <AvaloniaVersion>11.0.2</AvaloniaVersion>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <!--        <PublishTrimmed>true</PublishTrimmed>-->
+        <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">Windows</DefineConstants>
+        <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">$(DefineConstants);POSIX</DefineConstants>
+        <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+        <DefineConstants Condition="'$(PublishSingleFile)' == 'true'">$(DefineConstants);SINGLE_FILE</DefineConstants>
+        <LangVersion>latestmajor</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <CFBundleName>SantrollerConfigurator</CFBundleName> <!-- Also defines .app file name -->
+        <CFBundleDisplayName>SantrollerConfigurator</CFBundleDisplayName>
+        <CFBundleIdentifier>net.tangentmc</CFBundleIdentifier>
+        <CFBundleVersion>1.0.0</CFBundleVersion>
+        <CFBundleShortVersionString>1.0.0</CFBundleShortVersionString>
+        <CFBundlePackageType>APPL</CFBundlePackageType>
+        <CFBundleSignature>sanc</CFBundleSignature>
+        <CFBundleExecutable>SantrollerConfigurator</CFBundleExecutable>
+        <CFBundleIconFile>Resources/icon.icns</CFBundleIconFile> <!-- Will be copied from output directory -->
+        <NSPrincipalClass>NSApplication</NSPrincipalClass>
+        <NSHighResolutionCapable>true</NSHighResolutionCapable>
+        <Company>TangentMC</Company>
+        <Copyright>Copyright © 2023</Copyright>
+        <RepositoryUrl>https://github.com/sanjay900/guitar-configurator</RepositoryUrl>
+        <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
+    <ItemGroup>
+        <TrimmableAssembly Include="Avalonia.DesignerSupport" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="Resources\icon.icns">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="libusb-1.0.dylib" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\avalonia-logo.ico" />
+        <AvaloniaResource Include="Assets\Icons\**" />
+        <AvaloniaResource Include="Assets\Images\**" />
+        <AvaloniaResource Include="Assets\99-santroller.rules" />
+        <AvaloniaResource Include="Assets\99-santroller.rules" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(SkipAssets)' != 'Skip'">
+        <AvaloniaResource Include="Assets\dfu.tar.xz" />
+        <AvaloniaResource Include="Assets\firmware.tar.xz" />
+        <AvaloniaResource Include="Assets\platformio.tar.xz" />
+        <AvaloniaResource Include="Assets\firmware.version" />
+        <AvaloniaResource Include="Assets\platformio.version" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="Microsoft.Net.ILLink.Tasks" Version="8.0.100-1.23067.1" />
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.0.2" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.2" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.2" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.2" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.2" />
+        <PackageReference Include="Joveler.Compression.XZ" Version="4.2.1" />
+        <PackageReference Include="LibUsbDotNet" Version="2.2.29" />
+        <PackageReference Include="Microsoft.Build.Framework" Version="17.6.3">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.6.3">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview" />
+        <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.14.305" />
+        <PackageReference Include="protobuf-net" Version="3.2.26" />
+        <PackageReference Include="ReactiveUI.Fody" Version="19.3.2" />
+        <PackageReference Include="System.IO.Ports" Version="8.0.0-preview.7.23357.4" />
+        <PackageReference Include="SemanticVersioning" Version="2.0.2" />
+        <PackageReference Include="System.Text.Json" Version="8.0.0-preview.7.23357.4" />
+        <PackageReference Include="GitVersion.MsBuild" Version="5.6.10*">
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Views\RaiseIssueWindow.axaml.cs">
+            <DependentUpon>RaiseIssueWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\AreYouSureDialog.axaml.cs">
+            <DependentUpon>AreYouSureDialog.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\BindAllDialog.axaml.cs">
+            <DependentUpon>BindAllDialog.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\MainView.axaml.cs">
+            <DependentUpon>MainView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Sidebar.axaml.cs">
+            <DependentUpon>Sidebar.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\MainWindow.axaml.cs">
+            <DependentUpon>MainWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="App.axaml.cs">
+            <DependentUpon>App.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\InitialConfigureView.axaml.cs">
+            <DependentUpon>InitialConfigure.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\UnpluggedDialog.axaml.cs">
+            <DependentUpon>UnpluggedDialog.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\RestoreView.axaml.cs">
+            <DependentUpon>RestoreView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Resources.Designer.cs">
+          <DesignTime>True</DesignTime>
+          <AutoGen>True</AutoGen>
+          <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Update="Resources.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
+        <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' " />
+        <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
+    </Target>
+    <Target Name="ZipOutputPath" BeforeTargets="ResolveReferences">
+        <Builder Parameter1="$(TargetDir)" Parameter2="$(MSBuildProjectDirectory)" />
+    </Target>
+
+</Project>
