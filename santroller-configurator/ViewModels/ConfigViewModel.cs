@@ -60,6 +60,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private LedType _ledType;
     private LedType _ledTypePeripheral;
 
+    private bool _disconnected;
+
     private readonly DirectPinConfig? _unoRx;
     private readonly DirectPinConfig? _unoTx;
 
@@ -1665,25 +1667,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         Main.ShowError = foundError;
     }
 
-    public void AddDevice(IConfigurableDevice device)
-    {
-        RxApp.MainThreadScheduler.Schedule(() =>
-        {
-            Trace.WriteLine($"Add called, current device: {Device},  new device: {device}");
-            Trace.Flush();
-            if (device is Santroller santroller && Main.Working)
-            {
-                Main.Complete(100);
-                Device = device;
-                Microcontroller = device.GetMicrocontroller(this);
-                Main.SetDifference(false);
-                santroller.LoadConfiguration(this, false);
-            }
-
-            Device.DeviceAdded(device);
-        });
-    }
-
     public List<PinConfig> LedPinConfigs()
     {
         List<PinConfig> configs = new List<PinConfig>();
@@ -1712,16 +1695,35 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         Main.GoBack.Execute();
     }
 
+    public void AddDevice(IConfigurableDevice device)
+    {
+        if (_disconnected) return;
+        RxApp.MainThreadScheduler.Schedule(() =>
+        {
+            Trace.WriteLine($"Add called, current device: {Device},  new device: {device}");
+            Trace.Flush();
+            if (device is Santroller santroller && Main.Working)
+            {
+                Main.Complete(100);
+                Device = device;
+                Microcontroller = device.GetMicrocontroller(this);
+                Main.SetDifference(false);
+                santroller.LoadConfiguration(this, false);
+            }
+
+            Device.DeviceAdded(device);
+        });
+    }
+
     public void RemoveDevice(IConfigurableDevice device)
     {
-        if (!Main.Working && Device is Santroller old &&
-            (device.IsSameDevice(old.Serial) || device.IsSameDevice(old.Path)))
-        {
-            old.StopTicking();
-            Main.SetDifference(false);
-            ShowUnpluggedDialog.Handle(("", "", "")).ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(_ => Main.GoBack.Execute(new Unit()));
-        }
+        if (_disconnected || Main.Working || Device is not Santroller old ||
+            (!device.IsSameDevice(old.Serial) && !device.IsSameDevice(old.Path))) return;
+        old.StopTicking();
+        Main.SetDifference(false);
+        _disconnected = true;
+        ShowUnpluggedDialog.Handle(("", "", "")).ObserveOn(RxApp.MainThreadScheduler)
+            .Subscribe(_ => Main.GoBack.Execute(new Unit()));
     }
 
     public void Update(byte[] btRaw)
