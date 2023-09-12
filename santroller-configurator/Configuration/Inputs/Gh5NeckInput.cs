@@ -51,6 +51,14 @@ public class Gh5NeckInput : TwiInput
     
     public static readonly Dictionary<BarButton, int> Gh5MappingsReversed = Gh5Mappings.ToDictionary(x => x.Value, x => x.Key);
 
+    private static readonly Dictionary<Gh5NeckInputType, int> Fret = new()
+    {
+        {Gh5NeckInputType.Green, 4},
+        {Gh5NeckInputType.Red, 5},
+        {Gh5NeckInputType.Yellow, 7},
+        {Gh5NeckInputType.Blue, 6},
+        {Gh5NeckInputType.Orange, 0},
+    };
     private static readonly List<Gh5NeckInputType> Tap = new()
     {
         Gh5NeckInputType.TapGreen,
@@ -98,7 +106,7 @@ public class Gh5NeckInput : TwiInput
     public override string Generate()
     {
         if (Input <= Gh5NeckInputType.Orange)
-            return $"(fivetar_buttons[0] & {1 << ((byte) Input - (byte) Gh5NeckInputType.Green)})";
+            return $"(fivetar_buttons[0] & {1 << Fret[Input]})";
 
         if (Input == Gh5NeckInputType.TapBar) return "fivetar_buttons[1]";
 
@@ -125,7 +133,7 @@ public class Gh5NeckInput : TwiInput
         switch (Input)
         {
             case <= Gh5NeckInputType.Orange:
-                RawValue = (gh5Raw[0] & (1 << ((byte) Input - (byte) Gh5NeckInputType.Green))) != 0 ? 1 : 0;
+                RawValue = (gh5Raw[0] & (1 << Fret[Input])) != 0 ? 1 : 0;
                 break;
             case Gh5NeckInputType.TapBar:
                 RawValue = gh5Raw[1];

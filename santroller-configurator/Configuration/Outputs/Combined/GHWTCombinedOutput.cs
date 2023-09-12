@@ -124,10 +124,6 @@ public class GhwtCombinedOutput : CombinedOutput
 
     public void CreateDefaults()
     {
-        Outputs.Add(new ControllerButton(Model,
-            new GhWtTapInput(GhWtInputType.TapAll, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
-                true), Colors.Black,
-            Colors.Black, Array.Empty<byte>(), 5, StandardButtonType.A, true));
         Outputs.Add(new GuitarAxis(Model,
             new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                 true),
@@ -178,8 +174,18 @@ public class GhwtCombinedOutput : CombinedOutput
     {
         var axisController = Outputs.Items.FirstOrDefault(s => s is ControllerAxis);
         var axisGuitar = Outputs.Items.FirstOrDefault(s => s is GuitarAxis);
+        var tapAll = Outputs.Items.FirstOrDefault(s => s is OutputButton);
         if (Model.DeviceControllerType.Is5FretGuitar())
         {
+            if (tapAll == null)
+            {
+                var button = new GuitarButton(Model,
+                    new GhWtTapInput(GhWtInputType.TapAll, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
+                        true), Colors.Black,
+                    Colors.Black, Array.Empty<byte>(), 5, InstrumentButtonType.Slider, true);
+                button.Enabled = false;
+                Outputs.Add(button);
+            }
             if (axisController == null) return;
             Outputs.Remove(axisController);
             Outputs.Add(new GuitarAxis(Model,
@@ -191,6 +197,7 @@ public class GhwtCombinedOutput : CombinedOutput
         }
         else if (axisGuitar != null)
         {
+            if (tapAll != null) Outputs.Remove(tapAll);
             Outputs.Remove(axisGuitar);
             Outputs.Add(new ControllerAxis(Model,
                 new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,

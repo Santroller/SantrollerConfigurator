@@ -93,7 +93,7 @@
         <value>DJ Turntable Inputs</value>
     </data>
     <data name="Gh5CombinedTitle" xml:space="preserve">
-        <value>GH5 Slider Inputs</value>
+        <value>GH5 Neck Inputs</value>
     </data>
     <data name="GhwtCombinedTitle" xml:space="preserve">
         <value>GHWT Slider Inputs</value>
@@ -1768,6 +1768,9 @@
     </data>
     <data name="InstrumentButtonTypeSliderToFrets" xml:space="preserve">
         <value>Slider To Frets</value>
+    </data>
+    <data name="InstrumentButtonTypeSlider" xml:space="preserve">
+        <value>Slider</value>
     </data>
     <data name="LedTypeNone" xml:space="preserve">
         <value>None</value>

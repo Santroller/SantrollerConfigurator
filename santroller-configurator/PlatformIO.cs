@@ -85,17 +85,11 @@ public class PlatformIo
         }
         else
         {
-            var outdated = true;
-            if (File.Exists(firmwareVersion))
-                outdated = await File.ReadAllTextAsync(firmwareVersion) !=
-                           await AssetUtils.ReadFileAsync("firmware.version");
-
-            if (outdated) Directory.Delete(FirmwareDir, true);
+            Directory.Delete(FirmwareDir, true);
         }
 
-        if (!Directory.Exists(FirmwareDir))
-            await AssetUtils.ExtractXzAsync("firmware.tar.xz", appdataFolder,
-                progress => platformIoOutput.OnNext(new PlatformIoState(progress * 10, "Extracting Firmware", "")));
+        await AssetUtils.ExtractXzAsync("firmware.tar.xz", appdataFolder,
+            progress => platformIoOutput.OnNext(new PlatformIoState(progress * 10, "Extracting Firmware", "")));
 
         var pythonDir = Path.Combine(appdataFolder, "python");
         var platformIoDir = Path.Combine(appdataFolder, "platformio");

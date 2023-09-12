@@ -21,6 +21,15 @@ public class Gh5CombinedOutput : CombinedTwiOutput
         {Gh5NeckInputType.TapBlue, InstrumentButtonType.Blue},
         {Gh5NeckInputType.TapOrange, InstrumentButtonType.Orange}
     };
+    
+    private static readonly Dictionary<Gh5NeckInputType, InstrumentButtonType> Standard = new()
+    {
+        {Gh5NeckInputType.Green, InstrumentButtonType.Green},
+        {Gh5NeckInputType.Red, InstrumentButtonType.Red},
+        {Gh5NeckInputType.Yellow, InstrumentButtonType.Yellow},
+        {Gh5NeckInputType.Blue, InstrumentButtonType.Blue},
+        {Gh5NeckInputType.Orange, InstrumentButtonType.Orange}
+    };
 
     private static readonly Dictionary<Gh5NeckInputType, InstrumentButtonType> TapsRb = new()
     {
@@ -141,9 +150,22 @@ public class Gh5CombinedOutput : CombinedTwiOutput
             {
                 var button = new GuitarButton(Model,
                     new Gh5NeckInput(Gh5NeckInputType.TapAll, Model, Peripheral, combined: true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), 5, InstrumentButtonType.Green, true);
+                    Colors.Black, Array.Empty<byte>(), 5, InstrumentButtonType.Slider, true);
                 button.Enabled = false;
                 Outputs.Add(button);
+            }
+            
+            foreach (var (key, value) in Standard)
+            {
+                var item = Outputs.Items.FirstOrDefault(s => s.Input is Gh5NeckInput gh5 && gh5.Input == key);
+                if (item == null)
+                {
+                    var button = new GuitarButton(Model,
+                        new Gh5NeckInput(key, Model, Peripheral, combined: true), Colors.Black,
+                        Colors.Black, Array.Empty<byte>(), 5, value, true);
+                    button.Enabled = false;
+                    Outputs.Add(button);
+                }
             }
 
             if (axisController == null) return;
@@ -157,6 +179,16 @@ public class Gh5CombinedOutput : CombinedTwiOutput
         }
         else
         {
+            var toRemove = new List<Output>();
+            foreach (var key in Standard.Keys)
+            {
+                var item = Outputs.Items.FirstOrDefault(s => s.Input is Gh5NeckInput gh5 && gh5.Input == key);
+                if (item != null)
+                {
+                    toRemove.Add(item);
+                }
+            }
+            Outputs.RemoveMany(toRemove);
             if (tapAll != null) Outputs.Remove(tapAll);
 
             if (axisGuitar == null) return;

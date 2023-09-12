@@ -95,8 +95,8 @@ public class InputImageConverter : IMultiValueConverter
             DrumAxisType type => deviceControllerType + "/" + type,
             GuitarAxisType type => deviceControllerType + "/" + type,
             InstrumentButtonType type => deviceControllerType + "/" + type,
-            Gh5NeckInputType type => "GuitarHero/" + type,
-            GhWtInputType type => "GuitarHero/" + type,
+            Gh5NeckInputType type => "GuitarHeroGuitar/" + type,
+            GhWtInputType type => "GuitarHeroGuitar/" + type,
             EmulationModeType type => type switch
             {
                 EmulationModeType.XboxOne => "Combined/XboxOne",

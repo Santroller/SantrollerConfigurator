@@ -26,7 +26,8 @@ public enum InstrumentButtonType
     White3,
     StrumUp,
     StrumDown,
-    SliderToFrets
+    SliderToFrets,
+    Slider
 }
 
 public static class InstrumentButtonTypeExtensions

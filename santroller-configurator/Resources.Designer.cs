@@ -3375,6 +3375,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string InstrumentButtonTypeSlider {
+            get {
+                return ResourceManager.GetString("InstrumentButtonTypeSlider", resourceCulture);
+            }
+        }
+        
         public static string LedTypeNone {
             get {
                 return ResourceManager.GetString("LedTypeNone", resourceCulture);
