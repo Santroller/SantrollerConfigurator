@@ -359,36 +359,61 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public int Apa102Mosi
     {
         get => _apa102SpiConfig?.Mosi ?? 0;
-        set => _apa102SpiConfig!.Mosi = value;
+        set
+        {
+            _apa102SpiConfig!.Mosi = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public int Apa102Sck
     {
         get => _apa102SpiConfig?.Sck ?? 0;
-        set => _apa102SpiConfig!.Sck = value;
+        set
+        {
+            _apa102SpiConfig!.Sck = value;
+            this.RaisePropertyChanged();
+        }
     }
+
     public int PeripheralSda
     {
         get => _peripheralTwiConfig?.Sda ?? 0;
-        set => _peripheralTwiConfig!.Sda = value;
+        set
+        {
+            _peripheralTwiConfig!.Sda = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public int PeripheralScl
     {
         get => _peripheralTwiConfig?.Scl ?? 0;
-        set => _peripheralTwiConfig!.Scl = value;
+        set
+        {
+            _peripheralTwiConfig!.Scl = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public int Apa102MosiPeripheral
     {
         get => _apa102SpiConfigPeripheral?.Mosi ?? 0;
-        set => _apa102SpiConfigPeripheral!.Mosi = value;
+        set
+        {
+            _apa102SpiConfigPeripheral!.Mosi = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     public int Apa102SckPeripheral
     {
         get => _apa102SpiConfigPeripheral?.Sck ?? 0;
-        set => _apa102SpiConfigPeripheral!.Sck = value;
+        set
+        {
+            _apa102SpiConfigPeripheral!.Sck = value;
+            this.RaisePropertyChanged();
+        }
     }
 
     [Reactive] public bool Connected { get; set; }
@@ -1086,7 +1111,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             if (_peripheralTwiConfig != null)
             {
                 // If the peripheral is on the same pins as something else, then use the config from the other device.
-                if (actualPinConfigs.Any(s => s is TwiConfig && s != _peripheralTwiConfig && s.Pins.Except(_peripheralTwiConfig.Pins).Any()))
+                if (actualPinConfigs.Any(s => s is TwiConfig && s != _peripheralTwiConfig && s.Pins.Intersect(_peripheralTwiConfig.Pins).Any()))
                 {
                     actualPinConfigs.Remove(_peripheralTwiConfig);
                 }

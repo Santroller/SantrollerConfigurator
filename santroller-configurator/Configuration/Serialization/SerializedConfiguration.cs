@@ -6,6 +6,7 @@ using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ProtoBuf;
+using ReactiveUI;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
@@ -52,6 +53,8 @@ public class SerializedConfiguration
         Apa102SckPeripheral = model.Apa102SckPeripheral;
         LedCountPeripheral = model.LedCountPeripheral;
         HasPeripheral = model.HasPeripheral;
+        PeripheralSda = model.PeripheralSda;
+        PeripheralScl = model.PeripheralScl;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -82,6 +85,8 @@ public class SerializedConfiguration
     [ProtoMember(37)] public int Apa102SckPeripheral { get; private set; }
     [ProtoMember(38)] public byte LedCountPeripheral { get; private set; }
     [ProtoMember(39)] public bool HasPeripheral { get; private set; }
+    [ProtoMember(40)] public int PeripheralSda { get; private set; }
+    [ProtoMember(41)] public int PeripheralScl{ get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -100,6 +105,11 @@ public class SerializedConfiguration
         model.Variant = Variant;
         model.BtRxAddr = BtRxMacAddress;
         model.HasPeripheral = HasPeripheral;
+        if (HasPeripheral)
+        {
+            model.PeripheralScl = PeripheralScl;
+            model.PeripheralSda = PeripheralSda;
+        }
         if (DjPollRate == 0)
         {
             model.DjPollRate = 1;
