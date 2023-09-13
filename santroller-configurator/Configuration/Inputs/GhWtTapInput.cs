@@ -66,14 +66,11 @@ public class GhWtTapInput : Input
     public void ResetMin()
     {
         _minimumCount = 0;
-        for (var i = 0; i < _minimums.Length; i++)
-        {
-            _minimums[i] = Int32.MaxValue;
-        }
+        Array.Clear(_maximums);
     }
 
-    private readonly int[] _minimums = new int[5];
-    private int _minimumCount = 0;
+    private readonly int[] _maximums = new int[5];
+    private int _minimumCount;
 
     public DirectPinConfig PinConfigAnalog { get; }
     private DirectPinConfig PinConfigS0 { get; }
@@ -193,21 +190,20 @@ public class GhWtTapInput : Input
             _minimumCount++;
             for (var i = 0; i < inputs.Length; i++)
             {
-                _minimums[i] = Math.Min(_minimums[i], inputs[i]);
+                _maximums[i] = Math.Max(_maximums[i], inputs[i]);
             }
         }
-
         switch (Input)
         {
             case <= GhWtInputType.TapOrange:
                 var input = _channelsFromInput[Input];
-                RawValue = inputs[input] < _minimums[input] - Sensitivity ? 1 : 0;
+                RawValue = inputs[input] > _maximums[input] + Sensitivity ? 1 : 0;
                 break;
             case GhWtInputType.TapBar:
             case GhWtInputType.TapAll:
                 BarButton b =
                     _channels
-                        .Where(s => inputs[s.Value] < _minimums[s.Value] - Sensitivity)
+                        .Where(s => inputs[s.Value] > _maximums[s.Value] + Sensitivity)
                         .Select(s => s.Key)
                         .Aggregate<BarButton, BarButton>(0, (current, barButton) => current | barButton);
                 RawValue = Gh5NeckInput.Gh5MappingsReversed.TryGetValue(b, out var value) ? value : 0;

@@ -419,6 +419,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [Reactive] public bool Connected { get; set; }
+    [Reactive] public bool PeripheralConnected { get; set; }
 
 
     public int UsbHostDm
@@ -760,7 +761,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         LedCountPeripheral = 1;
         _deviceControllerType = DeviceControllerType.Gamepad;
         CombinedStrumDebounce = false;
-        WtSensitivity = 100;
+        WtSensitivity = 5;
         PollRate = 0;
         StrumDebounce = 0;
         Debounce = 10;
@@ -1726,12 +1727,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Subscribe(_ => Main.GoBack.Execute(new Unit()));
     }
 
-    public void Update(byte[] btRaw)
+    public void Update(byte[] btRaw, bool peripheralConnected)
     {
         if (IsBluetoothTx && btRaw.Any())
         {
             Connected = btRaw[0] != 0;
         }
+
+        PeripheralConnected = peripheralConnected;
     }
 
     public TwiConfig? GetTwiForType(string twiType, bool peripheral)
@@ -1802,10 +1805,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private void Diff(object? sender, EventArgs e)
     {
-        if (Main.Router.NavigationStack.Last() != this && Main.Router.NavigationStack.Last() is not InitialConfigViewModel)
+        if (_disconnected || (Main.Router.NavigationStack.Last() != this && Main.Router.NavigationStack.Last() is not InitialConfigViewModel))
         {
             _timer.Stop();
-            Main.SetDifference((false));
+            Main.SetDifference(false);
             return;
         }
 

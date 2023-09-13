@@ -10,6 +10,7 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
@@ -43,6 +44,7 @@ public class GhwtCombinedOutput : CombinedOutput
         int pinS2 = -1) : base(model)
     {
         Peripheral = peripheral;
+        UpdateDetails();
         Outputs.Clear();
         _pin = Model.GetPinForType(GhWtTapInput.GhWtAnalogPinType, peripheral, pin, DevicePinMode.PullUp);
         _pinConfigS0 = Model.GetPinForType(GhWtTapInput.GhWtS0PinType, peripheral, pinS0, DevicePinMode.Output);
@@ -140,7 +142,7 @@ public class GhwtCombinedOutput : CombinedOutput
         var tapFrets =
             Outputs.Items.FirstOrDefault(s => s is {Enabled: true, Input: GhWtTapInput {Input: GhWtInputType.TapAll}});
         if (tapAnalog == null && tapFrets == null) return Outputs.Items;
-        var outputs = new List<Output>(Outputs.Items);
+        var outputs = new List<Output>(Outputs.Items.Where(s => s.Enabled));
         // Map Tap bar to Upper frets on RB guitars
         if (tapAnalog != null && Model.DeviceControllerType is DeviceControllerType.RockBandGuitar)
         {
@@ -151,7 +153,6 @@ public class GhwtCombinedOutput : CombinedOutput
 
             outputs.Remove(tapAnalog);
         }
-
         if (tapFrets == null) return outputs;
         foreach (var pair in Taps)
         {
@@ -159,8 +160,8 @@ public class GhwtCombinedOutput : CombinedOutput
                 new GhWtTapInput(pair.Key, Model, Peripheral, Pin, PinS0, PinS1, PinS2, true),
                 Colors.Black,
                 Colors.Black, Array.Empty<byte>(), 5, pair.Value, true));
-            outputs.Remove(tapFrets);
         }
+        outputs.Remove(tapFrets);
 
         return outputs;
     }
@@ -182,7 +183,7 @@ public class GhwtCombinedOutput : CombinedOutput
                 var button = new GuitarButton(Model,
                     new GhWtTapInput(GhWtInputType.TapAll, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                         true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), 5, InstrumentButtonType.Slider, true);
+                    Colors.Black, Array.Empty<byte>(), 5, InstrumentButtonType.SliderToFrets, true);
                 button.Enabled = false;
                 Outputs.Add(button);
             }

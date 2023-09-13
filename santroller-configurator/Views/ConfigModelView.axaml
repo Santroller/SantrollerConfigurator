@@ -2502,6 +2502,10 @@
                                            VerticalContentAlignment="Center"
                                            Content="{x:Static netCore:Resources.PeripheralSettingsLabel}" />
                                 </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="45 0 0 0" HorizontalAlignment="Center" IsVisible="{Binding HasPeripheral}">
+                                    <CheckBox IsChecked="{Binding PeripheralConnected}" VerticalAlignment="Center" IsEnabled="False"
+                                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                                </StackPanel>
                                 <Label Foreground="Red" Margin="45 0 0 0"
                                        Content="{Binding PeripheralErrorText}"
                                        VerticalAlignment="Bottom"

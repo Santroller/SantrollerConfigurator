@@ -58,6 +58,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadPeripheralDigital,
         CommandReadPeripheralAnalog,
         CommandReadPeripheralWt,
+        CommandReadPeripheralValid,
     }
 
     private readonly Dictionary<int, int> _analogRaw = new();
@@ -228,9 +229,11 @@ public class Santroller : ConfigurableUsbDevice
             var usbHostRaw = Array.Empty<byte>();
             var usbHostInputsRaw = Array.Empty<byte>();
             var peripheralWtRaw = Array.Empty<byte>();
+            var peripheralConnected = false;
             if (_model.HasPeripheral)
             {
-                peripheralWtRaw = ReadData(0, (byte) Commands.CommandReadPeripheralWt, 1);
+                peripheralWtRaw = ReadData(0, (byte) Commands.CommandReadPeripheralWt, 5 * sizeof(int));
+                peripheralConnected = ReadData(0, (byte) Commands.CommandReadPeripheralValid, 1)[0] != 0;
             }
             if (_model.UsbHostEnabled)
             {
@@ -242,7 +245,7 @@ public class Santroller : ConfigurableUsbDevice
             if (IsPico()) bluetoothRaw = ReadData(0, (byte) Commands.CommandGetBtState, 1);
 
 
-            _model.Update(bluetoothRaw);
+            _model.Update(bluetoothRaw, peripheralConnected);
             foreach (var output in _bindings)
                 output.Update(_analogRaw, _digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                     djRightRaw, gh5Raw,
