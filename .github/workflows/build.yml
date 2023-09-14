@@ -18,14 +18,28 @@ jobs:
         run: |
           cd Branded
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
-          mkdir ../out
-          zip -r ../out/SantrollerConfiguratorBranded-macOS.zip bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app
+          mkdir out_stage
+          mkdir out
+          cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app out_stage
+          cp Resources/* out_stage
+          cd out_stage
+          zip -r ../out/SantrollerConfiguratorBranded-macOS.zip SantrollerConfiguratorBranded.app
+          cd ..
+          mv out ..
       - name: Build Standard
         run: |
           cd santroller-configurator
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
+          mkdir out_stage
+          mkdir out
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfigurator.app out_stage
-          zip -r ../out/SantrollerConfigurator-macOS.zip bin/Release/net7.0/osx-x64/publish/SantrollerConfigurator.app
+          cp Resources/* out_stage
+          cd out_stage
+          codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfigurator.app/Contents/MacOS/SantrollerConfigurator"
+          codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfigurator.app"
+          zip -r ../out/SantrollerConfigurator-macOS.zip SantrollerConfigurator.app
+          cd ..
+          mv out/SantrollerConfigurator-macOS.zip ../out
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -170,8 +184,14 @@ jobs:
         run: |
           cd Builder
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
-          mkdir ../out
-          zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBuilder.app
+          mkdir out_stage
+          mkdir out
+          cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBuilder.app out_stage
+          cp Resources/* out_stage
+          cd out_stage
+          zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip SantrollerConfiguratorBuilder.app
+          cd ..
+          mv out ..
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
