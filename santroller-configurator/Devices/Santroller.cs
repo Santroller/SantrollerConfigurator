@@ -233,7 +233,7 @@ public class Santroller : ConfigurableUsbDevice
             if (_model.HasPeripheral)
             {
                 peripheralWtRaw = ReadData(0, (byte) Commands.CommandReadPeripheralWt, 5 * sizeof(int));
-                peripheralConnected = ReadData(0, (byte) Commands.CommandReadPeripheralValid, 1)[0] != 0;
+                peripheralConnected = ReadData(0, (byte) Commands.CommandReadPeripheralValid, 1).Any(x => x != 0);
             }
             if (_model.UsbHostEnabled)
             {

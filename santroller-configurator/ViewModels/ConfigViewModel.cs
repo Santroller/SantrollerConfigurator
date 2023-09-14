@@ -452,8 +452,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public byte LedCountPeripheral { get; set; }
 
     [Reactive] public int WtSensitivity { get; set; }
-
-
+    
     [Reactive] public bool HasError { get; set; }
 
     public LedType LedType
@@ -512,6 +511,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _hasPeripheral;
         set
         {
+            if (!value)
+            {
+                Bindings.RemoveMany(Bindings.Items.Where(s => s.Input.Peripheral || s is GhwtCombinedOutput {Peripheral: true}));
+            }
             _peripheralTwiConfig = value ? Microcontroller.AssignTwiPins(this, PeripheralTwiType, false, -1, -1, PeripheralTwiClock) : null;
             this.RaisePropertyChanged(nameof(PeripheralSda));
             this.RaisePropertyChanged(nameof(PeripheralScl));

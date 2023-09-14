@@ -185,7 +185,7 @@ public class GhWtTapInput : Input
             inputs[i] = BitConverter.ToInt32(raw[(i * 4)..((i + 1) * 4)]);
         }
 
-        if (_maximumCount < 50)
+        if (_maximumCount < 10)
         {
             _maximumCount++;
             for (var i = 0; i < inputs.Length; i++)
@@ -193,8 +193,6 @@ public class GhWtTapInput : Input
                 _maximums[i] = Math.Max(_maximums[i], inputs[i]);
             }
         }
-        // Console.WriteLine(String.Join(", ", inputs.Select(s => s.ToString().PadLeft(5))));
-        // Console.WriteLine(String.Join(", ", _maximums.Select(s => s.ToString().PadLeft(5))));
         switch (Input)
         {
             case <= GhWtInputType.TapOrange:
