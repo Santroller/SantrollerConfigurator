@@ -28,7 +28,7 @@ public class PlatformIo
         if (!File.Exists(appdataFolder)) Directory.CreateDirectory(appdataFolder);
 
         var pioFolder = Path.Combine(appdataFolder, "platformio");
-        _pythonExecutable = Path.Combine(appdataFolder, "python", "bin", "python3");
+        _pythonExecutable = Path.Combine(appdataFolder, "python", "bin", "python3.11");
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             _pythonExecutable = Path.Combine(appdataFolder, "python", "python.exe");
 

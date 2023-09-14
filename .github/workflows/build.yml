@@ -35,8 +35,6 @@ jobs:
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfigurator.app out_stage
           cp Resources/* out_stage
           cd out_stage
-          codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfigurator.app/Contents/MacOS/SantrollerConfigurator"
-          codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfigurator.app"
           zip -r ../out/SantrollerConfigurator-macOS.zip SantrollerConfigurator.app
           cd ..
           mv out/SantrollerConfigurator-macOS.zip ../out
