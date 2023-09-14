@@ -2148,22 +2148,22 @@
         <value>Right</value>
     </data>
     <data name="SimpleTypeWiiInputSimple" xml:space="preserve">
-        <value>Automatic Wii Inputs</value>
+        <value>Wii Extension Inputs</value>
     </data>
     <data name="SimpleTypePs2InputSimple" xml:space="preserve">
-        <value>Automatic PS2 Inputs</value>
+        <value>PS2 Controller Inputs</value>
     </data>
     <data name="SimpleTypeWtNeckSimple" xml:space="preserve">
-        <value>Automatic Guitar Hero WT Slider Bar Inputs</value>
+        <value>Guitar Hero WT Slider Bar Inputs</value>
     </data>
     <data name="SimpleTypeWtNeckPeripheralSimple" xml:space="preserve">
-        <value>Automatic Guitar Hero WT Slider Bar Inputs (Peripheral)</value>
+        <value>Guitar Hero WT Slider Bar Inputs (Peripheral)</value>
     </data>
     <data name="SimpleTypeGh5NeckSimple" xml:space="preserve">
-        <value>Automatic Guitar Hero 5 Neck Inputs</value>
+        <value>Guitar Hero 5 Neck Inputs</value>
     </data>
     <data name="SimpleTypeDjTurntableSimple" xml:space="preserve">
-        <value>Automatic DJ Hero Turntable Inputs</value>
+        <value>DJ Hero Turntable Inputs</value>
     </data>
     <data name="SimpleTypeUsbHost" xml:space="preserve">
         <value>USB Host Inputs</value>
