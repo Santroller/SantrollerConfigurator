@@ -2690,11 +2690,6 @@
                                                       SelectedItem="{Binding GhWtInputType}"
                                                       ItemsSource="{Binding GhWtInputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
-                                            <ComboBox VerticalAlignment="Center"
-                                                      IsVisible="{Binding IsWt}"
-                                                      SelectedItem="{Binding GhWtInputType}"
-                                                      ItemsSource="{Binding GhWtInputTypes}"
-                                                      ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                         </StackPanel>
                                         <ContentControl ContentTemplate="{StaticResource OutputTemplate}"
                                                         Content="{Binding}" />

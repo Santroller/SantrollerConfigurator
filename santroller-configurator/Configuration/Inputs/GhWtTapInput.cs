@@ -65,12 +65,12 @@ public class GhWtTapInput : Input
 
     public void ResetMin()
     {
-        _minimumCount = 0;
+        _maximumCount = 0;
         Array.Clear(_maximums);
     }
 
     private readonly int[] _maximums = new int[5];
-    private int _minimumCount;
+    private int _maximumCount;
 
     public DirectPinConfig PinConfigAnalog { get; }
     private DirectPinConfig PinConfigS0 { get; }
@@ -128,7 +128,7 @@ public class GhWtTapInput : Input
 
 
     public ReadOnlyObservableCollection<int> AvailablePins => Model.AvailablePinsAnalog;
-    public ReadOnlyObservableCollection<int> AvailablePinsDigital => Model.AvailablePinsAnalog;
+    public ReadOnlyObservableCollection<int> AvailablePinsDigital => Model.AvailablePinsDigital;
 
     public GhWtInputType Input { get; set; }
     public bool Combined { get; }
@@ -185,14 +185,16 @@ public class GhWtTapInput : Input
             inputs[i] = BitConverter.ToInt32(raw[(i * 4)..((i + 1) * 4)]);
         }
 
-        if (_minimumCount < 10)
+        if (_maximumCount < 50)
         {
-            _minimumCount++;
+            _maximumCount++;
             for (var i = 0; i < inputs.Length; i++)
             {
                 _maximums[i] = Math.Max(_maximums[i], inputs[i]);
             }
         }
+        // Console.WriteLine(String.Join(", ", inputs.Select(s => s.ToString().PadLeft(5))));
+        // Console.WriteLine(String.Join(", ", _maximums.Select(s => s.ToString().PadLeft(5))));
         switch (Input)
         {
             case <= GhWtInputType.TapOrange:

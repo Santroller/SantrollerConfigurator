@@ -563,33 +563,33 @@ public abstract partial class Output : ReactiveObject
                 break;
             case InputType.Gh5NeckInput when Input.InnermostInput() is not Gh5NeckInput:
                 gh5NeckInputType ??= Gh5NeckInputType.Green;
-                if (this is GuitarAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
-
+                if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, false);
                 break;
             case InputType.Gh5NeckInput when Input.InnermostInput() is Gh5NeckInput gh5:
                 gh5NeckInputType ??= gh5.Input;
+                if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, gh5.Peripheral, gh5.Sda, gh5.Scl);
                 break;
             case InputType.WtNeckInput when Input.InnermostInput() is not GhWtTapInput:
                 ghWtInputType ??= GhWtInputType.TapGreen;
-                if (this is GuitarAxis) ghWtInputType = GhWtInputType.TapBar;
-
+                if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, false, -1, -1, -1, -1);
                 break;
             case InputType.WtNeckInput when Input.InnermostInput() is GhWtTapInput wt:
                 ghWtInputType ??= wt.Input;
+                if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, false, wt.Pin, wt.PinS0, wt.PinS1,
                     wt.PinS2);
                 break;
             case InputType.WtNeckPeripheralInput when Input.InnermostInput() is not GhWtTapInput:
-                ghWtInputType ??= GhWtInputType.TapGreen;
-                if (this is GuitarAxis) ghWtInputType = GhWtInputType.TapBar;
-
+                ghWtInputType ??=  GhWtInputType.TapGreen;
+                if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, true, -1, -1, -1, -1);
                 break;
             case InputType.WtNeckPeripheralInput when Input.InnermostInput() is GhWtTapInput wt:
                 ghWtInputType ??= wt.Input;
+                if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, true, wt.Pin, wt.PinS0, wt.PinS1,
                     wt.PinS2);
                 break;

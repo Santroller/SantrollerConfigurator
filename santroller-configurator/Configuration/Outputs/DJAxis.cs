@@ -208,7 +208,7 @@ public partial class DjAxis : OutputAxis
         };
         return Type switch
         {
-            DjAxisType.Crossfader => $"{GenerateOutput(mode)} = {gen};",
+            DjAxisType.Crossfader or DjAxisType.EffectsKnob => $"{GenerateOutput(mode)} = {gen};",
             _ when mode is ConfigField.Ps3
                     or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal =>
                 $"dj_temp={gen}; if (abs(dj_temp - INT8_MAX) > abs(({GenerateOutput(mode)}) - INT8_MAX)){{{GenerateOutput(mode)} = dj_temp;}}",

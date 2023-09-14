@@ -708,7 +708,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         0, ushort.MaxValue, axisType, false));
                     break;
                 case GuitarAxisType.Slider:
-                    Bindings.Add(new GuitarAxis(this, new GhWtTapInput(GhWtInputType.TapAll, this,
+                    Bindings.Add(new GuitarAxis(this, new GhWtTapInput(GhWtInputType.TapBar, this,
                             false,
                             -1,
                             -1, -1,
