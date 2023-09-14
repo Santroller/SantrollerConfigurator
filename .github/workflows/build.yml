@@ -18,11 +18,8 @@ jobs:
         run: |
           cd Branded
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
-          mkdir out_stage
-          mkdir out
-          zip -r out/SantrollerConfiguratorBranded-macOS.zip bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app
-          cd ..
-          mv out ..
+          mkdir ../out
+          zip -r ../out/SantrollerConfiguratorBranded-macOS.zip bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app
       - name: Build Standard
         run: |
           cd santroller-configurator
@@ -173,11 +170,8 @@ jobs:
         run: |
           cd Builder
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
-          mkdir out_stage
-          mkdir out
+          mkdir ../out
           zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBuilder.app
-          cd ..
-          mv out ..
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
