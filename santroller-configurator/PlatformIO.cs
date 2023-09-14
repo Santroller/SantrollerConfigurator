@@ -41,7 +41,6 @@ public class PlatformIo
         _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_CORE_DIR"] = pioFolder;
 
         _portProcess.StartInfo.Arguments = "-m platformio device list --json-output";
-
         _portProcess.StartInfo.UseShellExecute = false;
         _portProcess.StartInfo.RedirectStandardOutput = true;
         _portProcess.StartInfo.RedirectStandardError = true;
