@@ -20,46 +20,15 @@ jobs:
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
           mkdir out_stage
           mkdir out
-          cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app out_stage
-          cp Resources/* out_stage
-          cd out_stage
-          N=5
-          find "SantrollerConfiguratorBranded.app/Contents/MacOS" | while read fname; do
-            ((i=i%N)); ((i++==0)) && wait
-            if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded" ]; then
-            echo "[INFO] Signing $fname"
-            codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname" &
-            fi
-          done
-          wait
-          codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded"
-          codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBranded.app"
-          zip -r ../out/SantrollerConfiguratorBranded-macOS.zip SantrollerConfiguratorBranded.app
+          zip -r out/SantrollerConfiguratorBranded-macOS.zip bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app
           cd ..
           mv out ..
       - name: Build Standard
         run: |
           cd santroller-configurator
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
-          mkdir out_stage
-          mkdir out
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfigurator.app out_stage
-          cp Resources/* out_stage
-          cd out_stage
-          N=5
-          find "SantrollerConfigurator.app/Contents/MacOS" | while read fname; do
-            ((i=i%N)); ((i++==0)) && wait
-            if [[ -f $fname ]] && [ "$fname" != "SantrollerConfigurator.app/Contents/MacOS/SantrollerConfigurator" ]; then
-            echo "[INFO] Signing $fname"
-            codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname" &
-            fi
-          done
-          wait
-          codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfigurator.app/Contents/MacOS/SantrollerConfigurator"
-          codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfigurator.app"
-          zip -r ../out/SantrollerConfigurator-macOS.zip SantrollerConfigurator.app
-          cd ..
-          mv out/SantrollerConfigurator-macOS.zip ../out
+          zip -r ../out/SantrollerConfigurator-macOS.zip bin/Release/net7.0/osx-x64/publish/SantrollerConfigurator.app
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -206,21 +175,7 @@ jobs:
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
           mkdir out_stage
           mkdir out
-          cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBuilder.app out_stage
-          cp Resources/* out_stage
-          cd out_stage
-          N=5
-          find "SantrollerConfiguratorBuilder.app/Contents/MacOS" | while read fname; do
-            ((i=i%N)); ((i++==0)) && wait
-            if [[ -f $fname ]] && [ "$fname" != "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder" ]; then
-            echo "[INFO] Signing $fname"
-            codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "$fname" &
-            fi
-          done
-          wait
-          codesign --force --timestamp --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app/Contents/MacOS/SantrollerConfiguratorBuilder"
-          codesign --force --timestamp --options=runtime --entitlements "entitlements.xml" --sign "guitar-configurator" "SantrollerConfiguratorBuilder.app"
-          zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip SantrollerConfiguratorBuilder.app
+          zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBuilder.app
           cd ..
           mv out ..
       - name: Copy artifacts
