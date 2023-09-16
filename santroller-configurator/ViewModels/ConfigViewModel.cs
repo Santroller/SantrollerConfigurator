@@ -1686,8 +1686,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             santroller.StopTicking();
         }
 
+        Main.ShowError = false;
         Main.SetDifference(false);
-        Main.ProgressbarColor = Main.ProgressBarPrimary;
         Main.Complete(100);
         Main.GoBack.Execute();
     }
