@@ -552,6 +552,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     protected void UpdateProgress(PlatformIo.PlatformIoState state)
     {
         if (!Working) return;
+        
         ProgressbarColor =
             state.Message.Contains("Please unplug your device") ||
             state.Message.Contains("Looking for device in DFU mode")
