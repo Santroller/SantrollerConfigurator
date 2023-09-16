@@ -3243,6 +3243,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string InputTypeCloneNeckInput {
+            get {
+                return ResourceManager.GetString("InputTypeCloneNeckInput", resourceCulture);
+            }
+        }
+        
         public static string InputTypeMacroInput {
             get {
                 return ResourceManager.GetString("InputTypeMacroInput", resourceCulture);

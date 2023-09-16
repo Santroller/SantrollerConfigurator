@@ -1703,6 +1703,9 @@
     <data name="InputTypeGh5NeckInput" xml:space="preserve">
         <value>GH5 Neck Input</value>
     </data>
+    <data name="InputTypeCloneNeckInput" xml:space="preserve">
+        <value>Crazy Guitar Neck Input</value>
+    </data>
     <data name="InputTypeMacroInput" xml:space="preserve">
         <value>Macro Input</value>
     </data>

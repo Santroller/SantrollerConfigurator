@@ -251,7 +251,7 @@ public abstract partial class Output : ReactiveObject
 
     public Gh5NeckInputType Gh5NeckInputType
     {
-        get => (Input.InnermostInput() as Gh5NeckInput)?.Input ?? Gh5NeckInputType.Green;
+        get => (Input.InnermostInput() as Gh5NeckInput)?.Input ?? (Input.InnermostInput() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
         set => SetInput(SelectedInputType, null, null, null, value, null, null);
     }
 
