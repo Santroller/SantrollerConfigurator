@@ -117,6 +117,7 @@ public class EmptyOutput : Output
                 {
                     SimpleType.WiiInputSimple => new WiiCombinedOutput(Model, false),
                     SimpleType.Gh5NeckSimple => new Gh5CombinedOutput(Model, false),
+                    SimpleType.CloneNeckSimple => new CloneCombinedOutput(Model, false),
                     SimpleType.Ps2InputSimple => new Ps2CombinedOutput(Model, false),
                     SimpleType.WtNeckSimple => new GhwtCombinedOutput(Model, false),
                     SimpleType.WtNeckPeripheralSimple => new GhwtCombinedOutput(Model, true),

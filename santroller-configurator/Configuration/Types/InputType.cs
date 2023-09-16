@@ -10,6 +10,7 @@ public enum InputType
     TurntableInput,
     WtNeckInput,
     Gh5NeckInput,
+    CloneNeckInput,
     MacroInput,
     UsbHostInput,
     BluetoothInput,

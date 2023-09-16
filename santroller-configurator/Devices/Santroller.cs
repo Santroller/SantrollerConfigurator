@@ -59,6 +59,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadPeripheralAnalog,
         CommandReadPeripheralWt,
         CommandReadPeripheralValid,
+        CommandReadClone,
     }
 
     private readonly Dictionary<int, int> _analogRaw = new();
@@ -226,6 +227,7 @@ public class Santroller : ConfigurableUsbDevice
             var ghWtRaw = ReadData(0, (byte) Commands.CommandReadGhWt, 5 * sizeof(int));
             var ps2ControllerType = ReadData(0, (byte) Commands.CommandGetExtensionPs2, 1);
             var wiiControllerType = ReadData(0, (byte) Commands.CommandGetExtensionWii, sizeof(short));
+            var cloneRaw = ReadData(0, (byte) Commands.CommandReadClone, 4);
             var usbHostRaw = Array.Empty<byte>();
             var usbHostInputsRaw = Array.Empty<byte>();
             var peripheralWtRaw = Array.Empty<byte>();
@@ -249,7 +251,7 @@ public class Santroller : ConfigurableUsbDevice
             foreach (var output in _bindings)
                 output.Update(_analogRaw, _digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                     djRightRaw, gh5Raw,
-                    ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, _digitalRawPeripheral, _analogRawPeripheral);
+                    ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, _digitalRawPeripheral, _analogRawPeripheral, cloneRaw);
         }
         catch (Exception ex)
         {

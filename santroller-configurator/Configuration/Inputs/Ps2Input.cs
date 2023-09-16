@@ -264,7 +264,7 @@ public class Ps2Input : SpiInput
         ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, Dictionary<int, int> analogPeripheral)
+        Dictionary<int, bool> digitalPeripheral, Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
     {
         if (ps2ControllerType.IsEmpty || ps2Data.IsEmpty) return;
         var type = ps2ControllerType[0];

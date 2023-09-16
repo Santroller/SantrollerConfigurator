@@ -128,8 +128,8 @@ public abstract partial class Output : ReactiveObject
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInput() is WiiInput)
             .ToPropertyEx(this, x => x.IsWii);
         this.WhenAnyValue(x => x.Input)
-            .Select(x => x.InnermostInput() is Gh5NeckInput && this is not GuitarAxis)
-            .ToPropertyEx(this, x => x.IsGh5);
+            .Select(x => x.InnermostInput() is Gh5NeckInput or CloneNeckInput && this is not GuitarAxis)
+            .ToPropertyEx(this, x => x.IsGh5OrClone);
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInput() is Ps2Input)
             .ToPropertyEx(this, x => x.IsPs2);
         this.WhenAnyValue(x => x.Input)
@@ -279,7 +279,7 @@ public abstract partial class Output : ReactiveObject
     public IEnumerable<InputType> InputTypes =>
         Enum.GetValues<InputType>().Where(s =>
             (this is not GuitarAxis {Type: GuitarAxisType.Slider} ||
-             s is InputType.Gh5NeckInput or InputType.WtNeckInput or InputType.ConstantInput or InputType.WtNeckPeripheralInput) &&
+             s is InputType.Gh5NeckInput or InputType.WtNeckInput or InputType.ConstantInput or InputType.WtNeckPeripheralInput or InputType.CloneNeckInput) &&
             (s is not InputType.WtNeckPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.MultiplexerInput || Model.IsPico) &&
             (s is not (InputType.AnalogPeripheralInput or InputType.MultiplexerPeripheralInput
@@ -297,6 +297,8 @@ public abstract partial class Output : ReactiveObject
         if (Input.InnermostInput() is DjInput dj) return dj.Input;
 
         if (Input.InnermostInput() is Gh5NeckInput gh5) return gh5.Input;
+        
+        if (Input.InnermostInput() is CloneNeckInput c) return c.Input;
 
         if (Input.InnermostInput() is GhWtTapInput wt) return wt.Input;
 
@@ -320,7 +322,7 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] public bool IsWii { get; }
     [ObservableAsProperty] public bool IsUsb { get; }
     [ObservableAsProperty] public bool IsPs2 { get; }
-    [ObservableAsProperty] public bool IsGh5 { get; }
+    [ObservableAsProperty] public bool IsGh5OrClone { get; }
     [ObservableAsProperty] public bool IsWt { get; }
     [ObservableAsProperty] public bool AreLedsEnabled { get; }
     [ObservableAsProperty] public bool AreLedsEnabledPeripheral { get; }
@@ -571,6 +573,16 @@ public abstract partial class Output : ReactiveObject
                 if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, gh5.Peripheral, gh5.Sda, gh5.Scl);
                 break;
+            case InputType.CloneNeckInput when Input.InnermostInput() is not CloneNeckInput:
+                gh5NeckInputType ??= Gh5NeckInputType.Green;
+                if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
+                input = new CloneNeckInput(gh5NeckInputType.Value, Model, false);
+                break;
+            case InputType.CloneNeckInput when Input.InnermostInput() is CloneNeckInput gh5:
+                gh5NeckInputType ??= gh5.Input;
+                if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
+                input = new CloneNeckInput(gh5NeckInputType.Value, Model, gh5.Peripheral, gh5.Sda, gh5.Scl);
+                break;
             case InputType.WtNeckInput when Input.InnermostInput() is not GhWtTapInput:
                 ghWtInputType ??= GhWtInputType.TapGreen;
                 if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
@@ -713,19 +725,20 @@ public abstract partial class Output : ReactiveObject
         ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw, ReadOnlySpan<byte> djRightRaw,
         ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw, ReadOnlySpan<byte> ps2ControllerType,
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
-        ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-        Dictionary<int, int> analogPeripheral)
+        ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
+        Dictionary<int, bool> digitalPeripheral,
+        Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
     {
         if (Enabled)
             Input.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                 ghWtRaw,
-                ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral);
+                ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral, cloneRaw);
 
         foreach (var output in AllOutputs)
             if (output != this)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                     ghWtRaw,
-                    ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral);
+                    ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral, cloneRaw);
     }
 
     public void UpdateErrors()

@@ -127,7 +127,7 @@ public class Gh5NeckInput : TwiInput
         ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, Dictionary<int, int> analogPeripheral)
+        Dictionary<int, bool> digitalPeripheral, Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
     {
         if (gh5Raw.IsEmpty) return;
         switch (Input)
@@ -159,8 +159,6 @@ public class Gh5NeckInput : TwiInput
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        if (Input <= Gh5NeckInputType.Orange) return base.RequiredDefines().Concat(new[] {"INPUT_GH5_NECK"}).ToList();
-
-        return base.RequiredDefines().Concat(new[] {"INPUT_GH5_NECK", "INPUT_GH5_NECK_TAP_BAR"}).ToList();
+       return base.RequiredDefines().Concat(new[] {"INPUT_GH5_NECK"}).ToList();
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
@@ -17,7 +16,7 @@ public class InputImageConverter : IMultiValueConverter
 {
     private static readonly Dictionary<object, Bitmap> Icons = new();
 
-    private string GetPath(object type, LegendType legendType, bool swapSwitchFaceButtons)
+    private static string GetPath(object type, LegendType legendType, bool swapSwitchFaceButtons)
     {
         switch (legendType)
         {
@@ -62,6 +61,7 @@ public class InputImageConverter : IMultiValueConverter
                 SimpleType.Ps2InputSimple => "PS2",
                 SimpleType.WtNeckSimple => "GHWT",
                 SimpleType.Gh5NeckSimple => "GH5",
+                SimpleType.CloneNeckSimple => "Clone",
                 SimpleType.DjTurntableSimple => "DJ",
                 SimpleType.UsbHost => "Usb",
                 SimpleType.Bluetooth => "Bluetooth",

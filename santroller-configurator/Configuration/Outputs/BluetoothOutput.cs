@@ -84,7 +84,7 @@ public partial class BluetoothOutput : CombinedOutput
             ReadOnlySpan<byte> ghWtRaw, ReadOnlySpan<byte> ps2ControllerType,
             ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw,
             ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-            Dictionary<int, int> analogPeripheral)
+            Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
         {
         }
 
@@ -131,11 +131,12 @@ public partial class BluetoothOutput : CombinedOutput
         ReadOnlySpan<byte> djLeftRaw, ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw,
         ReadOnlySpan<byte> ghWtRaw, ReadOnlySpan<byte> ps2ControllerType,
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
-        ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-        Dictionary<int, int> analogPeripheral)
+        ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
+        Dictionary<int, bool> digitalPeripheral,
+        Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
-            ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral);
+            ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral, cloneRaw);
         if (LocalAddress == Resources.BluetoothWriteConfigMessage && Model.Device is Santroller santroller)
             LocalAddress = santroller.GetBluetoothAddress();
         if (bluetoothRaw.IsEmpty) return;

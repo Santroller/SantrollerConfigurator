@@ -169,6 +169,15 @@ public class MacroInput : Input
                 gh5NeckInputType ??= Gh5NeckInputType.Green;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, false, gh5.Sda, gh5.Scl);
                 break;
+            case Types.InputType.CloneNeckInput when child.InnermostInput() is not CloneNeckInput:
+                gh5NeckInputType ??= Gh5NeckInputType.Green;
+                input = new CloneNeckInput(gh5NeckInputType.Value, Model, false);
+                inputOther = new CloneNeckInput(gh5NeckInputType.Value, Model, false);
+                break;
+            case Types.InputType.CloneNeckInput when child.InnermostInput() is CloneNeckInput gh5:
+                gh5NeckInputType ??= gh5.Input;
+                input = new CloneNeckInput(gh5NeckInputType.Value, Model, gh5.Peripheral, gh5.Sda, gh5.Scl);
+                break;
             case Types.InputType.WtNeckInput when child.InnermostInput() is not GhWtTapInput:
                 ghWtInputType ??= GhWtInputType.TapGreen;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, false, -1, -1, -1, -1);
@@ -176,7 +185,16 @@ public class MacroInput : Input
                 break;
             case Types.InputType.WtNeckInput when child.InnermostInput() is GhWtTapInput wt:
                 ghWtInputType ??= GhWtInputType.TapGreen;
-                input = new GhWtTapInput(ghWtInputType.Value, Model, wt.Peripheral, wt.Pin, wt.PinS0, wt.PinS1, wt.PinS2);
+                input = new GhWtTapInput(ghWtInputType.Value, Model, false, wt.Pin, wt.PinS0, wt.PinS1, wt.PinS2);
+                break;
+            case Types.InputType.WtNeckPeripheralInput when child.InnermostInput() is not GhWtTapInput:
+                ghWtInputType ??= GhWtInputType.TapGreen;
+                input = new GhWtTapInput(ghWtInputType.Value, Model, true, -1, -1, -1, -1);
+                inputOther = new GhWtTapInput(ghWtInputType.Value, Model, true, -1, -1, -1, -1);
+                break;
+            case Types.InputType.WtNeckPeripheralInput when child.InnermostInput() is GhWtTapInput wt:
+                ghWtInputType ??= GhWtInputType.TapGreen;
+                input = new GhWtTapInput(ghWtInputType.Value, Model, true, wt.Pin, wt.PinS0, wt.PinS1, wt.PinS2);
                 break;
             case Types.InputType.WiiInput when child.InnermostInput() is not WiiInput:
                 wiiInput ??= WiiInputType.ClassicA;
@@ -313,12 +331,12 @@ public class MacroInput : Input
         ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, Dictionary<int, int> analogPeripheral)
+        Dictionary<int, bool> digitalPeripheral, Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
     {
         Child1.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
-            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral);
+            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral, cloneRaw);
         Child2.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
-            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral);
+            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral, cloneRaw);
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings,

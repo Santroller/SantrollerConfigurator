@@ -189,6 +189,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string CloneCombinedTitle {
+            get {
+                return ResourceManager.GetString("CloneCombinedTitle", resourceCulture);
+            }
+        }
+        
         public static string GhwtCombinedTitle {
             get {
                 return ResourceManager.GetString("GhwtCombinedTitle", resourceCulture);
@@ -4098,6 +4104,12 @@ namespace GuitarConfigurator.NetCore {
         public static string SimpleTypeGh5NeckSimple {
             get {
                 return ResourceManager.GetString("SimpleTypeGh5NeckSimple", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeCloneNeckSimple {
+            get {
+                return ResourceManager.GetString("SimpleTypeCloneNeckSimple", resourceCulture);
             }
         }
         

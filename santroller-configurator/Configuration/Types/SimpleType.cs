@@ -7,6 +7,7 @@ public enum SimpleType
     WtNeckSimple,
     WtNeckPeripheralSimple,
     Gh5NeckSimple,
+    CloneNeckSimple,
     DjTurntableSimple,
     UsbHost,
     Bluetooth,

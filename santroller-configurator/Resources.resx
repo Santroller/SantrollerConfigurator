@@ -95,6 +95,9 @@
     <data name="Gh5CombinedTitle" xml:space="preserve">
         <value>GH5 Neck Inputs</value>
     </data>
+    <data name="CloneCombinedTitle" xml:space="preserve">
+        <value>Crazy Guitar Neck Inputs</value>
+    </data>
     <data name="GhwtCombinedTitle" xml:space="preserve">
         <value>GHWT Slider Inputs</value>
     </data>
@@ -2161,6 +2164,9 @@
     </data>
     <data name="SimpleTypeGh5NeckSimple" xml:space="preserve">
         <value>Guitar Hero 5 Neck Inputs</value>
+    </data>
+    <data name="SimpleTypeCloneNeckSimple" xml:space="preserve">
+        <value>Crazy Guitar Neck Inputs</value>
     </data>
     <data name="SimpleTypeDjTurntableSimple" xml:space="preserve">
         <value>DJ Hero Turntable Inputs</value>

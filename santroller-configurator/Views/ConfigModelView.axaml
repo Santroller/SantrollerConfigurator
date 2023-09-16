@@ -2651,7 +2651,7 @@
                                                         <Binding Path="IsWii" />
                                                         <Binding Path="IsDj" />
                                                         <Binding Path="IsPs2" />
-                                                        <Binding Path="IsGh5" />
+                                                        <Binding Path="IsGh5OrClone" />
                                                         <Binding Path="IsWt" />
                                                         <Binding Path="IsUsb" />
                                                     </MultiBinding>
@@ -2681,7 +2681,7 @@
                                                       ItemsSource="{Binding Ps2InputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                             <ComboBox VerticalAlignment="Center"
-                                                      IsVisible="{Binding IsGh5}"
+                                                      IsVisible="{Binding IsGh5OrClone}"
                                                       SelectedItem="{Binding Gh5NeckInputType}"
                                                       ItemsSource="{Binding Gh5NeckInputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
