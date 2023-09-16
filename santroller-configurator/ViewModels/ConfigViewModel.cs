@@ -135,13 +135,36 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 or LedType.Apa102Rbg or LedType.Apa102Rgb)
             .ToPropertyEx(this, x => x.IsApa102);
         this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
-            .Select(x => x is {Item2: true, Item1: LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
+            .Select(x => x is
+            {
+                Item2: true, Item1: LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
                 or LedType.Apa102Rbg or LedType.Apa102Rgb
             })
             .ToPropertyEx(this, x => x.IsApa102Peripheral);
         Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is BluetoothOutput))
             .ToPropertyEx(this, x => x.IsBluetoothRx);
+        Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is WiiCombinedOutput))
+            .ToPropertyEx(this, x => x.HasWiiCombinedOutput);
+        Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is Ps2CombinedOutput))
+            .ToPropertyEx(this, x => x.HasPs2CombinedOutput);
+        Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is GhwtCombinedOutput))
+            .ToPropertyEx(this, x => x.HasGhwtCombinedOutput);
+        Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is CloneCombinedOutput))
+            .ToPropertyEx(this, x => x.HasCloneCombinedOutput);
+        Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is DjCombinedOutput))
+            .ToPropertyEx(this, x => x.HasDjCombinedOutput);
+        Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is Gh5CombinedOutput))
+            .ToPropertyEx(this, x => x.HasGh5CombinedOutput);
+        Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is UsbHostCombinedOutput))
+            .ToPropertyEx(this, x => x.HasUsbHostCombinedOutput);
         this.WhenAnyValue(x => x.IsBluetoothTx, x => x.IsBluetoothRx)
             .Select(x => x.Item1 || x.Item2)
             .ToPropertyEx(this, x => x.IsBluetooth);
@@ -156,7 +179,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         AllPins = new SourceList<int>();
         AllPins.AddRange(Microcontroller.GetAllPins());
         AllPins.Connect().Filter(this.WhenAnyValue(s => s.IsBluetooth)
-            .Select(s => new Func<int, bool>(pin => Microcontroller.FilterPin(false, s, pin))))
+                .Select(s => new Func<int, bool>(pin => Microcontroller.FilterPin(false, s, pin))))
             .Bind(out var digitalPins)
             .Subscribe();
         AllPins.Connect().Filter(this.WhenAnyValue(s => s.IsBluetooth)
@@ -194,14 +217,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     public IConfigurableDevice Device { get; set; }
-    
+
     [Reactive] public string? PeripheralErrorText { get; set; }
     [Reactive] public string? LedErrorText { get; set; }
 
     public ReadOnlyObservableCollection<Output> Outputs { get; }
 
     public bool Branded { get; }
-    
+
     private SourceList<int> AllPins { get; }
 
 
@@ -243,7 +266,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public Interaction<(string yesText, string noText, string text), AreYouSureWindowViewModel>
         ShowYesNoDialog { get; } = new();
-    
+
     public Interaction<ConfigViewModel, ResetWindowViewModel>
         ShowResetDialog { get; } = new();
 
@@ -274,6 +297,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Where(s => s.Value is TwiPinType.Scl)
             .Select(s => s.Key).ToList();
     }
+
     public ICommand BindAllCommand { get; }
 
     public MainWindowViewModel Main { get; }
@@ -294,7 +318,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public IEnumerable<LegendType> LegendTypes => Enum.GetValues<LegendType>();
 
     public ICommand WriteConfigCommand { get; }
-    
+
     public ICommand WriteUf2Command { get; }
 
     public ICommand SaveConfigCommand { get; }
@@ -303,7 +327,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public ICommand GoBackCommand { get; }
 
     public string LocalAddress { get; set; } = "Write config to retrieve address";
-    
+
     public List<int> AvailableApaMosiPins => Microcontroller.SpiPins()
         .Where(s => s.Value is SpiPinType.Mosi)
         .Select(s => s.Key).ToList();
@@ -314,7 +338,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public IEnumerable<LedType> LedTypes => Enum.GetValues<LedType>();
 
-    public bool BindableTwi { get; } 
+    public bool BindableTwi { get; }
     [Reactive] public bool PollExpanded { get; set; }
     [Reactive] public bool ControllerConfigExpanded { get; set; }
     [Reactive] public bool BluetoothConfigExpanded { get; set; }
@@ -452,7 +476,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public byte LedCountPeripheral { get; set; }
 
     [Reactive] public int WtSensitivity { get; set; }
-    
+
     [Reactive] public bool HasError { get; set; }
 
     public LedType LedType
@@ -467,7 +491,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
             else if (_ledType == LedType.None)
             {
-                _apa102SpiConfig = Microcontroller.AssignSpiPins(this, Apa102SpiType, false, false, -1, -1, -1, true, true,
+                _apa102SpiConfig = Microcontroller.AssignSpiPins(this, Apa102SpiType, false, false, -1, -1, -1, true,
+                    true,
                     true,
                     Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
                 this.RaisePropertyChanged(nameof(Apa102Mosi));
@@ -490,7 +515,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
             else if (_ledTypePeripheral == LedType.None)
             {
-                _apa102SpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102SpiType, true, false, -1, -1, -1, true, true,
+                _apa102SpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102SpiType, true, false, -1, -1, -1,
+                    true, true,
                     true,
                     Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
                 this.RaisePropertyChanged(nameof(Apa102MosiPeripheral));
@@ -513,9 +539,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (!value)
             {
-                Bindings.RemoveMany(Bindings.Items.Where(s => s.Input.Peripheral || s is GhwtCombinedOutput {Peripheral: true}));
+                Bindings.RemoveMany(Bindings.Items.Where(s =>
+                    s.Input.Peripheral || s is GhwtCombinedOutput {Peripheral: true}));
             }
-            _peripheralTwiConfig = value ? Microcontroller.AssignTwiPins(this, PeripheralTwiType, false, -1, -1, PeripheralTwiClock) : null;
+
+            _peripheralTwiConfig =
+                value
+                    ? Microcontroller.AssignTwiPins(this, PeripheralTwiType, false, -1, -1, PeripheralTwiClock)
+                    : null;
             this.RaisePropertyChanged(nameof(PeripheralSda));
             this.RaisePropertyChanged(nameof(PeripheralScl));
             this.RaiseAndSetIfChanged(ref _hasPeripheral, value);
@@ -580,6 +611,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsBluetooth { get; }
     [ObservableAsProperty] public bool IsOrWasBluetooth { get; }
     [ObservableAsProperty] public bool IsBluetoothRx { get; }
+    [ObservableAsProperty] public bool HasWiiCombinedOutput { get; }
+    [ObservableAsProperty] public bool HasPs2CombinedOutput { get; }
+    [ObservableAsProperty] public bool HasGhwtCombinedOutput { get; }
+    [ObservableAsProperty] public bool HasCloneCombinedOutput { get; }
+    [ObservableAsProperty] public bool HasDjCombinedOutput { get; }
+    [ObservableAsProperty] public bool HasGh5CombinedOutput { get; }
+    [ObservableAsProperty] public bool HasUsbHostCombinedOutput { get; }
 
     public bool UsbHostEnabled => Bindings.Items.Any(x =>
         x is UsbHostCombinedOutput ||
@@ -598,7 +636,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Concat(Enum.GetValues<StandardAxisType>().Cast<object>()).Select((s, index) => new {s, index})
             .ToDictionary(x => x.s, x => x.index);
 
-    
 
     public readonly ReadOnlyObservableCollection<int> AvailablePinsDigital;
     public readonly ReadOnlyObservableCollection<int> AvailablePinsAnalog;
@@ -608,7 +645,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public List<int> AvailablePinsDp => AvailablePinsDigital.SkipLast(1).ToList();
 
     public IEnumerable<PinConfig> PinConfigs =>
-        new PinConfig?[] {_apa102SpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig, _apa102SpiConfigPeripheral}.Where(s => s != null)
+        new PinConfig?[]
+            {
+                _apa102SpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
+                _apa102SpiConfigPeripheral
+            }.Where(s => s != null)
             .Cast<PinConfig>();
 
     public string UrlPathSegment { get; } = Guid.NewGuid().ToString()[..5];
@@ -827,6 +868,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             ResetBluetoothRelated();
         }
+
         // If going from say bluetooth controller to standard controller, the pin bindings can stay
         if (GetSimpleEmulationTypeFor(EmulationType) == GetSimpleEmulationTypeFor(emulationType))
         {
@@ -892,35 +934,40 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 direct.Pin = -1;
             }
         }
+
+        Bindings.RemoveMany(Bindings.Items.Where(s => s is BluetoothOutput));
     }
+
     public static string WriteBlob(BinaryWriter writer, byte[] data)
     {
         var pos = writer.BaseStream.Length;
         writer.Write(data);
         return $"config_blobs[{pos}]";
     }
+
     public static string WriteBlob(BinaryWriter writer, byte data)
     {
         var pos = writer.BaseStream.Length;
         writer.Write(data);
         return $"config_blobs[{pos}]";
     }
+
     public static string WriteBlob(BinaryWriter writer, bool data)
     {
         return WriteBlob(writer, data ? 1 : 0);
     }
-    
+
     public static string WriteBlob(BinaryWriter writer, int data)
     {
         var pos = writer.BaseStream.Length;
-        writer.Write((short)data);
+        writer.Write((short) data);
         return $"read_int16({pos})";
     }
-    
+
     public static string WriteBlob(BinaryWriter writer, uint data)
     {
         var pos = writer.BaseStream.Length;
-        writer.Write((ushort)data);
+        writer.Write((ushort) data);
         return $"read_uint16({pos})";
     }
 
@@ -954,17 +1001,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             writer = new BinaryWriter(blobStream);
             config += $"""
-                      #define CONFIGURABLE_BLOBS
-                      #define CONFIGURATION_LEN {WriteBlob(writer, configLength)}
-                      #define SWAP_SWITCH_FACE_BUTTONS {WriteBlob(writer, SwapSwitchFaceButtons)}
-                      #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows)}
-                      #define INPUT_QUEUE {WriteBlob(writer, Deque)}
-                      #define POLL_RATE {WriteBlob(writer, (byte)PollRate)}
-                      #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte)DjPollRate)}
-                      #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
-                      #define INPUT_DJ_TURNTABLE_SMOOTHING_DUAL {WriteBlob(writer, DjDual)}
-                      #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
-                      """;
+                       #define CONFIGURABLE_BLOBS
+                       #define CONFIGURATION_LEN {WriteBlob(writer, configLength)}
+                       #define SWAP_SWITCH_FACE_BUTTONS {WriteBlob(writer, SwapSwitchFaceButtons)}
+                       #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows)}
+                       #define INPUT_QUEUE {WriteBlob(writer, Deque)}
+                       #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
+                       #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
+                       #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
+                       #define INPUT_DJ_TURNTABLE_SMOOTHING_DUAL {WriteBlob(writer, DjDual)}
+                       #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
+                       """;
             if (IsBluetoothRx)
             {
                 var addr = new byte[Santroller.BtAddressLength];
@@ -973,6 +1020,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     addr = Encoding.UTF8.GetBytes(BtRxAddr);
                 }
+
                 config += $"""
 
                            #define BT_ADDR {WriteBlob(writer, addr)}
@@ -1110,11 +1158,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             if (_peripheralTwiConfig != null)
             {
                 // If the peripheral is on the same pins as something else, then use the config from the other device.
-                if (actualPinConfigs.Any(s => s is TwiConfig && s != _peripheralTwiConfig && s.Pins.Intersect(_peripheralTwiConfig.Pins).Any()))
+                if (actualPinConfigs.Any(s =>
+                        s is TwiConfig && s != _peripheralTwiConfig &&
+                        s.Pins.Intersect(_peripheralTwiConfig.Pins).Any()))
                 {
                     actualPinConfigs.Remove(_peripheralTwiConfig);
                 }
             }
+
             config += $"""
 
                        {actualPinConfigs.Aggregate("", (current, pinConfig) => current + pinConfig.Generate())}
@@ -1377,7 +1428,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        """;
             }
         }
-        
+
 
         return GenerateTick(ConfigField.StrobeLed, null).Trim() + FixNewlines(ret);
     }
@@ -1614,11 +1665,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         if (IsApa102Peripheral && _apa102SpiConfigPeripheral != null && type != Apa102PeripheralSpiType)
             pins[Apa102PeripheralSpiType] = _apa102SpiConfigPeripheral.Pins.ToList();
-        
+
         if (UsbHostEnabled && type != UsbHostPinTypeDm && type != UsbHostPinTypeDp)
             pins["USB Host"] = new List<int> {UsbHostDm, UsbHostDp};
 
-        if (_peripheralTwiConfig != null && type != PeripheralTwiType && !twi) pins[PeripheralTwiType] = _peripheralTwiConfig.Pins.ToList();
+        if (_peripheralTwiConfig != null && type != PeripheralTwiType && !twi)
+            pins[PeripheralTwiType] = _peripheralTwiConfig.Pins.ToList();
 
         return pins;
     }
@@ -1628,7 +1680,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var foundError = false;
         foreach (var output in Bindings.Items)
         {
-            output.UpdateErrors();;
+            output.UpdateErrors();
+            ;
             if (!string.IsNullOrEmpty(output.ErrorText)) foundError = true;
         }
 
@@ -1644,13 +1697,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             foundError = true;
             if (LedErrorText != null && LedErrorText != _apa102SpiConfigPeripheral.ErrorText)
             {
-                LedErrorText += " " +_apa102SpiConfigPeripheral.ErrorText;
+                LedErrorText += " " + _apa102SpiConfigPeripheral.ErrorText;
             }
             else
             {
                 LedErrorText = _apa102SpiConfigPeripheral.ErrorText;
             }
         }
+
         if (HasPeripheral && _peripheralTwiConfig?.ErrorText != null)
         {
             foundError = true;
@@ -1660,6 +1714,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             PeripheralErrorText = null;
         }
+
         HasError = foundError;
         Main.ShowError = foundError;
     }
@@ -1671,6 +1726,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             configs.Add(_apa102SpiConfig);
         }
+
         if (_apa102SpiConfigPeripheral != null)
         {
             configs.Add(_apa102SpiConfigPeripheral);
@@ -1736,21 +1792,25 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public TwiConfig? GetTwiForType(string twiType, bool peripheral)
     {
         return Bindings.Items.Select(binding => binding.GetPinConfigs())
-            .Select(configs => configs.OfType<TwiConfig>().FirstOrDefault(s => s.Type == twiType && s.Peripheral == peripheral))
+            .Select(configs => configs.OfType<TwiConfig>()
+                .FirstOrDefault(s => s.Type == twiType && s.Peripheral == peripheral))
             .FirstOrDefault(found => found != null);
     }
 
     public SpiConfig? GetSpiForType(string spiType, bool peripheral)
     {
         return Bindings.Items.Select(binding => binding.GetPinConfigs())
-            .Select(configs => configs.OfType<SpiConfig>().FirstOrDefault(s => s.Type == spiType && s.Peripheral == peripheral))
+            .Select(configs => configs.OfType<SpiConfig>()
+                .FirstOrDefault(s => s.Type == spiType && s.Peripheral == peripheral))
             .FirstOrDefault(found => found != null);
     }
 
     public DirectPinConfig GetPinForType(string pinType, bool peripheral, int fallbackPin, DevicePinMode fallbackMode)
     {
         return Bindings.Items.Select(binding => binding.GetPinConfigs())
-                   .Select(configs => configs.OfType<DirectPinConfig>().FirstOrDefault(s => s.Type == pinType && s.Peripheral == peripheral))
+                   .Select(configs =>
+                       configs.OfType<DirectPinConfig>()
+                           .FirstOrDefault(s => s.Type == pinType && s.Peripheral == peripheral))
                    .FirstOrDefault(found => found != null) ??
                new DirectPinConfig(this, pinType, fallbackPin, peripheral, fallbackMode);
     }
@@ -1801,7 +1861,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private void Diff(object? sender, EventArgs e)
     {
-        if (_disconnected || (Main.Router.NavigationStack.Last() != this && Main.Router.NavigationStack.Last() is not InitialConfigViewModel))
+        if (_disconnected || (Main.Router.NavigationStack.Last() != this &&
+                              Main.Router.NavigationStack.Last() is not InitialConfigViewModel))
         {
             _timer.Stop();
             Main.SetDifference(false);

@@ -42,9 +42,25 @@ public class EmptyOutput : Output
             .Select(x => Model.GetSimpleEmulationType() is EmulationType.KeyboardMouse)
             .ToProperty(this, x => x.IsKeyboard);
 
-        _combinedTypes = this.WhenAnyValue(vm => vm.Model.DeviceControllerType, vm => vm.Model.HasPeripheral)
-            .Select(type => ControllerEnumConverter.GetTypes(type.Item1).Where(s2 =>
-                (model.IsPico || s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.UsbHost)) && (type.Item2 || s2 is not SimpleType.WtNeckPeripheralSimple)))
+        _combinedTypes = this.WhenAnyValue(vm => vm.Model.DeviceControllerType, vm => vm.Model.HasPeripheral,
+                vm => vm.Model.IsBluetoothTx, vm => vm.Model.HasWiiCombinedOutput, vm => vm.Model.HasPs2CombinedOutput,
+                vm => vm.Model.HasGhwtCombinedOutput).CombineLatest(this.WhenAnyValue(
+                vm => vm.Model.HasCloneCombinedOutput,
+                vm => vm.Model.HasDjCombinedOutput, vm => vm.Model.HasGh5CombinedOutput,
+                vm => vm.Model.HasUsbHostCombinedOutput))
+            .Select(type => ControllerEnumConverter.GetTypes(type.Item1.Item1).Where(s2 =>
+                (model.IsPico ||
+                 s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.UsbHost)) &&
+                (type.Item1.Item2 || s2 is not SimpleType.WtNeckPeripheralSimple) &&
+                (!type.Item1.Item3 || s2 is not SimpleType.Bluetooth) &&
+                (!type.Item1.Item4 || s2 is not SimpleType.WiiInputSimple) &&
+                (!type.Item1.Item5 || s2 is not SimpleType.Ps2InputSimple) &&
+                (!type.Item1.Item6 || s2 is not SimpleType.WtNeckSimple) &&
+                (!type.Item2.Item1 || s2 is not SimpleType.CloneNeckSimple)&&
+                (!type.Item2.Item2 || s2 is not SimpleType.DjTurntableSimple)&&
+                (!type.Item2.Item3 || s2 is not SimpleType.Gh5NeckSimple)&&
+                (!type.Item2.Item4 || s2 is not SimpleType.UsbHost)
+            ))
             .ToProperty(this, x => x.CombinedTypes);
     }
 
@@ -221,6 +237,7 @@ public class EmptyOutput : Output
             {
                 Model.ResetBluetoothRelated();
             }
+
             Model.Bindings.Add(output);
             if (output is CombinedOutput combinedOutput)
             {
