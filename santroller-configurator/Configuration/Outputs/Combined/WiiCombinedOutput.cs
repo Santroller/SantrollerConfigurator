@@ -503,7 +503,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
                     Colors.Black, Array.Empty<byte>(), 0, ushort.MaxValue, 0,  GuitarAxisType.Slider, true));
             }
         }
-        else
+        else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
         {
             Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Slider}));
         }

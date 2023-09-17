@@ -108,7 +108,7 @@ public class Gh5NeckInput : TwiInput
         if (Input <= Gh5NeckInputType.Orange)
             return $"(fivetar_buttons[0] & {1 << Fret[Input]})";
 
-        if (Input == Gh5NeckInputType.TapBar) return "fivetar_buttons[1]";
+        if (Input is Gh5NeckInputType.TapBar or Gh5NeckInputType.TapAll) return "fivetar_buttons[1]";
 
         var mappings = MappingByInput[Input];
         return "(gh5Valid && (" +

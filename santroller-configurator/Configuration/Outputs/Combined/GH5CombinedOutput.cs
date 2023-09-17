@@ -98,7 +98,7 @@ public class Gh5CombinedOutput : CombinedTwiOutput
         var tapFrets =
             Outputs.Items.FirstOrDefault(
                 s => s is {Enabled: true, Input: Gh5NeckInput {Input: Gh5NeckInputType.TapAll}});
-        if (tapAnalog == null && tapFrets == null) return Outputs.Items;
+        if (tapAnalog == null && tapFrets == null) return Outputs.Items.Where(s => s.Enabled);
         var outputs = new List<Output>(Outputs.Items.Where(s => s.Enabled));
 
         // Map Tap bar to Upper frets on RB guitars

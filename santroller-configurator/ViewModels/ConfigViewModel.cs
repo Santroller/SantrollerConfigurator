@@ -1436,6 +1436,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private string GenerateTick(ConfigField mode, BinaryWriter? writer)
     {
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
+
         var outputsByType = outputs
             .GroupBy(s => s.Input.InnermostInput().GetType()).ToList();
         var combined = DeviceControllerType.IsGuitar() && CombinedStrumDebounce;
