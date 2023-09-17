@@ -170,14 +170,14 @@ public class GuitarAxis : OutputAxis
         {
             case ConfigField.XboxOne when Model.DeviceControllerType is DeviceControllerType.LiveGuitar:
                 return "";
-            case ConfigField.XboxOne when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
+            case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
                 // XB1 tilt is uint8_t
                 return $$"""
                          if ({{Input.Generate()}}) {
-                             {{GenerateOutput(mode)}} = {{analogOn >> 8}};
+                             {{GenerateOutput(mode)}} = 255;
                          }
                          """;
-            case ConfigField.XboxOne when Type is GuitarAxisType.Tilt :
+            case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt :
                 // XB1 tilt is similar enough to ps3 that we can just use it
                 return $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), ConfigField.Ps3, false, false, false, writer)};";
             case ConfigField.Xbox360 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
