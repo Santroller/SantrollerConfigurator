@@ -171,9 +171,10 @@ public class GuitarAxis : OutputAxis
             case ConfigField.XboxOne when Model.DeviceControllerType is DeviceControllerType.LiveGuitar:
                 return "";
             case ConfigField.XboxOne when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
+                // XB1 tilt is uint8_t
                 return $$"""
                          if ({{Input.Generate()}}) {
-                             {{GenerateOutput(mode)}} = {{analogOn}};
+                             {{GenerateOutput(mode)}} = {{analogOn >> 8}};
                          }
                          """;
             case ConfigField.XboxOne when Type is GuitarAxisType.Tilt :
