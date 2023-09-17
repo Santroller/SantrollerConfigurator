@@ -152,6 +152,7 @@ public class GhwtCombinedOutput : CombinedOutput
 
             outputs.Remove(tapAnalog);
         }
+
         if (tapFrets == null) return outputs;
         foreach (var pair in Taps)
         {
@@ -160,6 +161,7 @@ public class GhwtCombinedOutput : CombinedOutput
                 Colors.Black,
                 Colors.Black, Array.Empty<byte>(), 5, pair.Value, true));
         }
+
         outputs.Remove(tapFrets);
 
         return outputs;
@@ -186,6 +188,7 @@ public class GhwtCombinedOutput : CombinedOutput
                 button.Enabled = false;
                 Outputs.Add(button);
             }
+
             if (axisController == null) return;
             Outputs.Remove(axisController);
             Outputs.Add(new GuitarAxis(Model,
@@ -195,16 +198,34 @@ public class GhwtCombinedOutput : CombinedOutput
                 Colors.Black, Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                 GuitarAxisType.Slider, true));
         }
-        else if (axisGuitar != null)
+        else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
         {
             if (tapAll != null) Outputs.Remove(tapAll);
-            Outputs.Remove(axisGuitar);
+            if (axisGuitar != null)
+            {
+                Outputs.Remove(axisGuitar);
+            }
+
+            if (axisController != null) return;
             Outputs.Add(new ControllerAxis(Model,
                 new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                     true),
                 Colors.Black,
                 Colors.Black, Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                 ushort.MaxValue, StandardAxisType.LeftStickX, true));
+        }
+        else
+        {
+            if (tapAll != null) Outputs.Remove(tapAll);
+            if (axisGuitar != null)
+            {
+                Outputs.Remove(axisGuitar);
+            }
+
+            if (axisController != null)
+            {
+                Outputs.Remove(axisController);
+            }
         }
     }
 

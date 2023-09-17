@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,14 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedGhwtCombinedOutput : SerializedOutput
 {
+    // ReSharper disable once UnusedMember.Global
+    public SerializedGhwtCombinedOutput()
+    {
+        
+    }
     public SerializedGhwtCombinedOutput(bool peripheral, int pin, int pinS0, int pinS1, int pinS2, List<Output> outputs)
     {
         Pin = pin;
@@ -31,8 +37,8 @@ public class SerializedGhwtCombinedOutput : SerializedOutput
     [ProtoMember(5)] public int PinS2 { get; }
 
 
-    [ProtoMember(6)] public List<SerializedOutput> Outputs { get; }
-    [ProtoMember(7)] public byte[] Enabled { get; }
+    [ProtoMember(6)] public List<SerializedOutput> Outputs { get; } = new();
+    [ProtoMember(7)] public byte[] Enabled { get; } = Array.Empty<byte>();
     [ProtoMember(8)] private bool Peripheral { get; }
 
     public override Output Generate(ConfigViewModel model)

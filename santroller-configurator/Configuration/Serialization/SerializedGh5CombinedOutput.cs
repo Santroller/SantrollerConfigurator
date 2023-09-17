@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,15 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedGh5CombinedOutput : SerializedOutput
 {
-    public SerializedGh5CombinedOutput(bool peripheral, int sda, int scl, List<Output> outputs)
+    // ReSharper disable once UnusedMember.Global
+    public SerializedGh5CombinedOutput()
+    {
+        
+    }
+    public SerializedGh5CombinedOutput(bool peripheral, int sda, int scl, IReadOnlyCollection<Output> outputs)
     {
         Sda = sda;
         Scl = scl;
@@ -24,9 +30,9 @@ public class SerializedGh5CombinedOutput : SerializedOutput
     [ProtoMember(4)] public int Sda { get; }
     [ProtoMember(5)] public int Scl { get; }
 
-    [ProtoMember(6)] public List<SerializedOutput> Outputs { get; }
+    [ProtoMember(6)] public List<SerializedOutput> Outputs { get; } = new();
 
-    [ProtoMember(7)] public byte[] Enabled { get; }
+    [ProtoMember(7)] public byte[] Enabled { get; } = Array.Empty<byte>();
     [ProtoMember(8)] private bool Peripheral { get; }
 
     public override Output Generate(ConfigViewModel model)

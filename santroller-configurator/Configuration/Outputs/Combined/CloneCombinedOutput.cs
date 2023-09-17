@@ -151,22 +151,24 @@ public class CloneCombinedOutput : CombinedTwiOutput
             {
                 var button = new GuitarButton(Model,
                     new CloneNeckInput(Gh5NeckInputType.TapAll, Model, Peripheral, combined: true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), 5, InstrumentButtonType.Slider, true);
-                button.Enabled = false;
+                    Colors.Black, Array.Empty<byte>(), 5, InstrumentButtonType.Slider, true)
+                {
+                    Enabled = false
+                };
                 Outputs.Add(button);
             }
             
             foreach (var (key, value) in Standard)
             {
                 var item = Outputs.Items.FirstOrDefault(s => s.Input is CloneNeckInput gh5 && gh5.Input == key);
-                if (item == null)
+                if (item != null) continue;
+                var button = new GuitarButton(Model,
+                    new CloneNeckInput(key, Model, Peripheral, combined: true), Colors.Black,
+                    Colors.Black, Array.Empty<byte>(), 5, value, true)
                 {
-                    var button = new GuitarButton(Model,
-                        new CloneNeckInput(key, Model, Peripheral, combined: true), Colors.Black,
-                        Colors.Black, Array.Empty<byte>(), 5, value, true);
-                    button.Enabled = false;
-                    Outputs.Add(button);
-                }
+                    Enabled = false
+                };
+                Outputs.Add(button);
             }
 
             if (axisController == null) return;
@@ -177,6 +179,33 @@ public class CloneCombinedOutput : CombinedTwiOutput
                 Colors.Black,
                 Colors.Black, Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                 GuitarAxisType.Slider, true));
+        }
+        else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
+        {
+            var toRemove = new List<Output>();
+            foreach (var key in Standard.Keys)
+            {
+                var item = Outputs.Items.FirstOrDefault(s => s.Input is CloneNeckInput gh5 && gh5.Input == key);
+                if (item != null)
+                {
+                    toRemove.Add(item);
+                }
+            }
+            Outputs.RemoveMany(toRemove);
+            if (tapAll != null) Outputs.Remove(tapAll);
+
+            if (axisGuitar != null)
+            {
+                Outputs.Remove(axisGuitar);
+            }
+
+            if (axisController != null) return;
+            Outputs.Add(new ControllerAxis(Model,
+                new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
+                    true),
+                Colors.Black,
+                Colors.Black, Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                ushort.MaxValue, StandardAxisType.LeftStickX, true));
         }
         else
         {
@@ -192,14 +221,15 @@ public class CloneCombinedOutput : CombinedTwiOutput
             Outputs.RemoveMany(toRemove);
             if (tapAll != null) Outputs.Remove(tapAll);
 
-            if (axisGuitar == null) return;
-            Outputs.Remove(axisGuitar);
-            Outputs.Add(new ControllerAxis(Model,
-                new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
-                    true),
-                Colors.Black,
-                Colors.Black, Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
-                ushort.MaxValue, StandardAxisType.LeftStickX, true));
+            if (axisGuitar != null)
+            {
+                Outputs.Remove(axisGuitar);
+            }
+            if (axisController != null)
+            {
+                Outputs.Remove(axisController);
+            }
+
         }
     }
 }

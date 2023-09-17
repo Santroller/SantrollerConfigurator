@@ -162,6 +162,10 @@ public class GuitarAxis : OutputAxis
             if (Type == GuitarAxisType.Slider) analogOn &= 0xFF;
         }
 
+        if (Type == GuitarAxisType.Slider && Model.DeviceControllerType == DeviceControllerType.LiveGuitar)
+        {
+            return "";
+        }
         switch (mode)
         {
             case ConfigField.XboxOne when Model.DeviceControllerType is DeviceControllerType.LiveGuitar:
