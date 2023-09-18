@@ -518,10 +518,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         return state.OnErrorResumeNext(Observable.Return(behaviorSubject.Value));
     }
 
-    [RelayCommand]
-    public void OpenReleasesPage()
+    public void NavigateToUrl(string url)
     {
-        var url = "https://github.com/sanjay900/guitar-configurator/releases";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             Process.Start(new ProcessStartInfo(url) {UseShellExecute = true});
@@ -534,6 +532,17 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         {
             Process.Start("open", url);
         }
+    }
+
+    [RelayCommand]
+    public void OpenReleasesPage()
+    {
+        NavigateToUrl("https://github.com/sanjay900/guitar-configurator/releases");
+    }
+    [RelayCommand]
+    public void OpenCommercialUsePage()
+    {
+        NavigateToUrl("https://santroller.tangentmc.net/tool/commercial_use.html");
     }
 
     public void Complete(int total)

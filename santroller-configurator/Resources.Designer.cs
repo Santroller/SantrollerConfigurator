@@ -5673,6 +5673,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string NonCommercialButton {
+            get {
+                return ResourceManager.GetString("NonCommercialButton", resourceCulture);
+            }
+        }
+        
         public static string IncorrectTool {
             get {
                 return ResourceManager.GetString("IncorrectTool", resourceCulture);

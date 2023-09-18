@@ -174,11 +174,14 @@ public partial class BluetoothOutput : CombinedOutput
             Model.BtRxAddr = Resources.BluetoothNoDevice;
             
         }
-        else if (string.IsNullOrWhiteSpace(Model.BtRxAddr) || !Model.BtRxAddr.Contains(":"))
+        else
         {
             Addresses.Clear();
             Addresses.AddRange(addresses);
-            Model.BtRxAddr = Addresses.First();
+            if (string.IsNullOrWhiteSpace(Model.BtRxAddr) || !Model.BtRxAddr.Contains(":"))
+            {
+                Model.BtRxAddr = Addresses.First();
+            }
         }
 
         if (ScanTimer != 0) return;

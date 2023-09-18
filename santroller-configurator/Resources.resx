@@ -2951,7 +2951,10 @@
         <value>By clicking the configure button, you are acknowledging that devices you program with this tool are for personal use.</value>
     </data>
     <data name="NonCommercialUse3" xml:space="preserve">
-        <value>Want to sell devices using this tool? Visit the following link for more information on how to do this.</value>
+        <value>If you would like to sell devices using the Santroller platform, click the following button.</value>
+    </data>
+    <data name="NonCommercialButton" xml:space="preserve">
+        <value>Selling devices using this tool</value>
     </data>
     <data name="IncorrectTool" xml:space="preserve">
         <value>The device you have selected is not designed to be programed with this tool.</value>

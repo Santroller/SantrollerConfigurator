@@ -47,7 +47,8 @@
                 <Image Source="{Binding Main.Logo}" Width="200" Margin="0 0 0 40" />
                 <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  />
                 <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse2}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  />
-                <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse3}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 40"  />
+                <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse3}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  />
+                <Button HorizontalAlignment="Center" Command="{Binding Main.OpenCommercialUsePageCommand}" Content="{x:Static netCore:Resources.NonCommercialButton}" Margin="0 0 0 40" />
                 <StackPanel IsVisible="{Binding Main.HasUpdate}" HorizontalAlignment="Center" Orientation="Horizontal"
                             Margin="0 0 0 20">
                     <Label Content="{Binding Main.UpdateMessage}" VerticalAlignment="Center"
