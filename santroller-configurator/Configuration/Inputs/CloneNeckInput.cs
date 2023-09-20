@@ -74,7 +74,7 @@ public class CloneNeckInput : TwiInput
     public bool ShouldShowPins => !Combined && !Model.Branded; 
     public bool BindableTwi { get; }
 
-    public override InputType? InputType => Types.InputType.Gh5NeckInput;
+    public override InputType? InputType => Types.InputType.CloneNeckInput;
     public Gh5NeckInputType Input { get; set; }
 
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();

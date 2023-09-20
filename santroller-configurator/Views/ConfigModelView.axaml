@@ -243,6 +243,12 @@
                               Content="{x:Static netCore:Resources.DetectedLabel}" />
                 </StackPanel>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type combined:CloneCombinedOutput}">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Detected}" VerticalAlignment="Center" IsEnabled="False"
+                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type output:BluetoothOutput}">
                 <StackPanel Orientation="Horizontal">
                     <CheckBox IsChecked="{Binding Connected}" VerticalAlignment="Center" IsEnabled="False"
