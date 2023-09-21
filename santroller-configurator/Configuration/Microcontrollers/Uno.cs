@@ -58,7 +58,7 @@ public class Uno : AvrController
 
     public override Board Board { get; }
 
-    public override List<int> AnalogPins { get; } = Enumerable.Range(A0, 4).ToList();
+    public override List<int> AnalogPins { get; } = Enumerable.Range(A0, 6).ToList();
 
     public override List<int> PwmPins { get; } = new() {3, 5, 6, 9, 10, 11};
 
@@ -84,7 +84,7 @@ public class Uno : AvrController
 
     public override int GetChannel(int pin, bool reconfigurePin)
     {
-        var chan = PinA0 - pin;
+        var chan = pin - PinA0;
         if (reconfigurePin) chan |= 1 << 7;
         return chan;
     }
