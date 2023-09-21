@@ -122,7 +122,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedGh5CombinedOutput(Peripheral, Sda, Scl, Outputs.Items.ToList());
+        return new SerializedCloneCombinedOutput(Peripheral, Sda, Scl, Outputs.Items.ToList());
     }
 
     public override void Update(Dictionary<int, int> analogRaw,
