@@ -282,8 +282,7 @@ public abstract partial class Output : ReactiveObject
              s is InputType.Gh5NeckInput or InputType.WtNeckInput or InputType.ConstantInput or InputType.WtNeckPeripheralInput or InputType.CloneNeckInput) &&
             (s is not InputType.WtNeckPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.MultiplexerInput || Model.IsPico) &&
-            (s is not (InputType.AnalogPeripheralInput or InputType.MultiplexerPeripheralInput
-                or InputType.DigitalPeripheralInput) || Model.HasPeripheral) &&
+            (s is not InputType.DigitalPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.MacroInput || this is OutputButton)
             && s is not InputType.BluetoothInput &&
             (s is not InputType.UsbHostInput || Model.IsPico));
@@ -549,12 +548,6 @@ public abstract partial class Output : ReactiveObject
             case InputType.DigitalPeripheralInput:
                 input = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
                 break;
-            case InputType.AnalogPeripheralInput:
-                input = new DirectInput(-1, false, true, DevicePinMode.Analog, Model);
-                break;
-            case InputType.MultiplexerPeripheralInput:
-                input = new MultiplexerInput(-1, true, 0, -1, -1, -1, -1, MultiplexerType.EightChannel, Model);
-                break;
             case InputType.TurntableInput when Input.InnermostInput() is not DjInput:
                 djInputType ??= DjInputType.LeftGreen;
                 input = new DjInput(djInputType.Value, Model, false, true);
@@ -727,18 +720,18 @@ public abstract partial class Output : ReactiveObject
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
-        Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
+        ReadOnlySpan<byte> cloneRaw)
     {
         if (Enabled)
             Input.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                 ghWtRaw,
-                ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral, cloneRaw);
+                ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, cloneRaw);
 
         foreach (var output in AllOutputs)
             if (output != this)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                     ghWtRaw,
-                    ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral, cloneRaw);
+                    ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw);
     }
 
     public void UpdateErrors()

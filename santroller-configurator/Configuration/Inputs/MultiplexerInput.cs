@@ -102,7 +102,7 @@ public class MultiplexerInput : DirectInput
         }
     }
 
-    public override InputType? InputType => Peripheral ? Types.InputType.MultiplexerPeripheralInput : Types.InputType.MultiplexerInput;
+    public override InputType? InputType => Types.InputType.MultiplexerInput;
 
     public override IList<PinConfig> PinConfigs => MultiplexerType == MultiplexerType.SixteenChannel
         ? new List<PinConfig> {PinConfig, PinConfigS0, PinConfigS1, PinConfigS2, PinConfigS3}
@@ -153,7 +153,7 @@ public class MultiplexerInput : DirectInput
         ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw, ReadOnlySpan<byte> ps2ControllerType,
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw,
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-        Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
+        ReadOnlySpan<byte> cloneRaw)
     {
         RawValue = analogRaw.GetValueOrDefault(Pin, 0);
     }

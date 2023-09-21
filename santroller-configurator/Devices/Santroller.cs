@@ -56,7 +56,6 @@ public class Santroller : ConfigurableUsbDevice
         CommandGetBtAddress,
         CommandReadUsbHostInputs,
         CommandReadPeripheralDigital,
-        CommandReadPeripheralAnalog,
         CommandReadPeripheralWt,
         CommandReadPeripheralValid,
         CommandReadClone,
@@ -64,7 +63,6 @@ public class Santroller : ConfigurableUsbDevice
 
     private readonly Dictionary<int, int> _analogRaw = new();
     private readonly Dictionary<int, bool> _digitalRaw = new();
-    private readonly Dictionary<int, int> _analogRawPeripheral = new();
     private readonly Dictionary<int, bool> _digitalRawPeripheral = new();
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
     private readonly Stopwatch _sw = Stopwatch.StartNew();
@@ -210,15 +208,6 @@ public class Santroller : ConfigurableUsbDevice
                 _analogRaw[devicePin.Pin] = val;
             }
 
-            foreach (var devicePin in analogPeripheral)
-            {
-                var mask = _model.Microcontroller.GetAnalogMask(devicePin);
-                var wValue = (ushort) (_model.Microcontroller.GetChannel(devicePin.Pin, false) | (mask << 8));
-                var val = BitConverter.ToUInt16(ReadData(wValue, (byte) Commands.CommandReadPeripheralAnalog,
-                    sizeof(ushort)));
-                _analogRawPeripheral[devicePin.Pin] = val;
-            }
-
             var ps2Raw = ReadData(0, (byte) Commands.CommandReadPs2, 9);
             var wiiRaw = ReadData(0, (byte) Commands.CommandReadWii, 8);
             var djLeftRaw = ReadData(0, (byte) Commands.CommandReadDjLeft, 3);
@@ -251,7 +240,7 @@ public class Santroller : ConfigurableUsbDevice
             foreach (var output in _bindings)
                 output.Update(_analogRaw, _digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                     djRightRaw, gh5Raw,
-                    ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, _digitalRawPeripheral, _analogRawPeripheral, cloneRaw);
+                    ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, _digitalRawPeripheral, cloneRaw);
         }
         catch (Exception ex)
         {
@@ -359,7 +348,7 @@ public class Santroller : ConfigurableUsbDevice
                 var mask = microcontroller.GetAnalogMask(devicePin);
                 var wValue = (ushort) (microcontroller.GetChannel(pin, true) | (mask << 8));
                 ReadData(wValue,
-                    (byte) (peripheral ? Commands.CommandReadPeripheralAnalog : Commands.CommandReadAnalog),
+                    (byte) Commands.CommandReadAnalog,
                     sizeof(ushort));
             }
 
@@ -370,9 +359,14 @@ public class Santroller : ConfigurableUsbDevice
                     var devicePin = new DevicePin(pin, DevicePinMode.PullUp);
                     var mask = microcontroller.GetAnalogMask(devicePin);
                     var wValue = (ushort) (microcontroller.GetChannel(pin, true) | (mask << 8));
-                    var val = BitConverter.ToUInt16(ReadData(wValue,
-                        (byte) (peripheral ? Commands.CommandReadPeripheralAnalog : Commands.CommandReadAnalog),
-                        sizeof(ushort)));
+                    var response = ReadData(wValue,
+                        (byte) Commands.CommandReadAnalog,
+                        sizeof(ushort));
+                    if (response.Length < 2)
+                    {
+                        return original;
+                    }
+                    var val = BitConverter.ToUInt16(response);
                     if (analogVals.TryGetValue(pin, out var analogVal))
                     {
                         if (Math.Abs(analogVal - val) <= 3000) continue;
@@ -391,7 +385,7 @@ public class Santroller : ConfigurableUsbDevice
 
         var allPins = _microcontroller.GetAllPins()
             .Where(s => _microcontroller.FilterPin(false, _model.IsOrWasBluetooth, s)).Except(importantPins)
-            .Select(s => new DevicePin(s, DevicePinMode.PullUp));
+            .Select(s => new DevicePin(s, DevicePinMode.PullUp)).ToList();
         var ports = microcontroller.GetPortsForTicking(allPins);
         foreach (var (port, mask) in ports)
         {
@@ -399,17 +393,16 @@ public class Santroller : ConfigurableUsbDevice
             ReadData(wValue, (byte) (peripheral ? Commands.CommandReadPeripheralDigital : Commands.CommandReadDigital),
                 sizeof(byte));
         }
-
         Dictionary<int, byte> tickedPorts = new();
         while (_picking)
         {
             foreach (var (port, mask) in ports)
             {
                 var wValue = (ushort) (port | (mask << 8));
-                var pins = (byte) ((ReadData(wValue,
+                var pins = (byte) (ReadData(wValue,
                                        (byte) (peripheral
                                            ? Commands.CommandReadPeripheralDigital
-                                           : Commands.CommandReadDigital), sizeof(byte)))[0] &
+                                           : Commands.CommandReadDigital), sizeof(byte)).FirstOrDefault() &
                                    mask);
                 if (tickedPorts.ContainsKey(port))
                 {
@@ -489,6 +482,7 @@ public class Santroller : ConfigurableUsbDevice
 
     public override void Disconnect()
     {
+        _picking = false;
         _timer.Stop();
 
         base.Disconnect();

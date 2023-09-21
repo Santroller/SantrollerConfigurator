@@ -51,7 +51,7 @@ public abstract class Input : ReactiveObject
         ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw, ReadOnlySpan<byte> ps2ControllerType,
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw,
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-        Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw);
+        ReadOnlySpan<byte> cloneRaw);
 
     public abstract string GenerateAll(List<Tuple<Input, string>> bindings,
         ConfigField mode);

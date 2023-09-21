@@ -71,9 +71,6 @@ public class InputImageConverter : IMultiValueConverter
                 SimpleType.Led => "Led",
                 _ => null
             },
-            
-            InputType.AnalogPinInput or InputType.AnalogPeripheralInput => "Combined/Analog",
-            InputType.MultiplexerInput or InputType.MultiplexerPeripheralInput => "Combined/Multiplexer",
             InputType.DigitalPinInput or InputType.DigitalPeripheralInput => "Combined/Digital",
             InputType.MacroInput => "Combined/Macro",
             InputType.ConstantInput => "Combined/Constant",

@@ -133,20 +133,6 @@ public class MacroInput : Input
                 input = new DirectInput(-1, false, false, DevicePinMode.PullUp, Model);
                 inputOther = new DirectInput(-1, false, false, DevicePinMode.PullUp, Model);
                 break;
-            case Types.InputType.AnalogPeripheralInput:
-                input = new DirectInput(-1, false, true, DevicePinMode.Analog, Model);
-                inputOther = new DirectInput(-1, false, true, DevicePinMode.Analog, Model);
-                inputOther = new AnalogToDigital(inputOther,
-                    inputOther.IsUint ? AnalogToDigitalType.Trigger : AnalogToDigitalType.JoyLow,
-                    input.IsUint ? ushort.MaxValue / 2 : short.MaxValue / 2, Model);
-                break;
-            case Types.InputType.MultiplexerPeripheralInput:
-                input = new MultiplexerInput(-1, true, 0, -1, -1, -1, -1, MultiplexerType.EightChannel, Model);
-                inputOther = new MultiplexerInput(-1, true, 0, -1, -1, -1, -1, MultiplexerType.EightChannel, Model);
-                inputOther = new AnalogToDigital(inputOther,
-                    inputOther.IsUint ? AnalogToDigitalType.Trigger : AnalogToDigitalType.JoyLow,
-                    input.IsUint ? ushort.MaxValue / 2 : short.MaxValue / 2, Model);
-                break;
             case Types.InputType.DigitalPeripheralInput:
                 input = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
                 inputOther = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
@@ -331,12 +317,12 @@ public class MacroInput : Input
         ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
+        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw)
     {
         Child1.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
-            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral, cloneRaw);
+            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, cloneRaw);
         Child2.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
-            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, analogPeripheral, cloneRaw);
+            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, cloneRaw);
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings,

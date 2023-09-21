@@ -47,7 +47,7 @@ public class FixedInput : Input
         ReadOnlySpan<byte> ghWtRaw, ReadOnlySpan<byte> ps2ControllerType,
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw,
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-        Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
+        ReadOnlySpan<byte> cloneRaw)
     {
     }
 

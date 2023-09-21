@@ -25,7 +25,7 @@ public class DirectInput : InputWithPin
 
     [Reactive] public bool Inverted { get; set; }
 
-    public override InputType? InputType => Peripheral ? IsAnalog ? Types.InputType.AnalogPeripheralInput : Types.InputType.DigitalPeripheralInput : IsAnalog ? Types.InputType.AnalogPinInput : Types.InputType.DigitalPinInput;
+    public override InputType? InputType => IsAnalog ? Types.InputType.AnalogPinInput : Peripheral ? Types.InputType.DigitalPeripheralInput : Types.InputType.DigitalPinInput;
 
     protected override string DetectionText => IsAnalog ? Resources.DetectAxis : Resources.DetectButton;
 
@@ -77,8 +77,13 @@ public class DirectInput : InputWithPin
         ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw, ReadOnlySpan<byte> ps2ControllerType,
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw,
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-        Dictionary<int, int> analogPeripheral, ReadOnlySpan<byte> cloneRaw)
+        ReadOnlySpan<byte> cloneRaw)
     {
+        var dRaw = digitalRaw;
+        if (Peripheral)
+        {
+            dRaw = digitalPeripheral;
+        }
         if (IsAnalog)
         {
             RawValue = analogRaw.GetValueOrDefault(Pin, 0);
@@ -88,7 +93,7 @@ public class DirectInput : InputWithPin
             // Pullups mean low is a logical high, which is inherently an invert
             var invert = PinMode == DevicePinMode.PullUp;
             if (Inverted) invert = !invert;
-            RawValue = digitalRaw.GetValueOrDefault(Pin, invert) switch
+            RawValue = dRaw.GetValueOrDefault(Pin, invert) switch
             {
                 true when invert => 0,
                 false when invert => 1,
