@@ -2962,4 +2962,52 @@
     <data name="IncorrectTool2" xml:space="preserve">
         <value>Please contact the seller of your device for the correct tool.</value>
     </data>
+    <data name="UnoUnplugReplugMessage" xml:space="preserve">
+        <value>{0} - Please unplug your device, hold the reset button and plug it back in</value>
+    </data>
+    <data name="BuildingMessage" xml:space="preserve">
+        <value>{0} - Building</value>
+    </data>
+    <data name="ReleaseButtonMessage" xml:space="preserve">
+        <value> - Release the button</value>
+    </data>
+    <data name="DfuMessage" xml:space="preserve">
+        <value>{0} - Looking for device in DFU mode</value>
+    </data>
+    <data name="LookingForPortMessage" xml:space="preserve">
+        <value>{0} - Looking for port</value>
+    </data>
+    <data name="ReadingSettingsMessage" xml:space="preserve">
+        <value>{0} - Reading Settings</value>
+    </data>
+    <data name="UploadingMessage" xml:space="preserve">
+        <value>{0} - Uploading</value>
+    </data>
+    <data name="VerifyingMessage" xml:space="preserve">
+        <value>{0} - Verifying</value>
+    </data>
+    <data name="ErrorMessage" xml:space="preserve">
+        <value>{0} - Error</value>
+    </data>
+    <data name="WaitingMessage" xml:space="preserve">
+        <value>{0} - Waiting for Device</value>
+    </data>
+    <data name="ErasingMessage" xml:space="preserve">
+        <value>Erasing device</value>
+    </data>
+    <data name="LookingForDeviceMessage" xml:space="preserve">
+        <value>{0} - Looking for device</value>
+    </data>
+    <data name="SettingUpMessage" xml:space="preserve">
+        <value>Setting up</value>
+    </data>
+    <data name="ExtractingFirmwareMessage" xml:space="preserve">
+        <value>Extracting Firmware</value>
+    </data>
+    <data name="ExtractingPlatformIoMessage" xml:space="preserve">
+        <value>Extracting Platform.IO</value>
+    </data>
+    <data name="NoFreeSpaceMessage" xml:space="preserve">
+        <value>Not enough free space, you need 3GB of space free on your {0} drive to use this program</value>
+    </data>
 </root>

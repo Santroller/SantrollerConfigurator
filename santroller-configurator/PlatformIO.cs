@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.Utils;
+using Resources = GuitarConfigurator.NetCore.Resources;
 
 namespace GuitarConfigurator.NetCore;
 
@@ -57,7 +58,7 @@ public class PlatformIo
 
     private async Task InitialisePlatformIoAsync(IObserver<PlatformIoState> platformIoOutput)
     {
-        platformIoOutput.OnNext(new PlatformIoState(0, "Extracting Firmware", ""));
+        platformIoOutput.OnNext(new PlatformIoState(0, Resources.ExtractingFirmwareMessage, ""));
         var appdataFolder = AssetUtils.GetAppDataFolder();
         var firmwareVersion = Path.Combine(appdataFolder, "firmware.version");
         if (!Directory.Exists(FirmwareDir))
@@ -79,7 +80,7 @@ public class PlatformIo
             if (free < 3)
             {
                 platformIoOutput.OnError(new Exception(
-                    $"Not enough free space, you need 3GB of space free on your {info.Name} drive to use this program"));
+                    string.Format(Resources.NoFreeSpaceMessage, info.Name)));
                 return;
             }
         }
@@ -89,7 +90,7 @@ public class PlatformIo
         }
 
         await AssetUtils.ExtractXzAsync("firmware.tar.xz", appdataFolder,
-            progress => platformIoOutput.OnNext(new PlatformIoState(progress * 10, "Extracting Firmware", "")));
+            progress => platformIoOutput.OnNext(new PlatformIoState(progress * 10, Resources.ExtractingFirmwareMessage, "")));
 
         var pythonDir = Path.Combine(appdataFolder, "python");
         var platformIoDir = Path.Combine(appdataFolder, "platformio");
@@ -110,10 +111,10 @@ public class PlatformIo
 
         if (!Directory.Exists(platformIoDir))
         {
-            platformIoOutput.OnNext(new PlatformIoState(10, "Extracting Platform.IO", ""));
+            platformIoOutput.OnNext(new PlatformIoState(10, Resources.ExtractingPlatformIoMessage, ""));
             await AssetUtils.ExtractXzAsync("platformio.tar.xz", appdataFolder,
                 progress => platformIoOutput.OnNext(
-                    new PlatformIoState(10 + progress * 90, "Extracting Firmware", "")));
+                    new PlatformIoState(10 + progress * 90, Resources.ExtractingFirmwareMessage, "")));
 
             await AssetUtils.ExtractFileAsync("platformio.version", platformIoVersion);
         }
@@ -124,7 +125,7 @@ public class PlatformIo
     public IObservable<PlatformIoState> InitialisePlatformIo()
     {
         var platformIoOutput =
-            new BehaviorSubject<PlatformIoState>(new PlatformIoState(0, "Setting up", null));
+            new BehaviorSubject<PlatformIoState>(new PlatformIoState(0, Resources.SettingUpMessage, null));
         _ = InitialisePlatformIoAsync(platformIoOutput).ConfigureAwait(false);
         return platformIoOutput;
     }
@@ -216,7 +217,7 @@ public class PlatformIo
                 if (environment.EndsWith("_usb"))
                 {
                     platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                        $"{progressMessage} - Looking for device", null));
+                        string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
                     currentProgress += percentageStep / sections;
                     if (device != null)
                     {
@@ -232,7 +233,7 @@ public class PlatformIo
                     if (environment.Contains("pico"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            $"{progressMessage} - Looking for device", null));
+                            string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
                         currentProgress += percentageStep / sections;
                         sections = 4;
                     }
@@ -243,7 +244,7 @@ public class PlatformIo
                         if (device.Is32U4())
                         {
                             sections += 1;
-                            var subject = RunAvrdudeErase(device, "Erasing device", 0, percentageStep / sections);
+                            var subject = RunAvrdudeErase(device, Resources.ErasingMessage, 0, percentageStep / sections);
                             subject.Subscribe(s => platformIoOutput.OnNext(s));
                             await subject;
                             currentProgress += percentageStep / sections;
@@ -309,7 +310,7 @@ public class PlatformIo
                     if (line.Contains("searching for uno"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            $"{progressMessage} - Please unplug your device, hold the reset button and plug it back in",
+                            string.Format(Resources.UnoUnplugReplugMessage, progressMessage),
                             null));
                     }
 
@@ -321,10 +322,10 @@ public class PlatformIo
                         if (matches.Count > 0)
                         {
                             var env = matches[0].Groups[1].Value;
-                            var message = $"{progressMessage} - Building";
+                            var message = string.Format(Resources.BuildingMessage, progressMessage);
                             if (_buttonEnvs.Contains(env))
                             {
-                                message += " - Release the button";
+                                message += Resources.ReleaseButtonMessage;
                             }
                             
 
@@ -342,14 +343,14 @@ public class PlatformIo
                             else
                             {
                                 platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                    $"{progressMessage} - Looking for device in DFU mode", null));
+                                    string.Format(Resources.DfuMessage, progressMessage), null));
                             }
                         }
 
                         if (line.StartsWith("Looking for upload port..."))
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                $"{progressMessage} - Looking for port", null));
+                                string.Format(Resources.LookingForPortMessage, progressMessage), null));
                             currentProgress += percentageStep / sections;
 
 
@@ -359,7 +360,7 @@ public class PlatformIo
                         if (line.StartsWith("Looking for upload disk..."))
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                $"{progressMessage} - Looking for port", null));
+                                string.Format(Resources.LookingForPortMessage, progressMessage), null));
                             currentProgress += percentageStep / sections;
                         }
 
@@ -371,21 +372,21 @@ public class PlatformIo
                     if (line.Contains("AVR device initialized and ready to accept instructions"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            $"{progressMessage} - Reading Settings", null));
+                            string.Format(Resources.ReadingSettingsMessage, progressMessage), null));
                         state = 1;
                     }
 
                     if (line.Contains("writing flash"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            $"{progressMessage} - Uploading", null));
+                            string.Format(Resources.UploadingMessage, progressMessage), null));
                         state = 2;
                     }
 
                     if (line.Contains("rp2040load"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            $"{progressMessage} - Uploading", null));
+                            string.Format(Resources.UploadingMessage, progressMessage), null));
                         ;
                     }
 
@@ -394,13 +395,13 @@ public class PlatformIo
                         var done = line.Count(s => s == '=') / 30.0;
                         platformIoOutput.OnNext(new PlatformIoState(
                             currentProgress + percentageStep / sections * done,
-                            $"{progressMessage} - Uploading", null));
+                            string.Format(Resources.UploadingMessage, progressMessage), null));
                     }
 
                     if (line.Contains("reading on-chip flash data"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            $"{progressMessage} - Verifying", null));
+                            string.Format(Resources.VerifyingMessage, progressMessage), null));
                         state = 3;
                     }
 
@@ -416,7 +417,7 @@ public class PlatformIo
                     }
 
                     if (!line.Contains("FAILED")) continue;
-                    platformIoOutput.OnError(new Exception("{progressMessage} - Error"));
+                    platformIoOutput.OnError(new Exception(string.Format(Resources.ErrorMessage, progressMessage)));
                     hasError = true;
                     break;
                 }
@@ -437,15 +438,15 @@ public class PlatformIo
                         {
                             case 1:
                                 platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                    $"{progressMessage} - Reading Settings", null));
+                                    string.Format(Resources.ReadingSettingsMessage, progressMessage), null));
                                 break;
                             case 2:
                                 platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                    $"{progressMessage} - Uploading", null));
+                                    string.Format(Resources.UploadingMessage, progressMessage), null));
                                 break;
                             case 3:
                                 platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                    $"{progressMessage} - Verifying", null));
+                                    string.Format(Resources.VerifyingMessage, progressMessage), null));
                                 break;
                         }
                     }
@@ -460,7 +461,7 @@ public class PlatformIo
                 {
                     currentProgress = progressEndingPercentage;
                     platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                        $"{progressMessage} - Waiting for Device", null));
+                        string.Format(Resources.WaitingMessage, progressMessage), null));
                 }
 
                 platformIoOutput.OnCompleted();

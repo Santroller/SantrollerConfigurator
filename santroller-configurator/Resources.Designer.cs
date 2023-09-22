@@ -5690,5 +5690,101 @@ namespace GuitarConfigurator.NetCore {
                 return ResourceManager.GetString("IncorrectTool2", resourceCulture);
             }
         }
+        
+        public static string UnoUnplugReplugMessage {
+            get {
+                return ResourceManager.GetString("UnoUnplugReplugMessage", resourceCulture);
+            }
+        }
+        
+        public static string BuildingMessage {
+            get {
+                return ResourceManager.GetString("BuildingMessage", resourceCulture);
+            }
+        }
+        
+        public static string ReleaseButtonMessage {
+            get {
+                return ResourceManager.GetString("ReleaseButtonMessage", resourceCulture);
+            }
+        }
+        
+        public static string DfuMessage {
+            get {
+                return ResourceManager.GetString("DfuMessage", resourceCulture);
+            }
+        }
+        
+        public static string LookingForPortMessage {
+            get {
+                return ResourceManager.GetString("LookingForPortMessage", resourceCulture);
+            }
+        }
+        
+        public static string ReadingSettingsMessage {
+            get {
+                return ResourceManager.GetString("ReadingSettingsMessage", resourceCulture);
+            }
+        }
+        
+        public static string UploadingMessage {
+            get {
+                return ResourceManager.GetString("UploadingMessage", resourceCulture);
+            }
+        }
+        
+        public static string VerifyingMessage {
+            get {
+                return ResourceManager.GetString("VerifyingMessage", resourceCulture);
+            }
+        }
+        
+        public static string ErrorMessage {
+            get {
+                return ResourceManager.GetString("ErrorMessage", resourceCulture);
+            }
+        }
+        
+        public static string WaitingMessage {
+            get {
+                return ResourceManager.GetString("WaitingMessage", resourceCulture);
+            }
+        }
+        
+        public static string ErasingMessage {
+            get {
+                return ResourceManager.GetString("ErasingMessage", resourceCulture);
+            }
+        }
+        
+        public static string LookingForDeviceMessage {
+            get {
+                return ResourceManager.GetString("LookingForDeviceMessage", resourceCulture);
+            }
+        }
+        
+        public static string SettingUpMessage {
+            get {
+                return ResourceManager.GetString("SettingUpMessage", resourceCulture);
+            }
+        }
+        
+        public static string ExtractingFirmwareMessage {
+            get {
+                return ResourceManager.GetString("ExtractingFirmwareMessage", resourceCulture);
+            }
+        }
+        
+        public static string ExtractingPlatformIoMessage {
+            get {
+                return ResourceManager.GetString("ExtractingPlatformIoMessage", resourceCulture);
+            }
+        }
+        
+        public static string NoFreeSpaceMessage {
+            get {
+                return ResourceManager.GetString("NoFreeSpaceMessage", resourceCulture);
+            }
+        }
     }
 }
