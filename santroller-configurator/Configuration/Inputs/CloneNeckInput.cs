@@ -123,7 +123,6 @@ public class CloneNeckInput : TwiInput
                 break;
         }
     }
-
     public override string GenerateAll(List<Tuple<Input, string>> bindings,
         ConfigField mode)
     {
