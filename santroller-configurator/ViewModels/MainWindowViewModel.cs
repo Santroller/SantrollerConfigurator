@@ -537,7 +537,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [RelayCommand]
     public void OpenReleasesPage()
     {
-        NavigateToUrl("https://github.com/sanjay900/guitar-configurator/releases");
+        NavigateToUrl("https://github.com/Santroller/Santroller/releases");
     }
     [RelayCommand]
     public void OpenCommercialUsePage()

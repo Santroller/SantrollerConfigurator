@@ -91,8 +91,8 @@ public class CloneNeckInput : TwiInput
 
     public override SerializedInput Serialise()
     {
-        if (Combined) return new SerializedGh5NeckInputCombined(Input, Peripheral);
-        return new SerializedGh5NeckInput(Peripheral, Sda, Scl, Input);
+        if (Combined) return new SerializedCloneNeckInputCombined(Input, Peripheral);
+        return new SerializedCloneNeckInput(Peripheral, Sda, Scl, Input);
     }
 
     public override void Update(Dictionary<int, int> analogRaw,
