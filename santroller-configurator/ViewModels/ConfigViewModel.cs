@@ -1063,12 +1063,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             // Sort by pin index, and then map to adc number and turn into an array
             var analogPins = directInputs.Where(s => s.IsAnalog).OrderBy(s => s.PinConfig.Pin)
                 .Select(s => Microcontroller.GetChannel(s.PinConfig.Pin, false).ToString()).Distinct().ToList();
+            var actualLedCount = LedCount + LedCountPeripheral;
+            if (LedType == LedType.None) actualLedCount = 0;
             config += "\n";
             config += $$"""
                         #define USB_HOST_STACK {{UsbHostEnabled.ToString().ToLower()}}
                         #define USB_HOST_DP_PIN {{UsbHostDp}}
                         #define DIGITAL_COUNT {{CalculateDebounceTicks()}}
-                        #define LED_COUNT {{LedCount + LedCountPeripheral}}
+                        #define LED_COUNT {{actualLedCount}}
                         #define LED_TYPE {{GetLedType()}}
                         #define ADC_PINS {{{string.Join(",", analogPins)}}}
                         #define ADC_COUNT {{analogPins.Count}}
