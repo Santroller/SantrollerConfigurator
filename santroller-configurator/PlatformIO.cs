@@ -21,6 +21,7 @@ public class PlatformIo
     private readonly Process _portProcess;
     private readonly string _pythonExecutable;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private readonly HashSet<string> _buttonEnvs = new() {"arduino_uno", "arduino_mega_2560", "arduino_mega_adk"};
 
     public PlatformIo()
     {
@@ -319,8 +320,15 @@ public class PlatformIo
                         var matches = Regex.Matches(line, @"Processing (.+?) \(.+\)");
                         if (matches.Count > 0)
                         {
+                            var env = matches[0].Groups[1].Value;
+                            var message = $"{progressMessage} - Building";
+                            if (_buttonEnvs.Contains(env))
+                            {
+                                message += " - Release the button";
+                            }
+
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                $"{progressMessage} - Building", null));
+                                message, null));
                             currentProgress += percentageStep / sections;
                         }
 
