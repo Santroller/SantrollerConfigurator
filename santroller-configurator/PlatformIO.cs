@@ -306,9 +306,11 @@ public class PlatformIo
                     }
 
                     if (line.Contains("searching for uno"))
+                    {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                             $"{progressMessage} - Please unplug your device, hold the reset button and plug it back in",
                             null));
+                    }
 
                     platformIoOutput.OnNext(platformIoOutput.Value.WithLog(line));
 
