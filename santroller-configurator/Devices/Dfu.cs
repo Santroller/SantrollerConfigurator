@@ -57,7 +57,6 @@ public class Dfu : IConfigurableDevice
     {
     }
 
-
     public Microcontroller GetMicrocontroller(ConfigViewModel model)
     {
         var board = Board;
