@@ -119,7 +119,6 @@ public class CloneNeckInput : TwiInput
                         output |= InputToButton[type];
                     }
                 }
-
                 RawValue = Gh5NeckInput.Gh5MappingsReversed.TryGetValue(output, out var value) ? value : 0;
                 break;
         }
