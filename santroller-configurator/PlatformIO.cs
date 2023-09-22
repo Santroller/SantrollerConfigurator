@@ -326,6 +326,7 @@ public class PlatformIo
                             {
                                 message += " - Release the button";
                             }
+                            
 
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                                 message, null));
