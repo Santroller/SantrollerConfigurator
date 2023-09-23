@@ -50,6 +50,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
         });
     }
 
+    
     public void DeviceAdded(IConfigurableDevice device)
     {
         if (!_writing) return;
