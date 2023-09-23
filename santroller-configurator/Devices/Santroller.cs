@@ -103,7 +103,6 @@ public class Santroller : ConfigurableUsbDevice
             InvalidDevice = true;
             return;
         }
-
         Load();
         if (Board.Name == Board.Generic.Name)
         {
