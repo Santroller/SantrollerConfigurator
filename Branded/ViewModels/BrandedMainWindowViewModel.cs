@@ -19,7 +19,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
 
     public BrandedConfiguration SelectedConfig { get; set; }
 
-    private bool _writing = false;
+    private bool _writing;
 
     private string ColorToHex(Avalonia.Media.Color color)
     {
