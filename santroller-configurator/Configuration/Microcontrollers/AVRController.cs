@@ -216,12 +216,13 @@ public abstract class AvrController : Microcontroller
         return ret;
     }
 
-    public override string GenerateAckDefines(int ack)
+    public override IEnumerable<string> GenerateAckDefines(int ack)
     {
-        return $"INTERRUPT_PS2_ACK {GetInterruptForPin(ack)}";
+        var interrupt = GetInterruptForPin(ack);
+        return new List<string> {$"INTERRUPT_PS2_ACK INT{interrupt}", $"INTERRUPT_PS2_ACK_VECT INT{interrupt}_vect", $"INTERRUPT_PS2_ACK_EICRA _BV(ISC{interrupt}0) | _BV(ISC{interrupt}1)"};
     }
 
-    protected abstract string GetInterruptForPin(int ack);
+    protected abstract int GetInterruptForPin(int ack);
 
     public override int GetFirstAnalogPin()
     {

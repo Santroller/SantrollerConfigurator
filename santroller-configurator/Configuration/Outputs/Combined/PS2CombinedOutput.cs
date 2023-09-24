@@ -132,6 +132,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
     }
 
     public ReadOnlyObservableCollection<int> AvailablePins => Model.AvailablePinsDigital;
+    public ReadOnlyObservableCollection<int> AvailablePinsInterrupt => Model.AvailablePinsInterrupt;
 
     [Reactive] public Ps2ControllerType DetectedType { get; set; }
     [Reactive] public Ps2ControllerType SelectedType { get; set; } = Ps2ControllerType.Selected;

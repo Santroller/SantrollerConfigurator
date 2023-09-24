@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Types;
@@ -184,9 +185,9 @@ public class Pico : Microcontroller
         return new PicoTwiConfig(model, type, peripheral, sda, scl, clock);
     }
 
-    public override string GenerateAckDefines(int ack)
+    public override IEnumerable<string> GenerateAckDefines(int ack)
     {
-        return "";
+        return Array.Empty<string>();
     }
 
     public override List<int> SupportedAckPins()
@@ -269,7 +270,7 @@ public class Pico : Microcontroller
         return PwmPins;
     }
 
-    public override bool FilterPin(bool isAnalog, bool isBluetooth, int pin)
+    public override bool FilterPin(bool isAnalog, bool isBluetooth, bool isInterrupt, int pin)
     {
         if (isBluetooth && BluetoothPins.Contains(pin))
         {

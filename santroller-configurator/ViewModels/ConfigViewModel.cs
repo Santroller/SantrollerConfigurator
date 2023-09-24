@@ -179,15 +179,20 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         AllPins = new SourceList<int>();
         AllPins.AddRange(Microcontroller.GetAllPins());
         AllPins.Connect().Filter(this.WhenAnyValue(s => s.IsBluetooth)
-                .Select(s => new Func<int, bool>(pin => Microcontroller.FilterPin(false, s, pin))))
+                .Select(s => new Func<int, bool>(pin => Microcontroller.FilterPin(false, s, true, pin))))
+            .Bind(out var interruptPins)
+            .Subscribe();
+        AllPins.Connect().Filter(this.WhenAnyValue(s => s.IsBluetooth)
+                .Select(s => new Func<int, bool>(pin => Microcontroller.FilterPin(false, s, false, pin))))
             .Bind(out var digitalPins)
             .Subscribe();
         AllPins.Connect().Filter(this.WhenAnyValue(s => s.IsBluetooth)
-                .Select(s => new Func<int, bool>(pin => Microcontroller.FilterPin(true, s, pin))))
+                .Select(s => new Func<int, bool>(pin => Microcontroller.FilterPin(true, s, false, pin))))
             .Bind(out var analogPins)
             .Subscribe();
         AvailablePinsAnalog = analogPins;
         AvailablePinsDigital = digitalPins;
+        AvailablePinsInterrupt = interruptPins;
         _usbHostDm = new DirectPinConfig(this, UsbHostPinTypeDm, -1, false, DevicePinMode.Skip);
         _usbHostDp = new DirectPinConfig(this, UsbHostPinTypeDp, -1, false, DevicePinMode.Skip);
         if (!device.LoadConfiguration(this, false))
@@ -638,6 +643,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
 
     public readonly ReadOnlyObservableCollection<int> AvailablePinsDigital;
+    public readonly ReadOnlyObservableCollection<int> AvailablePinsInterrupt;
     public readonly ReadOnlyObservableCollection<int> AvailablePinsAnalog;
 
     // Since DM and DP need to be next to eachother, you cannot use pins at the far ends

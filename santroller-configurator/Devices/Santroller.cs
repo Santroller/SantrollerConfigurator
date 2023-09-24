@@ -338,7 +338,7 @@ public class Santroller : ConfigurableUsbDevice
         if (analog)
         {
             var pins = _microcontroller.GetAllPins()
-                .Where(s => _microcontroller.FilterPin(true, _model.IsOrWasBluetooth, s)).Except(importantPins)
+                .Where(s => _microcontroller.FilterPin(true, _model.IsOrWasBluetooth, false, s)).Except(importantPins)
                 .ToList();
             var analogVals = new Dictionary<int, int>();
             foreach (var pin in pins)
@@ -383,7 +383,7 @@ public class Santroller : ConfigurableUsbDevice
         }
 
         var allPins = _microcontroller.GetAllPins()
-            .Where(s => _microcontroller.FilterPin(false, _model.IsOrWasBluetooth, s)).Except(importantPins)
+            .Where(s => _microcontroller.FilterPin(false, _model.IsOrWasBluetooth, false, s)).Except(importantPins)
             .Select(s => new DevicePin(s, DevicePinMode.PullUp)).ToList();
         var ports = microcontroller.GetPortsForTicking(allPins);
         foreach (var (port, mask) in ports)

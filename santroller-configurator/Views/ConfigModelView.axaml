@@ -843,7 +843,7 @@
                                Width="300" Content="{x:Static netCore:Resources.AckLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Ack}"
-                                  ItemsSource="{Binding AvailablePins}"
+                                  ItemsSource="{Binding AvailablePinsInterrupt}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -2065,7 +2065,7 @@
                                Width="300" Content="{x:Static netCore:Resources.AckLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Ack}"
-                                  ItemsSource="{Binding AvailablePins}"
+                                  ItemsSource="{Binding AvailablePinsInterrupt}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>

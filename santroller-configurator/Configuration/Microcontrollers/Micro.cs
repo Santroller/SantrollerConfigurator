@@ -91,13 +91,13 @@ public class Micro : AvrController
         9 // A11		D12		PD6					ADC9
     };
 
-    public static readonly Dictionary<int, string> Interrupts = new()
+    public static readonly Dictionary<int, int> Interrupts = new()
     {
-        {0, "INT2"},
-        {1, "INT3"},
-        {2, "INT1"},
-        {3, "INT0"},
-        {7, "INT4"}
+        {0, 2},
+        {1, 3},
+        {2, 1},
+        {3, 0},
+        {7, 6}
     };
 
     public Micro(Board board)
@@ -149,7 +149,7 @@ public class Micro : AvrController
         };
     }
 
-    protected override string GetInterruptForPin(int ack)
+    protected override int GetInterruptForPin(int ack)
     {
         return Interrupts[ack];
     }
@@ -201,8 +201,12 @@ public class Micro : AvrController
         return Enumerable.Range(0, PinIndex.Length).ToList();
     }
 
-    public override bool FilterPin(bool isAnalog, bool isBluetooth, int pin)
+    public override bool FilterPin(bool isAnalog, bool isBluetooth, bool isInterrupt, int pin)
     {
+        if (isInterrupt)
+        {
+            return Interrupts.ContainsKey(pin);
+        }
         return !isAnalog || AnalogPins.Contains(pin);
     }
 }

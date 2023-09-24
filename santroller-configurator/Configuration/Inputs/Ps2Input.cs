@@ -234,6 +234,7 @@ public class Ps2Input : SpiInput
 
     public override InputType? InputType => Types.InputType.Ps2Input;
     public ReadOnlyObservableCollection<int> AvailablePins => Model.AvailablePinsDigital;
+    public ReadOnlyObservableCollection<int> AvailablePinsInterrupt => Model.AvailablePinsInterrupt;
 
     public override IList<DevicePin> Pins => new List<DevicePin>
     {
@@ -467,8 +468,7 @@ public class Ps2Input : SpiInput
         defines.Add($"PS2_ACK {Ack}");
         defines.Add($"INPUT_PS2_ATT_SET() {Model.Microcontroller.GenerateDigitalWrite(Att, true, Peripheral)}");
         defines.Add($"INPUT_PS2_ATT_CLEAR() {Model.Microcontroller.GenerateDigitalWrite(Att, false, Peripheral)}");
-        var ack = Model.Microcontroller.GenerateAckDefines(Ack);
-        if (!string.IsNullOrEmpty(ack)) defines.Add(ack);
+        defines.AddRange(Model.Microcontroller.GenerateAckDefines(Ack));
 
         return defines;
     }

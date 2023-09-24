@@ -24,10 +24,10 @@ public class Uno : AvrController
         'C', 'C', 'C', 'C', 'C'
     };
 
-    public static readonly Dictionary<int, string> Interrupts = new()
+    public static readonly Dictionary<int, int> Interrupts = new()
     {
-        {2, "INT0"},
-        {3, "INT1"}
+        {2, 0},
+        {3, 1}
     };
 
     public Uno(Board board)
@@ -62,7 +62,7 @@ public class Uno : AvrController
 
     public override List<int> PwmPins { get; } = new() {3, 5, 6, 9, 10, 11};
 
-    protected override string GetInterruptForPin(int ack)
+    protected override int GetInterruptForPin(int ack)
     {
         return Interrupts[ack];
     }
@@ -113,8 +113,12 @@ public class Uno : AvrController
         return Enumerable.Range(0, PinIndex.Length).ToList();
     }
 
-    public override bool FilterPin(bool isAnalog, bool isBluetooth, int pin)
+    public override bool FilterPin(bool isAnalog, bool isBluetooth, bool isInterrupt, int pin)
     {
+        if (isInterrupt)
+        {
+            return Interrupts.ContainsKey(pin);
+        }
         return !isAnalog || AnalogPins.Contains(pin);
     }
 }

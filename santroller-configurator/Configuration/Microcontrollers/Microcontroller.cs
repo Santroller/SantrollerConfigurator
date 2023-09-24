@@ -56,7 +56,7 @@ public abstract class Microcontroller
     public abstract TwiConfig AssignTwiPins(ConfigViewModel model, string type, bool peripheral, int sda, int scl, int clock);
     public abstract string GetPinForMicrocontroller(int pin, bool twi, bool spi);
 
-    public abstract string GenerateAckDefines(int ack);
+    public abstract IEnumerable<string> GenerateAckDefines(int ack);
 
     public abstract List<int> SupportedAckPins();
 
@@ -67,7 +67,7 @@ public abstract class Microcontroller
 
     public abstract int GetFirstAnalogPin();
     public abstract List<int> GetAllPins();
-    public abstract bool FilterPin(bool isAnalog, bool isBluetooth, int pin);
+    public abstract bool FilterPin(bool isAnalog, bool isBluetooth, bool isInterrupt, int pin);
 
     public abstract Dictionary<int, int> GetPortsForTicking(IEnumerable<DevicePin> digital);
 

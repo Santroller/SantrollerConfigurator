@@ -79,14 +79,14 @@ public class Mega : AvrController
         7 // PK 7 ** 69 ** A15	
     };
 
-    public static readonly Dictionary<int, string> Interrupts = new()
+    public static readonly Dictionary<int, int> Interrupts = new()
     {
-        {2, "INT0"},
-        {3, "INT1"},
-        {18, "INT5"},
-        {19, "INT4"},
-        {20, "INT3"},
-        {21, "INT2"}
+        {2, 0},
+        {3, 1},
+        {18, 5},
+        {19, 4},
+        {20, 3},
+        {21, 2}
     };
 
     private static readonly char[] Ports =
@@ -196,7 +196,7 @@ public class Mega : AvrController
     public override List<int> PwmPins => Enumerable.Range(2, 12).Concat(Enumerable.Range(44, 3)).ToList();
 
 
-    protected override string GetInterruptForPin(int ack)
+    protected override int GetInterruptForPin(int ack)
     {
         return Interrupts[ack];
     }
@@ -211,8 +211,12 @@ public class Mega : AvrController
         return Enumerable.Range(0, PinIndex.Length).ToList();
     }
 
-    public override bool FilterPin(bool isAnalog, bool isBluetooth, int pin)
+    public override bool FilterPin(bool isAnalog, bool isBluetooth, bool isInterrupt, int pin)
     {
+        if (isInterrupt)
+        {
+            return Interrupts.ContainsKey(pin);
+        }
         return !isAnalog || AnalogPins.Contains(pin);
     }
 
