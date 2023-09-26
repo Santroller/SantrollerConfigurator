@@ -52,7 +52,7 @@ public class MouseButton : OutputButton
         string combinedExtra,
         List<int> combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
-        return mode is not (ConfigField.Mouse or ConfigField.Shared)
+        return mode is not (ConfigField.Mouse or ConfigField.Shared or ConfigField.Reset)
             ? ""
             : base.Generate(mode, debounceIndex, extra, combinedExtra, combinedDebounce, macros, writer);
     }

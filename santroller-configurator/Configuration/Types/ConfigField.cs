@@ -3,6 +3,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Types;
 public enum ConfigField
 {
     Shared,
+    Reset,
     Universal,
     Xbox360,
     XboxOne,

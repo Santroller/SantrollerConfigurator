@@ -1087,6 +1087,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             {{GenerateTick(ConfigField.Shared, writer)}}
                         #define TICK_DETECTION \
                             {{GenerateTick(ConfigField.Detection, writer)}}
+                        #define TICK_RESET \
+                            {{GenerateTick(ConfigField.Reset, writer)}}
                         #define TICK_PS3 \
                             {{GenerateTick(ConfigField.Ps3, writer)}}
                         #define TICK_PS3_WITHOUT_CAPTURE \
@@ -1201,6 +1203,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                       #define TICK_PS3_WITHOUT_CAPTURE
                       #define TICK_PS4
                       #define TICK_XINPUT
+                      #define TICK_RESET
                       #define TICK_XBOX_ONE
                       #define DIGITAL_COUNT 0
                       #define LED_COUNT 0
