@@ -86,7 +86,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         BindableTwi = Microcontroller.TwiAssignable && !Branded;
         BindAllCommand = ReactiveCommand.CreateFromTask(BindAllAsync);
 
-        WriteConfigCommand = ReactiveCommand.CreateFromObservable(() => Main.Write(this),
+        WriteConfigCommand = ReactiveCommand.CreateFromObservable(() =>
+            {
+                SetUpDiff();
+                return Main.Write(this);
+            },
             this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected, x => x.HasError)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: true, Item3: false}));
         WriteUf2Command = ReactiveCommand.CreateFromObservable(() => Main.SaveUf2(this),
@@ -1767,7 +1771,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 Main.Complete(100);
                 Device = device;
                 Microcontroller = device.GetMicrocontroller(this);
-                SetUpDiff();
                 Main.SetDifference(false);
                 santroller.StartTicking(this);
             }
