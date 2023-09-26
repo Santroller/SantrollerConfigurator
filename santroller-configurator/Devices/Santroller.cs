@@ -307,6 +307,7 @@ public class Santroller : ConfigurableUsbDevice
     {
         _model = model;
 
+        _deviceControllerType = model.DeviceControllerType;
         model.Bindings.Connect().Bind(out var allOutputs).Subscribe();
         _bindings = allOutputs;
         _timer.Start();
