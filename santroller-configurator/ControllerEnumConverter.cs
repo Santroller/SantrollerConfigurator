@@ -19,17 +19,6 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.Guide
     };
 
-    private static readonly List<StandardButtonType> SupportedButtonsDrums = new()
-    {
-        StandardButtonType.DpadUp,
-        StandardButtonType.DpadDown,
-        StandardButtonType.DpadLeft,
-        StandardButtonType.DpadRight,
-        StandardButtonType.Start,
-        StandardButtonType.Back,
-        StandardButtonType.Guide
-    };
-
     private static readonly List<StandardButtonType> SupportedButtonsNonGamepad = new()
     {
         StandardButtonType.A,
@@ -182,14 +171,13 @@ public class ControllerEnumConverter : IMultiValueConverter
             case DeviceControllerType.Turntable:
             case DeviceControllerType.DancePad:
             case DeviceControllerType.StageKit:
+            case DeviceControllerType.GuitarHeroDrums:
+            case DeviceControllerType.RockBandDrums:
                 return SupportedButtonsNonGamepad.Contains(button);
             case DeviceControllerType.LiveGuitar:
             case DeviceControllerType.GuitarHeroGuitar:
             case DeviceControllerType.RockBandGuitar:
                 return SupportedButtonsGuitar.Contains(button);
-            case DeviceControllerType.GuitarHeroDrums:
-            case DeviceControllerType.RockBandDrums:
-                return SupportedButtonsDrums.Contains(button);
             default:
                 return true;
         }
