@@ -1768,6 +1768,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 Main.Complete(100);
                 Device = device;
                 Microcontroller = device.GetMicrocontroller(this);
+                SetUpDiff();
                 Main.SetDifference(false);
                 santroller.StartTicking(this);
             }
