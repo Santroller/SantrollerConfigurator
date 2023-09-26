@@ -1769,7 +1769,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 Device = device;
                 Microcontroller = device.GetMicrocontroller(this);
                 Main.SetDifference(false);
-                santroller.LoadConfiguration(this, false);
+                santroller.StartTicking(this);
             }
 
             Device.DeviceAdded(device);
