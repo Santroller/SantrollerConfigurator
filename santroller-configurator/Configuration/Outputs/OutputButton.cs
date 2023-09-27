@@ -76,9 +76,9 @@ public abstract class OutputButton : Output
             debounce /= 10;
         }
 
-        if (mode == ConfigField.Reset && debounce == 0)
+        if (mode == ConfigField.Reset)
         {
-            return $"debounce[{debounceIndex}]=0;";
+            return debounce == 0 ? $"debounce[{debounceIndex}]=0;" : "";
         }
         debounce += 1;
         

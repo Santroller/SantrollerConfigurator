@@ -308,6 +308,7 @@ public class WiiInput : TwiInput
 
         if (checkedType != WiiControllerType) return;
 
+        if (wiiData.IsEmpty) return;
         var wiiButtonsLow = ~wiiData[4];
         var wiiButtonsHigh = ~wiiData[5];
         var highResolution = checkedType == WiiControllerType.ClassicController && wiiData.Length == 8;
