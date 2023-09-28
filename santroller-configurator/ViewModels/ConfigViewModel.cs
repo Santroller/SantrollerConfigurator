@@ -205,6 +205,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Main.Progress = 0;
             // Write the full config, bluetooth has zero config so we can actually properly write it 
             Main.Write(this);
+            SetUpDiff();
         }
 
         if (Main is {IsUno: false, IsMega: false}) return;
@@ -830,32 +831,32 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     Expanded = true
                 };
-                output.SetOutputsOrDefaults(Array.Empty<Output>());
                 Bindings.Add(output);
+                output.SetOutputsOrDefaults(Array.Empty<Output>());
                 break;
             case DeviceInputType.Ps2:
                 var ps2Output = new Ps2CombinedOutput(this, false)
                 {
                     Expanded = true
                 };
-                ps2Output.SetOutputsOrDefaults(Array.Empty<Output>());
                 Bindings.Add(ps2Output);
+                ps2Output.SetOutputsOrDefaults(Array.Empty<Output>());
                 break;
             case DeviceInputType.Usb:
                 var usbOutput = new UsbHostCombinedOutput(this)
                 {
                     Expanded = true
                 };
-                usbOutput.SetOutputsOrDefaults(Array.Empty<Output>());
                 Bindings.Add(usbOutput);
+                usbOutput.SetOutputsOrDefaults(Array.Empty<Output>());
                 break;
             case DeviceInputType.Bluetooth:
                 var bluetoothOutput = new BluetoothOutput(this)
                 {
                     Expanded = true
                 };
-                bluetoothOutput.SetOutputsOrDefaults(Array.Empty<Output>());
                 Bindings.Add(bluetoothOutput);
+                bluetoothOutput.SetOutputsOrDefaults(Array.Empty<Output>());
                 break;
             case DeviceInputType.Peripheral:
                 HasPeripheral = true;
@@ -1696,7 +1697,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         foreach (var output in Bindings.Items)
         {
             output.UpdateErrors();
-            ;
             if (!string.IsNullOrEmpty(output.ErrorText)) foundError = true;
         }
 
@@ -1879,10 +1879,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                               Main.Router.NavigationStack.Last() is not InitialConfigViewModel))
         {
             _timer.Stop();
+            Main.ShowError = false;
+            Main.ProgressbarColor = Main.ProgressBarPrimary;
             Main.SetDifference(false);
             return;
         }
-
         if (_currentConfig == null || _lastConfig == null || _currentConfigData == null) return;
         _currentConfig.Update(this, Bindings.Items, false);
         using var outputStream = new MemoryStream(_currentConfigData);
