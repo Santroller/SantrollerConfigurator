@@ -223,6 +223,7 @@ public class PlatformIo
                         await subject;
                         currentProgress += percentageStep / sections;
                     }
+                    
                     platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                         string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
                     currentProgress += percentageStep / sections;
