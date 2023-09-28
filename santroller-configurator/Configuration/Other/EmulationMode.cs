@@ -25,7 +25,7 @@ public class EmulationMode : Output
         Type = type;
         _emulationModes.AddRange(Enum.GetValues<EmulationModeType>());
         _emulationModes.Connect()
-            .Filter(this.WhenAnyValue(x => x.Model.DeviceControllerType).Select(CreateFilter))
+            .Filter(this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.Model.IsPico).Select(CreateFilter))
             .Bind(out var modes)
             .Subscribe();
         EmulationModes = modes;
@@ -51,10 +51,10 @@ public class EmulationMode : Output
     public override string LedOnLabel => "";
     public override string LedOffLabel => "";
 
-    private static Func<EmulationModeType, bool> CreateFilter(DeviceControllerType deviceControllerType)
+    private static Func<EmulationModeType, bool> CreateFilter((DeviceControllerType deviceControllerType, bool isPico) data)
     {
-        return mode => mode != EmulationModeType.Wii || deviceControllerType is DeviceControllerType.RockBandDrums
-            or DeviceControllerType.RockBandGuitar;
+        return mode => (mode != EmulationModeType.Wii || data.deviceControllerType is DeviceControllerType.RockBandDrums
+            or DeviceControllerType.RockBandGuitar) && (mode != EmulationModeType.XboxOne || data.isPico);
     }
 
     private string GetDefinition()
