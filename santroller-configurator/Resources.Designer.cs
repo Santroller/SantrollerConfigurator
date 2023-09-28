@@ -5751,6 +5751,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string WaitingMessageReplug {
+            get {
+                return ResourceManager.GetString("WaitingMessageReplug", resourceCulture);
+            }
+        }
+        
         public static string ErasingMessage {
             get {
                 return ResourceManager.GetString("ErasingMessage", resourceCulture);

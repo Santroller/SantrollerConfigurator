@@ -34,7 +34,6 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
     public abstract bool MigrationSupported { get; }
 
     public abstract void Bootloader();
-    public abstract void BootloaderUsb();
 
     public bool IsSameDevice(PlatformIoPort port)
     {

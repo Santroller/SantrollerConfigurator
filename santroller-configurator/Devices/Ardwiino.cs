@@ -164,11 +164,6 @@ public class Ardwiino : ConfigurableUsbDevice
         WriteData(JumpBootloaderCommand, RequestHidSetReport, Array.Empty<byte>());
     }
 
-    public override void BootloaderUsb()
-    {
-        WriteData(JumpBootloaderCommandUno, RequestHidSetReport, Array.Empty<byte>());
-    }
-
     public override void Revert()
     {
     }

@@ -122,16 +122,12 @@ public class Santroller : ConfigurableUsbDevice
     public override void Bootloader()
     {
         if (Board.HasUsbmcu)
+        {
             WriteData(0, (byte) Commands.CommandJumpBootloaderUnoUsbThenSerial, Array.Empty<byte>());
+        }
         else
             WriteData(0, (byte) Commands.CommandJumpBootloader, Array.Empty<byte>());
 
-        Device.Close();
-    }
-
-    public override void BootloaderUsb()
-    {
-        WriteData(0, (byte) Commands.CommandJumpBootloaderUno, Array.Empty<byte>());
         Device.Close();
     }
 

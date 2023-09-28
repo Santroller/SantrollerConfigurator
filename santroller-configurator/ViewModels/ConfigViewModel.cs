@@ -1769,7 +1769,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         RxApp.MainThreadScheduler.Schedule(() =>
         {
             Console.WriteLine($"Add called, current device: {Device},  new device: {device}");
-            if (device is Santroller santroller && Main.Working && !Main.WaitingForUnoSerial)
+            if (device is Santroller santroller && Main.Working)
             {
                 Main.Complete(100);
                 Device = device;

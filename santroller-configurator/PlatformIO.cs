@@ -22,7 +22,6 @@ public class PlatformIo
     private readonly Process _portProcess;
     private readonly string _pythonExecutable;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
-    private readonly HashSet<string> _buttonEnvs = new() {"arduino_uno", "arduino_mega_2560", "arduino_mega_adk"};
 
     public PlatformIo()
     {
@@ -307,13 +306,6 @@ public class PlatformIo
                         continue;
                     }
 
-                    if (line.Contains("searching for uno"))
-                    {
-                        platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.UnoUnplugReplugMessage, progressMessage),
-                            null));
-                    }
-
                     platformIoOutput.OnNext(platformIoOutput.Value.WithLog(line));
 
                     if (uploading)
@@ -321,13 +313,7 @@ public class PlatformIo
                         var matches = Regex.Matches(line, @"Processing (.+?) \(.+\)");
                         if (matches.Count > 0)
                         {
-                            var env = matches[0].Groups[1].Value;
                             var message = string.Format(Resources.BuildingMessage, progressMessage);
-                            if (_buttonEnvs.Contains(env))
-                            {
-                                message += Resources.ReleaseButtonMessage;
-                            }
-                            
 
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                                 message, null));
@@ -460,8 +446,17 @@ public class PlatformIo
                 if (uploading)
                 {
                     currentProgress = progressEndingPercentage;
-                    platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                        string.Format(Resources.WaitingMessage, progressMessage), null));
+                    if (sections == 11)
+                    {
+                        platformIoOutput.OnNext(new PlatformIoState(currentProgress,
+                            string.Format(Resources.WaitingMessageReplug, progressMessage), null));
+                    }
+                    else
+                    {
+                        platformIoOutput.OnNext(new PlatformIoState(currentProgress,
+                            string.Format(Resources.WaitingMessage, progressMessage), null)); 
+                    }
+                    
                 }
 
                 platformIoOutput.OnCompleted();

@@ -557,16 +557,13 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         Working = true;
         ProgressbarColor = ProgressBarPrimary;
     }
-    
-    public bool WaitingForUnoSerial => Message.EndsWith(
-        "Please unplug your device, hold the reset button and plug it back in");
 
     protected void UpdateProgress(PlatformIo.PlatformIoState state)
     {
         if (!Working) return;
         
         ProgressbarColor =
-            state.Message.Contains("Please unplug your device") ||
+            state.Message.Contains("Please Unplug") ||
             state.Message.Contains("Looking for device in DFU mode")
                 ? ProgressBarWarning
                 : ProgressBarPrimary;

@@ -35,9 +35,6 @@ public class PicoDevice : IConfigurableDevice
     {
     }
 
-    public void BootloaderUsb()
-    {
-    }
 
     void IConfigurableDevice.DeviceAdded(IConfigurableDevice device)
     {

@@ -98,10 +98,6 @@ public class Dfu : IConfigurableDevice
     {
     }
 
-    public void BootloaderUsb()
-    {
-    }
-
     public bool IsPico()
     {
         return false;

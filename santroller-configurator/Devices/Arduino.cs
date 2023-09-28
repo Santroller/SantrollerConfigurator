@@ -89,11 +89,6 @@ public class Arduino : IConfigurableDevice
         serial.Close();
     }
 
-    public void BootloaderUsb()
-    {
-        // Automagically handled by pio
-    }
-
     public Microcontroller GetMicrocontroller(ConfigViewModel model)
     {
         if (model.Main.IsDfu || model.Main.IsMega || model.Main.IsUno)

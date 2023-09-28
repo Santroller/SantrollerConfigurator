@@ -2992,6 +2992,9 @@
     <data name="WaitingMessage" xml:space="preserve">
         <value>{0} - Waiting for Device</value>
     </data>
+    <data name="WaitingMessageReplug" xml:space="preserve">
+        <value>{0} - Waiting for Device - Please Unplug and Replug Your Device</value>
+    </data>
     <data name="ErasingMessage" xml:space="preserve">
         <value>Erasing device</value>
     </data>
