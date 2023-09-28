@@ -415,6 +415,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         }
     }
 
+    [Reactive] public bool LookingForDfu { get; set; } = false;
+
 
     [Reactive] private bool Installed { get; set; }
     [Reactive] public bool HasChanges { get; set; }
@@ -462,7 +464,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             environment = environment.Replace("_16", "");
         }
 
-        if (config.Microcontroller.Board.HasUsbmcu) environment += "_usb";
+        if (config.Microcontroller.Board.HasUsbmcu)
+        {
+            environment += "_usb";
+        }
 
         var state = Observable.Return(new PlatformIo.PlatformIoState(startingPercentage, "", null));
 
@@ -550,6 +555,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         Working = false;
         Message = "Done";
         Progress = total;
+        ProgressbarColor = ProgressBarPrimary;
     }
 
     public void StartWorking()
@@ -561,10 +567,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     protected void UpdateProgress(PlatformIo.PlatformIoState state)
     {
         if (!Working) return;
-        
+        LookingForDfu = state.Message.Contains("Looking for device in DFU mode");
         ProgressbarColor =
             state.Message.Contains("Please Unplug") ||
-            state.Message.Contains("Looking for device in DFU mode")
+            LookingForDfu
                 ? ProgressBarWarning
                 : ProgressBarPrimary;
         Progress = state.Percentage;

@@ -35,10 +35,6 @@ public class InitialConfigViewModel : ReactiveObject, IRoutableViewModel
         }
         
         DfuImage = GetImage();
-        if (Model.Device is not Arduino arduino) return;
-        if (!arduino.HasDfuMode()) return;
-        HasDfuImage = true;
-        arduino.DfuDetected.Subscribe(s => HasDfuImage = false);
     }
 
     public bool IsPeripheral => Main.DeviceInputType is DeviceInputType.Peripheral;
@@ -47,7 +43,6 @@ public class InitialConfigViewModel : ReactiveObject, IRoutableViewModel
     public ConfigViewModel Model { get; }
     public ReactiveCommand<Unit, IRoutableViewModel> ConfigureCommand { get; }
     public Bitmap? DfuImage { get; }
-    [Reactive] public bool HasDfuImage { get; private set; }
     public string? UrlPathSegment => Guid.NewGuid().ToString()[..5];
     public IScreen HostScreen { get; }
 

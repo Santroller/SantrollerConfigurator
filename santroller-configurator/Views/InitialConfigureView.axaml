@@ -40,9 +40,9 @@
                            Text="{x:Static netCore:Resources.InitialConfigPeripheralDesc}" Margin="0 0 0 20" />
                 <TextBlock IsVisible="{Binding !IsPeripheral}" HorizontalAlignment="Center"
                            Text="{x:Static netCore:Resources.InitialConfigDesc}" Margin="0 0 0 20" />
-                <TextBlock IsVisible="{Binding HasDfuImage}" HorizontalAlignment="Center"
+                <TextBlock IsVisible="{Binding Main.LookingForDfu}" HorizontalAlignment="Center"
                            Text="{x:Static netCore:Resources.UnoBridgeDesc}" Margin="0 0 0 20" />
-                <Image IsVisible="{Binding HasDfuImage}" Source="{Binding DfuImage}" Margin="0 0 0 20" MaxHeight="500" />
+                <Image IsVisible="{Binding Main.LookingForDfu}" Source="{Binding DfuImage}" Margin="0 0 0 20" MaxHeight="500" />
                 <Button IsVisible="{Binding IsPeripheral}" Content="{x:Static netCore:Resources.ReturnButtonLabel}" Command="{Binding ConfigureCommand}"
                         HorizontalAlignment="Center"
                         Margin="0 20 0 0" />

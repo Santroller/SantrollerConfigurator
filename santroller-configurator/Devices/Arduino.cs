@@ -18,7 +18,6 @@ public class Arduino : IConfigurableDevice
 
     public Arduino(PlatformIoPort port)
     {
-        DfuDetected = new Subject<bool>();
         _port = port.Port;
         foreach (var board in Board.Boards)
         {
@@ -66,8 +65,6 @@ public class Arduino : IConfigurableDevice
     public bool Is32U4Bootloader { get; private set; }
 
     public Board Board { get; set; }
-
-    public Subject<bool> DfuDetected { get; }
 
     public bool MigrationSupported { get; }
 
@@ -181,9 +178,6 @@ public class Arduino : IConfigurableDevice
                 _port = pico.GetPath();
                 _arduino32U4Path.TrySetResult(pico.GetPath());
                 _arduino32U4Path = null;
-                break;
-            case Dfu when !Is32U4():
-                DfuDetected.OnNext(true);
                 break;
         }
     }

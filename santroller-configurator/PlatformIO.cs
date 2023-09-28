@@ -140,20 +140,20 @@ public class PlatformIo
     public BehaviorSubject<PlatformIoState> RunAvrdudeErase(IConfigurableDevice device, string progressMessage,
         double progressStartingPercentage, double progressEndingPercentage)
     {
-        if (device is Arduino {Is32U4Bootloader: true} or Santroller or Ardwiino)
+        return device switch
         {
-            return RunPlatformIo("microdetect",
-                new[]
-                {
-                    "run", "-t", "micro_clean",
-                }, progressMessage, progressStartingPercentage, progressEndingPercentage, device, true);
-        }
-
-        return RunPlatformIo("microdetect",
-            new[]
-            {
-                "run", "-t", "micro_clean_jump",
-            }, progressMessage, progressStartingPercentage, progressEndingPercentage, device, true);
+            Arduino arduino when arduino.IsUno() => RunPlatformIo("microdetect",
+                new[] {"run", "-t", "arduino_uno_clean",}, progressMessage, progressStartingPercentage,
+                progressEndingPercentage, device, true),
+            Arduino arduino2 when arduino2.IsMega() => RunPlatformIo("microdetect",
+                new[] {"run", "-t", "arduino_mega_clean",}, progressMessage, progressStartingPercentage,
+                progressEndingPercentage, device, true),
+            Arduino {Is32U4Bootloader: true} or Santroller or Ardwiino => RunPlatformIo("microdetect",
+                new[] {"run", "-t", "micro_clean",}, progressMessage, progressStartingPercentage,
+                progressEndingPercentage, device, true),
+            _ => RunPlatformIo("microdetect", new[] {"run", "-t", "micro_clean_jump",}, progressMessage,
+                progressStartingPercentage, progressEndingPercentage, device, true)
+        };
     }
 
     public BehaviorSubject<PlatformIoState> RunAvrdudeErase(Dfu dfu, string progressMessage,
@@ -215,6 +215,14 @@ public class PlatformIo
                 if (device is Arduino) sections = 10;
                 if (environment.EndsWith("_usb"))
                 {
+                    if (device is Arduino)
+                    {
+                        sections += 1;
+                        var subject = RunAvrdudeErase(device, Resources.ErasingMessage, 0, percentageStep / sections);
+                        subject.Subscribe(s => platformIoOutput.OnNext(s));
+                        await subject;
+                        currentProgress += percentageStep / sections;
+                    }
                     platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                         string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
                     currentProgress += percentageStep / sections;
