@@ -235,6 +235,7 @@ public class PlatformIo
                             }
                             else
                             {
+                                Console.WriteLine("Detecting port please wait");
                                 Trace.WriteLine("Detecting port please wait");
                                 var port = await device.GetUploadPortAsync().ConfigureAwait(false);
                                 Console.WriteLine(port);
@@ -347,7 +348,7 @@ public class PlatformIo
                             currentProgress += percentageStep / sections;
                         }
 
-                        if (line.StartsWith("Looking for device in DFU mode"))
+                        if (line.StartsWith("Looking for device in DFU mode") && device is not Santroller)
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                                 string.Format(Resources.DfuMessage, progressMessage), null));

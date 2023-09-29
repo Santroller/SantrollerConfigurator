@@ -63,6 +63,10 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
         {
             BootloaderDevice = dfu;
             _bootloaderPath?.TrySetResult(dfu.Board.Environment);
+        } 
+        else if (Board.HasUsbmcu && device is Arduino {Board.HasUsbmcu: true} arduino)
+        {
+            _bootloaderPath?.TrySetResult(arduino.GetSerialPort());
         }
     }
 
