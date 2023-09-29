@@ -368,6 +368,7 @@ public class PlatformIo
                                 device.Bootloader();
                             }
                         }
+                        
 
                         if (line.StartsWith("searching for uno"))
                         {
