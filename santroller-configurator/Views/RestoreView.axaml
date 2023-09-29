@@ -40,6 +40,7 @@
             </ExperimentalAcrylicBorder>
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Image Source="{Binding Main.Logo}" Width="200" Margin="0 0 0 40" />
                 <TextBlock HorizontalAlignment="Center"
                            Text="{x:Static netCore:Resources.RestoringLabel}" Margin="0 0 0 20" />
                 <Button Content="{x:Static netCore:Resources.ReturnButtonLabel}" Command="{Binding GoBack}"

@@ -46,7 +46,7 @@ public class RestoreViewModel : ReactiveObject, IRoutableViewModel
                             break;
                     }
             });
-        _santroller.Bootloader();
+        _santroller.Revert();
         Main.Working = true;
         Main.Message = "Entering programming mode";
         Main.Progress = 10;

@@ -152,7 +152,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             .Select(s => s is DeviceInputType.Peripheral)
             .ToPropertyEx(this, s => s.IsPeripheral);
         this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
-            .Select(s => s is {Item1: not null and not Santroller {IsSantroller:false}, Item2: true} && (!s.Item3 || s.Item4 == null))
+            .Select(s =>
+                s is {Item1: not null and not Santroller {IsSantroller: false}, Item2: true} &&
+                (!s.Item3 || s.Item4 == null))
             .ToPropertyEx(this, s => s.ReadyToConfigure);
         this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is not Santroller {IsSantroller: false})
@@ -464,7 +466,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             environment = environment.Replace("_16", "");
         }
 
-        if (config.Microcontroller.Board.HasUsbmcu)
+        // Ardwiino + uno -> santroller has to do things in a different order
+        if (config.Microcontroller.Board.HasUsbmcu && config.Device is Ardwiino)
         {
             environment += "_usb";
         }
@@ -544,6 +547,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     {
         NavigateToUrl("https://github.com/Santroller/Santroller/releases");
     }
+
     [RelayCommand]
     public void OpenCommercialUsePage()
     {

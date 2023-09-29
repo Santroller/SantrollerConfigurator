@@ -89,7 +89,8 @@ public class PlatformIo
         }
 
         await AssetUtils.ExtractXzAsync("firmware.tar.xz", appdataFolder,
-            progress => platformIoOutput.OnNext(new PlatformIoState(progress * 10, Resources.ExtractingFirmwareMessage, "")));
+            progress => platformIoOutput.OnNext(new PlatformIoState(progress * 10, Resources.ExtractingFirmwareMessage,
+                "")));
 
         var pythonDir = Path.Combine(appdataFolder, "python");
         var platformIoDir = Path.Combine(appdataFolder, "platformio");
@@ -142,12 +143,6 @@ public class PlatformIo
     {
         return device switch
         {
-            Arduino arduino when arduino.IsUno() => RunPlatformIo("microdetect",
-                new[] {"run", "-t", "arduino_uno_clean",}, progressMessage, progressStartingPercentage,
-                progressEndingPercentage, device, true),
-            Arduino arduino2 when arduino2.IsMega() => RunPlatformIo("microdetect",
-                new[] {"run", "-t", "arduino_mega_clean",}, progressMessage, progressStartingPercentage,
-                progressEndingPercentage, device, true),
             Arduino {Is32U4Bootloader: true} or Santroller or Ardwiino => RunPlatformIo("microdetect",
                 new[] {"run", "-t", "micro_clean",}, progressMessage, progressStartingPercentage,
                 progressEndingPercentage, device, true),
@@ -190,7 +185,10 @@ public class PlatformIo
             args.Add("--environment");
             args.Add(environment);
             var sections = 5;
+            string? extraEnvs = null;
             var isUsb = false;
+            var hasDfu = device?.HasDfuMode() ?? false;
+            var hasDfuArdwiino = environment.EndsWith("_usb");
             if (erase && device != null)
             {
                 if (device is Arduino arduino2)
@@ -213,27 +211,41 @@ public class PlatformIo
             else
             {
                 if (device is Arduino) sections = 10;
-                if (environment.EndsWith("_usb"))
+                if (hasDfu)
                 {
-                    if (device is Arduino)
-                    {
-                        sections += 1;
-                        var subject = RunAvrdudeErase(device, Resources.ErasingMessage, 0, percentageStep / sections);
-                        subject.Subscribe(s => platformIoOutput.OnNext(s));
-                        await subject;
-                        currentProgress += percentageStep / sections;
-                    }
-                    
                     platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                         string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
                     currentProgress += percentageStep / sections;
+
+                    sections = 11;
+                    extraEnvs = hasDfuArdwiino ? "PROCEED_WITH_SERIAL" : "PROCEED_WITH_USB";
                     if (device != null)
                     {
                         isUsb = true;
-                        device.Bootloader();
+                        if (hasDfuArdwiino)
+                        {
+                            device.Bootloader();
+                        }
+                        else
+                        {
+                            if (device is Arduino arduino2)
+                            {
+                                args.Add("--upload-port");
+                                args.Add(arduino2.GetSerialPort());
+                            }
+                            else
+                            {
+                                Trace.WriteLine("Detecting port please wait");
+                                var port = await device.GetUploadPortAsync().ConfigureAwait(false);
+                                Console.WriteLine(port);
+                                if (port != null)
+                                {
+                                    args.Add("--upload-port");
+                                    args.Add(port);
+                                }
+                            }
+                        }
                     }
-
-                    sections = 11;
                 }
 
                 if (uploading && !isUsb)
@@ -252,7 +264,8 @@ public class PlatformIo
                         if (device.Is32U4())
                         {
                             sections += 1;
-                            var subject = RunAvrdudeErase(device, Resources.ErasingMessage, 0, percentageStep / sections);
+                            var subject = RunAvrdudeErase(device, Resources.ErasingMessage, 0,
+                                percentageStep / sections);
                             subject.Subscribe(s => platformIoOutput.OnNext(s));
                             await subject;
                             currentProgress += percentageStep / sections;
@@ -279,6 +292,11 @@ public class PlatformIo
             _currentProcess.StartInfo.WorkingDirectory = FirmwareDir;
             _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_CORE_DIR"] = pioFolder;
             _currentProcess.StartInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
+            if (extraEnvs != null)
+            {
+                _currentProcess.StartInfo.EnvironmentVariables[extraEnvs] = "1";
+            }
+
             _currentProcess.StartInfo.CreateNoWindow = true;
             //Some pio stuff uses Standard Output, some uses Standard Error, its easier to just flatten both of those to a single stream
             _currentProcess.StartInfo.Arguments =
@@ -329,17 +347,31 @@ public class PlatformIo
                             currentProgress += percentageStep / sections;
                         }
 
+                        if (line.StartsWith("Looking for device in DFU mode"))
+                        {
+                            platformIoOutput.OnNext(new PlatformIoState(currentProgress,
+                                string.Format(Resources.DfuMessage, progressMessage), null));
+                        }
+
+                        if (platformIoOutput.Value.Message == string.Format(Resources.DfuMessage, progressMessage) &&
+                            line.StartsWith("Calling"))
+                        {
+                            platformIoOutput.OnNext(new PlatformIoState(currentProgress,
+                                string.Format(Resources.BuildingMessage, progressMessage), null));
+                        }
+
                         if (line.StartsWith("Detecting microcontroller type"))
                         {
                             if (device is Santroller)
                             {
                                 device.Bootloader();
                             }
-                            else
-                            {
-                                platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                    string.Format(Resources.DfuMessage, progressMessage), null));
-                            }
+                        }
+
+                        if (line.StartsWith("searching for uno"))
+                        {
+                            platformIoOutput.OnNext(new PlatformIoState(currentProgress,
+                                string.Format(Resources.WaitingMessageReplug, progressMessage), null));
                         }
 
                         if (line.StartsWith("Looking for upload port..."))
@@ -455,7 +487,7 @@ public class PlatformIo
                 if (uploading)
                 {
                     currentProgress = progressEndingPercentage;
-                    if (sections == 11)
+                    if (sections == 11 && !hasDfuArdwiino)
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                             string.Format(Resources.WaitingMessageReplug, progressMessage), null));
@@ -463,9 +495,8 @@ public class PlatformIo
                     else
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.WaitingMessage, progressMessage), null)); 
+                            string.Format(Resources.WaitingMessage, progressMessage), null));
                     }
-                    
                 }
 
                 platformIoOutput.OnCompleted();

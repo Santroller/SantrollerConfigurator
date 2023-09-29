@@ -123,7 +123,7 @@ public class Santroller : ConfigurableUsbDevice
     {
         if (Board.HasUsbmcu)
         {
-            WriteData(0, (byte) Commands.CommandJumpBootloaderUnoUsbThenSerial, Array.Empty<byte>());
+            WriteData(0, (byte) Commands.CommandJumpBootloaderUno, Array.Empty<byte>());
         }
         else
             WriteData(0, (byte) Commands.CommandJumpBootloader, Array.Empty<byte>());
@@ -134,7 +134,9 @@ public class Santroller : ConfigurableUsbDevice
 
     public override void Revert()
     {
-        Bootloader();
+        // Reverting just needs to go to dfu mode, thats good enough
+        WriteData(0, (byte) Commands.CommandJumpBootloader, Array.Empty<byte>());
+        Device.Close();
     }
 
 
