@@ -47,8 +47,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
 
     private readonly SourceList<DeviceInputType> _allDeviceInputTypes = new();
-    private readonly ConfigurableUsbDeviceManager _manager;
+    private readonly ConfigurableUsbDeviceManager? _manager;
     private readonly bool _picoOnly;
+    public bool LibUsbMissing = false;
 
     public MainWindowViewModel(bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
         string error = "red")
@@ -71,7 +72,17 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             .Filter(this.WhenAnyValue(s => s.SelectedDevice).Select(CreateFilter))
             .Bind(out var deviceInputTypes).Subscribe();
         DeviceInputTypes = deviceInputTypes;
-        _manager = new ConfigurableUsbDeviceManager(this);
+        try
+        {
+            _manager = new ConfigurableUsbDeviceManager(this);
+        }
+        catch (DllNotFoundException)
+        {
+            Message =
+                "You are missing libusb. On ubuntu based distributions, you will need to install 'libusb-1.0-0-dev'";
+            ProgressbarColor = ProgressBarError;
+        }
+
         ConfigureCommand = ReactiveCommand.CreateFromObservable(
             () => Router.Navigate.Execute(new ConfigViewModel(this, SelectedDevice!, false))
         );
@@ -295,7 +306,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 Complete(100);
                 Working = false;
                 Installed = true;
-                _manager.Register();
+                _manager?.Register();
                 _timer.Start();
             });
 
@@ -306,7 +317,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             Complete(100);
             Working = false;
             Installed = true;
-            _manager.Register();
+            _manager?.Register();
             _timer.Start();
         }
     } // ReSharper disable UnassignedGetOnlyAutoProperty
@@ -471,7 +482,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         {
             environment += "_usb";
         }
-        
+
         if (config.Microcontroller.Board.HasUsbmcu && config.Device is Dfu)
         {
             environment += "_usb_serial";
@@ -708,7 +719,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     public void Dispose()
     {
-        _manager.Dispose();
+        _manager?.Dispose();
     }
 
     public virtual void SetDifference(bool difference)

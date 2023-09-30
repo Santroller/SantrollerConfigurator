@@ -14,14 +14,16 @@ using LibUsbDotNet.Main;
 using ReactiveUI;
 
 namespace GuitarConfigurator.NetCore.Devices;
+
 public class ConfigurableUsbDeviceManager
 {
-    private readonly IDeviceNotifier _deviceListener = new LinuxDeviceNotifier();
+    private readonly IDeviceNotifier _deviceListener;
     private readonly MainWindowViewModel _model;
 
     public ConfigurableUsbDeviceManager(MainWindowViewModel model)
     {
         _model = model;
+        _deviceListener = new LinuxDeviceNotifier();
     }
 
     public void Register()
