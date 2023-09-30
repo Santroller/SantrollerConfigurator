@@ -471,6 +471,11 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         {
             environment += "_usb";
         }
+        
+        if (config.Microcontroller.Board.HasUsbmcu && config.Device is Dfu)
+        {
+            environment += "_usb_serial";
+        }
 
         var state = Observable.Return(new PlatformIo.PlatformIoState(startingPercentage, "", null));
 

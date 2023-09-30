@@ -2,6 +2,8 @@
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using DynamicData;
 using GuitarConfigurator.NetCore.Devices;
 using ReactiveUI;
@@ -74,15 +76,20 @@ public class RestoreViewModel : ReactiveObject, IRoutableViewModel
         }
         else if (_santroller.HasDfuMode() && device is Dfu dfu)
         {
-            Main.Message = "Programming";
-            Main.Progress = 50;
-            // Write back a default firmware
-            _ = Main.Pio.RunAvrdudeErase(dfu, "", 0, 100, _santroller.Board).Subscribe(s => { }, s => { }, () =>
+            Task.Run(async delegate
             {
-                Main.Message = "Exiting Programming mode";
-                Main.Progress = 90;
-                dfu.Launch();
+                await Task.Delay(1000);
+                Main.Message = "Programming";
+                Main.Progress = 50;
+                // Write back a default firmware
+                _ = Main.Pio.RunAvrdudeErase(dfu, "", 0, 100, _santroller.Board).Subscribe(s => { }, s => { }, () =>
+                {
+                    Main.Message = "Exiting Programming mode";
+                    Main.Progress = 90;
+                    dfu.Launch();
+                });
             });
+            
         }
         else if (!_santroller.IsPico() && !_santroller.HasDfuMode() && device is Arduino)
         {

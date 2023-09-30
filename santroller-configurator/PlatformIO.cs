@@ -189,6 +189,7 @@ public class PlatformIo
             var isUsb = false;
             var hasDfu = device?.HasDfuMode() ?? false;
             var hasDfuArdwiino = environment.EndsWith("_usb");
+            var inDfu = environment.EndsWith("_usb_serial");
             if (erase && device != null)
             {
                 if (device is Arduino arduino2)
@@ -222,7 +223,11 @@ public class PlatformIo
                     if (device != null)
                     {
                         isUsb = true;
-                        if (hasDfuArdwiino)
+                        if (inDfu)
+                        {
+                            sections = 17;
+                        }
+                        else if (hasDfuArdwiino)
                         {
                             device.Bootloader();
                         }
@@ -348,7 +353,7 @@ public class PlatformIo
                             currentProgress += percentageStep / sections;
                         }
 
-                        if (line.StartsWith("Looking for device in DFU mode") && device is not Santroller)
+                        if (line.StartsWith("Looking for device in DFU mode") && device is not Santroller && !inDfu)
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                                 string.Format(Resources.DfuMessage, progressMessage), null));
@@ -368,7 +373,7 @@ public class PlatformIo
                                 device.Bootloader();
                             }
                         }
-                        
+
 
                         if (line.StartsWith("searching for uno"))
                         {
@@ -434,7 +439,7 @@ public class PlatformIo
                         state = 3;
                     }
 
-                    if (line.Contains("avrdude done.  Thank you."))
+                    if (line.Contains("avrdude done.  Thank you.") && !inDfu)
                     {
                         if (!main)
                         {
@@ -489,7 +494,7 @@ public class PlatformIo
                 if (uploading)
                 {
                     currentProgress = progressEndingPercentage;
-                    if (sections == 11 && !hasDfuArdwiino)
+                    if (sections == 11 && !hasDfuArdwiino || sections == 17)
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                             string.Format(Resources.WaitingMessageReplug, progressMessage), null));

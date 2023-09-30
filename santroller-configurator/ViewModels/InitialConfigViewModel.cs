@@ -64,9 +64,20 @@ public class InitialConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public Bitmap? GetImage()
     {
-        if (Model.Device is not Arduino arduino) return null;
+        Board board;
+        switch (Model.Device)
+        {
+            case Arduino arduino:
+                board = arduino.Board;
+                break;
+            case Dfu dfu:
+                board = dfu.Board;
+                break;
+            default:
+                return null;
+        }
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
-        var bitmap = arduino.Board.ArdwiinoName switch
+        var bitmap = board.ArdwiinoName switch
         {
             "mega2560" => "ArduinoMegaDFU.png",
             "megaadk" => "ArduinoMegaADKDFU.png",
