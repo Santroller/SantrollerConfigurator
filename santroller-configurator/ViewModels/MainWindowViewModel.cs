@@ -80,7 +80,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         catch (DllNotFoundException)
         {
             Message =
-                "You are missing libusb. On ubuntu based distributions, you will need to install 'libusb-1.0-0-dev'";
+                "You are missing libusb-1.0.so. On ubuntu or other debian based distributions, you will need to install 'libusb-1.0-0-dev'";
             ProgressbarColor = ProgressBarError;
             Progress = 100;
             hasLibUsb = false;
