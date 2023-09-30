@@ -82,6 +82,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             Message =
                 "You are missing libusb. On ubuntu based distributions, you will need to install 'libusb-1.0-0-dev'";
             ProgressbarColor = ProgressBarError;
+            Progress = 100;
             hasLibUsb = false;
         }
 
