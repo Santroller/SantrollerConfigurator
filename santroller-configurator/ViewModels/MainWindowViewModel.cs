@@ -44,6 +44,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public string ProgressBarPrimary;
     public string ProgressBarWarning;
     private readonly Timer _timer = new();
+    private bool hasLibUsb = true;
 
 
     private readonly SourceList<DeviceInputType> _allDeviceInputTypes = new();
@@ -81,6 +82,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             Message =
                 "You are missing libusb. On ubuntu based distributions, you will need to install 'libusb-1.0-0-dev'";
             ProgressbarColor = ProgressBarError;
+            hasLibUsb = false;
         }
 
         ConfigureCommand = ReactiveCommand.CreateFromObservable(
@@ -281,6 +283,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     public void Begin(bool platformIo)
     {
+        if (!hasLibUsb)
+        {
+            return;
+        }
         _timer.Elapsed += DevicePoller_Tick;
         _timer.AutoReset = false;
         StartWorking();
