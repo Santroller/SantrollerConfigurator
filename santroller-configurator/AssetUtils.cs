@@ -26,7 +26,7 @@ public class AssetUtils
     {
         string lib;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            lib = "liblzma.so.5";
+            lib = "liblzma.so";
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             lib = "liblzma.dylib";
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
