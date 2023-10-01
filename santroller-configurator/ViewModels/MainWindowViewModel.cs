@@ -85,6 +85,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             Progress = 100;
             hasLibUsb = false;
         }
+
         ConfigureCommand = ReactiveCommand.CreateFromObservable(
             () => Router.Navigate.Execute(new ConfigViewModel(this, SelectedDevice!, false))
         );
