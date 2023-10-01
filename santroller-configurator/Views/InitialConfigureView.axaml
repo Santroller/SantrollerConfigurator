@@ -34,22 +34,24 @@
                 </StackPanel>
             </ExperimentalAcrylicBorder>
 
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" RowDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto"
+                  ColumnDefinitions="*">
                 <Image Source="{Binding Main.Logo}" Width="200" Margin="0 0 0 40" />
-                <TextBlock IsVisible="{Binding IsPeripheral}" HorizontalAlignment="Center"
+                <TextBlock Grid.Row="1" Grid.Column="0" IsVisible="{Binding IsPeripheral}" HorizontalAlignment="Center"
                            Text="{x:Static netCore:Resources.InitialConfigPeripheralDesc}" Margin="0 0 0 20" />
-                <TextBlock IsVisible="{Binding !IsPeripheral}" HorizontalAlignment="Center"
+                <TextBlock Grid.Row="2" Grid.Column="0" IsVisible="{Binding !IsPeripheral}" HorizontalAlignment="Center"
                            Text="{x:Static netCore:Resources.InitialConfigDesc}" Margin="0 0 0 20" />
-                <TextBlock IsVisible="{Binding Main.LookingForDfu}" HorizontalAlignment="Center"
+                <TextBlock Grid.Row="3" Grid.Column="0" IsVisible="{Binding Main.LookingForDfu}" HorizontalAlignment="Center"
                            Text="{x:Static netCore:Resources.UnoBridgeDesc}" Margin="0 0 0 20" />
-                <Image IsVisible="{Binding Main.LookingForDfu}" Source="{Binding DfuImage}" Margin="0 0 0 20" MaxHeight="500" />
-                <Button IsVisible="{Binding IsPeripheral}" Content="{x:Static netCore:Resources.ReturnButtonLabel}" Command="{Binding ConfigureCommand}"
+
+                <Image Grid.Row="4" Grid.Column="0" IsVisible="{Binding Main.LookingForDfu}" Source="{Binding DfuImage}" Margin="0 0 0 20" MaxHeight="500" />
+                <Button Grid.Row="5" Grid.Column="0" IsVisible="{Binding IsPeripheral}" Content="{x:Static netCore:Resources.ReturnButtonLabel}" Command="{Binding ConfigureCommand}"
                         HorizontalAlignment="Center"
                         Margin="0 20 0 0" />
-                <Button IsVisible="{Binding !IsPeripheral}" Content="{x:Static netCore:Resources.ConfigureButtonLabel}" Command="{Binding ConfigureCommand}"
+                <Button Grid.Row="6" Grid.Column="0" IsVisible="{Binding !IsPeripheral}" Content="{x:Static netCore:Resources.ConfigureButtonLabel}" Command="{Binding ConfigureCommand}"
                         HorizontalAlignment="Center"
                         Margin="0 20 0 0" />
-            </StackPanel>
+            </Grid>
         </DockPanel>
     </Panel>
 </UserControl>
