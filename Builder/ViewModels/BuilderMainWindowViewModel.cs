@@ -191,40 +191,30 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             Progress = start;
         }
 
-        // Extract linux executable and append branded config into executable. Also append length so we can easily find the where the config is in the executable.
+        // Extract linux executable and append branded config into executable.
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
         var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");
         await using var linuxOutput =
             File.Open(SelectedTool.ToolName + "-linux-64", FileMode.Create, FileAccess.ReadWrite);
         await using var linuxInput = AssetLoader.Open(uri);
-        var len = linuxInput.Length;
         await linuxInput.CopyToAsync(linuxOutput).ConfigureAwait(false);
-        await using var linuxWriter = new BinaryWriter(linuxOutput);
-        Serializer.SerializeWithLengthPrefix(linuxOutput, new SerialisedBrandedConfigurationStore(SelectedTool),
-            PrefixStyle.Base128);
-        linuxWriter.Write((int) len);
+        await ExecutableUtils.AppendConfig(linuxOutput, SelectedTool);
 
-        // Extract windows executable and append branded config into executable. Also append length so we can easily find the where the config is in the executable.
+        // Extract windows executable and append branded config into executable.
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
         await using var windowsOutput =
             File.Open(SelectedTool.ToolName + "-win-64.exe", FileMode.Create, FileAccess.ReadWrite);
         await using var windowsInput = AssetLoader.Open(uri);
-        ExecutableUtils.UpdatePEFileIcon(SelectedTool.Logo, windowsInput, windowsOutput);
-        len = windowsOutput.Length;
-        await using var windowsWriter = new BinaryWriter(windowsOutput);
-        Serializer.SerializeWithLengthPrefix(windowsOutput, new SerialisedBrandedConfigurationStore(SelectedTool),
-            PrefixStyle.Base128);
-        windowsWriter.Write((int) len);
+        ExecutableUtils.UpdatePeFileIcon(SelectedTool.Logo, windowsInput, windowsOutput);
+        await ExecutableUtils.AppendConfig(windowsOutput, SelectedTool);
 
-        // Extract macos app zip.
+        // Extract macos app zip, insert config and update icons and application name
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-macOS.zip");
         await using var macosOutput =
             File.Open(SelectedTool.ToolName + "-macOS.zip", FileMode.Create, FileAccess.ReadWrite);
         await using var macosInput = AssetLoader.Open(uri);
         await macosInput.CopyToAsync(macosOutput).ConfigureAwait(false);
         macosOutput.Seek(0, SeekOrigin.Begin);
-
-        // Update macos app
         
         // Since macOS executables are directories, we put the branding in a file instead of appending
         using var archive = new ZipArchive(macosOutput, ZipArchiveMode.Update);

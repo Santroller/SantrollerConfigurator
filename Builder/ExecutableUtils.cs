@@ -12,12 +12,15 @@ using AsmResolver.PE.Win32Resources.Builder;
 using AsmResolver.PE.Win32Resources.Icon;
 using Avalonia;
 using Avalonia.Media.Imaging;
+using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
+using GuitarConfigurator.NetCore.Configuration.Serialization;
+using ProtoBuf;
 
 namespace SantrollerConfiguratorBuilder.NetCore;
 
 public class ExecutableUtils
 {
-    public async static void UpdatePEFileIcon(Bitmap img, Stream original, Stream output)
+    public static async void UpdatePeFileIcon(Bitmap img, Stream original, Stream output)
     {
         var len = original.Length;
         var bytes = new byte[len];
@@ -44,7 +47,8 @@ public class ExecutableUtils
         var writer = new BinaryStreamWriter(output);
         peFile.Write(writer);
     }
-    public static void ConvertToIco(Bitmap img, (IconGroupDirectoryEntry, IconEntry) valueTuple)
+
+    private static void ConvertToIco(Bitmap img, (IconGroupDirectoryEntry, IconEntry) valueTuple)
     {
         img = img.CreateScaledBitmap(new PixelSize(64, 64));
         using var msImg = new MemoryStream();
@@ -61,16 +65,16 @@ public class ExecutableUtils
         valueTuple.Item1.UpdateOffsets(new RelocationParameters());
     }
 
-    static ReadOnlySpan<byte> GetIcnsIconType(int width, bool isScale2x)
+    static ReadOnlySpan<byte> GetIcnsIconType(int width, bool isScale2X)
     {
         var iconType = width switch
         {
-            16 => isScale2x ? null : "icp4"u8,
-            32 => isScale2x ? "ic11"u8 : "icp5"u8,
-            64 => isScale2x ? "ic12"u8 : "icp6"u8,
-            128 => isScale2x ? null : "ic07"u8,
-            256 => isScale2x ? "ic13"u8 : "ic08"u8,
-            512 => isScale2x ? "ic14"u8 : "ic09"u8,
+            16 => isScale2X ? null : "icp4"u8,
+            32 => isScale2X ? "ic11"u8 : "icp5"u8,
+            64 => isScale2X ? "ic12"u8 : "icp6"u8,
+            128 => isScale2X ? null : "ic07"u8,
+            256 => isScale2X ? "ic13"u8 : "ic08"u8,
+            512 => isScale2X ? "ic14"u8 : "ic09"u8,
             _ => "ic10"u8
         };
 
@@ -140,7 +144,7 @@ public class ExecutableUtils
         info2.Close();
     }
 
-    public static void ConvertToIcns(Bitmap img, Stream outputFile)
+    private static void ConvertToIcns(Bitmap img, Stream outputFile)
     {
         var icnsData = new List<byte>();
         var sizeAll = 0;
@@ -161,5 +165,14 @@ public class ExecutableUtils
         outputFile.Write(sizeAllArray);
         outputFile.Write(iconType);
         outputFile.Write(icnsData.ToArray());
+    }
+
+    public static async Task AppendConfig(Stream output, BrandedConfigurationStore config)
+    {
+        var len = output.Length;
+        await using var windowsWriter = new BinaryWriter(output);
+        Serializer.SerializeWithLengthPrefix(output, new SerialisedBrandedConfigurationStore(config),
+            PrefixStyle.Base128);
+        windowsWriter.Write((int) len);
     }
 }
