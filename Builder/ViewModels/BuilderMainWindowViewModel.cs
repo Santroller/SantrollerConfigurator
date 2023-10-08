@@ -23,7 +23,7 @@ using ReactiveUI.Fody.Helpers;
 
 namespace SantrollerConfiguratorBuilder.NetCore.ViewModels;
 
-public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.ViewModels.MainWindowViewModel
+public partial class BuilderMainWindowViewModel : MainWindowViewModel
 {
     public BuilderConfig Config { get; }
 
@@ -50,7 +50,7 @@ public partial class BuilderMainWindowViewModel : GuitarConfigurator.NetCore.Vie
         Router.NavigateAndReset.Execute(new BuilderMainViewModel(this));
         this.WhenAnyValue(s => s.SelectedDevice).Subscribe(s =>
         {
-            if (Selected != null && SelectedDevice != null)
+            if (Selected != null && SelectedDevice != null && !Working)
             {
                 Selected.Model.Device = SelectedDevice;
             }
