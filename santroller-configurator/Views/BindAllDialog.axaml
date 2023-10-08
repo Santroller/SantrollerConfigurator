@@ -10,7 +10,7 @@
         x:Class="GuitarConfigurator.NetCore.Views.BindAllWindow"
         TransparencyLevelHint="AcrylicBlur"
         WindowStartupLocation="CenterOwner"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/icon.png"
         Title="{x:Static netCore:Resources.ToolName}"
         Background="Transparent"
         SystemDecorations="BorderOnly"

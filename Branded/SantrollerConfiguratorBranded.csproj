@@ -123,7 +123,7 @@
     </ItemGroup>
     <ItemGroup>
       <UpToDateCheckInput Remove="Assets\99-santroller.rules" />
-      <UpToDateCheckInput Remove="Assets\avalonia-logo.ico" />
+      <UpToDateCheckInput Remove="Assets\icons\icon.png" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj" >

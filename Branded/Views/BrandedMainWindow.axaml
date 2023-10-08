@@ -11,7 +11,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="SantrollerConfiguratorBranded.NetCore.Views.BrandedMainWindow"
         TransparencyLevelHint="AcrylicBlur"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="{Binding Config.Icon}"
         Title="{Binding Config.ToolName}"
         Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"

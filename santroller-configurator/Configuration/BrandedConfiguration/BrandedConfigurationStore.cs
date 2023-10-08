@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -59,6 +60,8 @@ public class BrandedConfigurationStore : ReactiveObject
     
     [Reactive]
     public Bitmap Logo { get; set; }
+
+    public WindowIcon Icon => new(Logo);
     public ObservableCollection<BrandedConfiguration> Configurations { get; } = new();
 
     public static BrandedConfigurationStore LoadBranding(MainWindowViewModel model)

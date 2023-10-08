@@ -9,7 +9,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GuitarConfigurator.NetCore.Views.MainWindow"
         TransparencyLevelHint="AcrylicBlur"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/icon.png"
         Title="{x:Static netCore:Resources.ToolName}"
         Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"
