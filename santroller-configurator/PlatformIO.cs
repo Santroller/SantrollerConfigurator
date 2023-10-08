@@ -263,7 +263,6 @@ public class PlatformIo
                         currentProgress += percentageStep / sections;
                         sections = 4;
                     }
-
                     if (device != null)
                     {
                         var port = "";
@@ -277,7 +276,7 @@ public class PlatformIo
                             currentProgress += percentageStep / sections;
                         }
 
-                        Trace.WriteLine("Detecting port please wait");
+                        Console.WriteLine("Detecting port please wait");
                         port = await device.GetUploadPortAsync().ConfigureAwait(false);
                         Console.WriteLine(port);
                         if (port != null)

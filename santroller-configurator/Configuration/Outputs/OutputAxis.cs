@@ -455,8 +455,8 @@ public abstract partial class OutputAxis : Output
                 : $"{function}({prev}, {generated}, {min}, {mulInt}, {DeadZone})";
 
         return intBased
-            ? $"{function}({prev}, {generated}, {WriteBlob(writer, (max + min) / 2)}, {WriteBlob(writer, min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, DeadZone)}"
-            : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) DeadZone)}";
+            ? $"{function}({prev}, {generated}, {WriteBlob(writer, (max + min) / 2)}, {WriteBlob(writer, min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, DeadZone)})"
+            : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) DeadZone)})";
     }
 
 
