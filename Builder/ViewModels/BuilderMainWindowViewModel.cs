@@ -1,13 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using AsmResolver;
+using AsmResolver.IO;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -20,6 +24,14 @@ using GuitarConfigurator.NetCore.ViewModels;
 using ProtoBuf;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using AsmResolver.PE;
+using AsmResolver.PE.DotNet.Builder;
+using AsmResolver.PE.File;
+using AsmResolver.PE.File.Headers;
+using AsmResolver.PE.Win32Resources;
+using AsmResolver.PE.Win32Resources.Builder;
+using AsmResolver.PE.Win32Resources.Icon;
+using Avalonia;
 
 namespace SantrollerConfiguratorBuilder.NetCore.ViewModels;
 
@@ -198,7 +210,31 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             File.Open(SelectedTool.ToolName + "-win-64.exe", FileMode.Create, FileAccess.ReadWrite);
         await using var windowsInput = AssetLoader.Open(uri);
         len = windowsInput.Length;
-        await windowsInput.CopyToAsync(windowsOutput).ConfigureAwait(false);
+        var bytes = new byte[len];
+        _ = await windowsInput.ReadAsync(bytes);
+        // Open the executable, and update the icon
+        var peFile = PEFile.FromBytes(bytes);
+        var image = new SerializedPEImage(peFile, new PEReaderParameters());
+        if (image.Resources != null)
+        {
+            var icons = IconResource.FromDirectory(image.Resources);
+            if (icons != null)
+            {
+                var group = icons.GetIconGroups().First();
+                var iconEntry = group.GetIconEntries().First();
+                ConvertToIco(SelectedTool.Logo, iconEntry);
+                icons.WriteToDirectory(image.Resources);
+                var resources = new ResourceDirectoryBuffer();
+                resources.AddDirectory(image.Resources);
+                var section = peFile.Sections.First(s => s.Name == ".rsrc");
+                section.Contents = resources;
+                peFile.AlignSections();
+            }
+        }
+
+        var writer = new BinaryStreamWriter(windowsOutput);
+        peFile.Write(writer);
+        len = writer.Length;
         await using var windowsWriter = new BinaryWriter(windowsOutput);
         Serializer.SerializeWithLengthPrefix(windowsOutput, new SerialisedBrandedConfigurationStore(SelectedTool),
             PrefixStyle.Base128);
@@ -223,30 +259,53 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         // Modify info.plist with the tools name
         entry = archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Info.plist")!;
         await using var info = entry.Open();
-        XmlReader reader = new XmlTextReader(info);
-        var document = XDocument.Load(reader);
-        var descendants = document.Descendants("dict").Descendants().ToList();
-        descendants.SkipWhile(s => s.Name != "key" || s.Value != "CFBundleName").ElementAt(1).Value =
-            SelectedTool.ToolName;
-        descendants.SkipWhile(s => s.Name != "key" || s.Value != "CFBundleDisplayName").ElementAt(1).Value =
-            SelectedTool.ToolName;
-        var stream = new MemoryStream();
-        document.Save(stream);
+        await using var stream = new MemoryStream();
+        await using var infoWriter = new StreamWriter(stream);
+        var infoReader = new StreamReader(info);
+        while (!infoReader.EndOfStream)
+        {
+            var line = await infoReader.ReadLineAsync();
+            await infoWriter.WriteLineAsync(line);
+            if (line!.Contains("CFBundleName"))
+            {
+                await infoReader.ReadLineAsync();
+                await infoWriter.WriteLineAsync($"<string>{SelectedTool.ToolName}</string>");
+            }
+            else if (line.Contains("CFBundleDisplayName"))
+            {
+                await infoReader.ReadLineAsync();
+                await infoWriter.WriteLineAsync($"<string>{SelectedTool.ToolName}</string>");
+            }
+        }
+
         info.SetLength(0);
         info.Seek(0, SeekOrigin.Begin);
+        await infoWriter.FlushAsync();
         stream.Seek(0, SeekOrigin.Begin);
         await stream.CopyToAsync(info);
         info.Close();
-
-        // Now rename SantrollerConfiguratorBranded.app in the zip file to the tool name.
+        entry = archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/Resources/icon.icns")!;
+        
+        await using var info2 = entry.Open();
+        info2.SetLength(0);
+        info2.Seek(0, SeekOrigin.Begin);
+        ConvertToIcns(SelectedTool.Logo, info2);
+        info2.Close();
+        entry = archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Resources/icon.icns")!;
+        await using var info3 = entry.Open();
+        info3.SetLength(0);
+        info3.Seek(0, SeekOrigin.Begin);
+        ConvertToIcns(SelectedTool.Logo, info3);
+        info3.Close();
         foreach (var oldEntry in archive.Entries.ToList())
         {
             var newEntry = archive.CreateEntry(oldEntry.FullName.Replace("SantrollerConfiguratorBranded.app",
                 SelectedTool.ToolName + ".app"));
             await using var oldStream = oldEntry.Open();
             await using var newStream = newEntry.Open();
-            oldStream.CopyTo(newStream);
+            await oldStream.CopyToAsync(newStream);
             oldStream.Close();
+            newEntry.ExternalAttributes = oldEntry.ExternalAttributes;
             oldEntry.Delete();
         }
 
@@ -256,18 +315,82 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public override void SetDifference(bool difference)
     {
         HasChanges = difference;
-        if (!Working)
+        if (Working) return;
+        if (!difference)
         {
-            if (!difference)
-            {
-                ProgressbarColor = ProgressBarPrimary;
-                Complete(100);
-            }
-            else
-            {
-                ProgressbarColor = ProgressBarWarning;
-                Message = "You have unsaved changes, click `Save Changes and return` to save them";
-            }
+            ProgressbarColor = ProgressBarPrimary;
+            Complete(100);
         }
+        else
+        {
+            ProgressbarColor = ProgressBarWarning;
+            Message = "You have unsaved changes, click `Save Changes and return` to save them";
+        }
+    }
+
+    public static void ConvertToIco(Bitmap img, (IconGroupDirectoryEntry, IconEntry) valueTuple)
+    {
+        img = img.CreateScaledBitmap(new PixelSize(64, 64));
+        using var msImg = new MemoryStream();
+        img.Save(msImg);
+        Array.Copy(msImg.ToArray(), valueTuple.Item2.RawIcon, msImg.Length);
+        valueTuple.Item1.Height = 64;
+        valueTuple.Item1.Width = 64;
+        valueTuple.Item1.ColorCount = 0;
+        valueTuple.Item1.Reserved = 0;
+        valueTuple.Item1.BytesInRes = (uint) msImg.Length;
+        valueTuple.Item1.ColorPlanes = 0;
+        valueTuple.Item1.PixelBitCount = 32;
+        valueTuple.Item2.UpdateOffsets(new RelocationParameters());
+        valueTuple.Item1.UpdateOffsets(new RelocationParameters());
+    }
+
+    static ReadOnlySpan<byte> GetIcnsIconType(int width, bool isScale2x)
+    {
+        var iconType = width switch
+        {
+            16 => isScale2x ? null : "icp4"u8,
+            32 => isScale2x ? "ic11"u8 : "icp5"u8,
+            64 => isScale2x ? "ic12"u8 : "icp6"u8,
+            128 => isScale2x ? null : "ic07"u8,
+            256 => isScale2x ? "ic13"u8 : "ic08"u8,
+            512 => isScale2x ? "ic14"u8 : "ic09"u8,
+            _ => "ic10"u8
+        };
+
+        return iconType;
+    }
+
+    private static byte[] GetBigEndianBytes(int value)
+    {
+        var bytes = BitConverter.GetBytes(value);
+
+        if (BitConverter.IsLittleEndian)
+            Array.Reverse(bytes);
+
+        return bytes;
+    }
+
+    private static void ConvertToIcns(Bitmap img, Stream outputFile)
+    {
+        var icnsData = new List<byte>();
+        var sizeAll = 0;
+
+        img = img.CreateScaledBitmap(new PixelSize(512, 512));
+        using var msImg = new MemoryStream();
+        img.Save(msImg);
+        msImg.Seek(0, SeekOrigin.Begin);
+        var iconType = GetIcnsIconType(512, false);
+        var sizeIcon = 4 + 4 + Convert.ToInt32(msImg.Length);
+        icnsData.AddRange(GetBigEndianBytes(sizeIcon));
+        msImg.CopyTo(outputFile);
+        sizeAll += 4 + 4 + sizeIcon;
+
+        outputFile.Write("icns"u8);
+        sizeAll = 4 + 4 + sizeAll;
+        var sizeAllArray = GetBigEndianBytes(sizeAll);
+        outputFile.Write(sizeAllArray);
+        outputFile.Write(iconType);
+        outputFile.Write(icnsData.ToArray());
     }
 }
