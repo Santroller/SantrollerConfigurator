@@ -89,7 +89,6 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
         Progress = 50;
         Message = "Writing";
         await SelectedConfig.BuildUf2(Path.Combine(path!, "firmware.uf2"));
-        Console.WriteLine("Overwrite done");
         return new PlatformIo.PlatformIoState(90, "Waiting for device", null);
     }
 

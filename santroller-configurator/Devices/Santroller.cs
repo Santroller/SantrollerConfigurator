@@ -103,6 +103,7 @@ public class Santroller : ConfigurableUsbDevice
             InvalidDevice = true;
             return;
         }
+
         Load();
         if (Board.Name == Board.Generic.Name)
         {
@@ -223,6 +224,7 @@ public class Santroller : ConfigurableUsbDevice
                 peripheralWtRaw = ReadData(0, (byte) Commands.CommandReadPeripheralWt, 5 * sizeof(int));
                 peripheralConnected = ReadData(0, (byte) Commands.CommandReadPeripheralValid, 1).Any(x => x != 0);
             }
+
             if (_model.UsbHostEnabled)
             {
                 usbHostRaw = ReadData(0, (byte) Commands.CommandReadUsbHost, 24);
@@ -237,7 +239,8 @@ public class Santroller : ConfigurableUsbDevice
             foreach (var output in _bindings)
                 output.Update(_analogRaw, _digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                     djRightRaw, gh5Raw,
-                    ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, _digitalRawPeripheral, cloneRaw);
+                    ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
+                    peripheralWtRaw, _digitalRawPeripheral, cloneRaw);
         }
         catch (Exception ex)
         {
@@ -333,6 +336,7 @@ public class Santroller : ConfigurableUsbDevice
                     if (!direct.Type.Contains("-")) importantPins.AddRange(direct.Pins.Where(s => s != -1));
                     break;
             }
+
         // Its important here that we do not tick bluetooth related pins if the user has previously programmed bluetooth and then disabled it, as that will lock up the pico.
         if (analog)
         {
@@ -364,6 +368,7 @@ public class Santroller : ConfigurableUsbDevice
                     {
                         return original;
                     }
+
                     var val = BitConverter.ToUInt16(response);
                     if (analogVals.TryGetValue(pin, out var analogVal))
                     {
@@ -391,6 +396,7 @@ public class Santroller : ConfigurableUsbDevice
             ReadData(wValue, (byte) (peripheral ? Commands.CommandReadPeripheralDigital : Commands.CommandReadDigital),
                 sizeof(byte));
         }
+
         Dictionary<int, byte> tickedPorts = new();
         while (_picking)
         {
@@ -427,21 +433,20 @@ public class Santroller : ConfigurableUsbDevice
 
     public override string ToString()
     {
-        if (InvalidDevice)
+        if (!InvalidDevice)
         {
-            var ret2 = Resources.ErrorNotPCMode;
-            if (_currentMode is not (ConsoleType.Universal or ConsoleType.Windows))
-            {
-                ret2 += $" (Currently {EnumToStringConverter.Convert(_currentMode)})";
-            }
-
-            return ret2;
+            return IsSantroller
+                ? $"{Product} - {Board.Name} - {EnumToStringConverter.Convert(_deviceControllerType)}"
+                : Product;
         }
 
-        var ret = $"{Product} - {Board.Name}";
-        ret += $" - {EnumToStringConverter.Convert(_deviceControllerType)}";
+        var ret2 = Resources.ErrorNotPCMode;
+        if (_currentMode is not (ConsoleType.Universal or ConsoleType.Windows))
+        {
+            ret2 += $" (Currently {EnumToStringConverter.Convert(_currentMode)})";
+        }
 
-        return ret;
+        return ret2;
     }
 
     public void ClearLed(byte led)
