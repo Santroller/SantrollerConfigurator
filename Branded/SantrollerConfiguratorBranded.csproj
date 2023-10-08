@@ -14,6 +14,7 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ApplicationIcon>Resources/icon.ico</ApplicationIcon>
         <RootNamespace>SantrollerConfiguratorBranded.NetCore</RootNamespace>
         <AvaloniaVersion>11.0.2</AvaloniaVersion>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
@@ -67,9 +68,6 @@
         <TrimmableAssembly Include="Avalonia.DesignerSupport" />
     </ItemGroup>
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
         <PackageReference Include="Microsoft.Net.ILLink.Tasks" Version="8.0.100-1.23067.1" />
@@ -120,10 +118,6 @@
           <DependentUpon>BuilderSidebar.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
-    </ItemGroup>
-    <ItemGroup>
-      <UpToDateCheckInput Remove="Assets\99-santroller.rules" />
-      <UpToDateCheckInput Remove="Assets\icons\icon.png" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj" >

@@ -32,6 +32,7 @@
         <RepositoryUrl>https://github.com/sanjay900/guitar-configurator</RepositoryUrl>
         <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
         <RepositoryType>git</RepositoryType>
+        <ApplicationIcon>Resources/icon.ico</ApplicationIcon>
     </PropertyGroup>
     <PropertyGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' ">
         <Optimize>true</Optimize>
