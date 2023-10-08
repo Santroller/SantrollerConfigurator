@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace GuitarConfigurator.NetCore;
 
@@ -37,6 +38,23 @@ public static class StructTools
             Marshal.StructureToPtr(data, ptr, true);
             Marshal.Copy(ptr, arr, 0, size);
             dest.Write(arr);
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(ptr);
+        }
+    }
+    public static async Task RawSerialiseAsync<T>(T data, Stream dest) where T : notnull {
+        var size = Marshal.SizeOf(data);
+        var arr = new byte[size];
+
+        var ptr = IntPtr.Zero;
+        try
+        {
+            ptr = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(data, ptr, true);
+            Marshal.Copy(ptr, arr, 0, size);
+            await dest.WriteAsync(arr);
         }
         finally
         {

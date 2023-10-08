@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using GuitarConfigurator.NetCore;
@@ -49,18 +50,12 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
                 }
         });
     }
-
+    
     public void DeviceAdded(IConfigurableDevice device)
     {
         if (!_writing) return;
         switch (device)
         {
-            case PicoDevice pico:
-                Progress = 50;
-                Message = "Writing";
-                SelectedConfig.BuildUf2(Path.Combine(pico.GetPath(), "firmware.uf2"));
-                SelectedDevice = device;
-                break;
             case Santroller santroller when santroller.Manufacturer ==
                 SelectedConfig.VendorName && santroller.Product == SelectedConfig.ProductName:
                 SelectedDevice = device;
@@ -80,25 +75,22 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
 
     public override IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, string extra = "", int startingPercentage = 0, int endingPercentage = 100)
     {
-        Overwrite();
-        return Observable.Return(new PlatformIo.PlatformIoState(0, "", ""));
+        return Observable.FromAsync(_ => Overwrite());
     }
 
     [RelayCommand]
-    public void Overwrite()
+    public async Task<PlatformIo.PlatformIoState> Overwrite()
     {
         _writing = true;
         StartWorking();
         Progress = 0;
         Message = "Looking for pico";
-        if (SelectedDevice is not PicoDevice)
-        {
-            SelectedDevice!.Bootloader();
-        }
-        else
-        {
-            DeviceAdded(SelectedDevice);
-        }
+        var path = await SelectedDevice!.GetUploadPortAsync();
+        Progress = 50;
+        Message = "Writing";
+        await SelectedConfig.BuildUf2(Path.Combine(path!, "firmware.uf2"));
+        Console.WriteLine("Overwrite done");
+        return new PlatformIo.PlatformIoState(90, "Waiting for device", null);
     }
 
     [RelayCommand]

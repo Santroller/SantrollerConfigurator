@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.Utils;
@@ -50,10 +51,10 @@ public class BrandedConfiguration : ReactiveObject
                 """;
     }
 
-    public void BuildUf2(string outputFile)
+    public async Task BuildUf2(string outputFile)
     {
         var blocks = new List<Uf2Block>(Uf2);
-        using var stream = File.OpenWrite(outputFile);
+        await using var stream = File.OpenWrite(outputFile);
         var block = new Uf2Block(Uf2.Last());
         // UF2s on the pico need to be continuous, so we have to pad between the defined sections
         for (var i = block.targetAddr + block.payloadSize; i < BlobOffset; i += block.payloadSize)
@@ -66,17 +67,29 @@ public class BrandedConfiguration : ReactiveObject
             blocks.Add(block);
         }
 
-        block = new Uf2Block(block)
+        await using (var streamBlob = new MemoryStream())
         {
-            targetAddr = BlobOffset
-        };
-        block.blockNo++;
-        using var streamBlob = new MemoryStream();
-        Model.Generate(streamBlob);
-        Array.Copy(streamBlob.ToArray(), block.data, streamBlob.Length);
-        blocks.Add(block);
+            Model.Generate(streamBlob);
+            streamBlob.Flush();
+            streamBlob.Seek(0, SeekOrigin.Begin);
+            block = new Uf2Block(block)
+            {
+                targetAddr = BlobOffset
+            };
+            while (true)
+            {
+                if (await streamBlob.ReadAsync(block.data.AsMemory(0, (int) block.payloadSize)) == 0)
+                {
+                    break;
+                }
+                block.blockNo++;
+                blocks.Add(block);
+                block = new Uf2Block(block);
+                block.targetAddr += block.payloadSize;
+            }
+        }
         // UF2s on the pico need to be continuous, so we have to pad between the defined sections
-        for (var i = block.targetAddr + block.payloadSize; i < ConfigOffset; i += block.payloadSize)
+        for (var i = block.targetAddr; i < ConfigOffset; i += block.payloadSize)
         {
             block = new Uf2Block(block)
             {
@@ -85,9 +98,10 @@ public class BrandedConfiguration : ReactiveObject
             block.blockNo++;
             blocks.Add(block);
         }
-        using (var outputStream = new MemoryStream())
+
+        await using (var outputStream = new MemoryStream())
         {
-            using (var compressStream = new BrotliStream(outputStream, CompressionLevel.SmallestSize))
+            await using (var compressStream = new BrotliStream(outputStream, CompressionLevel.SmallestSize))
             {
                 Serializer.Serialize(compressStream, new SerializedConfiguration(Model));
                 compressStream.Flush();
@@ -100,7 +114,7 @@ public class BrandedConfiguration : ReactiveObject
                 while (true)
                 {
                     block.blockNo++;
-                    if (outputStream.Read(block.data, 0, (int) block.payloadSize) == 0)
+                    if (await outputStream.ReadAsync(block.data.AsMemory(0, (int) block.payloadSize)) == 0)
                     {
                         break;
                     }
@@ -115,10 +129,10 @@ public class BrandedConfiguration : ReactiveObject
         foreach (var uf2Block in blocks)
         {
             uf2Block.numBlocks = (uint) blocks.Count;
-            StructTools.RawSerialise(uf2Block, stream);
+            await StructTools.RawSerialiseAsync(uf2Block, stream);
         }
 
-        stream.Flush();
+        await stream.FlushAsync();
     }
 
     public void LoadUf2()

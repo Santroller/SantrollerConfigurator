@@ -103,8 +103,8 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel IsVisible="{Binding !BrandedMain.ReadyToConfigure}">
-                        <Button Content="{x:Static netCore:Resources.ConfigureButtonLabel}"
-                                IsEnabled="false" HorizontalAlignment="Center"
+                        <Button Content="{x:Static netCore:Resources.ConfigureButtonLabel}" Command="{Binding BrandedMain.ConfigureBrandedCommand}"
+                                IsEnabled="{Binding Configurable}" HorizontalAlignment="Center"
                                 Margin="0 20 0 0" />
                     </StackPanel>
                 </StackPanel>
