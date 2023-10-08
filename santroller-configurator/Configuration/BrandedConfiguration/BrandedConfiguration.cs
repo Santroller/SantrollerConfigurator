@@ -54,7 +54,7 @@ public class BrandedConfiguration : ReactiveObject
     public async Task BuildUf2(string outputFile)
     {
         var blocks = new List<Uf2Block>(Uf2);
-        await using var stream = File.OpenWrite(outputFile);
+        await using var stream = new FileStream(outputFile,  FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous);
         var block = new Uf2Block(Uf2.Last());
         // UF2s on the pico need to be continuous, so we have to pad between the defined sections
         for (var i = block.targetAddr + block.payloadSize; i < BlobOffset; i += block.payloadSize)
@@ -131,8 +131,6 @@ public class BrandedConfiguration : ReactiveObject
             uf2Block.numBlocks = (uint) blocks.Count;
             await StructTools.RawSerialiseAsync(uf2Block, stream);
         }
-
-        await stream.FlushAsync();
     }
 
     public void LoadUf2()
