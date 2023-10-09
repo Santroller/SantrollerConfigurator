@@ -65,7 +65,7 @@ public static class ExecutableUtils
         valueTuple.Item1.UpdateOffsets(new RelocationParameters());
     }
 
-    static ReadOnlySpan<byte> GetIcnsIconType(int width, bool isScale2X)
+    private static ReadOnlySpan<byte> GetIcnsIconType(int width, bool isScale2X)
     {
         var iconType = width switch
         {
