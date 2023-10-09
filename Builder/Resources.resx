@@ -56,8 +56,17 @@
     <data name="LogoLabel" xml:space="preserve">
         <value>Logo</value>
     </data>
+    <data name="IconLabel" xml:space="preserve">
+        <value>Icon</value>
+    </data>
+    <data name="IconErrorLabel" xml:space="preserve">
+        <value>Error! Square image required for icon.</value>
+    </data>
     <data name="LogoButtonLabel" xml:space="preserve">
         <value>Change Logo</value>
+    </data>
+    <data name="IconButtonLabel" xml:space="preserve">
+        <value>Change Icon</value>
     </data>
     <data name="SaveUF2Label" xml:space="preserve">
         <value>Export UF2</value>

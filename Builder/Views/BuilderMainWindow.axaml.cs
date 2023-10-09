@@ -33,7 +33,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
         var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             AllowMultiple = false,
-            FileTypeFilter = new[] {new FilePickerFileType("Image File") {Patterns = new[] {"*.jpg", "*.png"}}}
+            FileTypeFilter = new[] {new FilePickerFileType("Image File") {Patterns = new[] {"*.png"}}}
         });
         if (!file.Any())
         {
@@ -46,7 +46,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
     {
         var file = await ((Window) VisualRoot!).StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
-            FileTypeChoices = new[] {new FilePickerFileType("UF2 File") {Patterns = new[] {"*.jpg", "*.png"}}},
+            FileTypeChoices = new[] {new FilePickerFileType("UF2 File") {Patterns = new[] {"*.uf2"}}},
             SuggestedFileName = "firmware.uf2"
         });
         obj.SetOutput(file);

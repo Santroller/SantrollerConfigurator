@@ -23,7 +23,8 @@ public class BrandedConfigurationStore : ReactiveObject
         PrimaryColor = primaryColor;
         WarningColor = warningColor;
         ErrorColor = errorColor;
-        Logo = new Bitmap(AssetLoader.Open(new Uri($"avares://SantrollerConfigurator/Assets/Icons/logo.png")));
+        Logo = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/Icons/logo.png")));
+        Icon = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/icon.png")));
     }
 
     public BrandedConfigurationStore(SerialisedBrandedConfigurationStore store, bool branded,
@@ -37,10 +38,13 @@ public class BrandedConfigurationStore : ReactiveObject
         {
             var stream = new MemoryStream(store.Logo);
             Logo = new Bitmap(stream);
+            stream = new MemoryStream(store.Icon);
+            Icon = new Bitmap(stream);
         }
         else
         {
-            Logo = new Bitmap(AssetLoader.Open(new Uri($"avares://SantrollerConfigurator/Assets/Icons/logo.png")));
+            Logo = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/Icons/logo.png")));
+            Icon = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/icon.png")));
         }
 
         Configurations.AddRange(store.Configurations.Select(s => new BrandedConfiguration(s, branded, screen)));
@@ -60,8 +64,11 @@ public class BrandedConfigurationStore : ReactiveObject
     
     [Reactive]
     public Bitmap Logo { get; set; }
+    
+    [Reactive]
+    public Bitmap Icon { get; set; }
 
-    public WindowIcon Icon => new(Logo);
+    public WindowIcon WindowIcon => new(Icon);
     public ObservableCollection<BrandedConfiguration> Configurations { get; } = new();
 
     public static BrandedConfigurationStore LoadBranding(MainWindowViewModel model)

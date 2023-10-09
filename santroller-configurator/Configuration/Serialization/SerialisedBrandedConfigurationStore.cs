@@ -25,6 +25,9 @@ public class SerialisedBrandedConfigurationStore
         var stream = new MemoryStream();
         store.Logo.Save(stream);
         Logo = stream.GetBuffer();
+        stream = new MemoryStream();
+        store.Icon.Save(stream);
+        Icon = stream.GetBuffer();
     }
 
     [ProtoMember(1)] public string ToolName { get; set; } = null!;
@@ -36,4 +39,5 @@ public class SerialisedBrandedConfigurationStore
     
     [ProtoMember(7)] public Color ErrorColor { get; set; }
     [ProtoMember(8)] public byte[] Logo { get; set; } = Array.Empty<byte>();
+    [ProtoMember(9)] public byte[] Icon { get; set; } = Array.Empty<byte>();
 }

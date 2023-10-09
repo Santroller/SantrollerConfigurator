@@ -18,7 +18,7 @@ using ProtoBuf;
 
 namespace SantrollerConfiguratorBuilder.NetCore;
 
-public class ExecutableUtils
+public static class ExecutableUtils
 {
     public static async void UpdatePeFileIcon(Bitmap img, Stream original, Stream output)
     {

@@ -111,9 +111,27 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
             }
         }
         
+        public static string IconLabel {
+            get {
+                return ResourceManager.GetString("IconLabel", resourceCulture);
+            }
+        }
+        
+        public static string IconErrorLabel {
+            get {
+                return ResourceManager.GetString("IconErrorLabel", resourceCulture);
+            }
+        }
+        
         public static string LogoButtonLabel {
             get {
                 return ResourceManager.GetString("LogoButtonLabel", resourceCulture);
+            }
+        }
+        
+        public static string IconButtonLabel {
+            get {
+                return ResourceManager.GetString("IconButtonLabel", resourceCulture);
             }
         }
         

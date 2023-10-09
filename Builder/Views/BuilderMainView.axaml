@@ -120,6 +120,18 @@
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.IconLabel}">
+                            </Label>
+                            <Image Source="{Binding BuilderMain.SelectedTool.Icon}" Width="64" Margin="118 0"></Image>
+                            <Button Width="125" HorizontalContentAlignment="Center" Content="{x:Static viewModels:Resources.IconButtonLabel}" Command="{Binding BuilderMain.SelectIconCommand}"/>
+                            
+                        </StackPanel>
+                        
+                        <Label Margin="300 0" Width="300" IsVisible="{Binding BuilderMain.ImageError}" HorizontalContentAlignment="Center" Foreground="Red" Content="{x:Static viewModels:Resources.IconErrorLabel}">
+                        </Label>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceTypeLabel}">
 
                             </Label>

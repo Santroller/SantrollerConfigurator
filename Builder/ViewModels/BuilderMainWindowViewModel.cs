@@ -1,17 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Linq;
-using AsmResolver;
-using AsmResolver.IO;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -24,14 +17,6 @@ using GuitarConfigurator.NetCore.ViewModels;
 using ProtoBuf;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using AsmResolver.PE;
-using AsmResolver.PE.DotNet.Builder;
-using AsmResolver.PE.File;
-using AsmResolver.PE.File.Headers;
-using AsmResolver.PE.Win32Resources;
-using AsmResolver.PE.Win32Resources.Builder;
-using AsmResolver.PE.Win32Resources.Icon;
-using Avalonia;
 
 namespace SantrollerConfiguratorBuilder.NetCore.ViewModels;
 
@@ -41,6 +26,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
     [Reactive] public BrandedConfigurationStore? SelectedTool { get; set; }
     [Reactive] public BrandedConfiguration? Selected { get; set; }
+    [Reactive] public bool ImageError { get; set; }
 
     public Interaction<BuilderMainWindowViewModel, IStorageFile?>
         LoadConfig { get; } =
@@ -136,6 +122,24 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         }
     }
 
+    [RelayCommand]
+    public async Task SelectIcon()
+    {
+        if (SelectedTool == null) return;
+        var output = await LoadConfig.Handle(this);
+        if (output != null)
+        {
+            var bitmap = new Bitmap(await output.OpenReadAsync());
+            if (Math.Abs(bitmap.Size.Width - bitmap.Size.Height) > 1)
+            {
+                ImageError = true;
+                return;
+            }
+
+            ImageError = false;
+            SelectedTool.Icon = bitmap;
+        }
+    }
     private async void SaveUf2File()
     {
         Complete(100);
