@@ -20,7 +20,7 @@ namespace SantrollerConfiguratorBuilder.NetCore;
 
 public static class ExecutableUtils
 {
-    public static async void UpdatePeFileIcon(Bitmap img, Stream original, Stream output)
+    public static async Task UpdatePeFileIcon(Bitmap img, Stream original, Stream output)
     {
         var len = original.Length;
         var bytes = new byte[len];
@@ -35,7 +35,7 @@ public static class ExecutableUtils
             {
                 var group = icons.GetIconGroups().First();
                 var iconEntry = group.GetIconEntries().First();
-                ConvertToIco(img, iconEntry);
+                UpdateIconEntryIcon(img, iconEntry);
                 icons.WriteToDirectory(image.Resources);
                 var resources = new ResourceDirectoryBuffer();
                 resources.AddDirectory(image.Resources);
@@ -48,7 +48,7 @@ public static class ExecutableUtils
         peFile.Write(writer);
     }
 
-    private static void ConvertToIco(Bitmap img, (IconGroupDirectoryEntry, IconEntry) valueTuple)
+    private static void UpdateIconEntryIcon(Bitmap img, (IconGroupDirectoryEntry, IconEntry) valueTuple)
     {
         img = img.CreateScaledBitmap(new PixelSize(64, 64));
         using var msImg = new MemoryStream();

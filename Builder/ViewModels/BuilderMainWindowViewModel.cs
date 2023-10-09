@@ -206,10 +206,10 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
         // Extract windows executable and append branded config into executable.
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
+        await using var windowsInput = AssetLoader.Open(uri);
         await using var windowsOutput =
             File.Open(SelectedTool.ToolName + "-win-64.exe", FileMode.Create, FileAccess.ReadWrite);
-        await using var windowsInput = AssetLoader.Open(uri);
-        ExecutableUtils.UpdatePeFileIcon(SelectedTool.Logo, windowsInput, windowsOutput);
+        await ExecutableUtils.UpdatePeFileIcon(SelectedTool.Logo, windowsInput, windowsOutput);
         await ExecutableUtils.AppendConfig(windowsOutput, SelectedTool);
 
         // Extract macos app zip, insert config and update icons and application name
