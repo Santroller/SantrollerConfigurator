@@ -252,11 +252,12 @@ jobs:
           repo: Santroller/SantrollerConfiguratorBinaries
         env:
           GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
-      - name: Delete old artifacts
+      - name: Stage the latest binaries
         env:
           RUN_ID: ${{ github.run_id }}
         run: |
-          rm -rf ~/artifacts/$RUN_ID
+          rm -rf ~/artifacts/latest_release
+          mv ~/artifacts/$RUN_ID ~/artifacts/latest_release
       - name: Sleep for 10 seconds
         run: sleep 10s
         shell: bash
@@ -271,8 +272,8 @@ jobs:
             ./windows/*.exe
             ./macos/*
             ./linux/*
-            ./windows-builder/*.exe
-            ./macos-builder/*
-            ./linux-builder/*
+            ./windows-builder/*Builder*.exe
+            ./macos-builder/*Builder*
+            ./linux-builder/*Builder*
         env:
           GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
