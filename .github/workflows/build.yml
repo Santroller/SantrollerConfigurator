@@ -211,7 +211,6 @@ jobs:
           rm -rf ~/artifacts/$RUN_ID
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           repository: Santroller/Santroller
           files: |
@@ -222,13 +221,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
-          repository: Santroller/Santroller
+          repository: Santroller/SantrollerConfiguratorBinaries
           files: |
-            ./windows/*.exe
-            ./macos/*
-            ./linux/*
             ./windows-builder/*.exe
             ./macos-builder/*
             ./linux-builder/*
@@ -269,11 +264,11 @@ jobs:
           repository: Santroller/SantrollerConfiguratorBinaries
           name: "Preview Build"
           files: |
-            ./windows/*.exe
-            ./macos/*
-            ./linux/*
-            ./windows-builder/*Builder*.exe
-            ./macos-builder/*Builder*
-            ./linux-builder/*Builder*
+            ./windows/SantrollerConfigurator-win-64.exe
+            ./macos/SantrollerConfigurator-macOS.zip
+            ./linux/SantrollerConfigurator-linux-64
+            ./windows-builder/*.exe
+            ./macos-builder/*
+            ./linux-builder/*
         env:
           GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
