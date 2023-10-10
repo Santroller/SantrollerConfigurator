@@ -40,8 +40,7 @@
             </ExperimentalAcrylicBorder>
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock FontSize="30" HorizontalAlignment="Center"
-                           Text="{x:Static viewModels:Resources.WelcomeDesc}" Margin="0 0 0 20" />
+                <Image Source="avares://SantrollerConfiguratorBuilder/Assets/logo.png" Width="200" Margin="0 0 0 40" />
                 <StackPanel IsVisible="{Binding BuilderMain.HasUpdate}" HorizontalAlignment="Center"
                             Orientation="Horizontal"
                             Margin="0 0 0 20">
