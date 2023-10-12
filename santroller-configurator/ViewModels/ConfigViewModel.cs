@@ -94,8 +94,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected, x => x.HasError)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: true, Item3: false}));
         WriteUf2Command = ReactiveCommand.CreateFromObservable(() => Main.SaveUf2(this),
-            this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected, x => x.HasError)
-                .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: true, Item3: false}));
+            this.WhenAnyValue(x => x.Main.Working,  x => x.HasError)
+                .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: false}));
         ResetCommand = ReactiveCommand.CreateFromTask(ResetAsync,
             this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: true}));
