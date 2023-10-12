@@ -72,11 +72,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public string WarningTextColor =>
         MainWindowViewModel.ShouldUseDarkTextColorForBackground(WarningColor) ? "#000000" : "#FFFFFF";
 
-    public ConfigViewModel(MainWindowViewModel screen, IConfigurableDevice device, bool branded)
+    public ConfigViewModel(MainWindowViewModel screen, IConfigurableDevice device, bool branded, bool builder = false)
     {
         Device = device;
         Main = screen;
         Branded = branded;
+        Builder = builder;
         _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.Background, Diff);
         BtRxAddr = "";
         UpdateBluetoothAddress();
@@ -94,7 +95,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected, x => x.HasError)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: true, Item3: false}));
         WriteUf2Command = ReactiveCommand.CreateFromObservable(() => Main.SaveUf2(this),
-            this.WhenAnyValue(x => x.Main.Working,  x => x.HasError)
+            this.WhenAnyValue(x => x.Main.Working, x => x.HasError)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: false}));
         ResetCommand = ReactiveCommand.CreateFromTask(ResetAsync,
             this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected)
@@ -233,6 +234,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public ReadOnlyObservableCollection<Output> Outputs { get; }
 
     public bool Branded { get; }
+    public bool Builder { get; }
 
     private SourceList<int> AllPins { get; }
 
@@ -1789,6 +1791,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         old.StopTicking();
         Main.SetDifference(false);
         _disconnected = true;
+        if (Builder) return;
         ShowUnpluggedDialog.Handle(("", "", "")).ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(_ => Main.GoBack.Execute(new Unit()));
     }
@@ -1884,6 +1887,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Main.SetDifference(false);
             return;
         }
+
         if (_currentConfig == null || _lastConfig == null || _currentConfigData == null) return;
         _currentConfig.Update(this, Bindings.Items, false);
         using var outputStream = new MemoryStream(_currentConfigData);

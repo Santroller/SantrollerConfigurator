@@ -25,7 +25,7 @@ public class BrandedConfiguration : ReactiveObject
 
     public BrandedConfiguration(SerialisedBrandedConfiguration configuration, bool branded, MainWindowViewModel screen)
     {
-        Model = new ConfigViewModel(screen, new EmptyDevice(), branded);
+        Model = new ConfigViewModel(screen, new EmptyDevice(), branded, !branded);
         configuration.Configuration.LoadConfiguration(Model);
         VendorName = configuration.VendorName;
         ProductName = configuration.ProductName;
@@ -34,7 +34,7 @@ public class BrandedConfiguration : ReactiveObject
 
     public BrandedConfiguration(string vendorName, string productName, MainWindowViewModel screen)
     {
-        Model = new ConfigViewModel(screen, new EmptyDevice(), false);
+        Model = new ConfigViewModel(screen, new EmptyDevice(), false, true);
         Model.SetDefaults();
         VendorName = vendorName;
         ProductName = productName;
