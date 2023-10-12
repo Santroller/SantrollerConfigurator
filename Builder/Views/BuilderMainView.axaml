@@ -28,8 +28,10 @@
                         <TextBlock Text="{Binding BuilderMain.Message}" />
                     </WrapPanel>
                     <ProgressBar HorizontalAlignment="Stretch" ShowProgressText="True" Name="RunProgress"
-                                 Foreground="{Binding BuilderMain.ProgressbarColor}" Value="{Binding BuilderMain.Progress}"
-                                 IsIndeterminate="False" Minimum="0" Maximum="100" Height="30" Classes.darkText="{Binding BuilderMain.ProgressBarShouldUseDarkTextColor}">
+                                 Foreground="{Binding BuilderMain.ProgressbarColor}"
+                                 Value="{Binding BuilderMain.Progress}"
+                                 IsIndeterminate="False" Minimum="0" Maximum="100" Height="30"
+                                 Classes.darkText="{Binding BuilderMain.ProgressBarShouldUseDarkTextColor}">
                         <ProgressBar.Styles>
                             <Style Selector="ProgressBar.darkText /template/ TextBlock">
                                 <Setter Property="Foreground" Value="#000000" />
@@ -38,162 +40,187 @@
                     </ProgressBar>
                 </StackPanel>
             </ExperimentalAcrylicBorder>
-
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Image Source="avares://SantrollerConfiguratorBuilder/Assets/logo.png" Width="200" Margin="0 0 0 40" />
-                <StackPanel IsVisible="{Binding BuilderMain.HasUpdate}" HorizontalAlignment="Center"
-                            Orientation="Horizontal"
-                            Margin="0 0 0 20">
-                    <Label Content="{Binding BuilderMain.UpdateMessage}" VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" />
-                    <Button Command="{Binding BuilderMain.OpenReleasesPageCommand}"
-                            Content="{x:Static netCore:Resources.UpdateDesc}" />
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Center">
-                    <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static viewModels:Resources.SelectedToolLabel}">
-
-                        </Label>
-                        <ComboBox Width="300" HorizontalAlignment="Stretch" IsEnabled="false"
-                                  IsVisible="{Binding !BuilderMain.Config.Configurations.Count}"
-                                  SelectedIndex="0">
-                            <ComboBoxItem Content="{x:Static viewModels:Resources.NoConfigurations}"></ComboBoxItem>
-                        </ComboBox>
-                        <ComboBox Width="300" HorizontalAlignment="Stretch"
-                                  IsVisible="{Binding BuilderMain.Config.Configurations.Count}"
-                                  SelectedItem="{Binding BuilderMain.SelectedTool}"
-                                  ItemsSource="{Binding BuilderMain.Config.Configurations}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding ToolName}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                        <Button Width="125" HorizontalContentAlignment="Center" Content="Create Tool" Command="{Binding BuilderMain.AddConfigCommand}" />
-                        <Button Width="125" HorizontalContentAlignment="Center" Content="Delete Tool" Command="{Binding BuilderMain.RemoveConfigCommand}"
-                                IsEnabled="{Binding BuilderMain.Config.Configurations.Count}" />
+            <Viewbox StretchDirection="DownOnly">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Image Source="avares://SantrollerConfiguratorBuilder/Assets/logo.png" Width="200"
+                           Margin="0 0 0 40" />
+                    <StackPanel IsVisible="{Binding BuilderMain.HasUpdate}" HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Margin="0 0 0 20">
+                        <Label Content="{Binding BuilderMain.UpdateMessage}" VerticalAlignment="Center"
+                               VerticalContentAlignment="Center" />
+                        <Button Command="{Binding BuilderMain.OpenReleasesPageCommand}"
+                                Content="{x:Static netCore:Resources.UpdateDesc}" />
                     </StackPanel>
-                    <StackPanel IsVisible="{Binding BuilderMain.Config.Configurations.Count}">
+                    <StackPanel HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static viewModels:Resources.SelectedToolNameLabel}">
-                            </Label>
-                            <TextBox Width="300" Text="{Binding BuilderMain.SelectedTool.ToolName}"></TextBox>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static viewModels:Resources.PrimaryColorLabel}">
-                            </Label>
-                            <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"
-                                         Color="{Binding BuilderMain.SelectedTool.PrimaryColor}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static viewModels:Resources.WarningColorLabel}">
-                            </Label>
-                            <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"
-                                         Color="{Binding BuilderMain.SelectedTool.WarningColor}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static viewModels:Resources.ErrorColorLabel}">
-                            </Label>
-                            <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"
-                                         Color="{Binding BuilderMain.SelectedTool.ErrorColor}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static viewModels:Resources.LogoLabel}">
-                            </Label>
-                            <Image Source="{Binding BuilderMain.SelectedTool.Logo}" Width="300"></Image>
-                            <Button Width="125" HorizontalContentAlignment="Center" Content="{x:Static viewModels:Resources.LogoButtonLabel}" Command="{Binding BuilderMain.SelectLogoCommand}"/>
-                            
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static viewModels:Resources.IconLabel}">
-                            </Label>
-                            <Image Source="{Binding BuilderMain.SelectedTool.Icon}" Width="64" Margin="118 0"></Image>
-                            <Button Width="125" HorizontalContentAlignment="Center" Content="{x:Static viewModels:Resources.IconButtonLabel}" Command="{Binding BuilderMain.SelectIconCommand}"/>
-                            
-                        </StackPanel>
-                        
-                        <Label Margin="300 0" Width="300" IsVisible="{Binding BuilderMain.ImageError}" HorizontalContentAlignment="Center" Foreground="Red" Content="{x:Static viewModels:Resources.IconErrorLabel}">
-                        </Label>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceTypeLabel}">
+                                   Width="300" Content="{x:Static viewModels:Resources.SelectedToolLabel}">
 
                             </Label>
                             <ComboBox Width="300" HorizontalAlignment="Stretch" IsEnabled="false"
-                                      IsVisible="{Binding !BuilderMain.SelectedTool.Configurations.Count}"
+                                      IsVisible="{Binding !BuilderMain.Config.Configurations.Count}"
                                       SelectedIndex="0">
-                                <ComboBoxItem Content="{x:Static viewModels:Resources.NoDevices}"></ComboBoxItem>
+                                <ComboBoxItem Content="{x:Static viewModels:Resources.NoConfigurations}"></ComboBoxItem>
                             </ComboBox>
                             <ComboBox Width="300" HorizontalAlignment="Stretch"
-                                      IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}"
-                                      SelectedItem="{Binding BuilderMain.Selected}"
-                                      ItemsSource="{Binding BuilderMain.SelectedTool.Configurations}">
+                                      IsVisible="{Binding BuilderMain.Config.Configurations.Count}"
+                                      SelectedItem="{Binding BuilderMain.SelectedTool}"
+                                      ItemsSource="{Binding BuilderMain.Config.Configurations}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding ProductName}" />
+                                        <TextBlock Text="{Binding ToolName}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <Button Width="125" HorizontalContentAlignment="Center" Content="{x:Static viewModels:Resources.CreateVariant}" Command="{Binding BuilderMain.AddDeviceCommand}" />
-                            <Button Width="125" HorizontalContentAlignment="Center" Content="{x:Static viewModels:Resources.RemoveVariant}" Command="{Binding BuilderMain.RemoveDeviceCommand}"
-                                    IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" />
+                            <Button Width="125" HorizontalContentAlignment="Center" Content="Create Tool"
+                                    Command="{Binding BuilderMain.AddConfigCommand}" />
+                            <Button Width="125" HorizontalContentAlignment="Center" Content="Delete Tool"
+                                    Command="{Binding BuilderMain.RemoveConfigCommand}"
+                                    IsEnabled="{Binding BuilderMain.Config.Configurations.Count}" />
                         </StackPanel>
-                        <StackPanel IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}">
+                        <StackPanel IsVisible="{Binding BuilderMain.Config.Configurations.Count}">
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceNameLabel}">
+                                       Width="300" Content="{x:Static viewModels:Resources.SelectedToolNameLabel}">
                                 </Label>
-                                <TextBox Width="300" Text="{Binding BuilderMain.Selected.ProductName}"></TextBox>
+                                <TextBox Width="300" Text="{Binding BuilderMain.SelectedTool.ToolName}"></TextBox>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceVendorLabel}">
+                                       Width="300" Content="{x:Static viewModels:Resources.PrimaryColorLabel}">
                                 </Label>
-                                <TextBox Width="300" Text="{Binding BuilderMain.Selected.VendorName}"></TextBox>
+                                <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False"
+                                             ColorSpectrumShape="Ring"
+                                             Color="{Binding BuilderMain.SelectedTool.PrimaryColor}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static viewModels:Resources.ConfigureSelectedDevice}">
+                                       Width="300" Content="{x:Static viewModels:Resources.WarningColorLabel}">
                                 </Label>
-                                <Button Width="300" Content="{x:Static viewModels:Resources.ConfigureSelectedDevice}" Command="{Binding BuilderMain.StartConfiguringCommand}"/>
+                                <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False"
+                                             ColorSpectrumShape="Ring"
+                                             Color="{Binding BuilderMain.SelectedTool.WarningColor}" />
                             </StackPanel>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static viewModels:Resources.SaveConfigTool}">
-                        </Label>
-                        <Button Width="300" Content="{x:Static viewModels:Resources.SaveConfigTool}" Command="{Binding BuilderMain.SaveCommand}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static viewModels:Resources.PackageTool}">
-                        </Label>
-                        <Button Width="300" IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" Content="{x:Static viewModels:Resources.PackageTool}" Command="{Binding BuilderMain.PackageCommand}"/>
-                    </StackPanel>
-                </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static viewModels:Resources.ErrorColorLabel}">
+                                </Label>
+                                <ColorPicker Width="300" IsAlphaEnabled="False" IsAlphaVisible="False"
+                                             ColorSpectrumShape="Ring"
+                                             Color="{Binding BuilderMain.SelectedTool.ErrorColor}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static viewModels:Resources.LogoLabel}">
+                                </Label>
+                                <Image Source="{Binding BuilderMain.SelectedTool.Logo}" Width="300"></Image>
+                                <Button Width="125" HorizontalContentAlignment="Center"
+                                        Content="{x:Static viewModels:Resources.LogoButtonLabel}"
+                                        Command="{Binding BuilderMain.SelectLogoCommand}" />
 
-            </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static viewModels:Resources.IconLabel}">
+                                </Label>
+                                <Image Source="{Binding BuilderMain.SelectedTool.Icon}" Width="64" Margin="118 0"></Image>
+                                <Button Width="125" HorizontalContentAlignment="Center"
+                                        Content="{x:Static viewModels:Resources.IconButtonLabel}"
+                                        Command="{Binding BuilderMain.SelectIconCommand}" />
+
+                            </StackPanel>
+
+                            <Label Margin="300 0" Width="300" IsVisible="{Binding BuilderMain.ImageError}"
+                                   HorizontalContentAlignment="Center" Foreground="Red"
+                                   Content="{x:Static viewModels:Resources.IconErrorLabel}">
+                            </Label>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceTypeLabel}">
+
+                                </Label>
+                                <ComboBox Width="300" HorizontalAlignment="Stretch" IsEnabled="false"
+                                          IsVisible="{Binding !BuilderMain.SelectedTool.Configurations.Count}"
+                                          SelectedIndex="0">
+                                    <ComboBoxItem Content="{x:Static viewModels:Resources.NoDevices}"></ComboBoxItem>
+                                </ComboBox>
+                                <ComboBox Width="300" HorizontalAlignment="Stretch"
+                                          IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}"
+                                          SelectedItem="{Binding BuilderMain.Selected}"
+                                          ItemsSource="{Binding BuilderMain.SelectedTool.Configurations}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ProductName}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <Button Width="125" HorizontalContentAlignment="Center"
+                                        Content="{x:Static viewModels:Resources.CreateVariant}"
+                                        Command="{Binding BuilderMain.AddDeviceCommand}" />
+                                <Button Width="125" HorizontalContentAlignment="Center"
+                                        Content="{x:Static viewModels:Resources.RemoveVariant}"
+                                        Command="{Binding BuilderMain.RemoveDeviceCommand}"
+                                        IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Width="300"
+                                           Content="{x:Static viewModels:Resources.SelectedDeviceNameLabel}">
+                                    </Label>
+                                    <TextBox Width="300" Text="{Binding BuilderMain.Selected.ProductName}"></TextBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Width="300"
+                                           Content="{x:Static viewModels:Resources.SelectedDeviceVendorLabel}">
+                                    </Label>
+                                    <TextBox Width="300" Text="{Binding BuilderMain.Selected.VendorName}"></TextBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Width="300"
+                                           Content="{x:Static viewModels:Resources.ConfigureSelectedDevice}">
+                                    </Label>
+                                    <Button Width="300"
+                                            Content="{x:Static viewModels:Resources.ConfigureSelectedDevice}"
+                                            Command="{Binding BuilderMain.StartConfiguringCommand}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.SaveConfigTool}">
+                            </Label>
+                            <Button Width="300" Content="{x:Static viewModels:Resources.SaveConfigTool}"
+                                    Command="{Binding BuilderMain.SaveCommand}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static viewModels:Resources.PackageTool}">
+                            </Label>
+                            <Button Width="300" IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}"
+                                    Content="{x:Static viewModels:Resources.PackageTool}"
+                                    Command="{Binding BuilderMain.PackageCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                </StackPanel>
+            </Viewbox>
         </DockPanel>
     </Panel>
 </UserControl>
