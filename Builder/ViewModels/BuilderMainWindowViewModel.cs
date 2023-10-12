@@ -164,6 +164,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     [RelayCommand]
     public async Task Package()
     {
+        Save();
         if (SelectedTool == null) return;
         // Check for duplicate variant names
         var names = SelectedTool.Configurations.Select(s => s.ProductName).ToList();
@@ -209,7 +210,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         await using var windowsInput = AssetLoader.Open(uri);
         await using var windowsOutput =
             File.Open(SelectedTool.ToolName + "-win-64.exe", FileMode.Create, FileAccess.ReadWrite);
-        await ExecutableUtils.UpdatePeFileIcon(SelectedTool.Logo, windowsInput, windowsOutput);
+        await ExecutableUtils.UpdatePeFileIcon(SelectedTool.Icon, windowsInput, windowsOutput);
         await ExecutableUtils.AppendConfig(windowsOutput, SelectedTool);
 
         // Extract macos app zip, insert config and update icons and application name
@@ -230,8 +231,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         
         // Update icons and info.plist so that the executable has the correct name and icons
         await ExecutableUtils.UpdatePlist(SelectedTool.ToolName, archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Info.plist")!);
-        await ExecutableUtils.OverwriteIcns(SelectedTool.Logo, archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/Resources/icon.icns")!);
-        await ExecutableUtils.OverwriteIcns(SelectedTool.Logo, archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Resources/icon.icns")!);
+        await ExecutableUtils.OverwriteIcns(SelectedTool.Icon, archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/Resources/icon.icns")!);
+        await ExecutableUtils.OverwriteIcns(SelectedTool.Icon, archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Resources/icon.icns")!);
         await ExecutableUtils.RenameDirectoryInZip("SantrollerConfiguratorBranded.app", SelectedTool.ToolName + ".app",
             archive);
 

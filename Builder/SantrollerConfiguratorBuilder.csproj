@@ -56,8 +56,8 @@
         <TrimmableAssembly Include="Avalonia.DesignerSupport"/>
     </ItemGroup>
     <ItemGroup>
-        <AvaloniaResource Include="Assets\icon.png" />
         <AvaloniaResource Include="Assets\logo.png" />
+        <AvaloniaResource Include="Assets\icon.png" />
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-macOS.zip" />
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-linux-64" />
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-win-64.exe" />
