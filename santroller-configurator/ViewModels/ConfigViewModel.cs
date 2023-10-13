@@ -1901,6 +1901,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Main.SetDifference(true);
         }
     }
+    
 
     public void SetUpDiff()
     {
