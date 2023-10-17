@@ -483,7 +483,8 @@ public class Led : Output
                 break;
         }
 
-        return new SerializedLed(LedOn, LedOff, LedIndices.ToArray(), Command, param1, param2, OutputEnabled, Peripheral, Inverted,
+        return new SerializedLed(LedOn, LedOff, LedIndices.ToArray(), Command, param1, param2, OutputEnabled,
+            Peripheral, Inverted,
             Pin);
     }
 
@@ -544,10 +545,12 @@ public class Led : Output
             case LedCommandType.Ps4LightBar when mode is ConfigField.LightBarLed:
                 return string.Join("\n",
                     LedIndices.Select(index => Model.LedType.GetLedAssignment("red", "green", "blue", index)));
-            
+
             case LedCommandType.Player when mode is ConfigField.PlayerLed:
+                // If Player > 4, then light up LED 4 + LED - 4
+                var condition = Player == 4 ? "player >= 4" : $"(player & 3) == {Player}";
                 return $$"""
-                         if (player == {{Player}}) {
+                         if ({{condition}}) {
                              {{on}}
                          } else {
                              {{off}}
