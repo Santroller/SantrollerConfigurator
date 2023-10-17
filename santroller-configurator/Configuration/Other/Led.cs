@@ -544,13 +544,16 @@ public class Led : Output
             case LedCommandType.Ps4LightBar when mode is ConfigField.LightBarLed:
                 return string.Join("\n",
                     LedIndices.Select(index => Model.LedType.GetLedAssignment("red", "green", "blue", index)));
-            // Player and Auth commands are a set and forget type thing, they are never switched off after being turned on
+            
             case LedCommandType.Player when mode is ConfigField.PlayerLed:
                 return $$"""
                          if (player == {{Player}}) {
                              {{on}}
+                         } else {
+                             {{off}}
                          }
                          """;
+            // Auth commands are a set and forget type thing, they are never switched off after being turned on
             case LedCommandType.Auth when mode is ConfigField.AuthLed:
                 return on;
         }
