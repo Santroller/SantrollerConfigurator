@@ -210,8 +210,12 @@ public partial class DrumAxis : OutputAxis
             case ConfigField.Universal:
                 if (ButtonsPs3.TryGetValue(Type, out var value3))
                     outputButtons += $"\n{GetReportField(value3)} = true;";
-                if (Type is not (DrumAxisType.Kick or DrumAxisType.Kick2))
-                    outputButtons += $"\n{GetReportField(Type)} = true;";
+                if (Model.DeviceControllerType.IsRb())
+                {
+                    if (Type is not (DrumAxisType.Kick or DrumAxisType.Kick2))
+                        outputButtons += $"\n{GetReportField(Type)} = true;";
+                }
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
