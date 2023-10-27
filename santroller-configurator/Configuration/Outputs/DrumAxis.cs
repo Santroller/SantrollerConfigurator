@@ -224,7 +224,7 @@ public partial class DrumAxis : OutputAxis
                      """;
         }
 
-        if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne && mode != ConfigField.Universal)
+        if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
         {
             switch (Type)
             {
@@ -247,28 +247,6 @@ public partial class DrumAxis : OutputAxis
                 case DrumAxisType.Blue:
                     outputButtons += $"\n{GetReportField("padFlag")} = true;";
 
-                    break;
-            }
-        }
-        
-        if (Model.DeviceControllerType.IsRb() && mode == ConfigField.Universal)
-        {
-            switch (Type)
-            {
-                case DrumAxisType.YellowCymbal:
-                    outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
-                    break;
-                case DrumAxisType.BlueCymbal:
-                    outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
-                    break;
-                case DrumAxisType.GreenCymbal:
-                    outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
-                    break;
-                case DrumAxisType.Green:
-                case DrumAxisType.Red:
-                case DrumAxisType.Yellow:
-                case DrumAxisType.Blue:
-                    outputButtons += $"\n{GetReportField("padFlag")} = true;";
                     break;
             }
         }
