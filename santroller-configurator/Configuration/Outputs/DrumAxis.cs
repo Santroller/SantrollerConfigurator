@@ -210,12 +210,6 @@ public partial class DrumAxis : OutputAxis
             case ConfigField.Universal:
                 if (ButtonsPs3.TryGetValue(Type, out var value3))
                     outputButtons += $"\n{GetReportField(value3)} = true;";
-                if (Model.DeviceControllerType.IsRb())
-                {
-                    if (Type is not (DrumAxisType.Kick or DrumAxisType.Kick2))
-                        outputButtons += $"\n{GetReportField(Type)} = true;";
-                }
-
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
@@ -231,6 +225,7 @@ public partial class DrumAxis : OutputAxis
         }
 
         if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne && mode != ConfigField.Universal)
+        {
             switch (Type)
             {
                 case DrumAxisType.YellowCymbal:
@@ -254,6 +249,29 @@ public partial class DrumAxis : OutputAxis
 
                     break;
             }
+        }
+        
+        if (Model.DeviceControllerType.IsRb() && mode == ConfigField.Universal)
+        {
+            switch (Type)
+            {
+                case DrumAxisType.YellowCymbal:
+                    outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
+                    break;
+                case DrumAxisType.BlueCymbal:
+                    outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
+                    break;
+                case DrumAxisType.GreenCymbal:
+                    outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
+                    break;
+                case DrumAxisType.Green:
+                case DrumAxisType.Red:
+                case DrumAxisType.Yellow:
+                case DrumAxisType.Blue:
+                    outputButtons += $"\n{GetReportField("padFlag")} = true;";
+                    break;
+            }
+        }
 
         if (outputButtons.Any())
         {
