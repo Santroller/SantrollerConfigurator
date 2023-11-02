@@ -726,6 +726,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
         _manager?.Dispose();
     }
 
