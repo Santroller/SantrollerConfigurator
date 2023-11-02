@@ -45,7 +45,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             SelectedTool = Config.Configurations.First();
         }
 
-        Router.NavigateAndReset.Execute(new BuilderMainViewModel(this));
+        Router.NavigateAndReset.Execute(new BuilderAuthViewModel(this));
         this.WhenAnyValue(s => s.SelectedDevice).Subscribe(s =>
         {
             if (Selected != null && SelectedDevice != null && !Working)

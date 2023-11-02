@@ -2,6 +2,7 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/home/sanjay/.nuget/packages/communitytoolkit.mvvm/8.2.1/lib/net6.0/CommunityToolkit.Mvvm.dll" /&gt;
   &lt;Assembly Path="/home/sanjay/.nuget/packages/discutils.dmg/0.16.13/lib/net5.0/DiscUtils.Dmg.dll" /&gt;
+  &lt;Assembly Path="/home/sanjay/.nuget/packages/identitymodel/5.2.0/lib/net5.0/IdentityModel.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
 	
 	

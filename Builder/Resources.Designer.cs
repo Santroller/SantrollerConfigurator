@@ -212,5 +212,35 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
                 return ResourceManager.GetString("UniqueName", resourceCulture);
             }
         }
+        
+        public static string GithubLogonLabel {
+            get {
+                return ResourceManager.GetString("GithubLogonLabel", resourceCulture);
+            }
+        }
+        
+        public static string GithubLogoutLabel {
+            get {
+                return ResourceManager.GetString("GithubLogoutLabel", resourceCulture);
+            }
+        }
+        
+        public static string InsufficientAccess {
+            get {
+                return ResourceManager.GetString("InsufficientAccess", resourceCulture);
+            }
+        }
+        
+        public static string ContinueLabel {
+            get {
+                return ResourceManager.GetString("ContinueLabel", resourceCulture);
+            }
+        }
+        
+        public static string GitHubAuthError {
+            get {
+                return ResourceManager.GetString("GitHubAuthError", resourceCulture);
+            }
+        }
     }
 }

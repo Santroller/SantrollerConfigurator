@@ -260,17 +260,17 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             {
                 if (preReleaseOutdated)
                 {
-                    return "New Prerelease: " + preReleaseTag;
+                    return string.Format(Resources.NewPreRelease, preReleaseTag);
                 }
             }
             else if (latestTagVer != new Version(GitVersionInformation.SemVer))
             {
-                return "New Version: " + latestTagVer;
+                return string.Format(Resources.NewVersion, latestTagVer);
             }
         }
         catch (Exception ex)
         {
-            return "Unable to check for updates: " + ex.Message;
+            return Resources.UnableToCheckForUpdates + ex.Message;
         }
 
         return UpToDate;
@@ -450,7 +450,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     public string UpdateMessage { get; }
 
-    public bool HasUpdate => UpdateMessage != UpToDate;
+    public bool HasUpdate => UpdateMessage != UpToDate && !UpdateMessage.StartsWith(Resources.UnableToCheckForUpdates);
 
     public PlatformIo Pio { get; } = new();
 

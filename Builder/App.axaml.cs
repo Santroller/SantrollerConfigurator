@@ -27,6 +27,7 @@ public class App : Application
 
         Locator.CurrentMutable.RegisterConstant<IScreen>(new BuilderMainWindowViewModel());
         Locator.CurrentMutable.Register<IViewFor<BuilderMainViewModel>>(() => new BuilderMainView());
+        Locator.CurrentMutable.Register<IViewFor<BuilderAuthViewModel>>(() => new BuilderAuthView());
         Locator.CurrentMutable.Register<IViewFor<ConfigViewModel>>(() => new ConfigView());
         lifetime.MainWindow = new BuilderMainWindow {DataContext = Locator.Current.GetService<IScreen>()};
         lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;

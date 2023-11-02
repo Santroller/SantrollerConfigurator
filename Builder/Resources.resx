@@ -107,4 +107,19 @@
     <data name="UniqueName" xml:space="preserve">
         <value>You have created variants with duplicate names. Please make sure each variant has a unique name.</value>
     </data>
+    <data name="GithubLogonLabel" xml:space="preserve">
+        <value>Log into GitHub</value>
+    </data>
+    <data name="GithubLogoutLabel" xml:space="preserve">
+        <value>Log out of GitHub</value>
+    </data>
+    <data name="InsufficientAccess" xml:space="preserve">
+        <value>Your GitHub account has not subscribed to the necessary GitHub sponsors tier for this project.</value>
+    </data>
+    <data name="ContinueLabel" xml:space="preserve">
+        <value>Continue</value>
+    </data>
+    <data name="GitHubAuthError" xml:space="preserve">
+        <value>Unable to authenticate with GitHub: {0}</value>
+    </data>
 </root>

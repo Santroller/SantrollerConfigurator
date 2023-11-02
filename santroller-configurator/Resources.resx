@@ -3013,4 +3013,13 @@
     <data name="NoFreeSpaceMessage" xml:space="preserve">
         <value>Not enough free space, you need 3GB of space free on your {0} drive to use this program</value>
     </data>
+    <data name="UnableToCheckForUpdates" xml:space="preserve">
+        <value>Unable to check for updates: </value>
+    </data>
+    <data name="NewVersion" xml:space="preserve">
+        <value>New Version: {0}</value>
+    </data>
+    <data name="NewPreRelease" xml:space="preserve">
+        <value>New Prerelease: {0}</value>
+    </data>
 </root>

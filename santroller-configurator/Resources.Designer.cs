@@ -5792,5 +5792,23 @@ namespace GuitarConfigurator.NetCore {
                 return ResourceManager.GetString("NoFreeSpaceMessage", resourceCulture);
             }
         }
+        
+        public static string UnableToCheckForUpdates {
+            get {
+                return ResourceManager.GetString("UnableToCheckForUpdates", resourceCulture);
+            }
+        }
+        
+        public static string NewVersion {
+            get {
+                return ResourceManager.GetString("NewVersion", resourceCulture);
+            }
+        }
+        
+        public static string NewPreRelease {
+            get {
+                return ResourceManager.GetString("NewPreRelease", resourceCulture);
+            }
+        }
     }
 }
