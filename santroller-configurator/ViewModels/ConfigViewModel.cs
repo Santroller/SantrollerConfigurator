@@ -698,8 +698,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             if (!Bindings.Items.Any(s => s is DjCombinedOutput))
             {
                 var dj = new DjCombinedOutput(this, false);
-                dj.SetOutputsOrDefaults(Array.Empty<Output>());
                 Bindings.Add(dj);
+                dj.SetOutputsOrDefaults(Array.Empty<Output>());
             }
         }
         else
