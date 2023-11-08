@@ -255,17 +255,17 @@ public partial class DrumAxis : OutputAxis
         var dtaVal = 0;
         if (input is DigitalToAnalog dta) dtaVal = dta.On;
 
-        var assignedVal = "val_real";
+        var assignedVal = $"(lastDrum[{debounceIndex}])";
         switch (mode)
         {
             // Xbox one uses 4 bit velocities
             case ConfigField.XboxOne:
-                assignedVal = "val_real >> 12";
+                assignedVal = $"(lastDrum[{debounceIndex}]) >> 12";
                 dtaVal >>= 12;
                 break;
             // PS3 and PC HID uses 8 bit velocities
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal:
-                assignedVal = "val_real >> 8";
+                assignedVal = $"(lastDrum[{debounceIndex}]) >> 8";
                 dtaVal >>= 8;
                 break;
             // Xbox 360 GH use uint8_t velocities
@@ -273,7 +273,7 @@ public partial class DrumAxis : OutputAxis
             {
                 if (Model.DeviceControllerType.IsGh())
                 {
-                    assignedVal = "val_real >> 8";
+                    assignedVal = $"(lastDrum[{debounceIndex}]) >> 8";
                     dtaVal >>= 8;
                 }
                 // And then 360 RB use inverted int16_t values, though the first bit is specified based on the type
@@ -286,13 +286,13 @@ public partial class DrumAxis : OutputAxis
                         case DrumAxisType.Green:
                         case DrumAxisType.Yellow:
                         case DrumAxisType.YellowCymbal:
-                            assignedVal = "-(0x7fff - (val_real >> 1))";
+                            assignedVal = $"-(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
                             dtaVal = -(0x7fff - (dtaVal >> 1));
                             break;
                         case DrumAxisType.Red:
                         case DrumAxisType.Blue:
                         case DrumAxisType.BlueCymbal:
-                            assignedVal = "(0x7fff - (val_real >> 1))";
+                            assignedVal = $"(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
                             dtaVal = 0x7fff - (dtaVal >> 1);
                             break;
                     }
@@ -314,32 +314,31 @@ public partial class DrumAxis : OutputAxis
                                   """;
             }
             return $$"""
-                     {
-                         if ({{input.Generate()}}) {
-                             {{reset}}
-                             {{GenerateOutput(mode)}} = {{dtaVal}};
-                         }
-                         {{outputButtons}}
+                     if ({{input.Generate()}}) {
+                         {{reset}}
+                         {{GenerateOutput(mode)}} = {{dtaVal}};
                      }
+                     {{outputButtons}}
                      """;
         }
 
-        // Drum axis' are weird. Translate the value to a uint16_t like any axis, do tests against threshold for hits
-        // and then convert them to their expected output format, before writing to the output report.
+        // For drums, we want to do things based on a peak.
+        // That means we ignore anything under Min, then when something peaks over Min, we capture that value and wait until we are back under Min before resetting.
+        var check = $"{Input.Generate()} > {Min}";
+        if (Min > Max)
+        {
+            check = $"({Input.Generate()} - {Min}) < {DeadZone}";
+        }
         return $$"""
-                 {
-                     uint16_t val_real = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
-                     if (val_real) {
-                         if (!{{ifStatement}}) {
-                             lastDrum[{{debounceIndex}}] = val_real;
-                         }
-                         {{reset}}
+                 if ({{check}}) {
+                     if (!{{ifStatement}}) {
+                         lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
                      }
-                     if ({{ifStatement}}) {
-                         {{outputButtons}}
-                         val_real = lastDrum[{{debounceIndex}}];
-                         {{GenerateOutput(mode)}} = {{assignedVal}};
-                     }
+                     {{reset}}
+                 }
+                 if ({{ifStatement}}) {
+                     {{outputButtons}}
+                     {{GenerateOutput(mode)}} = {{assignedVal}};
                  }
                  """;
     }

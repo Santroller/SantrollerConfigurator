@@ -150,7 +150,7 @@ public abstract partial class Output : ReactiveObject
         this.WhenAnyValue(x => x.Input.RawValue, x => x.Enabled).Select(x => x.Item2 ? x.Item1 : 0)
             .ToPropertyEx(this, x => x.ValueRaw);
         this.WhenAnyValue(x => x.ValueRaw, x => x.Input, x => x.IsCombined)
-            .Select(s => s.Item3 || s.Item2.IsAnalog ? 1 : (s.Item1 == 0 ? 0 : 0.35) + 0.65)
+            .Select(GetOpacity)
             .ToPropertyEx(this, s => s.ImageOpacity);
         this.WhenAnyValue(x => x.Enabled)
             .Select(s => s ? 1 : 0.5)
@@ -172,6 +172,27 @@ public abstract partial class Output : ReactiveObject
         _configured = true;
         IsVisible = !Model.Branded || LedIndices.Any() || this is Led || this is BluetoothOutput ||
                     this is CombinedOutput || this is OutputAxis {Input: not DigitalToAnalog};
+    }
+
+    private double GetOpacity((int, Input, bool) s)
+    {
+        var check = s.Item1 != 0 || s.Item3 || s.Item2.IsAnalog;
+
+        if (this is DrumAxis axis)
+        {
+            check = s.Item1 > axis.Min;
+            if (axis.Min > axis.Max)
+            {
+                check = (s.Item1 - axis.Min) < axis.DeadZone;
+            }
+        }
+
+        if (check)
+        {
+            return 1;
+        }
+
+        return 0.65;
     }
 
 
