@@ -11,7 +11,7 @@ public partial class BuilderAuthViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool LoggedIn { get; set; }
     [Reactive] public bool Authenticating { get; set; }
     [Reactive] public bool InsufficientAccess { get; set; }
-    [Reactive] public string ErrorMessage { get; set; }
+    [Reactive] public string ErrorMessage { get; set; } = "";
 
     public BuilderAuthViewModel(BuilderMainWindowViewModel screen)
     {

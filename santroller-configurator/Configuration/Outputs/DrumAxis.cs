@@ -251,14 +251,6 @@ public partial class DrumAxis : OutputAxis
             }
         }
 
-        if (outputButtons.Any())
-        {
-            outputButtons = $$"""
-                              if ({{ifStatement}}) {
-                                  {{outputButtons}}
-                              }
-                              """;
-        }
         // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
         var dtaVal = 0;
         if (input is DigitalToAnalog dta) dtaVal = dta.On;
@@ -320,6 +312,14 @@ public partial class DrumAxis : OutputAxis
         // If someone has mapped digital inputs to the drums, then we can shortcut a bunch of the tests, and just need to use the calculated value from above
         if (input is DigitalToAnalog)
         {
+            if (outputButtons.Any())
+            {
+                outputButtons = $$"""
+                                  if ({{ifStatement}}) {
+                                      {{outputButtons}}
+                                  }
+                                  """;
+            }
             return $$"""
                      {
                          if ({{input.Generate()}}) {
@@ -337,10 +337,16 @@ public partial class DrumAxis : OutputAxis
                  {
                      uint16_t val_real = {{GenerateAssignment(revVal, ConfigField.XboxOne, false, false, false, true, writer)}};
                      if (val_real) {
+                         if (!{{ifStatement}}) {
+                             lastDrum[{{debounceIndex}}] = val_real;
+                         }
                          {{reset}}
+                     }
+                     if ({{ifStatement}}) {
+                         {{outputButtons}}
+                         val_real = lastDrum[{{debounceIndex}}];
                          {{GenerateOutput(mode)}} = {{assignedVal}};
                      }
-                     {{outputButtons}}
                  }
                  """;
     }
