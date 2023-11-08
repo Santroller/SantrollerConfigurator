@@ -1569,7 +1569,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     foreach (var analogLedOutput in analogLedOutputs)
                     {
                         var ledRead =
-                            analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, null);
+                            analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
                         // Now we have the value, calibrated as a uint8_t
                         // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
                         analog +=
@@ -1613,7 +1613,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 ret += $"if (ledState[{led - 1}].select == 0) {{";
                 foreach (var analogLedOutput in analogLedOutputs)
                 {
-                    var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, writer);
+                    var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
                     // Now we have the value, calibrated as a uint8_t
                     ret +=
                         $"led_tmp = {ledRead};{LedType.GetLedAssignment(led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}";

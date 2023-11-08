@@ -264,16 +264,20 @@ public partial class DrumAxis : OutputAxis
         if (input is DigitalToAnalog dta) dtaVal = dta.On;
 
         var assignedVal = "val_real";
+        var revVal = GenerateOutput(mode);
+        // TODO: also store the logic to go from the prev value to val_real
         switch (mode)
         {
             // Xbox one uses 4 bit velocities
             case ConfigField.XboxOne:
                 assignedVal = "val_real >> 12";
+                revVal = $"{revVal} << 12";
                 dtaVal >>= 12;
                 break;
             // PS3 and PC HID uses 8 bit velocities
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal:
                 assignedVal = "val_real >> 8";
+                revVal = $"{revVal} << 8";
                 dtaVal >>= 8;
                 break;
             // Xbox 360 GH use uint8_t velocities
@@ -282,6 +286,7 @@ public partial class DrumAxis : OutputAxis
                 if (Model.DeviceControllerType.IsGh())
                 {
                     assignedVal = "val_real >> 8";
+                    revVal = $"{revVal} << 8";
                     dtaVal >>= 8;
                 }
                 // And then 360 RB use inverted int16_t values, though the first bit is specified based on the type
@@ -295,12 +300,14 @@ public partial class DrumAxis : OutputAxis
                         case DrumAxisType.Yellow:
                         case DrumAxisType.YellowCymbal:
                             assignedVal = "-(0x7fff - (val_real >> 1))";
+                            revVal = $"({revVal} + 0x7fff) << 1";
                             dtaVal = -(0x7fff - (dtaVal >> 1));
                             break;
                         case DrumAxisType.Red:
                         case DrumAxisType.Blue:
                         case DrumAxisType.BlueCymbal:
                             assignedVal = "(0x7fff - (val_real >> 1))";
+                            revVal = $"(0x7fff - {revVal}) << 1";
                             dtaVal = 0x7fff - (dtaVal >> 1);
                             break;
                     }
@@ -328,7 +335,7 @@ public partial class DrumAxis : OutputAxis
         // and then convert them to their expected output format, before writing to the output report.
         return $$"""
                  {
-                     uint16_t val_real = {{GenerateAssignment(GenerateOutput(mode), mode, false, false, false, writer)}};
+                     uint16_t val_real = {{GenerateAssignment(revVal, ConfigField.XboxOne, false, false, false, true, writer)}};
                      if (val_real) {
                          {{reset}}
                          {{GenerateOutput(mode)}} = {{assignedVal}};

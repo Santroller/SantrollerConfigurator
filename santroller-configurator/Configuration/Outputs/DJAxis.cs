@@ -204,7 +204,7 @@ public partial class DjAxis : OutputAxis
             DjAxisType.EffectsKnob when mode is ConfigField.Universal
                 => $"(({generatedPs3} >> 8))",
             DjAxisType.EffectsKnob => generated,
-            _ => GenerateAssignment(GenerateOutput(mode), mode, accelerometer, false, false, writer)
+            _ => GenerateAssignment(GenerateOutput(mode), mode, accelerometer, false, false, false, writer)
         };
         return Type switch
         {

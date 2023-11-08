@@ -316,7 +316,7 @@ public abstract partial class OutputAxis : Output
         };
     }
 
-    public string GenerateAssignment(string prev, ConfigField mode, bool forceAccel, bool forceTrigger, bool whammy,
+    public string GenerateAssignment(string prev, ConfigField mode, bool forceAccel, bool forceTrigger, bool whammy, bool drum, 
         BinaryWriter? writer)
     {
         if (Input is FixedInput or DigitalToAnalog) return Input.Generate();
@@ -378,6 +378,12 @@ public abstract partial class OutputAxis : Output
                 break;
             default:
                 return "";
+        }
+
+        if (drum)
+        {
+            function = "handle_calibration_drum";
+            if (ShouldFlip(mode)) function = "UINT16_MAX -" + function;
         }
 
         var min = Min;
@@ -490,7 +496,7 @@ public abstract partial class OutputAxis : Output
             }
 
             return $"""
-                    {output} = {GenerateAssignment(output, mode, false, false, false, writer)};
+                    {output} = {GenerateAssignment(output, mode, false, false, false, false, writer)};
                     {extraTrigger}
                     """;
         }
