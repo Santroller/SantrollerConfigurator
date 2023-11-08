@@ -324,15 +324,6 @@ public partial class DrumAxis : OutputAxis
                      """;
         }
 
-        if (reset.Any())
-        {
-            reset = $$"""
-                      if (val_real > {{Min}}) {
-                          {{reset}}
-                      }
-                      """;
-        }
-
         // Drum axis' are weird. Translate the value to a uint16_t like any axis, do tests against threshold for hits
         // and then convert them to their expected output format, before writing to the output report.
         return $$"""
