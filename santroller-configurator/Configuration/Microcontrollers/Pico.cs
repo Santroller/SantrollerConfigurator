@@ -217,7 +217,6 @@ public class Pico : Microcontroller
                 ret += $"\nslavePinMode({devicePin.Pin},{(byte) devicePin.PinMode});";
                 continue;
             }
-
             switch (devicePin.PinMode)
             {
                 case DevicePinMode.Analog:
