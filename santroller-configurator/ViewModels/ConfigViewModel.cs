@@ -522,11 +522,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (value == LedType.None)
             {
-                _apa102SpiConfigPeripheral = null;
+                _apa102SpiConfigPeripheral = null;a
             }
             else if (_ledTypePeripheral == LedType.None)
             {
-                _apa102SpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102SpiType, true, false, -1, -1, -1,
+                _apa102SpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102PeripheralSpiType, true, false, -1, -1, -1,
                     true, true,
                     true,
                     Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
@@ -1653,14 +1653,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         return Bindings.Items.SelectMany(s => s.GetPinConfigs()).Concat(PinConfigs).Distinct().ToList();
     }
 
-    public Dictionary<string, List<int>> GetPins(string type, bool twi, bool spi)
+    public Dictionary<string, List<int>> GetPins(string type, bool twi, bool spi, bool peripheral)
     {
         var pins = new Dictionary<string, List<int>>();
         foreach (var binding in Bindings.Items)
         {
             var configs = binding.GetPinConfigs();
             //Exclude digital or analog pins (which use a guid containing a -)
-            if (configs.Any(s => s.Type == type || (type.Contains("-") && s.Type.Contains("-")))) continue;
+            if (configs.Any(s => s.Type == type || (type.Contains("-") && s.Type.Contains("-")) || s.Peripheral != peripheral)) continue;
             if (!pins.ContainsKey(binding.LocalisedName)) pins[binding.LocalisedName] = new List<int>();
 
             foreach (var pinConfig in configs)
@@ -1672,23 +1672,27 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
         }
 
-        if (Main.IsUno || Main.IsMega)
+        if ((Main.IsUno || Main.IsMega) && !peripheral)
         {
             pins[UnoPinTypeTx] = new List<int> {UnoPinTypeTxPin};
             pins[UnoPinTypeRx] = new List<int> {UnoPinTypeRxPin};
         }
 
-        if (IsApa102 && _apa102SpiConfig != null && type != Apa102SpiType)
+        if (IsApa102 && _apa102SpiConfig != null && type != Apa102SpiType && !peripheral)
             pins[Apa102SpiType] = _apa102SpiConfig.Pins.ToList();
 
-        if (IsApa102Peripheral && _apa102SpiConfigPeripheral != null && type != Apa102PeripheralSpiType)
+        if (IsApa102Peripheral && _apa102SpiConfigPeripheral != null && type != Apa102PeripheralSpiType && peripheral)
+        {
             pins[Apa102PeripheralSpiType] = _apa102SpiConfigPeripheral.Pins.ToList();
+        }
 
-        if (UsbHostEnabled && type != UsbHostPinTypeDm && type != UsbHostPinTypeDp)
+        if (UsbHostEnabled && type != UsbHostPinTypeDm && type != UsbHostPinTypeDp && !peripheral)
             pins["USB Host"] = new List<int> {UsbHostDm, UsbHostDp};
 
-        if (_peripheralTwiConfig != null && type != PeripheralTwiType && !twi)
+        if (_peripheralTwiConfig != null && type != PeripheralTwiType && !twi && !peripheral)
+        {
             pins[PeripheralTwiType] = _peripheralTwiConfig.Pins.ToList();
+        }
 
         return pins;
     }

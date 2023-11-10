@@ -37,7 +37,7 @@ public abstract class PinConfig : ReactiveObject
         {
             return Resources.ErrorPinConfigurationMissing;
         }
-        var configs = Model.GetPins(Type, this is TwiConfig, this is SpiConfig);
+        var configs = Model.GetPins(Type, this is TwiConfig, this is SpiConfig, Peripheral);
 
         var ret = configs.Select(pinConfig => new {pinConfig, conflicting = pinConfig.Value.Intersect(Pins).ToList()})
             .Where(t => t.conflicting.Any())
