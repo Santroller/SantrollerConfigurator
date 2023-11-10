@@ -522,7 +522,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (value == LedType.None)
             {
-                _apa102SpiConfigPeripheral = null;a
+                _apa102SpiConfigPeripheral = null;
             }
             else if (_ledTypePeripheral == LedType.None)
             {
