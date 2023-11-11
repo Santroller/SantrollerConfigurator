@@ -22,7 +22,6 @@ public abstract class Input : ReactiveObject
     [Reactive] public int RawValue { get; set; }
     public abstract bool IsUint { get; }
 
-
     public abstract IList<DevicePin> Pins { get; }
     public abstract IList<PinConfig> PinConfigs { get; }
     public abstract InputType? InputType { get; }
