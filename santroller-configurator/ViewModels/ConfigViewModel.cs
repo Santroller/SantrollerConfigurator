@@ -1917,4 +1917,22 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _currentConfigData = new byte[_lastConfig.Length];
         _timer.Start();
     }
+
+    public string GetLedAssignment(string red, string green, string blue, byte index)
+    {
+        var type = index > LedCount ? LedTypePeripheral : LedType;
+        return type.GetLedAssignment(red, green, blue, index);
+    }
+    public string GetLedAssignment(Color color, byte index, BinaryWriter? writer)
+    {
+        var type = index > LedCount ? LedTypePeripheral : LedType;
+        return type.GetLedAssignment(color, index, writer);
+    }
+
+    public string GetLedAssignment(int index, Color on, Color off, string var,
+        BinaryWriter? writer)
+    {
+        var type = index > LedCount ? LedTypePeripheral : LedType;
+        return type.GetLedAssignment(index, on, off, var, writer);
+    }
 }

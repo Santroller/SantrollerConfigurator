@@ -513,30 +513,29 @@ public class Led : Output
             starPowerBetween =
                 $"{Model.Microcontroller.GenerateAnalogWrite(PinConfig.Pin, (Inverted ? "(255-" : "(") + "last_star_power)", Peripheral)};";
         }
-
         foreach (var index in LedIndices)
         {
             on += $"""
 
                    ledState[{index - 1}].select = 1;
-                   {Model.LedType.GetLedAssignment(LedOn, index, writer)}
+                   {Model.GetLedAssignment(LedOn, index, writer)}
                    """;
             off += $"""
 
                     ledState[{index - 1}].select = 0;
-                    {Model.LedType.GetLedAssignment(LedOff, index, writer)}
+                    {Model.GetLedAssignment(LedOff, index, writer)}
                     """;
             between +=
                 $"""
 
                  ledState[{index - 1}].select = 1;
-                 {Model.LedType.GetLedAssignment(index, LedOn, LedOff, "rumble_left", writer)}
+                 {Model.GetLedAssignment(index, LedOn, LedOff, "rumble_left", writer)}
                  """;
             starPowerBetween +=
                 $"""
 
                  ledState[{index - 1}].select = 1;
-                 {Model.LedType.GetLedAssignment(index, LedOn, LedOff, "last_star_power", writer)}
+                 {Model.GetLedAssignment(index, LedOn, LedOff, "last_star_power", writer)}
                  """;
         }
 
@@ -544,7 +543,7 @@ public class Led : Output
         {
             case LedCommandType.Ps4LightBar when mode is ConfigField.LightBarLed:
                 return string.Join("\n",
-                    LedIndices.Select(index => Model.LedType.GetLedAssignment("red", "green", "blue", index)));
+                    LedIndices.Select(index => Model.GetLedAssignment("red", "green", "blue", index)));
 
             case LedCommandType.Player when mode is ConfigField.PlayerLed:
                 // If Player > 4, then light up LED 4 + LED - 4

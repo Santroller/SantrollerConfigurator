@@ -214,9 +214,12 @@ public abstract partial class Output : ReactiveObject
         {
             this.RaiseAndSetIfChanged(ref _ledOn, value);
             if (!_configured || Model.LedType is LedType.None) return;
-            if (Model.Device is Santroller santroller)
-                foreach (var ledIndex in LedIndices)
-                    santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(value));
+            if (Model.Device is not Santroller santroller) return;
+            foreach (var ledIndex in LedIndices)
+            {
+                var type = ledIndex > Model.LedCount ? Model.LedTypePeripheral : Model.LedType;
+                santroller.SetLed((byte) (ledIndex - 1), type.GetLedBytes(value));
+            }
         }
     }
 
@@ -227,9 +230,12 @@ public abstract partial class Output : ReactiveObject
         {
             this.RaiseAndSetIfChanged(ref _ledOff, value);
             if (!_configured || Model.LedType is LedType.None) return;
-            if (Model.Device is Santroller santroller)
-                foreach (var ledIndex in LedIndices)
-                    santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(value));
+            if (Model.Device is not Santroller santroller) return;
+            foreach (var ledIndex in LedIndices)
+            {
+                var type = ledIndex > Model.LedCount ? Model.LedTypePeripheral : Model.LedType;
+                santroller.SetLed((byte) (ledIndex - 1), type.GetLedBytes(value));
+            }
         }
     }
 
@@ -401,18 +407,6 @@ public abstract partial class Output : ReactiveObject
     public virtual bool SupportsLedOff => true;
     public bool ConfigurableInput => Input is not (FixedInput or MacroInput);
     public bool IsVisible { get; }
-
-    public virtual void WriteBlobsToWriter(BinaryWriter writer)
-    {
-        Model.LedType.WriteToWriter(LedOn, writer);
-        Model.LedType.WriteToWriter(LedOff, writer);
-    }
-
-    public virtual void ReadBlobsFromReader(BinaryReader reader)
-    {
-        LedOn = Model.LedType.ReadFromReader(reader);
-        LedOff = Model.LedType.ReadFromReader(reader);
-    }
 
     private object? GetKey()
     {
