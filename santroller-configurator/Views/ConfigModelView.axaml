@@ -2168,7 +2168,10 @@
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
-                            <Binding Path="AreLedsEnabled" />
+                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                <Binding Path="AreLedsEnabled" />
+                                <Binding Path="AreLedsEnabledPeripheral" />
+                            </MultiBinding>
                             <Binding Path="!IsCombined" />
                             <Binding Path="LedsRequireColours" />
                         </MultiBinding>
@@ -2182,7 +2185,10 @@
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
-                            <Binding Path="AreLedsEnabled" />
+                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                <Binding Path="AreLedsEnabled" />
+                                <Binding Path="AreLedsEnabledPeripheral" />
+                            </MultiBinding>
                             <Binding Path="!IsCombined" />
                             <Binding Path="LedsRequireColours" />
                         </MultiBinding>
@@ -2532,8 +2538,10 @@
                                            VerticalContentAlignment="Center"
                                            Content="{x:Static netCore:Resources.PeripheralSettingsLabel}" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="45 0 0 0" HorizontalAlignment="Center" IsVisible="{Binding HasPeripheral}">
-                                    <CheckBox IsChecked="{Binding PeripheralConnected}" VerticalAlignment="Center" IsEnabled="False"
+                                <StackPanel Orientation="Horizontal" Margin="45 0 0 0" HorizontalAlignment="Center"
+                                            IsVisible="{Binding HasPeripheral}">
+                                    <CheckBox IsChecked="{Binding PeripheralConnected}" VerticalAlignment="Center"
+                                              IsEnabled="False"
                                               Content="{x:Static netCore:Resources.DetectedLabel}" />
                                 </StackPanel>
                                 <Label Foreground="Red" Margin="45 0 0 0"
