@@ -164,7 +164,7 @@ public class Santroller : ConfigurableUsbDevice
 
         try
         {
-            var direct = _model.Bindings.Items.Select(s => s.Input.InnermostInput())
+            var direct = _model.Bindings.Items.Where(s => string.IsNullOrEmpty(s.ErrorText)).Select(s => s.Input.InnermostInput())
                 .OfType<DirectInput>().ToList();
             var digital = direct.Where(s => s is {IsAnalog: false, Peripheral: false}).SelectMany(s => s.Pins)
                 .Distinct().Where(s => s.Pin != -1);
