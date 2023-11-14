@@ -217,7 +217,7 @@ public abstract partial class Output : ReactiveObject
             if (Model.Device is not Santroller santroller) return;
             foreach (var ledIndex in LedIndices)
             {
-                var type = ledIndex == Model.LedCount ? Model.LedTypePeripheral : Model.LedType;
+                var type = ledIndex > Model.LedCount ? Model.LedTypePeripheral : Model.LedType;
                 santroller.SetLed((byte) (ledIndex - 1), type.GetLedBytes(value));
             }
         }
@@ -233,7 +233,7 @@ public abstract partial class Output : ReactiveObject
             if (Model.Device is not Santroller santroller) return;
             foreach (var ledIndex in LedIndices)
             {
-                var type = ledIndex == Model.LedCount ? Model.LedTypePeripheral : Model.LedType;
+                var type = ledIndex > Model.LedCount ? Model.LedTypePeripheral : Model.LedType;
                 santroller.SetLed((byte) (ledIndex - 1), type.GetLedBytes(value));
             }
         }
