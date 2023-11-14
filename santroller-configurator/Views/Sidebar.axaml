@@ -5,7 +5,6 @@
              xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels"
              xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
              xmlns:views="clr-namespace:GuitarConfigurator.NetCore.Views"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" x:DataType="viewModels:ConfigViewModel"
              x:Class="GuitarConfigurator.NetCore.Views.SidebarView"
              x:CompileBindings="True"
