@@ -1707,7 +1707,7 @@
         <value>Crazy Guitar Neck Input</value>
     </data>
     <data name="InputTypeMacroInput" xml:space="preserve">
-        <value>Macro Input</value>
+        <value>Shortcut</value>
     </data>
     <data name="InputTypeUsbHostInput" xml:space="preserve">
         <value>USB Host Input</value>
