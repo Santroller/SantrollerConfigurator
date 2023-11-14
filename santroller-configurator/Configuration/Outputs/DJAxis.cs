@@ -206,15 +206,7 @@ public partial class DjAxis : OutputAxis
             DjAxisType.EffectsKnob => generated,
             _ => GenerateAssignment(GenerateOutput(mode), mode, accelerometer, false, false, false, writer)
         };
-        return Type switch
-        {
-            DjAxisType.Crossfader or DjAxisType.EffectsKnob => $"{GenerateOutput(mode)} = {gen};",
-            _ when mode is ConfigField.Ps3
-                    or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal =>
-                $"dj_temp={gen}; if (abs(dj_temp - INT8_MAX) > abs(({GenerateOutput(mode)}) - INT8_MAX)){{{GenerateOutput(mode)} = dj_temp;}}",
-            _ =>
-                $"dj_temp={gen}; if (abs(dj_temp) > abs({GenerateOutput(mode)})){{{GenerateOutput(mode)} = dj_temp;}}",
-        };
+        return $"dj_temp={gen}; if (dj_temp){{{GenerateOutput(mode)} = dj_temp;}}";
     }
 
     protected override string MinCalibrationText()
