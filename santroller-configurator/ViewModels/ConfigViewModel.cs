@@ -1084,7 +1084,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define USB_HOST_DP_PIN {{UsbHostDp}}
                         #define DIGITAL_COUNT {{CalculateDebounceTicks()}}
                         #define LED_COUNT {{actualLedCount}}
-                        #define LED_TYPE {{GetLedType()}}
                         #define ADC_PINS {{{string.Join(",", analogPins)}}}
                         #define ADC_COUNT {{analogPins.Count}}
                         #define TICK_SHARED \
@@ -1145,11 +1144,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                {mouseTick}
                            """;
 
-            if (IsApa102)
+            if (IsApa102 || IsApa102Peripheral)
             {
                 config += $"""
 
-                           #define {Apa102SpiType.ToUpper()}_SPI_PORT {_apa102SpiConfig!.Definition}
                            #define TICK_LED \
                                {GenerateLedTick()}
                            """;
@@ -1211,7 +1209,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                       #define TICK_XBOX_ONE
                       #define DIGITAL_COUNT 0
                       #define LED_COUNT 0
-                      #define LED_TYPE 0
                       #define HANDLE_AUTH_LED
                       #define HANDLE_PLAYER_LED
                       #define HANDLE_LIGHTBAR_LED
@@ -1381,9 +1378,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
         if (!outputs.Any(s => s.LedIndices.Any())) return "";
         var ret = "";
+        var ledCount = 0;
         if (_ledType != LedType.None)
         {
             var ledMax = LedCount;
+            ledCount = LedCount;
             ret +=
                 """
 
@@ -1415,7 +1414,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         if (_ledTypePeripheral != LedType.None)
         {
-            var ledMax = LedCount + LedCountPeripheral;
+            var ledMax = ledCount + LedCountPeripheral;
             ret +=
                 """
 
@@ -1424,7 +1423,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 slaveWriteLED(0x00);
                 slaveWriteLED(0x00);
                 """;
-            for (var i = LedCount; i < ledMax; i++)
+            for (var i = ledCount; i < ledMax; i++)
             {
                 ret +=
                     $"""
@@ -1436,7 +1435,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                      """;
             }
 
-            for (var i = LedCount; i <= ledMax; i += 16)
+            for (var i = ledCount; i <= ledMax; i += 16)
             {
                 ret += """
 
