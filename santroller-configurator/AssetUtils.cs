@@ -1,10 +1,12 @@
 using System;
 using System.Formats.Tar;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Platform;
+using GuitarConfigurator.NetCore.Configuration.Types;
+using GuitarConfigurator.NetCore.Utils;
 using Joveler.Compression.XZ;
 
 namespace GuitarConfigurator.NetCore;
@@ -78,8 +80,30 @@ public class AssetUtils
         {
             folder = "/Users/Shared/Library/Application Support";
         }
+
         var path = Path.Combine(folder, "SantrollerConfigurator");
 
         return path;
     }
+
+    public static ToolConfig GetConfig()
+    {
+        var configFile = Path.Combine(GetAppDataFolder(), "config.json");
+        return File.Exists(configFile)
+            ? JsonSerializer.Deserialize<ToolConfig>(File.ReadAllText(configFile), SourceGenerationContext2.Default.ToolConfig)!
+            : new ToolConfig();
+    }
+
+    public static LegendType GetViewType()
+    {
+        return GetConfig().LegendType;
+    }
+
+    public static void SaveConfig(ToolConfig config)
+    {
+        var configFile = Path.Combine(GetAppDataFolder(), "config.json");
+        File.WriteAllText(configFile, JsonSerializer.Serialize(config, SourceGenerationContext2.Default.ToolConfig));
+    }
 }
+
+   

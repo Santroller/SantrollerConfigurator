@@ -28,6 +28,7 @@ using GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Devices;
+using GuitarConfigurator.NetCore.Utils;
 using ProtoBuf;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -78,6 +79,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         Main = screen;
         Branded = branded;
         Builder = builder;
+        _legendType = _toolConfig.LegendType;
         _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.Background, Diff);
         BtRxAddr = "";
         UpdateBluetoothAddress();
@@ -565,7 +567,18 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [Reactive] public LegendType LegendType { get; set; } = LegendType.Xbox;
+    private readonly ToolConfig _toolConfig = AssetUtils.GetConfig();
+
+    private LegendType _legendType;
+    public LegendType LegendType {
+        get => _legendType;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _legendType, value);
+            _toolConfig.LegendType = value;
+            AssetUtils.SaveConfig(_toolConfig);
+        }
+    }
 
 
     public DeviceControllerType DeviceControllerType
