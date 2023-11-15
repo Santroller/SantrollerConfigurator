@@ -206,7 +206,11 @@ public partial class DjAxis : OutputAxis
             DjAxisType.EffectsKnob => generated,
             _ => GenerateAssignment(GenerateOutput(mode), mode, accelerometer, false, false, false, writer)
         };
-        return $"dj_temp={gen}; if (dj_temp){{{GenerateOutput(mode)} = dj_temp;}}";
+        return Type switch
+        {
+            DjAxisType.Crossfader or DjAxisType.EffectsKnob => $"{GenerateOutput(mode)} = {gen};",
+            _ => $"dj_temp={gen}; if (dj_temp){{{GenerateOutput(mode)} = dj_temp;}}"
+        };
     }
 
     protected override string MinCalibrationText()
