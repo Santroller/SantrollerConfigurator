@@ -5810,5 +5810,11 @@ namespace GuitarConfigurator.NetCore {
                 return ResourceManager.GetString("NewPreRelease", resourceCulture);
             }
         }
+        
+        public static string AddDeviceMessage {
+            get {
+                return ResourceManager.GetString("AddDeviceMessage", resourceCulture);
+            }
+        }
     }
 }

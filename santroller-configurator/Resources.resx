@@ -3022,4 +3022,7 @@
     <data name="NewPreRelease" xml:space="preserve">
         <value>New Prerelease: {0}</value>
     </data>
+    <data name="AddDeviceMessage" xml:space="preserve">
+        <value>Add called, current device: {0},  new device: {1}</value>
+    </data>
 </root>

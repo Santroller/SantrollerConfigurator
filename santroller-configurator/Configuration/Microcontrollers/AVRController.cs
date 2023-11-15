@@ -123,13 +123,11 @@ public abstract class AvrController : Microcontroller
         // PORTx input 1= pullup, 0 = floating
         var ddrByPort = new Dictionary<char, int>();
         var portByPort = new Dictionary<char, int>();
-        var slave = "";
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>().Where(s => s.PinMode != DevicePinMode.Skip);
         foreach (var pin in pins)
         {
             if (pin.Peripheral)
             {
-                slave += $"\nslavePinMode({pin.Pin},{(byte)pin.PinMode});";
                 continue;
             }
             var port = GetPort(pin.Pin);
@@ -174,7 +172,6 @@ public abstract class AvrController : Microcontroller
         }
 
         return $"""
-               {slave}
                uint8_t oldSREG = SREG;
                cli();
                {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}

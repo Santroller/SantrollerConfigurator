@@ -211,12 +211,7 @@ public class Pico : Microcontroller
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
         foreach (var devicePin in pins)
         {
-            if (devicePin.PinMode == DevicePinMode.Skip) continue;
-            if (devicePin.Peripheral)
-            {
-                ret += $"\nslavePinMode({devicePin.Pin},{(byte) devicePin.PinMode});";
-                continue;
-            }
+            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral) continue;
             switch (devicePin.PinMode)
             {
                 case DevicePinMode.Analog:

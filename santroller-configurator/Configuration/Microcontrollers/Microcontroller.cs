@@ -25,35 +25,50 @@ public abstract class Microcontroller
 
     public abstract string GenerateInit(ConfigViewModel configViewModel);
 
-    public string GetPin(int possiblePin, bool peripheral, int selectedPin, IEnumerable<Output> outputs, bool twi, bool spi,
+    public string GenerateInitPeripheral(ConfigViewModel configViewModel)
+    {
+        return configViewModel.GetPinConfigs().OfType<DirectPinConfig>()
+            .Where(s => s.PinMode != DevicePinMode.Skip && s.Peripheral).Aggregate("",
+                (current, pin) => current + $"\nslavePinMode({pin.Pin},{(byte) pin.PinMode});");
+    }
+
+    public string GetPin(int possiblePin, bool peripheral, int selectedPin, IEnumerable<Output> outputs, bool twi,
+        bool spi,
         IEnumerable<PinConfig> pinConfigs, ConfigViewModel model, bool addText)
     {
         var selectedConfig = pinConfigs.Where(s => s.Peripheral == peripheral && s.Pins.Contains(selectedPin));
         var apa102 = model.PinConfigs
-            .Where(s => s.Type == ConfigViewModel.Apa102SpiType && s.Peripheral == peripheral && s.Pins.Contains(possiblePin))
+            .Where(s => s.Type == ConfigViewModel.Apa102SpiType && s.Peripheral == peripheral &&
+                        s.Pins.Contains(possiblePin))
             .Select(s => s.Type);
         var unoMega = model.PinConfigs.Where(s =>
-                s.Peripheral == peripheral && (s.Type == ConfigViewModel.UnoPinTypeRx || s.Type == ConfigViewModel.UnoPinTypeTx) &&
+                s.Peripheral == peripheral &&
+                (s.Type == ConfigViewModel.UnoPinTypeRx || s.Type == ConfigViewModel.UnoPinTypeTx) &&
                 s.Pins.Contains(possiblePin))
             .Select(s => s.Type);
 
         var output = string.Join(" - ",
             outputs.Where(o =>
-                    o.GetPinConfigs().Except(selectedConfig).Any(s => s.Peripheral == peripheral && s.Pins.Contains(possiblePin)))
-                .Select(s => s.GetName(model.DeviceControllerType, model.LegendType, model.SwapSwitchFaceButtons)).Concat(apa102).Concat(unoMega));
+                    o.GetPinConfigs().Except(selectedConfig)
+                        .Any(s => s.Peripheral == peripheral && s.Pins.Contains(possiblePin)))
+                .Select(s => s.GetName(model.DeviceControllerType, model.LegendType, model.SwapSwitchFaceButtons))
+                .Concat(apa102).Concat(unoMega));
         var ret = GetPinForMicrocontroller(possiblePin, twi, spi);
         if (!string.IsNullOrEmpty(output) && addText) return "* " + ret + " - " + output;
 
         return ret;
     }
 
-    public abstract SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral,  bool includesMiso, int mosi, int miso,
+    public abstract SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesMiso,
+        int mosi, int miso,
         int sck, bool cpol,
         bool cpha,
         bool msbfirst,
         uint clock);
 
-    public abstract TwiConfig AssignTwiPins(ConfigViewModel model, string type, bool peripheral, int sda, int scl, int clock);
+    public abstract TwiConfig AssignTwiPins(ConfigViewModel model, string type, bool peripheral, int sda, int scl,
+        int clock);
+
     public abstract string GetPinForMicrocontroller(int pin, bool twi, bool spi);
 
     public abstract IEnumerable<string> GenerateAckDefines(int ack);

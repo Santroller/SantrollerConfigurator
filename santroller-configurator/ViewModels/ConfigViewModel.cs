@@ -1114,6 +1114,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             {{GenerateTick(ConfigField.RumbleLed, writer)}}
                         #define HANDLE_KEYBOARD_LED \
                             {{GenerateTick(ConfigField.KeyboardLed, writer)}}
+                        #define PIN_INIT_PERIPHERAL \
+                            {{GenerateInitPeripheral()}}
                         #define PIN_INIT \
                             {{GenerateInit()}}
                         #define LED_INIT \
@@ -1217,6 +1219,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                       #define ADC_PINS {}
                       #define ADC_COUNT 0
                       #define PIN_INIT
+                      #define PIN_INIT_PERIPHERAL
                       #define LED_INIT
                       """;
         }
@@ -1227,6 +1230,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private string GenerateInit()
     {
         return FixNewlines(Microcontroller.GenerateInit(this));
+    }
+    private string GenerateInitPeripheral()
+    {
+        return FixNewlines(Microcontroller.GenerateInitPeripheral(this));
     }
 
     public PinConfig[] UsbHostPinConfigs()
@@ -1257,23 +1264,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public EmulationType GetSimpleEmulationType()
     {
         return GetSimpleEmulationTypeFor(EmulationType);
-    }
-
-    private int GetLedType()
-    {
-        switch (LedType)
-        {
-            case LedType.Apa102Rgb:
-            case LedType.Apa102Rbg:
-            case LedType.Apa102Grb:
-            case LedType.Apa102Gbr:
-            case LedType.Apa102Brg:
-            case LedType.Apa102Bgr:
-                return 1;
-            case LedType.None:
-            default:
-                return 0;
-        }
     }
 
     private async Task BindAllAsync()
@@ -1656,18 +1646,29 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var pins = new Dictionary<string, List<int>>();
         foreach (var binding in Bindings.Items)
         {
+            var pins2 = new List<int>();
             var configs = binding.GetPinConfigs();
-            //Exclude digital or analog pins (which use a guid containing a -)
-            if (configs.Any(s => s.Type == type || (type.Contains("-") && s.Type.Contains("-")) || s.Peripheral != peripheral)) continue;
-            if (!pins.ContainsKey(binding.LocalisedName)) pins[binding.LocalisedName] = new List<int>();
-
+            var skip = false;
             foreach (var pinConfig in configs)
             {
+                //Exclude digital or analog pins (which use a guid containing a -)
+                if (pinConfig.Type == type || (type.Contains('-') && pinConfig.Type.Contains('-')) || pinConfig.Peripheral != peripheral)
+                {
+                    skip = true;
+                    break;
+                }
                 if (!twi || type != PeripheralTwiType)
                 {
-                    pins[binding.LocalisedName].AddRange(pinConfig.Pins);
+                    pins2.AddRange(pinConfig.Pins);
                 }
             }
+
+            if (skip)
+            {
+                break;
+            }
+            if (!pins.ContainsKey(binding.LocalisedName)) pins[binding.LocalisedName] = new List<int>();
+            pins[binding.LocalisedName].AddRange((pins2));
         }
 
         if ((Main.IsUno || Main.IsMega) && !peripheral)
@@ -1772,7 +1773,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (_disconnected) return;
         RxApp.MainThreadScheduler.Schedule(() =>
         {
-            Console.WriteLine($"Add called, current device: {Device},  new device: {device}");
+            Console.WriteLine(Resources.AddDeviceMessage, Device, device);
             if (device is Santroller santroller && Main.Working)
             {
                 Main.Complete(100);

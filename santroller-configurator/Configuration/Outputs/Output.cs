@@ -352,8 +352,8 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] public bool IsWt { get; }
     [ObservableAsProperty] public bool AreLedsEnabled { get; }
     [ObservableAsProperty] public bool AreLedsEnabledPeripheral { get; }
-    [ObservableAsProperty] public LedIndex[] AvailableIndices { get; } = Array.Empty<LedIndex>();
-    [ObservableAsProperty] public LedIndex[] AvailableIndicesPeripheral { get; } = Array.Empty<LedIndex>();
+    [ObservableAsProperty] public LedIndex[] AvailableIndices { get; }
+    [ObservableAsProperty] public LedIndex[] AvailableIndicesPeripheral { get; }
 
     [ObservableAsProperty] public double CombinedOpacity { get; }
     [ObservableAsProperty] public IBrush CombinedBackground { get; } = Brush.Parse("#99000000");
@@ -721,11 +721,11 @@ public abstract partial class Output : ReactiveObject
         return Enumerable.Empty<DevicePin>();
     }
 
-    public List<PinConfig> GetPinConfigs()
+    public IEnumerable<PinConfig> GetPinConfigs()
     {
-        return AllOutputs
-            .SelectMany(s => s.AllOutputs).SelectMany(s => s.Input.Inputs()).SelectMany(s => s.PinConfigs)
-            .Concat(GetOwnPinConfigs()).Distinct().ToList();
+        return Outputs
+            .Items.SelectMany(s => s.Outputs.Items).SelectMany(s => s.Input.Inputs()).SelectMany(s => s.PinConfigs)
+            .Concat(GetOwnPinConfigs()).Distinct();
     }
 
     public virtual void Update(Dictionary<int, int> analogRaw,
