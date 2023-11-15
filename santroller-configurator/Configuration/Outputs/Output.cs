@@ -213,8 +213,7 @@ public abstract partial class Output : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _ledOn, value);
-            if (!_configured || (Model.LedType is LedType.None && Model.LedTypePeripheral is LedType.None)) return;
-            if (Model.Device is not Santroller santroller) return;
+            if (!_configured || Model.Device is not Santroller santroller) return;
             var ledStart = Model.LedType is LedType.None ? 0 : Model.LedCount;
             foreach (var ledIndex in LedIndices)
             {
@@ -230,8 +229,7 @@ public abstract partial class Output : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _ledOff, value);
-            if (!_configured || (Model.LedType is LedType.None && Model.LedTypePeripheral is LedType.None)) return;
-            if (Model.Device is not Santroller santroller) return;
+            if (!_configured || Model.Device is not Santroller santroller) return;
             var ledStart = Model.LedType is LedType.None ? 0 : Model.LedCount;
             foreach (var ledIndex in LedIndices)
             {
