@@ -215,9 +215,10 @@ public abstract partial class Output : ReactiveObject
             this.RaiseAndSetIfChanged(ref _ledOn, value);
             if (!_configured || (Model.LedType is LedType.None && Model.LedTypePeripheral is LedType.None)) return;
             if (Model.Device is not Santroller santroller) return;
+            var ledStart = Model.LedType is LedType.None ? 0 : Model.LedCount;
             foreach (var ledIndex in LedIndices)
             {
-                var type = ledIndex > Model.LedCount ? Model.LedTypePeripheral : Model.LedType;
+                var type = ledIndex > ledStart ? Model.LedTypePeripheral : Model.LedType;
                 santroller.SetLed((byte) (ledIndex - 1), type.GetLedBytes(value));
             }
         }
@@ -231,9 +232,10 @@ public abstract partial class Output : ReactiveObject
             this.RaiseAndSetIfChanged(ref _ledOff, value);
             if (!_configured || (Model.LedType is LedType.None && Model.LedTypePeripheral is LedType.None)) return;
             if (Model.Device is not Santroller santroller) return;
+            var ledStart = Model.LedType is LedType.None ? 0 : Model.LedCount;
             foreach (var ledIndex in LedIndices)
             {
-                var type = ledIndex > Model.LedCount ? Model.LedTypePeripheral : Model.LedType;
+                var type = ledIndex > ledStart ? Model.LedTypePeripheral : Model.LedType;
                 santroller.SetLed((byte) (ledIndex - 1), type.GetLedBytes(value));
             }
         }
