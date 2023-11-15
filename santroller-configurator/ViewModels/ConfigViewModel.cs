@@ -1233,7 +1233,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
     private string GenerateInitPeripheral()
     {
-        return FixNewlines(Microcontroller.GenerateInitPeripheral(this));
+        return FixNewlines(GetPinConfigs().OfType<DirectPinConfig>()
+            .Where(s => s.PinMode != DevicePinMode.Skip && s.Peripheral).Aggregate("",
+                (current, pin) => current + $"\nslavePinMode({pin.Pin},{(byte) pin.PinMode});"));
     }
 
     public PinConfig[] UsbHostPinConfigs()

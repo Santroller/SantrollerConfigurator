@@ -25,13 +25,6 @@ public abstract class Microcontroller
 
     public abstract string GenerateInit(ConfigViewModel configViewModel);
 
-    public string GenerateInitPeripheral(ConfigViewModel configViewModel)
-    {
-        return configViewModel.GetPinConfigs().OfType<DirectPinConfig>()
-            .Where(s => s.PinMode != DevicePinMode.Skip && s.Peripheral).Aggregate("",
-                (current, pin) => current + $"\nslavePinMode({pin.Pin},{(byte) pin.PinMode});");
-    }
-
     public string GetPin(int possiblePin, bool peripheral, int selectedPin, IEnumerable<Output> outputs, bool twi,
         bool spi,
         IEnumerable<PinConfig> pinConfigs, ConfigViewModel model, bool addText)
