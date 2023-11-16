@@ -138,10 +138,10 @@ public class Led : Output
     private int _pin;
 
     public Led(ConfigViewModel model, bool outputEnabled, bool inverted, int pin, bool peripheral, Color ledOn,
-        Color ledOff, byte[] ledIndices, LedCommandType command, int param, int param2) : base(model,
+        Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, LedCommandType command, int param, int param2) : base(model,
         new FixedInput(model, 0, false),
         ledOn, ledOff,
-        ledIndices, false)
+        ledIndices, ledIndicesPeripheral, false)
     {
         _peripheral = peripheral;
         Player = 1;
@@ -483,7 +483,7 @@ public class Led : Output
                 break;
         }
 
-        return new SerializedLed(LedOn, LedOff, LedIndices.ToArray(), Command, param1, param2, OutputEnabled,
+        return new SerializedLed(LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Command, param1, param2, OutputEnabled,
             Peripheral, Inverted,
             Pin);
     }

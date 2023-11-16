@@ -767,17 +767,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 case StandardButtonType buttonType:
                     Bindings.Add(new ControllerButton(this,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), 1, buttonType, false));
+                        Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, buttonType, false));
                     break;
                 case InstrumentButtonType buttonType:
                     Bindings.Add(new GuitarButton(this,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), 1, buttonType, false));
+                        Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, buttonType, false));
                     break;
                 case StandardAxisType axisType:
                     Bindings.Add(new ControllerAxis(this,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
                         0, ushort.MaxValue, axisType, false));
                     break;
                 case GuitarAxisType.Slider:
@@ -785,26 +785,26 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 case GuitarAxisType axisType:
                     Bindings.Add(new GuitarAxis(this, new DirectInput(-1,
                             false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
                         0, axisType, false));
                     break;
                 case DrumAxisType axisType:
                     Bindings.Add(new DrumAxis(this,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
                         0, 10, axisType, false));
                     break;
                 case DjAxisType.EffectsKnob:
                     Bindings.Add(new DjAxis(this,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), 1, DjAxisType.EffectsKnob,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, DjAxisType.EffectsKnob,
                         false));
                     break;
                 case DjAxisType axisType:
                     if (axisType is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity) continue;
                     Bindings.Add(new DjAxis(this,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0, axisType,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0, axisType,
                         false));
                     break;
             }
@@ -935,7 +935,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             var isTrigger = type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger;
             Bindings.Add(new ControllerAxis(this,
                 new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), isTrigger ? ushort.MinValue : short.MinValue,
+                Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), isTrigger ? ushort.MinValue : short.MinValue,
                 isTrigger ? ushort.MaxValue : short.MaxValue, 0,
                 ushort.MaxValue, type, false));
         }
@@ -946,7 +946,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     .Any()) continue;
             Bindings.Add(new ControllerButton(this,
                 new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), 1, type, false));
+                Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, type, false));
         }
 
         UpdateErrors();
@@ -1092,15 +1092,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             // Sort by pin index, and then map to adc number and turn into an array
             var analogPins = directInputs.Where(s => s.IsAnalog).OrderBy(s => s.PinConfig.Pin)
                 .Select(s => Microcontroller.GetChannel(s.PinConfig.Pin, false).ToString()).Distinct().ToList();
-            var actualLedCount = 0;
-            if (LedType != LedType.None) actualLedCount += LedCount;
-            if (LedTypePeripheral != LedType.None) actualLedCount += LedCountPeripheral;
             config += "\n";
             config += $$"""
                         #define USB_HOST_STACK {{UsbHostEnabled.ToString().ToLower()}}
                         #define USB_HOST_DP_PIN {{UsbHostDp}}
                         #define DIGITAL_COUNT {{CalculateDebounceTicks()}}
-                        #define LED_COUNT {{actualLedCount}}
+                        #define LED_COUNT {{(LedType != LedType.None ? LedCount : 0)}}
+                        #define LED_COUNT_PERIPHERAL {{(LedTypePeripheral != LedType.None ? LedCountPeripheral : 0)}}
                         #define ADC_PINS {{{string.Join(",", analogPins)}}}
                         #define ADC_COUNT {{analogPins.Count}}
                         #define TICK_SHARED \
@@ -1163,12 +1161,31 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                {mouseTick}
                            """;
 
-            if (IsApa102 || IsApa102Peripheral)
+            if (IsApa102)
             {
                 config += $"""
 
                            #define TICK_LED \
                                {GenerateLedTick()}
+                           """;
+            }
+            
+            if (IsApa102Peripheral)
+            {
+                config += $"""
+
+                           #define TICK_LED_PERIPHERAL \
+                               {GenerateLedPeripheralTick()}
+                           """;
+            }
+
+            var ledTick = GenerateTick(ConfigField.StrobeLed, null);
+            if (ledTick.Any())
+            {
+                config += $"""
+
+                           #define TICK_LED_STROBE \
+                               {ledTick}
                            """;
             }
 
@@ -1209,6 +1226,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 config += $"\n#define SLAVE_TWI_PORT {_peripheralTwiConfig.Definition}";
             }
+
+            if (_apa102SpiConfig != null)
+            {
+                config += $"\n#define APA102_SPI_PORT {_apa102SpiConfig.Definition}";
+            }
         }
         else
         {
@@ -1228,6 +1250,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                       #define TICK_XBOX_ONE
                       #define DIGITAL_COUNT 0
                       #define LED_COUNT 0
+                      #define LED_COUNT_PERIPHERAL 0
                       #define HANDLE_AUTH_LED
                       #define HANDLE_PLAYER_LED
                       #define HANDLE_LIGHTBAR_LED
@@ -1372,7 +1395,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Bindings.Add(new EmptyOutput(this));
         else if (IsKeyboard)
             Bindings.Add(new KeyboardButton(this, new DirectInput(0, false, false, DevicePinMode.PullUp, this),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), 1, Key.Space));
+                Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, Key.Space));
 
         UpdateErrors();
     }
@@ -1386,75 +1409,77 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
         if (!outputs.Any(s => s.LedIndices.Any())) return "";
+        if (LedType == LedType.None) return "";
         var ret = "";
-        var ledCount = 0;
-        if (_ledType != LedType.None)
+        var ledMax = LedCount;
+        ret +=
+            """
+
+            spi_transfer(APA102_SPI_PORT, 0x00);
+            spi_transfer(APA102_SPI_PORT, 0x00);
+            spi_transfer(APA102_SPI_PORT, 0x00);
+            spi_transfer(APA102_SPI_PORT, 0x00);
+            """;
+        for (var i = 0; i < ledMax; i++)
         {
-            var ledMax = LedCount;
-            ledCount = LedCount;
             ret +=
-                """
+                $"""
 
-                spi_transfer(APA102_SPI_PORT, 0x00);
-                spi_transfer(APA102_SPI_PORT, 0x00);
-                spi_transfer(APA102_SPI_PORT, 0x00);
-                spi_transfer(APA102_SPI_PORT, 0x00);
-                """;
-            for (var i = 0; i < ledMax; i++)
-            {
-                ret +=
-                    $"""
-
-                     spi_transfer(APA102_SPI_PORT, 0xff);
-                     spi_transfer(APA102_SPI_PORT, ledState[{i}].r);
-                     spi_transfer(APA102_SPI_PORT, ledState[{i}].g);
-                     spi_transfer(APA102_SPI_PORT, ledState[{i}].b);
-                     """;
-            }
-
-            for (var i = 0; i <= ledMax; i += 16)
-            {
-                ret += """
-
-                       spi_transfer(APA102_SPI_PORT, 0xff);
-                       """;
-            }
+                 spi_transfer(APA102_SPI_PORT, 0xff);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b);
+                 """;
         }
 
-        if (_ledTypePeripheral != LedType.None)
+        for (var i = 0; i <= ledMax; i += 16)
         {
-            var ledMax = ledCount + LedCountPeripheral;
+            ret += """
+
+                   spi_transfer(APA102_SPI_PORT, 0xff);
+                   """;
+        }
+
+        return FixNewlines(ret);
+    }
+    
+    private string GenerateLedPeripheralTick()
+    {
+        var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
+        if (!outputs.Any(s => s.LedIndicesPeripheral.Any())) return "";
+        if (LedTypePeripheral == LedType.None) return "";
+        var ret = "";
+        var ledMax = LedCountPeripheral;
+        ret +=
+            """
+
+            slaveWriteLED(0x00);
+            slaveWriteLED(0x00);
+            slaveWriteLED(0x00);
+            slaveWriteLED(0x00);
+            """;
+        for (var i = 0; i < ledMax; i++)
+        {
             ret +=
-                """
+                $"""
 
-                slaveWriteLED(0x00);
-                slaveWriteLED(0x00);
-                slaveWriteLED(0x00);
-                slaveWriteLED(0x00);
-                """;
-            for (var i = ledCount; i < ledMax; i++)
-            {
-                ret +=
-                    $"""
+                 slaveWriteLED(0xff);
+                 slaveWriteLED(ledStatePeripheral[{i}].r);
+                 slaveWriteLED(ledStatePeripheral[{i}].g);
+                 slaveWriteLED(ledStatePeripheral[{i}].b);
+                 """;
+        }
 
-                     slaveWriteLED(0xff);
-                     slaveWriteLED(ledState[{i}].r);
-                     slaveWriteLED(ledState[{i}].g);
-                     slaveWriteLED(ledState[{i}].b);
-                     """;
-            }
+        for (var i = 0; i <= ledMax; i += 16)
+        {
+            ret += """
 
-            for (var i = ledCount; i <= ledMax; i += 16)
-            {
-                ret += """
-
-                       slaveWriteLED(0xff);
-                       """;
-            }
+                   slaveWriteLED(0xff);
+                   """;
         }
 
 
-        return GenerateTick(ConfigField.StrobeLed, null).Trim() + FixNewlines(ret);
+        return FixNewlines(ret);
     }
 
     private string GenerateTick(ConfigField mode, BinaryWriter? writer)

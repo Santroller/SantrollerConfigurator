@@ -12,8 +12,8 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class MouseAxis : OutputAxis
 {
-    public MouseAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, int min,
-        int max, int deadZone, MouseAxisType type) : base(model, input, ledOn, ledOff, ledIndices, min, max,
+    public MouseAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int min,
+        int max, int deadZone, MouseAxisType type) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, min, max,
         deadZone, false, false)
     {
         Type = type;
@@ -135,7 +135,7 @@ public class MouseAxis : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedMouseAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), Min, Max,
+        return new SerializedMouseAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Min, Max,
             DeadZone);
     }
 }

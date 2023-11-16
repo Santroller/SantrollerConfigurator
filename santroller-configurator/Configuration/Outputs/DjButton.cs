@@ -21,8 +21,8 @@ public class DjButton : OutputButton
         {DjInputType.RightBlue, DjInputType.LeftBlue},
     };
 
-    public DjButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte debounce,
-        DjInputType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, debounce,
+    public DjButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte debounce,
+        DjInputType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, debounce,
         childOfCombined)
     {
         Type = type;
@@ -88,7 +88,7 @@ public class DjButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedDjButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), Debounce, Type,
+        return new SerializedDjButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type,
             ChildOfCombined);
     }
 }

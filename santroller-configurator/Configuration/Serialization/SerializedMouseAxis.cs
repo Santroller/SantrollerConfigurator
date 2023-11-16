@@ -10,7 +10,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract(SkipConstructor = true)]
 public class SerializedMouseAxis : SerializedOutput
 {
-    public SerializedMouseAxis(SerializedInput input, MouseAxisType type, Color ledOn, Color ledOff, byte[] ledIndex,
+    public SerializedMouseAxis(SerializedInput input, MouseAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         int min, int max,
         int deadzone)
     {
@@ -22,22 +22,24 @@ public class SerializedMouseAxis : SerializedOutput
         Deadzone = deadzone;
         Type = type;
         LedIndex = ledIndex;
+        LedIndexPeripheral = ledIndexPeripheral;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
     [ProtoMember(2)] public uint LedOn { get; }
     [ProtoMember(3)] public uint LedOff { get; }
-    [ProtoMember(7)] public byte[] LedIndex { get; }
     [ProtoMember(4)] public int Min { get; }
     [ProtoMember(5)] public int Max { get; }
     [ProtoMember(6)] public int Deadzone { get; }
+    [ProtoMember(7)] public byte[] LedIndex { get; }
+    [ProtoMember(8)] public byte[] LedIndexPeripheral { get; }
 
     public MouseAxisType Type { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new MouseAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, Min, Max, Deadzone,
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, Deadzone,
             Type);
         model.Bindings.Add(combined);
         return combined;

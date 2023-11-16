@@ -38,14 +38,13 @@ public class LedIndex : ReactiveObject
         {
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
             var existing = output.AvailableIndicesPeripheral?.FirstOrDefault(s => s.Index == i);
-            Selected = existing?._selected ?? Output.LedIndices.Contains(RealIndex);
+            Selected = existing?._selected ?? Output.LedIndicesPeripheral.Contains(Index);
         }
         else
         {
             // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
             var existing = output.AvailableIndices?.FirstOrDefault(s => s.Index == i);
-            Selected = existing?._selected ??
-                       Output.LedIndices.Contains(RealIndex) && RealIndex <= output.Model.LedCount;
+            Selected = existing?._selected ?? Output.LedIndices.Contains(Index);
         }
     }
 
@@ -56,29 +55,16 @@ public class LedIndex : ReactiveObject
 
     private bool Peripheral { get; }
 
-    private byte RealIndex
-    {
-        get
-        {
-            var index = Index;
-            if (Peripheral)
-            {
-                index += Output.Model.LedCount;
-            }
-
-            return index;
-        }
-    }
-
     public bool Selected
     {
         get => _selected;
         set
         {
+            var arr = Peripheral ? Output.LedIndicesPeripheral : Output.LedIndices;
             if (value)
-                Output.LedIndices.Add(RealIndex);
+                arr.Add(Index);
             else
-                Output.LedIndices.Remove(RealIndex);
+                arr.Remove(Index);
             _selected = value;
             this.RaisePropertyChanged();
         }
@@ -99,7 +85,7 @@ public abstract partial class Output : ReactiveObject
     public ReactiveCommand<Unit, Unit> MoveDown { get; }
 
 
-    protected Output(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    protected Output(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral,
         bool childOfCombined)
     {
         ChildOfCombined = childOfCombined;
@@ -107,6 +93,7 @@ public abstract partial class Output : ReactiveObject
         Model = model;
         Input = input;
         LedIndices = new ObservableCollection<byte>(ledIndices);
+        LedIndicesPeripheral = new ObservableCollection<byte>(ledIndicesPeripheral);
         LedOn = ledOn;
         LedOff = ledOff;
         MoveUp = ReactiveCommand.Create(() => Model.MoveUp(this),
@@ -115,11 +102,11 @@ public abstract partial class Output : ReactiveObject
             Model.Bindings.Connect().Select(_ => Model.Bindings.Items.IndexOf(this) != Model.Bindings.Count - 1));
         AvailableIndices = Array.Empty<LedIndex>();
         AvailableIndicesPeripheral = Array.Empty<LedIndex>();
-        this.WhenAnyValue(x => x.Model.LedCount, x => x.Model.LedCountPeripheral)
-            .Select(x => Enumerable.Range(1, x.Item1).Select(s => new LedIndex(this, false, (byte) s)).ToArray())
+        this.WhenAnyValue(x => x.Model.LedCount)
+            .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, false, (byte) s)).ToArray())
             .ToPropertyEx(this, x => x.AvailableIndices);
-        this.WhenAnyValue(x => x.Model.LedCountPeripheral, x => x.Model.IsApa102, x => x.Model.LedCount)
-            .Select(x => Enumerable.Range(1, x.Item1).Select(s => new LedIndex(this, true, (byte) s)).ToArray())
+        this.WhenAnyValue(x => x.Model.LedCountPeripheral)
+            .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, true, (byte) s)).ToArray())
             .ToPropertyEx(this, x => x.AvailableIndicesPeripheral);
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInput() is DjInput)
             .ToPropertyEx(this, x => x.IsDj);
@@ -214,11 +201,19 @@ public abstract partial class Output : ReactiveObject
         {
             this.RaiseAndSetIfChanged(ref _ledOn, value);
             if (!_configured || Model.Device is not Santroller santroller) return;
-            var ledStart = Model.LedType is LedType.None ? 0 : Model.LedCount;
-            foreach (var ledIndex in LedIndices)
+            if (Model.LedType != LedType.None)
             {
-                var type = ledIndex > ledStart ? Model.LedTypePeripheral : Model.LedType;
-                santroller.SetLed((byte) (ledIndex - 1), type.GetLedBytes(value));
+                foreach (var ledIndex in LedIndices)
+                {
+                    santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(value));
+                }
+            }
+            if (Model.LedTypePeripheral != LedType.None)
+            {
+                foreach (var ledIndex in LedIndicesPeripheral)
+                {
+                    santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(value));
+                }
             }
         }
     }
@@ -230,11 +225,19 @@ public abstract partial class Output : ReactiveObject
         {
             this.RaiseAndSetIfChanged(ref _ledOff, value);
             if (!_configured || Model.Device is not Santroller santroller) return;
-            var ledStart = Model.LedType is LedType.None ? 0 : Model.LedCount;
-            foreach (var ledIndex in LedIndices)
+            if (Model.LedType != LedType.None)
             {
-                var type = ledIndex > ledStart ? Model.LedTypePeripheral : Model.LedType;
-                santroller.SetLed((byte) (ledIndex - 1), type.GetLedBytes(value));
+                foreach (var ledIndex in LedIndices)
+                {
+                    santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(value));
+                }
+            }
+            if (Model.LedTypePeripheral != LedType.None)
+            {
+                foreach (var ledIndex in LedIndicesPeripheral)
+                {
+                    santroller.SetLedPeripheral((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(value));
+                }
             }
         }
     }
@@ -367,6 +370,7 @@ public abstract partial class Output : ReactiveObject
 
     public abstract bool IsCombined { get; }
     public ObservableCollection<byte> LedIndices { get; set; }
+    public ObservableCollection<byte> LedIndicesPeripheral { get; set; }
     public string Id => _id.ToString();
 
 
@@ -447,10 +451,10 @@ public abstract partial class Output : ReactiveObject
 
         Output? newOutput = value switch
         {
-            Key key => new KeyboardButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), debounce, key),
-            MouseButtonType mouseButtonType => new MouseButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
+            Key key => new KeyboardButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), debounce, key),
+            MouseButtonType mouseButtonType => new MouseButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(),
                 debounce, mouseButtonType),
-            MouseAxisType axisType => new MouseAxis(Model, Input, LedOn, LedOff, LedIndices.ToArray(), min, max,
+            MouseAxisType axisType => new MouseAxis(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), min, max,
                 deadzone, axisType),
             _ => null
         };

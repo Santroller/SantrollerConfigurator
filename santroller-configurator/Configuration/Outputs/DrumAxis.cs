@@ -96,9 +96,9 @@ public partial class DrumAxis : OutputAxis
         {DrumAxisType.BlueCymbal, "report->blueCymbalVelocity"},
     };
 
-    public DrumAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, int min, int max,
+    public DrumAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max,
         int deadZone, int debounce, DrumAxisType type, bool childOfCombined) : base(model, input, ledOn,
-        ledOff, ledIndices,
+        ledOff, ledIndices, ledIndicesPeripheral,
         min, max, deadZone, true, childOfCombined)
     {
         Type = type;
@@ -160,7 +160,7 @@ public partial class DrumAxis : OutputAxis
         {
             if (Input is WiiInput)
             {
-                return new ControllerButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), (byte) Debounce, StandardButtonType.A,
+                return new ControllerButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), (byte) Debounce, StandardButtonType.A,
                         false)
                     .Generate(mode, debounceIndex, extra, combinedExtra, combinedDebounce, macros, writer);
             }
@@ -366,7 +366,7 @@ public partial class DrumAxis : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedDrumAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), Min, Max,
+        return new SerializedDrumAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Min, Max,
             DeadZone, Debounce, ChildOfCombined);
     }
 }

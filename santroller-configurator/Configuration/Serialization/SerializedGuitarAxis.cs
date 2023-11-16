@@ -10,7 +10,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract(SkipConstructor = true)]
 public class SerializedGuitarAxis : SerializedOutput
 {
-    public SerializedGuitarAxis(SerializedInput input, GuitarAxisType type, Color ledOn, Color ledOff, byte[] ledIndex,
+    public SerializedGuitarAxis(SerializedInput input, GuitarAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         int min, int max, int deadzone, bool childOfCombined)
     {
         Input = input;
@@ -21,6 +21,7 @@ public class SerializedGuitarAxis : SerializedOutput
         Deadzone = deadzone;
         Type = type;
         LedIndex = ledIndex;
+        LedIndexPeripheral = ledIndexPeripheral;
         ChildOfCombined = childOfCombined;
     }
 
@@ -33,11 +34,12 @@ public class SerializedGuitarAxis : SerializedOutput
     [ProtoMember(7)] public int Deadzone { get; }
     [ProtoMember(8)] public bool ChildOfCombined { get; }
     [ProtoMember(10)] public GuitarAxisType Type { get; }
+    [ProtoMember(11)] public byte[] LedIndexPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new GuitarAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, Min, Max, Deadzone,
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, Deadzone,
             Type, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;

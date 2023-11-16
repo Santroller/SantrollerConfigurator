@@ -45,7 +45,7 @@ public class JoystickToDpad : Output
     private bool Peripheral { get; }
 
     public JoystickToDpad(ConfigViewModel model, bool peripheral, int threshold, bool wii) : base(
-        model, new JoystickToDpadInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(), true)
+        model, new JoystickToDpadInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), true)
     {
         Threshold = threshold;
         Wii = wii;
@@ -56,11 +56,11 @@ public class JoystickToDpad : Output
             {
                 _outputs.Add(new ControllerButton(model,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow, Threshold,
-                        model), Colors.Black, Colors.Black, Array.Empty<byte>(), 10, StandardButtonType.DpadLeft,
+                        model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.DpadLeft,
                     true));
                 _outputs.Add(new ControllerButton(model,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh, Threshold,
-                        model), Colors.Black, Colors.Black, Array.Empty<byte>(), 10, StandardButtonType.DpadRight,
+                        model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.DpadRight,
                     true));
             }
 
@@ -68,10 +68,10 @@ public class JoystickToDpad : Output
             {
                 _outputs.Add(new ControllerButton(model,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh, Threshold,
-                        model), Colors.Black, Colors.Black, Array.Empty<byte>(), 10, StandardButtonType.DpadUp, true));
+                        model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.DpadUp, true));
                 _outputs.Add(new ControllerButton(model,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow, Threshold,
-                        model), Colors.Black, Colors.Black, Array.Empty<byte>(), 10, StandardButtonType.DpadDown,
+                        model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.DpadDown,
                     true));
             }
         }
@@ -80,16 +80,16 @@ public class JoystickToDpad : Output
 
             _outputs.Add(new ControllerButton(model,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral), AnalogToDigitalType.JoyLow, Threshold,
-                    model), Colors.Black, Colors.Black, Array.Empty<byte>(), 10, StandardButtonType.DpadLeft, true));
+                    model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.DpadLeft, true));
             _outputs.Add(new ControllerButton(model,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral), AnalogToDigitalType.JoyHigh, Threshold,
-                    model), Colors.Black, Colors.Black, Array.Empty<byte>(), 10, StandardButtonType.DpadRight, true));
+                    model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.DpadRight, true));
             _outputs.Add(new ControllerButton(model,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral), AnalogToDigitalType.JoyHigh, Threshold,
-                    model), Colors.Black, Colors.Black, Array.Empty<byte>(), 10, StandardButtonType.DpadUp, true));
+                    model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.DpadUp, true));
             _outputs.Add(new ControllerButton(model,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral), AnalogToDigitalType.JoyLow, Threshold,
-                    model), Colors.Black, Colors.Black, Array.Empty<byte>(), 10, StandardButtonType.DpadDown, true));
+                    model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.DpadDown, true));
         }
 
         UpdateDetails();

@@ -59,9 +59,11 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadPeripheralWt,
         CommandReadPeripheralValid,
         CommandReadClone,
+        CommandSetLedsPeripheral,
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
+    private readonly Dictionary<byte, TimeSpan> _ledTimersPeripheral = new();
     private readonly Stopwatch _sw = Stopwatch.StartNew();
 
     private DeviceControllerType _deviceControllerType;
@@ -157,6 +159,12 @@ public class Santroller : ConfigurableUsbDevice
             if (_sw.Elapsed - elapsed <= TimeSpan.FromSeconds(2)) continue;
             ClearLed(led);
             _ledTimers.Remove(led);
+        }
+        foreach (var (led, elapsed) in _ledTimersPeripheral)
+        {
+            if (_sw.Elapsed - elapsed <= TimeSpan.FromSeconds(2)) continue;
+            ClearLedPeripheral(led);
+            _ledTimersPeripheral.Remove(led);
         }
 
         try
@@ -453,11 +461,20 @@ public class Santroller : ConfigurableUsbDevice
     {
         WriteData(0, (byte) Commands.CommandSetLeds, new byte[] {led, 0, 0, 0});
     }
+    public void ClearLedPeripheral(byte led)
+    {
+        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new byte[] {led, 0, 0, 0});
+    }
 
     public void SetLed(byte led, byte[] color)
     {
         _ledTimers[led] = _sw.Elapsed;
         WriteData(0, (byte) Commands.CommandSetLeds, new[] {led}.Concat(color).ToArray());
+    }
+    public void SetLedPeripheral(byte led, byte[] color)
+    {
+        _ledTimersPeripheral[led] = _sw.Elapsed;
+        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led}.Concat(color).ToArray());
     }
 
     public void StartScan()

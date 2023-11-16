@@ -20,7 +20,7 @@ public class Rumble : Output
     private RumbleMotorType _rumbleMotorType;
 
     public Rumble(ConfigViewModel model, int pin, bool peripheral, RumbleMotorType rumbleMotorType) : base(model,
-        new FixedInput(model, 0, false), Colors.Black, Colors.Black, new byte[] { }, false)
+        new FixedInput(model, 0, false), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), false)
     {
         PinConfig = new DirectPinConfig(model, Guid.NewGuid().ToString(), pin, peripheral, DevicePinMode.Output);
         Pin = pin;

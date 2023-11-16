@@ -12,9 +12,9 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 public class ControllerAxis : OutputAxis
 {
 
-    public ControllerAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, int min,
+    public ControllerAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int min,
         int max,
-        int deadZone, int threshold, StandardAxisType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, min,
+        int deadZone, int threshold, StandardAxisType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, min,
         max,
         deadZone, IsTrigger(type), childOfCombined)
     {
@@ -144,7 +144,7 @@ public class ControllerAxis : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedControllerAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), Min, Max,
+        return new SerializedControllerAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Min, Max,
             DeadZone,Threshold, ChildOfCombined);
     }
 

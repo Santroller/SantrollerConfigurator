@@ -85,7 +85,7 @@ public class Gh5CombinedOutput : CombinedTwiOutput
         Outputs.Add(new ControllerAxis(Model,
             new Gh5NeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, combined: true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(), short.MinValue, short.MaxValue, 0, ushort.MaxValue,
+            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0, ushort.MaxValue,
             StandardAxisType.RightStickY, true));
         UpdateBindings();
     }
@@ -106,7 +106,7 @@ public class Gh5CombinedOutput : CombinedTwiOutput
         {
             outputs.AddRange(TapsRb.Select(pair => new GuitarButton(Model,
                 new Gh5NeckInput(pair.Key, Model, Peripheral, Sda, Scl, true), Colors.Black, Colors.Black,
-                Array.Empty<byte>(), 5,
+                Array.Empty<byte>(),Array.Empty<byte>(), 5,
                 pair.Value, true)));
 
             outputs.Remove(tapAnalog);
@@ -116,7 +116,7 @@ public class Gh5CombinedOutput : CombinedTwiOutput
 
         outputs.AddRange(Taps.Select(pair => new GuitarButton(Model,
             new Gh5NeckInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-            Colors.Black, Colors.Black, Array.Empty<byte>(), 5, pair.Value, true)));
+            Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5, pair.Value, true)));
 
         outputs.Remove(tapFrets);
 
@@ -154,7 +154,7 @@ public class Gh5CombinedOutput : CombinedTwiOutput
             {
                 var button = new GuitarButton(Model,
                     new Gh5NeckInput(Gh5NeckInputType.TapAll, Model, Peripheral, combined: true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), 5, InstrumentButtonType.Slider, true)
+                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5, InstrumentButtonType.Slider, true)
                 {
                     Enabled = false
                 };
@@ -167,7 +167,7 @@ public class Gh5CombinedOutput : CombinedTwiOutput
                 if (item != null) continue;
                 var button = new GuitarButton(Model,
                     new Gh5NeckInput(key, Model, Peripheral, combined: true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), 5, value, true)
+                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5, value, true)
                 {
                     Enabled = false
                 };
@@ -180,7 +180,7 @@ public class Gh5CombinedOutput : CombinedTwiOutput
                 new Gh5NeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                 GuitarAxisType.Slider, true));
         }
         else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
@@ -208,7 +208,7 @@ public class Gh5CombinedOutput : CombinedTwiOutput
                 new Gh5NeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                 ushort.MaxValue, StandardAxisType.LeftStickX, true));
         }
         else

@@ -10,13 +10,14 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract(SkipConstructor = true)]
 public class SerializedDjButton : SerializedOutput
 {
-    public SerializedDjButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte debounce,
+    public SerializedDjButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, byte debounce,
         DjInputType type, bool childOfCombined)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
         LedOff = ledOff.ToUInt32();
         LedIndex = ledIndex;
+        LedIndexPeripheral = ledIndexPeripheral;
         Debounce = debounce;
         Type = type;
         ChildOfCombined = childOfCombined;
@@ -29,11 +30,12 @@ public class SerializedDjButton : SerializedOutput
     [ProtoMember(5)] public DjInputType Type { get; }
     [ProtoMember(6)] public byte[] LedIndex { get; }
     [ProtoMember(7)] public bool ChildOfCombined { get; }
+    [ProtoMember(8)] public byte[] LedIndexPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new DjButton(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, Debounce, Type, ChildOfCombined);
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Debounce, Type, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;
     }

@@ -12,8 +12,8 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class MouseButton : OutputButton
 {
-    public MouseButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte debounce,
-        MouseButtonType type) : base(model, input, ledOn, ledOff, ledIndices, debounce, false)
+    public MouseButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte debounce,
+        MouseButtonType type) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, debounce, false)
     {
         Type = type;
         UpdateDetails();
@@ -59,6 +59,6 @@ public class MouseButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedMouseButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), Debounce, Type);
+        return new SerializedMouseButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type);
     }
 }

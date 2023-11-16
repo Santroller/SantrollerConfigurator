@@ -10,7 +10,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract(SkipConstructor = true)]
 public class SerializedDjAxis : SerializedOutput
 {
-    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex,
+    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         int min, int max, int deadzone, bool childOfCombined)
     {
         Input = input;
@@ -21,10 +21,11 @@ public class SerializedDjAxis : SerializedOutput
         DeadzoneOrMultiplier = deadzone;
         Type = type;
         LedIndex = ledIndex;
+        LedIndexPeripheral = ledIndexPeripheral;
         ChildOfCombined = childOfCombined;
     }
     
-    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, int multiplier, bool childOfCombined)
+    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int multiplier, bool childOfCombined)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -34,6 +35,7 @@ public class SerializedDjAxis : SerializedOutput
         DeadzoneOrMultiplier = multiplier;
         Type = type;
         LedIndex = ledIndex;
+        LedIndexPeripheral = ledIndexPeripheral;
         ChildOfCombined = childOfCombined;
     }
 
@@ -46,6 +48,7 @@ public class SerializedDjAxis : SerializedOutput
     [ProtoMember(7)] public int DeadzoneOrMultiplier { get; }
     [ProtoMember(8)] public bool ChildOfCombined { get; }
     [ProtoMember(10)] public DjAxisType Type { get; }
+    [ProtoMember(11)] public byte[] LedIndexPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
@@ -53,13 +56,13 @@ public class SerializedDjAxis : SerializedOutput
         if (Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity or DjAxisType.EffectsKnob)
         {
             combined = new DjAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-                Color.FromUInt32(LedOff), LedIndex, DeadzoneOrMultiplier,
+                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, DeadzoneOrMultiplier,
                 Type, ChildOfCombined);
         }
         else
         {
             combined = new DjAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-                Color.FromUInt32(LedOff), LedIndex, Min, Max, DeadzoneOrMultiplier,
+                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, DeadzoneOrMultiplier,
                 Type, ChildOfCombined);
         }
         

@@ -10,13 +10,14 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract(SkipConstructor = true)]
 public class SerializedMouseButton : SerializedOutput
 {
-    public SerializedMouseButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte debounce,
+    public SerializedMouseButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, byte debounce,
         MouseButtonType type)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
         LedOff = ledOff.ToUInt32();
         LedIndex = ledIndex;
+        LedIndexPeripheral = ledIndexPeripheral;
         Debounce = debounce;
         Type = type;
     }
@@ -27,11 +28,12 @@ public class SerializedMouseButton : SerializedOutput
     [ProtoMember(4)] public byte Debounce { get; }
     [ProtoMember(5)] public MouseButtonType Type { get; }
     [ProtoMember(6)] public byte[] LedIndex { get; }
+    [ProtoMember(7)] public byte[] LedIndexPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new MouseButton(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, Debounce, Type);
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Debounce, Type);
         model.Bindings.Add(combined);
         return combined;
     }

@@ -10,7 +10,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract(SkipConstructor = true)]
 public class SerializedPs3Axis : SerializedOutput
 {
-    public SerializedPs3Axis(SerializedInput input, Ps3AxisType type, Color ledOn, Color ledOff, byte[] ledIndex,
+    public SerializedPs3Axis(SerializedInput input, Ps3AxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         int min, int max, int deadzone, bool childOfCombined)
     {
         Input = input;
@@ -21,6 +21,7 @@ public class SerializedPs3Axis : SerializedOutput
         Deadzone = deadzone;
         Type = type;
         LedIndex = ledIndex;
+        LedIndexPeripheral = ledIndexPeripheral;
         ChildOfCombined = childOfCombined;
     }
 
@@ -35,11 +36,12 @@ public class SerializedPs3Axis : SerializedOutput
     [ProtoMember(7)] public Ps3AxisType Type { get; }
 
     [ProtoMember(9)] public bool ChildOfCombined { get; }
+    [ProtoMember(10)] public byte[] LedIndexPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new Ps3Axis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, Min, Max, Deadzone,
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, Deadzone,
             Type, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;
