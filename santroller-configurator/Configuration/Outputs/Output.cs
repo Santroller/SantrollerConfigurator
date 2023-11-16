@@ -212,7 +212,7 @@ public abstract partial class Output : ReactiveObject
             {
                 foreach (var ledIndex in LedIndicesPeripheral)
                 {
-                    santroller.SetLed((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(value));
+                    santroller.SetLedPeripheral((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(value));
                 }
             }
         }
