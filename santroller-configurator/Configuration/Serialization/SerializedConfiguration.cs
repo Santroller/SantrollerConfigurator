@@ -179,6 +179,7 @@ public class SerializedConfiguration
                         output.LedOn = outputToMerge.LedOn;
                         output.LedOff = outputToMerge.LedOff;
                         output.LedIndices = outputToMerge.LedIndices;
+                        output.LedIndicesPeripheral = outputToMerge.LedIndicesPeripheral;
                         if (outputToMerge is DjAxis djToMerge && output is DjAxis outputDj)
                         {
                             outputDj.Multiplier = djToMerge.Multiplier;

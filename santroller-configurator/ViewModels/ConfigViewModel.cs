@@ -400,7 +400,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _apa102SpiConfig?.Mosi ?? 0;
         set
         {
-            _apa102SpiConfig!.Mosi = value;
+            if (_apa102SpiConfig == null) return;
+            _apa102SpiConfig.Mosi = value;
             this.RaisePropertyChanged();
         }
     }
@@ -410,7 +411,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _apa102SpiConfig?.Sck ?? 0;
         set
         {
-            _apa102SpiConfig!.Sck = value;
+            if (_apa102SpiConfig == null) return;
+            _apa102SpiConfig.Sck = value;
             this.RaisePropertyChanged();
         }
     }
@@ -420,7 +422,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _peripheralTwiConfig?.Sda ?? 0;
         set
         {
-            _peripheralTwiConfig!.Sda = value;
+            if (_peripheralTwiConfig == null) return;
+            _peripheralTwiConfig.Sda = value;
             this.RaisePropertyChanged();
         }
     }
@@ -430,7 +433,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _peripheralTwiConfig?.Scl ?? 0;
         set
         {
-            _peripheralTwiConfig!.Scl = value;
+            if (_peripheralTwiConfig == null) return;
+            _peripheralTwiConfig.Scl = value;
             this.RaisePropertyChanged();
         }
     }
@@ -440,7 +444,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _apa102SpiConfigPeripheral?.Mosi ?? 0;
         set
         {
-            _apa102SpiConfigPeripheral!.Mosi = value;
+            if (_apa102SpiConfigPeripheral == null) return;
+            _apa102SpiConfigPeripheral.Mosi = value;
             this.RaisePropertyChanged();
         }
     }
@@ -450,6 +455,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _apa102SpiConfigPeripheral?.Sck ?? 0;
         set
         {
+            if (_apa102SpiConfigPeripheral == null) return;
             _apa102SpiConfigPeripheral!.Sck = value;
             this.RaisePropertyChanged();
         }
@@ -1660,7 +1666,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 if (debouncesRelatedToLed.ContainsKey(led)) continue;
                 ret += $"if (ledState[{led - 1}].select == 0) {{";
-                foreach (var analogLedOutput in analogLedOutputs.Distinct())
+                foreach (var analogLedOutput in analogLedOutputs)
                 {
                     var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
                     // Now we have the value, calibrated as a uint8_t
@@ -1671,7 +1677,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 ret += "}";
             }
         }
-        
         if (mode == ConfigField.Shared && LedTypePeripheral is not LedType.None)
         {
             // Handle leds, including when multiple leds are assigned to a single output.
@@ -1680,7 +1685,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 var analog = "";
                 if (analogRelatedToLedPeripheral.TryGetValue(led, out var analogLedOutputs))
                 {
-                    foreach (var analogLedOutput in analogLedOutputs.Distinct())
+                    foreach (var analogLedOutput in analogLedOutputs)
                     {
                         var ledRead =
                             analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
@@ -1721,7 +1726,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                          """;
             }
 
-            foreach (var (led, analogLedOutputs) in analogRelatedToLedPeripheral.Distinct())
+            foreach (var (led, analogLedOutputs) in analogRelatedToLedPeripheral)
             {
                 if (debouncesRelatedToLedPeripheral.ContainsKey(led)) continue;
                 ret += $"if (ledStatePeripheral[{led - 1}].select == 0) {{";

@@ -33,19 +33,7 @@ public class LedIndex : ReactiveObject
         Output = output;
         Index = i;
         Peripheral = peripheral;
-        // Thanks to how ReactiveUI binds things, it is possible for things to be null here when they really never should be.
-        if (peripheral)
-        {
-            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-            var existing = output.AvailableIndicesPeripheral?.FirstOrDefault(s => s.Index == i);
-            Selected = existing?._selected ?? Output.LedIndicesPeripheral.Contains(Index);
-        }
-        else
-        {
-            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-            var existing = output.AvailableIndices?.FirstOrDefault(s => s.Index == i);
-            Selected = existing?._selected ?? Output.LedIndices.Contains(Index);
-        }
+        _selected = Collection.Contains(Index);
     }
 
     private bool _selected;
@@ -55,16 +43,21 @@ public class LedIndex : ReactiveObject
 
     private bool Peripheral { get; }
 
+    private ObservableCollection<byte> Collection => Peripheral ? Output.LedIndicesPeripheral : Output.LedIndices;
+
     public bool Selected
     {
         get => _selected;
         set
         {
-            var arr = Peripheral ? Output.LedIndicesPeripheral : Output.LedIndices;
             if (value)
-                arr.Add(Index);
+            {
+                Collection.Add(Index);
+            }
             else
-                arr.Remove(Index);
+            {
+                Collection.Remove(Index);
+            }
             _selected = value;
             this.RaisePropertyChanged();
         }
@@ -85,7 +78,8 @@ public abstract partial class Output : ReactiveObject
     public ReactiveCommand<Unit, Unit> MoveDown { get; }
 
 
-    protected Output(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral,
+    protected Output(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral,
         bool childOfCombined)
     {
         ChildOfCombined = childOfCombined;
@@ -208,6 +202,7 @@ public abstract partial class Output : ReactiveObject
                     santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(value));
                 }
             }
+
             if (Model.LedTypePeripheral != LedType.None)
             {
                 foreach (var ledIndex in LedIndicesPeripheral)
@@ -232,6 +227,7 @@ public abstract partial class Output : ReactiveObject
                     santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(value));
                 }
             }
+
             if (Model.LedTypePeripheral != LedType.None)
             {
                 foreach (var ledIndex in LedIndicesPeripheral)
@@ -281,7 +277,8 @@ public abstract partial class Output : ReactiveObject
 
     public Gh5NeckInputType Gh5NeckInputType
     {
-        get => (Input.InnermostInput() as Gh5NeckInput)?.Input ?? (Input.InnermostInput() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
+        get => (Input.InnermostInput() as Gh5NeckInput)?.Input ??
+               (Input.InnermostInput() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
         set => SetInput(SelectedInputType, null, null, null, value, null, null);
     }
 
@@ -291,9 +288,12 @@ public abstract partial class Output : ReactiveObject
         set => SetInput(SelectedInputType, null, null, value, null, null, null);
     }
 
-    public IEnumerable<GhWtInputType> GhWtInputTypes => Enum.GetValues<GhWtInputType>().Where(s => s is not GhWtInputType.TapAll);
+    public IEnumerable<GhWtInputType> GhWtInputTypes =>
+        Enum.GetValues<GhWtInputType>().Where(s => s is not GhWtInputType.TapAll);
 
-    public IEnumerable<Gh5NeckInputType> Gh5NeckInputTypes => Enum.GetValues<Gh5NeckInputType>().Where(s => s is not Gh5NeckInputType.TapAll);
+    public IEnumerable<Gh5NeckInputType> Gh5NeckInputTypes =>
+        Enum.GetValues<Gh5NeckInputType>().Where(s => s is not Gh5NeckInputType.TapAll);
+
     public IEnumerable<UsbHostInputType> UsbInputTypes => Enum.GetValues<UsbHostInputType>();
 
     public IEnumerable<object> KeyOrMouseInputs => Enum.GetValues<MouseButtonType>().Cast<object>()
@@ -309,7 +309,8 @@ public abstract partial class Output : ReactiveObject
     public IEnumerable<InputType> InputTypes =>
         Enum.GetValues<InputType>().Where(s =>
             (this is not GuitarAxis {Type: GuitarAxisType.Slider} ||
-             s is InputType.Gh5NeckInput or InputType.WtNeckInput or InputType.ConstantInput or InputType.WtNeckPeripheralInput or InputType.CloneNeckInput) &&
+             s is InputType.Gh5NeckInput or InputType.WtNeckInput or InputType.ConstantInput
+                 or InputType.WtNeckPeripheralInput or InputType.CloneNeckInput) &&
             (s is not InputType.WtNeckPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.MultiplexerInput || Model.IsPico) &&
             (s is not InputType.DigitalPeripheralInput || Model.HasPeripheral) &&
@@ -326,7 +327,7 @@ public abstract partial class Output : ReactiveObject
         if (Input.InnermostInput() is DjInput dj) return dj.Input;
 
         if (Input.InnermostInput() is Gh5NeckInput gh5) return gh5.Input;
-        
+
         if (Input.InnermostInput() is CloneNeckInput c) return c.Input;
 
         if (Input.InnermostInput() is GhWtTapInput wt) return wt.Input;
@@ -451,10 +452,13 @@ public abstract partial class Output : ReactiveObject
 
         Output? newOutput = value switch
         {
-            Key key => new KeyboardButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), debounce, key),
-            MouseButtonType mouseButtonType => new MouseButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(),
+            Key key => new KeyboardButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
+                LedIndicesPeripheral.ToArray(), debounce, key),
+            MouseButtonType mouseButtonType => new MouseButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
+                LedIndicesPeripheral.ToArray(),
                 debounce, mouseButtonType),
-            MouseAxisType axisType => new MouseAxis(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), min, max,
+            MouseAxisType axisType => new MouseAxis(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
+                LedIndicesPeripheral.ToArray(), min, max,
                 deadzone, axisType),
             _ => null
         };
@@ -607,7 +611,7 @@ public abstract partial class Output : ReactiveObject
                     wt.PinS2);
                 break;
             case InputType.WtNeckPeripheralInput when Input.InnermostInput() is not GhWtTapInput:
-                ghWtInputType ??=  GhWtInputType.TapGreen;
+                ghWtInputType ??= GhWtInputType.TapGreen;
                 if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, true, -1, -1, -1, -1);
                 break;
@@ -744,13 +748,15 @@ public abstract partial class Output : ReactiveObject
         if (Enabled)
             Input.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                 ghWtRaw,
-                ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, cloneRaw);
+                ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral,
+                cloneRaw);
 
         foreach (var output in AllOutputs)
             if (output != this)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                     ghWtRaw,
-                    ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw);
+                    ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
+                    digitalPeripheral, cloneRaw);
     }
 
     public void UpdateErrors()
