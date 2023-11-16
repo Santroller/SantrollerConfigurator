@@ -1489,6 +1489,84 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         return FixNewlines(ret);
     }
 
+    private string ComputeLeds(ConfigField mode, bool peripheral, Dictionary<byte, List<(Output, int)>> debouncesRelatedToLed, Dictionary<byte, List<OutputAxis>> analogRelatedToLed, BinaryWriter? writer)
+    {
+        var ret = "";
+        var type = peripheral ? LedTypePeripheral : LedType;
+        var variable = peripheral ? "ledStatePeripheral" : "ledState";
+        if (mode != ConfigField.Shared || type is LedType.None) return "";
+        // Handle leds, including when multiple leds are assigned to a single output.
+        foreach (var (led, relatedOutputs) in debouncesRelatedToLed)
+        {
+            var analog = "";
+            if (analogRelatedToLed.TryGetValue(led, out var analogLedOutputs))
+            {
+                foreach (var analogLedOutput in analogLedOutputs)
+                {
+                    var ledRead =
+                        analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
+                    // Now we have the value, calibrated as a uint8_t
+                    // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
+                    analog +=
+                        $$"""
+                          led_tmp = {{ledRead}};
+                          if(led_tmp) {
+                              {{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}}
+                          } else {
+                              {{type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, writer)}}
+                          }
+                          """;
+                }
+            }
+
+            if (!analog.Any())
+            {
+                analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, writer);
+            }
+
+            ret += $$"""
+
+                     if ({{variable}}[{{led - 1}}].select == 0) {
+                     """;
+            ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
+            {
+                var ifStatement = $"debounce[{tuple.Item2}]";
+                return $$"""
+                         
+                             if ({{ifStatement}}) {
+                                 {{type.GetLedAssignment(peripheral, tuple.Item1.LedOn, led, writer)}}
+                             }
+                         """;
+            }));
+            ret += $$"""
+                         else {
+                             {{analog}}
+                         }
+                     }
+                     """;
+        }
+
+        foreach (var (led, analogLedOutputs) in analogRelatedToLed)
+        {
+            if (debouncesRelatedToLed.ContainsKey(led)) continue;
+            ret += $$"""
+
+                     if ({{variable}}[{{led - 1}}].select == 0) {
+                     """;
+            foreach (var analogLedOutput in analogLedOutputs)
+            {
+                var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
+                // Now we have the value, calibrated as a uint8_t
+                ret +=
+                    $"led_tmp = {ledRead};{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}";
+            }
+
+            ret += "}";
+        }
+
+        return ret;
+    }
+
     private string GenerateTick(ConfigField mode, BinaryWriter? writer)
     {
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
@@ -1556,7 +1634,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var ret = outputsByType
             .Aggregate("", (current, group) =>
             {
-                // we need to ensure that DigitalToAnalog is last
                 return current + group
                     .First().Input.InnermostInput()
                     .GenerateAll(group
@@ -1613,135 +1690,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         .Where(s => !string.IsNullOrEmpty(s.Item2))
                         .Distinct().ToList(), mode);
             });
-        if (mode == ConfigField.Shared && LedType is not LedType.None)
-        {
-            // Handle leds, including when multiple leds are assigned to a single output.
-            foreach (var (led, relatedOutputs) in debouncesRelatedToLed)
-            {
-                var analog = "";
-                if (analogRelatedToLed.TryGetValue(led, out var analogLedOutputs))
-                {
-                    foreach (var analogLedOutput in analogLedOutputs)
-                    {
-                        var ledRead =
-                            analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
-                        // Now we have the value, calibrated as a uint8_t
-                        // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
-                        analog +=
-                            $$"""
-                              led_tmp = {{ledRead}};
-                              if(led_tmp) {
-                                  {{LedType.GetLedAssignment(false, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}}
-                              } else {
-                                  {{LedType.GetLedAssignment(false, relatedOutputs.First().Item1.LedOff, led, writer)}}
-                              }
-                              """;
-                    }
-                }
-
-                if (!analog.Any())
-                {
-                    analog = LedType.GetLedAssignment(false, relatedOutputs.First().Item1.LedOff, led, writer);
-                }
-
-                ret += $"if (ledState[{led - 1}].select == 0) {{";
-                ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
-                {
-                    var ifStatement = $"debounce[{tuple.Item2}]";
-                    return $$"""
-                             if ({{ifStatement}}) {
-                                 {{LedType.GetLedAssignment(false, tuple.Item1.LedOn, led, writer)}}
-                             }
-                             """;
-                }));
-                ret += $$"""
-                             else {
-                                 {{analog}}
-                             }
-                         }
-                         """;
-            }
-
-            foreach (var (led, analogLedOutputs) in analogRelatedToLed)
-            {
-                if (debouncesRelatedToLed.ContainsKey(led)) continue;
-                ret += $"if (ledState[{led - 1}].select == 0) {{";
-                foreach (var analogLedOutput in analogLedOutputs)
-                {
-                    var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
-                    // Now we have the value, calibrated as a uint8_t
-                    ret +=
-                        $"led_tmp = {ledRead};{LedType.GetLedAssignment(false, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}";
-                }
-
-                ret += "}";
-            }
-        }
-        if (mode == ConfigField.Shared && LedTypePeripheral is not LedType.None)
-        {
-            // Handle leds, including when multiple leds are assigned to a single output.
-            foreach (var (led, relatedOutputs) in debouncesRelatedToLedPeripheral)
-            {
-                var analog = "";
-                if (analogRelatedToLedPeripheral.TryGetValue(led, out var analogLedOutputs))
-                {
-                    foreach (var analogLedOutput in analogLedOutputs)
-                    {
-                        var ledRead =
-                            analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
-                        // Now we have the value, calibrated as a uint8_t
-                        // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
-                        analog +=
-                            $$"""
-                              led_tmp = {{ledRead}};
-                              if(led_tmp) {
-                                  {{LedTypePeripheral.GetLedAssignment(true, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}}
-                              } else {
-                                  {{LedTypePeripheral.GetLedAssignment(true,relatedOutputs.First().Item1.LedOff, led, writer)}}
-                              }
-                              """;
-                    }
-                }
-
-                if (!analog.Any())
-                {
-                    analog = LedTypePeripheral.GetLedAssignment(true,relatedOutputs.First().Item1.LedOff, led, writer);
-                }
-
-                ret += $"if (ledStatePeripheral[{led - 1}].select == 0) {{";
-                ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
-                {
-                    var ifStatement = $"debounce[{tuple.Item2}]";
-                    return $$"""
-                             if ({{ifStatement}}) {
-                                 {{LedTypePeripheral.GetLedAssignment(true,tuple.Item1.LedOn, led, writer)}}
-                             }
-                             """;
-                }));
-                ret += $$"""
-                             else {
-                                 {{analog}}
-                             }
-                         }
-                         """;
-            }
-
-            foreach (var (led, analogLedOutputs) in analogRelatedToLedPeripheral)
-            {
-                if (debouncesRelatedToLedPeripheral.ContainsKey(led)) continue;
-                ret += $"if (ledStatePeripheral[{led - 1}].select == 0) {{";
-                foreach (var analogLedOutput in analogLedOutputs)
-                {
-                    var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
-                    // Now we have the value, calibrated as a uint8_t
-                    ret +=
-                        $"led_tmp = {ledRead};{LedTypePeripheral.GetLedAssignment(true,led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}";
-                }
-
-                ret += "}";
-            }
-        }
-
+        ret += ComputeLeds(mode, false, debouncesRelatedToLed, analogRelatedToLed, writer);
+        ret += ComputeLeds(mode, true, debouncesRelatedToLedPeripheral, analogRelatedToLedPeripheral, writer);
         return FixNewlines(ret);
     }
 
