@@ -554,6 +554,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 Bindings.RemoveMany(Bindings.Items.Where(s =>
                     s.Input.Peripheral || s is GhwtCombinedOutput {Peripheral: true}));
+                _peripheralTwiConfig = null;
+                this.RaiseAndSetIfChanged(ref _hasPeripheral, value);
+                UpdateErrors();
+                LedTypePeripheral = LedType.None;
             }
 
             _peripheralTwiConfig =

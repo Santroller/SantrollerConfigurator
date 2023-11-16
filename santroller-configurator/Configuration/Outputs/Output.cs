@@ -118,7 +118,7 @@ public abstract partial class Output : ReactiveObject
         this.WhenAnyValue(x => x.Model.LedCount, x => x.Model.LedCountPeripheral)
             .Select(x => Enumerable.Range(1, x.Item1).Select(s => new LedIndex(this, false, (byte) s)).ToArray())
             .ToPropertyEx(this, x => x.AvailableIndices);
-        this.WhenAnyValue(x => x.Model.LedCountPeripheral, x => x.Model.LedCount)
+        this.WhenAnyValue(x => x.Model.LedCountPeripheral, x => x.Model.IsApa102, x => x.Model.LedCount)
             .Select(x => Enumerable.Range(1, x.Item1).Select(s => new LedIndex(this, true, (byte) s)).ToArray())
             .ToPropertyEx(this, x => x.AvailableIndicesPeripheral);
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInput() is DjInput)

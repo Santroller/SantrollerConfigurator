@@ -176,7 +176,7 @@ public partial class DjAxis : OutputAxis
         if (i2CTurntable)
         {
             // When using inputs from an actual turntable, we can skip scaling everything to uint16 and back
-            generatedTablePs3 = $"({generatedTable} + INT8_MAX)";
+            generatedTablePs3 = $"({generatedTable} + PS3_STICK_CENTER)";
         }
         else
         {
@@ -209,7 +209,7 @@ public partial class DjAxis : OutputAxis
         return Type switch
         {
             DjAxisType.Crossfader or DjAxisType.EffectsKnob => $"{GenerateOutput(mode)} = {gen};",
-            _ => $"dj_temp={gen}; if (dj_temp){{{GenerateOutput(mode)} = dj_temp;}}"
+            _ => $"if ({Input.Generate()}){{{GenerateOutput(mode)} = {gen};}}"
         };
     }
 
