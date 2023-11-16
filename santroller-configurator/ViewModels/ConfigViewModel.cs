@@ -1593,10 +1593,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 }
                                 foreach (var led in output.LedIndices)
                                 {
-                                    if (!analogRelatedToLedPeripheral.ContainsKey(led))
-                                        analogRelatedToLedPeripheral[led] = new List<OutputAxis>();
+                                    if (!analogRelatedToLed.ContainsKey(led))
+                                        analogRelatedToLed[led] = new List<OutputAxis>();
 
-                                    analogRelatedToLedPeripheral[led].Add(axis);
+                                    analogRelatedToLed[led].Add(axis);
                                 }
                             }
 
