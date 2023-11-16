@@ -518,24 +518,49 @@ public class Led : Output
             on += $"""
 
                    ledState[{index - 1}].select = 1;
-                   {Model.GetLedAssignment(LedOn, index, writer)}
+                   {Model.LedType.GetLedAssignment(false, LedOn, index, writer)}
                    """;
             off += $"""
 
                     ledState[{index - 1}].select = 0;
-                    {Model.GetLedAssignment(LedOff, index, writer)}
+                    {Model.LedType.GetLedAssignment(false, LedOff, index, writer)}
                     """;
             between +=
                 $"""
 
                  ledState[{index - 1}].select = 1;
-                 {Model.GetLedAssignment(index, LedOn, LedOff, "rumble_left", writer)}
+                 {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, "rumble_left", writer)}
                  """;
             starPowerBetween +=
                 $"""
 
                  ledState[{index - 1}].select = 1;
-                 {Model.GetLedAssignment(index, LedOn, LedOff, "last_star_power", writer)}
+                 {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, "last_star_power", writer)}
+                 """;
+        }
+        foreach (var index in LedIndicesPeripheral)
+        {
+            on += $"""
+
+                   ledStatePeripheral[{index - 1}].select = 1;
+                   {Model.LedType.GetLedAssignment(true, LedOn, index, writer)}
+                   """;
+            off += $"""
+
+                    ledStatePeripheral[{index - 1}].select = 0;
+                    {Model.LedType.GetLedAssignment(true, LedOff, index, writer)}
+                    """;
+            between +=
+                $"""
+
+                 ledStatePeripheral[{index - 1}].select = 1;
+                 {Model.LedType.GetLedAssignment(true, index, LedOn, LedOff, "rumble_left", writer)}
+                 """;
+            starPowerBetween +=
+                $"""
+
+                 ledStatePeripheral[{index - 1}].select = 1;
+                 {Model.LedType.GetLedAssignment(true, index, LedOn, LedOff, "last_star_power", writer)}
                  """;
         }
 
@@ -543,7 +568,7 @@ public class Led : Output
         {
             case LedCommandType.Ps4LightBar when mode is ConfigField.LightBarLed:
                 return string.Join("\n",
-                    LedIndices.Select(index => Model.GetLedAssignment("red", "green", "blue", index)));
+                    LedIndices.Select(index => Model.LedType.GetLedAssignment(false, "red", "green", "blue", index)).Concat(LedIndicesPeripheral.Select(index => Model.LedTypePeripheral.GetLedAssignment(true, "red", "green", "blue", index))));
 
             case LedCommandType.Player when mode is ConfigField.PlayerLed:
                 // If Player > 4, then light up LED 4 + LED - 4

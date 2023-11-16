@@ -107,27 +107,30 @@ public static class LedTypeMethods
         };
     }
 
-    public static string GetLedAssignment(this LedType type, Color color, byte index, BinaryWriter? writer)
+    public static string GetLedAssignment(this LedType type, bool peripheral, Color color, byte index, BinaryWriter? writer)
     {
         var data = GetLedBytes(type, color);
+        var variable = peripheral ? "ledStatePeripheral" : "ledState";
         return string.Join("\n",
             writer != null
                 ? data.Zip(new[] {'r', 'g', 'b'}).Select(pair =>
-                    $"ledState[{index - 1}].{pair.Second} = {WriteBlob(writer, pair.First)};")
+                    $"{variable}[{index - 1}].{pair.Second} = {WriteBlob(writer, pair.First)};")
                 : data.Zip(new[] {'r', 'g', 'b'})
-                    .Select(pair => $"ledState[{index - 1}].{pair.Second} = {pair.First};"));
+                    .Select(pair => $"{variable}[{index - 1}].{pair.Second} = {pair.First};"));
     }
 
-    public static string GetLedAssignment(this LedType type, string r, string g, string b, byte index)
+    public static string GetLedAssignment(this LedType type, bool peripheral, string r, string g, string b, byte index)
     {
+        var variable = peripheral ? "ledStatePeripheral" : "ledState";
         var data = GetLedStrings(type, r, g, b);
         return string.Join("\n",
-            data.Zip(new[] {'r', 'g', 'b'}).Select(pair => $"ledState[{index - 1}].{pair.Second} = {pair.First};"));
+            data.Zip(new[] {'r', 'g', 'b'}).Select(pair => $"{variable}[{index - 1}].{pair.Second} = {pair.First};"));
     }
 
-    public static string GetLedAssignment(this LedType type, int index, Color on, Color off, string var,
+    public static string GetLedAssignment(this LedType type, bool peripheral, int index, Color on, Color off, string var,
         BinaryWriter? writer)
     {
+        var variable = peripheral ? "ledStatePeripheral" : "ledState";
         var rScale = on.R - off.R;
         var gScale = on.G - off.G;
         var bScale = on.B - off.B;
@@ -139,14 +142,14 @@ public static class LedTypeMethods
             return string.Join("\n",
                 new[] {'r', 'g', 'b'}.Zip(offBytes, mulStrings).Select(pair =>
                     pair.Third == "0"
-                        ? $"ledState[{index - 1}].{pair.First} = {WriteBlob(writer, pair.Second)};"
-                        : $"ledState[{index - 1}].{pair.First} = ({var} * {pair.Third} / 255) + {WriteBlob(writer, pair.Second)};"));
+                        ? $"{variable}[{index - 1}].{pair.First} = {WriteBlob(writer, pair.Second)};"
+                        : $"{variable}[{index - 1}].{pair.First} = ({var} * {pair.Third} / 255) + {WriteBlob(writer, pair.Second)};"));
         }
 
         return string.Join("\n",
             new[] {'r', 'g', 'b'}.Zip(offBytes, mulStrings).Select(pair =>
                 pair.Third == "0"
-                    ? $"ledState[{index - 1}].{pair.First} = {pair.Second};"
-                    : $"ledState[{index - 1}].{pair.First} = ({var} * {pair.Third} / 255) + {pair.Second};"));
+                    ? $"{variable}[{index - 1}].{pair.First} = {pair.Second};"
+                    : $"{variable}[{index - 1}].{pair.First} = ({var} * {pair.Third} / 255) + {pair.Second};"));
     }
 }

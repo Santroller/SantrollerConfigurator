@@ -831,7 +831,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         PollRate = 0;
         StrumDebounce = 0;
         Debounce = 10;
-        DjPollRate = 4;
+        DjPollRate = 10;
+        DjSmoothing = false;
         SwapSwitchFaceButtons = false;
         HasPeripheral = false;
         BtRxAddr = "";
@@ -1543,6 +1544,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         var debouncesRelatedToLed = new Dictionary<byte, List<(Output, int)>>();
         var analogRelatedToLed = new Dictionary<byte, List<OutputAxis>>();
+        var debouncesRelatedToLedPeripheral = new Dictionary<byte, List<(Output, int)>>();
+        var analogRelatedToLedPeripheral = new Dictionary<byte, List<OutputAxis>>();
         // Handle most mappings
         var ret = outputsByType
             .Aggregate("", (current, group) =>
@@ -1570,16 +1573,30 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                                     debouncesRelatedToLed[led].Add((output, index));
                                 }
+                                foreach (var led in output.LedIndicesPeripheral)
+                                {
+                                    if (!debouncesRelatedToLedPeripheral.ContainsKey(led))
+                                        debouncesRelatedToLedPeripheral[led] = new List<(Output, int)>();
+
+                                    debouncesRelatedToLedPeripheral[led].Add((output, index));
+                                }
                             }
 
                             if (output is OutputAxis axis)
                             {
+                                foreach (var led in output.LedIndicesPeripheral)
+                                {
+                                    if (!analogRelatedToLedPeripheral.ContainsKey(led))
+                                        analogRelatedToLedPeripheral[led] = new List<OutputAxis>();
+
+                                    analogRelatedToLedPeripheral[led].Add(axis);
+                                }
                                 foreach (var led in output.LedIndices)
                                 {
-                                    if (!analogRelatedToLed.ContainsKey(led))
-                                        analogRelatedToLed[led] = new List<OutputAxis>();
+                                    if (!analogRelatedToLedPeripheral.ContainsKey(led))
+                                        analogRelatedToLedPeripheral[led] = new List<OutputAxis>();
 
-                                    analogRelatedToLed[led].Add(axis);
+                                    analogRelatedToLedPeripheral[led].Add(axis);
                                 }
                             }
 
@@ -1608,9 +1625,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             $$"""
                               led_tmp = {{ledRead}};
                               if(led_tmp) {
-                                  {{LedType.GetLedAssignment(led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}}
+                                  {{LedType.GetLedAssignment(false, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}}
                               } else {
-                                  {{LedType.GetLedAssignment(relatedOutputs.First().Item1.LedOff, led, writer)}}
+                                  {{LedType.GetLedAssignment(false, relatedOutputs.First().Item1.LedOff, led, writer)}}
                               }
                               """;
                     }
@@ -1618,7 +1635,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                 if (!analog.Any())
                 {
-                    analog = LedType.GetLedAssignment(relatedOutputs.First().Item1.LedOff, led, writer);
+                    analog = LedType.GetLedAssignment(false, relatedOutputs.First().Item1.LedOff, led, writer);
                 }
 
                 ret += $"if (ledState[{led - 1}].select == 0) {{";
@@ -1627,7 +1644,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     var ifStatement = $"debounce[{tuple.Item2}]";
                     return $$"""
                              if ({{ifStatement}}) {
-                                 {{LedType.GetLedAssignment(tuple.Item1.LedOn, led, writer)}}
+                                 {{LedType.GetLedAssignment(false, tuple.Item1.LedOn, led, writer)}}
                              }
                              """;
                 }));
@@ -1648,7 +1665,72 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
                     // Now we have the value, calibrated as a uint8_t
                     ret +=
-                        $"led_tmp = {ledRead};{LedType.GetLedAssignment(led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}";
+                        $"led_tmp = {ledRead};{LedType.GetLedAssignment(false, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}";
+                }
+
+                ret += "}";
+            }
+        }
+        
+        if (mode == ConfigField.Shared && LedTypePeripheral is not LedType.None)
+        {
+            // Handle leds, including when multiple leds are assigned to a single output.
+            foreach (var (led, relatedOutputs) in debouncesRelatedToLedPeripheral)
+            {
+                var analog = "";
+                if (analogRelatedToLedPeripheral.TryGetValue(led, out var analogLedOutputs))
+                {
+                    foreach (var analogLedOutput in analogLedOutputs)
+                    {
+                        var ledRead =
+                            analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
+                        // Now we have the value, calibrated as a uint8_t
+                        // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
+                        analog +=
+                            $$"""
+                              led_tmp = {{ledRead}};
+                              if(led_tmp) {
+                                  {{LedTypePeripheral.GetLedAssignment(true, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}}
+                              } else {
+                                  {{LedTypePeripheral.GetLedAssignment(true,relatedOutputs.First().Item1.LedOff, led, writer)}}
+                              }
+                              """;
+                    }
+                }
+
+                if (!analog.Any())
+                {
+                    analog = LedTypePeripheral.GetLedAssignment(true,relatedOutputs.First().Item1.LedOff, led, writer);
+                }
+
+                ret += $"if (ledStatePeripheral[{led - 1}].select == 0) {{";
+                ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
+                {
+                    var ifStatement = $"debounce[{tuple.Item2}]";
+                    return $$"""
+                             if ({{ifStatement}}) {
+                                 {{LedTypePeripheral.GetLedAssignment(true,tuple.Item1.LedOn, led, writer)}}
+                             }
+                             """;
+                }));
+                ret += $$"""
+                             else {
+                                 {{analog}}
+                             }
+                         }
+                         """;
+            }
+
+            foreach (var (led, analogLedOutputs) in analogRelatedToLedPeripheral)
+            {
+                if (debouncesRelatedToLedPeripheral.ContainsKey(led)) continue;
+                ret += $"if (ledStatePeripheral[{led - 1}].select == 0) {{";
+                foreach (var analogLedOutput in analogLedOutputs)
+                {
+                    var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
+                    // Now we have the value, calibrated as a uint8_t
+                    ret +=
+                        $"led_tmp = {ledRead};{LedTypePeripheral.GetLedAssignment(true,led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}";
                 }
 
                 ret += "}";
@@ -1959,23 +2041,5 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _currentConfig = new SerializedConfiguration(this);
         _currentConfigData = new byte[_lastConfig.Length];
         _timer.Start();
-    }
-
-    public string GetLedAssignment(string red, string green, string blue, byte index)
-    {
-        var type = index > LedCount ? LedTypePeripheral : LedType;
-        return type.GetLedAssignment(red, green, blue, index);
-    }
-    public string GetLedAssignment(Color color, byte index, BinaryWriter? writer)
-    {
-        var type = index > LedCount ? LedTypePeripheral : LedType;
-        return type.GetLedAssignment(color, index, writer);
-    }
-
-    public string GetLedAssignment(int index, Color on, Color off, string var,
-        BinaryWriter? writer)
-    {
-        var type = index > LedCount ? LedTypePeripheral : LedType;
-        return type.GetLedAssignment(index, on, off, var, writer);
     }
 }
