@@ -1584,19 +1584,19 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                             if (output is OutputAxis axis)
                             {
-                                foreach (var led in output.LedIndicesPeripheral)
-                                {
-                                    if (!analogRelatedToLedPeripheral.ContainsKey(led))
-                                        analogRelatedToLedPeripheral[led] = new List<OutputAxis>();
-
-                                    analogRelatedToLedPeripheral[led].Add(axis);
-                                }
                                 foreach (var led in output.LedIndices)
                                 {
                                     if (!analogRelatedToLed.ContainsKey(led))
                                         analogRelatedToLed[led] = new List<OutputAxis>();
 
                                     analogRelatedToLed[led].Add(axis);
+                                }
+                                foreach (var led in output.LedIndicesPeripheral)
+                                {
+                                    if (!analogRelatedToLedPeripheral.ContainsKey(led))
+                                        analogRelatedToLedPeripheral[led] = new List<OutputAxis>();
+
+                                    analogRelatedToLedPeripheral[led].Add(axis);
                                 }
                             }
 
@@ -1639,7 +1639,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 }
 
                 ret += $"if (ledState[{led - 1}].select == 0) {{";
-                ret += string.Join(" else ", relatedOutputs.Select(tuple =>
+                ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
                 {
                     var ifStatement = $"debounce[{tuple.Item2}]";
                     return $$"""
@@ -1660,7 +1660,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 if (debouncesRelatedToLed.ContainsKey(led)) continue;
                 ret += $"if (ledState[{led - 1}].select == 0) {{";
-                foreach (var analogLedOutput in analogLedOutputs)
+                foreach (var analogLedOutput in analogLedOutputs.Distinct())
                 {
                     var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
                     // Now we have the value, calibrated as a uint8_t
@@ -1680,7 +1680,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 var analog = "";
                 if (analogRelatedToLedPeripheral.TryGetValue(led, out var analogLedOutputs))
                 {
-                    foreach (var analogLedOutput in analogLedOutputs)
+                    foreach (var analogLedOutput in analogLedOutputs.Distinct())
                     {
                         var ledRead =
                             analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
@@ -1721,7 +1721,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                          """;
             }
 
-            foreach (var (led, analogLedOutputs) in analogRelatedToLedPeripheral)
+            foreach (var (led, analogLedOutputs) in analogRelatedToLedPeripheral.Distinct())
             {
                 if (debouncesRelatedToLedPeripheral.ContainsKey(led)) continue;
                 ret += $"if (ledStatePeripheral[{led - 1}].select == 0) {{";
