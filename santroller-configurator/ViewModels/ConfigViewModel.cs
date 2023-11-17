@@ -1509,7 +1509,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     var ledReadCheck = "led_tmp";
                     if (analogLedOutput.Input is DjInput {Input: DjInputType.LeftTurntable or DjInputType.RightTurntable})
                     {
-                        ledRead = analogLedOutput.Input.Generate() + " + INT8_MAX";
+                        var multiplier = 1;
+                        if (analogLedOutput is DjAxis djAxis)
+                        {
+                            multiplier = djAxis.Multiplier;
+                        }
+                        ledRead = $"({analogLedOutput.Input.Generate()} * {multiplier}) + INT8_MAX";
                         ledReadCheck = analogLedOutput.Input.Generate();
                     }
                     // Now we have the value, calibrated as a uint8_t
