@@ -1505,12 +1505,19 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     var ledRead =
                         analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
+
+                    var ledReadCheck = "led_tmp";
+                    if (analogLedOutput.Input is DjInput {Input: DjInputType.LeftTurntable or DjInputType.RightTurntable})
+                    {
+                        ledRead = analogLedOutput.Input.Generate() + " + INT8_MAX";
+                        ledReadCheck = analogLedOutput.Input.Generate();
+                    }
                     // Now we have the value, calibrated as a uint8_t
                     // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
                     analog +=
                         $$"""
                           led_tmp = {{ledRead}};
-                          if(led_tmp) {
+                          if({{ledReadCheck}}) {
                               {{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}}
                           } else {
                               {{type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, writer)}}
