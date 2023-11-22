@@ -1518,6 +1518,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         ledRead = $"({analogLedOutput.Input.Generate()} * {multiplier}) + INT8_MAX";
                         ledReadCheck = analogLedOutput.Input.Generate();
                     }
+
+                    if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
+                    {
+                        var generated = $"({analogLedOutput.Input.Generate()})";
+                        if (!analogLedOutput.InputIsUint)
+                        {
+                            generated = $"({generated} + INT16_MAX)";
+                        }
+
+                        ledRead = $"(({generated} >> 8))";
+                    }
                     // Now we have the value, calibrated as a uint8_t
                     // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
                     analog +=
@@ -1577,6 +1588,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         multiplier = djAxis.Multiplier;
                     }
                     ledRead = $"({analogLedOutput.Input.Generate()} * {multiplier}) + INT8_MAX";
+                }
+
+                if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
+                {
+                    var generated = $"({analogLedOutput.Input.Generate()})";
+                    if (!analogLedOutput.InputIsUint)
+                    {
+                        generated = $"({generated} + INT16_MAX)";
+                    }
+
+                    ledRead = $"(({generated} >> 8))";
                 }
                 // Now we have the value, calibrated as a uint8_t
                 ret +=
