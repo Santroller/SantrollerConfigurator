@@ -1507,6 +1507,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
 
                     var ledReadCheck = "led_tmp";
+                    // Turntable velocities are different to most axis, as they don't use standard calibration.
                     if (analogLedOutput.Input is DjInput {Input: DjInputType.LeftTurntable or DjInputType.RightTurntable})
                     {
                         var multiplier = 1;
@@ -1568,6 +1569,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             foreach (var analogLedOutput in analogLedOutputs)
             {
                 var ledRead = analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
+                if (analogLedOutput.Input is DjInput {Input: DjInputType.LeftTurntable or DjInputType.RightTurntable})
+                {
+                    var multiplier = 1;
+                    if (analogLedOutput is DjAxis djAxis)
+                    {
+                        multiplier = djAxis.Multiplier;
+                    }
+                    ledRead = $"({analogLedOutput.Input.Generate()} * {multiplier}) + INT8_MAX";
+                }
                 // Now we have the value, calibrated as a uint8_t
                 ret +=
                     $"led_tmp = {ledRead};{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}";
