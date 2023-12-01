@@ -337,10 +337,22 @@ public class Led : Output
         get => _test;
         set
         {
-            if (Model.Device is not Santroller santroller) return;
+            if (Model.Device is not Santroller santroller || !UsesPwm) return;
             santroller.AnalogWrite(Pin, Inverted ? 255 - value : value);
 
             this.RaiseAndSetIfChanged(ref _test, value);
+        }
+    }
+
+    public bool TestDigital
+    {
+        get => _test != 0;
+        set
+        {
+            if (Model.Device is not Santroller santroller || UsesPwm) return;
+            santroller.DigitalWrite(Pin, Inverted ? !value : value);
+
+            this.RaiseAndSetIfChanged(ref _test, value ? 255 : 0);
         }
     }
 
@@ -370,7 +382,14 @@ public class Led : Output
         {
             this.RaiseAndSetIfChanged(ref _inverted, value);
             if (Model.Device is not Santroller santroller) return;
-            santroller.AnalogWrite(Pin, value ? 255 - Test : Test);
+            if (UsesPwm)
+            {
+                santroller.AnalogWrite(Pin, value ? 255 - Test : Test);
+            }
+            else
+            {
+                santroller.DigitalWrite(Pin, value ? Test == 0 : Test != 0);
+            }
         }
     }
 

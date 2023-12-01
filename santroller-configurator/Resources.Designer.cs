@@ -5061,9 +5061,21 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string EnableAnalogOutputTitle {
+            get {
+                return ResourceManager.GetString("EnableAnalogOutputTitle", resourceCulture);
+            }
+        }
+        
         public static string InvertLabel {
             get {
                 return ResourceManager.GetString("InvertLabel", resourceCulture);
+            }
+        }
+        
+        public static string AnalogOutputPinLabel {
+            get {
+                return ResourceManager.GetString("AnalogOutputPinLabel", resourceCulture);
             }
         }
         
@@ -5073,9 +5085,9 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string AnalogOutputPinLabel {
+        public static string TestLabelDigital {
             get {
-                return ResourceManager.GetString("AnalogOutputPinLabel", resourceCulture);
+                return ResourceManager.GetString("TestLabelDigital", resourceCulture);
             }
         }
         

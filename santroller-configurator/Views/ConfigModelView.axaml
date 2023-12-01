@@ -669,13 +669,26 @@
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Combo}" Minimum="1"
                                        Maximum="244" Width="200" Height="30" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.EnableDigitalOutputTitle}" />
-                        <ToggleSwitch IsChecked="{Binding OutputEnabled}"
-                                      OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                      OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+
+                    <StackPanel IsVisible="{Binding !UsesPwm}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.EnableDigitalOutputTitle}" />
+                            <ToggleSwitch IsChecked="{Binding OutputEnabled}"
+                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding UsesPwm}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.EnableAnalogOutputTitle}" />
+                            <ToggleSwitch IsChecked="{Binding OutputEnabled}"
+                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
                         <Label VerticalAlignment="Center"
@@ -683,15 +696,27 @@
                                Width="300" Content="{x:Static netCore:Resources.InvertLabel}" />
                         <ToggleSwitch IsChecked="{Binding Inverted}" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.TestLabel}" />
-                        <Slider Value="{Binding Test}"
-                                Minimum="1"
-                                Maximum="255"
-                                IsSnapToTickEnabled="True"
-                                TickFrequency="1" Width="240" />
+                    <StackPanel IsVisible="{Binding UsesPwm}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   IsVisible="{Binding UsesPwm}"
+                                   Width="300" Content="{x:Static netCore:Resources.TestLabel}" />
+                            <Slider Value="{Binding Test}"
+                                    Minimum="1"
+                                    Maximum="255"
+                                    IsSnapToTickEnabled="True"
+                                    TickFrequency="1" Width="240" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding !UsesPwm}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   IsVisible="{Binding !UsesPwm}"
+                                   Width="300" Content="{x:Static netCore:Resources.TestLabelDigital}" />
+                            <ToggleSwitch IsChecked="{Binding TestDigital}" />
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel IsVisible="{Binding UsesPwm}">
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">

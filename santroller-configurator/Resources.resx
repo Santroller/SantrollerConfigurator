@@ -2647,14 +2647,20 @@
     <data name="EnableDigitalOutputTitle" xml:space="preserve">
         <value>Enable Digital Output</value>
     </data>
+    <data name="EnableAnalogOutputTitle" xml:space="preserve">
+        <value>Enable Analog Output</value>
+    </data>
     <data name="InvertLabel" xml:space="preserve">
         <value>Invert</value>
     </data>
-    <data name="TestLabel" xml:space="preserve">
-        <value>Test Output</value>
-    </data>
     <data name="AnalogOutputPinLabel" xml:space="preserve">
         <value>Analog Output Pin</value>
+    </data>
+    <data name="TestLabel" xml:space="preserve">
+        <value>Test Analog Output</value>
+    </data>
+    <data name="TestLabelDigital" xml:space="preserve">
+        <value>Test Digital Output</value>
     </data>
     <data name="DigitalOutputPinLabel" xml:space="preserve">
         <value>Digital Output Pin</value>

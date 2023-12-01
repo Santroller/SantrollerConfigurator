@@ -61,6 +61,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadClone,
         CommandSetLedsPeripheral,
         CommandWriteAnalog,
+        CommandWriteDigital,
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -471,6 +472,14 @@ public class Santroller : ConfigurableUsbDevice
     public void AnalogWrite(int pin, int value)
     {
         WriteData(0, (byte) Commands.CommandWriteAnalog, new byte[] {(byte) pin, (byte) value, 0, 0});
+    }
+    public void DigitalWrite(int pin, bool value)
+    {
+        var ports = _microcontroller.GetPortsForTicking(new []{new DevicePin(pin, DevicePinMode.Output)});
+        foreach (var (port, mask) in ports)
+        {
+            WriteData(0, (byte) Commands.CommandWriteDigital, new byte[] {(byte)port,(byte)mask, (byte)(value?mask:0), 0});
+        }
     }
 
     public void SetLed(byte led, byte[] color)
