@@ -19,6 +19,6 @@ public class SerializedDjInputCombined : SerializedInput
 
     public override Input Generate(ConfigViewModel model)
     {
-        return new DjInput(Type, model, Peripheral, true, combined: true);
+        return new DjInput(Type, model, Peripheral, combined: true);
     }
 }

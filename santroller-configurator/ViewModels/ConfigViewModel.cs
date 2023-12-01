@@ -1543,6 +1543,23 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 break;
             case ResetType.Defaults:
                 Bindings.Clear();
+                Deque = false;
+                LedType = LedType.None;
+                LedTypePeripheral = LedType.None;
+                LedCount = 1;
+                LedCountPeripheral = 1;
+                CombinedStrumDebounce = false;
+                WtSensitivity = 5;
+                PollRate = 0;
+                StrumDebounce = 0;
+                Debounce = 10;
+                DjPollRate = 10;
+                DjSmoothing = false;
+                SwapSwitchFaceButtons = false;
+                HasPeripheral = false;
+                BtRxAddr = "";
+                XInputOnWindows = true;
+                MouseMovementType = MouseMovementType.Relative;
                 UpdateBindings();
                 UpdateErrors();
                 break;

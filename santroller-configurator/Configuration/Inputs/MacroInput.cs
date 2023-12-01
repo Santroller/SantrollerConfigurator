@@ -139,12 +139,12 @@ public class MacroInput : Input
                 break;
             case Types.InputType.TurntableInput when child.InnermostInput() is not DjInput:
                 djInputType ??= DjInputType.LeftGreen;
-                input = new DjInput(djInputType.Value, Model, false, true);
-                inputOther = new DjInput(djInputType.Value, Model, false, true);
+                input = new DjInput(djInputType.Value, Model, false);
+                inputOther = new DjInput(djInputType.Value, Model, false);
                 break;
             case Types.InputType.TurntableInput when child.InnermostInput() is DjInput dj:
                 djInputType ??= DjInputType.LeftGreen;
-                input = new DjInput(djInputType.Value, Model, dj.Smoothing, false,dj.Sda, dj.Scl);
+                input = new DjInput(djInputType.Value, Model, dj.Smoothing,dj.Sda, dj.Scl);
                 break;
             case Types.InputType.Gh5NeckInput when child.InnermostInput() is not Gh5NeckInput:
                 gh5NeckInputType ??= Gh5NeckInputType.Green;

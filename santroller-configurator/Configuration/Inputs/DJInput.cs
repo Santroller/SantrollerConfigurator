@@ -15,11 +15,11 @@ public partial class DjInput : TwiInput
     public static readonly string DjTwiType = "dj";
     public static readonly int DjTwiFreq = 150000;
 
-    public DjInput(DjInputType input, ConfigViewModel model, bool peripheral,  bool smoothing, int sda = -1,
+    public DjInput(DjInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
         int scl = -1, bool combined = false) : base(
         DjTwiType, DjTwiFreq, peripheral, sda, scl, model)
     {
-        Smoothing = smoothing;
+        Smoothing = model.DjSmoothing;
         Combined = combined;
         BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
         Input = input;
@@ -150,6 +150,6 @@ public partial class DjInput : TwiInput
     {
         if (Combined) return new SerializedDjInputCombined(Input, Peripheral);
 
-        return new SerializedDjInput(Peripheral, Sda, Scl, Input, Smoothing);
+        return new SerializedDjInput(Peripheral, Sda, Scl, Input);
     }
 }
