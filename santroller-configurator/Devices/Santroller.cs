@@ -473,12 +473,14 @@ public class Santroller : ConfigurableUsbDevice
     {
         WriteData(0, (byte) Commands.CommandWriteAnalog, new byte[] {(byte) pin, (byte) value, 0, 0});
     }
+
     public void DigitalWrite(int pin, bool value)
     {
-        var ports = _microcontroller.GetPortsForTicking(new []{new DevicePin(pin, DevicePinMode.Output)});
+        var ports = _microcontroller.GetPortsForTicking(new[] {new DevicePin(pin, DevicePinMode.Output)});
         foreach (var (port, mask) in ports)
         {
-            WriteData(0, (byte) Commands.CommandWriteDigital, new byte[] {(byte)port,(byte)mask, (byte)(value?mask:0), 0});
+            WriteData(0, (byte) Commands.CommandWriteDigital,
+                new byte[] {(byte) port, (byte) mask, (byte) (value ? mask : 0), 0});
         }
     }
 
@@ -492,6 +494,18 @@ public class Santroller : ConfigurableUsbDevice
     {
         _ledTimersPeripheral[led] = _sw.Elapsed;
         WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led}.Concat(color).ToArray());
+    }
+
+    public void SetLedStp(byte led, bool state)
+    {
+        _ledTimers[led] = _sw.Elapsed;
+        WriteData(0, (byte) Commands.CommandSetLeds, new[] {led, (byte) (state ? 1 : 0)});
+    }
+
+    public void SetLedStpPeripheral(byte led, bool state)
+    {
+        _ledTimersPeripheral[led] = _sw.Elapsed;
+        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led, (byte) (state ? 1 : 0)});
     }
 
     public void StartScan()

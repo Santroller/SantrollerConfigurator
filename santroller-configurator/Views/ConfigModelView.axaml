@@ -2250,6 +2250,28 @@
                     <StackPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                <Binding Path="!LedsRequireColours" />
+                                <Binding Path="!LedsRequireColoursPeripheral" />
+                            </MultiBinding>
+                            <Binding Path="!IsCombined" />
+                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                <Binding Path="AreLedsEnabled" />
+                                <Binding Path="AreLedsEnabledPeripheral" />
+                            </MultiBinding>
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center" Width="300"
+                           Content="{x:Static netCore:Resources.TestLEDLabel}" />
+                    <Button HorizontalAlignment="Center"
+                                  Width="200"
+                                  Command="{Binding TestLEDs}"
+                                  HorizontalContentAlignment="Center" Content="{x:Static netCore:Resources.TestLEDLabel}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                 <Binding Path="LedsRequireColours" />
                                 <Binding Path="LedsRequireColoursPeripheral" />
                             </MultiBinding>

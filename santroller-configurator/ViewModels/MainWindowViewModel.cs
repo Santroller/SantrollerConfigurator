@@ -34,7 +34,7 @@ namespace GuitarConfigurator.NetCore.ViewModels;
 public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 {
     private const string UpToDate = "Up to date";
-    private const string UdevFile = "99-santroller.rules";
+    private const string UdevFile = "68-santroller.rules";
     private const string UdevPath = $"/etc/udev/rules.d/{UdevFile}";
     private static readonly Regex VersionRegex = new("v\\d+\\.\\d+\\.\\d+$");
     private readonly HashSet<string> _currentDrives = new();

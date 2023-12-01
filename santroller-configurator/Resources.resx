@@ -2542,6 +2542,15 @@
     <data name="SelectedLEDsPeripheralLabel" xml:space="preserve">
         <value>Selected LEDs (Peripheral)</value>
     </data>
+    <data name="TestLEDLabel" xml:space="preserve">
+        <value>Test LEDs</value>
+    </data>
+    <data name="OnLabel" xml:space="preserve">
+        <value>On</value>
+    </data>
+    <data name="OffLabel" xml:space="preserve">
+        <value>Off</value>
+    </data>
     <data name="EnabledLabel" xml:space="preserve">
         <value>Enabled</value>
     </data>

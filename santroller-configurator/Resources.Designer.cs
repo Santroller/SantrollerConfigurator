@@ -4851,6 +4851,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string TestLEDLabel {
+            get {
+                return ResourceManager.GetString("TestLEDLabel", resourceCulture);
+            }
+        }
+        
+        public static string OnLabel {
+            get {
+                return ResourceManager.GetString("OnLabel", resourceCulture);
+            }
+        }
+        
+        public static string OffLabel {
+            get {
+                return ResourceManager.GetString("OffLabel", resourceCulture);
+            }
+        }
+        
         public static string EnabledLabel {
             get {
                 return ResourceManager.GetString("EnabledLabel", resourceCulture);

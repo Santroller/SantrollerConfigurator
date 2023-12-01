@@ -132,7 +132,7 @@
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
-        <UpToDateCheckInput Remove="Assets\99-santroller.rules" />
+        <UpToDateCheckInput Remove="Assets\68-santroller.rules" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj">

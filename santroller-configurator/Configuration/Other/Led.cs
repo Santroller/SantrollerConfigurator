@@ -635,28 +635,27 @@ public class Led : Output
             foreach (var led in LedIndices)
             {
                 var index = led - 1;
-                var indexSelect = led - 1 + Model.LedCount;
                 on += $"""
 
-                       bit_clear(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
-                       bit_set(ledState[{index / 8}],{index & 0x0f});
+                       bit_clear(ledStateSelect[{index / 8}],{index % 8});
+                       bit_set(ledState[{index / 8}],{index % 8});
                        """;
                 off += $"""
 
-                        bit_clear(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
-                        bit_clear(ledState[{index / 8}],{index & 0x0f});
+                        bit_clear(ledStateSelect[{index / 8}],{index % 8});
+                        bit_clear(ledState[{index / 8}],{index % 8});
                         """;
                 between +=
                     $"""
 
-                     bit_set(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
-                     bit_write(ledState[{index / 8}],{index & 0x0f},rumble_left);
+                     bit_set(ledStateSelect[{index / 8}],{index % 8});
+                     bit_write(rumble_left, ledState[{index / 8}],{index % 8});
                      """;
                 starPowerBetween +=
                     $"""
 
-                     bit_set(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
-                     bit_write(ledState[{index / 8}],{index & 0x0f},last_star_power);
+                     bit_set(ledStateSelect[{index / 8}],{index % 8});
+                     bit_write(last_star_power, ledState[{index / 8}],{index % 8});
                      """;
 
                 ps4 += on;
@@ -668,28 +667,27 @@ public class Led : Output
             foreach (var led in LedIndicesPeripheral)
             {
                 var index = led - 1;
-                var indexSelect = led - 1 + Model.LedCountPeripheral;
                 on += $"""
 
-                       bit_clear(ledStatePeripheral[{indexSelect / 8}],{indexSelect & 0x0f});
-                       bit_set(ledStatePeripheral[{index / 8}],{index & 0x0f});
+                       bit_clear(ledStatePeripheralSelect[{index / 8}],{index % 8});
+                       bit_set(ledStatePeripheral[{index / 8}],{index % 8});
                        """;
                 off += $"""
 
-                        bit_clear(ledStatePeripheral[{indexSelect / 8}],{indexSelect & 0x0f});
-                        bit_clear(ledStatePeripheral[{index / 8}],{index & 0x0f});
+                        bit_clear(ledStatePeripheralSelect[{index / 8}],{index % 8});
+                        bit_clear(ledStatePeripheral[{index / 8}],{index % 8});
                         """;
                 between +=
                     $"""
 
-                     bit_set(ledStatePeripheral[{indexSelect / 8}],{indexSelect & 0x0f});
-                     bit_write(ledStatePeripheral[{index / 8}],{index & 0x0f},rumble_left);
+                     bit_set(ledStatePeripheralSelect[{index / 8}],{index % 8});
+                     bit_write(rumble_left, ledStatePeripheral[{index / 8}],{index % 8});
                      """;
                 starPowerBetween +=
                     $"""
 
-                     bit_set(ledStatePeripheral[{indexSelect / 8}],{indexSelect & 0x0f});
-                     bit_write(ledStatePeripheral[{index / 8}],{index & 0x0f},last_star_power);
+                     bit_set(ledStatePeripheralSelect[{index / 8}],{index % 8});
+                     bit_write(last_star_power, ledStatePeripheral[{index / 8}],{index % 8});
                      """;
 
                 ps4 += on;

@@ -582,29 +582,37 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 _ledSpiConfig = null;
                 UpdateErrors();
             }
-            else if (_ledType == LedType.None)
-            {
-                _ledSpiConfig = Microcontroller.AssignSpiPins(this, Apa102SpiType, false, false, -1, -1, -1, true,
-                    true,
-                    true,
-                    Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
-                this.RaisePropertyChanged(nameof(LedMosi));
-                this.RaisePropertyChanged(nameof(LedSck));
-                UpdateErrors();
-            }
 
             if (value != _ledType)
             {
                 if (value == LedType.Stp16Cpc26)
                 {
+                    _ledSpiConfig = Microcontroller.AssignSpiPins(this, Apa102SpiType, false, false,
+                        _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, false,
+                        false,
+                        true,
+                        Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
                     _stp16Le = new DirectPinConfig(this, Stp16LeType, -1, false, DevicePinMode.Output);
                     _stp16Oe = new DirectPinConfig(this, Stp16OeType, -1, false, DevicePinMode.Output);
                     this.RaisePropertyChanged(nameof(Stp16Le));
                     this.RaisePropertyChanged(nameof(Stp16Oe));
+                    this.RaisePropertyChanged(nameof(LedMosi));
+                    this.RaisePropertyChanged(nameof(LedSck));
                     UpdateErrors();
                 }
                 else
                 {
+                    if (value != LedType.None)
+                    {
+                        _ledSpiConfig = Microcontroller.AssignSpiPins(this, Apa102SpiType, false, false,
+                            _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, true,
+                            true,
+                            true,
+                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
+                        this.RaisePropertyChanged(nameof(LedMosi));
+                        this.RaisePropertyChanged(nameof(LedSck));
+                    }
+
                     _stp16Le = null;
                     _stp16Oe = null;
                     UpdateErrors();
@@ -1242,7 +1250,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             """;
             }
 
-            ledInit = GenerateLedInit() + "\\\n\t" + GenerateTick(ConfigField.InitLed, writer) + "\\\n\t" + FixNewlines(ledInit);
+            ledInit = GenerateLedInit() + "\\\n\t" + GenerateTick(ConfigField.InitLed, writer) + "\\\n\t" +
+                      FixNewlines(ledInit);
             config += "\n";
             config += $$"""
                         #define USB_HOST_STACK {{UsbHostEnabled.ToString().ToLower()}}
@@ -1442,6 +1451,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         return FixNewlines(Microcontroller.GenerateLedInit(this));
     }
+
     private string GenerateInit()
     {
         return FixNewlines(Microcontroller.GenerateInit(this));
@@ -1739,24 +1749,23 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         foreach (var (led, relatedOutputs) in debouncesRelatedToLed)
         {
             var index = led - 1;
-            var indexSelect = led - 1 + count;
             var analog = "";
             if (analogRelatedToLed.TryGetValue(led, out var analogLedOutputs))
             {
                 analog = analogLedOutputs.Aggregate(analog,
                     (current, analogLedOutput) =>
                         current +
-                        $"bit_write({variable}[{index / 8}],{index & 0xff},{analogLedOutput.Input.Generate()});");
+                        $"bit_write({analogLedOutput.Input.Generate()}, {variable}[{index / 8}],{index % 8});");
             }
 
             if (!analog.Any())
             {
-                analog = $"bit_clear({variable}[{index / 8}],{index & 0xff});";
+                analog = $"bit_clear({variable}[{index / 8}],{index % 8});";
             }
 
             ret += $$"""
 
-                     if (!bit_check({{variable}}[{{indexSelect / 8}}],{{indexSelect & 0xff}})) {
+                     if (!bit_check({{variable}}Select[{{index / 8}}],{{index % 8}})) {
                      """;
             ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
             {
@@ -1764,7 +1773,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 return $$"""
                          
                              if ({{ifStatement}}) {
-                                 bit_set({{variable}}[{{index / 8}}],{{index & 0xff}});
+                                 bit_set({{variable}}[{{index / 8}}],{{index % 8}});
                              }
                          """;
             }));
@@ -1780,14 +1789,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (debouncesRelatedToLed.ContainsKey(led)) continue;
             var index = led - 1;
-            var indexSelect = led - 1 + count;
             ret += $$"""
 
-                     if (!bit_check({{variable}}[{{indexSelect / 8}}],{{indexSelect & 0xff}})) {
+                     if (!bit_check({{variable}}Select[{{index / 8}}],{{index % 8}})) {
                      """;
             ret = analogLedOutputs.Aggregate(ret,
                 (current, analogLedOutput) =>
-                    current + $"bit_write({variable}[{index / 8}],{index & 0xff},{analogLedOutput.Input.Generate()});");
+                    current + $"bit_write({analogLedOutput.Input.Generate()}, {variable}[{index / 8}],{index % 8});");
 
             ret += "}";
         }

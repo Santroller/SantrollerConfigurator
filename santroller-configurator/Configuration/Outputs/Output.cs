@@ -58,6 +58,7 @@ public class LedIndex : ReactiveObject
             {
                 Collection.Remove(Index);
             }
+
             _selected = value;
             this.RaisePropertyChanged();
         }
@@ -347,6 +348,26 @@ public abstract partial class Output : ReactiveObject
         this.RaisePropertyChanged(nameof(ShouldUpdateDetails));
         ShouldUpdateDetails = false;
         this.RaisePropertyChanged(nameof(ShouldUpdateDetails));
+    }
+    [RelayCommand]
+    public void TestLEDs()
+    {
+        if (!_configured || Model.Device is not Santroller santroller) return;
+        if (Model.LedType == LedType.Stp16Cpc26)
+        {
+            foreach (var ledIndex in LedIndices)
+            {
+                santroller.SetLedStp((byte) (ledIndex - 1), true);
+            }
+        }
+
+        if (Model.LedTypePeripheral == LedType.Stp16Cpc26)
+        {
+            foreach (var ledIndex in LedIndicesPeripheral)
+            {
+                santroller.SetLedStpPeripheral((byte) (ledIndex - 1), true);
+            }
+        }
     }
 
     // ReSharper disable UnassignedGetOnlyAutoProperty
