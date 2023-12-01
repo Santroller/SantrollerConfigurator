@@ -1242,6 +1242,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             {Microcontroller.GenerateDigitalWrite(Stp16OePeripheral, false, true)};
                             """;
             }
+
             ledInit = GenerateTick(ConfigField.InitLed, writer)+"\\\n\t"+FixNewlines(ledInit);
             config += "\n";
             config += $$"""
