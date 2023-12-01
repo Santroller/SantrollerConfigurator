@@ -445,6 +445,7 @@
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.DPlusLabel}" />
                         <ComboBox HorizontalAlignment="Stretch"
+                                  DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding UsbHostDp}"
                                   ItemsSource="{Binding AvailablePinsDp}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
@@ -456,6 +457,7 @@
                                Width="300" Content="{x:Static netCore:Resources.DMinusLabel}" />
                         <ComboBox HorizontalAlignment="Stretch"
                                   IsEnabled="False"
+                                  DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding UsbHostDm}"
                                   ItemsSource="{Binding AvailablePinsDm}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
@@ -478,6 +480,7 @@
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.SliderAnalogInputPin}" />
                             <ComboBox VerticalAlignment="Center"
+                                      DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding Pin}"
                                       ItemsSource="{Binding AvailablePins}"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
@@ -488,6 +491,7 @@
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.SliderS0Pin}" />
                             <ComboBox VerticalAlignment="Center"
+                                      DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding PinS0}"
                                       ItemsSource="{Binding AvailablePinsDigital}"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
@@ -498,6 +502,7 @@
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.SliderS1Pin}" />
                             <ComboBox VerticalAlignment="Center"
+                                      DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding PinS1}"
                                       ItemsSource="{Binding AvailablePinsDigital}"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
@@ -508,6 +513,7 @@
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.SliderS2Pin}" />
                             <ComboBox VerticalAlignment="Center"
+                                      DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding PinS2}"
                                       ItemsSource="{Binding AvailablePinsDigital}"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
@@ -523,6 +529,7 @@
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.SclGh5Label}" />
                         <ComboBox VerticalAlignment="Center"
+                                  DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding Scl}"
                                   ItemsSource="{Binding AvailableSclPins}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
@@ -533,6 +540,7 @@
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.SdaGh5Label}" />
                         <ComboBox VerticalAlignment="Center"
+                                  DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding Sda}"
                                   ItemsSource="{Binding AvailableSdaPins}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
@@ -547,6 +555,7 @@
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.SclGh5Label}" />
                         <ComboBox VerticalAlignment="Center"
+                                  DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding Scl}"
                                   ItemsSource="{Binding AvailableSclPins}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
@@ -557,6 +566,7 @@
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.SdaGh5Label}" />
                         <ComboBox VerticalAlignment="Center"
+                                  DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding Sda}"
                                   ItemsSource="{Binding AvailableSdaPins}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
@@ -659,7 +669,7 @@
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Combo}" Minimum="1"
                                        Maximum="244" Width="200" Height="30" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsRequireColours}">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.EnableDigitalOutputTitle}" />
@@ -680,6 +690,7 @@
                                    Width="300" Content="{x:Static netCore:Resources.AnalogOutputPinLabel}" />
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Pin}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
                                       ItemsSource="{Binding AvailablePwmPins}" />
                         </StackPanel>
@@ -691,6 +702,7 @@
                                    Width="300" Content="{x:Static netCore:Resources.DigitalOutputPinLabel}" />
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Pin}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
                                       ItemsSource="{Binding AvailablePins}" />
                         </StackPanel>
@@ -715,6 +727,7 @@
                                Width="300" Content="{x:Static netCore:Resources.MotorDriverPinLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Pin}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   ItemsSource="{Binding AvailablePins}" />
                     </StackPanel>
@@ -730,6 +743,7 @@
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Scl}"
                                       ItemsSource="{Binding AvailableSclPins}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
                                       Width="200" />
                         </StackPanel>
@@ -740,6 +754,7 @@
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Sda}"
                                       ItemsSource="{Binding AvailableSdaPins}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
                                       Width="200" />
                         </StackPanel>
@@ -788,6 +803,7 @@
                         <ComboBox HorizontalAlignment="Stretch"
                                   SelectedItem="{Binding UsbHostDp}"
                                   ItemsSource="{Binding AvailablePinsDp}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                     <StackPanel IsVisible="{Binding ShouldShowPins}" Orientation="Horizontal">
@@ -798,6 +814,7 @@
                                   IsEnabled="False"
                                   SelectedItem="{Binding UsbHostDm}"
                                   ItemsSource="{Binding AvailablePinsDm}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                 </StackPanel>
@@ -811,6 +828,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Mosi}"
                                   ItemsSource="{Binding AvailableMosiPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -822,6 +840,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Miso}"
                                   ItemsSource="{Binding AvailableMisoPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -833,6 +852,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sck}"
                                   ItemsSource="{Binding AvailableSckPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -844,6 +864,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Ack}"
                                   ItemsSource="{Binding AvailablePinsInterrupt}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -855,6 +876,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Att}"
                                   ItemsSource="{Binding AvailablePins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -880,6 +902,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Scl}"
                                   ItemsSource="{Binding AvailableSclPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -890,6 +913,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sda}"
                                   ItemsSource="{Binding AvailableSdaPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -902,6 +926,7 @@
                                Content="{x:Static netCore:Resources.AnalogPinLabel}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding Pin}"
                                   ItemsSource="{Binding AvailablePins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding IsSixteenChannel}">
@@ -927,24 +952,28 @@
                         <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.S0Pin}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinS0}"
                                   ItemsSource="{Binding AvailableDigitalPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.S1Pin}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinS1}"
                                   ItemsSource="{Binding AvailableDigitalPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.S2Pin}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinS2}"
                                   ItemsSource="{Binding AvailableDigitalPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding IsSixteenChannel}">
                         <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.S3Pin}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinS3}"
                                   ItemsSource="{Binding AvailableDigitalPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                 </StackPanel>
@@ -965,6 +994,7 @@
                         <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.PinLabel}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding Pin}"
                                   ItemsSource="{Binding AvailablePins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                         <Button Command="{Binding DetectPinCommand}" Content="{Binding PinConfigText}" />
                     </StackPanel>
@@ -1874,6 +1904,7 @@
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Scl}"
                                       ItemsSource="{Binding AvailableSclPins}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
                                       Width="200" />
                         </StackPanel>
@@ -1884,6 +1915,7 @@
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Sda}"
                                       ItemsSource="{Binding AvailableSdaPins}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
                                       Width="200" />
                         </StackPanel>
@@ -1906,6 +1938,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Scl}"
                                   ItemsSource="{Binding AvailableSclPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -1916,6 +1949,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sda}"
                                   ItemsSource="{Binding AvailableSdaPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -1940,6 +1974,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Scl}"
                                   ItemsSource="{Binding AvailableSclPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -1950,6 +1985,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sda}"
                                   ItemsSource="{Binding AvailableSdaPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -1972,6 +2008,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Pin}"
                                   ItemsSource="{Binding AvailablePins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -1982,6 +2019,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding PinS0}"
                                   ItemsSource="{Binding AvailablePinsDigital}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -1992,6 +2030,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding PinS1}"
                                   ItemsSource="{Binding AvailablePinsDigital}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -2002,6 +2041,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding PinS2}"
                                   ItemsSource="{Binding AvailablePinsDigital}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -2032,6 +2072,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Mosi}"
                                   ItemsSource="{Binding AvailableMosiPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -2054,6 +2095,7 @@
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sck}"
                                   ItemsSource="{Binding AvailableSckPins}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
@@ -2067,6 +2109,7 @@
                                   SelectedItem="{Binding Ack}"
                                   ItemsSource="{Binding AvailablePinsInterrupt}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   Width="200" />
                     </StackPanel>
 
@@ -2079,6 +2122,7 @@
                                   SelectedItem="{Binding Att}"
                                   ItemsSource="{Binding AvailablePins}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  DropDownOpened="ReloadPinTemplates"
                                   Width="200" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -2169,11 +2213,11 @@
                     <StackPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="AreLedsEnabled" />
-                                <Binding Path="AreLedsEnabledPeripheral" />
+                                <Binding Path="LedsRequireColours" />
+                                <Binding Path="LedsRequireColoursPeripheral" />
                             </MultiBinding>
                             <Binding Path="!IsCombined" />
-                            <Binding Path="LedsRequireColours" />
+                            <Binding Path="LedsHaveColours" />
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
@@ -2186,11 +2230,11 @@
                     <StackPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="AreLedsEnabled" />
-                                <Binding Path="AreLedsEnabledPeripheral" />
+                                <Binding Path="LedsRequireColours" />
+                                <Binding Path="LedsRequireColoursPeripheral" />
                             </MultiBinding>
                             <Binding Path="!IsCombined" />
-                            <Binding Path="LedsRequireColours" />
+                            <Binding Path="LedsHaveColours" />
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
@@ -2405,7 +2449,7 @@
                                       ItemTemplate="{StaticResource EnumToStringTemplate}"
                                       ItemsSource="{Binding LedTypes}" />
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsApa102}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsIndexedLed}">
                             <Label VerticalAlignment="Center" Width="300"
                                    Content="{x:Static netCore:Resources.LEDTypeCountLabel}" />
                             <NumericUpDown Width="200" FormatString="{}{0:#,0}"
@@ -2419,29 +2463,53 @@
                             <StackPanel.IsVisible>
                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                                     <Binding Path="BindableSpi" />
-                                    <Binding Path="IsApa102" />
+                                    <Binding Path="IsIndexedLed" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsApa102}"
                                    Content="{x:Static netCore:Resources.APA102SCKLabel}" />
+                            <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
+                                   Content="{x:Static netCore:Resources.STP16CPC26MTRSCKLabel}" />
                             <ComboBox Width="200"
-                                      SelectedItem="{Binding Apa102Sck}"
+                                      SelectedItem="{Binding LedSck}"
                                       ItemsSource="{Binding AvailableApaSckPins}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplateSpi}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <StackPanel.IsVisible>
                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                                     <Binding Path="BindableSpi" />
-                                    <Binding Path="IsApa102" />
+                                    <Binding Path="IsIndexedLed" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label IsVisible="{Binding IsApa102}" VerticalAlignment="Center" Width="300"
                                    Content="{x:Static netCore:Resources.APA102MOSILabel}" />
+                            <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
+                                   Content="{x:Static netCore:Resources.STP16CPC26MTRMOSILabel}" />
                             <ComboBox Width="200"
-                                      SelectedItem="{Binding Apa102Mosi}"
+                                      SelectedItem="{Binding LedMosi}"
                                       ItemsSource="{Binding AvailableApaMosiPins}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplateSpi}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.STP16CPC26MTROELabel}" />
+                            <ComboBox Width="200"
+                                      DropDownOpened="ReloadPinTemplates"
+                                      SelectedItem="{Binding Stp16Oe}"
+                                      ItemsSource="{Binding AvailablePinsDigital}"
+                                      ItemTemplate="{StaticResource PinToStringTemplate}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.STP16CPC26MTRLELabel}" />
+                            <ComboBox Width="200"
+                                      DropDownOpened="ReloadPinTemplates"
+                                      SelectedItem="{Binding Stp16Le}"
+                                      ItemsSource="{Binding AvailablePinsDigital}"
+                                      ItemTemplate="{StaticResource PinToStringTemplate}" />
                         </StackPanel>
                         <StackPanel IsVisible="{Binding HasPeripheral}" Orientation="Horizontal">
                             <Label VerticalAlignment="Center" Width="300"
@@ -2451,7 +2519,7 @@
                                       ItemTemplate="{StaticResource EnumToStringTemplate}"
                                       ItemsSource="{Binding LedTypes}" />
                         </StackPanel>
-                        <StackPanel IsVisible="{Binding IsApa102Peripheral}" Orientation="Horizontal">
+                        <StackPanel IsVisible="{Binding IsIndexedLedPeripheral}" Orientation="Horizontal">
                             <Label VerticalAlignment="Center" Width="300"
                                    Content="{x:Static netCore:Resources.LEDTypePeripheralCountLabel}" />
                             <NumericUpDown VerticalAlignment="Center" Width="200" FormatString="{}{0:#,0}"
@@ -2463,29 +2531,53 @@
                             <StackPanel.IsVisible>
                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                                     <Binding Path="BindableSpi" />
-                                    <Binding Path="IsApa102Peripheral" />
+                                    <Binding Path="IsIndexedLedPeripheral" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
                                    Content="{x:Static netCore:Resources.APA102SCKPeripheralLabel}" />
+                            <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.STP16CPC26MTRSCKPeripheralLabel}" />
                             <ComboBox VerticalAlignment="Center" Width="200"
-                                      SelectedItem="{Binding Apa102SckPeripheral}"
+                                      SelectedItem="{Binding LedSckPeripheral}"
                                       ItemsSource="{Binding AvailableApaSckPins}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplatePeripheralSpi}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <StackPanel.IsVisible>
                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                                     <Binding Path="BindableSpi" />
-                                    <Binding Path="IsApa102Peripheral" />
+                                    <Binding Path="IsIndexedLedPeripheral" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
                                    Content="{x:Static netCore:Resources.APA102MOSIPeripheralLabel}" />
+                            <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.STP16CPC26MTRMOSIPeripheralLabel}" />
                             <ComboBox VerticalAlignment="Center" Width="200"
-                                      SelectedItem="{Binding Apa102MosiPeripheral}"
+                                      SelectedItem="{Binding LedMosiPeripheral}"
                                       ItemsSource="{Binding AvailableApaMosiPins}"
+                                      DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplatePeripheralSpi}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.STP16CPC26MTROEPeripheralLabel}" />
+                            <ComboBox Width="200"
+                                      DropDownOpened="ReloadPinTemplates"
+                                      SelectedItem="{Binding Stp16OePeripheral}"
+                                      ItemsSource="{Binding AvailablePinsDigital}"
+                                      ItemTemplate="{StaticResource PinToStringTemplate}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.STP16CPC26MTRLEPeripheralLabel}" />
+                            <ComboBox Width="200"
+                                      SelectedItem="{Binding Stp16LePeripheral}"
+                                      ItemsSource="{Binding AvailablePinsDigital}"
+                                      DropDownOpened="ReloadPinTemplates"
+                                      ItemTemplate="{StaticResource PinToStringTemplate}" />
                         </StackPanel>
                     </StackPanel>
                 </Expander>
@@ -2572,6 +2664,7 @@
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding PeripheralScl}"
                                           ItemsSource="{Binding AvailableSclPins}"
+                                          DropDownOpened="ReloadPinTemplates"
                                           ItemTemplate="{StaticResource PinToStringTemplateTwi}"
                                           Width="200" />
                             </StackPanel>
@@ -2582,6 +2675,7 @@
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding PeripheralSda}"
                                           ItemsSource="{Binding AvailableSdaPins}"
+                                          DropDownOpened="ReloadPinTemplates"
                                           ItemTemplate="{StaticResource PinToStringTemplateTwi}"
                                           Width="200" />
                             </StackPanel>

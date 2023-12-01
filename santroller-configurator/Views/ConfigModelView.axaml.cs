@@ -125,4 +125,13 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         await dialog.ShowDialog<BindAllWindowViewModel?>((Window) VisualRoot!);
         interaction.SetOutput(model);
     }
+
+    private void ReloadPinTemplates(object? sender, EventArgs _)
+    {
+        // We need to refresh item templates for pin dropdowns so they are always up to date
+        if (sender is not ComboBox comboBox) return;
+        var t = comboBox.ItemTemplate;
+        comboBox.ItemTemplate = null;
+        comboBox.ItemTemplate = t;
+    }
 }

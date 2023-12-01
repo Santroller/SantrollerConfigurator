@@ -132,7 +132,7 @@ public class Led : Output
 {
     private readonly SourceList<LedCommandType> _rumbleCommands = new();
 
-    private readonly ObservableAsPropertyHelper<bool> _ledsRequireColours;
+    private readonly ObservableAsPropertyHelper<bool> _outputHasColours;
     private bool _outputEnabled;
 
     private int _pin;
@@ -209,8 +209,8 @@ public class Led : Output
             .Bind(out var rumbleCommands)
             .Subscribe();
         RumbleCommands = rumbleCommands;
-        _ledsRequireColours = this.WhenAnyValue(x => x.Command).Select(s => s is not LedCommandType.Ps4LightBar)
-            .ToProperty(this, x => x.LedsRequireColours);
+        _outputHasColours = this.WhenAnyValue(x => x.Command).Select(s => s is not LedCommandType.Ps4LightBar)
+            .ToProperty(this, x => x.LedsHaveColours);
         this.WhenAnyValue(x => x.Command)
             .Select(commandType => commandType is LedCommandType.DjEuphoria
                 or LedCommandType.StarPowerActive
@@ -257,8 +257,8 @@ public class Led : Output
         UpdateDetails();
     }
 
-    public override bool LedsRequireColours =>
-        _ledsRequireColours.Value; // ReSharper disable UnassignedGetOnlyAutoProperty
+    public override bool LedsHaveColours =>
+        _outputHasColours.Value; // ReSharper disable UnassignedGetOnlyAutoProperty
 
     [ObservableAsProperty] public bool FiveFretMode { get; }
     [ObservableAsProperty] public bool SixFretMode { get; }
@@ -504,6 +504,7 @@ public class Led : Output
         var off = "";
         var between = "";
         var starPowerBetween = "";
+        var ps4 = "";
         if (PinConfig != null)
         {
             on = $"{Model.Microcontroller.GenerateDigitalWrite(PinConfig.Pin, !Inverted, Peripheral)};";
@@ -513,63 +514,153 @@ public class Led : Output
             starPowerBetween =
                 $"{Model.Microcontroller.GenerateAnalogWrite(PinConfig.Pin, (Inverted ? "(255-" : "(") + "last_star_power)", Peripheral)};";
         }
-        foreach (var index in LedIndices)
+
+        if (Model.IsApa102)
         {
-            on += $"""
+            foreach (var index in LedIndices)
+            {
+                on += $"""
 
-                   ledState[{index - 1}].select = 1;
-                   {Model.LedType.GetLedAssignment(false, LedOn, index, writer)}
-                   """;
-            off += $"""
+                       ledState[{index - 1}].select = 1;
+                       {Model.LedType.GetLedAssignment(false, LedOn, index, writer)}
+                       """;
+                off += $"""
 
-                    ledState[{index - 1}].select = 0;
-                    {Model.LedType.GetLedAssignment(false, LedOff, index, writer)}
-                    """;
-            between +=
-                $"""
+                        ledState[{index - 1}].select = 0;
+                        {Model.LedType.GetLedAssignment(false, LedOff, index, writer)}
+                        """;
+                between +=
+                    $"""
 
-                 ledState[{index - 1}].select = 1;
-                 {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, "rumble_left", writer)}
-                 """;
-            starPowerBetween +=
-                $"""
+                     ledState[{index - 1}].select = 1;
+                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, "rumble_left", writer)}
+                     """;
+                starPowerBetween +=
+                    $"""
 
-                 ledState[{index - 1}].select = 1;
-                 {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, "last_star_power", writer)}
-                 """;
+                     ledState[{index - 1}].select = 1;
+                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, "last_star_power", writer)}
+                     """;
+                
+                ps4 += $"""
+                        ledState[{index - 1}].select = 1;
+                        {Model.LedType.GetLedAssignment(false, "red", "green", "blue", index)};
+                        """;
+            }
         }
-        foreach (var index in LedIndicesPeripheral)
+
+        if (Model.IsApa102Peripheral)
         {
-            on += $"""
 
-                   ledStatePeripheral[{index - 1}].select = 1;
-                   {Model.LedType.GetLedAssignment(true, LedOn, index, writer)}
-                   """;
-            off += $"""
+            foreach (var index in LedIndicesPeripheral)
+            {
+                on += $"""
 
-                    ledStatePeripheral[{index - 1}].select = 0;
-                    {Model.LedType.GetLedAssignment(true, LedOff, index, writer)}
-                    """;
-            between +=
-                $"""
+                       ledStatePeripheral[{index - 1}].select = 1;
+                       {Model.LedTypePeripheral.GetLedAssignment(true, LedOn, index, writer)}
+                       """;
+                off += $"""
 
-                 ledStatePeripheral[{index - 1}].select = 1;
-                 {Model.LedType.GetLedAssignment(true, index, LedOn, LedOff, "rumble_left", writer)}
-                 """;
-            starPowerBetween +=
-                $"""
+                        ledStatePeripheral[{index - 1}].select = 0;
+                        {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, writer)}
+                        """;
+                between +=
+                    $"""
 
-                 ledStatePeripheral[{index - 1}].select = 1;
-                 {Model.LedType.GetLedAssignment(true, index, LedOn, LedOff, "last_star_power", writer)}
-                 """;
+                     ledStatePeripheral[{index - 1}].select = 1;
+                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, "rumble_left", writer)}
+                     """;
+                starPowerBetween +=
+                    $"""
+
+                     ledStatePeripheral[{index - 1}].select = 1;
+                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, "last_star_power", writer)}
+                     """;
+                
+                ps4 += $"""
+                        ledStatePeripheral[{index - 1}].select = 1;
+                        {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", index)};
+                        """;
+            }
+        }
+        
+        if (Model.IsStp16)
+        {
+            foreach (var led in LedIndices)
+            {
+                var index = led - 1;
+                var indexSelect = led - 1 + Model.LedCount;
+                on += $"""
+
+                       bit_clear(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
+                       bit_set(ledState[{index / 8}],{index & 0x0f});
+                       """;
+                off += $"""
+                        
+                        bit_clear(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
+                        bit_clear(ledState[{index / 8}],{index & 0x0f});
+                        """;
+                between +=
+                    $"""
+
+                     bit_set(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
+                     bit_write(ledState[{index / 8}],{index & 0x0f},rumble_left);
+                     """;
+                starPowerBetween +=
+                    $"""
+
+                     bit_set(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
+                     bit_write(ledState[{index / 8}],{index & 0x0f},last_star_power);
+                     """;
+                
+                ps4 += on;
+            }
+        }
+
+        if (Model.IsStp16Peripheral)
+        {
+
+            foreach (var led in LedIndicesPeripheral)
+            {
+                var index = led - 1;
+                var indexSelect = led - 1 + Model.LedCountPeripheral;
+                on += $"""
+
+                       bit_clear(ledStatePeripheral[{indexSelect / 8}],{indexSelect & 0x0f});
+                       bit_set(ledStatePeripheral[{index / 8}],{index & 0x0f});
+                       """;
+                off += $"""
+
+                        bit_clear(ledStatePeripheral[{indexSelect / 8}],{indexSelect & 0x0f});
+                        bit_clear(ledStatePeripheral[{index / 8}],{index & 0x0f});
+                        """;
+                between +=
+                    $"""
+
+                     bit_set(ledStatePeripheral[{indexSelect / 8}],{indexSelect & 0x0f});
+                     bit_write(ledStatePeripheral[{index / 8}],{index & 0x0f},rumble_left);
+                     """;
+                starPowerBetween +=
+                    $"""
+
+                     bit_set(ledStatePeripheral[{indexSelect / 8}],{indexSelect & 0x0f});
+                     bit_write(ledStatePeripheral[{index / 8}],{index & 0x0f},last_star_power);
+                     """;
+                
+                ps4 += on;
+            }
         }
 
         switch (Command)
         {
             case LedCommandType.Ps4LightBar when mode is ConfigField.LightBarLed:
-                return string.Join("\n",
-                    LedIndices.Select(index => Model.LedType.GetLedAssignment(false, "red", "green", "blue", index)).Concat(LedIndicesPeripheral.Select(index => Model.LedTypePeripheral.GetLedAssignment(true, "red", "green", "blue", index))));
-
+                return $$"""
+                         if (red || green || blue) {
+                             {{ps4}}
+                         } else {
+                             {{off}}
+                         }
+                         """;
             case LedCommandType.Player when mode is ConfigField.PlayerLed:
                 // If Player > 4, then light up LED 4 + LED - 4
                 var condition = Player == 4 ? "player >= 4" : $"(player & 3) == {Player}";

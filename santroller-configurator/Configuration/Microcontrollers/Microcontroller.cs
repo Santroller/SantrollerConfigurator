@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -33,7 +34,10 @@ public abstract class Microcontroller
         var apa102 = model.PinConfigs
             .Where(s => s.Type == ConfigViewModel.Apa102SpiType && s.Peripheral == peripheral &&
                         s.Pins.Contains(possiblePin))
-            .Select(s => s.Type);
+            .Select(s => model.LedSpiType(peripheral)).Concat(model.PinConfigs
+                .Where(s => s.Type.Contains("STP16CPC26MTR") && s.Peripheral == peripheral &&
+                            s.Pins.Contains(possiblePin))
+                .Select(s => s.Type)).ToList();
         var unoMega = model.PinConfigs.Where(s =>
                 s.Peripheral == peripheral &&
                 (s.Type == ConfigViewModel.UnoPinTypeRx || s.Type == ConfigViewModel.UnoPinTypeTx) &&

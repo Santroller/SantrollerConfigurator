@@ -1799,6 +1799,9 @@
     <data name="LedTypeApa102Bgr" xml:space="preserve">
         <value>APA102 - BGR</value>
     </data>
+    <data name="LedTypeStp16Cpc26Mtr" xml:space="preserve">
+        <value>STP16CPC26MTR</value>
+    </data>
     <data name="LegendTypeXbox" xml:space="preserve">
         <value>Xbox</value>
     </data>
@@ -2869,6 +2872,18 @@
     <data name="APA102MOSILabel" xml:space="preserve">
         <value>APA102 DI / MOSI Pin</value>
     </data>
+    <data name="STP16CPC26MTRSCKLabel" xml:space="preserve">
+        <value>STP16CPC26MTR CLK / SCK Pin</value>
+    </data>
+    <data name="STP16CPC26MTRMOSILabel" xml:space="preserve">
+        <value>STP16CPC26MTR SDI / MOSI Pin</value>
+    </data>
+    <data name="STP16CPC26MTROELabel" xml:space="preserve">
+        <value>STP16CPC26MTR Output Enable / OE Pin</value>
+    </data>
+    <data name="STP16CPC26MTRLELabel" xml:space="preserve">
+        <value>STP16CPC26MTR Latch Enable / LE Pin</value>
+    </data>
     <data name="LEDTypePeripheralLabel" xml:space="preserve">
         <value>Peripheral LED Type</value>
     </data>
@@ -2883,6 +2898,18 @@
     </data>
     <data name="APA102MOSIPeripheralLabel" xml:space="preserve">
         <value>Peripheral APA102 DI / MOSI Pin</value>
+    </data>
+    <data name="STP16CPC26MTRSCKPeripheralLabel" xml:space="preserve">
+        <value>Peripheral STP16CPC26MTR CLK / SCK Pin</value>
+    </data>
+    <data name="STP16CPC26MTRMOSIPeripheralLabel" xml:space="preserve">
+        <value>Peripheral STP16CPC26MTR SDI / MOSI Pin</value>
+    </data>
+    <data name="STP16CPC26MTROEPeripheralLabel" xml:space="preserve">
+        <value>Peripheral STP16CPC26MTR Output Enable / OE Pin</value>
+    </data>
+    <data name="STP16CPC26MTRLEPeripheralLabel" xml:space="preserve">
+        <value>Peripheral STP16CPC26MTR Latch Enable / LE Pin</value>
     </data>
     <data name="SwapSwitchFaceButtonLabel" xml:space="preserve">
         <value>Swap Switch Face Buttons</value>

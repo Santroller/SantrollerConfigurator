@@ -30,8 +30,8 @@ public class SerializedConfiguration
         EmulationType = model.EmulationType;
         XInputOnWindows = model.XInputOnWindows;
         LedType = model.LedType;
-        Apa102Mosi = model.Apa102Mosi;
-        Apa102Sck = model.Apa102Sck;
+        LedMosi = model.LedMosi;
+        LedSck = model.LedSck;
         LedCount = model.LedCount;
         MouseMovementType = model.MouseMovementType;
         WtSensitivity = model.WtSensitivity;
@@ -49,12 +49,16 @@ public class SerializedConfiguration
         Variant = model.Variant;
         BtRxMacAddress = model.BtRxAddr;
         LedTypePeripheral = model.LedTypePeripheral;
-        Apa102MosiPeripheral = model.Apa102MosiPeripheral;
-        Apa102SckPeripheral = model.Apa102SckPeripheral;
+        LedMosiPeripheral = model.LedMosiPeripheral;
+        LedSckPeripheral = model.LedSckPeripheral;
         LedCountPeripheral = model.LedCountPeripheral;
         HasPeripheral = model.HasPeripheral;
         PeripheralSda = model.PeripheralSda;
         PeripheralScl = model.PeripheralScl;
+        Stp16Oe = model.Stp16Oe;
+        Stp16Le = model.Stp16Le;
+        Stp16OePeripheral = model.Stp16OePeripheral;
+        Stp16LePeripheral = model.Stp16LePeripheral;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -62,8 +66,8 @@ public class SerializedConfiguration
     [ProtoMember(4)] public DeviceControllerType DeviceType { get; private set; }
     [ProtoMember(5)] public EmulationType EmulationType { get; private set; }
     [ProtoMember(7)] public List<SerializedOutput> Bindings { get; private set; } = new();
-    [ProtoMember(8)] public int Apa102Mosi { get; private set; }
-    [ProtoMember(9)] public int Apa102Sck { get; private set; }
+    [ProtoMember(8)] public int LedMosi { get; private set; }
+    [ProtoMember(9)] public int LedSck { get; private set; }
     [ProtoMember(10)] public byte LedCount { get; private set; }
     [ProtoMember(11)] public MouseMovementType MouseMovementType { get; private set; }
     [ProtoMember(12)] public int WtSensitivity { get; private set; }
@@ -81,12 +85,16 @@ public class SerializedConfiguration
     [ProtoMember(33)] public string Variant { get; private set; } = "";
     [ProtoMember(34)] public string BtRxMacAddress { get; private set; } = "";
     [ProtoMember(35)] public LedType LedTypePeripheral { get; private set; }
-    [ProtoMember(36)] public int Apa102MosiPeripheral { get; private set; }
-    [ProtoMember(37)] public int Apa102SckPeripheral { get; private set; }
+    [ProtoMember(36)] public int LedMosiPeripheral { get; private set; }
+    [ProtoMember(37)] public int LedSckPeripheral { get; private set; }
     [ProtoMember(38)] public byte LedCountPeripheral { get; private set; }
     [ProtoMember(39)] public bool HasPeripheral { get; private set; }
     [ProtoMember(40)] public int PeripheralSda { get; private set; }
     [ProtoMember(41)] public int PeripheralScl{ get; private set; }
+    [ProtoMember(42)] public int Stp16Oe { get; private set; }
+    [ProtoMember(43)] public int Stp16Le { get; private set; }
+    [ProtoMember(44)] public int Stp16OePeripheral { get; private set; }
+    [ProtoMember(45)] public int Stp16LePeripheral { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -132,15 +140,27 @@ public class SerializedConfiguration
         model.WtSensitivity = WtSensitivity;
         model.MouseMovementType = MouseMovementType;
         model.CombinedStrumDebounce = CombinedStrumDebounce;
-        if (model.IsApa102)
+        if (model.IsApa102 || model.IsStp16)
         {
-            model.Apa102Mosi = Apa102Mosi;
-            model.Apa102Sck = Apa102Sck;
+            model.LedMosi = LedMosi;
+            model.LedSck = LedSck;
         }
-        if (model.IsApa102Peripheral)
+        if (model.IsApa102Peripheral || model.IsStp16Peripheral)
         {
-            model.Apa102MosiPeripheral = Apa102MosiPeripheral;
-            model.Apa102SckPeripheral = Apa102SckPeripheral;
+            model.LedMosiPeripheral = LedMosiPeripheral;
+            model.LedSckPeripheral = LedSckPeripheral;
+        }
+
+        if (model.IsStp16)
+        {
+            model.Stp16Le = Stp16Le;
+            model.Stp16Oe = Stp16Oe;
+        }
+
+        if (model.IsStp16Peripheral)
+        {
+            model.Stp16OePeripheral = Stp16OePeripheral;
+            model.Stp16LePeripheral = Stp16LePeripheral;
         }
 
         model.SetUpDiff();

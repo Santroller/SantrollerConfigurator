@@ -657,8 +657,8 @@ public class Ardwiino : ConfigurableUsbDevice
 
         if (model.IsApa102)
         {
-            model.Apa102Mosi = 3;
-            model.Apa102Sck = 6;
+            model.LedMosi = 3;
+            model.LedSck = 6;
             model.LedCount = ledIndexes.Values.Max();
         }
 
