@@ -1225,7 +1225,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             // Sort by pin index, and then map to adc number and turn into an array
             var analogPins = directInputs.Where(s => s.IsAnalog).OrderBy(s => s.PinConfig.Pin)
                 .Select(s => Microcontroller.GetChannel(s.PinConfig.Pin, false).ToString()).Distinct().ToList();
-            var ledInit = GenerateTick(ConfigField.InitLed, writer);
+            var ledInit = "";
             if (IsStp16)
             {
                 ledInit += $"""
@@ -1243,7 +1243,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             """;
             }
 
-            ledInit = FixNewlines(ledInit);
+            ledInit = GenerateTick(ConfigField.InitLed, writer)+"\\\n\t"+FixNewlines(ledInit);
             config += "\n";
             config += $$"""
                         #define USB_HOST_STACK {{UsbHostEnabled.ToString().ToLower()}}
