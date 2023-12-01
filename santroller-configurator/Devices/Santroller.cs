@@ -60,6 +60,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadPeripheralValid,
         CommandReadClone,
         CommandSetLedsPeripheral,
+        CommandWriteAnalog,
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -160,6 +161,7 @@ public class Santroller : ConfigurableUsbDevice
             ClearLed(led);
             _ledTimers.Remove(led);
         }
+
         foreach (var (led, elapsed) in _ledTimersPeripheral)
         {
             if (_sw.Elapsed - elapsed <= TimeSpan.FromSeconds(2)) continue;
@@ -241,7 +243,7 @@ public class Santroller : ConfigurableUsbDevice
 
             var bluetoothRaw = Array.Empty<byte>();
             if (IsPico()) bluetoothRaw = ReadData(0, (byte) Commands.CommandGetBtState, 1);
-            
+
             _model.Update(bluetoothRaw, peripheralConnected);
             foreach (var output in _bindings)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
@@ -460,9 +462,15 @@ public class Santroller : ConfigurableUsbDevice
     {
         WriteData(0, (byte) Commands.CommandSetLeds, new byte[] {led, 0, 0, 0});
     }
+
     public void ClearLedPeripheral(byte led)
     {
         WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new byte[] {led, 0, 0, 0});
+    }
+
+    public void AnalogWrite(int pin, int value)
+    {
+        WriteData(0, (byte) Commands.CommandWriteAnalog, new byte[] {(byte) pin, (byte) value, 0, 0});
     }
 
     public void SetLed(byte led, byte[] color)
@@ -470,6 +478,7 @@ public class Santroller : ConfigurableUsbDevice
         _ledTimers[led] = _sw.Elapsed;
         WriteData(0, (byte) Commands.CommandSetLeds, new[] {led}.Concat(color).ToArray());
     }
+
     public void SetLedPeripheral(byte led, byte[] color)
     {
         _ledTimersPeripheral[led] = _sw.Elapsed;

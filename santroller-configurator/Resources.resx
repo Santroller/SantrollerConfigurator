@@ -2650,6 +2650,9 @@
     <data name="InvertLabel" xml:space="preserve">
         <value>Invert</value>
     </data>
+    <data name="TestLabel" xml:space="preserve">
+        <value>Test Output</value>
+    </data>
     <data name="AnalogOutputPinLabel" xml:space="preserve">
         <value>Analog Output Pin</value>
     </data>

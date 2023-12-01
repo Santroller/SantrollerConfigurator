@@ -25,6 +25,7 @@ public abstract class Microcontroller
     public abstract int GetChannel(int pin, bool reconfigurePin);
 
     public abstract string GenerateInit(ConfigViewModel configViewModel);
+    public abstract string GenerateLedInit(ConfigViewModel configViewModel);
 
     public string GetPin(int possiblePin, bool peripheral, int selectedPin, IEnumerable<Output> outputs, bool twi,
         bool spi,

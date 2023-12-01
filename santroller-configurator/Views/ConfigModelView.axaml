@@ -683,6 +683,16 @@
                                Width="300" Content="{x:Static netCore:Resources.InvertLabel}" />
                         <ToggleSwitch IsChecked="{Binding Inverted}" />
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.TestLabel}" />
+                        <Slider Value="{Binding Test}"
+                                Minimum="1"
+                                Maximum="255"
+                                IsSnapToTickEnabled="True"
+                                TickFrequency="1" Width="240" />
+                    </StackPanel>
                     <StackPanel IsVisible="{Binding UsesPwm}">
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
                             <Label VerticalAlignment="Center"

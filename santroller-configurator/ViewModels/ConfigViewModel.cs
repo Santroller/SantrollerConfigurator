@@ -1242,7 +1242,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             """;
             }
 
-            ledInit = GenerateTick(ConfigField.InitLed, writer) + "\\\n\t" + FixNewlines(ledInit);
+            ledInit = GenerateLedInit() + "\\\n\t" + GenerateTick(ConfigField.InitLed, writer) + "\\\n\t" + FixNewlines(ledInit);
             config += "\n";
             config += $$"""
                         #define USB_HOST_STACK {{UsbHostEnabled.ToString().ToLower()}}
@@ -1438,6 +1438,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         return config;
     }
 
+    private string GenerateLedInit()
+    {
+        return FixNewlines(Microcontroller.GenerateLedInit(this));
+    }
     private string GenerateInit()
     {
         return FixNewlines(Microcontroller.GenerateInit(this));

@@ -211,7 +211,35 @@ public class Pico : Microcontroller
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
         foreach (var devicePin in pins)
         {
-            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral) continue;
+            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral || devicePin.Type == "led_output") continue;
+            switch (devicePin.PinMode)
+            {
+                case DevicePinMode.Analog:
+                    ret += $"\nadc_gpio_init({devicePin.Pin});";
+                    continue;
+                default:
+                    var up = devicePin.PinMode is DevicePinMode.BusKeep or DevicePinMode.PullUp;
+                    var down = devicePin.PinMode is DevicePinMode.BusKeep or DevicePinMode.PullDown;
+                    ret += "\n";
+                    ret += $"""
+                            gpio_init({devicePin.Pin});
+                            gpio_set_dir({devicePin.Pin},{(devicePin.PinMode == DevicePinMode.Output).ToString().ToLower()});
+                            gpio_set_pulls({devicePin.Pin},{up.ToString().ToLower()},{down.ToString().ToLower()});
+                            """;
+                    continue;
+            }
+        }
+
+        return ret;
+    }
+    
+    public override string GenerateLedInit(ConfigViewModel configViewModel)
+    {
+        var ret = "";
+        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
+        foreach (var devicePin in pins)
+        {
+            if (devicePin.Type != "led_output") continue;
             switch (devicePin.PinMode)
             {
                 case DevicePinMode.Analog:

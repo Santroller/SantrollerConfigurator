@@ -5067,6 +5067,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string TestLabel {
+            get {
+                return ResourceManager.GetString("TestLabel", resourceCulture);
+            }
+        }
+        
         public static string AnalogOutputPinLabel {
             get {
                 return ResourceManager.GetString("AnalogOutputPinLabel", resourceCulture);

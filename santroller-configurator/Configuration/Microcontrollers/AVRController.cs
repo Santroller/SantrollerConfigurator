@@ -179,6 +179,69 @@ public abstract class AvrController : Microcontroller
                SREG = oldSREG;
                """;
     }
+    
+    public override string GenerateLedInit(ConfigViewModel configViewModel)
+    {
+        // DDRx 1 = output, 0 = input
+        // PORTx input 1= pullup, 0 = floating
+        var ddrByPort = new Dictionary<char, int>();
+        var portByPort = new Dictionary<char, int>();
+        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>().Where(s => s.Type == "led_output");
+        foreach (var pin in pins)
+        {
+            if (pin.Peripheral)
+            {
+                continue;
+            }
+            var port = GetPort(pin.Pin);
+            var idx = GetIndex(pin.Pin);
+            var currentPort = portByPort.GetValueOrDefault(port, 0);
+            var currentDdr = ddrByPort.GetValueOrDefault(port, 0);
+            switch (pin.PinMode)
+            {
+                case DevicePinMode.Output:
+                    currentDdr |= 1 << idx;
+                    break;
+                case DevicePinMode.PullUp:
+                    currentPort |= 1 << idx;
+                    break;
+            }
+
+            portByPort[port] = currentPort;
+            ddrByPort[port] = currentDdr;
+        }
+
+        for (var i = 0; i < PinCount; i++)
+        {
+            var force = ForcedMode(i);
+            var port = GetPort(i);
+            var idx = GetIndex(i);
+
+            if (ForcedMode(i) is null) continue;
+            var currentPort = portByPort.GetValueOrDefault(port, 0);
+            var currentDdr = ddrByPort.GetValueOrDefault(port, 0);
+            switch (force)
+            {
+                case AvrPinMode.InputPullup:
+                    currentPort |= 1 << idx;
+                    break;
+                case AvrPinMode.Output:
+                    currentDdr |= 1 << idx;
+                    break;
+            }
+
+            portByPort[port] = currentPort;
+            ddrByPort[port] = currentDdr;
+        }
+
+        return $"""
+               uint8_t oldSREG = SREG;
+               cli();
+               {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}
+               {string.Join("\n", portByPort.Select(port => $"PORT{port.Key} = {port.Value};"))}
+               SREG = oldSREG;
+               """;
+    }
 
     public override string GenerateAnalogRead(int pin, ConfigViewModel model, bool peripheral)
     {

@@ -11,6 +11,7 @@ using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
+using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -138,7 +139,8 @@ public class Led : Output
     private int _pin;
 
     public Led(ConfigViewModel model, bool outputEnabled, bool inverted, int pin, bool peripheral, Color ledOn,
-        Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, LedCommandType command, int param, int param2) : base(model,
+        Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, LedCommandType command, int param,
+        int param2) : base(model,
         new FixedInput(model, 0, false),
         ledOn, ledOff,
         ledIndices, ledIndicesPeripheral, false)
@@ -289,7 +291,7 @@ public class Led : Output
             if (value)
             {
                 if (PinConfig != null) return;
-                PinConfig = new DirectPinConfig(Model, "led", Pin, Peripheral, DevicePinMode.Output);
+                PinConfig = new DirectPinConfig(Model, "led_output", Pin, Peripheral, DevicePinMode.Output);
             }
             else
             {
@@ -328,6 +330,20 @@ public class Led : Output
         }
     }
 
+    private int _test;
+
+    public int Test
+    {
+        get => _test;
+        set
+        {
+            if (Model.Device is not Santroller santroller) return;
+            santroller.AnalogWrite(Pin, Inverted ? 255 - value : value);
+
+            this.RaiseAndSetIfChanged(ref _test, value);
+        }
+    }
+
     private LedCommandType _command;
 
     public LedCommandType Command
@@ -345,7 +361,18 @@ public class Led : Output
         }
     }
 
-    [Reactive] public bool Inverted { get; set; }
+    private bool _inverted;
+
+    public bool Inverted
+    {
+        get => _inverted;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _inverted, value);
+            if (Model.Device is not Santroller santroller) return;
+            santroller.AnalogWrite(Pin, value ? 255 - Test : Test);
+        }
+    }
 
     [ObservableAsProperty] public bool UsesPwm { get; }
     [Reactive] public int Player { get; set; }
@@ -483,7 +510,8 @@ public class Led : Output
                 break;
         }
 
-        return new SerializedLed(LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Command, param1, param2, OutputEnabled,
+        return new SerializedLed(LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Command, param1,
+            param2, OutputEnabled,
             Peripheral, Inverted,
             Pin);
     }
@@ -541,7 +569,7 @@ public class Led : Output
                      ledState[{index - 1}].select = 1;
                      {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, "last_star_power", writer)}
                      """;
-                
+
                 ps4 += $"""
                         ledState[{index - 1}].select = 1;
                         {Model.LedType.GetLedAssignment(false, "red", "green", "blue", index)};
@@ -551,7 +579,6 @@ public class Led : Output
 
         if (Model.IsApa102Peripheral)
         {
-
             foreach (var index in LedIndicesPeripheral)
             {
                 on += $"""
@@ -576,14 +603,14 @@ public class Led : Output
                      ledStatePeripheral[{index - 1}].select = 1;
                      {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, "last_star_power", writer)}
                      """;
-                
+
                 ps4 += $"""
                         ledStatePeripheral[{index - 1}].select = 1;
                         {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", index)};
                         """;
             }
         }
-        
+
         if (Model.IsStp16)
         {
             foreach (var led in LedIndices)
@@ -596,7 +623,7 @@ public class Led : Output
                        bit_set(ledState[{index / 8}],{index & 0x0f});
                        """;
                 off += $"""
-                        
+
                         bit_clear(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
                         bit_clear(ledState[{index / 8}],{index & 0x0f});
                         """;
@@ -612,14 +639,13 @@ public class Led : Output
                      bit_set(ledState[{indexSelect / 8}],{indexSelect & 0x0f});
                      bit_write(ledState[{index / 8}],{index & 0x0f},last_star_power);
                      """;
-                
+
                 ps4 += on;
             }
         }
 
         if (Model.IsStp16Peripheral)
         {
-
             foreach (var led in LedIndicesPeripheral)
             {
                 var index = led - 1;
@@ -646,7 +672,7 @@ public class Led : Output
                      bit_set(ledStatePeripheral[{indexSelect / 8}],{indexSelect & 0x0f});
                      bit_write(ledStatePeripheral[{index / 8}],{index & 0x0f},last_star_power);
                      """;
-                
+
                 ps4 += on;
             }
         }
@@ -707,22 +733,22 @@ public class Led : Output
                          """;
             case LedCommandType.StarPowerInactive when mode == ConfigField.RumbleLed:
                 return $$"""
-                         if (rumble_right == {{(int)RumbleCommand.SantrollerStarPowerActive}} && !rumble_left) {
+                         if (rumble_right == {{(int) RumbleCommand.SantrollerStarPowerActive}} && !rumble_left) {
                               star_power_active = false;
                               {{starPowerBetween}}
                          }
-                         if (!star_power_active && rumble_right == {{(int)RumbleCommand.SantrollerStarPowerGauge}}) {
+                         if (!star_power_active && rumble_right == {{(int) RumbleCommand.SantrollerStarPowerGauge}}) {
                               last_star_power = rumble_left;
                               {{starPowerBetween}}
                          }
                          """;
             case LedCommandType.StarPowerActive when mode == ConfigField.RumbleLed:
                 return $$"""
-                         if (rumble_right == {{(int)RumbleCommand.SantrollerStarPowerActive}} && rumble_left) {
+                         if (rumble_right == {{(int) RumbleCommand.SantrollerStarPowerActive}} && rumble_left) {
                               star_power_active = true;
                               {{starPowerBetween}}
                          }
-                         if (star_power_active && rumble_right == {{(int)RumbleCommand.SantrollerStarPowerGauge}}) {
+                         if (star_power_active && rumble_right == {{(int) RumbleCommand.SantrollerStarPowerGauge}}) {
                               last_star_power = rumble_left;
                               {{starPowerBetween}}
                          }
@@ -782,17 +808,17 @@ public class Led : Output
         {
             case StageKitCommand.Fog:
                 return $$"""
-                         if ((rumble_left == 0 && rumble_right == {{(int)RumbleCommand.StageKitFogOff}})) {
+                         if ((rumble_left == 0 && rumble_right == {{(int) RumbleCommand.StageKitFogOff}})) {
                              {{off}}
-                         } else if (rumble_left == 0 && rumble_right == {{(int)RumbleCommand.StageKitFogOn}}) {
+                         } else if (rumble_left == 0 && rumble_right == {{(int) RumbleCommand.StageKitFogOn}}) {
                              {{on}}
                          }
                          """;
             case StageKitCommand.Strobe:
                 return
                     $$"""
-                      if (rumble_left == 0 && rumble_right >= {{(int)RumbleCommand.StageKitStrobeLightSlow}} && rumble_right <= {{(int)RumbleCommand.StageKitStrobeLightFastest}}) {
-                           strobe_delay = 5 - (rumble_right - {{(int)RumbleCommand.StageKitFogOff}});
+                      if (rumble_left == 0 && rumble_right >= {{(int) RumbleCommand.StageKitStrobeLightSlow}} && rumble_right <= {{(int) RumbleCommand.StageKitStrobeLightFastest}}) {
+                           strobe_delay = 5 - (rumble_right - {{(int) RumbleCommand.StageKitFogOff}});
                       }
                       if (strobe_delay == 0) {
                           strobe_delay = 0;
@@ -804,9 +830,9 @@ public class Led : Output
                 var led = 1 << (StageKitLed - 1);
                 return
                     $$"""
-                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int)RumbleCommand.StageKitStrobeLightBlue}})) {
+                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightBlue}})) {
                           {{off}}
-                      } else if ((rumble_left & {{led}}) && (rumble_right == {{(int)RumbleCommand.StageKitStrobeLightBlue}})) {
+                      } else if ((rumble_left & {{led}}) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightBlue}})) {
                           {{on}}
                       }
                       """;
@@ -816,9 +842,9 @@ public class Led : Output
                 var led = 1 << (StageKitLed - 1);
                 return
                     $$"""
-                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int)RumbleCommand.StageKitStrobeLightGreen}})) {
+                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightGreen}})) {
                           {{off}}
-                      } else if ((rumble_left & {{led}}) && (rumble_right == {{(int)RumbleCommand.StageKitStrobeLightGreen}})) {
+                      } else if ((rumble_left & {{led}}) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightGreen}})) {
                           {{on}}
                       }
                       """;
@@ -828,9 +854,9 @@ public class Led : Output
                 var led = 1 << (StageKitLed - 1);
                 return
                     $$"""
-                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int)RumbleCommand.StageKitStrobeLightRed}})) {
+                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightRed}})) {
                           {{off}}
-                      } else if ((rumble_left & {{led}}) && (rumble_right == {{(int)RumbleCommand.StageKitStrobeLightRed}})) {
+                      } else if ((rumble_left & {{led}}) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightRed}})) {
                           {{on}}
                       }
                       """;
@@ -840,9 +866,9 @@ public class Led : Output
                 var led = 1 << (StageKitLed - 1);
                 return
                     $$"""
-                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int)RumbleCommand.StageKitStrobeLightYellow}})) {
+                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightYellow}})) {
                           {{off}}
-                      } else if ((rumble_left & {{led}}) && (rumble_right == {{(int)RumbleCommand.StageKitStrobeLightYellow}})) {
+                      } else if ((rumble_left & {{led}}) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightYellow}})) {
                           {{on}}
                       }
                       """;
