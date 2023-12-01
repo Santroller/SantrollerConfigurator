@@ -43,7 +43,6 @@ public class SerializedConfiguration
         CombinedStrumDebounce = model.CombinedStrumDebounce;
         QueueBasedInputs = model.Deque;
         DjPollRate = model.DjPollRate;
-        DjDual = model.DjDual;
         DjSmooth = model.DjSmoothing;
         SwapSwitchFaceButtons = model.SwapSwitchFaceButtons;
         Variant = model.Variant;
@@ -107,7 +106,6 @@ public class SerializedConfiguration
         model.StrumDebounce = StrumDebounce;
         model.Deque = QueueBasedInputs;
         model.DjPollRate = DjPollRate;
-        model.DjDual = DjDual;
         model.DjSmoothing = DjSmooth;
         model.SwapSwitchFaceButtons = SwapSwitchFaceButtons;
         model.Variant = Variant;
@@ -174,7 +172,6 @@ public class SerializedConfiguration
         model.StrumDebounce = StrumDebounce;
         model.Deque = QueueBasedInputs;
         model.DjPollRate = DjPollRate;
-        model.DjDual = DjDual;
         model.DjSmoothing = DjSmooth;
         model.SwapSwitchFaceButtons = SwapSwitchFaceButtons;
         model.WtSensitivity = WtSensitivity;

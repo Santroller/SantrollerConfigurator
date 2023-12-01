@@ -184,14 +184,14 @@ public partial class DjAxis : OutputAxis
         }
 
         // Table just applies a multiplier to the value
-        var generatedTable = $"{tableCommand360}({generated}, {Multiplier})";
-        var generatedTablePs3 = $"{tableCommand}({generatedPs3}, {Multiplier})";
+        var generatedTable = $"{tableCommand360}({GenerateOutput(mode)},{generated}, {Multiplier})";
+        var generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generatedPs3}, {Multiplier})";
         
         if (writer != null && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
         {
             var multiplierBlob = ConfigViewModel.WriteBlob(writer, Multiplier);
-            generatedTable = $"{tableCommand360}({generated}, {multiplierBlob}";
-            generatedTablePs3 = $"{tableCommand}({generatedPs3}, {multiplierBlob})";
+            generatedTable = $"{tableCommand360}({GenerateOutput(mode)},{generated}, {multiplierBlob}";
+            generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generatedPs3}, {multiplierBlob})";
         }
 
         var gen = Type switch

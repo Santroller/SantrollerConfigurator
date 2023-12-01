@@ -762,15 +762,7 @@
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.TurntableSmoothingLabel}" />
-                            <ToggleSwitch IsEnabled="{Binding !Dual}" IsChecked="{Binding Smoothing}"
-                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsAnalog}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.DualTurntableSmoothingLabel}" />
-                            <ToggleSwitch IsChecked="{Binding Dual}"
+                            <ToggleSwitch IsChecked="{Binding Smoothing}"
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>

@@ -25,7 +25,6 @@ public partial class DjInput : TwiInput
         Input = input;
         IsAnalog = Input <= DjInputType.RightTurntable;
         this.WhenAnyValue(x => x.Model.DjPollRate).Subscribe(_ => this.RaisePropertyChanged(nameof(PollRate)));
-        this.WhenAnyValue(x => x.Model.DjDual).Subscribe(_ => this.RaisePropertyChanged(nameof(Dual)));
         this.WhenAnyValue(x => x.Model.DjSmoothing).Subscribe(_ => this.RaisePropertyChanged(nameof(Smoothing)));
     }
 
@@ -41,12 +40,6 @@ public partial class DjInput : TwiInput
     {
         get => Model.DjSmoothing;
         set => Model.DjSmoothing = value;
-    }
-
-    public bool Dual
-    {
-        get => Model.DjDual;
-        set => Model.DjDual = value;
     }
 
     public bool BindableTwi { get; }
@@ -65,7 +58,7 @@ public partial class DjInput : TwiInput
             case DjInputType.LeftTurntable:
                 return "(dj_turntable_left)";
             case DjInputType.RightTurntable:
-                return Dual ? "" : "(dj_turntable_right)";
+                return "(dj_turntable_right)";
             case DjInputType.LeftBlue:
             case DjInputType.LeftGreen:
             case DjInputType.LeftRed:
@@ -116,19 +109,11 @@ public partial class DjInput : TwiInput
             or ConfigField.Ps4 or ConfigField.Universal))
             return "";
         var left = string.Join(";",
-            bindings.Where(binding => (!Dual || (binding.Item1 as DjInput)!.Input != DjInputType.LeftTurntable) &&
-                                      (binding.Item1 as DjInput)!.Input.ToString().Contains("Left"))
+            bindings.Where(binding => binding.Item1 is DjInput {Input: DjInputType.LeftTurntable or DjInputType.LeftGreen or DjInputType.LeftRed or DjInputType.LeftBlue})
                 .Select(binding => binding.Item2));
         var right = string.Join(";",
-            bindings.Where(binding => (!Dual || (binding.Item1 as DjInput)!.Input != DjInputType.RightTurntable) &&
-                                      (binding.Item1 as DjInput)!.Input.ToString().Contains("Right"))
+            bindings.Where(binding => binding.Item1 is DjInput {Input: DjInputType.RightTurntable or DjInputType.RightGreen or DjInputType.RightRed or DjInputType.RightBlue})
                 .Select(binding => binding.Item2));
-        var dual = "";
-        if (Dual)
-        {
-            dual = bindings.Where(binding => (binding.Item1 as DjInput)!.Input == DjInputType.LeftTurntable)
-                .Select(binding => binding.Item2).FirstOrDefault("");
-        }
 
         return $$"""
                  if (djLeftValid) {
@@ -137,7 +122,6 @@ public partial class DjInput : TwiInput
                  if (djRightValid) {
                      {{right}}
                  }
-                 {{dual}}
                  """;
     }
 

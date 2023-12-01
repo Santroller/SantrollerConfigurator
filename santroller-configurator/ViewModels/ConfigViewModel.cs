@@ -421,7 +421,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public int PollRate { get; set; }
     [Reactive] public int DjPollRate { get; set; }
-    [Reactive] public bool DjDual { get; set; }
     [Reactive] public bool DjSmoothing { get; set; }
 
     [Reactive] public string BtRxAddr { get; set; }
@@ -1172,7 +1171,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
-                       #define INPUT_DJ_TURNTABLE_SMOOTHING_DUAL {WriteBlob(writer, DjDual)}
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
                        """;
             if (IsBluetoothRx)
@@ -1201,7 +1199,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WT_SENSITIVITY {WtSensitivity}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {DjPollRate * 1000}
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {DjSmoothing.ToString().ToLower()}
-                       #define INPUT_DJ_TURNTABLE_SMOOTHING_DUAL {DjDual.ToString().ToLower()}
                        """;
             if (BtRxAddr.Any() && BtRxAddr.Contains(":"))
             {
@@ -1842,8 +1839,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         }
 
                         ledRead = isI2C
-                            ? $"handle_calibration_turntable_ps3_i2c({analogLedOutput.Input.Generate()},{multiplier})"
-                            : $"handle_calibration_turntable_ps3({generated},{multiplier})";
+                            ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
+                            : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
                     }
 
                     if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
@@ -1927,8 +1924,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     }
 
                     ledRead = isI2C
-                        ? $"handle_calibration_turntable_ps3_i2c({analogLedOutput.Input.Generate()},{multiplier})"
-                        : $"handle_calibration_turntable_ps3({generated},{multiplier})";
+                        ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
+                        : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
                 }
 
                 if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
