@@ -16,7 +16,7 @@ public enum LedType
     Apa102Gbr,
     Apa102Brg,
     Apa102Bgr,
-    Stp16Cpc26Mtr
+    Stp16Cpc26
 }
 
 public static class LedTypeMethods

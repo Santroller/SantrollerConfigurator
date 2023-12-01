@@ -35,7 +35,7 @@ public abstract class Microcontroller
             .Where(s => s.Type == ConfigViewModel.Apa102SpiType && s.Peripheral == peripheral &&
                         s.Pins.Contains(possiblePin))
             .Select(s => model.LedSpiType(peripheral)).Concat(model.PinConfigs
-                .Where(s => s.Type.Contains("STP16CPC26MTR") && s.Peripheral == peripheral &&
+                .Where(s => s.Type.Contains("STP16CPC26") && s.Peripheral == peripheral &&
                             s.Pins.Contains(possiblePin))
                 .Select(s => s.Type)).ToList();
         var unoMega = model.PinConfigs.Where(s =>

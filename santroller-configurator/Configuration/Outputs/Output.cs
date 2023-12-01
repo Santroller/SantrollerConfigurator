@@ -124,9 +124,9 @@ public abstract partial class Output : ReactiveObject
             .ToPropertyEx(this, x => x.AreLedsEnabled);
         this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not LedType.None)
             .ToPropertyEx(this, x => x.AreLedsEnabledPeripheral);
-        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not (LedType.None or LedType.Stp16Cpc26Mtr))
+        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
             .ToPropertyEx(this, x => x.LedsRequireColours);
-        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not (LedType.None or LedType.Stp16Cpc26Mtr))
+        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
             .ToPropertyEx(this, x => x.LedsRequireColoursPeripheral);
         this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails, x => x.Model.LegendType,
                 x => x.Model.SwapSwitchFaceButtons)

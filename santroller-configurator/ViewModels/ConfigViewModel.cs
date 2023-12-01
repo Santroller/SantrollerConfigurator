@@ -38,13 +38,13 @@ namespace GuitarConfigurator.NetCore.ViewModels;
 public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 {
     public static readonly string Apa102SpiType = "APA102";
-    public static readonly string Stp16SpiType = "STP16CPC26MTR";
-    public static readonly string Stp16PeripheralSpiType = "Peripheral STP16CPC26MTR";
+    public static readonly string Stp16SpiType = "STP16CPC26";
+    public static readonly string Stp16PeripheralSpiType = "Peripheral STP16CPC26";
     public static readonly string Apa102PeripheralSpiType = "Peripheral APA102";
-    public static readonly string Stp16LeType = "STP16CPC26MTR Latch Enable";
-    public static readonly string Stp16LePeripheralType = "Peripheral STP16CPC26MTR Latch Enable";
-    public static readonly string Stp16OeType = "STP16CPC26MTR Output Enable";
-    public static readonly string Stp16OePeripheralType = "Peripheral STP16CPC26MTR Output Enable";
+    public static readonly string Stp16LeType = "STP16CPC26 Latch Enable";
+    public static readonly string Stp16LePeripheralType = "Peripheral STP16CPC26 Latch Enable";
+    public static readonly string Stp16OeType = "STP16CPC26 Output Enable";
+    public static readonly string Stp16OePeripheralType = "Peripheral STP16CPC26 Output Enable";
     public static readonly string PeripheralTwiType = "Peripheral";
     public static readonly int PeripheralTwiClock = 500000;
     public static readonly string UsbHostPinTypeDm = "DM";
@@ -158,24 +158,24 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             })
             .ToPropertyEx(this, x => x.IsApa102Peripheral);
         this.WhenAnyValue(x => x.LedType)
-            .Select(x => x is LedType.Stp16Cpc26Mtr)
+            .Select(x => x is LedType.Stp16Cpc26)
             .ToPropertyEx(this, x => x.IsStp16);
         this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
             .Select(x => x is
             {
-                Item2: true, Item1: LedType.Stp16Cpc26Mtr
+                Item2: true, Item1: LedType.Stp16Cpc26
             })
             .ToPropertyEx(this, x => x.IsStp16Peripheral);
 
         this.WhenAnyValue(x => x.LedType)
             .Select(x => x is LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
-                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26Mtr)
+                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26)
             .ToPropertyEx(this, x => x.IsIndexedLed);
         this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
             .Select(x => x is
             {
                 Item2: true, Item1: LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
-                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26Mtr
+                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26
             })
             .ToPropertyEx(this, x => x.IsIndexedLedPeripheral);
         Bindings.Connect()
@@ -596,7 +596,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (value != _ledType)
             {
-                if (value == LedType.Stp16Cpc26Mtr)
+                if (value == LedType.Stp16Cpc26)
                 {
                     _stp16Le = new DirectPinConfig(this, Stp16LeType, -1, false, DevicePinMode.Output);
                     _stp16Oe = new DirectPinConfig(this, Stp16OeType, -1, false, DevicePinMode.Output);
@@ -639,7 +639,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (value != _ledTypePeripheral)
             {
-                if (value == LedType.Stp16Cpc26Mtr)
+                if (value == LedType.Stp16Cpc26)
                 {
                     _stp16LePeripheral =
                         new DirectPinConfig(this, Stp16LePeripheralType, -1, true, DevicePinMode.Output);
@@ -1249,10 +1249,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define USB_HOST_STACK {{UsbHostEnabled.ToString().ToLower()}}
                         #define USB_HOST_DP_PIN {{UsbHostDp}}
                         #define DIGITAL_COUNT {{CalculateDebounceTicks()}}
-                        #define LED_COUNT {{(LedType is not (LedType.None or LedType.Stp16Cpc26Mtr) ? LedCount : 0)}}
-                        #define LED_COUNT_PERIPHERAL {{(LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26Mtr) ? LedCountPeripheral : 0)}}
-                        #define LED_COUNT_STP {{(LedType is LedType.Stp16Cpc26Mtr ? LedCount : 0)}}
-                        #define LED_COUNT_PERIPHERAL_STP {{(LedTypePeripheral is LedType.Stp16Cpc26Mtr ? LedCountPeripheral : 0)}}
+                        #define LED_COUNT {{(LedType is not (LedType.None or LedType.Stp16Cpc26) ? LedCount : 0)}}
+                        #define LED_COUNT_PERIPHERAL {{(LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26) ? LedCountPeripheral : 0)}}
+                        #define LED_COUNT_STP {{(LedType is LedType.Stp16Cpc26 ? LedCount : 0)}}
+                        #define LED_COUNT_PERIPHERAL_STP {{(LedTypePeripheral is LedType.Stp16Cpc26 ? LedCountPeripheral : 0)}}
                         #define ADC_PINS {{{string.Join(",", analogPins)}}}
                         #define ADC_COUNT {{analogPins.Count}}
                         #define TICK_SHARED \
@@ -1781,7 +1781,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var type = peripheral ? LedTypePeripheral : LedType;
         var variable = peripheral ? "ledStatePeripheral" : "ledState";
         if (mode != ConfigField.Shared || type is LedType.None) return "";
-        if (type == LedType.Stp16Cpc26Mtr)
+        if (type == LedType.Stp16Cpc26)
         {
             return ComputeLedsStp16(peripheral, debouncesRelatedToLed, analogRelatedToLed);
         }

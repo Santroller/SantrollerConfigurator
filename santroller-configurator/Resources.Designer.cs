@@ -3435,9 +3435,9 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string LedTypeStp16Cpc26Mtr {
+        public static string LedTypeStp16Cpc26 {
             get {
-                return ResourceManager.GetString("LedTypeStp16Cpc26Mtr", resourceCulture);
+                return ResourceManager.GetString("LedTypeStp16Cpc26", resourceCulture);
             }
         }
         
@@ -5511,27 +5511,27 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string STP16CPC26MTRSCKLabel {
+        public static string STP16CPC26SCKLabel {
             get {
-                return ResourceManager.GetString("STP16CPC26MTRSCKLabel", resourceCulture);
+                return ResourceManager.GetString("STP16CPC26SCKLabel", resourceCulture);
             }
         }
         
-        public static string STP16CPC26MTRMOSILabel {
+        public static string STP16CPC26MOSILabel {
             get {
-                return ResourceManager.GetString("STP16CPC26MTRMOSILabel", resourceCulture);
+                return ResourceManager.GetString("STP16CPC26MOSILabel", resourceCulture);
             }
         }
         
-        public static string STP16CPC26MTROELabel {
+        public static string STP16CPC26OELabel {
             get {
-                return ResourceManager.GetString("STP16CPC26MTROELabel", resourceCulture);
+                return ResourceManager.GetString("STP16CPC26OELabel", resourceCulture);
             }
         }
         
-        public static string STP16CPC26MTRLELabel {
+        public static string STP16CPC26LELabel {
             get {
-                return ResourceManager.GetString("STP16CPC26MTRLELabel", resourceCulture);
+                return ResourceManager.GetString("STP16CPC26LELabel", resourceCulture);
             }
         }
         
@@ -5565,27 +5565,27 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string STP16CPC26MTRSCKPeripheralLabel {
+        public static string STP16CPC26SCKPeripheralLabel {
             get {
-                return ResourceManager.GetString("STP16CPC26MTRSCKPeripheralLabel", resourceCulture);
+                return ResourceManager.GetString("STP16CPC26SCKPeripheralLabel", resourceCulture);
             }
         }
         
-        public static string STP16CPC26MTRMOSIPeripheralLabel {
+        public static string STP16CPC26MOSIPeripheralLabel {
             get {
-                return ResourceManager.GetString("STP16CPC26MTRMOSIPeripheralLabel", resourceCulture);
+                return ResourceManager.GetString("STP16CPC26MOSIPeripheralLabel", resourceCulture);
             }
         }
         
-        public static string STP16CPC26MTROEPeripheralLabel {
+        public static string STP16CPC26OEPeripheralLabel {
             get {
-                return ResourceManager.GetString("STP16CPC26MTROEPeripheralLabel", resourceCulture);
+                return ResourceManager.GetString("STP16CPC26OEPeripheralLabel", resourceCulture);
             }
         }
         
-        public static string STP16CPC26MTRLEPeripheralLabel {
+        public static string STP16CPC26LEPeripheralLabel {
             get {
-                return ResourceManager.GetString("STP16CPC26MTRLEPeripheralLabel", resourceCulture);
+                return ResourceManager.GetString("STP16CPC26LEPeripheralLabel", resourceCulture);
             }
         }
         

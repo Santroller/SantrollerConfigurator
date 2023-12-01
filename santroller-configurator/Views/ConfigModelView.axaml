@@ -2469,7 +2469,7 @@
                             <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsApa102}"
                                    Content="{x:Static netCore:Resources.APA102SCKLabel}" />
                             <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MTRSCKLabel}" />
+                                   Content="{x:Static netCore:Resources.STP16CPC26SCKLabel}" />
                             <ComboBox Width="200"
                                       SelectedItem="{Binding LedSck}"
                                       ItemsSource="{Binding AvailableApaSckPins}"
@@ -2486,7 +2486,7 @@
                             <Label IsVisible="{Binding IsApa102}" VerticalAlignment="Center" Width="300"
                                    Content="{x:Static netCore:Resources.APA102MOSILabel}" />
                             <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MTRMOSILabel}" />
+                                   Content="{x:Static netCore:Resources.STP16CPC26MOSILabel}" />
                             <ComboBox Width="200"
                                       SelectedItem="{Binding LedMosi}"
                                       ItemsSource="{Binding AvailableApaMosiPins}"
@@ -2495,7 +2495,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
                             <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MTROELabel}" />
+                                   Content="{x:Static netCore:Resources.STP16CPC26OELabel}" />
                             <ComboBox Width="200"
                                       DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding Stp16Oe}"
@@ -2504,7 +2504,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
                             <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MTRLELabel}" />
+                                   Content="{x:Static netCore:Resources.STP16CPC26LELabel}" />
                             <ComboBox Width="200"
                                       DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding Stp16Le}"
@@ -2537,7 +2537,7 @@
                             <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
                                    Content="{x:Static netCore:Resources.APA102SCKPeripheralLabel}" />
                             <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MTRSCKPeripheralLabel}" />
+                                   Content="{x:Static netCore:Resources.STP16CPC26SCKPeripheralLabel}" />
                             <ComboBox VerticalAlignment="Center" Width="200"
                                       SelectedItem="{Binding LedSckPeripheral}"
                                       ItemsSource="{Binding AvailableApaSckPins}"
@@ -2554,7 +2554,7 @@
                             <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
                                    Content="{x:Static netCore:Resources.APA102MOSIPeripheralLabel}" />
                             <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MTRMOSIPeripheralLabel}" />
+                                   Content="{x:Static netCore:Resources.STP16CPC26MOSIPeripheralLabel}" />
                             <ComboBox VerticalAlignment="Center" Width="200"
                                       SelectedItem="{Binding LedMosiPeripheral}"
                                       ItemsSource="{Binding AvailableApaMosiPins}"
@@ -2563,7 +2563,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
                             <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MTROEPeripheralLabel}" />
+                                   Content="{x:Static netCore:Resources.STP16CPC26OEPeripheralLabel}" />
                             <ComboBox Width="200"
                                       DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding Stp16OePeripheral}"
@@ -2572,7 +2572,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
                             <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MTRLEPeripheralLabel}" />
+                                   Content="{x:Static netCore:Resources.STP16CPC26LEPeripheralLabel}" />
                             <ComboBox Width="200"
                                       SelectedItem="{Binding Stp16LePeripheral}"
                                       ItemsSource="{Binding AvailablePinsDigital}"
