@@ -927,7 +927,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 case DjAxisType.EffectsKnob:
                     Bindings.Add(new DjAxis(this,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 1, DjAxisType.EffectsKnob,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 1, 1,
+                        DjAxisType.EffectsKnob,
                         false));
                     break;
                 case DjAxisType axisType:
@@ -1229,11 +1230,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             if (IsStp16)
             {
                 ledInit += $"""
-                           
-                           {Microcontroller.GenerateDigitalWrite(Stp16Le, false, false)}; 
-                           {Microcontroller.GenerateDigitalWrite(Stp16Oe, false, false)};
-                           """;
+
+                            {Microcontroller.GenerateDigitalWrite(Stp16Le, false, false)};
+                            {Microcontroller.GenerateDigitalWrite(Stp16Oe, false, false)};
+                            """;
             }
+
             if (IsStp16Peripheral)
             {
                 ledInit += $"""
@@ -1243,7 +1245,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             """;
             }
 
-            ledInit = GenerateTick(ConfigField.InitLed, writer)+"\\\n\t"+FixNewlines(ledInit);
+            ledInit = GenerateTick(ConfigField.InitLed, writer) + "\\\n\t" + FixNewlines(ledInit);
             config += "\n";
             config += $$"""
                         #define USB_HOST_STACK {{UsbHostEnabled.ToString().ToLower()}}
@@ -1669,7 +1671,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                  spi_transfer(APA102_SPI_PORT, ledState[{i}]);
                  """;
         }
-        ret += 
+
+        ret +=
             $"""
 
              {Microcontroller.GenerateDigitalWrite(Stp16Le, true, false)};
@@ -1695,7 +1698,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                  slaveWriteLED(ledStatePeripheral[{i}]);
                  """;
         }
-        ret += 
+
+        ret +=
             $"""
 
              {Microcontroller.GenerateDigitalWrite(Stp16LePeripheral, true, true)};
@@ -1799,19 +1803,30 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                     var ledReadCheck = "led_tmp";
                     // Turntable velocities are different to most axis, as they don't use standard calibration.
-                    if (analogLedOutput.Input is DjInput
+                    if (analogLedOutput is DjAxis
+                        {
+                            Type: DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
+                        } djAxis)
+                    {
+                        var multiplier = djAxis.LedMultiplier;
+                        var generated = $"({analogLedOutput.Input.Generate()})";
+                        var isI2C = analogLedOutput.Input is DjInput
                         {
                             Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
-                        })
-                    {
-                        var multiplier = 1;
-                        if (analogLedOutput is DjAxis djAxis)
+                        };
+                        ledReadCheck = analogLedOutput.Input.Generate();
+                        if (analogLedOutput.InputIsUint)
                         {
-                            multiplier = djAxis.Multiplier;
+                            ledReadCheck = $"({generated} - INT16_MAX)";
+                        }
+                        else
+                        {
+                            generated = $"({generated} + INT16_MAX)";
                         }
 
-                        ledRead = $"({analogLedOutput.Input.Generate()} * {multiplier}) + INT8_MAX";
-                        ledReadCheck = analogLedOutput.Input.Generate();
+                        ledRead = isI2C
+                            ? $"handle_calibration_turntable_ps3_i2c({analogLedOutput.Input.Generate()},{multiplier})"
+                            : $"handle_calibration_turntable_ps3({generated},{multiplier})";
                     }
 
                     if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
@@ -1877,15 +1892,26 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 var ledRead =
                     analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
-                if (analogLedOutput.Input is DjInput {Input: DjInputType.LeftTurntable or DjInputType.RightTurntable})
-                {
-                    var multiplier = 1;
-                    if (analogLedOutput is DjAxis djAxis)
+                // Turntable velocities are different to most axis, as they don't use standard calibration.
+                if (analogLedOutput is DjAxis
                     {
-                        multiplier = djAxis.Multiplier;
+                        Type: DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
+                    } djAxis)
+                {
+                    var multiplier = djAxis.LedMultiplier;
+                    var generated = $"({analogLedOutput.Input.Generate()})";
+                    var isI2C = analogLedOutput.Input is DjInput
+                    {
+                        Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
+                    };
+                    if (!analogLedOutput.InputIsUint)
+                    {
+                        generated = $"({generated} + INT16_MAX)";
                     }
 
-                    ledRead = $"({analogLedOutput.Input.Generate()} * {multiplier}) + INT8_MAX";
+                    ledRead = isI2C
+                        ? $"handle_calibration_turntable_ps3_i2c({analogLedOutput.Input.Generate()},{multiplier})"
+                        : $"handle_calibration_turntable_ps3({generated},{multiplier})";
                 }
 
                 if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})

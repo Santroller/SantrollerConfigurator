@@ -23,7 +23,7 @@ public partial class DjAxis : OutputAxis
         UpdateDetails();
     }
 
-    public DjAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int multiplier,
+    public DjAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int multiplier, int ledMultiplier,
         DjAxisType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, 0, 0,
         0,
         false, childOfCombined)
@@ -37,11 +37,14 @@ public partial class DjAxis : OutputAxis
             Multiplier = multiplier;
         }
 
+        LedMultiplier = ledMultiplier;
+
         Type = type;
         UpdateDetails();
     }
 
     [Reactive] public int Multiplier { get; set; }
+    [Reactive] public int LedMultiplier { get; set; }
 
     [Reactive] public bool Invert { get; set; }
 
@@ -122,13 +125,13 @@ public partial class DjAxis : OutputAxis
     {
         if (IsVelocity)
         {
-            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Multiplier,
+            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Multiplier, LedMultiplier,
                 ChildOfCombined);
         }
 
         if (IsEffectsKnob)
         {
-            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Invert ? -1 : 1,
+            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Invert ? -1 : 1, LedMultiplier,
                 ChildOfCombined);
         }
 
@@ -162,34 +165,33 @@ public partial class DjAxis : OutputAxis
             Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
         };
 
+        var tableCommand = "handle_calibration_turntable_ps3";
+        var tableCommand360 = "handle_calibration_turntable_360";
+        switch (i2CTurntable)
+        {
+            case true:
+                tableCommand = "handle_calibration_turntable_ps3_i2c";
+                tableCommand360 = "handle_calibration_turntable_360_i2c";
+                break;
+            case false when InputIsUint:
+                // 360 needs int, uint -> int
+                generated = $"({generated} - INT16_MAX)";
+                break;
+            case false:
+                // ps3 needs uint, int -> uint
+                generatedPs3 = $"({generated} + INT16_MAX)";
+                break;
+        }
 
         // Table just applies a multiplier to the value
-        var generatedTable = $"({generated} * {Multiplier})";
-        var generatedTablePs3 = $"(({generatedPs3} >> 8) * {Multiplier})";
+        var generatedTable = $"{tableCommand360}({generated}, {Multiplier})";
+        var generatedTablePs3 = $"{tableCommand}({generatedPs3}, {Multiplier})";
         
         if (writer != null && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
         {
             var multiplierBlob = ConfigViewModel.WriteBlob(writer, Multiplier);
-            generatedTable = $"({generated} * {multiplierBlob}";
-            generatedTablePs3 = $"(({generatedPs3} >> 8) * {multiplierBlob})";
-        }
-        if (i2CTurntable)
-        {
-            // When using inputs from an actual turntable, we can skip scaling everything to uint16 and back
-            generatedTablePs3 = $"({generatedTable} + PS3_STICK_CENTER)";
-        }
-        else
-        {
-            if (InputIsUint)
-            {
-                // 360 needs int, uint -> int
-                generated = $"({generated} - INT16_MAX)";
-            }
-            else
-            {
-                // ps3 needs uint, int -> uint
-                generatedPs3 = $"({generated} + INT16_MAX)";
-            }
+            generatedTable = $"{tableCommand360}({generated}, {multiplierBlob}";
+            generatedTablePs3 = $"{tableCommand}({generatedPs3}, {multiplierBlob})";
         }
 
         var gen = Type switch

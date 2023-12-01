@@ -25,7 +25,7 @@ public class SerializedDjAxis : SerializedOutput
         ChildOfCombined = childOfCombined;
     }
     
-    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int multiplier, bool childOfCombined)
+    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int multiplier, int ledMultiplier, bool childOfCombined)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -33,6 +33,7 @@ public class SerializedDjAxis : SerializedOutput
         Min = 0;
         Max = 0;
         DeadzoneOrMultiplier = multiplier;
+        LedMultiplier = ledMultiplier;
         Type = type;
         LedIndex = ledIndex;
         LedIndexPeripheral = ledIndexPeripheral;
@@ -49,6 +50,7 @@ public class SerializedDjAxis : SerializedOutput
     [ProtoMember(8)] public bool ChildOfCombined { get; }
     [ProtoMember(10)] public DjAxisType Type { get; }
     [ProtoMember(11)] public byte[] LedIndexPeripheral { get; }
+    [ProtoMember(12)] public int LedMultiplier { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
@@ -56,7 +58,7 @@ public class SerializedDjAxis : SerializedOutput
         if (Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity or DjAxisType.EffectsKnob)
         {
             combined = new DjAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, DeadzoneOrMultiplier,
+                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, DeadzoneOrMultiplier, LedMultiplier,
                 Type, ChildOfCombined);
         }
         else
