@@ -6,6 +6,7 @@ using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using MouseButton = Avalonia.Input.MouseButton;
@@ -51,7 +52,6 @@ public class InputImageConverter : IMultiValueConverter
         if (values[3] is not bool swapSwitchFaceButtons) return null;
         var name = values[0]!.GetType().Name + values[0] + deviceControllerType + legendType + swapSwitchFaceButtons;
         if (Icons.TryGetValue(name, out var image)) return image;
-
         var path = values[0] switch
         {
             EmptyType.Empty => "Generic",
@@ -83,6 +83,7 @@ public class InputImageConverter : IMultiValueConverter
             DpadType type => (type.ToString().StartsWith("Ps2") ? "PS2/DPad" : "Wii/ClassicDPad") +
                              type.ToString()[3..],
             UsbHostInputType type => $"Combined/Usb/{type}",
+            LedCommandType => "Combined/Led",
             Key => "Keyboard",
             MouseAxis => "Mouse",
             MouseButton => "Mouse",
