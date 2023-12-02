@@ -847,7 +847,7 @@ public class Led : Output
                 var led = 1 << (StageKitLed - 1);
                 return
                     $$"""
-                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightBlue}})) {
+                      if (((rumble_left & {{led}}) == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightBlue}})) {
                           {{off}}
                       } else if ((rumble_left & {{led}}) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightBlue}})) {
                           {{on}}
@@ -859,7 +859,7 @@ public class Led : Output
                 var led = 1 << (StageKitLed - 1);
                 return
                     $$"""
-                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightGreen}})) {
+                      if (((rumble_left & {{led}}) == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightGreen}})) {
                           {{off}}
                       } else if ((rumble_left & {{led}}) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightGreen}})) {
                           {{on}}
@@ -871,7 +871,7 @@ public class Led : Output
                 var led = 1 << (StageKitLed - 1);
                 return
                     $$"""
-                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightRed}})) {
+                      if (((rumble_left & {{led}}) == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightRed}})) {
                           {{off}}
                       } else if ((rumble_left & {{led}}) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightRed}})) {
                           {{on}}
@@ -883,7 +883,7 @@ public class Led : Output
                 var led = 1 << (StageKitLed - 1);
                 return
                     $$"""
-                      if ((rumble_left & {{led}} == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightYellow}})) {
+                      if (((rumble_left & {{led}}) == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightYellow}})) {
                           {{off}}
                       } else if ((rumble_left & {{led}}) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightYellow}})) {
                           {{on}}
