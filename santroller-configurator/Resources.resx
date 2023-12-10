@@ -2960,7 +2960,7 @@
         <value>Save Current Settings as {0}</value>
     </data>
     <data name="PresetLabel" xml:space="preserve">
-        <value>Preset</value>
+        <value>Presets</value>
     </data>
     <data name="LoadPresetSimple" xml:space="preserve">
         <value>Load Preset</value>
@@ -3010,9 +3010,6 @@
     </data>
     <data name="LEDSettingsLabel" xml:space="preserve">
         <value>LED Settings</value>
-    </data>
-    <data name="PresetLabel" xml:space="preserve">
-        <value>Presets</value>
     </data>
     <data name="PollSettingsLabel" xml:space="preserve">
         <value>Controller Poll Settings</value>
