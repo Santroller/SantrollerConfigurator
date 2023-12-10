@@ -203,7 +203,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Any())
-            .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, X => X.SelectedType)
+            .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
                 .Select(CreateFilter))
             .Bind(out var analogOutputs)
             .Subscribe();
@@ -211,7 +211,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Any())
-            .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, X => X.SelectedType)
+            .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
                 .Select(CreateFilter))
             .Bind(out var digitalOutputs)
             .Subscribe();
@@ -242,6 +242,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
     private static Func<Output, bool> CreateFilter(
         (bool controllerFound, WiiControllerType currentType, WiiControllerType selectedType) tuple)
     {
+        
         if (tuple.selectedType == WiiControllerType.All)
         {
             return _ => true;
@@ -322,7 +323,6 @@ public class WiiCombinedOutput : CombinedTwiOutput
     {
         var outputs = new List<Output>(base.ValidOutputs());
 
-        ControllerEnumConverter.FilterValidOutputs(Model.DeviceControllerType, outputs);
         var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
         if (joyToDpad?.Enabled == true)
         {
