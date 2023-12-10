@@ -10,5 +10,5 @@ namespace GuitarConfigurator.NetCore.Utils;
 public class ToolConfig
 {
     [ProtoMember(1)] public LegendType LegendType { get; set; } = LegendType.Xbox;
-    [ProtoMember(2)] public List<Tuple<string, SerializedConfiguration>> Presets { get; set; } = [];
+    [ProtoMember(2)] public List<Tuple<string, SerializedConfiguration>> Presets { get; set; } = new();
 }
