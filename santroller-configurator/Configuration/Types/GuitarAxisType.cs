@@ -53,26 +53,9 @@ public static class GuitarAxisTypeMethods
             : RbTypes();
     }
 
-    public static IEnumerable<GuitarAxisType> GetInvalidTypesFor(DeviceControllerType deviceControllerType)
-    {
-        if (deviceControllerType == DeviceControllerType.LiveGuitar || deviceControllerType.IsFortnite())
-        {
-            return RbTypes().Concat(GhTypes());
-        }
-        return deviceControllerType.IsGh()
-            ? RbTypes()
-            : GhTypes();
-    }
-
     public static IEnumerable<GuitarAxisType> GetDifferenceFor(DeviceControllerType deviceControllerType)
     {
-        return GetInvalidTypesFor(deviceControllerType)
+        return Enum.GetValues<GuitarAxisType>()
             .Except(GetTypeFor(deviceControllerType));
-    }
-
-    public static IEnumerable<GuitarAxisType> GetDifferenceInverseFor(DeviceControllerType deviceControllerType)
-    {
-        return GetTypeFor(deviceControllerType)
-            .Except(GetInvalidTypesFor(deviceControllerType));
     }
 }

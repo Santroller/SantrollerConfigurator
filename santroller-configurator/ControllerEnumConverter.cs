@@ -62,6 +62,14 @@ public class ControllerEnumConverter : IMultiValueConverter
                     Resources.ButtonLabelHeroPower
                 },
                 {
+                    (DeviceControllerType.FortniteGuitar, StandardButtonType.Back),
+                    Resources.ButtonLabelOverdrive
+                },
+                {
+                    (DeviceControllerType.FortniteGuitarStrum, StandardButtonType.Back),
+                    Resources.ButtonLabelOverdrive
+                },
+                {
                     (DeviceControllerType.LiveGuitar, StandardButtonType.LeftThumbClick),
                     Resources.ButtonLabelGHTV
                 },

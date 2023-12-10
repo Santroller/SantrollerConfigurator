@@ -106,7 +106,7 @@ public class InputImageConverter : IMultiValueConverter
                 EmulationModeType.Switch => "Combined/Switch",
                 _ => throw new ArgumentOutOfRangeException()
             },
-            StandardButtonType type => GetPath(type, legendType, swapSwitchFaceButtons),
+            StandardButtonType type => (deviceControllerType.IsDrum() || deviceControllerType.IsGuitar()) && type is StandardButtonType.Back or StandardButtonType.Start or StandardButtonType.LeftThumbClick ? deviceControllerType + "/" + type : GetPath(type, legendType, swapSwitchFaceButtons),
             StandardAxisType type => GetPath(type, legendType, swapSwitchFaceButtons),
             Ps3AxisType type => "PS2/" + type.ToString().Replace("Pressure",""),
             _ => null

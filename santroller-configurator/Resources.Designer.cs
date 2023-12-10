@@ -3297,6 +3297,48 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string FortniteGreen {
+            get {
+                return ResourceManager.GetString("FortniteGreen", resourceCulture);
+            }
+        }
+        
+        public static string FortniteRed {
+            get {
+                return ResourceManager.GetString("FortniteRed", resourceCulture);
+            }
+        }
+        
+        public static string FortniteYellow {
+            get {
+                return ResourceManager.GetString("FortniteYellow", resourceCulture);
+            }
+        }
+        
+        public static string FortniteBlue {
+            get {
+                return ResourceManager.GetString("FortniteBlue", resourceCulture);
+            }
+        }
+        
+        public static string FortniteOrange {
+            get {
+                return ResourceManager.GetString("FortniteOrange", resourceCulture);
+            }
+        }
+        
+        public static string FortniteStrumUp {
+            get {
+                return ResourceManager.GetString("FortniteStrumUp", resourceCulture);
+            }
+        }
+        
+        public static string FortniteStrumDown {
+            get {
+                return ResourceManager.GetString("FortniteStrumDown", resourceCulture);
+            }
+        }
+        
         public static string InstrumentButtonTypeGreen {
             get {
                 return ResourceManager.GetString("InstrumentButtonTypeGreen", resourceCulture);
@@ -4728,6 +4770,12 @@ namespace GuitarConfigurator.NetCore {
         public static string ButtonLabelHeroPower {
             get {
                 return ResourceManager.GetString("ButtonLabelHeroPower", resourceCulture);
+            }
+        }
+        
+        public static string ButtonLabelOverdrive {
+            get {
+                return ResourceManager.GetString("ButtonLabelOverdrive", resourceCulture);
             }
         }
         

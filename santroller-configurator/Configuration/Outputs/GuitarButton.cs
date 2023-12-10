@@ -88,6 +88,10 @@ public class GuitarButton : OutputButton
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
+        if (deviceControllerType.IsFortnite())
+        {
+            return Resources.ResourceManager.GetString("Fortnite" + Type) ?? "";
+        }
         return EnumToStringConverter.Convert(Type);
     }
 

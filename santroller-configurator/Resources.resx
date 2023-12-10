@@ -1730,6 +1730,27 @@
     <data name="InputTypeConstantInput" xml:space="preserve">
         <value>Constant Input</value>
     </data>
+    <data name="FortniteGreen" xml:space="preserve">
+        <value>Lane 1</value>
+    </data>
+    <data name="FortniteRed" xml:space="preserve">
+        <value>Lane 2</value>
+    </data>
+    <data name="FortniteYellow" xml:space="preserve">
+        <value>Lane 3</value>
+    </data>
+    <data name="FortniteBlue" xml:space="preserve">
+        <value>Lane 4</value>
+    </data>
+    <data name="FortniteOrange" xml:space="preserve">
+        <value>Lane 5</value>
+    </data>
+    <data name="FortniteStrumUp" xml:space="preserve">
+        <value>Strum Up</value>
+    </data>
+    <data name="FortniteStrumDown" xml:space="preserve">
+        <value>Strum Down</value>
+    </data>
     <data name="InstrumentButtonTypeGreen" xml:space="preserve">
         <value>Green Fret</value>
     </data>
@@ -1761,22 +1782,22 @@
         <value>Solo Orange Fret</value>
     </data>
     <data name="InstrumentButtonTypeBlack1" xml:space="preserve">
-        <value>Black1</value>
+        <value>Black 1</value>
     </data>
     <data name="InstrumentButtonTypeBlack2" xml:space="preserve">
-        <value>Black2</value>
+        <value>Black 2</value>
     </data>
     <data name="InstrumentButtonTypeBlack3" xml:space="preserve">
-        <value>Black3</value>
+        <value>Black 3</value>
     </data>
     <data name="InstrumentButtonTypeWhite1" xml:space="preserve">
-        <value>White1</value>
+        <value>White 1</value>
     </data>
     <data name="InstrumentButtonTypeWhite2" xml:space="preserve">
-        <value>White2</value>
+        <value>White 2</value>
     </data>
     <data name="InstrumentButtonTypeWhite3" xml:space="preserve">
-        <value>White3</value>
+        <value>White 3</value>
     </data>
     <data name="InstrumentButtonTypeStrumUp" xml:space="preserve">
         <value>Strum Up</value>
@@ -2481,6 +2502,9 @@
     </data>
     <data name="ButtonLabelHeroPower" xml:space="preserve">
         <value>/ Hero Power Button</value>
+    </data>
+    <data name="ButtonLabelOverdrive" xml:space="preserve">
+        <value>Overdrive</value>
     </data>
     <data name="ButtonLabelGHTV" xml:space="preserve">
         <value>GHTV Button</value>
