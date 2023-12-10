@@ -1,15 +1,14 @@
-using System.Text.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
+using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Utils;
 
+[ProtoContract]
 public class ToolConfig
 {
-    [JsonPropertyName("viewType")] public LegendType LegendType { get; set; } = LegendType.Xbox;
-}
-
-[JsonSourceGenerationOptions(WriteIndented = true)]
-[JsonSerializable(typeof(ToolConfig))]
-internal partial class SourceGenerationContext2 : JsonSerializerContext
-{
+    [ProtoMember(1)] public LegendType LegendType { get; set; } = LegendType.Xbox;
+    [ProtoMember(2)] public List<Tuple<string, SerializedConfiguration>> Presets { get; set; } = [];
 }

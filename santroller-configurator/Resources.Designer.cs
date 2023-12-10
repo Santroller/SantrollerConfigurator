@@ -5673,6 +5673,54 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SavePresetLabel {
+            get {
+                return ResourceManager.GetString("SavePresetLabel", resourceCulture);
+            }
+        }
+        
+        public static string SavePresetLabel2 {
+            get {
+                return ResourceManager.GetString("SavePresetLabel2", resourceCulture);
+            }
+        }
+        
+        public static string PresetLabel {
+            get {
+                return ResourceManager.GetString("PresetLabel", resourceCulture);
+            }
+        }
+        
+        public static string LoadPresetSimple {
+            get {
+                return ResourceManager.GetString("LoadPresetSimple", resourceCulture);
+            }
+        }
+        
+        public static string LoadPresetLabel {
+            get {
+                return ResourceManager.GetString("LoadPresetLabel", resourceCulture);
+            }
+        }
+        
+        public static string DeletePresetLabel {
+            get {
+                return ResourceManager.GetString("DeletePresetLabel", resourceCulture);
+            }
+        }
+        
+        public static string LoadPresetLabel2 {
+            get {
+                return ResourceManager.GetString("LoadPresetLabel2", resourceCulture);
+            }
+        }
+        
+        public static string DeletePresetLabel2 {
+            get {
+                return ResourceManager.GetString("DeletePresetLabel2", resourceCulture);
+            }
+        }
+        
         public static string ConfigureAllInputsLabel {
             get {
                 return ResourceManager.GetString("ConfigureAllInputsLabel", resourceCulture);

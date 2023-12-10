@@ -2519,7 +2519,7 @@
         <value>Devices connected</value>
     </data>
     <data name="RevertArduinoLabel" xml:space="preserve">
-        <value>Revert device to Arduino</value>
+        <value>Revert Device to Arduino</value>
     </data>
     <data name="SaveConfigurationLabel" xml:space="preserve">
         <value>Save Settings</value>
@@ -2948,13 +2948,38 @@
         <value>Add Setting</value>
     </data>
     <data name="ExportConfigLabel" xml:space="preserve">
-        <value>Export Settings</value>
+        <value>Export Current Settings to File</value>
     </data>
     <data name="ImportConfigLabel" xml:space="preserve">
-        <value>Import Settings</value>
+        <value>Import Settings from File</value>
+    </data>
+    <data name="SavePresetLabel" xml:space="preserve">
+        <value>Create Preset</value>
+    </data>
+    <data name="SavePresetLabel2" xml:space="preserve">
+        <value>Save Current Settings as {0}</value>
+    </data>
+    <data name="PresetLabel" xml:space="preserve">
+        <value>Preset</value>
+    </data>
+    <data name="LoadPresetSimple" xml:space="preserve">
+        <value>Load Preset</value>
+    </data>
+    <data name="LoadPresetLabel" xml:space="preserve">
+        <value>Load Settings from Preset</value>
+    </data>
+    <data name="DeletePresetLabel" xml:space="preserve">
+        <value>Delete Preset</value>
+    </data>
+
+    <data name="LoadPresetLabel2" xml:space="preserve">
+        <value>Load Settings from {0}</value>
+    </data>
+    <data name="DeletePresetLabel2" xml:space="preserve">
+        <value>Delete {0}</value>
     </data>
     <data name="ConfigureAllInputsLabel" xml:space="preserve">
-        <value>Configure all inputs</value>
+        <value>Configure All Inputs</value>
     </data>
     <data name="LoadDefaultsLabel" xml:space="preserve">
         <value>Load Defaults</value>
@@ -2985,6 +3010,9 @@
     </data>
     <data name="LEDSettingsLabel" xml:space="preserve">
         <value>LED Settings</value>
+    </data>
+    <data name="PresetLabel" xml:space="preserve">
+        <value>Presets</value>
     </data>
     <data name="PollSettingsLabel" xml:space="preserve">
         <value>Controller Poll Settings</value>

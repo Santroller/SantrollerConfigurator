@@ -89,15 +89,7 @@
                 <Button Command="{Binding ResetWithConfirmationCommand}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
                         Content="{x:Static netCore:Resources.ResetSettingsLabel}" />
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="20 5 20 0">
-                    <Button Command="{Binding LoadConfigCommand}"
-                            HorizontalAlignment="Stretch" Width="130" HorizontalContentAlignment="Center" 
-                            Content="{x:Static netCore:Resources.ImportConfigLabel}" />
-                    <Button Command="{Binding SaveConfigCommand}"
-                            HorizontalAlignment="Stretch" Width="130" HorizontalContentAlignment="Center"
-                            Content="{x:Static netCore:Resources.ExportConfigLabel}" />
-                </StackPanel>
+                
                 <Button Command="{Binding BindAllCommand}" HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center" Margin="20 5 20 0"
                         Content="{x:Static netCore:Resources.ConfigureAllInputsLabel}" />

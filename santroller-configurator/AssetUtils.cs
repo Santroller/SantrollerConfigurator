@@ -8,6 +8,7 @@ using Avalonia.Platform;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Utils;
 using Joveler.Compression.XZ;
+using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore;
 
@@ -88,21 +89,21 @@ public class AssetUtils
 
     public static ToolConfig GetConfig()
     {
-        var configFile = Path.Combine(GetAppDataFolder(), "config.json");
-        return File.Exists(configFile)
-            ? JsonSerializer.Deserialize<ToolConfig>(File.ReadAllText(configFile), SourceGenerationContext2.Default.ToolConfig)!
-            : new ToolConfig();
-    }
+        var configFile = Path.Combine(GetAppDataFolder(), "config.bin");
+        if (!File.Exists(configFile))
+        {
+            return new ToolConfig();
+        }
 
-    public static LegendType GetViewType()
-    {
-        return GetConfig().LegendType;
+        var outputStream = new FileStream(configFile, FileMode.Open);
+        return Serializer.Deserialize<ToolConfig>(outputStream);
     }
 
     public static void SaveConfig(ToolConfig config)
     {
-        var configFile = Path.Combine(GetAppDataFolder(), "config.json");
-        File.WriteAllText(configFile, JsonSerializer.Serialize(config, SourceGenerationContext2.Default.ToolConfig));
+        var configFile = Path.Combine(GetAppDataFolder(), "config.bin");
+        var outputStream = new FileStream(configFile, FileMode.OpenOrCreate);
+        Serializer.Serialize(outputStream, config);
     }
 }
 

@@ -90,6 +90,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         Branded = branded;
         Builder = builder;
         _legendType = _toolConfig.LegendType;
+        Presets.AddRange(_toolConfig.Presets);
+        CurrentPreset = Presets.FirstOrDefault();
         _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.Background, Diff);
         BtRxAddr = "";
         UpdateBluetoothAddress();
@@ -124,6 +126,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .ToPropertyEx(this, x => x.IsAdvancedMode);
         this.WhenAnyValue(x => x.Mode).Select(x => x is ModeType.Standard)
             .ToPropertyEx(this, x => x.IsStandardMode);
+        this.WhenAnyValue(x => x.PresetName).Select(x => String.IsNullOrWhiteSpace(x) ? Resources.SavePresetLabel : string.Format(Resources.SavePresetLabel2, x))
+            .ToPropertyEx(this, x => x.SavePresetLabel);
+        this.WhenAnyValue(x => x.CurrentPreset).Select(x => x is null ? Resources.LoadPresetLabel : string.Format(Resources.LoadPresetLabel2, x.Item1))
+            .ToPropertyEx(this, x => x.LoadPresetLabel);
+        this.WhenAnyValue(x => x.CurrentPreset).Select(x => x is null ? Resources.DeletePresetLabel : string.Format(Resources.DeletePresetLabel2, x.Item1))
+            .ToPropertyEx(this, x => x.DeletePresetLabel);
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => x is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
             .ToPropertyEx(this, x => x.IsBluetoothTx);
@@ -398,6 +406,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public bool BindableTwi { get; }
     [Reactive] public bool PollExpanded { get; set; }
+    
+    [Reactive] public bool PresetsExpanded { get; set; }
     [Reactive] public bool ControllerConfigExpanded { get; set; }
     [Reactive] public bool BluetoothConfigExpanded { get; set; }
     [Reactive] public bool LedConfigExpanded { get; set; }
@@ -714,6 +724,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private readonly ToolConfig _toolConfig = AssetUtils.GetConfig();
 
+    [Reactive] public string PresetName { get; set; } = "";
+
     private LegendType _legendType;
 
     public LegendType LegendType
@@ -748,8 +760,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public Microcontroller Microcontroller { get; private set; }
 
     public SourceList<Output> Bindings { get; } = new();
-    public bool BindableSpi => IsPico;
 
+    [Reactive] public Tuple<string, SerializedConfiguration>? CurrentPreset { get; set; }
+
+    public ObservableCollection<Tuple<string, SerializedConfiguration>> Presets { get; } = new();
+    public bool BindableSpi => IsPico;
     public IDisposable RegisterConnections()
     {
         return
@@ -769,6 +784,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     // ReSharper disable UnassignedGetOnlyAutoProperty
+    [ObservableAsProperty] public string? LoadPresetLabel { get; }
+    [ObservableAsProperty] public string? DeletePresetLabel { get; }
+    [ObservableAsProperty] public string? SavePresetLabel { get; }
     [ObservableAsProperty] public bool IsStandardMode { get; }
     [ObservableAsProperty] public bool IsAdvancedMode { get; }
     [ObservableAsProperty] public bool IsGuitar { get; }
@@ -1565,7 +1583,30 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         UpdateErrors();
     }
-
+    [RelayCommand]
+    public void LoadPreset()
+    {
+        CurrentPreset!.Item2.LoadConfiguration(this);
+    }
+    [RelayCommand]
+    public void DeletePreset()
+    {
+        Presets.Remove(CurrentPreset!);
+        CurrentPreset = Presets.FirstOrDefault();
+        _toolConfig.Presets.Clear();
+        _toolConfig.Presets.AddRange(Presets);
+        AssetUtils.SaveConfig(_toolConfig);
+    }
+    [RelayCommand]
+    public void SavePreset()
+    {
+        var config = new SerializedConfiguration(this);
+        Presets.Add(new (PresetName, config));
+        CurrentPreset ??= Presets.First();
+        _toolConfig.Presets.Clear();
+        _toolConfig.Presets.AddRange(Presets);
+        AssetUtils.SaveConfig(_toolConfig);
+    }
     [RelayCommand]
     public void ClearOutputs()
     {
@@ -1579,7 +1620,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         foreach (var binding in Bindings.Items) binding.Expanded = true;
         PeripheralExpanded = true;
         PollExpanded = true;
+        PresetsExpanded = true;
         LedConfigExpanded = true;
+        ControllerConfigExpanded = true;
+        BluetoothConfigExpanded = true;
     }
 
     [RelayCommand]
@@ -1588,7 +1632,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         foreach (var binding in Bindings.Items) binding.Expanded = false;
         PeripheralExpanded = false;
         PollExpanded = false;
+        PresetsExpanded = false;
         LedConfigExpanded = false;
+        ControllerConfigExpanded = false;
+        BluetoothConfigExpanded = false;
     }
 
     [RelayCommand]

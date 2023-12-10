@@ -2264,9 +2264,9 @@
                            VerticalContentAlignment="Center" Width="300"
                            Content="{x:Static netCore:Resources.TestLEDLabel}" />
                     <Button HorizontalAlignment="Center"
-                                  Width="200"
-                                  Command="{Binding TestLEDs}"
-                                  HorizontalContentAlignment="Center" Content="{x:Static netCore:Resources.TestLEDLabel}" />
+                            Width="200"
+                            Command="{Binding TestLEDs}"
+                            HorizontalContentAlignment="Center" Content="{x:Static netCore:Resources.TestLEDLabel}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.IsVisible>
@@ -2473,6 +2473,78 @@
                                           IsChecked="{Binding CombinedStrumDebounce}"
                                           OnContent="{x:Static netCore:Resources.StrumCombinedLabel}"
                                           OffContent="{x:Static netCore:Resources.StrumIndividualLabel}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}" IsVisible="{Binding !Branded}"
+                          IsExpanded="{Binding PresetsExpanded}">
+                    <Expander.HeaderTemplate>
+                        <DataTemplate DataType="viewModels:ConfigViewModel">
+                            <Panel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="75"
+                                           Source="avares://SantrollerConfigurator/Assets/Icons/Combined/Presets.png">
+                                    </Image>
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.PresetLabel}" />
+                                </StackPanel>
+                            </Panel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.ImportConfigLabel}" />
+                            <Button Command="{Binding LoadConfigCommand}"
+                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    Content="{x:Static netCore:Resources.ImportConfigLabel}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.ExportConfigLabel}" />
+                            <Button Command="{Binding SaveConfigCommand}"
+                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    Content="{x:Static netCore:Resources.ExportConfigLabel}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.SavePresetLabel}" />
+                            <TextBox Width="300" Text="{Binding PresetName}"></TextBox>
+                            <Button Command="{Binding SavePresetCommand}"
+                                    IsEnabled="{Binding PresetName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    Content="{Binding SavePresetLabel}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.PresetLabel}" />
+                            <ComboBox Width="300"
+                                      IsEnabled="{Binding Presets.Count}"
+                                      SelectedItem="{Binding CurrentPreset}"
+                                      ItemsSource="{Binding Presets}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Item1, Mode=OneWay}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.LoadPresetSimple}" />
+                            <Button Command="{Binding LoadPresetCommand}"
+                                    IsEnabled="{Binding Presets.Count}"
+                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    Content="{Binding LoadPresetLabel}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.DeletePresetLabel}" />
+                            <Button Command="{Binding DeletePresetCommand}"
+                                    IsEnabled="{Binding Presets.Count}"
+                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    Content="{Binding DeletePresetLabel}" />
                         </StackPanel>
                     </StackPanel>
                 </Expander>
