@@ -129,11 +129,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .ToPropertyEx(this, x => x.IsBluetoothTx);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarHeroGuitar
-                or DeviceControllerType.RockBandGuitar)
+                or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum)
             .ToPropertyEx(this, x => x.IsGuitar);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.StageKit)
             .ToPropertyEx(this, x => x.IsStageKit);
+        this.WhenAnyValue(x => x.EmulationType)
+            .Select(x => x is EmulationType.FortniteFestival)
+            .ToPropertyEx(this, x => x.IsFortniteFestival);
         _strumDebounceDisplay = this.WhenAnyValue(x => x.StrumDebounce)
             .Select(x => x / 10.0f)
             .ToProperty(this, x => x.StrumDebounceDisplay);
@@ -143,6 +146,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.Controller)
             .ToPropertyEx(this, x => x.IsController);
+        this.WhenAnyValue(x => x.EmulationType)
+            .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.Controller && x is not EmulationType.FortniteFestival)
+            .ToPropertyEx(this, x => x.IsNonFortniteController);
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.KeyboardMouse)
             .ToPropertyEx(this, x => x.IsKeyboard);
@@ -212,6 +218,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Filter(s => s.IsVisible)
             .Bind(out var outputs)
             .Subscribe();
+        _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>());
+        _deviceControllerTypes.Connect().Filter(
+            this.WhenAnyValue(s => s.EmulationType)
+                .Select(s =>
+                    new Func<DeviceControllerType, bool>(type =>
+                        s is EmulationType.FortniteFestival == type.IsFortnite())))
+                .Bind(out var controllerTypes)
+                .Subscribe();
+        DeviceControllerRhythmTypes = controllerTypes;
         Outputs = outputs;
         AllPins = new SourceList<int>();
         AllPins.AddRange(Microcontroller.GetAllPins());
@@ -346,11 +361,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public MainWindowViewModel Main { get; }
 
-    public IEnumerable<DeviceControllerType> DeviceControllerRhythmTypes =>
-        Enum.GetValues<DeviceControllerType>();
-
+    private SourceList<DeviceControllerType> _deviceControllerTypes = new SourceList<DeviceControllerType>();
+    
+    public ReadOnlyObservableCollection<DeviceControllerType> DeviceControllerRhythmTypes { get; }
     public IEnumerable<ModeType> ModeTypes => Enum.GetValues<ModeType>();
-
     // Only Pico supports bluetooth
     public IEnumerable<EmulationType> EmulationTypes => Enum.GetValues<EmulationType>()
         .Where(type =>
@@ -760,6 +774,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsGuitar { get; }
     [ObservableAsProperty] public bool IsStageKit { get; }
     [ObservableAsProperty] public bool IsController { get; }
+    [ObservableAsProperty] public bool IsNonFortniteController { get; }
+    [ObservableAsProperty] public bool IsFortniteFestival { get; }
     [ObservableAsProperty] public bool IsKeyboard { get; }
     [ObservableAsProperty] public bool IsApa102 { get; }
     [ObservableAsProperty] public bool IsApa102Peripheral { get; }
@@ -1036,6 +1052,38 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (emulationType is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
         {
             ResetBluetoothRelated();
+        }
+
+        if (DeviceControllerType.IsGuitar() && emulationType == EmulationType.FortniteFestival)
+        {
+            _emulationType = emulationType;
+            this.RaisePropertyChanged(nameof(EmulationType));
+            DeviceControllerType = DeviceControllerType.FortniteGuitar;
+            return;
+        }
+
+        if (DeviceControllerType.IsDrum() && emulationType == EmulationType.FortniteFestival)
+        {
+            _emulationType = emulationType;
+            this.RaisePropertyChanged(nameof(EmulationType));
+            DeviceControllerType = DeviceControllerType.FortniteDrums;
+            return;
+        }
+        
+        if (DeviceControllerType.IsGuitar() && emulationType == EmulationType.Controller)
+        {
+            _emulationType = emulationType;
+            this.RaisePropertyChanged(nameof(EmulationType));
+            DeviceControllerType = DeviceControllerType.GuitarHeroGuitar;
+            return;
+        }
+
+        if (DeviceControllerType.IsDrum() && emulationType == EmulationType.Controller)
+        {
+            _emulationType = emulationType;
+            this.RaisePropertyChanged(nameof(EmulationType));
+            DeviceControllerType = DeviceControllerType.GuitarHeroDrums;
+            return;
         }
 
         // If going from say bluetooth controller to standard controller, the pin bindings can stay
@@ -1480,6 +1528,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             case EmulationType.Bluetooth:
             case EmulationType.Controller:
+            case EmulationType.FortniteFestival:
                 return EmulationType.Controller;
             case EmulationType.KeyboardMouse:
             case EmulationType.BluetoothKeyboardMouse:
@@ -1993,8 +2042,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 }
 
                 debounces.TryAdd(generatedInput, debounces.Count);
-
-                if (combined && output is GuitarButton
+                if (output is GuitarButton
                     {
                         IsStrum: true
                     })
@@ -2034,6 +2082,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     .GenerateAll(group
                         // DigitalToAnalog and MacroInput need to be handled last
                         .OrderByDescending(s => s.Input is DigitalToAnalog or MacroInput ? 0 : 1)
+                        // And then we need to make sure any strum ouputs are first, so that the fortnite strum code works
+                        .ThenBy(s => s is GuitarButton {IsStrum: true} ? 0 : 1)
                         .Select(s =>
                         {
                             var input = s.Input;
@@ -2080,7 +2130,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 }
                             }
 
-                            var generated = output.Generate(mode, index, "", "", strumIndices, macros, writer);
+                            var generated = output.Generate(mode, index, "", "", strumIndices, combined, macros, writer);
 
                             return new Tuple<Input, string>(input, generated);
                         })

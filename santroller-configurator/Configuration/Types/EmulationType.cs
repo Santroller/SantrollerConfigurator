@@ -4,6 +4,7 @@ public enum EmulationType
 {
     Controller,
     KeyboardMouse,
+    FortniteFestival,
     Bluetooth,
     BluetoothKeyboardMouse
 }

@@ -2359,7 +2359,7 @@
                                           ItemsSource="{Binding DeviceControllerRhythmTypes}" />
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsController}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonFortniteController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.SwapSwitchFaceButtonLabel}" />
@@ -2370,7 +2370,7 @@
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsController}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonFortniteController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.WindowsControllerModeLabel}" />

@@ -49,7 +49,8 @@ public class Reset : Output
 
     public override string Generate(ConfigField mode, int debounceIndex, string extra,
         string combinedExtra,
-        List<int> combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
+        List<int> strumIndexes,
+        bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         return mode != ConfigField.Detection
             ? ""

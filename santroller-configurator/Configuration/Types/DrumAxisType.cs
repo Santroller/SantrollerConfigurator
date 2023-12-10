@@ -41,14 +41,34 @@ public static class DrumAxisTypeMethods
             DrumAxisType.Kick2
         };
     }
+    
+    public static IEnumerable<DrumAxisType> FortniteTypes()
+    {
+        return new[]
+        {
+            DrumAxisType.Green,
+            DrumAxisType.Red,
+            DrumAxisType.Yellow,
+            DrumAxisType.Blue,
+            DrumAxisType.Orange
+        };
+    }
 
     public static IEnumerable<DrumAxisType> GetTypeFor(DeviceControllerType type)
     {
+        if (type.IsFortnite())
+        {
+            return FortniteTypes();
+        }
         return type.IsGh() ? GhTypes() : RbTypes();
     }
 
     public static IEnumerable<DrumAxisType> GetInvalidTypesFor(DeviceControllerType type)
     {
+        if (type.IsFortnite())
+        {
+            return RbTypes().Concat(GhTypes());
+        }
         return type.IsGh() ? RbTypes() : GhTypes();
     }
 

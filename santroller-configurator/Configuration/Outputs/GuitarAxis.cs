@@ -147,10 +147,11 @@ public class GuitarAxis : OutputAxis
 
     public override string Generate(ConfigField mode, int debounceIndex, string extra,
         string combinedExtra,
-        List<int> combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
+        List<int> strumIndexes,
+        bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         if (mode == ConfigField.Shared)
-            return base.Generate(mode, debounceIndex, extra, combinedExtra, combinedDebounce, macros, writer);
+            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360 or ConfigField.XboxOne
             or ConfigField.Universal)) return "";
         // The below is a mess... but essentially we have to handle converting the input to its respective output depending on console
@@ -325,7 +326,7 @@ public class GuitarAxis : OutputAxis
                     $"{GenerateOutput(mode)} = (((({GenerateAssignment(GenerateOutput(mode), mode, false, true, false, false, writer)}) >> 10) + 1) & 0xF0);";
             default:
                 if (Input is DigitalToAnalog)
-                    return base.Generate(mode, debounceIndex, extra, combinedExtra, combinedDebounce, macros, writer);
+                    return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
                 return
                     $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, Type is GuitarAxisType.Whammy, false, writer)};";
         }

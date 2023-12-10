@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Avalonia;
+using Avalonia.Input;
 using Avalonia.Media;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
@@ -30,6 +31,14 @@ public partial class DrumAxis : OutputAxis
         {DrumAxisType.Orange, StandardButtonType.RightShoulder},
         {DrumAxisType.Kick, StandardButtonType.LeftShoulder},
         {DrumAxisType.Kick2, StandardButtonType.LeftThumbClick}
+    };
+    private static readonly Dictionary<DrumAxisType, Key> KeysFortnite = new()
+    {
+        {DrumAxisType.Green, Key.D},
+        {DrumAxisType.Red, Key.F},
+        {DrumAxisType.Yellow, Key.J},
+        {DrumAxisType.Blue, Key.K},
+        {DrumAxisType.Orange, Key.L},
     };
 
     private static readonly Dictionary<DrumAxisType, StandardButtonType> ButtonsXboxOne = new()
@@ -154,7 +163,8 @@ public partial class DrumAxis : OutputAxis
 
     public override string Generate(ConfigField mode, int debounceIndex, string extra,
         string combinedExtra,
-        List<int> combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
+        List<int> strumIndexes,
+        bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         if (mode == ConfigField.Shared)
         {
@@ -162,13 +172,13 @@ public partial class DrumAxis : OutputAxis
             {
                 return new ControllerButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), (byte) Debounce, StandardButtonType.A,
                         false)
-                    .Generate(mode, debounceIndex, extra, combinedExtra, combinedDebounce, macros, writer);
+                    .Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
             }
-            return base.Generate(mode, debounceIndex, extra, combinedExtra, combinedDebounce, macros, writer);
+            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
         }
         
 
-        if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360 or ConfigField.Universal)) return "";
+        if (Model.EmulationType is not EmulationType.FortniteFestival && (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360 or ConfigField.Universal)) || (Model.EmulationType is EmulationType.FortniteFestival && mode is not ConfigField.Keyboard)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;
         if (!Model.IsAdvancedMode) debounce = (byte) Model.Debounce;
@@ -211,11 +221,15 @@ public partial class DrumAxis : OutputAxis
                 if (ButtonsPs3.TryGetValue(Type, out var value3))
                     outputButtons += $"\n{GetReportField(value3)} = true;";
                 break;
+            case ConfigField.Keyboard:
+                if (KeysFortnite.TryGetValue(Type, out var value4))
+                    outputButtons += $"\n{GetReportField(value4)} = true;";
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
 
-        if (Model.DeviceControllerType.IsRb() && Type is DrumAxisType.Kick or DrumAxisType.Kick2)
+        if (Model.DeviceControllerType.IsRb() && Type is DrumAxisType.Kick or DrumAxisType.Kick2 || mode is ConfigField.Keyboard)
         {
             return $$"""
                      if ({{ifStatement}}) {
@@ -338,7 +352,7 @@ public partial class DrumAxis : OutputAxis
                  }
                  if ({{ifStatement}}) {
                      {{outputButtons}}
-                     {{GenerateOutput(mode)}} = {{assignedVal}};
+                     {{GenerateOutput(mode)}} = {{assignedVal}};;
                  }
                  """;
     }

@@ -321,6 +321,8 @@ public class WiiCombinedOutput : CombinedTwiOutput
     public override IEnumerable<Output> ValidOutputs()
     {
         var outputs = new List<Output>(base.ValidOutputs());
+
+        ControllerEnumConverter.FilterValidOutputs(Model.DeviceControllerType, outputs);
         var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
         if (joyToDpad?.Enabled == true)
         {
@@ -479,7 +481,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
             }
         }
 
-        if (Model.DeviceControllerType.IsGuitar())
+        if (Model.DeviceControllerType.IsGuitar() && !Model.DeviceControllerType.IsFortnite())
         {
             if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Whammy}))
             {
@@ -494,7 +496,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
         }
 
         // Map Slider on guitars to Slider, and to RightStickY on anything else
-        if (Model.DeviceControllerType.Is5FretGuitar())
+        if (Model.DeviceControllerType.Is5FretGuitar() && !Model.DeviceControllerType.IsFortnite())
         {
             if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Slider}))
             {
@@ -503,7 +505,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
                     Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 0,  GuitarAxisType.Slider, true));
             }
         }
-        else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
+        else if (Model.DeviceControllerType == DeviceControllerType.Gamepad || Model.DeviceControllerType.IsFortnite())
         {
             Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Slider}));
         }

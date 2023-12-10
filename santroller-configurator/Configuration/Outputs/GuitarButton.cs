@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Avalonia.Input;
 using Avalonia.Media;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -21,6 +22,16 @@ public class GuitarButton : OutputButton
         Type = type;
         UpdateDetails();
     }
+    private readonly Dictionary<InstrumentButtonType, Key> _fortniteKeys = new()
+    {
+        {InstrumentButtonType.Green, Key.D},
+        {InstrumentButtonType.Red, Key.F},
+        {InstrumentButtonType.Yellow, Key.J},
+        {InstrumentButtonType.Blue, Key.K},
+        {InstrumentButtonType.Orange, Key.L},
+        {InstrumentButtonType.StrumUp, Key.Up},
+        {InstrumentButtonType.StrumDown, Key.Down},
+    };
 
     public override string LedOnLabel => Resources.LedColourActiveButtonColour;
     public override string LedOffLabel => Resources.LedColourInactiveButtonColour;
@@ -32,6 +43,10 @@ public class GuitarButton : OutputButton
 
     public override string GenerateOutput(ConfigField mode)
     {
+        if (mode is ConfigField.Keyboard)
+        {
+            return _fortniteKeys.TryGetValue(Type, out var forniteKey) ? GetReportField(forniteKey) : "";
+        }
         // PS3 and 360 just set the standard buttons, and rely on the solo flag
         // XB1 however has things broken out
         // For the universal report, we only put standard frets on nav, not solo
@@ -83,25 +98,34 @@ public class GuitarButton : OutputButton
 
     public override string Generate(ConfigField mode, int debounceIndex, string extra,
         string combinedExtra,
-        List<int> combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
+        List<int> strumIndexes,
+        bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         if (mode is not (ConfigField.Shared or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
-            or ConfigField.Universal
+            or ConfigField.Universal or ConfigField.Keyboard 
             or ConfigField.XboxOne or ConfigField.Reset)) return "";
         // If combined debounce is on, then additionally generate extra logic to ignore this input if the opposite debounce flag is active
-        if (combinedDebounce.Any() && Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
+        if (combinedDebounce && Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
             combinedExtra = string.Join(" && ",
-                combinedDebounce.Where(s => s != debounceIndex).Select(x => $"!debounce[{x}]"));
+                strumIndexes.Distinct().Where(s => s != debounceIndex).Select(x => $"!debounce[{x}]"));
+        if (mode is ConfigField.Shared && Model.DeviceControllerType is DeviceControllerType.FortniteGuitarStrum)
+        {
+            if (Type is InstrumentButtonType.Green or InstrumentButtonType.Red or InstrumentButtonType.Yellow
+                or InstrumentButtonType.Blue or InstrumentButtonType.Orange)
+            {
+                combinedExtra = string.Join(" || ", strumIndexes.Distinct().Select(x => $"debounce[{x}]"));
+            }
+        }
         // GHL Guitars map strum up and strum down to dpad up and down, and also the stick
         if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar &&
             Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp &&
             mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360)
             return base.Generate(mode, debounceIndex,
                 $"report->strumBar={(Type is InstrumentButtonType.StrumDown ? "0xFF" : "0x00")};", combinedExtra,
-                combinedDebounce, macros, writer);
+                strumIndexes, combinedDebounce, macros, writer);
 
         if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar})
-            return base.Generate(mode, debounceIndex, "", combinedExtra, combinedDebounce, macros, writer);
+            return base.Generate(mode, debounceIndex, "", combinedExtra, strumIndexes, combinedDebounce, macros, writer);
 
         //This stuff is only relevant for rock band guitars
         // Set solo flag (not relevant for universal)
@@ -114,7 +138,7 @@ public class GuitarButton : OutputButton
             extra += $"{GenerateOutput(ConfigField.Ps3)}=true;";
 
 
-        return base.Generate(mode, debounceIndex, extra, combinedExtra, combinedDebounce, macros, writer);
+        return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
     }
 
     public override SerializedOutput Serialize()

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Avalonia.Input;
 using Avalonia.Media;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -29,6 +31,12 @@ public class ControllerButton : OutputButton
     public override string LedOnLabel => Resources.LedColourActiveButtonColour;
     public override string LedOffLabel => Resources.LedColourInactiveButtonColour;
 
+    private readonly Dictionary<StandardButtonType, Key> _fortniteKeys = new()
+    {
+        {StandardButtonType.Back, Key.Space},
+        {StandardButtonType.DpadUp, Key.Up},
+        {StandardButtonType.DpadDown, Key.Down},
+    };
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
@@ -42,6 +50,10 @@ public class ControllerButton : OutputButton
 
     public override string GenerateOutput(ConfigField mode)
     {
+        if (Model.EmulationType is EmulationType.FortniteFestival && mode is ConfigField.Keyboard && _fortniteKeys.TryGetValue(Type, out var fortniteKey))
+        {
+            return GetReportField(fortniteKey);
+        }
         if (mode is not ConfigField.Ps3 && Type is StandardButtonType.Capture)
         {
             return "";

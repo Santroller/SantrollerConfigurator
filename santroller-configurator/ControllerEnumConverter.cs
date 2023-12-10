@@ -18,6 +18,10 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.Back,
         StandardButtonType.Guide
     };
+    private static readonly List<StandardButtonType> SupportedButtonsFortnite = new()
+    {
+        StandardButtonType.Back
+    };
 
     private static readonly List<StandardButtonType> SupportedButtonsNonGamepad = new()
     {
@@ -42,6 +46,7 @@ public class ControllerEnumConverter : IMultiValueConverter
         {StandardButtonType.Y, Resources.ButtonLabelTriangle},
         {StandardButtonType.Guide, Resources.ButtonLabelPlayStation}
     };
+
     private static readonly Dictionary<StandardButtonType, string> XboxLabels = new()
     {
         {StandardButtonType.Guide, Resources.ButtonLabelGuide},
@@ -70,7 +75,8 @@ public class ControllerEnumConverter : IMultiValueConverter
                 },
             };
 
-    public static string Convert(Enum value, DeviceControllerType deviceType, LegendType legendType, bool swapSwitchFaceButtons)
+    public static string Convert(Enum value, DeviceControllerType deviceType, LegendType legendType,
+        bool swapSwitchFaceButtons)
     {
         if (legendType == LegendType.Switch && !swapSwitchFaceButtons)
         {
@@ -87,11 +93,11 @@ public class ControllerEnumConverter : IMultiValueConverter
         var ret = EnumToStringConverter.Convert(value);
         if (value is StandardButtonType button)
         {
-            
             if (legendType == LegendType.PlayStation && PlaystationLabels.TryGetValue(button, out var label))
             {
                 ret = label;
             }
+
             if (legendType == LegendType.Xbox && XboxLabels.TryGetValue(button, out label))
             {
                 ret = label;
@@ -101,7 +107,7 @@ public class ControllerEnumConverter : IMultiValueConverter
             {
                 if (label.StartsWith("/"))
                 {
-                    ret += " "+ label;
+                    ret += " " + label;
                 }
                 else
                 {
@@ -115,7 +121,12 @@ public class ControllerEnumConverter : IMultiValueConverter
 
     public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (values[0] is not Enum e || values[1] is not DeviceControllerType t || values[2] is not LegendType l || values[3] is not bool swapSwitchFaceButtons) {return null;}
+        if (values[0] is not Enum e || values[1] is not DeviceControllerType t || values[2] is not LegendType l ||
+            values[3] is not bool swapSwitchFaceButtons)
+        {
+            return null;
+        }
+
         return Convert(e, t, l, swapSwitchFaceButtons);
     }
 
@@ -164,6 +175,7 @@ public class ControllerEnumConverter : IMultiValueConverter
         {
             return true;
         }
+
         switch (deviceControllerType)
         {
             case DeviceControllerType.Gamepad:
@@ -178,6 +190,10 @@ public class ControllerEnumConverter : IMultiValueConverter
             case DeviceControllerType.GuitarHeroGuitar:
             case DeviceControllerType.RockBandGuitar:
                 return SupportedButtonsGuitar.Contains(button);
+            case DeviceControllerType.FortniteGuitar:
+            case DeviceControllerType.FortniteGuitarStrum:
+            case DeviceControllerType.FortniteDrums:
+                return SupportedButtonsFortnite.Contains(button);
             default:
                 return true;
         }
@@ -187,7 +203,8 @@ public class ControllerEnumConverter : IMultiValueConverter
     {
         var otherBindings = deviceType switch
         {
-            DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums =>
+            DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums
+                or DeviceControllerType.FortniteDrums =>
                 DrumAxisTypeMethods.GetTypeFor(deviceType).Cast<object>(),
             DeviceControllerType.Gamepad => Enum.GetValues<Ps3AxisType>().Cast<object>()
                 .Concat(Enum.GetValues<StandardAxisType>().Cast<object>()),
@@ -196,6 +213,8 @@ public class ControllerEnumConverter : IMultiValueConverter
                 .Cast<object>()
                 .Concat(Enum.GetValues<DjAxisType>().Cast<object>()),
             DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandGuitar
+                or DeviceControllerType.FortniteGuitar
+                or DeviceControllerType.FortniteGuitarStrum
                 or DeviceControllerType.LiveGuitar => GuitarAxisTypeMethods
                     .GetTypeFor(deviceType)
                     .Cast<object>()

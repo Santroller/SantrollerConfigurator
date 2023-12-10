@@ -50,11 +50,12 @@ public class MouseButton : OutputButton
 
     public override string Generate(ConfigField mode, int debounceIndex, string extra,
         string combinedExtra,
-        List<int> combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
+        List<int> strumIndexes,
+        bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         return mode is not (ConfigField.Mouse or ConfigField.Shared or ConfigField.Reset)
             ? ""
-            : base.Generate(mode, debounceIndex, extra, combinedExtra, combinedDebounce, macros, writer);
+            : base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
     }
 
     public override SerializedOutput Serialize()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,6 +43,11 @@ public static class GuitarAxisTypeMethods
         {
             return GhlTypes();
         }
+
+        if (deviceControllerType.IsFortnite())
+        {
+            return Array.Empty<GuitarAxisType>();
+        }
         return deviceControllerType.IsGh()
             ? GhTypes()
             : RbTypes();
@@ -49,7 +55,7 @@ public static class GuitarAxisTypeMethods
 
     public static IEnumerable<GuitarAxisType> GetInvalidTypesFor(DeviceControllerType deviceControllerType)
     {
-        if (deviceControllerType == DeviceControllerType.LiveGuitar)
+        if (deviceControllerType == DeviceControllerType.LiveGuitar || deviceControllerType.IsFortnite())
         {
             return RbTypes().Concat(GhTypes());
         }

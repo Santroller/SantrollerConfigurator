@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,6 +46,7 @@ public abstract class OutputButton : Output
     /// <param name="debounceIndex"></param>
     /// <param name="extra">Used to provide extra statements that are called if the button is pressed</param>
     /// <param name="combinedExtra"></param>
+    /// <param name="strumIndexes"></param>
     /// <param name="combinedDebounce"></param>
     /// <param name="macros"></param>
     /// <param name="writer"></param>
@@ -52,11 +54,12 @@ public abstract class OutputButton : Output
     /// <exception cref="IncompleteConfigurationException"></exception>
     public override string Generate(ConfigField mode, int debounceIndex, string extra,
         string combinedExtra,
-        List<int> combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
+        List<int> strumIndexes,
+        bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         var ifStatement = $"debounce[{debounceIndex}]";
         var extraStatement = "";
-        if (mode == ConfigField.Shared && combinedExtra.Any()) extraStatement = " && " + combinedExtra;
+        if (mode == ConfigField.Shared && combinedExtra.Any()) extraStatement = $" && ({combinedExtra})";
 
         var debounce = Debounce;
         if (!Model.IsAdvancedMode)

@@ -713,6 +713,15 @@
     <data name="DeviceControllerTypeStageKit" xml:space="preserve">
         <value>Rock Band Stage Kit</value>
     </data>
+    <data name="DeviceControllerTypeFortniteGuitar" xml:space="preserve">
+        <value>Guitar</value>
+    </data>
+    <data name="DeviceControllerTypeFortniteGuitarStrum" xml:space="preserve">
+        <value>Guitar (with strum)</value>
+    </data>
+    <data name="DeviceControllerTypeFortniteDrums" xml:space="preserve">
+        <value>Drums</value>
+    </data>
     <data name="TwiPinTypeSda" xml:space="preserve">
         <value>SDA</value>
     </data>
@@ -1573,6 +1582,9 @@
     </data>
     <data name="EmulationTypeController" xml:space="preserve">
         <value>Controller</value>
+    </data>
+    <data name="EmulationTypeFortniteFestival" xml:space="preserve">
+        <value>Fortnite Festival</value>
     </data>
     <data name="EmulationTypeKeyboardMouse" xml:space="preserve">
         <value>Keyboard + Mouse</value>

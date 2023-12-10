@@ -1425,6 +1425,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string DeviceControllerTypeFortniteGuitar {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeFortniteGuitar", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeFortniteGuitarStrum {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeFortniteGuitarStrum", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeFortniteDrums {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeFortniteDrums", resourceCulture);
+            }
+        }
+        
         public static string TwiPinTypeSda {
             get {
                 return ResourceManager.GetString("TwiPinTypeSda", resourceCulture);
@@ -2982,6 +3000,12 @@ namespace GuitarConfigurator.NetCore {
         public static string EmulationTypeController {
             get {
                 return ResourceManager.GetString("EmulationTypeController", resourceCulture);
+            }
+        }
+        
+        public static string EmulationTypeFortniteFestival {
+            get {
+                return ResourceManager.GetString("EmulationTypeFortniteFestival", resourceCulture);
             }
         }
         
