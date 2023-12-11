@@ -1246,8 +1246,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
-                       """
-                
+                       """;
+            
             if (IsBluetoothRx)
             {
                 var addr = new byte[Santroller.BtAddressLength];
