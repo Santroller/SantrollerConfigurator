@@ -363,7 +363,6 @@ public class Santroller : ConfigurableUsbDevice
                     (byte) Commands.CommandReadAnalog,
                     sizeof(ushort));
             }
-
             while (_picking)
             {
                 foreach (var pin in pins)
