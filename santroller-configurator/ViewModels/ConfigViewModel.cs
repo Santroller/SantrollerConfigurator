@@ -1368,11 +1368,20 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             var nkroTick = GenerateTick(ConfigField.Keyboard, writer);
             if (nkroTick.Any())
+            {
                 config += $"""
 
                            #define TICK_NKRO \
                                {nkroTick}
                            """;
+            }
+            else if (IsKeyboard || IsFortniteFestival)
+            {
+                config += $"""
+
+                           #define TICK_NKRO
+                           """;
+            }
 
             var consumerTick = GenerateTick(ConfigField.Consumer, writer);
             if (consumerTick.Any())
