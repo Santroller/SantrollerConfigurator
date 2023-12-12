@@ -51,7 +51,7 @@ public class BrandedConfiguration : ReactiveObject
                 """;
     }
 
-    public async Task BuildUf2(string outputFile)
+    public async Task BuildUf2(ConfigViewModel model, string outputFile)
     {
         var blocks = new List<Uf2Block>(Uf2);
         await using var stream = new FileStream(outputFile,  FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, 4096, FileOptions.Asynchronous);
@@ -69,7 +69,7 @@ public class BrandedConfiguration : ReactiveObject
 
         await using (var streamBlob = new MemoryStream())
         {
-            Model.Generate(streamBlob);
+            model.Generate(streamBlob);
             streamBlob.Flush();
             streamBlob.Seek(0, SeekOrigin.Begin);
             block = new Uf2Block(block)
@@ -103,7 +103,7 @@ public class BrandedConfiguration : ReactiveObject
         {
             await using (var compressStream = new BrotliStream(outputStream, CompressionLevel.SmallestSize))
             {
-                Serializer.Serialize(compressStream, new SerializedConfiguration(Model));
+                Serializer.Serialize(compressStream, new SerializedConfiguration(model));
                 compressStream.Flush();
                 outputStream.Seek(0, SeekOrigin.Begin);
 

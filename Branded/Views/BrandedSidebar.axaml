@@ -4,6 +4,7 @@
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore;assembly=SantrollerConfigurator"
              xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels;assembly=SantrollerConfigurator"
+             xmlns:viewModels1="clr-namespace:SantrollerConfiguratorBranded.NetCore.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" x:DataType="viewModels:ConfigViewModel"
              x:Class="SantrollerConfiguratorBranded.NetCore.Views.BrandedSidebarView"
              x:CompileBindings="True"
@@ -40,7 +41,8 @@
     <Panel>
         <ScrollViewer VerticalAlignment="Center">
             <StackPanel Margin="0 0 0 40">
-                <Image Source="{Binding Main.Logo}" Width="200" Margin="40 5 40 40" IsVisible="{Binding $parent[Window].Height, Converter={StaticResource SidebarHeightConverter }}"/>
+                <Image Source="{Binding Main.Logo}" Width="200" Margin="40 5 40 40"
+                       IsVisible="{Binding $parent[Window].Height, Converter={StaticResource SidebarHeightConverter }}" />
                 <StackPanel IsVisible="{Binding IsController}">
                     <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"
                                Text="{x:Static netCore:Resources.ControllerViewTypeLabel}"
@@ -50,6 +52,24 @@
                               ItemTemplate="{StaticResource EnumToStringTemplate}"
                               ItemsSource="{Binding LegendTypes}" />
                 </StackPanel>
+                <StackPanel IsVisible="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).HasMultipleConfigs}">
+                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"
+                               Text="{x:Static netCore:Resources.PresetLabel}"
+                               TextAlignment="Center" />
+                    <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0"
+                              SelectedItem="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).SelectedConfig}"
+                              ItemsSource="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).Config.Configurations}">
+
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ProductName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button Content="{x:Static netCore:Resources.LoadPresetButtonLabel}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
+                            Command="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).LoadSelectedConfigCommand}" />
+                </StackPanel>
                 <Button Content="{x:Static netCore:Resources.SaveConfigurationLabel}" Background="#FFd7cb00"
                         Foreground="Black"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
@@ -58,7 +78,7 @@
                         Command="{Binding WriteConfigCommand}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
                         IsVisible="{Binding !Main.HasChanges}" />
-                
+
                 <Button Content="{x:Static netCore:Resources.GoBackLabel}" Command="{Binding GoBackCommand}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0" />
             </StackPanel>

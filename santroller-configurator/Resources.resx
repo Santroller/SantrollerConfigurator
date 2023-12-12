@@ -2884,6 +2884,9 @@
     <data name="ControllerViewTypeLabel" xml:space="preserve">
         <value>Controller View Type</value>
     </data>
+    <data name="LoadPresetButtonLabel" xml:space="preserve">
+        <value>Load Preset</value>
+    </data>
     <data name="ControllerTypeLabel" xml:space="preserve">
         <value>Controller Type</value>
     </data>

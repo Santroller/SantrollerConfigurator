@@ -5535,6 +5535,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string LoadPresetButtonLabel {
+            get {
+                return ResourceManager.GetString("LoadPresetButtonLabel", resourceCulture);
+            }
+        }
+        
         public static string ControllerTypeLabel {
             get {
                 return ResourceManager.GetString("ControllerTypeLabel", resourceCulture);
