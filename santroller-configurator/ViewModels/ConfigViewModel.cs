@@ -1072,19 +1072,19 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ResetBluetoothRelated();
         }
 
-        if (DeviceControllerType.IsGuitar() && emulationType == EmulationType.FortniteFestival)
-        {
-            _emulationType = emulationType;
-            this.RaisePropertyChanged(nameof(EmulationType));
-            DeviceControllerType = DeviceControllerType.FortniteGuitar;
-            return;
-        }
-
         if (DeviceControllerType.IsDrum() && emulationType == EmulationType.FortniteFestival)
         {
             _emulationType = emulationType;
             this.RaisePropertyChanged(nameof(EmulationType));
             DeviceControllerType = DeviceControllerType.FortniteDrums;
+            return;
+        }
+
+        if (emulationType == EmulationType.FortniteFestival)
+        {
+            _emulationType = emulationType;
+            this.RaisePropertyChanged(nameof(EmulationType));
+            DeviceControllerType = DeviceControllerType.FortniteGuitar;
             return;
         }
         
