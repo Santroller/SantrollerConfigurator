@@ -39,7 +39,6 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     {
         return ColorTranslator.ToHtml(Color.FromArgb(color.A, color.R, color.G, color.B));
     }
-
     public BrandedMainWindowViewModel() : base(true)
     {
         Config = BrandedConfigurationStore.LoadBranding(this);
