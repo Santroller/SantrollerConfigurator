@@ -1240,7 +1240,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define CONFIGURABLE_BLOBS
                        #define CONFIGURATION_LEN {WriteBlob(writer, configLength)}
                        #define SWAP_SWITCH_FACE_BUTTONS {WriteBlob(writer, SwapSwitchFaceButtons)}
-                       #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows)}
+                       #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsNonFortniteController)}
                        #define INPUT_QUEUE {WriteBlob(writer, Deque)}
                        #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
@@ -1268,7 +1268,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             config += $"""
                        #define CONFIGURATION_LEN {configLength}
                        #define SWAP_SWITCH_FACE_BUTTONS {(!SwapSwitchFaceButtons).ToString().ToLower()}
-                       #define WINDOWS_USES_XINPUT {XInputOnWindows.ToString().ToLower()}
+                       #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsNonFortniteController).ToString().ToLower()}
                        #define INPUT_QUEUE {Deque.ToString().ToLower()}
                        #define POLL_RATE {PollRate}
                        #define WT_SENSITIVITY {WtSensitivity}
