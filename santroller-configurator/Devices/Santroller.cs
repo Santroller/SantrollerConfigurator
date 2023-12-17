@@ -88,6 +88,10 @@ public class Santroller : ConfigurableUsbDevice
         _microcontroller = new Pico(Board.Generic);
         _deviceControllerType = (DeviceControllerType) (version >> 8);
         _currentMode = (ConsoleType) (serial[^3] - '0');
+        if (serial[^2] > 'K')
+        {
+            _deviceControllerType = (DeviceControllerType) (serial[^2] - 'K');
+        }
         Product = product;
         Manufacturer = manufacturer;
         if (device is IUsbDevice usbDevice) usbDevice.ClaimInterface(2);
