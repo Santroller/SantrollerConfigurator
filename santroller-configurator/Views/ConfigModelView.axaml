@@ -2415,7 +2415,7 @@
                         </DataTemplate>
                     </Expander.HeaderTemplate>
                     <StackPanel>
-                        <StackPanel IsVisible="{Binding !IsAdvancedMode}">
+                        <StackPanel IsVisible="{Binding SupportsDeque}">
                             <StackPanel IsVisible="{Binding IsGuitar}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"

@@ -135,6 +135,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => x is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
             .ToPropertyEx(this, x => x.IsBluetoothTx);
+        this.WhenAnyValue(x => x.EmulationType, x => x.Mode)
+            .Select(x => x.Item1 is EmulationType.Controller && x.Item2 is ModeType.Standard)
+            .ToPropertyEx(this, x => x.SupportsDeque);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarHeroGuitar
                 or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum)
@@ -418,10 +421,22 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public MouseMovementType MouseMovementType { get; set; }
 
-    [Reactive] public ModeType Mode { get; set; }
+    public ModeType Mode
+    {
+        get => _mode;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _mode, value);
+            if (value is ModeType.Advanced)
+            {
+                Deque = false;
+            }
+        }
+    }
 
     [Reactive] public int Debounce { get; set; }
 
+    private ModeType _mode;
     private bool _deque;
 
     public bool Deque
@@ -806,6 +821,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStp16 { get; }
     [ObservableAsProperty] public bool IsStp16Peripheral { get; }
     [ObservableAsProperty] public bool IsBluetoothTx { get; }
+    [ObservableAsProperty] public bool SupportsDeque { get; }
     [ObservableAsProperty] public string? PollRateLabel { get; }
     [ObservableAsProperty] public bool IsBluetooth { get; }
     [ObservableAsProperty] public bool IsOrWasBluetooth { get; }
@@ -1070,6 +1086,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private async Task SetDefaultBindingsAsync(EmulationType emulationType)
     {
+        if (emulationType is not EmulationType.Controller)
+        {
+            Deque = false;
+        }
         if (emulationType is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
         {
             ResetBluetoothRelated();
