@@ -22,7 +22,7 @@ public class PlatformIo
     private readonly Process _portProcess;
     private readonly string _pythonExecutable;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
-    private string _lastBootloaderPort;
+    private string? _lastBootloaderPort;
 
     public PlatformIo()
     {

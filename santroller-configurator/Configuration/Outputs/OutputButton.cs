@@ -100,10 +100,10 @@ public abstract class OutputButton : Output
             {
                 return  $$"""
                           if ({{ifStatement}}) {
-                              setKey({{debounce}},report,{{keyCode}},true);
+                              setKey({{debounceIndex}},{{keyCode}},report,true);
                               {{extra}}
                           } else {
-                             setKey({{debounce}},report,{{keyCode}},false);
+                             setKey({{debounceIndex}},{{keyCode}},report,false);
                           }
                           """;
             }
