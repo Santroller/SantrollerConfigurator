@@ -22,6 +22,7 @@ public class PlatformIo
     private readonly Process _portProcess;
     private readonly string _pythonExecutable;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private string _lastBootloaderPort;
 
     public PlatformIo()
     {
@@ -143,8 +144,11 @@ public class PlatformIo
     {
         return device switch
         {
-            Arduino {Is32U4Bootloader: true} or Santroller or Ardwiino => RunPlatformIo("microdetect",
+            Arduino {Is32U4Bootloader: true} => RunPlatformIo("microdetect",
                 new[] {"run", "-t", "micro_clean",}, progressMessage, progressStartingPercentage,
+                progressEndingPercentage, device, true),
+            Santroller or Ardwiino => RunPlatformIo("microdetect",
+                new[] {"run", "-t", "micro_clean_existing",}, progressMessage, progressStartingPercentage,
                 progressEndingPercentage, device, true),
             _ => RunPlatformIo("microdetect", new[] {"run", "-t", "micro_clean_jump",}, progressMessage,
                 progressStartingPercentage, progressEndingPercentage, device, true)
@@ -197,9 +201,9 @@ public class PlatformIo
                     args.Add("--upload-port");
                     args.Add(arduino2.GetSerialPort());
                 }
-                else
+                else if (device is not (Ardwiino or Santroller))
                 {
-                    Trace.WriteLine("Detecting port please wait");
+                    Console.WriteLine("Detecting port please wait");
                     var port = await device.GetUploadPortAsync().ConfigureAwait(false);
                     Console.WriteLine(port);
                     if (port != null)
@@ -238,7 +242,7 @@ public class PlatformIo
                                 args.Add("--upload-port");
                                 args.Add(arduino2.GetSerialPort());
                             }
-                            else
+                            else if (!device.Is32U4())
                             {
                                 Console.WriteLine("Detecting port please wait");
                                 Trace.WriteLine("Detecting port please wait");
@@ -263,9 +267,10 @@ public class PlatformIo
                         currentProgress += percentageStep / sections;
                         sections = 4;
                     }
+
                     if (device != null)
                     {
-                        var port = "";
+                        string? port = null;
                         if (device.Is32U4())
                         {
                             sections += 1;
@@ -274,10 +279,26 @@ public class PlatformIo
                             subject.Subscribe(s => platformIoOutput.OnNext(s));
                             await subject;
                             currentProgress += percentageStep / sections;
+                            if (device is Arduino {Is32U4Bootloader: true} a)
+                            {
+                                port = a.GetSerialPort();
+                            }
+                            else
+                            {
+                                port = _lastBootloaderPort;
+                            }
                         }
 
-                        Console.WriteLine("Detecting port please wait");
-                        port = await device.GetUploadPortAsync().ConfigureAwait(false);
+                        if (port == null)
+                        {
+                            Console.WriteLine("Detecting port please wait");
+                            port = await device.GetUploadPortAsync().ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Continuing with bootloader mode port");
+                        }
+
                         Console.WriteLine(port);
                         if (port != null)
                         {
@@ -339,6 +360,18 @@ public class PlatformIo
                     }
 
                     platformIoOutput.OnNext(platformIoOutput.Value.WithLog(line));
+                    if (erase)
+                    {
+                        if (line.StartsWith("Waiting for bootloader device"))
+                        {
+                            device?.Bootloader();
+                        }
+
+                        if (line.StartsWith("PORT: "))
+                        {
+                            _lastBootloaderPort = line.Replace("PORT: ", "");
+                        }
+                    }
 
                     if (uploading)
                     {
@@ -358,7 +391,8 @@ public class PlatformIo
                                 string.Format(Resources.DfuMessage, progressMessage), null));
                         }
 
-                        if (platformIoOutput.Value.Message == string.Format(Resources.DfuMessage, progressMessage) &&
+                        if (platformIoOutput.Value.Message ==
+                            string.Format(Resources.DfuMessage, progressMessage) &&
                             line.StartsWith("Calling"))
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
