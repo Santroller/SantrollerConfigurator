@@ -2358,6 +2358,22 @@
                                           ItemTemplate="{StaticResource EnumToStringTemplate}"
                                           ItemsSource="{Binding DeviceControllerRhythmTypes}" />
                             </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                        <Binding Path="IsKeyboard" />
+                                        <Binding Path="IsFortniteFestival" />
+                                    </MultiBinding>
+                                </StackPanel.IsVisible>
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.RolloverModeLabel}" />
+                                <ComboBox HorizontalAlignment="Stretch" Width="200"
+                                          SelectedItem="{Binding RolloverMode}"
+                                          ItemTemplate="{StaticResource EnumToStringTemplate}"
+                                          ItemsSource="{Binding RolloverModes}" />
+                            </StackPanel>
+                            
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonFortniteController}">
                             <Label VerticalAlignment="Center"

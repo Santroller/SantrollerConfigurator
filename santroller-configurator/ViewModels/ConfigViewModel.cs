@@ -283,6 +283,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     public IConfigurableDevice Device { get; set; }
+    
+    [Reactive] public RolloverMode RolloverMode { get; set; }
+    public IEnumerable<RolloverMode> RolloverModes => Enum.GetValues<RolloverMode>();
 
     [Reactive] public string? PeripheralErrorText { get; set; }
     [Reactive] public string? LedErrorText { get; set; }
@@ -1366,14 +1369,26 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             {{ledInit}}
                         """;
 
-            var nkroTick = GenerateTick(ConfigField.Keyboard, writer);
-            if (nkroTick.Any())
+            var keyboardTick = GenerateTick(ConfigField.Keyboard, writer);
+            if (keyboardTick.Any())
             {
-                config += $"""
+                switch (RolloverMode)
+                {
+                    case RolloverMode.Nkro:
+                        config += $"""
 
-                           #define TICK_NKRO \
-                               {nkroTick}
-                           """;
+                                   #define TICK_NKRO \
+                                       {keyboardTick}
+                                   """;
+                        break;
+                    case RolloverMode.SixKro:
+                        config += $"""
+
+                                   #define TICK_SIXKRO \
+                                       {keyboardTick}
+                                   """;
+                        break;
+                }
             }
             else if (IsKeyboard || IsFortniteFestival)
             {

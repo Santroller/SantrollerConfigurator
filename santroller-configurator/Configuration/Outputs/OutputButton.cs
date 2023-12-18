@@ -9,6 +9,7 @@ using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
+using Splat.ModeDetection;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
@@ -92,14 +93,27 @@ public abstract class OutputButton : Output
                 ifStatement = $"{GenerateOutput(ConfigField.Shared).Replace("report->", "current_queue_report.")}";
             }
             var outputVar = GenerateOutput(mode);
-            return outputVar.Any()
-                ? $$"""
-                    if ({{ifStatement}}) {
-                        {{outputVar}} = true;
-                        {{extra}}
-                    }
-                    """
-                : "";
+            if (!outputVar.Any()) return "";
+            var keyCode = KeyboardButton.KeyCodes.IndexOf(outputVar);
+            // Modifiers still go via the normal system, only standard keys go via 6kro mode.
+            if ((Model.IsKeyboard || Model.IsFortniteFestival) && Model.RolloverMode == RolloverMode.SixKro && keyCode != -1)
+            {
+                return  $$"""
+                          if ({{ifStatement}}) {
+                              setKey({{debounce}},report,{{keyCode}},true);
+                              {{extra}}
+                          } else {
+                             setKey({{debounce}},report,{{keyCode}},false);
+                          }
+                          """;
+            }
+            return  $$"""
+                      if ({{ifStatement}}) {
+                          {{outputVar}} = true;
+                          {{extra}}
+                      }
+                      """;
+
         }
         
         var gen = Input.Generate();

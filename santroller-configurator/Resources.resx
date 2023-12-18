@@ -3134,4 +3134,13 @@
     <data name="AddDeviceMessage" xml:space="preserve">
         <value>Add called, current device: {0},  new device: {1}</value>
     </data>
+    <data name="RolloverModeNkro" xml:space="preserve">
+        <value>NKRO (Best for PC)</value>
+    </data>
+    <data name="RolloverModeSixKro" xml:space="preserve">
+        <value>6KRO (Works on PS4/5)</value>
+    </data>
+    <data name="RolloverModeLabel" xml:space="preserve">
+        <value>Rollover Mode</value>
+    </data>
 </root>

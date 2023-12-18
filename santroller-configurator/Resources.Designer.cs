@@ -6032,5 +6032,23 @@ namespace GuitarConfigurator.NetCore {
                 return ResourceManager.GetString("AddDeviceMessage", resourceCulture);
             }
         }
+        
+        public static string RolloverModeNkro {
+            get {
+                return ResourceManager.GetString("RolloverModeNkro", resourceCulture);
+            }
+        }
+        
+        public static string RolloverModeSixKro {
+            get {
+                return ResourceManager.GetString("RolloverModeSixKro", resourceCulture);
+            }
+        }
+        
+        public static string RolloverModeLabel {
+            get {
+                return ResourceManager.GetString("RolloverModeLabel", resourceCulture);
+            }
+        }
     }
 }

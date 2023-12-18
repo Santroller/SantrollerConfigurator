@@ -88,7 +88,7 @@ public class Santroller : ConfigurableUsbDevice
         _microcontroller = new Pico(Board.Generic);
         _deviceControllerType = (DeviceControllerType) (version >> 8);
         _currentMode = (ConsoleType) (serial[^3] - '0');
-        if (serial[^2] > 'K')
+        if (serial[^2] >= 'K')
         {
             _deviceControllerType = (DeviceControllerType) (serial[^2] - 'K');
         }

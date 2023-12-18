@@ -25,6 +25,7 @@ public class SerializedConfiguration
     public void Update(ConfigViewModel model, IEnumerable<Output> bindings, bool allowErrors = true)
     {
         if (!allowErrors && model.HasError) return;
+        RolloverMode = model.RolloverMode;
         Bindings = bindings.Select(s => s.Serialize()).ToList();
         DeviceType = model.DeviceControllerType;
         EmulationType = model.EmulationType;
@@ -94,6 +95,7 @@ public class SerializedConfiguration
     [ProtoMember(43)] public int Stp16Le { get; private set; }
     [ProtoMember(44)] public int Stp16OePeripheral { get; private set; }
     [ProtoMember(45)] public int Stp16LePeripheral { get; private set; }
+    [ProtoMember(46)] public RolloverMode RolloverMode { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -111,6 +113,7 @@ public class SerializedConfiguration
         model.Variant = Variant;
         model.BtRxAddr = BtRxMacAddress;
         model.HasPeripheral = HasPeripheral;
+        model.RolloverMode = RolloverMode;
         if (HasPeripheral)
         {
             model.PeripheralScl = PeripheralScl;
