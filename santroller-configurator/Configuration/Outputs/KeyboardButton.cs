@@ -12,6 +12,8 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class KeyboardButton : OutputButton
 {
+    // 6KRO doesn't use the standard bitfield logic everything else uses. Its easier to use the same logic anyways
+    // and then do a lookup to resolve the generated bitfields back to standard keycodes when doing the final build.
     public static readonly List<string> KeyCodes = new()
     {
         "blank",
@@ -132,17 +134,6 @@ public class KeyboardButton : OutputButton
         "report->f24"
     };
 
-    public static readonly List<string> Modifiers = new()
-    {
-        "report->leftCtrl",
-        "report->leftShift",
-        "report->leftAlt",
-        "report->lWin",
-        "report->rightCtrl",
-        "report->rightShift",
-        "report->rightAlt",
-        "report->rWin",
-    };
     public static readonly List<Key> Keys = new()
     {
         Key.LeftCtrl,
