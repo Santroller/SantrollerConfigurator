@@ -366,7 +366,6 @@ public class PlatformIo
                         {
                             device?.Bootloader();
                         }
-
                         if (line.StartsWith("PORT: "))
                         {
                             _lastBootloaderPort = line.Replace("PORT: ", "");
