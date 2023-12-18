@@ -444,6 +444,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _deque;
         set
         {
+            if (value == _deque) return;
             this.RaiseAndSetIfChanged(ref _deque, value);
             if (value)
             {
@@ -883,7 +884,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         foreach (var binding in Bindings.Items) binding.UpdateBindings();
         InstrumentButtonTypeExtensions.ConvertBindings(Bindings, this, false);
-        if (!IsGuitar)
+        if (!IsGuitar || EmulationType is EmulationType.FortniteFestival)
         {
             Deque = false;
         }
@@ -1086,10 +1087,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private async Task SetDefaultBindingsAsync(EmulationType emulationType)
     {
-        if (emulationType is not EmulationType.Controller)
-        {
-            Deque = false;
-        }
         if (emulationType is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
         {
             ResetBluetoothRelated();
