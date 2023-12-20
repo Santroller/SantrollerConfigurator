@@ -1387,32 +1387,35 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         """;
 
             var keyboardTick = GenerateTick(ConfigField.Keyboard, writer);
-            if (keyboardTick.Any())
+            if (IsKeyboard || IsFortniteFestival)
             {
-                switch (RolloverMode)
+                if (keyboardTick.Any())
                 {
-                    case RolloverMode.Nkro:
-                        config += $"""
+                    switch (RolloverMode)
+                    {
+                        case RolloverMode.Nkro:
+                            config += $"""
 
-                                   #define TICK_NKRO \
-                                       {keyboardTick}
-                                   """;
-                        break;
-                    case RolloverMode.SixKro:
-                        config += $"""
+                                       #define TICK_NKRO \
+                                           {keyboardTick}
+                                       """;
+                            break;
+                        case RolloverMode.SixKro:
+                            config += $"""
 
-                                   #define TICK_SIXKRO \
-                                       {keyboardTick}
-                                   """;
-                        break;
+                                       #define TICK_SIXKRO \
+                                           {keyboardTick}
+                                       """;
+                            break;
+                    }
                 }
-            }
-            else if (IsKeyboard || IsFortniteFestival)
-            {
-                config += $"""
+                else
+                {
+                    config += $"""
 
-                           #define TICK_NKRO
-                           """;
+                               #define TICK_NKRO
+                               """;
+                }
             }
 
             var consumerTick = GenerateTick(ConfigField.Consumer, writer);
