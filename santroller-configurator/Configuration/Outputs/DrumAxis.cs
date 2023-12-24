@@ -168,13 +168,14 @@ public partial class DrumAxis : OutputAxis
     {
         if (mode == ConfigField.Shared)
         {
-            if (Input is WiiInput)
+            if (Input is WiiInput || (Model.DeviceControllerType.IsRb() && Type is DrumAxisType.Kick or DrumAxisType.Kick2) || Model.IsKeyboard || Model.IsFortniteFestival)
             {
                 return new ControllerButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), (byte) Debounce, StandardButtonType.A,
                         false)
                     .Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
             }
-            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+
+            return "";
         }
         
 
@@ -229,7 +230,7 @@ public partial class DrumAxis : OutputAxis
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
 
-        if (Model.DeviceControllerType.IsRb() && Type is DrumAxisType.Kick or DrumAxisType.Kick2 || mode is ConfigField.Keyboard)
+        if ((Model.DeviceControllerType.IsRb() && Type is DrumAxisType.Kick or DrumAxisType.Kick2) || mode is ConfigField.Keyboard)
         {
             return $$"""
                      if ({{ifStatement}}) {
