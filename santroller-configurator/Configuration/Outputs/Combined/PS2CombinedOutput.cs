@@ -223,7 +223,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         Outputs.Add(new ControllerAxis(Model,
             new DigitalToAnalog(new Ps2Input(Ps2InputType.L2, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                 ushort.MaxValue,
-                true, Model),
+                Model, DigitalToAnalogType.Trigger),
             Colors.Black,
             Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0, ushort.MaxValue,
             StandardAxisType.LeftTrigger,
@@ -231,7 +231,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         Outputs.Add(new ControllerAxis(Model,
             new DigitalToAnalog(new Ps2Input(Ps2InputType.R2, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                 ushort.MaxValue,
-                true, Model),
+                Model, DigitalToAnalogType.Trigger),
             Colors.Black,
             Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0, ushort.MaxValue,
             StandardAxisType.RightTrigger,
@@ -333,8 +333,8 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                 Outputs.Add(new GuitarAxis(Model,
                     new DigitalToAnalog(
                         new Ps2Input(Ps2InputType.GuitarTilt, Model, Peripheral, Miso, Mosi, Sck, Att, Ack,
-                            true),
-                        Model), Colors.Black,
+                            true), 32767,
+                        Model, DigitalToAnalogType.Tilt), Colors.Black,
                     Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
                     0, GuitarAxisType.Tilt, true));
             }

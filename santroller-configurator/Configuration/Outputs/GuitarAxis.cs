@@ -49,7 +49,6 @@ public class GuitarAxis : OutputAxis
     [ObservableAsProperty] public string NamedAxisInfo { get; } = "";
 
     public GuitarAxisType Type { get; }
-
     public bool HasNamedAxis => Type is GuitarAxisType.Slider or GuitarAxisType.Pickup;
 
     public override bool IsKeyboard => false;

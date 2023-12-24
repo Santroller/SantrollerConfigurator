@@ -319,8 +319,7 @@ public abstract partial class Output : ReactiveObject
             (s is not InputType.WtNeckPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.MultiplexerInput || Model.IsPico) &&
             (s is not InputType.DigitalPeripheralInput || Model.HasPeripheral) &&
-            (s is not InputType.MacroInput || this is OutputButton)
-            && s is not InputType.BluetoothInput &&
+            s is not InputType.BluetoothInput &&
             (s is not InputType.UsbHostInput || Model.IsPico));
 
     private Enum GetChildOutputType()
@@ -349,6 +348,7 @@ public abstract partial class Output : ReactiveObject
         ShouldUpdateDetails = false;
         this.RaisePropertyChanged(nameof(ShouldUpdateDetails));
     }
+
     [RelayCommand]
     public void TestLEDs()
     {
@@ -688,7 +688,7 @@ public abstract partial class Output : ReactiveObject
                 Input = new AnalogToDigital(input, oldType, oldThreshold, Model);
                 break;
             case false when this is GuitarAxis {Type: GuitarAxisType.Tilt}:
-                Input = new DigitalToAnalog(input, Model);
+                Input = new DigitalToAnalog(input, 32767, Model, DigitalToAnalogType.Tilt);
                 break;
             case false when this is OutputAxis axis:
                 int oldOn = axis.Trigger ? ushort.MaxValue : short.MaxValue;
@@ -697,7 +697,20 @@ public abstract partial class Output : ReactiveObject
                     oldOn = dta.On;
                 }
 
-                Input = new DigitalToAnalog(input, oldOn, axis.Trigger, Model);
+                if (axis.Trigger)
+                {
+                    Input = new DigitalToAnalog(input, oldOn, Model, DigitalToAnalogType.Trigger);
+                }
+                else
+                    Input = axis switch
+                    {
+                        GuitarAxis {Type: GuitarAxisType.Pickup} => new DigitalToAnalog(input, oldOn, Model,
+                            DigitalToAnalogType.Pickup),
+                        GuitarAxis {Type: GuitarAxisType.Slider} => new DigitalToAnalog(input, oldOn, Model,
+                            DigitalToAnalogType.TapBar),
+                        _ => new DigitalToAnalog(input, oldOn, Model, DigitalToAnalogType.Normal)
+                    };
+
                 break;
         }
 

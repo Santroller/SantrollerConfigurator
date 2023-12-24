@@ -1824,7 +1824,7 @@
                 <StackPanel>
                     <ContentControl Content="{Binding Child}"
                                     ContentTemplate="{StaticResource OutputTemplates}" />
-                    <StackPanel IsVisible="{Binding !Tilt}" Orientation="Horizontal">
+                    <StackPanel IsVisible="{Binding Normal}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
@@ -1832,6 +1832,30 @@
                                        Maximum="{Binding Maximum}"
                                        VerticalAlignment="Center"
                                        Width="200" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding RbPickup}">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding PickupSelectorType}"
+                                  ItemsSource="{Binding PickupSelectorTypes}"
+                                  ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding TapBar}">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
+                        <CheckBox IsChecked="{Binding Green}" VerticalAlignment="Center"
+                                  Content="{x:Static netCore:Resources.TapBarCurrentFretsGreen}" />
+                        <CheckBox IsChecked="{Binding Red}" VerticalAlignment="Center"
+                                  Content="{x:Static netCore:Resources.TapBarCurrentFretsRed}" />
+                        <CheckBox IsChecked="{Binding Yellow}" VerticalAlignment="Center"
+                                  Content="{x:Static netCore:Resources.TapBarCurrentFretsYellow}" />
+                        <CheckBox IsChecked="{Binding Blue}" VerticalAlignment="Center"
+                                  Content="{x:Static netCore:Resources.TapBarCurrentFretsBlue}" />
+                        <CheckBox IsChecked="{Binding Orange}" VerticalAlignment="Center"
+                                  Content="{x:Static netCore:Resources.TapBarCurrentFretsOrange}" />
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
