@@ -381,7 +381,7 @@ public class Led : Output
         set
         {
             this.RaiseAndSetIfChanged(ref _inverted, value);
-            if (Model.Device is not Santroller santroller) return;
+            if (Model.Device is not Santroller santroller || Pin == -1) return;
             if (UsesPwm)
             {
                 santroller.AnalogWrite(Pin, value ? 255 - Test : Test);
@@ -473,6 +473,7 @@ public class Led : Output
                         or LedCommandType.InputReactive or LedCommandType.StageKitLed when
                         type.controllerType is DeviceControllerType.RockBandDrums
                             or DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandGuitar
+                            or DeviceControllerType.GuitarHeroGuitar
                             or DeviceControllerType.RockBandGuitar
                             or DeviceControllerType.LiveGuitar or DeviceControllerType.Turntable
                             or DeviceControllerType.StageKit => true,
@@ -751,9 +752,13 @@ public class Led : Output
                          """;
             case LedCommandType.StarPowerInactive when mode == ConfigField.RumbleLed:
                 return $$"""
-                         if (rumble_right == {{(int) RumbleCommand.SantrollerStarPowerActive}} && !rumble_left) {
-                              star_power_active = false;
+                         if (rumble_right == {{(int) RumbleCommand.SantrollerStarPowerActive}}) {
+                            star_power_active=rumble_left;
+                            if (!rumble_left) {
                               {{starPowerBetween}}
+                            } else {
+                              {{off}}
+                            }
                          }
                          if (!star_power_active && rumble_right == {{(int) RumbleCommand.SantrollerStarPowerGauge}}) {
                               last_star_power = rumble_left;
@@ -762,9 +767,13 @@ public class Led : Output
                          """;
             case LedCommandType.StarPowerActive when mode == ConfigField.RumbleLed:
                 return $$"""
-                         if (rumble_right == {{(int) RumbleCommand.SantrollerStarPowerActive}} && rumble_left) {
-                              star_power_active = true;
+                         if (rumble_right == {{(int) RumbleCommand.SantrollerStarPowerActive}}) {
+                            star_power_active=rumble_left;
+                            if (rumble_left) {
                               {{starPowerBetween}}
+                            } else {
+                              {{off}}
+                            }
                          }
                          if (star_power_active && rumble_right == {{(int) RumbleCommand.SantrollerStarPowerGauge}}) {
                               last_star_power = rumble_left;
