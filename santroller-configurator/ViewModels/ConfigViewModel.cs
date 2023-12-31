@@ -888,7 +888,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             Deque = false;
         }
-
         if (EmulationType is EmulationType.FortniteFestival ||
             DeviceControllerType is DeviceControllerType.GuitarPraiseGuitar)
         {
