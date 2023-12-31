@@ -2399,7 +2399,7 @@
                             </StackPanel>
                             
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonFortniteController}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonStandardController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.SwapSwitchFaceButtonLabel}" />
@@ -2410,7 +2410,7 @@
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonFortniteController}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonStandardController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.WindowsControllerModeLabel}" />

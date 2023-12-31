@@ -28,6 +28,13 @@ public static class GuitarAxisTypeMethods
             GuitarAxisType.Tilt, GuitarAxisType.Whammy
         };
     }
+    public static IEnumerable<GuitarAxisType> GuitarPraiseTypes()
+    {
+        return new[]
+        {
+            GuitarAxisType.Whammy
+        };
+    }
 
     public static IEnumerable<GuitarAxisType> GhTypes()
     {
@@ -39,9 +46,12 @@ public static class GuitarAxisTypeMethods
 
     public static IEnumerable<GuitarAxisType> GetTypeFor(DeviceControllerType deviceControllerType)
     {
-        if (deviceControllerType == DeviceControllerType.LiveGuitar)
+        switch (deviceControllerType)
         {
-            return GhlTypes();
+            case DeviceControllerType.GuitarPraiseGuitar:
+                return GuitarPraiseTypes();
+            case DeviceControllerType.LiveGuitar:
+                return GhlTypes();
         }
 
         if (deviceControllerType.IsFortnite())

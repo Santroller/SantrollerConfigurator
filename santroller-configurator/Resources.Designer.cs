@@ -1443,6 +1443,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string DeviceControllerTypeGuitarPraiseGuitar {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeGuitarPraiseGuitar", resourceCulture);
+            }
+        }
+        
         public static string TwiPinTypeSda {
             get {
                 return ResourceManager.GetString("TwiPinTypeSda", resourceCulture);

@@ -135,12 +135,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => x is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
             .ToPropertyEx(this, x => x.IsBluetoothTx);
-        this.WhenAnyValue(x => x.EmulationType, x => x.Mode)
+        this.WhenAnyValue(x => x.EmulationType, x => x.Mode, x => x.DeviceControllerType)
             .Select(x => x.Item1 is EmulationType.Controller && x.Item2 is ModeType.Standard)
             .ToPropertyEx(this, x => x.SupportsDeque);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarHeroGuitar
-                or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum)
+                or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum or DeviceControllerType.GuitarPraiseGuitar)
             .ToPropertyEx(this, x => x.IsGuitar);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.StageKit)
@@ -157,9 +157,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.Controller)
             .ToPropertyEx(this, x => x.IsController);
-        this.WhenAnyValue(x => x.EmulationType)
-            .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.Controller && x is not EmulationType.FortniteFestival)
-            .ToPropertyEx(this, x => x.IsNonFortniteController);
+        this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
+            .Select(x => GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller && x.Item1 is not EmulationType.FortniteFestival && x.Item2 is not DeviceControllerType.GuitarPraiseGuitar)
+            .ToPropertyEx(this, x => x.IsNonStandardController);
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.KeyboardMouse)
             .ToPropertyEx(this, x => x.IsKeyboard);
@@ -811,7 +811,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsGuitar { get; }
     [ObservableAsProperty] public bool IsStageKit { get; }
     [ObservableAsProperty] public bool IsController { get; }
-    [ObservableAsProperty] public bool IsNonFortniteController { get; }
+    [ObservableAsProperty] public bool IsNonStandardController { get; }
     [ObservableAsProperty] public bool IsFortniteFestival { get; }
     [ObservableAsProperty] public bool IsKeyboard { get; }
     [ObservableAsProperty] public bool IsApa102 { get; }
@@ -887,6 +887,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (!IsGuitar || EmulationType is EmulationType.FortniteFestival)
         {
             Deque = false;
+        }
+
+        if (EmulationType is EmulationType.FortniteFestival ||
+            DeviceControllerType is DeviceControllerType.GuitarPraiseGuitar)
+        {
+            Bindings.RemoveMany(Bindings.Items.Where(s => s is Led));
         }
 
         var (extra, types) =
@@ -1260,7 +1266,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define CONFIGURABLE_BLOBS
                        #define CONFIGURATION_LEN {WriteBlob(writer, configLength)}
                        #define SWAP_SWITCH_FACE_BUTTONS {WriteBlob(writer, SwapSwitchFaceButtons)}
-                       #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsNonFortniteController)}
+                       #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsNonStandardController)}
                        #define INPUT_QUEUE {WriteBlob(writer, Deque)}
                        #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
@@ -1288,7 +1294,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             config += $"""
                        #define CONFIGURATION_LEN {configLength}
                        #define SWAP_SWITCH_FACE_BUTTONS {(!SwapSwitchFaceButtons).ToString().ToLower()}
-                       #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsNonFortniteController).ToString().ToLower()}
+                       #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsNonStandardController).ToString().ToLower()}
                        #define INPUT_QUEUE {Deque.ToString().ToLower()}
                        #define POLL_RATE {PollRate}
                        #define WT_SENSITIVITY {WtSensitivity}

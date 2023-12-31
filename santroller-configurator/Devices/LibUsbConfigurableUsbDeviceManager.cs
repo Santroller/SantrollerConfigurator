@@ -59,6 +59,11 @@ public class ConfigurableUsbDeviceManager
                     var product = info.ProductString ?? "Santroller";
                     var manufacturer = info.ManufacturerString ?? "sanjay900";
                     var serial = info.SerialString?.Split("\0", 2)[0] ?? "";
+                    // All our devices have a serial number specified, so skip devices that don't have one
+                    if (string.IsNullOrEmpty(serial))
+                    {
+                        return;
+                    }
                     switch (product)
                     {
                         case "Ardwiino" when _model.Programming:

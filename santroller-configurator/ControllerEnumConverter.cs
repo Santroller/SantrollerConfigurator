@@ -18,6 +18,12 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.Back,
         StandardButtonType.Guide
     };
+    private static readonly List<StandardButtonType> SupportedButtonsGuitarPraise = new()
+    {
+        StandardButtonType.Start,
+        StandardButtonType.Back,
+        StandardButtonType.LeftThumbClick
+    };
     private static readonly List<StandardButtonType> SupportedButtonsFortnite = new()
     {
         StandardButtonType.Back
@@ -60,6 +66,10 @@ public class ControllerEnumConverter : IMultiValueConverter
                 {
                     (DeviceControllerType.LiveGuitar, StandardButtonType.Start),
                     Resources.ButtonLabelHeroPower
+                },
+                {
+                    (DeviceControllerType.GuitarPraiseGuitar, StandardButtonType.LeftThumbClick),
+                    Resources.GuitarAxisTypeTilt
                 },
                 {
                     (DeviceControllerType.FortniteGuitar, StandardButtonType.Back),
@@ -202,6 +212,8 @@ public class ControllerEnumConverter : IMultiValueConverter
             case DeviceControllerType.FortniteGuitarStrum:
             case DeviceControllerType.FortniteDrums:
                 return SupportedButtonsFortnite.Contains(button);
+            case DeviceControllerType.GuitarPraiseGuitar:
+                return SupportedButtonsGuitarPraise.Contains(button);
             default:
                 return true;
         }
@@ -223,7 +235,7 @@ public class ControllerEnumConverter : IMultiValueConverter
             DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandGuitar
                 or DeviceControllerType.FortniteGuitar
                 or DeviceControllerType.FortniteGuitarStrum
-                or DeviceControllerType.LiveGuitar => GuitarAxisTypeMethods
+                or DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarPraiseGuitar => GuitarAxisTypeMethods
                     .GetTypeFor(deviceType)
                     .Cast<object>()
                     .Concat(InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>()),

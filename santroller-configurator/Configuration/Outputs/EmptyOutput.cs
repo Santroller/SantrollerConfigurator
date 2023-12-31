@@ -49,6 +49,7 @@ public class EmptyOutput : Output
                 vm => vm.Model.HasDjCombinedOutput, vm => vm.Model.HasGh5CombinedOutput,
                 vm => vm.Model.HasUsbHostCombinedOutput))
             .Select(type => ControllerEnumConverter.GetTypes(type.Item1.Item1).Where(s2 =>
+                ((!type.First.Item1.IsFortnite() && type.First.Item1 is not DeviceControllerType.GuitarPraiseGuitar) || s2 is not SimpleType.Led) &&
                 (model.IsPico ||
                  s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.UsbHost)) &&
                 (type.Item1.Item2 || s2 is not SimpleType.WtNeckPeripheralSimple) &&

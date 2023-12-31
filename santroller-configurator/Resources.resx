@@ -722,6 +722,9 @@
     <data name="DeviceControllerTypeFortniteDrums" xml:space="preserve">
         <value>Drums</value>
     </data>
+    <data name="DeviceControllerTypeGuitarPraiseGuitar" xml:space="preserve">
+        <value>Guitar Praise Guitar</value>
+    </data>
     <data name="TwiPinTypeSda" xml:space="preserve">
         <value>SDA</value>
     </data>

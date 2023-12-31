@@ -58,6 +58,9 @@ public class Ardwiino : ConfigurableUsbDevice
 
         // Switch IDs
         (0x0F0D, 0x0092),
+        
+        // Guitar Praise Guitar
+        (0x0314, 0x0830) 
     };
 
     public const ushort SerialArdwiinoRevision = 0x3122;
