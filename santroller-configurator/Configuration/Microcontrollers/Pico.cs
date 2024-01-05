@@ -239,7 +239,7 @@ public class Pico : Microcontroller
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
         foreach (var devicePin in pins)
         {
-            if (devicePin.Type != "led_output") continue;
+            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral) continue;
             switch (devicePin.PinMode)
             {
                 case DevicePinMode.Analog:

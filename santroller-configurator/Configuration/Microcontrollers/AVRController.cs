@@ -123,13 +123,10 @@ public abstract class AvrController : Microcontroller
         // PORTx input 1= pullup, 0 = floating
         var ddrByPort = new Dictionary<char, int>();
         var portByPort = new Dictionary<char, int>();
-        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>().Where(s => s.PinMode != DevicePinMode.Skip);
+        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
         foreach (var pin in pins)
         {
-            if (pin.Peripheral)
-            {
-                continue;
-            }
+            if (pin.PinMode == DevicePinMode.Skip || pin.Peripheral || pin.Type == "led_output") continue;
             var port = GetPort(pin.Pin);
             var idx = GetIndex(pin.Pin);
             var currentPort = portByPort.GetValueOrDefault(port, 0);
@@ -170,7 +167,6 @@ public abstract class AvrController : Microcontroller
             portByPort[port] = currentPort;
             ddrByPort[port] = currentDdr;
         }
-
         return $"""
                uint8_t oldSREG = SREG;
                cli();
@@ -186,10 +182,10 @@ public abstract class AvrController : Microcontroller
         // PORTx input 1= pullup, 0 = floating
         var ddrByPort = new Dictionary<char, int>();
         var portByPort = new Dictionary<char, int>();
-        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>().Where(s => s.Type == "led_output");
+        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
         foreach (var pin in pins)
         {
-            if (pin.Peripheral)
+            if (pin.PinMode == DevicePinMode.Skip || pin.Peripheral)
             {
                 continue;
             }
