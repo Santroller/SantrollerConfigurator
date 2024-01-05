@@ -175,6 +175,7 @@ public abstract class AvrController : Microcontroller
                SREG = oldSREG;
                """;
     }
+    
     public override string GenerateLedInit(ConfigViewModel configViewModel)
     {
         // DDRx 1 = output, 0 = input
