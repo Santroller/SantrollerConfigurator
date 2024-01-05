@@ -77,7 +77,6 @@ public class Santroller : ConfigurableUsbDevice
     private readonly ConsoleType _currentMode;
     public string Product { get; }
     public string Manufacturer { get; }
-
     public bool IsSantroller => Product == "Santroller";
 
     public Santroller(string path, UsbDevice device, string serial,
