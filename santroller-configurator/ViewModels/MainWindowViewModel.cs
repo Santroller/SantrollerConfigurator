@@ -220,7 +220,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         {
             using var client = new HttpClient();
             client.BaseAddress = new Uri("https://github.com");
-            var response = client.GetAsync($"sanjay900/guitar-configurator/info/refs?service=git-upload-pack").Result;
+            var response = client.GetAsync($"Santroller/Santroller/info/refs?service=git-upload-pack").Result;
             response.EnsureSuccessStatusCode();
             var res = response.Content.ReadAsStringAsync().Result.Split("\n")[2..^1];
             var latestTagVer = new Version(GitVersionInformation.SemVer);
