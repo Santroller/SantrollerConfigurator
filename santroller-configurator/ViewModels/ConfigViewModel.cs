@@ -1515,7 +1515,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             var test = string.Join("\n", inputs.SelectMany(s => s.RequiredDefines()).Distinct()
                 .Select(define => $"#define {define}"));
-            Console.WriteLine(test);
             config += $"""
 
                        {actualPinConfigs.Aggregate("", (current, pinConfig) => current + pinConfig.Generate())}
