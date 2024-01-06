@@ -3068,6 +3068,9 @@
     <data name="NonCommercialButton" xml:space="preserve">
         <value>Selling devices using this tool</value>
     </data>
+    <data name="DiscordButton" xml:space="preserve">
+        <value>Click here to join the Discord</value>
+    </data>
     <data name="IncorrectTool" xml:space="preserve">
         <value>The device you have selected is not designed to be programed with this tool.</value>
     </data>

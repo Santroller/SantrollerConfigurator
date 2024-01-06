@@ -576,6 +576,12 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         NavigateToUrl("https://santroller.tangentmc.net/tool/commercial_use.html");
     }
 
+    [RelayCommand]
+    public void OpenDiscord()
+    {
+        NavigateToUrl("https://discord.gg/CmdYpXKcEU");
+    }
+
     public void Complete(int total)
     {
         Working = false;

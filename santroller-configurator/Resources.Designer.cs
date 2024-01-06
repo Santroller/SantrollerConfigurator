@@ -5901,6 +5901,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string DiscordButton {
+            get {
+                return ResourceManager.GetString("DiscordButton", resourceCulture);
+            }
+        }
+        
         public static string IncorrectTool {
             get {
                 return ResourceManager.GetString("IncorrectTool", resourceCulture);

@@ -44,7 +44,8 @@
             </ExperimentalAcrylicBorder>
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Image Source="{Binding Main.Logo}" Width="200" Margin="0 0 0 40" />
+                <Image Source="{Binding Main.Logo}" Width="200" Margin="0 0 0 10" />
+                <Button HorizontalAlignment="Center" Command="{Binding Main.OpenDiscord}" Content="{x:Static netCore:Resources.DiscordButton}" Margin="0 0 0 40" />
                 <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  />
                 <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse2}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  />
                 <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse3}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"  />
