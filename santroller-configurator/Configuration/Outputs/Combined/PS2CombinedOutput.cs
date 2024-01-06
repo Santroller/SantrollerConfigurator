@@ -178,7 +178,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         }
 
         return output => output is JoystickToDpad ||
-                         (output.Input.InnermostInputs() is Ps2Input ps2Input &&
+                         (output.Input.InnermostInputs().First() is Ps2Input ps2Input &&
                           ps2Input.SupportsType(controllerType));
     }
 
@@ -328,7 +328,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                     Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 8000, GuitarAxisType.Whammy, true));
             }
 
-            if (!Outputs.Items.Any(s => s.Input.InnermostInputs() is Ps2Input {Input: Ps2InputType.GuitarTilt}))
+            if (!Outputs.Items.Any(s => s.Input.InnermostInputs().First() is Ps2Input {Input: Ps2InputType.GuitarTilt}))
             {
                 Outputs.Add(new GuitarAxis(Model,
                     new DigitalToAnalog(
@@ -342,7 +342,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         else
         {
             Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Whammy}));
-            Outputs.RemoveMany(Outputs.Items.Where(s => s.Input.InnermostInputs() is Ps2Input
+            Outputs.RemoveMany(Outputs.Items.Where(s => s.Input.InnermostInputs().First() is Ps2Input
             {
                 Input: Ps2InputType.GuitarTilt
             }));

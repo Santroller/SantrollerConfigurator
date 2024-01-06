@@ -517,7 +517,7 @@ public class WiiInput : TwiInput
         Dictionary<WiiControllerType, List<string>> mappedBindings = new();
         foreach (var binding in bindings)
         {
-            if (binding.Item1.InnermostInputs() is not WiiInput input) continue;
+            if (binding.Item1.InnermostInputs().First() is not WiiInput input) continue;
 
             if (!mappedBindings.ContainsKey(input.WiiControllerType))
                 mappedBindings.Add(input.WiiControllerType, new List<string>());

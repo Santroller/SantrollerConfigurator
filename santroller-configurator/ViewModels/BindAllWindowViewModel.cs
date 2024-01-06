@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ public class BindAllWindowViewModel : ReactiveObject
         AccentedTextColor = model.Main.AccentedButtonTextColor;
         Model = model;
         Output = output;
-        Input = (output.Input.InnermostInputs() as DirectInput)!;
+        Input = (output.Input.InnermostInputs().First() as DirectInput)!;
         IsAnalog = Input.IsAnalog;
         LocalisedName = output.GetName(model.DeviceControllerType, model.LegendType, model.SwapSwitchFaceButtons);
 

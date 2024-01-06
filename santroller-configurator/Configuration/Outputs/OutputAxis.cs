@@ -157,7 +157,6 @@ public abstract partial class OutputAxis : Output
 
     private void ApplyCalibration(int rawValue)
     {
-        Console.WriteLine(rawValue);
         switch (_calibrationState)
         {
             case OutputAxisCalibrationState.Min:
