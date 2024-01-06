@@ -208,7 +208,6 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           cp -r ~/artifacts/$RUN_ID/* .
-          rm -rf ~/artifacts/$RUN_ID
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
@@ -241,7 +240,7 @@ jobs:
         run: |
           cp -r ~/artifacts/$RUN_ID/* .
           rm -rf ~/artifacts/latest_release
-          mv ~/artifacts/$RUN_ID ~/artifacts/latest_release
+          cp -r ~/artifacts/$RUN_ID ~/artifacts/latest_release
       - uses: dev-drprasad/delete-tag-and-release@v0.2.1
         with:
           delete_release: true
@@ -268,3 +267,14 @@ jobs:
             ./linux-builder/*
         env:
           GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
+  cleanup:
+    name: Remove temp files
+    runs-on: [self-hosted, linux]
+    if: ${{ always() }}
+    needs: [pre-release, release]
+    steps:
+      - name: Remove artifacts
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          rm -rf ~/artifacts/$RUN_ID
