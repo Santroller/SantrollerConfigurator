@@ -169,9 +169,9 @@ public class AnalogToDigital : Input
         return 0;
     }
 
-    public override Input InnermostInput()
+    public override IEnumerable<Input> InnermostInputs()
     {
-        return Child;
+        return new []{Child};
     }
 
     public override void Update(Dictionary<int, int> analogRaw,

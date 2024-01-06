@@ -837,7 +837,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public bool UsbHostEnabled => Bindings.Items.Any(x =>
         x is UsbHostCombinedOutput ||
-        x.Outputs.Items.Any(x2 => x2.Input.InnermostInput().InputType is InputType.UsbHostInput));
+        x.Outputs.Items.Any(x2 => x2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput));
 
     // ReSharper enable UnassignedGetOnlyAutoProperty
 
@@ -1241,7 +1241,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         BinaryWriter? writer = null;
         var outputs = Bindings.Items.SelectMany(binding => binding.Outputs.Items).ToList();
-        var inputs = outputs.Select(binding => binding.Input.InnermostInput()).ToList();
+        var inputs = outputs.Select(binding => binding.Input.InnermostInputs()).ToList();
         var directInputs = inputs.OfType<DirectInput>().ToList();
         string config;
         int configLength;
@@ -1516,7 +1516,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             config += $"""
 
                        {actualPinConfigs.Aggregate("", (current, pinConfig) => current + pinConfig.Generate())}
-                       {string.Join("\n", inputs.SelectMany(input => input.RequiredDefines()).Distinct().Select(define => $"#define {define}"))}
+                       {string.Join("\n", inputs.SelectMany(input => input.Select(s => s.RequiredDefines())).Distinct().Select(define => $"#define {define}"))}
                        """;
             if (_peripheralTwiConfig != null)
             {
@@ -1615,7 +1615,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         foreach (var binding in Bindings.Items)
         {
-            if (binding.Input.InnermostInput() is not DirectInput) continue;
+            if (binding.Input.InnermostInputs() is not DirectInput) continue;
             var response = await ShowBindAllDialog.Handle((this, binding)).ToTask();
             if (!response.Response) return;
         }
@@ -2113,7 +2113,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
 
         var outputsByType = outputs
-            .GroupBy(s => s.Input.InnermostInput().GetType()).ToList();
+            .GroupBy(s => s.Input.InnermostInputs().GetType()).ToList();
         var combined = DeviceControllerType.IsGuitar() && CombinedStrumDebounce;
         Dictionary<string, int> debounces = new();
         var strumIndices = new List<int>();
@@ -2175,7 +2175,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Aggregate("", (current, group) =>
             {
                 return current + group
-                    .First().Input.InnermostInput()
+                    .First().Input.InnermostInputs().First()
                     .GenerateAll(group
                         // DigitalToAnalog and MacroInput need to be handled last
                         .OrderByDescending(s => s.Input is DigitalToAnalog or MacroInput ? 0 : 1)
@@ -2243,7 +2243,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
         var outputsByType = outputs
-            .GroupBy(s => s.Input.InnermostInput().GetType()).ToList();
+            .GroupBy(s => s.Input.InnermostInputs().GetType()).ToList();
         Dictionary<string, int> debounces = new();
 
         foreach (var outputByType in outputsByType)

@@ -384,7 +384,7 @@ public class Ps2Input : SpiInput
         Dictionary<Ps2InputType, string> ds2Axis = new();
         Dictionary<Ps2ControllerType, List<string>> mappedBindings = new();
         foreach (var binding in bindings)
-            if (binding.Item1.InnermostInput() is Ps2Input input)
+            if (binding.Item1.InnermostInputs() is Ps2Input input)
             {
                 var types = new List<Ps2ControllerType>();
                 if (AxisToType.TryGetValue(input.Input, out var value))

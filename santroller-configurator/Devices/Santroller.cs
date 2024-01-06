@@ -175,17 +175,16 @@ public class Santroller : ConfigurableUsbDevice
         try
         {
             var direct = _model.Bindings.Items.Where(s => string.IsNullOrEmpty(s.ErrorText))
-                .Select(s => s.Input.InnermostInput())
+                .SelectMany(s => s.Input.InnermostInputs())
                 .OfType<DirectInput>().ToList();
             var digital = direct.Where(s => s is {IsAnalog: false, Peripheral: false}).SelectMany(s => s.Pins)
-                .Distinct().Where(s => s.Pin != -1);
+                .Distinct().Where(s => s.Pin != -1).ToList();
             var digitalPeripheral = direct.Where(s => s is {IsAnalog: false, Peripheral: true}).SelectMany(s => s.Pins)
                 .Distinct().Where(s => s.Pin != -1);
             var analog = direct.Where(s => s is {IsAnalog: true, Peripheral: false}).SelectMany(s => s.Pins).Distinct()
                 .Where(s => s.Pin != -1);
             var ports = _model.Microcontroller.GetPortsForTicking(digital);
             var portsPeripheral = _model.Microcontroller.GetPortsForTicking(digitalPeripheral);
-
             Dictionary<int, int> analogRaw = new();
             Dictionary<int, bool> digitalRaw = new();
             Dictionary<int, bool> digitalRawPeripheral = new();

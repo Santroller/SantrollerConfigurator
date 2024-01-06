@@ -34,9 +34,9 @@ public abstract class Input : ReactiveObject
 
     public abstract SerializedInput Serialise();
 
-    public virtual Input InnermostInput()
+    public virtual IEnumerable<Input> InnermostInputs()
     {
-        return this;
+        return new []{this};
     }
 
     public virtual IList<Input> Inputs()

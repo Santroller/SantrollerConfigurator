@@ -20,17 +20,17 @@ public class MacroInput : Input
     {
         Child1 = child1;
         Child2 = child2;
-        this.WhenAnyValue(x => x.Child1, x => x.Child2)
-            .Select(x => x.Item1.RawValue > 0 && x.Item2.RawValue > 0 ? 1 : 0).ObserveOn(RxApp.MainThreadScheduler)
+        this.WhenAnyValue(x => x.Child1.RawValue, x => x.Child2.RawValue)
+            .Select(x => x is {Item1: > 0, Item2: > 0} ? 1 : 0).ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(s => RawValue = s);
         IsAnalog = false;
-        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInput() is DjInput)
+        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is DjInput)
             .ToPropertyEx(this, x => x.IsDj);
-        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInput() is WiiInput)
+        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is WiiInput)
             .ToPropertyEx(this, x => x.IsWii);
-        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInput() is Ps2Input)
+        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is Ps2Input)
             .ToPropertyEx(this, x => x.IsPs2);
-        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInput() is UsbHostInput)
+        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is UsbHostInput)
             .ToPropertyEx(this, x => x.IsUsb);
     }
     public override bool Peripheral => Child1.Peripheral;
@@ -43,25 +43,25 @@ public class MacroInput : Input
 
     public WiiInputType WiiInputType1
     {
-        get => (Child1.InnermostInput() as WiiInput)?.Input ?? WiiInputType.ClassicA;
+        get => (Child1.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
         set => SetInput(SelectedInputType1, true, value, null, null, null, null, null);
     }
 
     public Ps2InputType Ps2InputType1
     {
-        get => (Child1.InnermostInput() as Ps2Input)?.Input ?? Ps2InputType.Cross;
+        get => (Child1.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
         set => SetInput(SelectedInputType1, true, null, value, null, null, null, null);
     }
 
     public DjInputType DjInputType1
     {
-        get => (Child1.InnermostInput() as DjInput)?.Input ?? DjInputType.LeftGreen;
+        get => (Child1.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
         set => SetInput(SelectedInputType1, true, null, null, null, null, value, null);
     }
 
     public UsbHostInputType UsbInputType1
     {
-        get => (Child1.InnermostInput() as UsbHostInput)?.Input ?? UsbHostInputType.A;
+        get => (Child1.InnermostInputs().First() as UsbHostInput)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType1, true, null, null, null, null, null, value);
     }
 
@@ -73,25 +73,25 @@ public class MacroInput : Input
 
     public WiiInputType WiiInputType2
     {
-        get => (Child2.InnermostInput() as WiiInput)?.Input ?? WiiInputType.ClassicA;
+        get => (Child2.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
         set => SetInput(SelectedInputType2, false, value, null, null, null, null, null);
     }
 
     public Ps2InputType Ps2InputType2
     {
-        get => (Child2.InnermostInput() as Ps2Input)?.Input ?? Ps2InputType.Cross;
+        get => (Child2.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
         set => SetInput(SelectedInputType2, false, null, value, null, null, null, null);
     }
 
     public DjInputType DjInputType2
     {
-        get => (Child2.InnermostInput() as DjInput)?.Input ?? DjInputType.LeftGreen;
+        get => (Child2.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
         set => SetInput(SelectedInputType2, false, null, null, null, null, value, null);
     }
 
     public UsbHostInputType UsbInputType2
     {
-        get => (Child2.InnermostInput() as UsbHostInput)?.Input ?? UsbHostInputType.A;
+        get => (Child2.InnermostInputs().First() as UsbHostInput)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType2, false, null, null, null, null, null, value);
     }
     // ReSharper disable UnassignedGetOnlyAutoProperty
@@ -108,8 +108,7 @@ public class MacroInput : Input
         GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
         UsbHostInputType? usbInputType)
     {
-        var child = isChild1 ? Child1 : Child2;
-        child = child.InnermostInput();
+        var child = (isChild1 ? Child1.InnermostInputs() : Child2.InnermostInputs()).First();
 
         Input? inputOther = null;
         Input input;
@@ -137,77 +136,77 @@ public class MacroInput : Input
                 input = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
                 inputOther = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
                 break;
-            case Types.InputType.TurntableInput when child.InnermostInput() is not DjInput:
+            case Types.InputType.TurntableInput when child is not DjInput:
                 djInputType ??= DjInputType.LeftGreen;
                 input = new DjInput(djInputType.Value, Model, false);
                 inputOther = new DjInput(djInputType.Value, Model, false);
                 break;
-            case Types.InputType.TurntableInput when child.InnermostInput() is DjInput dj:
+            case Types.InputType.TurntableInput when child is DjInput dj:
                 djInputType ??= DjInputType.LeftGreen;
                 input = new DjInput(djInputType.Value, Model, dj.Smoothing,dj.Sda, dj.Scl);
                 break;
-            case Types.InputType.Gh5NeckInput when child.InnermostInput() is not Gh5NeckInput:
+            case Types.InputType.Gh5NeckInput when child is not Gh5NeckInput:
                 gh5NeckInputType ??= Gh5NeckInputType.Green;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, false);
                 inputOther = new Gh5NeckInput(gh5NeckInputType.Value, Model, false);
                 break;
-            case Types.InputType.Gh5NeckInput when child.InnermostInput() is Gh5NeckInput gh5:
+            case Types.InputType.Gh5NeckInput when child is Gh5NeckInput gh5:
                 gh5NeckInputType ??= Gh5NeckInputType.Green;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, false, gh5.Sda, gh5.Scl);
                 break;
-            case Types.InputType.CloneNeckInput when child.InnermostInput() is not CloneNeckInput:
+            case Types.InputType.CloneNeckInput when child is not CloneNeckInput:
                 gh5NeckInputType ??= Gh5NeckInputType.Green;
                 input = new CloneNeckInput(gh5NeckInputType.Value, Model, false);
                 inputOther = new CloneNeckInput(gh5NeckInputType.Value, Model, false);
                 break;
-            case Types.InputType.CloneNeckInput when child.InnermostInput() is CloneNeckInput gh5:
+            case Types.InputType.CloneNeckInput when child is CloneNeckInput gh5:
                 gh5NeckInputType ??= gh5.Input;
                 input = new CloneNeckInput(gh5NeckInputType.Value, Model, gh5.Peripheral, gh5.Sda, gh5.Scl);
                 break;
-            case Types.InputType.WtNeckInput when child.InnermostInput() is not GhWtTapInput:
+            case Types.InputType.WtNeckInput when child is not GhWtTapInput:
                 ghWtInputType ??= GhWtInputType.TapGreen;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, false, -1, -1, -1, -1);
                 inputOther = new GhWtTapInput(ghWtInputType.Value, Model, false, -1, -1, -1, -1);
                 break;
-            case Types.InputType.WtNeckInput when child.InnermostInput() is GhWtTapInput wt:
+            case Types.InputType.WtNeckInput when child is GhWtTapInput wt:
                 ghWtInputType ??= GhWtInputType.TapGreen;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, false, wt.Pin, wt.PinS0, wt.PinS1, wt.PinS2);
                 break;
-            case Types.InputType.WtNeckPeripheralInput when child.InnermostInput() is not GhWtTapInput:
+            case Types.InputType.WtNeckPeripheralInput when child is not GhWtTapInput:
                 ghWtInputType ??= GhWtInputType.TapGreen;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, true, -1, -1, -1, -1);
                 inputOther = new GhWtTapInput(ghWtInputType.Value, Model, true, -1, -1, -1, -1);
                 break;
-            case Types.InputType.WtNeckPeripheralInput when child.InnermostInput() is GhWtTapInput wt:
+            case Types.InputType.WtNeckPeripheralInput when child is GhWtTapInput wt:
                 ghWtInputType ??= GhWtInputType.TapGreen;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, true, wt.Pin, wt.PinS0, wt.PinS1, wt.PinS2);
                 break;
-            case Types.InputType.WiiInput when child.InnermostInput() is not WiiInput:
+            case Types.InputType.WiiInput when child is not WiiInput:
                 wiiInput ??= WiiInputType.ClassicA;
                 input = new WiiInput(wiiInput.Value, Model, false);
                 inputOther = new WiiInput(wiiInput.Value, Model, false);
                 break;
-            case Types.InputType.WiiInput when child.InnermostInput() is WiiInput wii:
+            case Types.InputType.WiiInput when child is WiiInput wii:
                 wiiInput ??= WiiInputType.ClassicA;
                 input = new WiiInput(wiiInput.Value, Model, false, wii.Sda, wii.Scl);
                 break;
-            case Types.InputType.Ps2Input when child.InnermostInput() is not Ps2Input:
+            case Types.InputType.Ps2Input when child is not Ps2Input:
                 ps2InputType ??= Ps2InputType.Cross;
                 input = new Ps2Input(ps2InputType.Value, Model, false);
                 inputOther = new Ps2Input(ps2InputType.Value, Model, false);
                 break;
-            case Types.InputType.Ps2Input when child.InnermostInput() is Ps2Input ps2:
+            case Types.InputType.Ps2Input when child is Ps2Input ps2:
                 ps2InputType ??= Ps2InputType.Cross;
                 input = new Ps2Input(ps2InputType.Value, Model, false, ps2.Miso, ps2.Mosi, ps2.Sck,
                     ps2.Att,
                     ps2.Ack);
                 break;
-            case Types.InputType.UsbHostInput when child.InnermostInput() is not UsbHostInput:
+            case Types.InputType.UsbHostInput when child is not UsbHostInput:
                 usbInputType ??= UsbHostInputType.A;
                 input = new UsbHostInput(usbInputType.Value, Model);
                 inputOther = new UsbHostInput(usbInputType.Value, Model);
                 break;
-            case Types.InputType.UsbHostInput when child.InnermostInput() is UsbHostInput:
+            case Types.InputType.UsbHostInput when child is UsbHostInput:
                 usbInputType ??= UsbHostInputType.A;
                 input = new UsbHostInput(usbInputType.Value, Model);
                 break;
@@ -301,9 +300,9 @@ public class MacroInput : Input
         return new SerializedMacroInput(Child1.Serialise(), Child2.Serialise());
     }
 
-    public override Input InnermostInput()
+    public override IEnumerable<Input> InnermostInputs()
     {
-        return Child1;
+        return new []{Child1, Child2};
     }
 
     public override IList<Input> Inputs()

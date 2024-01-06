@@ -100,7 +100,10 @@ public class GuitarAxis : OutputAxis
     {
         if (Type is GuitarAxisType.Pickup)
         {
-            val += short.MaxValue + 1;
+            if (Input.IsUint)
+            {
+                val += short.MaxValue + 1;
+            }
             return EnumToStringConverter.Convert(GetPickupSelectorValue(val));
         }
 

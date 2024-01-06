@@ -103,19 +103,19 @@ public abstract partial class Output : ReactiveObject
         this.WhenAnyValue(x => x.Model.LedCountPeripheral)
             .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, true, (byte) s)).ToArray())
             .ToPropertyEx(this, x => x.AvailableIndicesPeripheral);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInput() is DjInput)
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs() is DjInput)
             .ToPropertyEx(this, x => x.IsDj);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInput() is UsbHostInput)
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs() is UsbHostInput)
             .ToPropertyEx(this, x => x.IsUsb);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInput() is WiiInput)
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs() is WiiInput)
             .ToPropertyEx(this, x => x.IsWii);
         this.WhenAnyValue(x => x.Input)
-            .Select(x => x.InnermostInput() is Gh5NeckInput or CloneNeckInput && this is not GuitarAxis)
+            .Select(x => x.InnermostInputs() is Gh5NeckInput or CloneNeckInput && this is not GuitarAxis)
             .ToPropertyEx(this, x => x.IsGh5OrClone);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInput() is Ps2Input)
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs() is Ps2Input)
             .ToPropertyEx(this, x => x.IsPs2);
         this.WhenAnyValue(x => x.Input)
-            .Select(x => x.InnermostInput() is GhWtTapInput && this is not GuitarAxis)
+            .Select(x => x.InnermostInputs() is GhWtTapInput && this is not GuitarAxis)
             .ToPropertyEx(this, x => x.IsWt);
         this.WhenAnyValue(x => x.Input.Title, x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails,
                 x => x.Model.LegendType, x => x.Model.SwapSwitchFaceButtons)
@@ -252,13 +252,13 @@ public abstract partial class Output : ReactiveObject
 
     public WiiInputType WiiInputType
     {
-        get => (Input.InnermostInput() as WiiInput)?.Input ?? WiiInputType.ClassicA;
+        get => (Input.InnermostInputs() as WiiInput)?.Input ?? WiiInputType.ClassicA;
         set => SetInput(SelectedInputType, value, null, null, null, null, null);
     }
 
     public Ps2InputType Ps2InputType
     {
-        get => (Input.InnermostInput() as Ps2Input)?.Input ?? Ps2InputType.Cross;
+        get => (Input.InnermostInputs() as Ps2Input)?.Input ?? Ps2InputType.Cross;
         set => SetInput(SelectedInputType, null, value, null, null, null, null);
     }
 
@@ -270,26 +270,26 @@ public abstract partial class Output : ReactiveObject
 
     public DjInputType DjInputType
     {
-        get => (Input.InnermostInput() as DjInput)?.Input ?? DjInputType.LeftGreen;
+        get => (Input.InnermostInputs() as DjInput)?.Input ?? DjInputType.LeftGreen;
         set => SetInput(SelectedInputType, null, null, null, null, value, null);
     }
 
     public UsbHostInputType UsbInputType
     {
-        get => (Input.InnermostInput() as UsbHostInput)?.Input ?? UsbHostInputType.A;
+        get => (Input.InnermostInputs() as UsbHostInput)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType, null, null, null, null, null, value);
     }
 
     public Gh5NeckInputType Gh5NeckInputType
     {
-        get => (Input.InnermostInput() as Gh5NeckInput)?.Input ??
-               (Input.InnermostInput() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
+        get => (Input.InnermostInputs() as Gh5NeckInput)?.Input ??
+               (Input.InnermostInputs() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
         set => SetInput(SelectedInputType, null, null, null, value, null, null);
     }
 
     public GhWtInputType GhWtInputType
     {
-        get => (Input.InnermostInput() as GhWtTapInput)?.Input ?? GhWtInputType.TapGreen;
+        get => (Input.InnermostInputs() as GhWtTapInput)?.Input ?? GhWtInputType.TapGreen;
         set => SetInput(SelectedInputType, null, null, value, null, null, null);
     }
 
@@ -324,19 +324,19 @@ public abstract partial class Output : ReactiveObject
 
     private Enum GetChildOutputType()
     {
-        if (Input.InnermostInput() is WiiInput wii) return wii.Input;
+        if (Input.InnermostInputs() is WiiInput wii) return wii.Input;
 
-        if (Input.InnermostInput() is Ps2Input ps2) return ps2.Input;
+        if (Input.InnermostInputs() is Ps2Input ps2) return ps2.Input;
 
-        if (Input.InnermostInput() is DjInput dj) return dj.Input;
+        if (Input.InnermostInputs() is DjInput dj) return dj.Input;
 
-        if (Input.InnermostInput() is Gh5NeckInput gh5) return gh5.Input;
+        if (Input.InnermostInputs() is Gh5NeckInput gh5) return gh5.Input;
 
-        if (Input.InnermostInput() is CloneNeckInput c) return c.Input;
+        if (Input.InnermostInputs() is CloneNeckInput c) return c.Input;
 
-        if (Input.InnermostInput() is GhWtTapInput wt) return wt.Input;
+        if (Input.InnermostInputs() is GhWtTapInput wt) return wt.Input;
 
-        if (Input.InnermostInput() is UsbHostInput usb) return usb.Input;
+        if (Input.InnermostInputs() is UsbHostInput usb) return usb.Input;
 
         return GetOutputType();
     }
@@ -564,21 +564,21 @@ public abstract partial class Output : ReactiveObject
         Input input;
         switch (inputType)
         {
-            case InputType.ConstantInput when Input.InnermostInput() is not FixedInput && this is OutputAxis axis:
+            case InputType.ConstantInput when Input.InnermostInputs().First() is not FixedInput && this is OutputAxis axis:
                 input = new ConstantInput(Model, 0, true, axis.Min, axis.Max,
                     axis is GuitarAxis {Type: GuitarAxisType.Slider}, axis is GuitarAxis {Type: GuitarAxisType.Pickup});
                 break;
-            case InputType.ConstantInput when Input.InnermostInput() is not FixedInput:
+            case InputType.ConstantInput when Input.InnermostInputs().First() is not FixedInput:
                 input = new ConstantInput(Model, 0, false, 0, 1, false, false);
                 break;
             case InputType.ConstantInput:
-                input = Input.InnermostInput();
+                input = Input.InnermostInputs().First();
                 break;
-            case InputType.UsbHostInput when Input.InnermostInput() is not UsbHostInput:
+            case InputType.UsbHostInput when Input.InnermostInputs().First() is not UsbHostInput:
                 usbInputType ??= UsbHostInputType.A;
                 input = new UsbHostInput(usbInputType.Value, Model);
                 break;
-            case InputType.UsbHostInput when Input.InnermostInput() is UsbHostInput usbHost:
+            case InputType.UsbHostInput when Input.InnermostInputs().First() is UsbHostInput usbHost:
                 usbInputType ??= usbHost.Input;
                 input = new UsbHostInput(usbInputType.Value, Model);
                 break;
@@ -598,69 +598,69 @@ public abstract partial class Output : ReactiveObject
             case InputType.DigitalPeripheralInput:
                 input = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
                 break;
-            case InputType.TurntableInput when Input.InnermostInput() is not DjInput:
+            case InputType.TurntableInput when Input.InnermostInputs().First() is not DjInput:
                 djInputType ??= DjInputType.LeftGreen;
                 input = new DjInput(djInputType.Value, Model, false);
                 break;
-            case InputType.TurntableInput when Input.InnermostInput() is DjInput dj:
+            case InputType.TurntableInput when Input.InnermostInputs().First() is DjInput dj:
                 djInputType ??= dj.Input;
                 input = new DjInput(djInputType.Value, Model, dj.Peripheral, dj.Sda, dj.Scl);
                 break;
-            case InputType.Gh5NeckInput when Input.InnermostInput() is not Gh5NeckInput:
+            case InputType.Gh5NeckInput when Input.InnermostInputs().First() is not Gh5NeckInput:
                 gh5NeckInputType ??= Gh5NeckInputType.Green;
                 if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, false);
                 break;
-            case InputType.Gh5NeckInput when Input.InnermostInput() is Gh5NeckInput gh5:
+            case InputType.Gh5NeckInput when Input.InnermostInputs().First() is Gh5NeckInput gh5:
                 gh5NeckInputType ??= gh5.Input;
                 if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, gh5.Peripheral, gh5.Sda, gh5.Scl);
                 break;
-            case InputType.CloneNeckInput when Input.InnermostInput() is not CloneNeckInput:
+            case InputType.CloneNeckInput when Input.InnermostInputs().First() is not CloneNeckInput:
                 gh5NeckInputType ??= Gh5NeckInputType.Green;
                 if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
                 input = new CloneNeckInput(gh5NeckInputType.Value, Model, false);
                 break;
-            case InputType.CloneNeckInput when Input.InnermostInput() is CloneNeckInput gh5:
+            case InputType.CloneNeckInput when Input.InnermostInputs().First() is CloneNeckInput gh5:
                 gh5NeckInputType ??= gh5.Input;
                 if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
                 input = new CloneNeckInput(gh5NeckInputType.Value, Model, gh5.Peripheral, gh5.Sda, gh5.Scl);
                 break;
-            case InputType.WtNeckInput when Input.InnermostInput() is not GhWtTapInput:
+            case InputType.WtNeckInput when Input.InnermostInputs().First() is not GhWtTapInput:
                 ghWtInputType ??= GhWtInputType.TapGreen;
                 if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, false, -1, -1, -1, -1);
                 break;
-            case InputType.WtNeckInput when Input.InnermostInput() is GhWtTapInput wt:
+            case InputType.WtNeckInput when Input.InnermostInputs().First() is GhWtTapInput wt:
                 ghWtInputType ??= wt.Input;
                 if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, false, wt.Pin, wt.PinS0, wt.PinS1,
                     wt.PinS2);
                 break;
-            case InputType.WtNeckPeripheralInput when Input.InnermostInput() is not GhWtTapInput:
+            case InputType.WtNeckPeripheralInput when Input.InnermostInputs().First() is not GhWtTapInput:
                 ghWtInputType ??= GhWtInputType.TapGreen;
                 if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, true, -1, -1, -1, -1);
                 break;
-            case InputType.WtNeckPeripheralInput when Input.InnermostInput() is GhWtTapInput wt:
+            case InputType.WtNeckPeripheralInput when Input.InnermostInputs().First() is GhWtTapInput wt:
                 ghWtInputType ??= wt.Input;
                 if (this is OutputAxis) ghWtInputType = GhWtInputType.TapBar;
                 input = new GhWtTapInput(ghWtInputType.Value, Model, true, wt.Pin, wt.PinS0, wt.PinS1,
                     wt.PinS2);
                 break;
-            case InputType.WiiInput when Input.InnermostInput() is not WiiInput:
+            case InputType.WiiInput when Input.InnermostInputs().First() is not WiiInput:
                 wiiInput ??= WiiInputType.ClassicA;
                 input = new WiiInput(wiiInput.Value, Model, false);
                 break;
-            case InputType.WiiInput when Input.InnermostInput() is WiiInput wii:
+            case InputType.WiiInput when Input.InnermostInputs().First() is WiiInput wii:
                 wiiInput ??= wii.Input;
                 input = new WiiInput(wiiInput.Value, Model, wii.Peripheral, wii.Sda, wii.Scl);
                 break;
-            case InputType.Ps2Input when Input.InnermostInput() is not Ps2Input:
+            case InputType.Ps2Input when Input.InnermostInputs().First() is not Ps2Input:
                 ps2InputType ??= Ps2InputType.Cross;
                 input = new Ps2Input(ps2InputType.Value, Model, false);
                 break;
-            case InputType.Ps2Input when Input.InnermostInput() is Ps2Input ps2:
+            case InputType.Ps2Input when Input.InnermostInputs().First() is Ps2Input ps2:
                 ps2InputType ??= ps2.Input;
                 input = new Ps2Input(ps2InputType.Value, Model, ps2.Peripheral, ps2.Miso, ps2.Mosi, ps2.Sck,
                     ps2.Att,
@@ -717,7 +717,7 @@ public abstract partial class Output : ReactiveObject
         if (this is EmulationMode) Input = input;
 
 
-        if (input.InnermostInput() is not DirectInput && this is OutputAxis axis2)
+        if (input.InnermostInputs() is not DirectInput && this is OutputAxis axis2)
         {
             // Reset min and max to be safe
             if (Input.IsUint)

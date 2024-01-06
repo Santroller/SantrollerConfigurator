@@ -158,9 +158,9 @@ public class DigitalToAnalog : Input
         return new SerializedDigitalToAnalog(Child.Serialise(), On, _trigger, Type);
     }
 
-    public override Input InnermostInput()
+    public override IEnumerable<Input> InnermostInputs()
     {
-        return Child.InnermostInput();
+        return Child.InnermostInputs();
     }
 
     public override void Update(Dictionary<int, int> analogRaw,
