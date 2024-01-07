@@ -125,7 +125,7 @@ public abstract class OutputButton : Output
             {
                 var gen2 = input.Generate();
                 if (!macros.TryGetValue(gen2, out var inputs2)) continue;
-                if (Input.InnermostInputs() is WiiInput wiiInput)
+                if (Input.InnermostInputs().First() is WiiInput wiiInput)
                 {
                     extra += string.Join("\n    ",
                         inputs2.Where((s) =>

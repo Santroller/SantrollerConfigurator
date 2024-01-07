@@ -252,13 +252,13 @@ public abstract partial class Output : ReactiveObject
 
     public WiiInputType WiiInputType
     {
-        get => (Input.InnermostInputs() as WiiInput)?.Input ?? WiiInputType.ClassicA;
+        get => (Input.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
         set => SetInput(SelectedInputType, value, null, null, null, null, null);
     }
 
     public Ps2InputType Ps2InputType
     {
-        get => (Input.InnermostInputs() as Ps2Input)?.Input ?? Ps2InputType.Cross;
+        get => (Input.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
         set => SetInput(SelectedInputType, null, value, null, null, null, null);
     }
 
@@ -270,7 +270,7 @@ public abstract partial class Output : ReactiveObject
 
     public DjInputType DjInputType
     {
-        get => (Input.InnermostInputs() as DjInput)?.Input ?? DjInputType.LeftGreen;
+        get => (Input.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
         set => SetInput(SelectedInputType, null, null, null, null, value, null);
     }
 
@@ -324,19 +324,19 @@ public abstract partial class Output : ReactiveObject
 
     private Enum GetChildOutputType()
     {
-        if (Input.InnermostInputs() is WiiInput wii) return wii.Input;
+        if (Input.InnermostInputs().First() is WiiInput wii) return wii.Input;
 
-        if (Input.InnermostInputs() is Ps2Input ps2) return ps2.Input;
+        if (Input.InnermostInputs().First() is Ps2Input ps2) return ps2.Input;
 
-        if (Input.InnermostInputs() is DjInput dj) return dj.Input;
+        if (Input.InnermostInputs().First() is DjInput dj) return dj.Input;
 
-        if (Input.InnermostInputs() is Gh5NeckInput gh5) return gh5.Input;
+        if (Input.InnermostInputs().First() is Gh5NeckInput gh5) return gh5.Input;
 
-        if (Input.InnermostInputs() is CloneNeckInput c) return c.Input;
+        if (Input.InnermostInputs().First() is CloneNeckInput c) return c.Input;
 
-        if (Input.InnermostInputs() is GhWtTapInput wt) return wt.Input;
+        if (Input.InnermostInputs().First() is GhWtTapInput wt) return wt.Input;
 
-        if (Input.InnermostInputs() is UsbHostInput usb) return usb.Input;
+        if (Input.InnermostInputs().First() is UsbHostInput usb) return usb.Input;
 
         return GetOutputType();
     }
@@ -717,7 +717,7 @@ public abstract partial class Output : ReactiveObject
         if (this is EmulationMode) Input = input;
 
 
-        if (input.InnermostInputs() is not DirectInput && this is OutputAxis axis2)
+        if (input.InnermostInputs().First() is not DirectInput && this is OutputAxis axis2)
         {
             // Reset min and max to be safe
             if (Input.IsUint)
