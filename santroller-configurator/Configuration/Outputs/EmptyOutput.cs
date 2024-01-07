@@ -41,7 +41,6 @@ public class EmptyOutput : Output
         _isKeyboard = this.WhenAnyValue(x => x.Model.EmulationType)
             .Select(x => Model.GetSimpleEmulationType() is EmulationType.KeyboardMouse)
             .ToProperty(this, x => x.IsKeyboard);
-
         _combinedTypes = this.WhenAnyValue(vm => vm.Model.DeviceControllerType, vm => vm.Model.HasPeripheral,
                 vm => vm.Model.IsBluetoothTx, vm => vm.Model.HasWiiCombinedOutput, vm => vm.Model.HasPs2CombinedOutput,
                 vm => vm.Model.HasGhwtCombinedOutput).CombineLatest(this.WhenAnyValue(

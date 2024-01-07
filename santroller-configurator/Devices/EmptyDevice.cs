@@ -42,7 +42,7 @@ public class EmptyDevice: IConfigurableDevice
 
     public bool IsPico()
     {
-        return false;
+        return true;
     }
 
     public void Reconnect()
