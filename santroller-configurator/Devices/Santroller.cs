@@ -454,6 +454,7 @@ public class Santroller : ConfigurableUsbDevice
             {
                 type = Resources.ConsoleTypeKeyboardMouse;
             }
+            
             return IsSantroller
                 ? $"{Product} - {Board.Name} - {type}"
                 : Product;
