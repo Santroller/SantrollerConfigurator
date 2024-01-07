@@ -107,7 +107,7 @@ public partial class DjAxis : OutputAxis
 
     public override bool ShouldFlip(ConfigField mode)
     {
-        return false;
+        return mode is ConfigField.Xbox360 && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity;
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
