@@ -802,7 +802,6 @@ public class Ardwiino : ConfigurableUsbDevice
         public readonly byte pin;
         public byte inverted;
     }
-
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     private struct Pins
     {
