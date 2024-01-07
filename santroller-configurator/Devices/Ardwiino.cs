@@ -58,9 +58,9 @@ public class Ardwiino : ConfigurableUsbDevice
 
         // Switch IDs
         (0x0F0D, 0x0092),
-        
+
         // Guitar Praise Guitar
-        (0x0314, 0x0830) 
+        (0x0314, 0x0830)
     };
 
     public const ushort SerialArdwiinoRevision = 0x3122;
@@ -177,8 +177,13 @@ public class Ardwiino : ConfigurableUsbDevice
         if (!MigrationSupported) return false;
         var readConfig = ReadConfigCommand;
         if (Version < new Version(8, 0, 7))
+        {
             readConfig = ReadConfigPre807Command;
-        else if (Version < new Version(7, 0, 3)) readConfig = ReadConfigPre703Command;
+        }
+        else if (Version < new Version(7, 0, 3))
+        {
+            readConfig = ReadConfigPre703Command;
+        }
 
         var data = new byte[Marshal.SizeOf<ArdwiinoConfiguration>()];
         var sizeOfAll = Marshal.SizeOf<FullArdwiinoConfiguration>();
@@ -501,7 +506,8 @@ public class Ardwiino : ConfigurableUsbDevice
                     config.all.main.tiltType == 2)
                 {
                     bindings.Add(new GuitarAxis(model,
-                        new DigitalToAnalog(new DirectInput(pin.pin, false, false, DevicePinMode.PullUp, model), 32767, model, DigitalToAnalogType.Tilt),
+                        new DigitalToAnalog(new DirectInput(pin.pin, false, false, DevicePinMode.PullUp, model), 32767,
+                            model, DigitalToAnalogType.Tilt),
                         on,
                         off, ledIndex, Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
                         0, GuitarAxisType.Tilt, false));
@@ -603,7 +609,8 @@ public class Ardwiino : ConfigurableUsbDevice
                         ledIndex = new[] {index};
 
                     bindings.Add(new GuitarAxis(model,
-                        new DigitalToAnalog(new DirectInput(pin.pin, false, false, DevicePinMode.PullUp, model), 32767, model, DigitalToAnalogType.Tilt),
+                        new DigitalToAnalog(new DirectInput(pin.pin, false, false, DevicePinMode.PullUp, model), 32767,
+                            model, DigitalToAnalogType.Tilt),
                         on,
                         off, ledIndex, Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
                         0, GuitarAxisType.Tilt, false));
@@ -802,6 +809,7 @@ public class Ardwiino : ConfigurableUsbDevice
         public readonly byte pin;
         public byte inverted;
     }
+
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     private struct Pins
     {
