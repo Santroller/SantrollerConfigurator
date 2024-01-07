@@ -49,6 +49,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
 
     private async void DoSaveConfigAsync(IInteractionContext<ConfigViewModel, Unit> obj)
     {
+        obj.SetOutput(new Unit());
         var extension = "." + obj.Input.Microcontroller.Board.ArdwiinoName + "config";
         var file = await ((Window) VisualRoot!).StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
@@ -62,6 +63,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
 
     private async void DoLoadConfigAsync(IInteractionContext<ConfigViewModel, Unit> obj)
     {
+        obj.SetOutput(new Unit());
         var extension = "." + obj.Input.Microcontroller.Board.ArdwiinoName + "config";
         var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
