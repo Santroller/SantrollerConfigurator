@@ -103,19 +103,19 @@ public abstract partial class Output : ReactiveObject
         this.WhenAnyValue(x => x.Model.LedCountPeripheral)
             .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, true, (byte) s)).ToArray())
             .ToPropertyEx(this, x => x.AvailableIndicesPeripheral);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs() is DjInput)
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is DjInput)
             .ToPropertyEx(this, x => x.IsDj);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs() is UsbHostInput)
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is UsbHostInput)
             .ToPropertyEx(this, x => x.IsUsb);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs() is WiiInput)
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is WiiInput)
             .ToPropertyEx(this, x => x.IsWii);
         this.WhenAnyValue(x => x.Input)
-            .Select(x => x.InnermostInputs() is Gh5NeckInput or CloneNeckInput && this is not GuitarAxis)
+            .Select(x => x.InnermostInputs().First() is Gh5NeckInput or CloneNeckInput && this is not GuitarAxis {Type:GuitarAxisType.Slider})
             .ToPropertyEx(this, x => x.IsGh5OrClone);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs() is Ps2Input)
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Ps2Input)
             .ToPropertyEx(this, x => x.IsPs2);
         this.WhenAnyValue(x => x.Input)
-            .Select(x => x.InnermostInputs() is GhWtTapInput && this is not GuitarAxis)
+            .Select(x => x.InnermostInputs().First() is GhWtTapInput && this is not GuitarAxis {Type:GuitarAxisType.Slider})
             .ToPropertyEx(this, x => x.IsWt);
         this.WhenAnyValue(x => x.Input.Title, x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails,
                 x => x.Model.LegendType, x => x.Model.SwapSwitchFaceButtons)
