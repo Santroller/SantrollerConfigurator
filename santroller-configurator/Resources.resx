@@ -2995,6 +2995,9 @@
     <data name="SavePresetLabel2" xml:space="preserve">
         <value>Save Current Settings as {0}</value>
     </data>
+    <data name="SavePresetLabel3" xml:space="preserve">
+        <value>Save Current Settings as {0} and overwrite existing preset</value>
+    </data>
     <data name="PresetLabel" xml:space="preserve">
         <value>Presets</value>
     </data>

@@ -5757,6 +5757,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SavePresetLabel3 {
+            get {
+                return ResourceManager.GetString("SavePresetLabel3", resourceCulture);
+            }
+        }
+        
         public static string PresetLabel {
             get {
                 return ResourceManager.GetString("PresetLabel", resourceCulture);

@@ -126,11 +126,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .ToPropertyEx(this, x => x.IsAdvancedMode);
         this.WhenAnyValue(x => x.Mode).Select(x => x is ModeType.Standard)
             .ToPropertyEx(this, x => x.IsStandardMode);
-        this.WhenAnyValue(x => x.PresetName).Select(x => String.IsNullOrWhiteSpace(x) ? Resources.SavePresetLabel : string.Format(Resources.SavePresetLabel2, x))
+        this.WhenAnyValue(x => x.PresetName).Select(x =>
+                String.IsNullOrWhiteSpace(x) ? Resources.SavePresetLabel :
+                Presets.Any(s => s.Item1 == x) ? string.Format(Resources.SavePresetLabel3, x) :
+                string.Format(Resources.SavePresetLabel2, x))
             .ToPropertyEx(this, x => x.SavePresetLabel);
-        this.WhenAnyValue(x => x.CurrentPreset).Select(x => x is null ? Resources.LoadPresetLabel : string.Format(Resources.LoadPresetLabel2, x.Item1))
+        this.WhenAnyValue(x => x.CurrentPreset).Select(x =>
+                x is null ? Resources.LoadPresetLabel : string.Format(Resources.LoadPresetLabel2, x.Item1))
             .ToPropertyEx(this, x => x.LoadPresetLabel);
-        this.WhenAnyValue(x => x.CurrentPreset).Select(x => x is null ? Resources.DeletePresetLabel : string.Format(Resources.DeletePresetLabel2, x.Item1))
+        this.WhenAnyValue(x => x.CurrentPreset).Select(x =>
+                x is null ? Resources.DeletePresetLabel : string.Format(Resources.DeletePresetLabel2, x.Item1))
             .ToPropertyEx(this, x => x.DeletePresetLabel);
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => x is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
@@ -140,7 +145,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .ToPropertyEx(this, x => x.SupportsDeque);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarHeroGuitar
-                or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum or DeviceControllerType.GuitarPraiseGuitar)
+                or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar
+                or DeviceControllerType.FortniteGuitarStrum or DeviceControllerType.GuitarPraiseGuitar)
             .ToPropertyEx(this, x => x.IsGuitar);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.StageKit)
@@ -158,7 +164,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.Controller)
             .ToPropertyEx(this, x => x.IsController);
         this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
-            .Select(x => GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller && x.Item1 is not EmulationType.FortniteFestival && x.Item2 is not DeviceControllerType.GuitarPraiseGuitar)
+            .Select(x =>
+                GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller &&
+                x.Item1 is not EmulationType.FortniteFestival && x.Item2 is not DeviceControllerType.GuitarPraiseGuitar)
             .ToPropertyEx(this, x => x.IsNonStandardController);
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.KeyboardMouse)
@@ -231,12 +239,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Subscribe();
         _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>());
         _deviceControllerTypes.Connect().Filter(
-            this.WhenAnyValue(s => s.EmulationType)
-                .Select(s =>
-                    new Func<DeviceControllerType, bool>(type =>
-                        s is EmulationType.FortniteFestival == type.IsFortnite())))
-                .Bind(out var controllerTypes)
-                .Subscribe();
+                this.WhenAnyValue(s => s.EmulationType)
+                    .Select(s =>
+                        new Func<DeviceControllerType, bool>(type =>
+                            s is EmulationType.FortniteFestival == type.IsFortnite())))
+            .Bind(out var controllerTypes)
+            .Subscribe();
         DeviceControllerRhythmTypes = controllerTypes;
         Outputs = outputs;
         AllPins = new SourceList<int>();
@@ -286,7 +294,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     public IConfigurableDevice Device { get; set; }
-    
+
     [Reactive] public RolloverMode RolloverMode { get; set; }
     public IEnumerable<RolloverMode> RolloverModes => Enum.GetValues<RolloverMode>();
 
@@ -376,9 +384,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public MainWindowViewModel Main { get; }
 
     private SourceList<DeviceControllerType> _deviceControllerTypes = new SourceList<DeviceControllerType>();
-    
+
     public ReadOnlyObservableCollection<DeviceControllerType> DeviceControllerRhythmTypes { get; }
+
     public IEnumerable<ModeType> ModeTypes => Enum.GetValues<ModeType>();
+
     // Only Pico supports bluetooth
     public IEnumerable<EmulationType> EmulationTypes => Enum.GetValues<EmulationType>()
         .Where(type =>
@@ -412,7 +422,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public bool BindableTwi { get; }
     [Reactive] public bool PollExpanded { get; set; }
-    
+
     [Reactive] public bool PresetsExpanded { get; set; }
     [Reactive] public bool ControllerConfigExpanded { get; set; }
     [Reactive] public bool BluetoothConfigExpanded { get; set; }
@@ -714,7 +724,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private bool _hasPeripheral;
 
     [Reactive] public bool XInputOnWindows { get; set; }
-    
+
     [Reactive] public bool XInputAuth { get; set; }
 
     public bool HasPeripheral
@@ -786,6 +796,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public ObservableCollection<Tuple<string, SerializedConfiguration>> Presets { get; } = new();
     public bool BindableSpi => IsPico;
+
     public IDisposable RegisterConnections()
     {
         return
@@ -890,6 +901,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             Deque = false;
         }
+
         if (EmulationType is EmulationType.FortniteFestival ||
             DeviceControllerType is DeviceControllerType.GuitarPraiseGuitar)
         {
@@ -1115,7 +1127,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             DeviceControllerType = DeviceControllerType.FortniteGuitar;
             return;
         }
-        
+
         if (DeviceControllerType.IsGuitar() && emulationType == EmulationType.Controller)
         {
             _emulationType = emulationType;
@@ -1276,7 +1288,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
                        """;
-            
+
             if (IsBluetoothRx)
             {
                 var addr = new byte[Santroller.BtAddressLength];
@@ -1640,11 +1652,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         UpdateErrors();
     }
+
     [RelayCommand]
     public void LoadPreset()
     {
         CurrentPreset!.Item2.LoadConfiguration(this);
     }
+
     [RelayCommand]
     public void DeletePreset()
     {
@@ -1654,16 +1668,22 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _toolConfig.Presets.AddRange(Presets);
         AssetUtils.SaveConfig(_toolConfig);
     }
+
     [RelayCommand]
     public void SavePreset()
     {
         var config = new SerializedConfiguration(this);
-        Presets.Add(new (PresetName, config));
+        Presets.RemoveMany(Presets.Where(s => s.Item1 == PresetName));
+        Presets.Add(new(PresetName, config));
+        var test = PresetName;
+        PresetName = "";
+        PresetName = test;
         CurrentPreset ??= Presets.First();
         _toolConfig.Presets.Clear();
         _toolConfig.Presets.AddRange(Presets);
         AssetUtils.SaveConfig(_toolConfig);
     }
+
     [RelayCommand]
     public void ClearOutputs()
     {
@@ -2234,7 +2254,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 }
                             }
 
-                            var generated = output.Generate(mode, index, "", "", strumIndices, combined, macros, writer);
+                            var generated = output.Generate(mode, index, "", "", strumIndices, combined, macros,
+                                writer);
 
                             return new Tuple<Input, string>(input, generated);
                         })
