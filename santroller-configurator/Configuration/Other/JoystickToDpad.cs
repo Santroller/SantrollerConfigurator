@@ -29,7 +29,8 @@ public class JoystickToDpad : Output
         WiiInputType.ClassicLeftStickX,
         WiiInputType.NunchukStickX,
         WiiInputType.GuitarJoystickX,
-        WiiInputType.DrumJoystickX
+        WiiInputType.DrumJoystickX,
+        WiiInputType.DjStickX
     };
 
     private static readonly List<WiiInputType> JoystickToDpadYWii = new()
@@ -37,7 +38,8 @@ public class JoystickToDpad : Output
         WiiInputType.ClassicLeftStickY,
         WiiInputType.NunchukStickY,
         WiiInputType.GuitarJoystickY,
-        WiiInputType.DrumJoystickY
+        WiiInputType.DrumJoystickY,
+        WiiInputType.DjStickY
     };
 
     private readonly List<ControllerButton> _outputs = new();

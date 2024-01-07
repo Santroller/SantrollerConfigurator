@@ -490,8 +490,9 @@ public class WiiInput : TwiInput
                     WiiInputType.DjTurntableLeft =>
                         ((((wiiButtonsLow & 1) != 0 ? 32 : 1) + (0x1F - (wiiData[3] & 0x1F))) - 32) << 10,
                     WiiInputType.DjTurntableRight => ((((wiiData[2] & 1) != 0 ? 32 : 1) +
-                                                      (0x1F - (((wiiData[2] & 0x80) >> 7) | ((wiiData[1] & 0xC0) >> 5) |
-                                                               ((wiiData[0] & 0xC0) >> 3)))) - 32) << 10,
+                                                       (0x1F - (((wiiData[2] & 0x80) >> 7) |
+                                                                ((wiiData[1] & 0xC0) >> 5) |
+                                                                ((wiiData[0] & 0xC0) >> 3)))) - 32) << 10,
 
                     _ => RawValue
                 };
@@ -529,11 +530,17 @@ public class WiiInput : TwiInput
 
         if (mappedBindings.ContainsKey(WiiControllerType.ClassicController))
         {
-            var mappings = mappedBindings[WiiControllerType.ClassicController].Select(s => s.Replace("\n","\n          ")).ToList();
+            var mappings = mappedBindings[WiiControllerType.ClassicController]
+                .Select(s => s.Replace("\n", "\n          ")).ToList();
+            Console.WriteLine(string.Join("\n", mappings));
             mappedBindings.Remove(WiiControllerType.ClassicController);
-            var mappingsDigital = mappings.Where(m => m.Contains("wiiButtons") || m.Contains("debounce"));
-            mappings = mappings.Where(m => !m.Contains("wiiButtons") && !m.Contains("debounce")).Select(s => s.Replace("\n","\n   ")).ToList().ToList();
-            var mappings2 = mappings.Select(mapping => HiResMapOrder.Aggregate(mapping, (current, key) => current.Replace(key, HiResMap[key]))).ToList();
+            var mappingsDigital = mappings.Where(m =>
+                (m.Contains("wiiButtons") || m.Contains("debounce")) && !m.Contains("wiiData[0]") &&
+                !m.Contains("wiiData[1]"));
+            mappings = mappings.Where(m => (!m.Contains("wiiButtons") && !m.Contains("debounce")) || m.Contains("wiiData[0]") || m.Contains("wiiData[1]"))
+                .Select(s => s.Replace("\n", "\n   ")).ToList().ToList();
+            var mappings2 = mappings.Select(mapping =>
+                HiResMapOrder.Aggregate(mapping, (current, key) => current.Replace(key, HiResMap[key]))).ToList();
 
             var analogMappings = mappings.Any()
                 ? $$"""
@@ -560,18 +567,20 @@ public class WiiInput : TwiInput
             ret += $"""
 
                     case {CType[input]}:
-                        {string.Join("\n    ", mappings.Select(s => s.Replace("\n","\n    ")))};
+                        {string.Join("\n    ", mappings.Select(s => s.Replace("\n", "\n    ")))};
                         break;
                     """;
         }
 
-        return ret.Any() ? $$"""
-                             if (wiiValid) {
-                                switch(wiiControllerType) {
-                                    {{ret}}
-                                }
-                             }
-                             """ : "";
+        return ret.Any()
+            ? $$"""
+                if (wiiValid) {
+                   switch(wiiControllerType) {
+                       {{ret}}
+                   }
+                }
+                """
+            : "";
     }
 
     public override IReadOnlyList<string> RequiredDefines()
