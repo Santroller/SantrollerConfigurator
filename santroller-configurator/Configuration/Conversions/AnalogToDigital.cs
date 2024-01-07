@@ -148,6 +148,7 @@ public class AnalogToDigital : Input
     private int Calculate((int raw, int threshold) val)
     {
         if (Child.IsUint)
+        {
             switch (AnalogToDigitalType)
             {
                 case AnalogToDigitalType.Trigger:
@@ -156,7 +157,9 @@ public class AnalogToDigital : Input
                 case AnalogToDigitalType.JoyLow:
                     return val.raw < short.MaxValue - val.threshold ? 1 : 0;
             }
+        }
         else
+        {
             switch (AnalogToDigitalType)
             {
                 case AnalogToDigitalType.Trigger:
@@ -165,6 +168,7 @@ public class AnalogToDigital : Input
                 case AnalogToDigitalType.JoyLow:
                     return val.raw < -Math.Abs(val.threshold) ? 1 : 0;
             }
+        }
 
         return 0;
     }
