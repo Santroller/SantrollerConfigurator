@@ -1663,6 +1663,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void DeletePreset()
     {
         Presets.Remove(CurrentPreset!);
+        var test = PresetName;
+        PresetName = "";
+        PresetName = test;
         CurrentPreset = Presets.FirstOrDefault();
         _toolConfig.Presets.Clear();
         _toolConfig.Presets.AddRange(Presets);
