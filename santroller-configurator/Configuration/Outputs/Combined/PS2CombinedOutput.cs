@@ -143,6 +143,12 @@ public class Ps2CombinedOutput : CombinedSpiOutput
     public override IEnumerable<Output> ValidOutputs()
     {
         var outputs = base.ValidOutputs().ToList();
+        var startSelectHome = outputs.FirstOrDefault(s => s is StartSelectHome);
+        if (startSelectHome?.Enabled == true)
+        {
+            outputs.Remove(startSelectHome);
+            outputs.Add(startSelectHome.ValidOutputs());
+        }
         var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
         if (joyToDpad?.Enabled != true) return outputs;
         outputs.Remove(joyToDpad);
@@ -252,6 +258,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                     true));
 
         Outputs.Add(new JoystickToDpad(Model, Peripheral, short.MaxValue / 2, false));
+        Outputs.Add(new StartSelectHome(Model, Peripheral, false) {Enabled = false});
         UpdateBindings();
     }
 

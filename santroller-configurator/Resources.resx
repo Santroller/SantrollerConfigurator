@@ -56,6 +56,9 @@
     <data name="JoystickToDpadTitle" xml:space="preserve">
         <value>Map joystick to Dpad</value>
     </data>
+    <data name="StartSelectHomeTitle" xml:space="preserve">
+        <value>Map Start+Select to Home</value>
+    </data>
     <data name="LeftJoystickToDpadTitle" xml:space="preserve">
         <value>Map Left joystick to Dpad</value>
     </data>
@@ -2901,6 +2904,9 @@
     </data>
     <data name="XInputLabel" xml:space="preserve">
         <value>XInput</value>
+    </data>
+    <data name="XboxAuthLabel" xml:space="preserve">
+        <value>Authentication for Xbox 360</value>
     </data>
     <data name="QueueBasedInputsLabel" xml:space="preserve">
         <value>Queue Based Inputs</value>

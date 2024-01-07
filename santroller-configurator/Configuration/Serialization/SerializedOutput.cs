@@ -30,6 +30,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoInclude(122, typeof(SerializedCombinedUsbHostOutput))]
 [ProtoInclude(123, typeof(SerializedReset))]
 [ProtoInclude(124, typeof(SerializedCloneCombinedOutput))]
+[ProtoInclude(125, typeof(SerializedStartSelectHome))]
 [ProtoContract]
 public abstract class SerializedOutput
 {

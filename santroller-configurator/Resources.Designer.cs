@@ -111,6 +111,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string StartSelectHomeTitle {
+            get {
+                return ResourceManager.GetString("StartSelectHomeTitle", resourceCulture);
+            }
+        }
+        
         public static string LeftJoystickToDpadTitle {
             get {
                 return ResourceManager.GetString("LeftJoystickToDpadTitle", resourceCulture);
@@ -5568,6 +5574,12 @@ namespace GuitarConfigurator.NetCore {
         public static string XInputLabel {
             get {
                 return ResourceManager.GetString("XInputLabel", resourceCulture);
+            }
+        }
+        
+        public static string XboxAuthLabel {
+            get {
+                return ResourceManager.GetString("XboxAuthLabel", resourceCulture);
             }
         }
         
