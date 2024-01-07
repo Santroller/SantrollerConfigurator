@@ -532,7 +532,6 @@ public class WiiInput : TwiInput
         {
             var mappings = mappedBindings[WiiControllerType.ClassicController]
                 .Select(s => s.Replace("\n", "\n          ")).ToList();
-            Console.WriteLine(string.Join("\n", mappings));
             mappedBindings.Remove(WiiControllerType.ClassicController);
             var mappingsDigital = mappings.Where(m =>
                 (m.Contains("wiiButtons") || m.Contains("debounce")) && !m.Contains("wiiData[0]") &&

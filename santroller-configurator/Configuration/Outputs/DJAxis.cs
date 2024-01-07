@@ -200,6 +200,8 @@ public partial class DjAxis : OutputAxis
             DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity when mode is ConfigField.Ps3
                     or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 => generatedTablePs3,
+            DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity when mode is ConfigField.Xbox360
+                => $"(-({generatedTable}))",
             DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
                 => generatedTable,
             DjAxisType.EffectsKnob when mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
