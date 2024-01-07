@@ -53,6 +53,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
                 Selected.Model.Device = SelectedDevice;
             }
         });
+        
         this.WhenAnyValue(s => s.SelectedTool).Subscribe(s =>
         {
             if (SelectedTool != null && SelectedTool.Configurations.Any())
