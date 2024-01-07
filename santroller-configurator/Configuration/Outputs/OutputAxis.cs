@@ -31,7 +31,8 @@ public abstract partial class OutputAxis : Output
 
     private OutputAxisCalibrationState _calibrationState = OutputAxisCalibrationState.None;
 
-    protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral,
+    protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral,
         int min, int max,
         int deadZone, bool trigger, bool childOfCombined) : base(model, input, ledOn, ledOff,
         ledIndices, ledIndicesPeripheral, childOfCombined)
@@ -316,20 +317,29 @@ public abstract partial class OutputAxis : Output
         };
     }
 
-    public string GenerateAssignment(string prev, ConfigField mode, bool forceAccel, bool forceTrigger, bool whammy, bool drum, 
+    public string GenerateAssignment(string prev, ConfigField mode, bool forceAccel, bool forceTrigger, bool whammy,
+        bool drum,
         BinaryWriter? writer)
     {
-        if (Input is FixedInput or DigitalToAnalog) return Input.Generate();
+        var trigger = Trigger || forceTrigger;
+        switch (Input)
+        {
+            case DigitalToAnalog:
+                return Input.Generate();
+            case FixedInput when this is GuitarAxis {Type: GuitarAxisType.Pickup}:
+                return $"({Input.Generate()} >> 8) & 0xff";
+        }
 
         string function;
-        var trigger = Trigger || forceTrigger;
         var intBased = false;
+        var singleByte = false;
 
         switch (mode)
         {
             // Don't use ps3 whammy hacks on PC, use a more normal whammy instead.
             // XB1 also uses a uint8 for whammy, so we can handle that here too
             case ConfigField.Shared or ConfigField.Universal or ConfigField.XboxOne when whammy:
+                singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
@@ -347,6 +357,7 @@ public abstract partial class OutputAxis : Output
                 if (ShouldFlip(mode)) function = "-" + function;
                 break;
             case ConfigField.Xbox360 when trigger:
+                singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
@@ -363,15 +374,18 @@ public abstract partial class OutputAxis : Output
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture when whammy:
                 function = "handle_calibration_ps3_whammy";
+                singleByte = true;
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
                 or ConfigField.Universal when trigger:
+                singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
                 or ConfigField.Universal:
+                singleByte = true;
                 intBased = true;
                 function = "handle_calibration_ps3";
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
@@ -454,6 +468,12 @@ public abstract partial class OutputAxis : Output
             true when InputIsUint => ") - INT16_MAX",
             _ => ")"
         };
+
+        if (Input is FixedInput)
+        {
+            return singleByte ? $"({generated}) >> 8" : generated;
+        }
+        
         var mulInt = (short) (multiplier * 512);
         if (writer == null)
             return intBased

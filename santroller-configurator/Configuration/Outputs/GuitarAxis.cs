@@ -323,6 +323,11 @@ public class GuitarAxis : OutputAxis
                          """;
             case ConfigField.XboxOne
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
+                     Type == GuitarAxisType.Pickup && Input is FixedInput:
+                return
+                    $"{GenerateOutput(mode)} = (((({GenerateAssignment(GenerateOutput(mode), mode, false, true, false, false, writer)}) >> 2) + 1) & 0xF0);";
+            case ConfigField.XboxOne
+                when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is not DigitalToAnalog:
                 return
                     $"{GenerateOutput(mode)} = (((({GenerateAssignment(GenerateOutput(mode), mode, false, true, false, false, writer)}) >> 10) + 1) & 0xF0);";
