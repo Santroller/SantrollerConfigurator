@@ -1318,7 +1318,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         config += $"""
                    #define ABSOLUTE_MOUSE_COORDS {(MouseMovementType == MouseMovementType.Absolute).ToString().ToLower()}
                    #define ARDWIINO_BOARD "{Microcontroller.Board.ArdwiinoName}"
-                   #define CONSOLE_TYPE {GetEmulationType()}
+                   #define EMULATION_TYPE {GetEmulationType()}
                    #define DEVICE_TYPE {(byte) DeviceControllerType}
                    """;
 

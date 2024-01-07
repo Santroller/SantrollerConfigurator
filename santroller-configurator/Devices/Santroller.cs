@@ -72,6 +72,7 @@ public class Santroller : ConfigurableUsbDevice
     private Microcontroller _microcontroller;
     private ConfigViewModel? _model;
     private bool _picking;
+    private bool _keyboard = false;
     private readonly DispatcherTimer _timer;
     private ReadOnlyObservableCollection<Output>? _bindings;
     private readonly ConsoleType _currentMode;
@@ -91,6 +92,8 @@ public class Santroller : ConfigurableUsbDevice
         {
             _deviceControllerType = (DeviceControllerType) (serial[^2] - 'K');
         }
+
+        _keyboard = serial[^2] == 'K';
         Product = product;
         Manufacturer = manufacturer;
         if (device is IUsbDevice usbDevice) usbDevice.ClaimInterface(2);
@@ -446,8 +449,13 @@ public class Santroller : ConfigurableUsbDevice
     {
         if (!InvalidDevice)
         {
+            var type = EnumToStringConverter.Convert(_deviceControllerType);
+            if (_keyboard)
+            {
+                type = Resources.ConsoleTypeKeyboardMouse;
+            }
             return IsSantroller
-                ? $"{Product} - {Board.Name} - {EnumToStringConverter.Convert(_deviceControllerType)}"
+                ? $"{Product} - {Board.Name} - {type}"
                 : Product;
         }
 
