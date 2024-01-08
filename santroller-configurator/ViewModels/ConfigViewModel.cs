@@ -85,7 +85,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public ConfigViewModel(MainWindowViewModel screen, IConfigurableDevice device, bool branded, bool builder = false)
     {
-        Device = device;
+        _device = device;
         Main = screen;
         Branded = branded;
         Builder = builder;
@@ -294,7 +294,28 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         return arg.dequeue ? $"Dequeue Rate ({rate}+ fps required)" : $"Poll Rate (0 for fastest speed) ({rate}hz)";
     }
 
-    public IConfigurableDevice Device { get; set; }
+    private IConfigurableDevice _device;
+
+    public IConfigurableDevice Device
+    {
+        get => _device;
+        set
+        {
+            if (Builder)
+            {
+                Main.DeviceNotProgrammed = value is not (Santroller or EmptyDevice);
+                if (value is Santroller s)
+                {
+                    Main.Complete(100);
+                    Microcontroller = value.GetMicrocontroller(this);
+                    Main.SetDifference(false);
+                    s.StartTicking(this);
+                }
+            }
+
+            this.RaiseAndSetIfChanged(ref _device, value);
+        }
+    }
 
     [Reactive] public RolloverMode RolloverMode { get; set; }
     public IEnumerable<RolloverMode> RolloverModes => Enum.GetValues<RolloverMode>();

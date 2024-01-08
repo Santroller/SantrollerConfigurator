@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using GuitarConfigurator.NetCore;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
+using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ProtoBuf;
 using ReactiveUI;
@@ -50,7 +51,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Router.NavigateAndReset.Execute(new BuilderAuthViewModel(this));
         this.WhenAnyValue(s => s.SelectedDevice).Subscribe(s =>
         {
-            if (Selected != null && SelectedDevice != null && !Working)
+            if (Selected != null && SelectedDevice != null && !Working && HasSidebar)
             {
                 Selected.Model.Device = SelectedDevice;
             }
@@ -104,6 +105,11 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public void StartConfiguring()
     {
         if (SelectedTool == null || Selected == null) return;
+        if (SelectedDevice != null)
+        {
+            Selected.Model.Device = SelectedDevice;
+        }
+
         Router.Navigate.Execute(Selected.Model);
         Selected.Model.SetUpDiff();
     }
@@ -262,6 +268,13 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     {
         HasChanges = difference;
         if (Working) return;
+        if (DeviceNotProgrammed)
+        {
+            Progress = 100;
+            Message = "Device is not programmed, hit write configuration to set device up";
+            ProgressbarColor = ProgressBarError;
+            return;
+        }
         if (!difference)
         {
             ProgressbarColor = ProgressBarPrimary;

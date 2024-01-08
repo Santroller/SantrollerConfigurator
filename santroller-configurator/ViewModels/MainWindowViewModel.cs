@@ -442,6 +442,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [Reactive] public bool Installed { get; set; }
     [Reactive] public bool HasChanges { get; set; }
     [Reactive] public bool Working { get; set; }
+    [Reactive] public bool DeviceNotProgrammed { get; set; }
 
     [Reactive] public string ProgressbarColor { get; set; }
 
@@ -742,7 +743,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public virtual void SetDifference(bool difference)
     {
         HasChanges = difference;
-        if (Working || Router.NavigationStack.Last() is not ConfigViewModel) return;
+        if (Working || DeviceNotProgrammed || Router.NavigationStack.Last() is not ConfigViewModel) return;
         if (ShowError)
         {
             Message = Resources.ConfigurationErrorLabel;
