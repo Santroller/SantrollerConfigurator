@@ -12,7 +12,7 @@
         x:Class="SantrollerConfiguratorBuilder.NetCore.Views.BuilderMainWindow"
         TransparencyLevelHint="AcrylicBlur"
         Icon="/Assets/icon.png"
-        Title="{x:Static viewModels:Resources.ToolName}"
+        Title="{Binding ToolName}"
         Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"
         x:DataType="viewModels:BuilderMainWindowViewModel"

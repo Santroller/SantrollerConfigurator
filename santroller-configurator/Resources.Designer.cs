@@ -6080,5 +6080,11 @@ namespace GuitarConfigurator.NetCore {
                 return ResourceManager.GetString("RolloverModeLabel", resourceCulture);
             }
         }
+        
+        public static string VersionPrefixLabel {
+            get {
+                return ResourceManager.GetString("VersionPrefixLabel", resourceCulture);
+            }
+        }
     }
 }

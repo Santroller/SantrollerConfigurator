@@ -215,7 +215,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
         var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");
         await using var linuxOutput =
-            File.Open(SelectedTool.ToolName + GitVersionInformation.SemVer + "-linux-64", FileMode.Create, FileAccess.ReadWrite);
+            File.Open($"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-linux-64", FileMode.Create, FileAccess.ReadWrite);
         await using var linuxInput = AssetLoader.Open(uri);
         await linuxInput.CopyToAsync(linuxOutput).ConfigureAwait(false);
         await ExecutableUtils.AppendConfig(linuxOutput, SelectedTool);
@@ -224,7 +224,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
         await using var windowsInput = AssetLoader.Open(uri);
         await using var windowsOutput =
-            File.Open(SelectedTool.ToolName + GitVersionInformation.SemVer + "-win-64.exe", FileMode.Create,
+            File.Open($"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-win-64.exe", FileMode.Create,
                 FileAccess.ReadWrite);
         await ExecutableUtils.UpdatePeFileIcon(SelectedTool.Icon, windowsInput, windowsOutput);
         await ExecutableUtils.AppendConfig(windowsOutput, SelectedTool);
@@ -232,7 +232,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         // Extract macos app zip, insert config and update icons and application name
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-macOS.zip");
         await using var macosOutput =
-            File.Open(SelectedTool.ToolName + GitVersionInformation.SemVer + "-macOS.zip", FileMode.Create, FileAccess.ReadWrite);
+            File.Open($"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip", FileMode.Create, FileAccess.ReadWrite);
         await using var macosInput = AssetLoader.Open(uri);
         await macosInput.CopyToAsync(macosOutput).ConfigureAwait(false);
         macosOutput.Seek(0, SeekOrigin.Begin);

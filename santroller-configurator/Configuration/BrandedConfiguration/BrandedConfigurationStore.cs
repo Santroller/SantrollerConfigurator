@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -25,6 +26,8 @@ public class BrandedConfigurationStore : ReactiveObject
         ErrorColor = errorColor;
         Logo = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/Icons/logo.png")));
         Icon = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/icon.png")));
+        this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
+            .ToPropertyEx(this, x => x.ToolNameVersioned);
     }
 
     public BrandedConfigurationStore(SerialisedBrandedConfigurationStore store, bool branded,
@@ -48,25 +51,21 @@ public class BrandedConfigurationStore : ReactiveObject
         }
 
         Configurations.AddRange(store.Configurations.Select(s => new BrandedConfiguration(s, branded, screen)));
+        this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
+            .ToPropertyEx(this, x => x.ToolNameVersioned);
     }
+    [ObservableAsProperty] public string? ToolNameVersioned { get; }
+    [Reactive] public string ToolName { get; set; }
 
-    [Reactive]
-    public string ToolName { get; set; }
-    
-    [Reactive]
-    public Color WarningColor { get; set; }
-    
-    [Reactive]
-    public Color PrimaryColor { get; set; }
-    
-    [Reactive]
-    public Color ErrorColor { get; set; }
-    
-    [Reactive]
-    public Bitmap Logo { get; set; }
-    
-    [Reactive]
-    public Bitmap Icon { get; set; }
+    [Reactive] public Color WarningColor { get; set; }
+
+    [Reactive] public Color PrimaryColor { get; set; }
+
+    [Reactive] public Color ErrorColor { get; set; }
+
+    [Reactive] public Bitmap Logo { get; set; }
+
+    [Reactive] public Bitmap Icon { get; set; }
 
     public WindowIcon WindowIcon => new(Icon);
     public ObservableCollection<BrandedConfiguration> Configurations { get; } = new();
@@ -83,7 +82,9 @@ public class BrandedConfigurationStore : ReactiveObject
         var path = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, "branding.bin");
         var stream = File.OpenRead(path);
 #endif
-        return new BrandedConfigurationStore(Serializer.DeserializeWithLengthPrefix<SerialisedBrandedConfigurationStore>(stream, PrefixStyle.Base128), true,
+        return new BrandedConfigurationStore(
+            Serializer.DeserializeWithLengthPrefix<SerialisedBrandedConfigurationStore>(stream, PrefixStyle.Base128),
+            true,
             model);
     }
 }

@@ -3158,4 +3158,7 @@
     <data name="RolloverModeLabel" xml:space="preserve">
         <value>Rollover Mode</value>
     </data>
+    <data name="VersionPrefixLabel" xml:space="preserve">
+        <value>Version 10.0.18</value>
+    </data>
 </root>

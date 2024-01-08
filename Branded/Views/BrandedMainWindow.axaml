@@ -12,7 +12,7 @@
         x:Class="SantrollerConfiguratorBranded.NetCore.Views.BrandedMainWindow"
         TransparencyLevelHint="AcrylicBlur"
         Icon="{Binding Config.WindowIcon}"
-        Title="{Binding Config.ToolName}"
+        Title="{Binding Config.ToolNameVersioned}"
         Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"
         x:DataType="viewModels:BrandedMainWindowViewModel"

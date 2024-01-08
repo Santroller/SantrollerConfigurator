@@ -45,6 +45,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public string ProgressBarWarning;
     private readonly Timer _timer = new();
     private bool hasLibUsb = true;
+    public string ToolName => Resources.ToolName + " - v" + GitVersionInformation.SemVer;
 
 
     private readonly SourceList<DeviceInputType> _allDeviceInputTypes = new();
