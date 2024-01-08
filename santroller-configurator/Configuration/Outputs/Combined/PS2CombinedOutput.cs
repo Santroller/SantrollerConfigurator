@@ -107,7 +107,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                 .Select(CreateFilter))
             .Bind(out var analogOutputs)
             .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad)
+        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Any())
