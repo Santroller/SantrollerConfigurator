@@ -53,8 +53,6 @@ public static class ExecutableUtils
         img = img.CreateScaledBitmap(new PixelSize(128, 128));
         using var msImg = new MemoryStream();
         img.Save(msImg);
-        using var test = File.OpenWrite("/tmp/test.img");
-        img.Save(test);
         Array.Copy(msImg.ToArray(), valueTuple.Item2.RawIcon, msImg.Length);
         valueTuple.Item1.Height = 128;
         valueTuple.Item1.Width = 128;
