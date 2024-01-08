@@ -246,13 +246,13 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         branding.Close();
 
         // Update icons and info.plist so that the executable has the correct name and icons
-        await ExecutableUtils.UpdatePlist(SelectedTool.ToolName,
+        await ExecutableUtils.UpdatePlist(SelectedTool.ToolNameVersioned,
             archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Info.plist")!);
         await ExecutableUtils.OverwriteIcns(SelectedTool.Icon,
             archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/Resources/icon.icns")!);
         await ExecutableUtils.OverwriteIcns(SelectedTool.Icon,
             archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Resources/icon.icns")!);
-        await ExecutableUtils.RenameDirectoryInZip("SantrollerConfiguratorBranded.app", SelectedTool.ToolName + ".app",
+        await ExecutableUtils.RenameDirectoryInZip("SantrollerConfiguratorBranded.app", SelectedTool.ToolNameVersioned + ".app",
             archive);
 
         Complete(100);

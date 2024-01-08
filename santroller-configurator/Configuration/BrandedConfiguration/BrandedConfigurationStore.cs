@@ -54,7 +54,8 @@ public class BrandedConfigurationStore : ReactiveObject
         this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
             .ToPropertyEx(this, x => x.ToolNameVersioned);
     }
-    [ObservableAsProperty] public string? ToolNameVersioned { get; }
+
+    [ObservableAsProperty] public string ToolNameVersioned { get; } = null!;
     [Reactive] public string ToolName { get; set; }
 
     [Reactive] public Color WarningColor { get; set; }
