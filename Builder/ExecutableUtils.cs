@@ -50,12 +50,14 @@ public static class ExecutableUtils
 
     private static void UpdateIconEntryIcon(Bitmap img, (IconGroupDirectoryEntry, IconEntry) valueTuple)
     {
-        img = img.CreateScaledBitmap(new PixelSize(64, 64));
+        img = img.CreateScaledBitmap(new PixelSize(128, 128));
         using var msImg = new MemoryStream();
         img.Save(msImg);
+        using var test = File.OpenWrite("/tmp/test.img");
+        img.Save(test);
         Array.Copy(msImg.ToArray(), valueTuple.Item2.RawIcon, msImg.Length);
-        valueTuple.Item1.Height = 64;
-        valueTuple.Item1.Width = 64;
+        valueTuple.Item1.Height = 128;
+        valueTuple.Item1.Width = 128;
         valueTuple.Item1.ColorCount = 0;
         valueTuple.Item1.Reserved = 0;
         valueTuple.Item1.BytesInRes = (uint) msImg.Length;

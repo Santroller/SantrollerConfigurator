@@ -9,6 +9,7 @@ using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Splat.ModeDetection;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -24,7 +25,8 @@ public abstract class OutputButton : Output
             .Select(x => x / 10.0f)
             .ToProperty(this, x => x.DebounceDisplay);
     }
-
+    
+    [Reactive]
     public byte Debounce { get; set; }
 
     public float DebounceDisplay

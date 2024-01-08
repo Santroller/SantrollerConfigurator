@@ -28,6 +28,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     [Reactive] public BrandedConfiguration? Selected { get; set; }
     [Reactive] public bool ImageError { get; set; }
 
+    public override bool Builder => true;
+
     public Interaction<BuilderMainWindowViewModel, IStorageFile?>
         LoadConfig { get; } =
         new();
@@ -53,7 +55,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
                 Selected.Model.Device = SelectedDevice;
             }
         });
-        
+
         this.WhenAnyValue(s => s.SelectedTool).Subscribe(s =>
         {
             if (SelectedTool != null && SelectedTool.Configurations.Any())
@@ -141,6 +143,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             SelectedTool.Icon = bitmap;
         }
     }
+
     private async void SaveUf2File()
     {
         Complete(100);
@@ -152,10 +155,21 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         await fileStream.CopyToAsync(await output.OpenWriteAsync());
     }
 
+    public override IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, bool write, string extra = "",
+        int startingPercentage = 0, int endingPercentage = 100)
+    {
+        if (Selected != null)
+        {
+            extra = Selected.ExtraConfig();
+        }
+
+        return base.Write(config, write, extra, startingPercentage, endingPercentage);
+    }
+
     public override IObservable<PlatformIo.PlatformIoState> SaveUf2(ConfigViewModel model)
     {
         if (Selected == null) return Observable.Return(new PlatformIo.PlatformIoState(100, "Done", null));
-        var state = Write(model, Selected.ExtraConfig());
+        var state = Write(model, true, Selected.ExtraConfig());
 
         state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, SaveUf2File);
 
@@ -191,7 +205,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             }
 
             config.Model.Variant = config.ProductName;
-            await Write(config.Model, config.ExtraConfig(), start, steps);
+            await Write(config.Model, false, config.ExtraConfig(), start, steps);
             config.LoadUf2();
             start += steps;
             Progress = start;
@@ -201,7 +215,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
         var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");
         await using var linuxOutput =
-            File.Open(SelectedTool.ToolName + "-linux-64", FileMode.Create, FileAccess.ReadWrite);
+            File.Open(SelectedTool.ToolName + GitVersionInformation.SemVer + "-linux-64", FileMode.Create, FileAccess.ReadWrite);
         await using var linuxInput = AssetLoader.Open(uri);
         await linuxInput.CopyToAsync(linuxOutput).ConfigureAwait(false);
         await ExecutableUtils.AppendConfig(linuxOutput, SelectedTool);
@@ -210,18 +224,19 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
         await using var windowsInput = AssetLoader.Open(uri);
         await using var windowsOutput =
-            File.Open(SelectedTool.ToolName + "-win-64.exe", FileMode.Create, FileAccess.ReadWrite);
+            File.Open(SelectedTool.ToolName + GitVersionInformation.SemVer + "-win-64.exe", FileMode.Create,
+                FileAccess.ReadWrite);
         await ExecutableUtils.UpdatePeFileIcon(SelectedTool.Icon, windowsInput, windowsOutput);
         await ExecutableUtils.AppendConfig(windowsOutput, SelectedTool);
 
         // Extract macos app zip, insert config and update icons and application name
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-macOS.zip");
         await using var macosOutput =
-            File.Open(SelectedTool.ToolName + "-macOS.zip", FileMode.Create, FileAccess.ReadWrite);
+            File.Open(SelectedTool.ToolName + GitVersionInformation.SemVer + "-macOS.zip", FileMode.Create, FileAccess.ReadWrite);
         await using var macosInput = AssetLoader.Open(uri);
         await macosInput.CopyToAsync(macosOutput).ConfigureAwait(false);
         macosOutput.Seek(0, SeekOrigin.Begin);
-        
+
         // Since macOS executables are directories, we put the branding in a file instead of appending
         using var archive = new ZipArchive(macosOutput, ZipArchiveMode.Update);
         var entry = archive.CreateEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/branding.bin");
@@ -229,11 +244,14 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Serializer.SerializeWithLengthPrefix(branding, new SerialisedBrandedConfigurationStore(SelectedTool),
             PrefixStyle.Base128);
         branding.Close();
-        
+
         // Update icons and info.plist so that the executable has the correct name and icons
-        await ExecutableUtils.UpdatePlist(SelectedTool.ToolName, archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Info.plist")!);
-        await ExecutableUtils.OverwriteIcns(SelectedTool.Icon, archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/Resources/icon.icns")!);
-        await ExecutableUtils.OverwriteIcns(SelectedTool.Icon, archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Resources/icon.icns")!);
+        await ExecutableUtils.UpdatePlist(SelectedTool.ToolName,
+            archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Info.plist")!);
+        await ExecutableUtils.OverwriteIcns(SelectedTool.Icon,
+            archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/Resources/icon.icns")!);
+        await ExecutableUtils.OverwriteIcns(SelectedTool.Icon,
+            archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Resources/icon.icns")!);
         await ExecutableUtils.RenameDirectoryInZip("SantrollerConfiguratorBranded.app", SelectedTool.ToolName + ".app",
             archive);
 
@@ -255,6 +273,4 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             Message = "You have unsaved changes, click `Save Changes and return` to save them";
         }
     }
-
-    
 }

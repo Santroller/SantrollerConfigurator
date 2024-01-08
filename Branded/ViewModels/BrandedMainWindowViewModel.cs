@@ -11,6 +11,7 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Path = System.IO.Path;
 
 namespace SantrollerConfiguratorBranded.NetCore.ViewModels;
@@ -23,6 +24,8 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     public BrandedConfiguration SelectedConfig { get; set; }
 
     private TaskCompletionSource<string>? _bootloaderPath;
+    
+    [ObservableAsProperty] public bool ReadyToConfigureBranded { get; }
 
     private bool _writing;
 
@@ -62,6 +65,11 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
                         break;
                 }
         });
+        this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
+            .Select(s =>
+                s is {Item1: not null , Item2: true} &&
+                (!s.Item3 || s.Item4 == null))
+            .ToPropertyEx(this, s => s.ReadyToConfigureBranded);
     }
 
     public void DeviceAdded(IConfigurableDevice device)
@@ -89,7 +97,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     {
     }
 
-    public override IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, string extra = "",
+    public override IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, bool write, string extra = "",
         int startingPercentage = 0, int endingPercentage = 100)
     {
         return Observable.FromAsync(_ => Overwrite());
@@ -106,10 +114,10 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
         }
 
         _writing = true;
+        _bootloaderPath = new TaskCompletionSource<string>();
         StartWorking();
         Progress = 0;
         Message = "Looking for pico";
-        _bootloaderPath = new TaskCompletionSource<string>();
         SelectedDevice.Bootloader();
         var path = await _bootloaderPath.Task;
         _bootloaderPath = null;

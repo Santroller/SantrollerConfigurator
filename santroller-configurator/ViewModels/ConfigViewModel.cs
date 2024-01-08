@@ -104,10 +104,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         WriteConfigCommand = ReactiveCommand.CreateFromObservable(() =>
             {
                 SetUpDiff();
-                return Main.Write(this);
+                return Main.Write(this, true);
             },
             this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected, x => x.HasError)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: true, Item3: false}));
+
         WriteUf2Command = ReactiveCommand.CreateFromObservable(() => Main.SaveUf2(this),
             this.WhenAnyValue(x => x.Main.Working, x => x.HasError)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: false}));
@@ -272,7 +273,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Main.Message = "Building";
             Main.Progress = 0;
             // Write the full config, bluetooth has zero config so we can actually properly write it 
-            Main.Write(this);
+            Main.Write(this, true);
             SetUpDiff();
         }
 

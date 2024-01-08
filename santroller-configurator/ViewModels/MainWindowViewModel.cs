@@ -51,6 +51,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private readonly ConfigurableUsbDeviceManager? _manager;
     private readonly bool _picoOnly;
     public bool LibUsbMissing = false;
+    public virtual bool Builder => false;
 
     public MainWindowViewModel(bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
         string error = "red")
@@ -437,7 +438,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [Reactive] public bool LookingForDfu { get; set; } = false;
 
 
-    [Reactive] private bool Installed { get; set; }
+    [Reactive] public bool Installed { get; set; }
     [Reactive] public bool HasChanges { get; set; }
     [Reactive] public bool Working { get; set; }
 
@@ -464,7 +465,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         return Observable.Return(new PlatformIo.PlatformIoState(100, "Done", ""));
     }
 
-    public virtual IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, string extra = "",
+    public virtual IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, bool write, string extra = "",
         int startingPercentage = 0, int endingPercentage = 100)
     {
         StartWorking();
@@ -497,7 +498,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         var state = Observable.Return(new PlatformIo.PlatformIoState(startingPercentage, "", null));
 
         // When programming, the last 10 percentage is waiting for the device to show up
-        if (!extra.Any())
+        if (write)
         {
             endingPercentage -= 10;
         }
@@ -505,7 +506,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         var env = environment;
         Programming = true;
         BehaviorSubject<PlatformIo.PlatformIoState> command;
-        if (extra.Any())
+        if (!write)
         {
             command = Pio.RunPlatformIo(env, new[] {"run"},
                 "Building " + config.Variant,
@@ -567,7 +568,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [RelayCommand]
     public void OpenReleasesPage()
     {
-        NavigateToUrl("https://github.com/Santroller/Santroller/releases");
+        NavigateToUrl(Builder
+            ? "https://github.com/Santroller/SantrollerConfiguratorBinaries/releases"
+            : "https://github.com/Santroller/Santroller/releases");
     }
 
     [RelayCommand]

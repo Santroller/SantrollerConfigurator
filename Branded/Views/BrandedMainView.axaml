@@ -41,7 +41,7 @@
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Image Source="{Binding BrandedMain.Logo}" Width="200" Margin="0 0 0 40" />
-                <StackPanel IsVisible="{Binding BrandedMain.ReadyToConfigure}">
+                <StackPanel IsVisible="{Binding BrandedMain.ReadyToConfigureBranded}">
                     <Label HorizontalAlignment="Center" IsVisible="{Binding !Configurable}"
                            Content="{Binding EraseText}" />
                 </StackPanel>
@@ -68,7 +68,7 @@
                         </ComboBox>
                     </StackPanel>
 
-                    <StackPanel IsVisible="{Binding BrandedMain.ReadyToConfigure}">
+                    <StackPanel IsVisible="{Binding BrandedMain.ReadyToConfigureBranded}">
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Configurable}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
@@ -88,21 +88,21 @@
                             <Button IsVisible="{Binding Configurable}"
                                     Content="{x:Static netCore:Resources.ConfigureButtonLabel}"
                                     Command="{Binding BrandedMain.ConfigureBrandedCommand}"
-                                    IsEnabled="{Binding BrandedMain.ReadyToConfigure}" HorizontalAlignment="Center"
+                                    IsEnabled="{Binding BrandedMain.ReadyToConfigureBranded}" HorizontalAlignment="Center"
                                     Margin="0 20 0 0" />
                             <Button IsVisible="{Binding Configurable}"
                                     Content="{x:Static viewModels:Resources.ResetFactoryButtonLabel}"
                                     Command="{Binding BrandedMain.ResetBrandedCommand}"
-                                    IsEnabled="{Binding BrandedMain.ReadyToConfigure}" HorizontalAlignment="Center"
+                                    IsEnabled="{Binding BrandedMain.ReadyToConfigureBranded}" HorizontalAlignment="Center"
                                     Margin="0 20 0 0" />
                             <Button IsVisible="{Binding !Configurable}"
                                     Content="{x:Static viewModels:Resources.EraseButtonLabel}"
                                     Command="{Binding BrandedMain.OverwriteCommand}"
-                                    IsEnabled="{Binding BrandedMain.ReadyToConfigure}" HorizontalAlignment="Center"
+                                    IsEnabled="{Binding BrandedMain.ReadyToConfigureBranded}" HorizontalAlignment="Center"
                                     Margin="0 20 0 0" />
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel IsVisible="{Binding !BrandedMain.ReadyToConfigure}">
+                    <StackPanel IsVisible="{Binding !BrandedMain.ReadyToConfigureBranded}">
                         <Button Content="{x:Static netCore:Resources.ConfigureButtonLabel}" Command="{Binding BrandedMain.ConfigureBrandedCommand}"
                                 IsEnabled="{Binding Configurable}" HorizontalAlignment="Center"
                                 Margin="0 20 0 0" />
