@@ -130,7 +130,7 @@ public class WiiInput : TwiInput
         {WiiInputType.DjTurntableLeft, "(((wiiData[4] & 1) ? -1 : 1) * (wiiData[3] & 0x1F)) << 10"},
         {
             WiiInputType.DjTurntableRight,
-            "(((wiiData[2] & 1) ? -1 : 1) * ((wiiData[2] & 0x80) >> 7 | (wiiData[1] & 0xC0) >> 5 | (wiiData[0] & 0xC0) >> 3)) << 10"
+            "(((wiiData[2] & 1) ? 1 : -1) * ((wiiData[2] & 0x80) >> 7 | (wiiData[1] & 0xC0) >> 5 | (wiiData[0] & 0xC0) >> 3)) << 10"
         },
         {WiiInputType.DrawsomePenPressure, "(wiiButtonsLow | (wiiButtonsHigh & 0x0f) << 8)"},
         {WiiInputType.DrawsomePenX, "wiiData[0] | wiiData[1] << 8"},
@@ -312,7 +312,6 @@ public class WiiInput : TwiInput
         var wiiButtonsLow = ~wiiData[4];
         var wiiButtonsHigh = ~wiiData[5];
         var highResolution = checkedType == WiiControllerType.ClassicController && wiiData.Length == 8;
-        var rtt = (wiiData[2] & 0x80) >> 7 | (wiiData[1] & 0xC0) >> 5 | (wiiData[0] & 0xC0) >> 3;
         if (highResolution)
         {
             wiiButtonsLow = ~wiiData[6];
@@ -489,7 +488,7 @@ public class WiiInput : TwiInput
                     WiiInputType.DjStickX => ((wiiData[0] & 0x3F) - 0x20) << 10,
                     WiiInputType.DjStickY => ((wiiData[1] & 0x3F) - 0x20) << 10,
                     WiiInputType.DjTurntableLeft => (((wiiData[4] & 1) != 0 ? -1 : 1) * (wiiData[3] & 0x1F)) << 10,
-                    WiiInputType.DjTurntableRight => (((wiiData[2] & 1) != 0 ? -1 : 1) * ((wiiData[2] & 0x80) >> 7 | (wiiData[1] & 0xC0) >> 5 | (wiiData[0] & 0xC0) >> 3)) << 10,
+                    WiiInputType.DjTurntableRight => (((wiiData[2] & 1) != 0 ? 1 : -1) * ((wiiData[2] & 0x80) >> 7 | (wiiData[1] & 0xC0) >> 5 | (wiiData[0] & 0xC0) >> 3)) << 10,
 
                     _ => RawValue
                 };
