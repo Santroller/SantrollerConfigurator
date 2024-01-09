@@ -118,9 +118,18 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
         StartWorking();
         Progress = 0;
         Message = "Looking for pico";
-        SelectedDevice.Bootloader();
-        var path = await _bootloaderPath.Task;
-        _bootloaderPath = null;
+        string path;
+        if (SelectedDevice is not PicoDevice pico)
+        {
+            SelectedDevice.Bootloader();
+            path = await _bootloaderPath.Task;
+            _bootloaderPath = null;
+        }
+        else
+        {
+            path = pico.GetPath();
+        }
+
         Progress = 50;
         Message = "Writing";
         await SelectedConfig.BuildUf2(Model, Path.Combine(path!, "firmware.uf2"));

@@ -164,7 +164,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public override IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, bool write, string extra = "",
         int startingPercentage = 0, int endingPercentage = 100)
     {
-        if (Selected != null)
+        if (Selected != null && string.IsNullOrEmpty(extra))
         {
             extra = Selected.ExtraConfig();
         }
