@@ -170,7 +170,6 @@ public abstract class AvrController : Microcontroller
                     currentDdr |= 1 << idx;
                     break;
             }
-
             portByPort[port] = currentPort;
             ddrByPort[port] = currentDdr;
         }
