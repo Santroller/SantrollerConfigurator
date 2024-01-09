@@ -2223,9 +2223,45 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string WiiInputTypeGuitarTapBar {
+        public static string Ps2InputTypeGuitarTapBar {
             get {
-                return ResourceManager.GetString("WiiInputTypeGuitarTapBar", resourceCulture);
+                return ResourceManager.GetString("Ps2InputTypeGuitarTapBar", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeGuitarTapAll {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeGuitarTapAll", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeGuitarTapGreen {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeGuitarTapGreen", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeGuitarTapRed {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeGuitarTapRed", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeGuitarTapYellow {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeGuitarTapYellow", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeGuitarTapBlue {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeGuitarTapBlue", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeGuitarTapOrange {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeGuitarTapOrange", resourceCulture);
             }
         }
         
@@ -3798,6 +3834,12 @@ namespace GuitarConfigurator.NetCore {
         public static string Ps2InputTypeGuitarWhammy {
             get {
                 return ResourceManager.GetString("Ps2InputTypeGuitarWhammy", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeGuitarSlider {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeGuitarSlider", resourceCulture);
             }
         }
         

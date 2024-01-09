@@ -1136,8 +1136,35 @@
     <data name="WiiInputTypeGuitarWhammy" xml:space="preserve">
         <value>Guitar - Whammy</value>
     </data>
-    <data name="WiiInputTypeGuitarTapBar" xml:space="preserve">
+    <data name="Ps2InputTypeGuitarTapBar" xml:space="preserve">
         <value>Guitar - Slider Axis</value>
+    </data>
+
+    <data name="Ps2InputTypeGuitarTapBar" xml:space="preserve">
+        <value>Guitar - Slider Axis</value>
+    </data>
+    <data name="Ps2InputTypeGuitarTapAll" xml:space="preserve">
+        <value>Guitar - Slider To Frets</value>
+    </data>
+
+    <data name="Ps2InputTypeGuitarTapGreen" xml:space="preserve">
+        <value>Guitar - Slider Green Fret</value>
+    </data>
+
+    <data name="Ps2InputTypeGuitarTapRed" xml:space="preserve">
+        <value>Guitar - Slider Red Fret</value>
+    </data>
+
+    <data name="Ps2InputTypeGuitarTapYellow" xml:space="preserve">
+        <value>Guitar - Slider Yellow Fret</value>
+    </data>
+
+    <data name="Ps2InputTypeGuitarTapBlue" xml:space="preserve">
+        <value>Guitar - Slider Blue Fret</value>
+    </data>
+
+    <data name="Ps2InputTypeGuitarTapOrange" xml:space="preserve">
+        <value>Guitar - Slider Orange Fret</value>
     </data>
 
     <data name="WiiInputTypeNunchukStickX" xml:space="preserve">
@@ -1992,6 +2019,12 @@
     </data>
     <data name="Ps2InputTypeGuitarWhammy" xml:space="preserve">
         <value>Guitar - Whammy Axis</value>
+    </data>
+    <data name="Ps2InputTypeGuitarSlider" xml:space="preserve">
+        <value>Guitar - Slider Axis</value>
+    </data>
+    <data name="Ps2InputTypeGuitarSlider" xml:space="preserve">
+        <value>Guitar - Slider Axis</value>
     </data>
 
     <data name="Ps2InputTypeLeftStickX" xml:space="preserve">

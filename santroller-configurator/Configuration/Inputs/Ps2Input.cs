@@ -107,6 +107,7 @@ public class Ps2Input : SpiInput
         {Ps2InputType.GunConHSync, "(ps2Data[6] << 8) | ps2Data[5]"},
         {Ps2InputType.GunConVSync, "(ps2Data[8] << 8) | ps2Data[7]"},
         {Ps2InputType.JogConWheel, "(ps2Data[6] << 8) | ps2Data[5]"},
+        {Ps2InputType.GuitarTapBar, "lastTapPS2GH5"},
         {Ps2InputType.GuitarWhammy, "-(ps2Data[8] - 127) << 9"},
         {Ps2InputType.Dualshock2RightButton, "ps2Data[9]"},
         {Ps2InputType.Dualshock2LeftButton, "ps2Data[10]"},
@@ -146,7 +147,12 @@ public class Ps2Input : SpiInput
         {Ps2InputType.Triangle, "(~ps2Data[4]) & (1 << 4)"},
         {Ps2InputType.Circle, "(~ps2Data[4]) & (1 << 5)"},
         {Ps2InputType.Cross, "(~ps2Data[4]) & (1 << 6)"},
-        {Ps2InputType.Square, "(~ps2Data[4]) & (1 << 7)"}
+        {Ps2InputType.Square, "(~ps2Data[4]) & (1 << 7)"},
+        {Ps2InputType.GuitarTapGreen, GetMappingForTapBar(0x95, 0xB0)},
+        {Ps2InputType.GuitarTapRed, GetMappingForTapBar(0xB0,0xCD,0xE6)},
+        {Ps2InputType.GuitarTapYellow, GetMappingForTapBar(0xE6, 0x1A, 0x2F)},
+        {Ps2InputType.GuitarTapBlue, GetMappingForTapBar(0x2F, 0x49, 0x66)},
+        {Ps2InputType.GuitarTapOrange, GetMappingForTapBar(0x66, 0x7F)}
     };
 
     private static readonly Dictionary<Ps2InputType, Ps2ControllerType> AxisToType =
@@ -258,6 +264,11 @@ public class Ps2Input : SpiInput
             return new SerializedPs2InputCombined(Input, Peripheral);
         return new SerializedPs2Input(Peripheral, Miso, Mosi, Sck, Att, Ack, Input);
     }
+    
+    private static string GetMappingForTapBar(params int[] mappings)
+    {
+        return string.Join(" || ", mappings.Select(s2 => $"(lastTapPS2GH5 == {s2})"));
+    }
 
     public override void Update(Dictionary<int, int> analogRaw,
         Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Data,
@@ -281,6 +292,7 @@ public class Ps2Input : SpiInput
         var jogcon = realType is Ps2ControllerType.JogCon;
         var guncon = realType is Ps2ControllerType.GunCon;
         var ds2 = realType is Ps2ControllerType.Dualshock2;
+        var lastTapPs2 = (ps2Data[7] - 128) << 8;
 
         RawValue = Input switch
         {
@@ -325,6 +337,12 @@ public class Ps2Input : SpiInput
             Ps2InputType.GuitarStart when guitar => ~ps2Data[3] & (1 << 3),
             Ps2InputType.GuitarStrumUp when guitar => ~ps2Data[3] & (1 << 4),
             Ps2InputType.GuitarStrumDown when guitar => ~ps2Data[3] & (1 << 6),
+            Ps2InputType.GuitarTapBar => lastTapPs2,
+            Ps2InputType.GuitarTapGreen => lastTapPs2 is > 0x10 and < 0x3F ? 1 : 0,
+            Ps2InputType.GuitarTapRed => lastTapPs2 is > 0x30 and < 0x6F ? 1 : 0,
+            Ps2InputType.GuitarTapYellow => lastTapPs2 is > 0x60 and < 0xAF and not 0x80 ? 1 : 0,
+            Ps2InputType.GuitarTapBlue => lastTapPs2 is > 0xA0 and < 0xDF ? 1 : 0,
+            Ps2InputType.GuitarTapOrange => lastTapPs2 > 0xD0 ? 1 : 0,
             Ps2InputType.NegConStart => ~ps2Data[3] & (1 << 3),
             Ps2InputType.L3 when digital => ~ps2Data[3] & (1 << 1),
             Ps2InputType.R3 when digital => ~ps2Data[3] & (1 << 2),

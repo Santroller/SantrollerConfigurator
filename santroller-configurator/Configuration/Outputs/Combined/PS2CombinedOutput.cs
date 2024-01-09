@@ -51,6 +51,25 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         {Ps2InputType.NegConB, StandardButtonType.Y},
         {Ps2InputType.NegConStart, StandardButtonType.Start}
     };
+    
+    
+    private static readonly Dictionary<Ps2InputType, StandardButtonType> Tap = new()
+    {
+        {Ps2InputType.GuitarTapGreen, StandardButtonType.A},
+        {Ps2InputType.GuitarTapRed, StandardButtonType.B},
+        {Ps2InputType.GuitarTapYellow, StandardButtonType.Y},
+        {Ps2InputType.GuitarTapBlue, StandardButtonType.X},
+        {Ps2InputType.GuitarTapOrange, StandardButtonType.LeftShoulder}
+    };
+
+    private static readonly Dictionary<Ps2InputType, InstrumentButtonType> TapRb = new()
+    {
+        {Ps2InputType.GuitarTapGreen, InstrumentButtonType.SoloGreen},
+        {Ps2InputType.GuitarTapRed, InstrumentButtonType.SoloRed},
+        {Ps2InputType.GuitarTapYellow, InstrumentButtonType.SoloYellow},
+        {Ps2InputType.GuitarTapBlue, InstrumentButtonType.SoloBlue},
+        {Ps2InputType.GuitarTapOrange, InstrumentButtonType.SoloOrange}
+    };
 
 
     public static readonly Dictionary<Ps2InputType, StandardAxisType> Axis = new()
@@ -150,9 +169,36 @@ public class Ps2CombinedOutput : CombinedSpiOutput
             outputs.Add(startSelectHome.ValidOutputs());
         }
         var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
-        if (joyToDpad?.Enabled != true) return outputs;
-        outputs.Remove(joyToDpad);
-        outputs.Add(joyToDpad.ValidOutputs());
+        if (joyToDpad?.Enabled == true)
+        {
+            outputs.Remove(joyToDpad);
+            outputs.Add(joyToDpad.ValidOutputs());
+        }
+        var tapAnalog =
+            Outputs.Items.FirstOrDefault(s => s is {Enabled: true, Input: Ps2Input {Input: Ps2InputType.GuitarTapBar}});
+        var tapFrets =
+            Outputs.Items.FirstOrDefault(s => s is {Enabled: true, Input: Ps2Input {Input: Ps2InputType.GuitarTapAll}});
+        if (tapAnalog == null && tapFrets == null) return outputs;
+        // Map Tap bar to Upper frets on RB guitars
+        if (tapAnalog != null && Model.DeviceControllerType is DeviceControllerType.RockBandGuitar)
+        {
+            outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model,
+                new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
+                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, true)));
+
+            outputs.Remove(tapAnalog);
+        }
+
+        if (tapFrets == null) return outputs;
+        if (Model.DeviceControllerType.Is5FretGuitar())
+        {
+            outputs.AddRange(Tap.Select(pair => new ControllerButton(Model,
+                new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
+                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, true)));
+        }
+
+        outputs.Remove(tapFrets);
+
         return outputs;
     }
 
@@ -334,6 +380,14 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 8000, GuitarAxisType.Whammy, true));
             }
+            
+            if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Slider}))
+            {
+                Outputs.Add(new GuitarAxis(Model,
+                    new Ps2Input(Ps2InputType.GuitarTapBar, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
+                    Colors.Black,
+                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 8000, GuitarAxisType.Slider, true));
+            }
 
             if (!Outputs.Items.Any(s => s.Input.InnermostInputs().First() is Ps2Input {Input: Ps2InputType.GuitarTilt}))
             {
@@ -348,11 +402,34 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         }
         else
         {
-            Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Whammy}));
+            Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Whammy or GuitarAxisType.Slider}));
             Outputs.RemoveMany(Outputs.Items.Where(s => s.Input.InnermostInputs().First() is Ps2Input
             {
                 Input: Ps2InputType.GuitarTilt
             }));
+        }
+        var tapFrets =
+            Outputs.Items.FirstOrDefault(s => s is {Input: Ps2Input {Input: Ps2InputType.GuitarTapAll}});
+        if (Model.DeviceControllerType.Is5FretGuitar())
+        {
+            if (tapFrets == null)
+            {
+                Outputs.Add(new GuitarButton(Model,
+                    new Ps2Input(Ps2InputType.GuitarTapAll, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
+                    Colors.Black,
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
+                    InstrumentButtonType.SliderToFrets, true)
+                {
+                    Enabled = false
+                });
+            }
+        }
+        else
+        {
+            if (tapFrets != null)
+            {
+                Outputs.Remove(tapFrets);
+            }
         }
 
         InstrumentButtonTypeExtensions.ConvertBindings(Outputs, Model, true);

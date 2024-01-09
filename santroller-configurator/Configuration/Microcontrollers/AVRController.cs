@@ -123,7 +123,14 @@ public abstract class AvrController : Microcontroller
         // PORTx input 1= pullup, 0 = floating
         var ddrByPort = new Dictionary<char, int>();
         var portByPort = new Dictionary<char, int>();
-        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
+        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>().ToList();
+        if (configViewModel.GetPinConfigs().OfType<SpiConfig>().Any())
+        {
+            pins.Add(new DirectPinConfig(configViewModel, "mosi", SpiMosi, false, DevicePinMode.Output));
+            pins.Add(new DirectPinConfig(configViewModel, "miso", SpiMiso, false, DevicePinMode.PullUp));
+            pins.Add(new DirectPinConfig(configViewModel, "sck", SpiSck, false, DevicePinMode.Output));
+            pins.Add(new DirectPinConfig(configViewModel, "ss", SpiCSn, false, DevicePinMode.Output));
+        }
         foreach (var pin in pins)
         {
             if (pin.PinMode == DevicePinMode.Skip || pin.Peripheral || pin.Type == "led_output") continue;
@@ -182,7 +189,14 @@ public abstract class AvrController : Microcontroller
         // PORTx input 1= pullup, 0 = floating
         var ddrByPort = new Dictionary<char, int>();
         var portByPort = new Dictionary<char, int>();
-        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
+        var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>().ToList();
+        if (configViewModel.GetPinConfigs().OfType<SpiConfig>().Any())
+        {
+            pins.Add(new DirectPinConfig(configViewModel, "mosi", SpiMosi, false, DevicePinMode.Output));
+            pins.Add(new DirectPinConfig(configViewModel, "miso", SpiMiso, false, DevicePinMode.PullUp));
+            pins.Add(new DirectPinConfig(configViewModel, "sck", SpiSck, false, DevicePinMode.Output));
+            pins.Add(new DirectPinConfig(configViewModel, "ss", SpiCSn, false, DevicePinMode.Output));
+        }
         foreach (var pin in pins)
         {
             if (pin.PinMode == DevicePinMode.Skip || pin.Peripheral)

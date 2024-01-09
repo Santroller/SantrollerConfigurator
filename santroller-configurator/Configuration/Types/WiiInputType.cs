@@ -108,6 +108,5 @@ public enum WiiInputType
     ClassicPlus,
     ClassicMinus,
     ClassicHome,
-    
     JoystickToDpad
 }

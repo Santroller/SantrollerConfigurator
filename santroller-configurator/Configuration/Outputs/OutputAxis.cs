@@ -370,7 +370,7 @@ public abstract partial class OutputAxis : Output
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture when forceAccel:
                 intBased = true;
                 function = "handle_calibration_ps3_accel";
-                if (ShouldFlip(mode)) function = "1024 -" + function;
+                if (ShouldFlip(mode)) function = "-" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture when whammy:
                 function = "handle_calibration_ps3_whammy";
