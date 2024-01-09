@@ -200,6 +200,8 @@ public class WiiCombinedOutput : CombinedTwiOutput
         Outputs.Clear();
         this.WhenAnyValue(x => x.DetectedType).Select(s => s is WiiControllerType.Guitar)
             .ToPropertyEx(this, x => x.IsGuitar);
+        this.WhenAnyValue(x => x.DetectedType).Select(s => s is WiiControllerType.Dj)
+            .ToPropertyEx(this, x => x.IsTurntable);
         Outputs.Connect().Filter(x => x is OutputAxis)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
@@ -222,6 +224,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
 
     // ReSharper disable once UnassignedGetOnlyAutoProperty
     [ObservableAsProperty] public bool IsGuitar { get; }
+    [ObservableAsProperty] public bool IsTurntable { get; }
 
     [Reactive] public WiiControllerType DetectedType { get; set; }
     [Reactive] public WiiControllerType SelectedType { get; set; } = WiiControllerType.Selected;

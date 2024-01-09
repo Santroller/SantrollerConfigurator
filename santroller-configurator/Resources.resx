@@ -3194,4 +3194,10 @@
     <data name="VersionPrefixLabel" xml:space="preserve">
         <value>Version 10.0.18</value>
     </data>
+    <data name="TurntableNote1" xml:space="preserve">
+        <value>Note: Wii Turntables are designed to use a Poll Rate of 10</value>
+    </data>
+    <data name="TurntableNote2" xml:space="preserve">
+        <value>If you use any other poll rate, you will need to adjust the multiplier to compensate</value>
+    </data>
 </root>

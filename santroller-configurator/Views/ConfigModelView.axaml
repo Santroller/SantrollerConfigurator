@@ -2041,6 +2041,14 @@
                                   ItemTemplate="{StaticResource EnumToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
+                    <Label IsVisible="{Binding IsTurntable}" VerticalAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           Foreground="Red"
+                           Content="{x:Static netCore:Resources.TurntableNote1}" />
+                    <Label IsVisible="{Binding IsTurntable}" VerticalAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           Foreground="Red"
+                           Content="{x:Static netCore:Resources.TurntableNote2}" />
                 </StackPanel>
             </DataTemplate>
             <DataTemplate DataType="{x:Type combined:CombinedTwiOutput}">

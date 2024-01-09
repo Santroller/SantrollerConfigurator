@@ -6128,5 +6128,17 @@ namespace GuitarConfigurator.NetCore {
                 return ResourceManager.GetString("VersionPrefixLabel", resourceCulture);
             }
         }
+        
+        public static string TurntableNote1 {
+            get {
+                return ResourceManager.GetString("TurntableNote1", resourceCulture);
+            }
+        }
+        
+        public static string TurntableNote2 {
+            get {
+                return ResourceManager.GetString("TurntableNote2", resourceCulture);
+            }
+        }
     }
 }
