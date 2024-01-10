@@ -95,14 +95,14 @@ public class AssetUtils
             return new ToolConfig();
         }
 
-        var outputStream = new FileStream(configFile, FileMode.Open);
+        using var outputStream = new FileStream(configFile, FileMode.Open);
         return Serializer.Deserialize<ToolConfig>(outputStream);
     }
 
     public static void SaveConfig(ToolConfig config)
     {
         var configFile = Path.Combine(GetAppDataFolder(), "config.bin");
-        var outputStream = new FileStream(configFile, FileMode.OpenOrCreate);
+        using var outputStream = new FileStream(configFile, FileMode.OpenOrCreate);
         Serializer.Serialize(outputStream, config);
     }
 }
