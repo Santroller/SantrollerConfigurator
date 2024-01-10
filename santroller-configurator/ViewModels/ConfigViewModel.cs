@@ -1514,7 +1514,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            """;
             }
 
-            var ledTick = GenerateTick(ConfigField.StrobeLed, null);
+            var ledTick = GenerateTick(ConfigField.StrobeLed, writer);
             if (ledTick.Any())
             {
                 config += $"""

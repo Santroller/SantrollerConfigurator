@@ -276,20 +276,20 @@ public abstract partial class Output : ReactiveObject
 
     public UsbHostInputType UsbInputType
     {
-        get => (Input.InnermostInputs() as UsbHostInput)?.Input ?? UsbHostInputType.A;
+        get => (Input.InnermostInputs().First() as UsbHostInput)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType, null, null, null, null, null, value);
     }
 
     public Gh5NeckInputType Gh5NeckInputType
     {
-        get => (Input.InnermostInputs() as Gh5NeckInput)?.Input ??
-               (Input.InnermostInputs() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
+        get => (Input.InnermostInputs().First() as Gh5NeckInput)?.Input ??
+               (Input.InnermostInputs().First() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
         set => SetInput(SelectedInputType, null, null, null, value, null, null);
     }
 
     public GhWtInputType GhWtInputType
     {
-        get => (Input.InnermostInputs() as GhWtTapInput)?.Input ?? GhWtInputType.TapGreen;
+        get => (Input.InnermostInputs().First() as GhWtTapInput)?.Input ?? GhWtInputType.TapGreen;
         set => SetInput(SelectedInputType, null, null, value, null, null, null);
     }
 
