@@ -95,8 +95,16 @@ public class AssetUtils
             return new ToolConfig();
         }
 
-        using var outputStream = new FileStream(configFile, FileMode.Open);
-        return Serializer.Deserialize<ToolConfig>(outputStream);
+        try
+        {
+            using var outputStream = new FileStream(configFile, FileMode.Open);
+            return Serializer.Deserialize<ToolConfig>(outputStream);
+        }
+        catch (Exception)
+        {
+            // Config is broken, reset to defaults so the tool doesnt crash.
+            return new ToolConfig();
+        }
     }
 
     public static void SaveConfig(ToolConfig config)
