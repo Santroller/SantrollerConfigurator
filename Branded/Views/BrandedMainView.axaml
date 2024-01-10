@@ -97,7 +97,7 @@
                                     Margin="0 20 0 0" />
                             <Button IsVisible="{Binding !Configurable}"
                                     Content="{x:Static viewModels:Resources.EraseButtonLabel}"
-                                    Command="{Binding BrandedMain.OverwriteCommand}"
+                                    Command="{Binding BrandedMain.OverwriteNewCommand}"
                                     IsEnabled="{Binding BrandedMain.ReadyToConfigureBranded}" HorizontalAlignment="Center"
                                     Margin="0 20 0 0" />
                         </StackPanel>

@@ -112,6 +112,14 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     }
 
     [RelayCommand]
+    public async Task<PlatformIo.PlatformIoState> OverwriteNew()
+    {
+        if (SelectedDevice == null) return new PlatformIo.PlatformIoState(100, "No device selected", null);
+        Model = null;
+        return await Overwrite();
+    }
+    
+    [RelayCommand]
     public async Task<PlatformIo.PlatformIoState> Overwrite()
     {
         if (SelectedDevice == null) return new PlatformIo.PlatformIoState(100, "No device selected", null);
