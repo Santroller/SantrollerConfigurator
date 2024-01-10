@@ -24,10 +24,10 @@ public class SerialisedBrandedConfigurationStore
         Configurations.AddRange(store.Configurations.Select(s => new SerialisedBrandedConfiguration(s)).ToList());
         var stream = new MemoryStream();
         store.Logo.Save(stream);
-        Logo = stream.GetBuffer();
+        Logo = stream.ToArray();
         stream = new MemoryStream();
         store.Icon.Save(stream);
-        Icon = stream.GetBuffer();
+        Icon = stream.ToArray();
     }
 
     [ProtoMember(1)] public string ToolName { get; set; } = null!;
