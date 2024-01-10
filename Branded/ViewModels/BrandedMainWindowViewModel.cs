@@ -85,10 +85,18 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
                 SelectedDevice = device;
                 _writing = false;
                 Complete(100);
-                SelectedConfig.Model.Device = SelectedDevice;
-                Router.Navigate.Execute(SelectedConfig.Model);
-                SelectedConfig.Model.UpdateBluetoothAddress();
-                SelectedConfig.Model.SetUpDiff();
+                if (Model == null)
+                {
+                    SelectedConfig.Model.Device = SelectedDevice;
+                    Router.Navigate.Execute(SelectedConfig.Model);
+                }
+                else
+                {
+                    Model.Device = SelectedDevice;
+                    Model.UpdateBluetoothAddress();
+                    Model.SetUpDiff();
+                }
+
                 break;
         }
     }
