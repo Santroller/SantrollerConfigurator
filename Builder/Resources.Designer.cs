@@ -242,5 +242,11 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
                 return ResourceManager.GetString("GitHubAuthError", resourceCulture);
             }
         }
+        
+        public static string ReorderVariantLabel {
+            get {
+                return ResourceManager.GetString("ReorderVariantLabel", resourceCulture);
+            }
+        }
     }
 }

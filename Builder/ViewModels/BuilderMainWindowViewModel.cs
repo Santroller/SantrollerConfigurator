@@ -182,6 +182,35 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     }
 
     [RelayCommand]
+    public void MoveDown()
+    {
+        if (SelectedTool == null || Selected == null) return;
+        var from = SelectedTool.Configurations.IndexOf(Selected);
+        if (from == SelectedTool.Configurations.Count - 1)
+        {
+            return;
+        }
+        var old = Selected;
+        SelectedTool.Configurations.Move(from, from+1);
+        Selected = null;
+        Selected = old;
+    }
+    [RelayCommand]
+    public void MoveUp()
+    {
+        if (SelectedTool == null || Selected == null) return;
+        var from = SelectedTool.Configurations.IndexOf(Selected);
+        if (from == 0)
+        {
+            return;
+        }
+        var old = Selected;
+        SelectedTool.Configurations.Move(from, from-1);
+        Selected = null;
+        Selected = old;
+    }
+    
+    [RelayCommand]
     public async Task Package()
     {
         Save();

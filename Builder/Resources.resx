@@ -122,4 +122,7 @@
     <data name="GitHubAuthError" xml:space="preserve">
         <value>Unable to authenticate with GitHub: {0}</value>
     </data>
+    <data name="ReorderVariantLabel" xml:space="preserve">
+        <value>Reorder Variants</value>
+    </data>
 </root>
