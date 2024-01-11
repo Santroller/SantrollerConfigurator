@@ -290,11 +290,13 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         {
             return;
         }
+
         _timer.Elapsed += DevicePoller_Tick;
         _timer.AutoReset = false;
         StartWorking();
 #if Windows
-        RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"System\CurrentControlSet\Control\MediaProperties\PrivateProperties\Joystick\OEM\VID_1209&PID_2882", true);
+        RegistryKey? key =
+ Registry.CurrentUser.OpenSubKey(@"System\CurrentControlSet\Control\MediaProperties\PrivateProperties\Joystick\OEM\VID_1209&PID_2882", true);
         if (key != null) {
             if (key.GetValue("OEMName") != null) {
                 key.DeleteValue("OEMName");
@@ -508,7 +510,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         var env = environment;
         Programming = true;
         BehaviorSubject<PlatformIo.PlatformIoState> command;
-        if (!write)
+        if (!write || extra.Any())
         {
             command = Pio.RunPlatformIo(env, new[] {"run"},
                 "Building " + config.Variant,

@@ -160,6 +160,20 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         await Selected.BuildUf2(model, output.Path.AbsolutePath);
     }
 
+    private async void SaveToDevice(ConfigViewModel model)
+    {
+        if (Selected == null || SelectedDevice == null) return;
+        Working = true;
+        Selected.LoadUf2();
+        var path = await SelectedDevice.GetUploadPortAsync();
+        if (path == null)
+        {
+            return;
+        }
+        await Selected.BuildUf2(model, Path.Join(path, "firmware.uf2"));
+        Complete(100);
+    }
+
     public override IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, bool write, string extra = "",
         int startingPercentage = 0, int endingPercentage = 100)
     {
@@ -168,7 +182,17 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             extra = Selected.ExtraConfig();
         }
 
-        return base.Write(config, write, extra, startingPercentage, endingPercentage);
+        var state = base.Write(config, false, extra, startingPercentage, endingPercentage);
+        state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, () =>
+        {
+            if (!extra.Any() || !write) return;
+            Progress = 50;
+            Message = "Writing";
+            SaveToDevice(config);
+        });
+
+
+        return state;
     }
 
     public override IObservable<PlatformIo.PlatformIoState> SaveUf2(ConfigViewModel model)
@@ -176,7 +200,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         if (Selected == null) return Observable.Return(new PlatformIo.PlatformIoState(100, "Done", null));
         var state = Write(model, false);
 
-        state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, ()=>SaveUf2File(model));
+        state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, () => SaveUf2File(model));
 
         return state;
     }
@@ -190,11 +214,13 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         {
             return;
         }
+
         var old = Selected;
-        SelectedTool.Configurations.Move(from, from+1);
+        SelectedTool.Configurations.Move(from, from + 1);
         Selected = null;
         Selected = old;
     }
+
     [RelayCommand]
     public void MoveUp()
     {
@@ -204,12 +230,13 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         {
             return;
         }
+
         var old = Selected;
-        SelectedTool.Configurations.Move(from, from-1);
+        SelectedTool.Configurations.Move(from, from - 1);
         Selected = null;
         Selected = old;
     }
-    
+
     [RelayCommand]
     public async Task Package()
     {
@@ -249,7 +276,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
         var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");
         await using var linuxOutput =
-            File.Open($"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-linux-64", FileMode.Create, FileAccess.ReadWrite);
+            File.Open($"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-linux-64", FileMode.Create,
+                FileAccess.ReadWrite);
         await using var linuxInput = AssetLoader.Open(uri);
         await linuxInput.CopyToAsync(linuxOutput).ConfigureAwait(false);
         await ExecutableUtils.AppendConfig(linuxOutput, SelectedTool);
@@ -266,7 +294,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         // Extract macos app zip, insert config and update icons and application name
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-macOS.zip");
         await using var macosOutput =
-            File.Open($"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip", FileMode.Create, FileAccess.ReadWrite);
+            File.Open($"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip", FileMode.Create,
+                FileAccess.ReadWrite);
         await using var macosInput = AssetLoader.Open(uri);
         await macosInput.CopyToAsync(macosOutput).ConfigureAwait(false);
         macosOutput.Seek(0, SeekOrigin.Begin);
@@ -286,7 +315,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/Resources/icon.icns")!);
         await ExecutableUtils.OverwriteIcns(SelectedTool.Icon,
             archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Resources/icon.icns")!);
-        await ExecutableUtils.RenameDirectoryInZip("SantrollerConfiguratorBranded.app", SelectedTool.ToolNameVersioned + ".app",
+        await ExecutableUtils.RenameDirectoryInZip("SantrollerConfiguratorBranded.app",
+            SelectedTool.ToolNameVersioned + ".app",
             archive);
 
         Complete(100);
@@ -295,7 +325,6 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public override void SetDifference(bool difference)
     {
         HasChanges = difference;
-        if (Working) return;
         if (DeviceNotProgrammed)
         {
             Progress = 100;
@@ -303,6 +332,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             ProgressbarColor = ProgressBarError;
             return;
         }
+
+        if (Working) return;
         if (!difference)
         {
             ProgressbarColor = ProgressBarPrimary;

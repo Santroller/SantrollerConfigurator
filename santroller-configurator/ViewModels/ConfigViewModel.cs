@@ -303,12 +303,18 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (Builder)
             {
+                if (_device is Santroller santroller)
+                {
+                    santroller.StopTicking();
+                }
+
+                Main.ShowError = false;
+                Main.Complete(100);
                 Main.DeviceNotProgrammed = value is not (Santroller or EmptyDevice);
+                Main.SetDifference(false);
                 if (value is Santroller s)
                 {
-                    Main.Complete(100);
                     Microcontroller = value.GetMicrocontroller(this);
-                    Main.SetDifference(false);
                     s.StartTicking(this);
                 }
             }
@@ -1822,6 +1828,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .ToTask();
         if (!yesNo.Response) return;
         if (Device is not Santroller device) return;
+        if (Builder)
+        {
+            device.Revert();
+            return;
+        } 
         await Main.RevertCommand.Execute(device);
     }
 
