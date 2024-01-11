@@ -110,12 +110,15 @@ public abstract partial class Output : ReactiveObject
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is WiiInput)
             .ToPropertyEx(this, x => x.IsWii);
         this.WhenAnyValue(x => x.Input)
-            .Select(x => x.InnermostInputs().First() is Gh5NeckInput or CloneNeckInput && this is not GuitarAxis {Type:GuitarAxisType.Slider})
+            .Select(x =>
+                x.InnermostInputs().First() is Gh5NeckInput or CloneNeckInput &&
+                this is not GuitarAxis {Type: GuitarAxisType.Slider})
             .ToPropertyEx(this, x => x.IsGh5OrClone);
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Ps2Input)
             .ToPropertyEx(this, x => x.IsPs2);
         this.WhenAnyValue(x => x.Input)
-            .Select(x => x.InnermostInputs().First() is GhWtTapInput && this is not GuitarAxis {Type:GuitarAxisType.Slider})
+            .Select(x =>
+                x.InnermostInputs().First() is GhWtTapInput && this is not GuitarAxis {Type: GuitarAxisType.Slider})
             .ToPropertyEx(this, x => x.IsWt);
         this.WhenAnyValue(x => x.Input.Title, x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails,
                 x => x.Model.LegendType, x => x.Model.SwapSwitchFaceButtons)
@@ -360,12 +363,26 @@ public abstract partial class Output : ReactiveObject
                 santroller.SetLedStp((byte) (ledIndex - 1), true);
             }
         }
+        else if (Model.LedType != LedType.None)
+        {
+            foreach (var ledIndex in LedIndices)
+            {
+                santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(LedOn));
+            }
+        }
 
         if (Model.LedTypePeripheral == LedType.Stp16Cpc26)
         {
             foreach (var ledIndex in LedIndicesPeripheral)
             {
                 santroller.SetLedStpPeripheral((byte) (ledIndex - 1), true);
+            }
+        }
+        else if (Model.LedTypePeripheral != LedType.None)
+        {
+            foreach (var ledIndex in LedIndicesPeripheral)
+            {
+                santroller.SetLedPeripheral((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(LedOn));
             }
         }
     }
@@ -564,7 +581,8 @@ public abstract partial class Output : ReactiveObject
         Input input;
         switch (inputType)
         {
-            case InputType.ConstantInput when Input.InnermostInputs().First() is not FixedInput && this is OutputAxis axis:
+            case InputType.ConstantInput
+                when Input.InnermostInputs().First() is not FixedInput && this is OutputAxis axis:
                 input = new ConstantInput(Model, 0, true, axis.Min, axis.Max,
                     axis is GuitarAxis {Type: GuitarAxisType.Slider}, axis is GuitarAxis {Type: GuitarAxisType.Pickup});
                 break;
