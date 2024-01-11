@@ -3207,7 +3207,7 @@
         <value>Note that if your are using APA102-2020s or SK9822-2020s</value>
     </data>
     <data name="BrightnessNote2" xml:space="preserve">
-        <value>The manufacturer recommends not going above brightness 10</value>
+        <value>The manufacturer recommends not going above brightness 9</value>
     </data>
     <data name="BrightnessNote3" xml:space="preserve">
         <value>As the small LEDs will overheat at higher levels.</value>
