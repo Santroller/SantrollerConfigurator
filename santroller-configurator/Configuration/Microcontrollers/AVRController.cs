@@ -179,9 +179,9 @@ public abstract class AvrController : Microcontroller
         return $"""
                uint8_t oldSREG = SREG;
                cli();
-               {write};
                {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}
                {string.Join("\n", portByPort.Select(port => $"PORT{port.Key} = {port.Value};"))}
+               {write};
                SREG = oldSREG;
                """;
     }
@@ -252,10 +252,10 @@ public abstract class AvrController : Microcontroller
         return $"""
                uint8_t oldSREG = SREG;
                cli();
-               {write};
                {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}
                {string.Join("\n", portByPort.Select(port => $"PORT{port.Key} = {port.Value};"))}
                SREG = oldSREG;
+               {write};
                """;
     }
 
