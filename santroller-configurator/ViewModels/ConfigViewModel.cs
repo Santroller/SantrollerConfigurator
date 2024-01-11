@@ -2412,22 +2412,22 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             pins[LedSpiType(true)] = _ledSpiConfigPeripheral.Pins.ToList();
         }
 
-        if (IsStp16 && _stp16Le != null && type != Stp16LeType)
+        if (IsStp16 && _stp16Le != null && type != Stp16LeType && !peripheral)
         {
             pins[Stp16LeType] = _stp16Le.Pins.ToList();
         }
 
-        if (IsStp16 && _stp16Oe != null && type != Stp16OeType)
+        if (IsStp16 && _stp16Oe != null && type != Stp16OeType && !peripheral)
         {
             pins[Stp16OeType] = _stp16Oe.Pins.ToList();
         }
 
-        if (IsStp16Peripheral && _stp16LePeripheral != null && type != Stp16LePeripheralType)
+        if (IsStp16Peripheral && _stp16LePeripheral != null && type != Stp16LePeripheralType && peripheral)
         {
             pins[Stp16LePeripheralType] = _stp16LePeripheral.Pins.ToList();
         }
 
-        if (IsStp16Peripheral && _stp16OePeripheral != null && type != Stp16OePeripheralType)
+        if (IsStp16Peripheral && _stp16OePeripheral != null && type != Stp16OePeripheralType && peripheral)
         {
             pins[Stp16OePeripheralType] = _stp16OePeripheral.Pins.ToList();
         }

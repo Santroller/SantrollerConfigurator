@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GuitarConfigurator.NetCore.ViewModels;
@@ -44,6 +45,11 @@ public abstract class PinConfig : ReactiveObject
             .Select(t =>
                 string.Format(Resources.ConflictLabel, t.pinConfig.Key, string.Join(", ", t.conflicting.Select(s => Model.Microcontroller.GetPinForMicrocontroller(s, this is TwiConfig, this is SpiConfig)))))
             .ToList();
+
+        if (ret.Any()) 
+        {
+            Console.WriteLine(ret.Any());
+        }
 
         return ret.Any() ? string.Join(", ", ret) : null;
     }

@@ -210,16 +210,16 @@ public class Ps2Input : SpiInput
         Combined = combined;
         BindableSpi = !Combined && !model.Branded && Model.Microcontroller.SpiAssignable;
         BindableAtt = !Combined && !model.Branded && Model.Microcontroller is not (Uno or Mega);
-        if (!BindableAtt)
-        {
-            Att = 10;
-        }
         Input = input;
         _ackConfig = Model.GetPinForType(Ps2AckType, peripheral, ack, DevicePinMode.Floating);
         _attConfig = Model.GetPinForType(Ps2AttType, peripheral, att, DevicePinMode.Floating);
         this.WhenAnyValue(x => x._attConfig.Pin).Subscribe(_ => this.RaisePropertyChanged(nameof(Att)));
         this.WhenAnyValue(x => x._ackConfig.Pin).Subscribe(_ => this.RaisePropertyChanged(nameof(Ack)));
         IsAnalog = Input <= Ps2InputType.Dualshock2R2;
+        if (!BindableAtt)
+        {
+            Att = 10;
+        }
     }
 
     public int Ack
