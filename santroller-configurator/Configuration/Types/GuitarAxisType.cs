@@ -28,13 +28,6 @@ public static class GuitarAxisTypeMethods
             GuitarAxisType.Tilt, GuitarAxisType.Whammy
         };
     }
-    public static IEnumerable<GuitarAxisType> GuitarPraiseTypes()
-    {
-        return new[]
-        {
-            GuitarAxisType.Whammy
-        };
-    }
 
     public static IEnumerable<GuitarAxisType> GhTypes()
     {
@@ -48,8 +41,6 @@ public static class GuitarAxisTypeMethods
     {
         switch (deviceControllerType)
         {
-            case DeviceControllerType.GuitarPraiseGuitar:
-                return GuitarPraiseTypes();
             case DeviceControllerType.LiveGuitar:
                 return GhlTypes();
         }

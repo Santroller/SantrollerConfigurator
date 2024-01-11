@@ -135,7 +135,6 @@ public static class InstrumentButtonTypeExtensions
         return deviceControllerType switch
         {
             DeviceControllerType.GuitarHeroGuitar => GuitarButtons,
-            DeviceControllerType.GuitarPraiseGuitar => GuitarButtons,
             DeviceControllerType.FortniteGuitar => GuitarButtons,
             DeviceControllerType.FortniteGuitarStrum => GuitarButtons,
             DeviceControllerType.RockBandGuitar => RbButtons,
@@ -152,7 +151,6 @@ public static class InstrumentButtonTypeExtensions
             case DeviceControllerType.RockBandGuitar:
             case DeviceControllerType.FortniteGuitar:
             case DeviceControllerType.FortniteGuitarStrum:
-            case DeviceControllerType.GuitarPraiseGuitar:
             {
                 foreach (var output in outputs.Items)
                 {

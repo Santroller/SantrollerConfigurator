@@ -725,9 +725,6 @@
     <data name="DeviceControllerTypeFortniteDrums" xml:space="preserve">
         <value>Drums</value>
     </data>
-    <data name="DeviceControllerTypeGuitarPraiseGuitar" xml:space="preserve">
-        <value>Guitar Praise Guitar</value>
-    </data>
     <data name="TwiPinTypeSda" xml:space="preserve">
         <value>SDA</value>
     </data>
@@ -1135,9 +1132,6 @@
     </data>
     <data name="WiiInputTypeGuitarWhammy" xml:space="preserve">
         <value>Guitar - Whammy</value>
-    </data>
-    <data name="Ps2InputTypeGuitarTapBar" xml:space="preserve">
-        <value>Guitar - Slider Axis</value>
     </data>
 
     <data name="Ps2InputTypeGuitarTapBar" xml:space="preserve">
@@ -2019,9 +2013,6 @@
     </data>
     <data name="Ps2InputTypeGuitarWhammy" xml:space="preserve">
         <value>Guitar - Whammy Axis</value>
-    </data>
-    <data name="Ps2InputTypeGuitarSlider" xml:space="preserve">
-        <value>Guitar - Slider Axis</value>
     </data>
     <data name="Ps2InputTypeGuitarSlider" xml:space="preserve">
         <value>Guitar - Slider Axis</value>
@@ -3204,12 +3195,12 @@
         <value>LED Brightness</value>
     </data>
     <data name="BrightnessNote1" xml:space="preserve">
-        <value>Note that if your are using APA102-2020s or SK9822-2020s</value>
+        <value>Note that if you are using APA102-2020s or SK9822-2020s</value>
     </data>
     <data name="BrightnessNote2" xml:space="preserve">
-        <value>The manufacturer recommends not going above brightness 9</value>
+        <value>Setting a brightness level over 9 may cause the lifespan of the LEDs to be shortened</value>
     </data>
     <data name="BrightnessNote3" xml:space="preserve">
-        <value>As the small LEDs will overheat at higher levels.</value>
+        <value>Especially if you are using LEDs that are always on</value>
     </data>
 </root>

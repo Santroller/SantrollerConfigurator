@@ -147,7 +147,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarHeroGuitar
                 or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar
-                or DeviceControllerType.FortniteGuitarStrum or DeviceControllerType.GuitarPraiseGuitar)
+                or DeviceControllerType.FortniteGuitarStrum)
             .ToPropertyEx(this, x => x.IsGuitar);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.StageKit)
@@ -167,7 +167,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
             .Select(x =>
                 GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller &&
-                x.Item1 is not EmulationType.FortniteFestival && x.Item2 is not DeviceControllerType.GuitarPraiseGuitar)
+                x.Item1 is not EmulationType.FortniteFestival)
             .ToPropertyEx(this, x => x.IsNonStandardController);
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.KeyboardMouse)
@@ -954,8 +954,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Deque = false;
         }
 
-        if (EmulationType is EmulationType.FortniteFestival ||
-            DeviceControllerType is DeviceControllerType.GuitarPraiseGuitar)
+        if (EmulationType is EmulationType.FortniteFestival)
         {
             Bindings.RemoveMany(Bindings.Items.Where(s => s is Led));
         }
