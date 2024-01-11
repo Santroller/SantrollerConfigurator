@@ -3191,11 +3191,14 @@
     <data name="TurntableNote2" xml:space="preserve">
         <value>If you use any other poll rate, you will need to adjust the multiplier to compensate</value>
     </data>
+    <data name="Apa1022020Label" xml:space="preserve">
+        <value>Hide APA102 2020 warning</value>
+    </data>
     <data name="LedBrightnessLabel" xml:space="preserve">
         <value>LED Brightness</value>
     </data>
     <data name="BrightnessNote1" xml:space="preserve">
-        <value>Note that if you are using APA102-2020s or SK9822-2020s</value>
+        <value>If you are using APA102-2020s or SK9822-2020s</value>
     </data>
     <data name="BrightnessNote2" xml:space="preserve">
         <value>Setting a brightness level over 9 may cause the lifespan of the LEDs to be shortened</value>

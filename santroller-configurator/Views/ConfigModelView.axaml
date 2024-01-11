@@ -462,8 +462,8 @@
                                   ItemsSource="{Binding AvailablePinsDm}"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
-                    
-                    <StackPanel Orientation="Horizontal" >
+
+                    <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.XboxAuthLabel}" />
@@ -932,7 +932,7 @@
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type other:StartSelectHome}">
                 <StackPanel Orientation="Vertical">
                 </StackPanel>
@@ -2422,7 +2422,7 @@
                                           ItemTemplate="{StaticResource EnumToStringTemplate}"
                                           ItemsSource="{Binding RolloverModes}" />
                             </StackPanel>
-                            
+
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonStandardController}">
                             <Label VerticalAlignment="Center"
@@ -2775,21 +2775,50 @@
                                       DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplate}" />
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsApa102}">
-                            <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.LedBrightnessLabel}" />
-                            <NumericUpDown Height="30" Width="200" FormatString="{}{0:#,0}"
-                                           Value="{Binding LedBrightness}"
-                                           Minimum="1"
-                                           Maximum="31" />
-                            <Slider Value="{Binding LedBrightness}"
-                                    Minimum="1"
-                                    Maximum="31"
-                                    IsSnapToTickEnabled="True"
-                                    TickFrequency="1" Width="200" />
+                        <StackPanel>
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                    <Binding
+                                        Path="IsApa102" />
+                                    <Binding Path="IsApa102Peripheral" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsApa102}">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.LedBrightnessLabel}" />
+                                <NumericUpDown Height="30" Width="200" FormatString="{}{0:#,0}"
+                                               Value="{Binding LedBrightness}"
+                                               Minimum="1"
+                                               Maximum="31" />
+                                <Slider Value="{Binding LedBrightness}"
+                                        Minimum="1"
+                                        Maximum="31"
+                                        IsSnapToTickEnabled="True"
+                                        TickFrequency="1" Width="200" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding Builder}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.Apa1022020Label}" />
+                                <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                              HorizontalContentAlignment="Center"
+                                              IsChecked="{Binding Apa102IsFullSize}"
+                                              OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                              OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                            </StackPanel>
+                            <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote1}">
+                                <Label.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding
+                                            Path="!Branded" />
+                                        <Binding Path="!Apa102IsFullSize" />
+                                    </MultiBinding>
+                                </Label.IsVisible>
+                            </Label>
+                            <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote2}"
+                                   IsVisible="{Binding !Apa102IsFullSize}" />
+                            <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote3}"
+                                   IsVisible="{Binding !Apa102IsFullSize}" />
                         </StackPanel>
-                        <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote1}" />
-                        <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote2}" />
-                        <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote3}" />
                     </StackPanel>
                 </Expander>
                 <Expander IsVisible="{Binding IsBluetoothTx}" HorizontalAlignment="Stretch" Header="{Binding}"

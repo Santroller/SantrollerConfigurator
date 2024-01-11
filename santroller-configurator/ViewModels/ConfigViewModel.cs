@@ -606,6 +606,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.RaisePropertyChanged();
         }
     }
+    
+    [Reactive]
+    public bool Apa102IsFullSize { get; set; }
 
     public int Stp16LePeripheral
     {
@@ -1095,6 +1098,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         StrumDebounce = 0;
         Debounce = 10;
         DjPollRate = 10;
+        LedBrightness = 31;
+        Apa102IsFullSize = false;
         DjSmoothing = false;
         SwapSwitchFaceButtons = false;
         HasPeripheral = false;
@@ -1338,6 +1343,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
+                       #define LED_BRIGHTNESS {WriteBlob(writer, LedBrightness)}
                        """;
 
             if (IsBluetoothRx)
@@ -1367,6 +1373,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WT_SENSITIVITY {WtSensitivity}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {DjPollRate * 1000}
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {DjSmoothing.ToString().ToLower()}
+                       #define LED_BRIGHTNESS {LedBrightness}
                        """;
             if (BtRxAddr.Any() && BtRxAddr.Contains(":"))
             {
@@ -1383,7 +1390,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                    #define ARDWIINO_BOARD "{Microcontroller.Board.ArdwiinoName}"
                    #define EMULATION_TYPE {GetEmulationType()}
                    #define DEVICE_TYPE {(byte) DeviceControllerType}
-                   #define LED_BRIGHTNESS {LedBrightness}
                    """;
 
         // Actually write the config as configured

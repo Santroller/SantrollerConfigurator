@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DynamicData;
+using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
@@ -61,6 +62,7 @@ public class SerializedConfiguration
         Stp16Le = model.Stp16Le;
         Stp16OePeripheral = model.Stp16OePeripheral;
         Stp16LePeripheral = model.Stp16LePeripheral;
+        Apa102IsFullSize = model.Apa102IsFullSize;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -100,6 +102,7 @@ public class SerializedConfiguration
     [ProtoMember(46)] public RolloverMode RolloverMode { get; private set; }
     [ProtoMember(47)] public bool XInputAuth { get; private set; }
     [ProtoMember(48)] public int LedBrightness { get; private set; }
+    [ProtoMember(49)] public bool Apa102IsFullSize { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -120,6 +123,7 @@ public class SerializedConfiguration
         model.HasPeripheral = HasPeripheral;
         model.RolloverMode = RolloverMode;
         model.LedBrightness = LedBrightness == 0 ? 32 : LedBrightness;
+        model.Apa102IsFullSize = Apa102IsFullSize;
         if (HasPeripheral)
         {
             model.PeripheralScl = PeripheralScl;
@@ -187,6 +191,7 @@ public class SerializedConfiguration
         model.WtSensitivity = WtSensitivity;
         model.CombinedStrumDebounce = CombinedStrumDebounce;
         model.BtRxAddr = BtRxMacAddress;
+        model.LedBrightness = LedBrightness;
         var clone = new List<Output>(model.Bindings.Items);
         var generated = Bindings.Select(s => s.Generate(model)).SelectMany(s => s.Outputs.Items)
             .GroupBy(s => s.GetOutputType()).ToDictionary(s => s.Key, s => s);

@@ -6135,6 +6135,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string Apa1022020Label {
+            get {
+                return ResourceManager.GetString("Apa1022020Label", resourceCulture);
+            }
+        }
+        
         public static string LedBrightnessLabel {
             get {
                 return ResourceManager.GetString("LedBrightnessLabel", resourceCulture);
