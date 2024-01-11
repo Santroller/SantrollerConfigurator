@@ -3200,4 +3200,16 @@
     <data name="TurntableNote2" xml:space="preserve">
         <value>If you use any other poll rate, you will need to adjust the multiplier to compensate</value>
     </data>
+    <data name="LedBrightnessLabel" xml:space="preserve">
+        <value>LED Brightness</value>
+    </data>
+    <data name="BrightnessNote1" xml:space="preserve">
+        <value>Note that if your are using APA102-2020s or SK9822-2020s</value>
+    </data>
+    <data name="BrightnessNote2" xml:space="preserve">
+        <value>The manufacturer recommends not going above brightness 10</value>
+    </data>
+    <data name="BrightnessNote3" xml:space="preserve">
+        <value>As the small LEDs will overheat at higher levels.</value>
+    </data>
 </root>

@@ -62,6 +62,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandSetLedsPeripheral,
         CommandWriteAnalog,
         CommandWriteDigital,
+        CommandSetBrightness,
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -492,6 +493,12 @@ public class Santroller : ConfigurableUsbDevice
             WriteData(0, (byte) Commands.CommandWriteDigital,
                 new byte[] {(byte) port, (byte) mask, (byte) (value ? mask : 0), 0});
         }
+    }
+    
+    public void SetBrightness(int brightness)
+    {
+        WriteData(0, (byte) Commands.CommandSetBrightness,
+            new[] {(byte)brightness});
     }
 
     public void SetLed(byte led, byte[] color)

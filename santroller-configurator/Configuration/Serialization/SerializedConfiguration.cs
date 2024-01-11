@@ -35,6 +35,7 @@ public class SerializedConfiguration
         LedMosi = model.LedMosi;
         LedSck = model.LedSck;
         LedCount = model.LedCount;
+        LedBrightness = model.LedBrightness;
         MouseMovementType = model.MouseMovementType;
         WtSensitivity = model.WtSensitivity;
         UsbHostDp = model.UsbHostDp;
@@ -98,6 +99,7 @@ public class SerializedConfiguration
     [ProtoMember(45)] public int Stp16LePeripheral { get; private set; }
     [ProtoMember(46)] public RolloverMode RolloverMode { get; private set; }
     [ProtoMember(47)] public bool XInputAuth { get; private set; }
+    [ProtoMember(48)] public int LedBrightness { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -117,6 +119,7 @@ public class SerializedConfiguration
         model.BtRxAddr = BtRxMacAddress;
         model.HasPeripheral = HasPeripheral;
         model.RolloverMode = RolloverMode;
+        model.LedBrightness = LedBrightness == 0 ? 32 : LedBrightness;
         if (HasPeripheral)
         {
             model.PeripheralScl = PeripheralScl;

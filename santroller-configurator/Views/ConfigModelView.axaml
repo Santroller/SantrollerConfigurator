@@ -2775,6 +2775,21 @@
                                       DropDownOpened="ReloadPinTemplates"
                                       ItemTemplate="{StaticResource PinToStringTemplate}" />
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsApa102}">
+                            <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.LedBrightnessLabel}" />
+                            <NumericUpDown Height="30" Width="200" FormatString="{}{0:#,0}"
+                                           Value="{Binding LedBrightness}"
+                                           Minimum="1"
+                                           Maximum="31" />
+                            <Slider Value="{Binding LedBrightness}"
+                                    Minimum="1"
+                                    Maximum="31"
+                                    IsSnapToTickEnabled="True"
+                                    TickFrequency="1" Width="200" />
+                        </StackPanel>
+                        <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote1}" />
+                        <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote2}" />
+                        <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote3}" />
                     </StackPanel>
                 </Expander>
                 <Expander IsVisible="{Binding IsBluetoothTx}" HorizontalAlignment="Stretch" Header="{Binding}"

@@ -522,6 +522,36 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
+    private int _ledBrightness;
+
+    public int LedBrightness
+    {
+        get => _ledBrightness;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _ledBrightness, value);
+            if (Device is not Santroller santroller || (LedType is LedType.None or LedType.Stp16Cpc26 && LedTypePeripheral is LedType.None or LedType.Stp16Cpc26)) return;
+            santroller.SetBrightness(value);
+            foreach (var output in Bindings.Items.SelectMany(binding => binding.ValidOutputs()))
+            {
+                if (LedType is not (LedType.None or LedType.Stp16Cpc26) && output.LedIndices.Any() && output.LedOn != Colors.Black)
+                {
+                    foreach (var ledIndex in output.LedIndices)
+                    {
+                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn));
+                    }
+                }
+                if (LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26) && output.LedIndicesPeripheral.Any() && output.LedOn != Colors.Black)
+                {
+                    foreach (var ledIndex in output.LedIndicesPeripheral)
+                    {
+                        santroller.SetLedPeripheral((byte) (ledIndex - 1), LedTypePeripheral.GetLedBytes(output.LedOn));
+                    }
+                }
+            }
+        }
+    }
+
     public int PeripheralSda
     {
         get => _peripheralTwiConfig?.Sda ?? 0;
@@ -1354,6 +1384,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                    #define ARDWIINO_BOARD "{Microcontroller.Board.ArdwiinoName}"
                    #define EMULATION_TYPE {GetEmulationType()}
                    #define DEVICE_TYPE {(byte) DeviceControllerType}
+                   #define LED_BRIGHTNESS {LedBrightness}
                    """;
 
         // Actually write the config as configured
@@ -1826,7 +1857,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ret +=
                 $"""
 
-                 spi_transfer(APA102_SPI_PORT, 0xff);
+                 spi_transfer(APA102_SPI_PORT, brightness | 0xE0);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].r);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].g);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].b);
@@ -1864,7 +1895,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ret +=
                 $"""
 
-                 slaveWriteLED(0xff);
+                 slaveWriteLED(brightness | 0xE0);
                  slaveWriteLED(ledStatePeripheral[{i}].r);
                  slaveWriteLED(ledStatePeripheral[{i}].g);
                  slaveWriteLED(ledStatePeripheral[{i}].b);
