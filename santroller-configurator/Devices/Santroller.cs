@@ -221,7 +221,7 @@ public class Santroller : ConfigurableUsbDevice
                 analogRaw[devicePin.Pin] = val;
             }
 
-            var ps2Raw = ReadData(0, (byte) Commands.CommandReadPs2, 9);
+            var ps2Raw = ReadData(0, (byte) Commands.CommandReadPs2, 32);
             var wiiRaw = ReadData(0, (byte) Commands.CommandReadWii, 8);
             var djLeftRaw = ReadData(0, (byte) Commands.CommandReadDjLeft, 3);
             var djRightRaw = ReadData(0, (byte) Commands.CommandReadDjRight, 3);
