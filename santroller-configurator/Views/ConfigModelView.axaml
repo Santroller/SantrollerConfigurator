@@ -908,7 +908,7 @@
                                   Width="200" />
                     </StackPanel>
 
-                    <StackPanel IsVisible="{Binding ShouldShowPins}" Orientation="Horizontal">
+                    <StackPanel IsVisible="{Binding BindableAtt}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.AttentionLabel}" />
@@ -2200,7 +2200,7 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal"
-                                IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                IsVisible="{Binding BindableAtt}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.AttentionLabel}" />

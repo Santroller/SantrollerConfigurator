@@ -149,7 +149,7 @@ public class Ps2Input : SpiInput
         {Ps2InputType.Cross, "(~ps2Data[4]) & (1 << 6)"},
         {Ps2InputType.Square, "(~ps2Data[4]) & (1 << 7)"},
         {Ps2InputType.GuitarTapGreen, GetMappingForTapBar(0x95, 0xB0)},
-        {Ps2InputType.GuitarTapRed, GetMappingForTapBar(0xB0,0xCD,0xE6)},
+        {Ps2InputType.GuitarTapRed, GetMappingForTapBar(0xB0, 0xCD, 0xE6)},
         {Ps2InputType.GuitarTapYellow, GetMappingForTapBar(0xE6, 0x1A, 0x2F)},
         {Ps2InputType.GuitarTapBlue, GetMappingForTapBar(0x2F, 0x49, 0x66)},
         {Ps2InputType.GuitarTapOrange, GetMappingForTapBar(0x66, 0x7F)}
@@ -208,7 +208,12 @@ public class Ps2Input : SpiInput
         Ps2SpiCpha, Ps2SpiMsbFirst, miso: miso, mosi: mosi, sck: sck, model: model)
     {
         Combined = combined;
-        BindableSpi = !Combined && Model.Microcontroller.SpiAssignable && !model.Branded;
+        BindableSpi = !Combined && !model.Branded && Model.Microcontroller.SpiAssignable;
+        BindableAtt = !Combined && !model.Branded && Model.Microcontroller is not (Uno or Mega);
+        if (!BindableAtt)
+        {
+            Att = 10;
+        }
         Input = input;
         _ackConfig = Model.GetPinForType(Ps2AckType, peripheral, ack, DevicePinMode.Floating);
         _attConfig = Model.GetPinForType(Ps2AttType, peripheral, att, DevicePinMode.Floating);
@@ -232,9 +237,10 @@ public class Ps2Input : SpiInput
     public Ps2InputType Input { get; }
 
     public bool Combined { get; }
-    public bool ShouldShowPins => !Combined && !Model.Branded; 
+    public bool ShouldShowPins => !Combined && !Model.Branded;
 
     public bool BindableSpi { get; }
+    public bool BindableAtt { get; }
 
     public override bool IsUint => !IntInputs.Contains(Input);
 
@@ -264,7 +270,7 @@ public class Ps2Input : SpiInput
             return new SerializedPs2InputCombined(Input, Peripheral);
         return new SerializedPs2Input(Peripheral, Miso, Mosi, Sck, Att, Ack, Input);
     }
-    
+
     private static string GetMappingForTapBar(params int[] mappings)
     {
         return string.Join(" || ", mappings.Select(s2 => $"(lastTapPS2GH5 == {s2})"));
@@ -461,9 +467,9 @@ public class Ps2Input : SpiInput
         foreach (var (input, mappings) in mappedBindings)
         {
             ret += $"""
-
+                    
                            case {CType[input]}:
-                              {string.Join("\n          ", mappings.Select(s => s.Replace("\n","\n          ")))}
+                              {string.Join("\n          ", mappings.Select(s => s.Replace("\n", "\n          ")))}
                               break;
                     """;
         }
