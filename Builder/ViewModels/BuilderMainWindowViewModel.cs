@@ -150,15 +150,14 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         }
     }
 
-    private async void SaveUf2File()
+    private async void SaveUf2File(ConfigViewModel model)
     {
+        if (Selected == null) return;
+        Selected.LoadUf2();
         Complete(100);
         var output = await SaveUf2Handler.Handle(this);
         if (output == null) return;
-        var uf2File = Path.Combine(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", "pico",
-            "firmware.uf2");
-        var fileStream = File.OpenRead(uf2File);
-        await fileStream.CopyToAsync(await output.OpenWriteAsync());
+        await Selected.BuildUf2(model, output.Path.AbsolutePath);
     }
 
     public override IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, bool write, string extra = "",
@@ -175,9 +174,9 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public override IObservable<PlatformIo.PlatformIoState> SaveUf2(ConfigViewModel model)
     {
         if (Selected == null) return Observable.Return(new PlatformIo.PlatformIoState(100, "Done", null));
-        var state = Write(model, true, Selected.ExtraConfig());
+        var state = Write(model, false);
 
-        state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, SaveUf2File);
+        state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, ()=>SaveUf2File(model));
 
         return state;
     }
