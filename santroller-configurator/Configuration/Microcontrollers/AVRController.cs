@@ -124,12 +124,14 @@ public abstract class AvrController : Microcontroller
         var ddrByPort = new Dictionary<char, int>();
         var portByPort = new Dictionary<char, int>();
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>().ToList();
+        var write = "";
         if (configViewModel.GetPinConfigs().OfType<SpiConfig>().Any())
         {
             pins.Add(new DirectPinConfig(configViewModel, "mosi", SpiMosi, false, DevicePinMode.Output));
             pins.Add(new DirectPinConfig(configViewModel, "miso", SpiMiso, false, DevicePinMode.PullUp));
             pins.Add(new DirectPinConfig(configViewModel, "sck", SpiSck, false, DevicePinMode.Output));
             pins.Add(new DirectPinConfig(configViewModel, "ss", SpiCSn, false, DevicePinMode.Output));
+            write = GenerateDigitalWrite(SpiCSn, true, false);
         }
         foreach (var pin in pins)
         {
@@ -173,7 +175,9 @@ public abstract class AvrController : Microcontroller
             portByPort[port] = currentPort;
             ddrByPort[port] = currentDdr;
         }
+
         return $"""
+               {write}
                uint8_t oldSREG = SREG;
                cli();
                {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}
@@ -189,12 +193,14 @@ public abstract class AvrController : Microcontroller
         var ddrByPort = new Dictionary<char, int>();
         var portByPort = new Dictionary<char, int>();
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>().ToList();
+        var write = "";
         if (configViewModel.GetPinConfigs().OfType<SpiConfig>().Any())
         {
             pins.Add(new DirectPinConfig(configViewModel, "mosi", SpiMosi, false, DevicePinMode.Output));
             pins.Add(new DirectPinConfig(configViewModel, "miso", SpiMiso, false, DevicePinMode.PullUp));
             pins.Add(new DirectPinConfig(configViewModel, "sck", SpiSck, false, DevicePinMode.Output));
             pins.Add(new DirectPinConfig(configViewModel, "ss", SpiCSn, false, DevicePinMode.Output));
+            write = GenerateDigitalWrite(SpiCSn, true, false);
         }
         foreach (var pin in pins)
         {
@@ -244,6 +250,7 @@ public abstract class AvrController : Microcontroller
         }
 
         return $"""
+               {write}
                uint8_t oldSREG = SREG;
                cli();
                {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}
