@@ -230,7 +230,6 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         {
             return;
         }
-
         var old = Selected;
         SelectedTool.Configurations.Move(from, from - 1);
         Selected = null;
