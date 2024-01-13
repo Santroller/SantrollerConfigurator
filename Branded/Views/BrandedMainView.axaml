@@ -108,6 +108,11 @@
                                 Margin="0 20 0 0" />
                     </StackPanel>
                 </StackPanel>
+                
+                <TextBlock IsVisible="{Binding BrandedMain.Windows}" Text="{x:Static netCore:Resources.NotShowing}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 20 0 0"  />
+                <Button IsVisible="{Binding BrandedMain.Windows}" Content="{x:Static netCore:Resources.RescanLabel}"
+                        Command="{Binding BrandedMain.RescanCommand}" HorizontalAlignment="Center"
+                        Margin="0 20 0 0" />
             </StackPanel>
         </DockPanel>
     </Panel>

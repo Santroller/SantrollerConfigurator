@@ -1,4 +1,8 @@
+using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.ReactiveUI;
+using GuitarConfigurator.NetCore.ViewModels;
+using GuitarConfigurator.NetCore.Views;
 using ReactiveUI;
 using SantrollerConfiguratorBranded.NetCore.ViewModels;
 
@@ -10,9 +14,22 @@ public partial class BrandedMainWindow : ReactiveWindow<BrandedMainWindowViewMod
     {
         this.WhenActivated(disposables =>
         {
+            disposables(ViewModel!.ShowInformationDialog.RegisterHandler(DoShowInformationDialogAsync));
             ViewModel!.Begin(false);
         });
         InitializeComponent();
+    }
+
+    private async Task DoShowInformationDialogAsync(
+        IInteractionContext<string, InformationWindowViewModel> interaction)
+    {
+        var model = new InformationWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input);
+        var dialog = new InformationWindow
+        {
+            DataContext = model
+        };
+        await dialog.ShowDialog<InformationWindowViewModel?>((Window) VisualRoot!);
+        interaction.SetOutput(model);
     }
 
 }
