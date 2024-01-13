@@ -1,7 +1,12 @@
 #if Windows
+
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using DynamicData;
 using GuitarConfigurator.NetCore.ViewModels;
 using LibUsbDotNet;
@@ -28,7 +33,7 @@ public class ConfigurableUsbDeviceManager
     {
         _deviceNotificationListener.DeviceArrived += DeviceArrived;
         _deviceNotificationListener.DeviceRemoved += DeviceRemoved;
-        var guids = new[] { DeviceInterfaceIds.UsbDevice, Ardwiino.DeviceGuid, Santroller.DeviceGuid };
+        var guids = new[] {DeviceInterfaceIds.UsbDevice, Ardwiino.DeviceGuid, Santroller.DeviceGuid};
         foreach (var guid in guids)
         {
             _deviceNotificationListener.StartListen(guid);
@@ -61,7 +66,7 @@ public class ConfigurableUsbDeviceManager
                 {
                     WinUsbDevice.Open(path, out var dev);
                     if (dev == null) return;
-                    var revision = (ushort)dev.Info.Descriptor.BcdDevice;
+                    var revision = (ushort) dev.Info.Descriptor.BcdDevice;
                     serial = dev.Info.SerialString;
                     // If a device gets disconnected just after connection (aka when swapping to xinput)
                     // Then we dont get a serial string.
@@ -69,13 +74,15 @@ public class ConfigurableUsbDeviceManager
                     {
                         return;
                     }
-                    _model.AddDevice(new Santroller(path, dev, serial, revision, dev.Info.ProductString, dev.Info.ManufacturerString));
+
+                    _model.AddDevice(new Santroller(path, dev, serial, revision, dev.Info.ProductString,
+                        dev.Info.ManufacturerString));
                 }
                 else if (guid == Ardwiino.DeviceGuid)
                 {
                     WinUsbDevice.Open(path, out var dev);
                     if (dev == null) return;
-                    var revision = (ushort)dev.Info.Descriptor.BcdDevice;
+                    var revision = (ushort) dev.Info.Descriptor.BcdDevice;
                     _model.AddDevice(new Ardwiino(path, dev, serial, revision));
                 }
             }
@@ -147,6 +154,39 @@ public class ConfigurableUsbDeviceManager
         _deviceNotificationListener.DeviceRemoved -= DeviceRemoved;
 
         _deviceNotificationListener.StopListen(DeviceInterfaceIds.UsbDevice);
+    }
+
+    public async Task RescanAsync()
+    {
+        var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.System);
+        // Can we get a list of all santrollers, regardless of GUID? i think we have that somewhere
+        var instance = 0;
+        while (Devcon.FindByInterfaceGuid(DeviceInterfaceIds.UsbDevice, out var path,
+                   out var instanceId, instance++))
+        {
+            var n = UsbSymbolicName.Parse(instanceId);
+            if (!Ardwiino.HardwareIds.Contains((n.Vid, n.Pid))) continue;
+            var info = new ProcessStartInfo(Path.Combine(windowsDir, "pnputil.exe"));
+            info.ArgumentList.AddRange(new[] {"/remove-device", instanceId});
+            info.UseShellExecute = true;
+            info.CreateNoWindow = true;
+            info.WindowStyle = ProcessWindowStyle.Hidden;
+            info.Verb = "runas";
+            var process = Process.Start(info);
+            if (process == null) return;
+            await process.WaitForExitAsync();
+        }
+
+        // And then rescan
+        var info2 = new ProcessStartInfo(Path.Combine(windowsDir, "pnputil.exe"));
+        info2.ArgumentList.AddRange(new[] {"/scan-devices"});
+        info2.UseShellExecute = true;
+        info2.CreateNoWindow = true;
+        info2.WindowStyle = ProcessWindowStyle.Hidden;
+        info2.Verb = "runas";
+        var process2 = Process.Start(info2);
+        if (process2 == null) return;
+        await process2.WaitForExitAsync();
     }
 }
 #endif

@@ -679,6 +679,14 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath);
     }
 
+    [RelayCommand]
+    private async Task RescanAsync()
+    {
+        #if Windows
+           await _manager.RescanAsync();
+        #endif
+    }
+
     private async Task InstallDependenciesAsync()
     {
         if (CheckDependencies()) return;
@@ -699,7 +707,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             info.CreateNoWindow = true;
             info.WindowStyle = ProcessWindowStyle.Hidden;
             info.Verb = "runas";
-            Process.Start(info);
+            var process = Process.Start(info);
+            if (process == null) return;
+            await process.WaitForExitAsync();
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
