@@ -683,7 +683,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private async Task RescanAsync()
     {
         #if Windows
-           await _manager.RescanAsync();
+           await _manager?.RescanAsync()!;
         #endif
     }
 

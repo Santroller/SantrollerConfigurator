@@ -158,28 +158,8 @@ public class ConfigurableUsbDeviceManager
 
     public async Task RescanAsync()
     {
-        var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.System);
-        // Can we get a list of all santrollers, regardless of GUID? i think we have that somewhere
-        var instance = 0;
-        while (Devcon.FindByInterfaceGuid(DeviceInterfaceIds.UsbDevice, out var path,
-                   out var instanceId, instance++))
-        {
-            var n = UsbSymbolicName.Parse(instanceId);
-            if (!Ardwiino.HardwareIds.Contains((n.Vid, n.Pid))) continue;
-            var info = new ProcessStartInfo(Path.Combine(windowsDir, "pnputil.exe"));
-            info.ArgumentList.AddRange(new[] {"/remove-device", instanceId});
-            info.UseShellExecute = true;
-            info.CreateNoWindow = true;
-            info.WindowStyle = ProcessWindowStyle.Hidden;
-            info.Verb = "runas";
-            var process = Process.Start(info);
-            if (process == null) return;
-            await process.WaitForExitAsync();
-        }
-
-        // And then rescan
-        var info2 = new ProcessStartInfo(Path.Combine(windowsDir, "pnputil.exe"));
-        info2.ArgumentList.AddRange(new[] {"/scan-devices"});
+        var info2 = new ProcessStartInfo("powershell.exe");
+        info2.ArgumentList.AddRange(new[] {"-Command", "pnputil /enum-devices /connected | findstr 1209 | ForEach-Object { pnputil /remove-device $_.Split(\":\")[1].Trim() }; pnputil /scan-devices /async"});
         info2.UseShellExecute = true;
         info2.CreateNoWindow = true;
         info2.WindowStyle = ProcessWindowStyle.Hidden;

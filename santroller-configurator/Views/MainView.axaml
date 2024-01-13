@@ -165,6 +165,9 @@
                             Command="{Binding Main.InitialConfigureCommand}"
                             IsEnabled="{Binding Main.ReadyToConfigure}" HorizontalAlignment="Center"
                             Margin="0 20 0 0" />
+                    <Button  Content="Refresh devices"
+                            Command="{Binding Main.RescanCommand}" HorizontalAlignment="Center"
+                            Margin="0 20 0 0" />
                 </StackPanel>
             </StackPanel>
         </DockPanel>
