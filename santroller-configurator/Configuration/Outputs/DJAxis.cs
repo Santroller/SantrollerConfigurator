@@ -161,38 +161,31 @@ public partial class DjAxis : OutputAxis
         // So convert to the right method for that console, and then shift for ps3
         var generated = $"({Input.Generate()})";
         var generatedPs3 = generated;
-        var i2CTurntable = Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity && Input is DjInput
-        {
-            Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
-        };
 
         var tableCommand = "handle_calibration_turntable_ps3";
         var tableCommand360 = "handle_calibration_turntable_360";
-        switch (i2CTurntable)
+
+        if (InputIsUint)
+        { 
+            // xinput needs int, uint -> int
+            generated = $"({generated} - INT16_MAX)";
+        }
+        else
         {
-            case true:
-                tableCommand = "handle_calibration_turntable_ps3_i2c";
-                tableCommand360 = "handle_calibration_turntable_360_i2c";
-                break;
-            case false when InputIsUint:
-                // 360 needs int, uint -> int
-                generated = $"({generated} - INT16_MAX)";
-                break;
-            case false:
-                // ps3 needs uint, int -> uint
-                generatedPs3 = $"({generated} + INT16_MAX)";
-                break;
+            // ps3 needs int, int -> uint
+            generatedPs3 = $"({generated} + INT16_MAX)";
         }
 
         // Table just applies a multiplier to the value
+        // This is the one instance where even PS3 uses int values, because it makes the math easier
         var generatedTable = $"{tableCommand360}({GenerateOutput(mode)},{generated}, {Multiplier})";
-        var generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generatedPs3}, {Multiplier})";
+        var generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generated}, {Multiplier})";
         
         if (writer != null && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
         {
             var multiplierBlob = ConfigViewModel.WriteBlob(writer, Multiplier);
             generatedTable = $"{tableCommand360}({GenerateOutput(mode)},{generated}, {multiplierBlob}";
-            generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generatedPs3}, {multiplierBlob})";
+            generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generated}, {multiplierBlob})";
         }
 
         var gen = Type switch
@@ -200,8 +193,6 @@ public partial class DjAxis : OutputAxis
             DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity when mode is ConfigField.Ps3
                     or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 => generatedTablePs3,
-            DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity when mode is ConfigField.Xbox360
-                => $"(-({generatedTable}))",
             DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
                 => generatedTable,
             DjAxisType.EffectsKnob when mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture

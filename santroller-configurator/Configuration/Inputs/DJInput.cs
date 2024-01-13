@@ -56,9 +56,9 @@ public partial class DjInput : TwiInput
         switch (Input)
         {
             case DjInputType.LeftTurntable:
-                return "(dj_turntable_left)";
+                return "(dj_turntable_left << 9)";
             case DjInputType.RightTurntable:
-                return "(dj_turntable_right)";
+                return "(dj_turntable_right << 9)";
             case DjInputType.LeftBlue:
             case DjInputType.LeftGreen:
             case DjInputType.LeftRed:
@@ -83,10 +83,10 @@ public partial class DjInput : TwiInput
         switch (Input)
         {
             case DjInputType.LeftTurntable when !djLeftRaw.IsEmpty:
-                RawValue = (sbyte) djLeftRaw[2];
+                RawValue = (sbyte) djLeftRaw[2] << 9;
                 break;
             case DjInputType.RightTurntable when !djRightRaw.IsEmpty:
-                RawValue = (sbyte) djRightRaw[2];
+                RawValue = (sbyte) djRightRaw[2] << 9;
                 break;
             case DjInputType.LeftBlue when !djLeftRaw.IsEmpty:
             case DjInputType.LeftGreen when !djLeftRaw.IsEmpty:

@@ -127,10 +127,10 @@ public class WiiInput : TwiInput
         {WiiInputType.DjEffectDial, "((wiiData[3] & 0xE0) >> 5 | (wiiData[2] & 0x60) >> 2) << 11"},
         {WiiInputType.DjStickX, "((wiiData[0] & 0x3F) - 0x20) << 10"},
         {WiiInputType.DjStickY, "((wiiData[1] & 0x3F) - 0x20) << 10"},
-        {WiiInputType.DjTurntableLeft, "((((wiiData[4] & 1) ? 32 : 1) + (0x1F - (wiiData[3] & 0x1F))) - 32) << 10"},
+        {WiiInputType.DjTurntableLeft, "(ltt_t.ltt << 10)"},
         {
             WiiInputType.DjTurntableRight,
-            "((((wiiData[2] & 1) ? 32 : 1) + (0x1F - ((wiiData[2] & 0x80) >> 7 | (wiiData[1] & 0xC0) >> 5 | (wiiData[0] & 0xC0) >> 3))) - 32) << 10"
+            "(rtt_t.rtt << 10)"
         },
         {WiiInputType.DrawsomePenPressure, "(wiiButtonsLow | (wiiButtonsHigh & 0x0f) << 8)"},
         {WiiInputType.DrawsomePenX, "wiiData[0] | wiiData[1] << 8"},
