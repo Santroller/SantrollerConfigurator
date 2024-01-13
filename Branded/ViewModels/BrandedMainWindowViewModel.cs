@@ -24,7 +24,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     public BrandedConfiguration SelectedConfig { get; set; }
 
     private TaskCompletionSource<string>? _bootloaderPath;
-    
+
     [ObservableAsProperty] public bool ReadyToConfigureBranded { get; }
 
     private bool _writing;
@@ -42,6 +42,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     {
         return ColorTranslator.ToHtml(Color.FromArgb(color.A, color.R, color.G, color.B));
     }
+
     public BrandedMainWindowViewModel() : base(true)
     {
         Config = BrandedConfigurationStore.LoadBranding(this);
@@ -67,7 +68,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
         });
         this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
             .Select(s =>
-                s is {Item1: not null , Item2: true} &&
+                s is {Item1: not null, Item2: true} &&
                 (!s.Item3 || s.Item4 == null))
             .ToPropertyEx(this, s => s.ReadyToConfigureBranded);
     }
@@ -118,7 +119,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
         Model = null;
         return await Overwrite();
     }
-    
+
     [RelayCommand]
     public async Task<PlatformIo.PlatformIoState> Overwrite()
     {
@@ -148,8 +149,9 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
 
         Progress = 50;
         Message = "Writing";
-        await SelectedConfig.BuildUf2(Model, Path.Combine(path!, "firmware.uf2"));
-        return new PlatformIo.PlatformIoState(90, "Waiting for device", null);
+        await SelectedConfig.BuildUf2(Model, Path.Combine(path, "firmware.uf2"));
+        return new PlatformIo.PlatformIoState(90,
+            Windows ? "Waiting for device (Stuck here? Try clicking refresh devices)" : "Waiting for device", null);
     }
 
     [RelayCommand]

@@ -53,6 +53,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private readonly bool _picoOnly;
     public bool LibUsbMissing = false;
     public virtual bool Builder => false;
+    public bool Windows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
     public MainWindowViewModel(bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
         string error = "red")
@@ -188,6 +189,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     public Interaction<(string yesText, string noText, string text), AreYouSureWindowViewModel>
         ShowYesNoDialog { get; } = new();
+    
+    public Interaction<string, InformationWindowViewModel>
+        ShowInformationDialog { get; } = new();
 
     public Interaction<(string _platformIOText, ConfigViewModel), RaiseIssueWindowViewModel?>
         ShowIssueDialog { get; } =
@@ -685,6 +689,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         #if Windows
            await _manager?.RescanAsync()!;
         #endif
+
+        await ShowInformationDialog.Handle("Please unplug and replug your controller");
+
     }
 
     private async Task InstallDependenciesAsync()

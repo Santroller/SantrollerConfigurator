@@ -366,6 +366,7 @@ public class PlatformIo
                         {
                             device?.Bootloader();
                         }
+
                         if (line.StartsWith("PORT: "))
                         {
                             _lastBootloaderPort = line.Replace("PORT: ", "");
@@ -528,13 +529,23 @@ public class PlatformIo
                     currentProgress = progressEndingPercentage;
                     if (sections == 11 && !hasDfuArdwiino || sections == 17)
                     {
+#if Windows
+                        platformIoOutput.OnNext(new PlatformIoState(currentProgress,
+                            string.Format(Resources.WaitingMessageReplugWindows, progressMessage), null));
+#else
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                             string.Format(Resources.WaitingMessageReplug, progressMessage), null));
+#endif
                     }
                     else
                     {
+#if Windows
+                            platformIoOutput.OnNext(new PlatformIoState(currentProgress,
+                                string.Format(Resources.WaitingMessageWindows, progressMessage), null));
+#else
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                             string.Format(Resources.WaitingMessage, progressMessage), null));
+#endif
                     }
                 }
 

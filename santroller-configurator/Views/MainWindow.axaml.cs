@@ -14,6 +14,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         {
             disposables(ViewModel!.ShowYesNoDialog.RegisterHandler(DoShowYesNoDialogAsync));
             disposables(ViewModel!.ShowIssueDialog.RegisterHandler(DoShowIssueDialogAsync));
+            disposables(ViewModel!.ShowInformationDialog.RegisterHandler(DoShowInformationDialogAsync));
             ViewModel!.Begin(true);
         });
         InitializeComponent();
@@ -41,6 +42,17 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
             DataContext = model
         };
         await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window) VisualRoot!);
+        interaction.SetOutput(model);
+    }
+    private async Task DoShowInformationDialogAsync(
+        IInteractionContext<string, InformationWindowViewModel> interaction)
+    {
+        var model = new InformationWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input);
+        var dialog = new InformationWindow
+        {
+            DataContext = model
+        };
+        await dialog.ShowDialog<InformationWindowViewModel?>((Window) VisualRoot!);
         interaction.SetOutput(model);
     }
 }

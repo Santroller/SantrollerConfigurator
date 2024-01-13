@@ -5961,6 +5961,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string NotShowing {
+            get {
+                return ResourceManager.GetString("NotShowing", resourceCulture);
+            }
+        }
+        
         public static string IncorrectTool {
             get {
                 return ResourceManager.GetString("IncorrectTool", resourceCulture);
@@ -6030,6 +6036,18 @@ namespace GuitarConfigurator.NetCore {
         public static string WaitingMessage {
             get {
                 return ResourceManager.GetString("WaitingMessage", resourceCulture);
+            }
+        }
+        
+        public static string WaitingMessageWindows {
+            get {
+                return ResourceManager.GetString("WaitingMessageWindows", resourceCulture);
+            }
+        }
+        
+        public static string WaitingMessageReplugWindows {
+            get {
+                return ResourceManager.GetString("WaitingMessageReplugWindows", resourceCulture);
             }
         }
         
@@ -6162,6 +6180,12 @@ namespace GuitarConfigurator.NetCore {
         public static string BrightnessNote3 {
             get {
                 return ResourceManager.GetString("BrightnessNote3", resourceCulture);
+            }
+        }
+        
+        public static string RescanLabel {
+            get {
+                return ResourceManager.GetString("RescanLabel", resourceCulture);
             }
         }
     }

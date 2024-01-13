@@ -165,7 +165,9 @@
                             Command="{Binding Main.InitialConfigureCommand}"
                             IsEnabled="{Binding Main.ReadyToConfigure}" HorizontalAlignment="Center"
                             Margin="0 20 0 0" />
-                    <Button  Content="Refresh devices"
+                    
+                    <TextBlock IsVisible="{Binding Main.Windows}" Text="{x:Static netCore:Resources.NotShowing}"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 20 0 0"  />
+                    <Button IsVisible="{Binding Main.Windows}" Content="{x:Static netCore:Resources.RescanLabel}"
                             Command="{Binding Main.RescanCommand}" HorizontalAlignment="Center"
                             Margin="0 20 0 0" />
                 </StackPanel>

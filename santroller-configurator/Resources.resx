@@ -3104,6 +3104,9 @@
     <data name="DiscordButton" xml:space="preserve">
         <value>Click here to join the Discord</value>
     </data>
+    <data name="NotShowing" xml:space="preserve">
+        <value>Controller not showing up? Try clicking the below button, it may fix the problem.</value>
+    </data>
     <data name="IncorrectTool" xml:space="preserve">
         <value>The device you have selected is not designed to be programed with this tool.</value>
     </data>
@@ -3139,6 +3142,12 @@
     </data>
     <data name="WaitingMessage" xml:space="preserve">
         <value>{0} - Waiting for Device</value>
+    </data>
+    <data name="WaitingMessageWindows" xml:space="preserve">
+        <value>{0} - Waiting for device (Stuck here? Try clicking refresh devices)</value>
+    </data>
+    <data name="WaitingMessageReplugWindows" xml:space="preserve">
+        <value>{0} - Waiting for device - Please Unplug and Replug Your Device (Stuck here? Try clicking refresh devices)</value>
     </data>
     <data name="WaitingMessageReplug" xml:space="preserve">
         <value>{0} - Waiting for Device - Please Unplug and Replug Your Device</value>
@@ -3205,5 +3214,8 @@
     </data>
     <data name="BrightnessNote3" xml:space="preserve">
         <value>Especially if you are using LEDs that are always on</value>
+    </data>
+    <data name="RescanLabel" xml:space="preserve">
+        <value>Refresh devices</value>
     </data>
 </root>

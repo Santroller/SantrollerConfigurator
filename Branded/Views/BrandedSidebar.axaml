@@ -78,7 +78,9 @@
                         Command="{Binding WriteConfigCommand}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
                         IsVisible="{Binding !Main.HasChanges}" />
-
+                <Button IsVisible="{Binding Main.Windows}" Content="{x:Static netCore:Resources.RescanLabel}"
+                        Command="{Binding Main.RescanCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0" />
                 <Button Content="{x:Static netCore:Resources.GoBackLabel}" Command="{Binding GoBackCommand}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0" />
             </StackPanel>
