@@ -301,25 +301,37 @@ public class Ps2Input : SpiInput
         var guncon = realType is Ps2ControllerType.GunCon;
         var ds2 = realType is Ps2ControllerType.Dualshock2;
         BarButton lastTapPs2 = 0;
-        if (ps2Data[7] is > 0x10 and < 0x3F)
+        switch (ps2Data[7])
         {
-            lastTapPs2 |= BarButton.Green;
-        }
-        if (ps2Data[7] is > 0x30 and < 0x6F)
-        {
-            lastTapPs2 |= BarButton.Red;
-        }
-        if (ps2Data[7] is > 0x60 and < 0xAF and not 0x80)
-        {
-            lastTapPs2 |= BarButton.Yellow;
-        }
-        if (ps2Data[7] is > 0xA0 and < 0xDF)
-        {
-            lastTapPs2 |= BarButton.Blue;
-        }
-        if (ps2Data[7] > 0xD0)
-        {
-            lastTapPs2 |= BarButton.Orange;
+            case > 0x75 and < 0x85:
+                break;
+            case < 0x1F:
+                lastTapPs2 = BarButton.Green;
+                break;
+            case < 0x3F:
+                lastTapPs2 = BarButton.Green | BarButton.Red;
+                break;
+            case < 0x5F:
+                lastTapPs2 = BarButton.Red;
+                break;
+            case < 0x6F:
+                lastTapPs2 = BarButton.Red | BarButton.Yellow;
+                break;
+            case < 0x9F:
+                lastTapPs2 = BarButton.Yellow;
+                break;
+            case < 0xAF:
+                lastTapPs2 = BarButton.Yellow | BarButton.Blue;
+                break;
+            case < 0xCF:
+                lastTapPs2 = BarButton.Blue;
+                break;
+            case < 0xEF:
+                lastTapPs2 = BarButton.Blue | BarButton.Orange;
+                break;
+            default:
+                lastTapPs2 = BarButton.Orange;
+                break;
         }
 
         RawValue = Input switch
