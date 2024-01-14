@@ -364,6 +364,7 @@ public class Ps2Input : SpiInput
             Ps2InputType.GuitarStrumUp when guitar => ~ps2Data[3] & (1 << 4),
             Ps2InputType.GuitarStrumDown when guitar => ~ps2Data[3] & (1 << 6),
             Ps2InputType.GuitarTapBar => Gh5NeckInput.Gh5MappingsReversed[lastTapPs2],
+            Ps2InputType.GuitarTapAll => Gh5NeckInput.Gh5MappingsReversed[lastTapPs2],
             Ps2InputType.GuitarTapGreen => lastTapPs2.HasFlag(BarButton.Green) ? 1 : 0,
             Ps2InputType.GuitarTapRed => lastTapPs2.HasFlag(BarButton.Red) ? 1 : 0,
             Ps2InputType.GuitarTapYellow => lastTapPs2.HasFlag(BarButton.Yellow) ? 1 : 0,

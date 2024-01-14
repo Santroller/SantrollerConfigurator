@@ -443,6 +443,7 @@ public class WiiInput : TwiInput
                     WiiInputType.GuitarJoystickX => ((wiiData[0] & 0x3f) - 32) << 10,
                     WiiInputType.GuitarJoystickY => ((wiiData[1] & 0x3f) - 32) << 10,
                     WiiInputType.GuitarTapBar => Gh5NeckInput.Gh5MappingsReversed[lastTapWii],
+                    WiiInputType.GuitarTapAll => Gh5NeckInput.Gh5MappingsReversed[lastTapWii],
                     WiiInputType.GuitarWhammy => (wiiData[3] & 0x1f) << 11,
                     WiiInputType.GuitarTapGreen => lastTapWii.HasFlag(BarButton.Green) ? 1 : 0,
                     WiiInputType.GuitarTapRed => lastTapWii.HasFlag(BarButton.Red) ? 1 : 0,
