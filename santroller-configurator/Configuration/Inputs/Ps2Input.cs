@@ -298,7 +298,7 @@ public class Ps2Input : SpiInput
         var jogcon = realType is Ps2ControllerType.JogCon;
         var guncon = realType is Ps2ControllerType.GunCon;
         var ds2 = realType is Ps2ControllerType.Dualshock2;
-        var lastTapPs2 = (ps2Data[7] - 128) << 8;
+        var lastTapPs2 = ps2Data[7];
 
         RawValue = Input switch
         {
