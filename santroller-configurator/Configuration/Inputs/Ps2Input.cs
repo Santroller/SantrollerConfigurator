@@ -298,7 +298,27 @@ public class Ps2Input : SpiInput
         var jogcon = realType is Ps2ControllerType.JogCon;
         var guncon = realType is Ps2ControllerType.GunCon;
         var ds2 = realType is Ps2ControllerType.Dualshock2;
-        var lastTapPs2 = ps2Data[7];
+        BarButton lastTapPs2 = 0;
+        if (ps2Data[7] is > 0x10 and < 0x3F)
+        {
+            lastTapPs2 |= BarButton.Green;
+        }
+        if (ps2Data[7] is > 0x30 and < 0x6F)
+        {
+            lastTapPs2 |= BarButton.Red;
+        }
+        if (ps2Data[7] is > 0x60 and < 0xAF and not 0x80)
+        {
+            lastTapPs2 |= BarButton.Yellow;
+        }
+        if (ps2Data[7] is > 0xA0 and < 0xDF)
+        {
+            lastTapPs2 |= BarButton.Blue;
+        }
+        if (ps2Data[7] is > 0xD0)
+        {
+            lastTapPs2 |= BarButton.Orange;
+        }
 
         RawValue = Input switch
         {
@@ -343,12 +363,12 @@ public class Ps2Input : SpiInput
             Ps2InputType.GuitarStart when guitar => ~ps2Data[3] & (1 << 3),
             Ps2InputType.GuitarStrumUp when guitar => ~ps2Data[3] & (1 << 4),
             Ps2InputType.GuitarStrumDown when guitar => ~ps2Data[3] & (1 << 6),
-            Ps2InputType.GuitarTapBar => lastTapPs2 << 8,
-            Ps2InputType.GuitarTapGreen => lastTapPs2 is > 0x10 and < 0x3F ? 1 : 0,
-            Ps2InputType.GuitarTapRed => lastTapPs2 is > 0x30 and < 0x6F ? 1 : 0,
-            Ps2InputType.GuitarTapYellow => lastTapPs2 is > 0x60 and < 0xAF and not 0x80 ? 1 : 0,
-            Ps2InputType.GuitarTapBlue => lastTapPs2 is > 0xA0 and < 0xDF ? 1 : 0,
-            Ps2InputType.GuitarTapOrange => lastTapPs2 > 0xD0 ? 1 : 0,
+            Ps2InputType.GuitarTapBar => Gh5NeckInput.Gh5MappingsReversed[lastTapPs2],
+            Ps2InputType.GuitarTapGreen => lastTapPs2.HasFlag(BarButton.Green) ? 1 : 0,
+            Ps2InputType.GuitarTapRed => lastTapPs2.HasFlag(BarButton.Red) ? 1 : 0,
+            Ps2InputType.GuitarTapYellow => lastTapPs2.HasFlag(BarButton.Yellow) ? 1 : 0,
+            Ps2InputType.GuitarTapBlue => lastTapPs2.HasFlag(BarButton.Blue) ? 1 : 0,
+            Ps2InputType.GuitarTapOrange => lastTapPs2.HasFlag(BarButton.Orange) ? 1 : 0,
             Ps2InputType.NegConStart => ~ps2Data[3] & (1 << 3),
             Ps2InputType.L3 when digital => ~ps2Data[3] & (1 << 1),
             Ps2InputType.R3 when digital => ~ps2Data[3] & (1 << 2),

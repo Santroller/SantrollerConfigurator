@@ -201,12 +201,12 @@ public class GhWtTapInput : Input
                 break;
             case GhWtInputType.TapBar:
             case GhWtInputType.TapAll:
-                BarButton b =
+                var b =
                     _channels
                         .Where(s => inputs[s.Value] > _maximums[s.Value] + Sensitivity)
                         .Select(s => s.Key)
                         .Aggregate<BarButton, BarButton>(0, (current, barButton) => current | barButton);
-                RawValue = Gh5NeckInput.Gh5MappingsReversed.TryGetValue(b, out var value) ? value : 0;
+                RawValue = Gh5NeckInput.Gh5MappingsReversed.GetValueOrDefault(b, 0);
                 break;
         }
     }

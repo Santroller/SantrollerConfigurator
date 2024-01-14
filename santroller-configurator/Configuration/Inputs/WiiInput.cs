@@ -407,7 +407,28 @@ public class WiiInput : TwiInput
                 };
                 break;
             case WiiControllerType.Guitar:
-                var lastTapWii = wiiData[2] & 0x1f;
+                var lastTapVal = wiiData[2] & 0x1f;
+                BarButton lastTapWii = 0;
+                if (lastTapVal is 0x04 or 0x07)
+                {
+                    lastTapWii |= BarButton.Green;
+                }
+                if (lastTapVal is 0x07 or 0x0A or 0x0c or 0x0d)
+                {
+                    lastTapWii |= BarButton.Red;
+                }
+                if (lastTapVal is 0x0c or 0x0d or 0x12 or 0x13 or 0x14 or 0x15)
+                {
+                    lastTapWii |= BarButton.Yellow;
+                }
+                if (lastTapVal is 0x14 or 0x15 or 0x17 or 0x18 or 0x1A)
+                {
+                    lastTapWii |= BarButton.Blue;
+                }
+                if (lastTapVal is 0x1A or 0x1F)
+                {
+                    lastTapWii |= BarButton.Orange;
+                }
                 RawValue = Input switch
                 {
                     WiiInputType.GuitarPlus => wiiButtonsLow & (1 << 2),
@@ -421,13 +442,13 @@ public class WiiInput : TwiInput
                     WiiInputType.GuitarOrange => wiiButtonsHigh & (1 << 7),
                     WiiInputType.GuitarJoystickX => ((wiiData[0] & 0x3f) - 32) << 10,
                     WiiInputType.GuitarJoystickY => ((wiiData[1] & 0x3f) - 32) << 10,
-                    WiiInputType.GuitarTapBar => (wiiData[2] & 0x1f) << 11,
+                    WiiInputType.GuitarTapBar => Gh5NeckInput.Gh5MappingsReversed[lastTapWii],
                     WiiInputType.GuitarWhammy => (wiiData[3] & 0x1f) << 11,
-                    WiiInputType.GuitarTapGreen => lastTapWii is 0x04 or 0x07 ? 1 : 0,
-                    WiiInputType.GuitarTapRed => lastTapWii is 0x07 or 0x0A or 0x0c or 0x0d ? 1 : 0,
-                    WiiInputType.GuitarTapYellow => lastTapWii is 0x0c or 0x0d or 0x12 or 0x13 or 0x14 or 0x15 ? 1 : 0,
-                    WiiInputType.GuitarTapBlue => lastTapWii is 0x14 or 0x15 or 0x17 or 0x18 or 0x1A ? 1 : 0,
-                    WiiInputType.GuitarTapOrange => lastTapWii is 0x1A or 0x1F ? 1 : 0,
+                    WiiInputType.GuitarTapGreen => lastTapWii.HasFlag(BarButton.Green) ? 1 : 0,
+                    WiiInputType.GuitarTapRed => lastTapWii.HasFlag(BarButton.Red) ? 1 : 0,
+                    WiiInputType.GuitarTapYellow => lastTapWii.HasFlag(BarButton.Yellow) ? 1 : 0,
+                    WiiInputType.GuitarTapBlue => lastTapWii.HasFlag(BarButton.Blue) ? 1 : 0,
+                    WiiInputType.GuitarTapOrange => lastTapWii.HasFlag(BarButton.Orange) ? 1 : 0,
                     _ => RawValue
                 };
                 break;
