@@ -1351,6 +1351,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
                        #define LED_BRIGHTNESS {WriteBlob(writer, LedBrightness)}
                        """;
+
             if (IsBluetoothRx)
             {
                 var addr = new byte[Santroller.BtAddressLength];
