@@ -128,11 +128,11 @@ public class MultiplexerInput : DirectInput
         {
             if (IsSixteenChannel)
             {
-                return $"slaveReadMultiplexer({Model.Microcontroller.GetChannel(Pin, false)}, {Channel}, {PinS0}, {PinS1}, {PinS2}, {PinS3});";
+                return $"slaveReadMultiplexer({Model.Microcontroller.GetChannel(Pin, false)}, {Channel}, {PinS0}, {PinS1}, {PinS2}, {PinS3})";
             }
-            return $"slaveReadMultiplexer({Model.Microcontroller.GetChannel(Pin, false)}, {Channel}, {PinS0}, {PinS1}, {PinS2});";
+            return $"slaveReadMultiplexer({Model.Microcontroller.GetChannel(Pin, false)}, {Channel}, {PinS0}, {PinS1}, {PinS2})";
         }
-        return $"multiplexer_read({Model.Microcontroller.GetChannel(Pin, false)}, {mask}, {bits});";
+        return $"multiplexer_read({Model.Microcontroller.GetChannel(Pin, false)}, {mask}, {bits})";
     }
 
     public override SerializedInput Serialise()
