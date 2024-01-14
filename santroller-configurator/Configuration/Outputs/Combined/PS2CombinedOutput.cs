@@ -500,6 +500,36 @@ public class Ps2CombinedOutput : CombinedSpiOutput
 
         if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
         {
+            if (!Outputs.Items.Any(
+                    s => s is ControllerAxis {Type: StandardAxisType.LeftTrigger, Input: DigitalToAnalog}))
+            {
+                Outputs.Add(new ControllerAxis(Model,
+                    new DigitalToAnalog(
+                        new Ps2Input(Ps2InputType.L2, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
+                        ushort.MaxValue,
+                        Model, DigitalToAnalogType.Trigger),
+                    Colors.Black,
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0,
+                    ushort.MaxValue,
+                    StandardAxisType.LeftTrigger,
+                    true));
+            }
+
+            if (!Outputs.Items.Any(
+                    s => s is ControllerAxis {Type: StandardAxisType.RightTrigger, Input: DigitalToAnalog}))
+            {
+                Outputs.Add(new ControllerAxis(Model,
+                    new DigitalToAnalog(
+                        new Ps2Input(Ps2InputType.R2, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
+                        ushort.MaxValue,
+                        Model, DigitalToAnalogType.Trigger),
+                    Colors.Black,
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0,
+                    ushort.MaxValue,
+                    StandardAxisType.RightTrigger,
+                    true));
+            }
+
             if (Outputs.Items.Any(s => s is Ps3Axis)) return;
             foreach (var pair in Ps3Axis)
                 Outputs.Add(new Ps3Axis(Model,

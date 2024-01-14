@@ -119,8 +119,8 @@ public class Ps2Input : SpiInput
         {Ps2InputType.Dualshock2Square, "ps2Data[16]"},
         {Ps2InputType.Dualshock2L1, "ps2Data[17]"},
         {Ps2InputType.Dualshock2R1, "ps2Data[18]"},
-        {Ps2InputType.Dualshock2L2, "ps2Data[19]"},
-        {Ps2InputType.Dualshock2R2, "ps2Data[20]"},
+        {Ps2InputType.Dualshock2L2, "ps2Data[19] << 8"},
+        {Ps2InputType.Dualshock2R2, "ps2Data[20] << 8"},
         {Ps2InputType.GuitarGreen, "(~ps2Data[4]) & (1 << 1)"},
         {Ps2InputType.GuitarRed, "(~ps2Data[4]) & (1 << 5)"},
         {Ps2InputType.GuitarYellow, "(~ps2Data[4]) & (1 << 4)"},
@@ -216,7 +216,7 @@ public class Ps2Input : SpiInput
         this.WhenAnyValue(x => x._attConfig.Pin).Subscribe(_ => this.RaisePropertyChanged(nameof(Att)));
         this.WhenAnyValue(x => x._ackConfig.Pin).Subscribe(_ => this.RaisePropertyChanged(nameof(Ack)));
         IsAnalog = Input <= Ps2InputType.Dualshock2R2;
-        if (!BindableAtt)
+        if (Model.Microcontroller is (Uno or Mega))
         {
             Att = 10;
         }
@@ -405,7 +405,7 @@ public class Ps2Input : SpiInput
     public override string GenerateAll(List<Tuple<Input, string>> bindings,
         ConfigField mode)
     {
-        Dictionary<Ps2InputType, string> ds2Axis = new();
+        Dictionary<Ps2InputType, List<string>> ds2Axis = new();
         Dictionary<Ps2ControllerType, List<string>> mappedBindings = new();
         foreach (var binding in bindings)
             if (binding.Item1.InnermostInputs().First() is Ps2Input input)
@@ -417,7 +417,8 @@ public class Ps2Input : SpiInput
                 }
                 else if (Dualshock2Order.Contains(input.Input))
                 {
-                    ds2Axis[input.Input] = binding.Item2;
+                    if (!ds2Axis.ContainsKey(input.Input)) ds2Axis.Add(input.Input, new List<string>());
+                    ds2Axis[input.Input].Add(binding.Item2);
                 }
                 else if (DigitalButtons.Contains(input.Input))
                 {
@@ -451,10 +452,12 @@ public class Ps2Input : SpiInput
 
         var retDs2 = "";
         foreach (var binding in Dualshock2Order)
+        {
             if (ds2Axis.TryGetValue(binding, out var axi))
             {
-                retDs2 += axi + "\n";
+                retDs2 += string.Join("\n", axi) + "\n";
             }
+        }
 
         if (!string.IsNullOrEmpty(retDs2))
         {

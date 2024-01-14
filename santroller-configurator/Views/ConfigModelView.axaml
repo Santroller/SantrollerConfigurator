@@ -277,7 +277,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding ControllerFound}">
                         <Label VerticalAlignment="Center" VerticalContentAlignment="Center"
                                Content="{x:Static netCore:Resources.CurrentExtensionLabel}" />
-                        <TextBlock IsVisible="{Binding !IsGuitar}" VerticalAlignment="Center"
+                        <TextBlock VerticalAlignment="Center"
                                    HorizontalAlignment="Center"
                                    Text="{Binding DetectedType, Converter={StaticResource EnumToStringConverter}}" />
                     </StackPanel>
