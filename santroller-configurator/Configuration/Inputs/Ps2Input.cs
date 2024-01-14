@@ -167,7 +167,9 @@ public class Ps2Input : SpiInput
             {Ps2InputType.NegConIi, Ps2ControllerType.NegCon},
             {Ps2InputType.NegConL, Ps2ControllerType.NegCon},
             {Ps2InputType.JogConWheel, Ps2ControllerType.JogCon},
-            {Ps2InputType.GuitarWhammy, Ps2ControllerType.Guitar}
+            {Ps2InputType.GuitarWhammy, Ps2ControllerType.Guitar},
+            {Ps2InputType.GuitarTapAll, Ps2ControllerType.Guitar},
+            {Ps2InputType.GuitarTapBar, Ps2ControllerType.Guitar}
         };
 
     private static readonly IReadOnlyList<Ps2InputType> Dualshock = new[]
