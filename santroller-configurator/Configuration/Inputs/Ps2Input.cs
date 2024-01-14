@@ -343,7 +343,7 @@ public class Ps2Input : SpiInput
             Ps2InputType.GuitarStart when guitar => ~ps2Data[3] & (1 << 3),
             Ps2InputType.GuitarStrumUp when guitar => ~ps2Data[3] & (1 << 4),
             Ps2InputType.GuitarStrumDown when guitar => ~ps2Data[3] & (1 << 6),
-            Ps2InputType.GuitarTapBar => lastTapPs2,
+            Ps2InputType.GuitarTapBar => lastTapPs2 << 8,
             Ps2InputType.GuitarTapGreen => lastTapPs2 is > 0x10 and < 0x3F ? 1 : 0,
             Ps2InputType.GuitarTapRed => lastTapPs2 is > 0x30 and < 0x6F ? 1 : 0,
             Ps2InputType.GuitarTapYellow => lastTapPs2 is > 0x60 and < 0xAF and not 0x80 ? 1 : 0,
