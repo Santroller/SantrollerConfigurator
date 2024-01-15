@@ -132,6 +132,7 @@ public class MultiplexerInput : DirectInput
             }
             return $"slaveReadMultiplexer({Model.Microcontroller.GetChannel(Pin, false)}, {Channel}, {PinS0}, {PinS1}, {PinS2})";
         }
+        
         return $"multiplexer_read({Model.Microcontroller.GetChannel(Pin, false)}, {mask}, {bits})";
     }
 
