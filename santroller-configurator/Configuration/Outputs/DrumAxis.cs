@@ -149,9 +149,9 @@ public partial class DrumAxis : OutputAxis
     {
         return mode switch
         {
-            ConfigField.Universal => UniversalAxisMappings.TryGetValue(Type, out var value) ? value : "",
-            ConfigField.XboxOne => AxisMappingsXb1.TryGetValue(Type, out var value) ? value : "",
-            _ => AxisMappings.TryGetValue(Type, out var mapping) ? mapping : ""
+            ConfigField.Universal => UniversalAxisMappings.GetValueOrDefault(Type, ""),
+            ConfigField.XboxOne => AxisMappingsXb1.GetValueOrDefault(Type, ""),
+            _ => AxisMappings.GetValueOrDefault(Type, "")
         };
     }
 
