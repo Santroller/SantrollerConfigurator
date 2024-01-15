@@ -63,8 +63,8 @@ public class StartSelectHome : Output
         else
         {
             _outputs.Add(new ControllerButton(Model,
-                new MacroInput(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral),
-                    new Ps2Input(Ps2InputType.LeftStickX, model, peripheral), Model), Colors.Black, Colors.Black,
+                new MacroInput(new Ps2Input(Ps2InputType.Start, model, peripheral),
+                    new Ps2Input(Ps2InputType.Select, model, peripheral), Model), Colors.Black, Colors.Black,
                 Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, true));
         }
 
