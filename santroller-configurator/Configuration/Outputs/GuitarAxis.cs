@@ -342,6 +342,10 @@ public class GuitarAxis : OutputAxis
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
+        if (deviceControllerType is DeviceControllerType.RockBandGuitar && Type is GuitarAxisType.Slider)
+        {
+            return "Solo Frets";
+        }
         return EnumToStringConverter.Convert(Type);
     }
 

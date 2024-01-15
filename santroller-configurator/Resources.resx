@@ -1133,6 +1133,9 @@
     <data name="WiiInputTypeGuitarWhammy" xml:space="preserve">
         <value>Guitar - Whammy</value>
     </data>
+    <data name="WiiInputTypeGuitarTapBar" xml:space="preserve">
+        <value>Guitar - Slider Axis</value>
+    </data>
 
     <data name="Ps2InputTypeGuitarTapBar" xml:space="preserve">
         <value>Guitar - Slider Axis</value>

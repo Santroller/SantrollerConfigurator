@@ -2217,6 +2217,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string WiiInputTypeGuitarTapBar {
+            get {
+                return ResourceManager.GetString("WiiInputTypeGuitarTapBar", resourceCulture);
+            }
+        }
+        
         public static string Ps2InputTypeGuitarTapBar {
             get {
                 return ResourceManager.GetString("Ps2InputTypeGuitarTapBar", resourceCulture);
