@@ -80,13 +80,14 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         {
             _manager = new ConfigurableUsbDeviceManager(this);
         }
-        catch (DllNotFoundException)
+        catch (DllNotFoundException e)
         {
             Message =
                 "You are missing libusb-1.0.so. On ubuntu or other debian based distributions, you will need to install 'libusb-1.0-0-dev'";
             ProgressbarColor = ProgressBarError;
             Progress = 100;
             hasLibUsb = false;
+            Console.WriteLine(e);
         }
 
         ConfigureCommand = ReactiveCommand.CreateFromObservable(
