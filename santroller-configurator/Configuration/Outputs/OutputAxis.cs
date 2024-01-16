@@ -347,6 +347,11 @@ public abstract partial class OutputAxis : Output
                 function = "handle_calibration_xbox_one_trigger";
                 if (ShouldFlip(mode)) function = "UINT16_MAX -" + function;
                 break;
+            case ConfigField.XboxOne when forceAccel:
+                singleByte = true;
+                function = "handle_calibration_ps3_360_trigger";
+                if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
+                break;
             case ConfigField.XboxOne:
                 intBased = true;
                 function = "handle_calibration_xbox";
@@ -462,12 +467,24 @@ public abstract partial class OutputAxis : Output
         }
 
         var generated = "(" + Input.Generate();
-        generated += intBased switch
+        if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && mode is ConfigField.XboxOne)
         {
-            false when !InputIsUint => ") + INT16_MAX",
-            true when InputIsUint => ") - INT16_MAX",
-            _ => ")"
-        };
+            // XB1 tilt is special. it centers at 0 but is a uint, so we need to strip away negative values
+            generated += ")";
+            if (!InputIsUint)
+            {
+                generated = $"abs({generated}) << 1";
+            }
+        }
+        else
+        {
+            generated += intBased switch
+            {
+                false when !InputIsUint => ") + INT16_MAX",
+                true when InputIsUint => ") - INT16_MAX",
+                _ => ")"
+            };
+        }
 
         if (Input is FixedInput)
         {

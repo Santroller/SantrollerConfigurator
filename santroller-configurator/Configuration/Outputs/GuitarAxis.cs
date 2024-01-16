@@ -183,7 +183,7 @@ public class GuitarAxis : OutputAxis
                          """;
             case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt :
                 // XB1 tilt is similar enough to ps3 that we can just use it
-                return $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), ConfigField.Ps3, false, true, false, false, writer)};";
+                return $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};";
             case ConfigField.Xbox360 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 if (analogOn > 0x80)
