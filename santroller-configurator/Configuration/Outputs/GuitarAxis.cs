@@ -21,7 +21,7 @@ public class GuitarAxis : OutputAxis
         {1, 0x50},
         {2, 0x70},
         {3, 0xA0},
-        {4, 0xD0},
+        {4, 0xC0},
         {5, 0xFF},
     };
 
