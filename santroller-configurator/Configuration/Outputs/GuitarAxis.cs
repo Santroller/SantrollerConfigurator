@@ -295,19 +295,16 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} |= {{GenerateAssignment("0", ConfigField.XboxOne, true, false, false, false, writer)}} > 0xE0;
                          }
                          """;
-            // Xbox 360 Pickup Selector is actually on one of the triggers.
             case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is DigitalToAnalog:
-                // Was int16_t (axis), needs to become uint8_t (trigger)
-                var val = analogOn;
-                val = (val >> 8) + 128;
+                // only keep the first byte
                 return $$"""
                          if ({{Input.Generate()}}) {
-                             {{GenerateOutput(mode)}} = {{val}};
+                             {{GenerateOutput(mode)}} = {{analogOn & 0xFF}};
                          }
                          """;
-            case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
+            case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is not DigitalToAnalog:
                 return $$"""
@@ -327,9 +324,18 @@ public class GuitarAxis : OutputAxis
             case ConfigField.XboxOne
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup:
+                var ret = new List<string>();
+                foreach (var (key, value) in PickupSelectorRanges)
+                {
+                    ret.Add($$"""
+                             if (({{Input.Generate()}} >> 8) < {{value}}) {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[key]}};
+                             }
+                             """);
+                }
                 return $$"""
                          if ({{Input.Generate()}}) {
-                             {{GenerateOutput(mode)}} = (((({{Input.Generate()}} >> 8) & 0xff) + 1) & 0xF0);
+                             {{string.Join(" else ", ret)}};
                          }
                          """;
             default:
