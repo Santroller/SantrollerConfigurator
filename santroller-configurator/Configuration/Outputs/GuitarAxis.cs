@@ -290,10 +290,10 @@ public class GuitarAxis : OutputAxis
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Tilt && Input is not DigitalToAnalog:
-                // PS3 RB expects tilt as a digital bit, so map that here. Still map a ps3 variant of the tilt though
+                // PS3 RB expects tilt as a digital bit, so map that here.
                 return $$"""
                          if ({{Input.Generate()}}) {
-                             {{GenerateOutput(mode)}} |= {{GenerateAssignment("0", mode, false, false, false, false, writer)}} > 0xE0;
+                             {{GenerateOutput(mode)}} |= {{GenerateAssignment("0x80", mode, false, false, false, false, writer)}} > 0xE0;
                          }
                          """;
             // Xbox 360 Pickup Selector is actually on one of the triggers.
