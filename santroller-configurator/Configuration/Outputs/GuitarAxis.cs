@@ -182,7 +182,6 @@ public class GuitarAxis : OutputAxis
                          }
                          """;
             case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt :
-                // XB1 tilt is similar enough to ps3 that we can just use it
                 return $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};";
             case ConfigField.Xbox360 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
@@ -293,7 +292,7 @@ public class GuitarAxis : OutputAxis
                 // PS3 RB expects tilt as a digital bit, so map that here.
                 return $$"""
                          if ({{Input.Generate()}}) {
-                             {{GenerateOutput(mode)}} |= {{GenerateAssignment("0x80", mode, false, false, false, false, writer)}} > 0xE0;
+                             {{GenerateOutput(mode)}} |= {{GenerateAssignment("0", ConfigField.XboxOne, true, false, false, false, writer)}} > 0xE0;
                          }
                          """;
             // Xbox 360 Pickup Selector is actually on one of the triggers.
