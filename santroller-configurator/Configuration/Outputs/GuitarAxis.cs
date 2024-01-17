@@ -284,7 +284,7 @@ public class GuitarAxis : OutputAxis
                 // PS3 rb uses a digital bit, so just map the bit right across and skip the analog conversion
                 return $$"""
                          if ({{Input.Generate()}}) {
-                             report->tiltDigital = true;
+                             {{GenerateOutput(mode)}} = true;
                          }
                          """;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
@@ -293,7 +293,7 @@ public class GuitarAxis : OutputAxis
                 // PS3 RB expects tilt as a digital bit, so map that here. Still map a ps3 variant of the tilt though
                 return $$"""
                          if ({{Input.Generate()}}) {
-                             report->tiltDigital = {{GenerateAssignment(GenerateOutput(mode), mode, false, false, false, false, writer)}} == 0xFF;
+                             {{GenerateOutput(mode)}} |= {{GenerateAssignment("0", mode, false, false, false, false, writer)}} > 0xE0;
                          }
                          """;
             // Xbox 360 Pickup Selector is actually on one of the triggers.
