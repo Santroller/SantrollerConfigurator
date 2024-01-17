@@ -296,7 +296,7 @@ public class GuitarAxis : OutputAxis
                          }
                          """;
             // Xbox 360 Pickup Selector is actually on one of the triggers.
-            case ConfigField.Xbox360
+            case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is DigitalToAnalog:
                 // Was int16_t (axis), needs to become uint8_t (trigger)
@@ -307,10 +307,14 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = {{val}};
                          }
                          """;
-            case ConfigField.Xbox360
+            case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is not DigitalToAnalog:
-                return $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, true, false, false, writer)};";
+                return $$"""
+                         if ({{Input.Generate()}}) {
+                             {{GenerateOutput(mode)}} = (({{Input.Generate()}} >> 8) & 0xff);
+                         }
+                         """;
             // Xbox One pickup selector ranges from 0 - 64, so we need to map it correctly.
             case ConfigField.XboxOne
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
@@ -322,14 +326,12 @@ public class GuitarAxis : OutputAxis
                          """;
             case ConfigField.XboxOne
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
-                     Type == GuitarAxisType.Pickup && Input is FixedInput or DigitalToAnalog:
-                return
-                    $"{GenerateOutput(mode)} = (((({GenerateAssignment(GenerateOutput(mode), mode, false, true, false, false, writer)}) >> 2) + 1) & 0xF0);";
-            case ConfigField.XboxOne
-                when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
-                     Type == GuitarAxisType.Pickup && Input is not DigitalToAnalog:
-                return
-                    $"{GenerateOutput(mode)} = (((({GenerateAssignment(GenerateOutput(mode), mode, false, true, false, false, writer)}) >> 10) + 1) & 0xF0);";
+                     Type == GuitarAxisType.Pickup:
+                return $$"""
+                         if ({{Input.Generate()}}) {
+                             {{GenerateOutput(mode)}} = (((({{Input.Generate()}} >> 8) & 0xff) + 1) & 0xF0);
+                         }
+                         """;
             default:
                 if (Input is DigitalToAnalog)
                     return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
