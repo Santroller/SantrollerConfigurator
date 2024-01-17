@@ -19,8 +19,6 @@ public class ConstantInput : FixedInput
         this.WhenAnyValue(x => x.Value).Subscribe(v => RawValue = v);
     }
     
-    public IEnumerable<PickupSelectorType> PickupSelectorTypes => Enum.GetValues<PickupSelectorType>();
-    
     public bool TapBar { get; }
     public bool RbPickup { get; }
 
@@ -36,12 +34,12 @@ public class ConstantInput : FixedInput
         }
     }
 
-    public PickupSelectorType PickupSelectorType
+    public int PickupSelectorType
     {
         get => GuitarAxis.GetPickupSelectorValue(Value);
         set
         {
-            Value = ((int) (value + 1) * 51) << 8;
+            Value = GuitarAxis.PickupSelectorRanges[value] << 8;
             this.RaisePropertyChanged();
         }
     }

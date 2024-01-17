@@ -511,7 +511,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
                     new WiiInput(WiiInputType.GuitarWhammy, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue, 8000,
-                    GuitarAxisType.Whammy, true));
+                    false, GuitarAxisType.Whammy, true));
             }
         }
         else
@@ -528,7 +528,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
                     new WiiInput(WiiInputType.GuitarTapBar, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue, 0,
-                    GuitarAxisType.Slider, true));
+                    false, GuitarAxisType.Slider, true));
             }
         }
         else if (Model.DeviceControllerType == DeviceControllerType.Gamepad || Model.DeviceControllerType.IsFortnite())

@@ -1391,6 +1391,13 @@
                                     Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding DeadZone}" />
                         </StackPanel>
                     </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding AllowInvert}">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.InvertLabel}" />
+                        <ToggleSwitch IsChecked="{Binding Inverted}" />
+                    </StackPanel>
                 </StackPanel>
 
             </DataTemplate>
@@ -1763,10 +1770,10 @@
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
-                        <ComboBox VerticalAlignment="Center"
-                                  SelectedItem="{Binding PickupSelectorType}"
-                                  ItemsSource="{Binding PickupSelectorTypes}"
-                                  ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding PickupSelectorType}" Minimum="1"
+                                       Maximum="5"
+                                       VerticalAlignment="Center"
+                                       Width="200" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding TapBar}">
                         <Label VerticalAlignment="Center"
@@ -1854,10 +1861,10 @@
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
-                        <ComboBox VerticalAlignment="Center"
-                                  SelectedItem="{Binding PickupSelectorType}"
-                                  ItemsSource="{Binding PickupSelectorTypes}"
-                                  ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding PickupSelectorType}" Minimum="1"
+                                       Maximum="5"
+                                       VerticalAlignment="Center"
+                                       Width="200" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding TapBar}">
                         <Label VerticalAlignment="Center"

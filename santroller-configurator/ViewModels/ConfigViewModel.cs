@@ -1055,7 +1055,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             false, false, DevicePinMode.Analog, this),
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue,
                         ushort.MaxValue,
-                        0, axisType, false));
+                        0, false, axisType, false));
                     break;
                 case DrumAxisType axisType:
                     Bindings.Add(new DrumAxis(this,

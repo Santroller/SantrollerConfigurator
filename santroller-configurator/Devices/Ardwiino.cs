@@ -509,7 +509,7 @@ public class Ardwiino : ConfigurableUsbDevice
                             model, DigitalToAnalogType.Tilt),
                         on,
                         off, ledIndex, Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
-                        0, GuitarAxisType.Tilt, false));
+                        0, false, GuitarAxisType.Tilt, false));
                 }
                 else
                 {
@@ -530,7 +530,7 @@ public class Ardwiino : ConfigurableUsbDevice
                         bindings.Add(new GuitarAxis(model,
                             new DirectInput(pin.pin, false, false, DevicePinMode.Analog, model), on,
                             off,
-                            ledIndex, Array.Empty<byte>(), min, max, axisDeadzone, GuitarAxisType.Whammy, false));
+                            ledIndex, Array.Empty<byte>(), min, max, axisDeadzone, false, GuitarAxisType.Whammy, false));
                     }
                     else
                     {
@@ -612,7 +612,7 @@ public class Ardwiino : ConfigurableUsbDevice
                             model, DigitalToAnalogType.Tilt),
                         on,
                         off, ledIndex, Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
-                        0, GuitarAxisType.Tilt, false));
+                        0, false, GuitarAxisType.Tilt, false));
                 }
             }
         }

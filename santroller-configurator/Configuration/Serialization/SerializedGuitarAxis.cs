@@ -11,11 +11,12 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedGuitarAxis : SerializedOutput
 {
     public SerializedGuitarAxis(SerializedInput input, GuitarAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
-        int min, int max, int deadzone, bool childOfCombined)
+        bool invert, int min, int max, int deadzone, bool childOfCombined)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
         LedOff = ledOff.ToUInt32();
+        Invert = invert;
         Min = min;
         Max = max;
         Deadzone = deadzone;
@@ -35,12 +36,13 @@ public class SerializedGuitarAxis : SerializedOutput
     [ProtoMember(8)] public bool ChildOfCombined { get; }
     [ProtoMember(10)] public GuitarAxisType Type { get; }
     [ProtoMember(11)] public byte[] LedIndexPeripheral { get; }
+    [ProtoMember(12)] public bool Invert { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new GuitarAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
             Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, Deadzone,
-            Type, ChildOfCombined);
+            Invert, Type, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;
     }

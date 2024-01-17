@@ -130,7 +130,7 @@ public class GhwtCombinedOutput : CombinedOutput
                 true),
             Colors.Black,
             Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
-            GuitarAxisType.Slider, true));
+            false, GuitarAxisType.Slider, true));
         UpdateBindings();
     }
 
@@ -196,7 +196,7 @@ public class GhwtCombinedOutput : CombinedOutput
                     true),
                 Colors.Black,
                 Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
-                GuitarAxisType.Slider, true));
+                false, GuitarAxisType.Slider, true));
         }
         else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
         {

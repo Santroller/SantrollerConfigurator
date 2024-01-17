@@ -47,15 +47,13 @@ public class DigitalToAnalog : Input
     public bool RbPickup { get; }
     
     public bool Normal => !Tilt && !RbPickup && IsAnalog;
-    public IEnumerable<PickupSelectorType> PickupSelectorTypes => Enum.GetValues<PickupSelectorType>();
 
-
-    public PickupSelectorType PickupSelectorType
+    public int PickupSelectorType
     {
         get => GuitarAxis.GetPickupSelectorValue(On);
         set
         {
-            On = ((int) (value + 1) * 51) << 8;
+            On = GuitarAxis.PickupSelectorRanges[value] << 8;
             this.RaisePropertyChanged();
         }
     }

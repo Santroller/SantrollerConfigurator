@@ -378,7 +378,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                 Outputs.Add(new GuitarAxis(Model,
                     new Ps2Input(Ps2InputType.GuitarWhammy, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                     Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 8000, GuitarAxisType.Whammy, true));
+                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 8000, false, GuitarAxisType.Whammy, true));
             }
             
             if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Slider}))
@@ -386,7 +386,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                 Outputs.Add(new GuitarAxis(Model,
                     new Ps2Input(Ps2InputType.GuitarTapBar, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                     Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 0, GuitarAxisType.Slider, true));
+                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 0, false, GuitarAxisType.Slider, true));
             }
 
             if (!Outputs.Items.Any(s => s.Input.InnermostInputs().First() is Ps2Input {Input: Ps2InputType.GuitarTilt}))
@@ -397,7 +397,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                             true), 32767,
                         Model, DigitalToAnalogType.Tilt), Colors.Black,
                     Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
-                    0, GuitarAxisType.Tilt, true));
+                    0, false, GuitarAxisType.Tilt, true));
             }
         }
         else

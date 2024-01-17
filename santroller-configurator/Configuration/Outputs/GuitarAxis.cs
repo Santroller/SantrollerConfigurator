@@ -16,40 +16,45 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class GuitarAxis : OutputAxis
 {
-    public static readonly Dictionary<PickupSelectorType, int> PickupSelectorRanges = new()
+    public static readonly Dictionary<int, int> PickupSelectorRanges = new()
     {
-        {PickupSelectorType.Chorus, 0x40},
-        {PickupSelectorType.WahWah, 0x70},
-        {PickupSelectorType.Flanger, 0xA0},
-        {PickupSelectorType.Echo, 0xD0},
-        {PickupSelectorType.None, 0xFF},
+        {1, 0x50},
+        {2, 0x70},
+        {3, 0xA0},
+        {4, 0xD0},
+        {5, 0xFF},
     };
 
-    public static readonly Dictionary<PickupSelectorType, int> PickupSelectorRangesXb1 = new()
+    public static readonly Dictionary<int, int> PickupSelectorRangesXb1 = new()
     {
-        {PickupSelectorType.Chorus, 0x0},
-        {PickupSelectorType.WahWah, 0x10},
-        {PickupSelectorType.Flanger, 0x20},
-        {PickupSelectorType.Echo, 0x30},
-        {PickupSelectorType.None, 0x40},
+        {1, 0x0},
+        {2, 0x10},
+        {3, 0x20},
+        {4, 0x30},
+        {5, 0x40},
     };
 
     public GuitarAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff,
-        byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max, int deadZone, GuitarAxisType type, bool childOfCombined) : base(model,
+        byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max, int deadZone, bool invert, GuitarAxisType type, bool childOfCombined) : base(model,
         input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, min, max, deadZone, type is GuitarAxisType.Slider or GuitarAxisType.Whammy, childOfCombined)
     {
         Type = type;
+        Inverted = invert;
         UpdateDetails();
         this.WhenAnyValue(x => x.Value).Select(GetNamedAxisInfo).ToPropertyEx(this, x => x.NamedAxisInfo);
     }
 
-
     // ReSharper disable once UnassignedGetOnlyAutoProperty
     [ObservableAsProperty] public string NamedAxisInfo { get; } = "";
+    
+    [Reactive]
+    public bool Inverted { get; set; }
 
     public GuitarAxisType Type { get; }
     public bool HasNamedAxis => Type is GuitarAxisType.Slider or GuitarAxisType.Pickup;
+
+    public bool AllowInvert => Type is GuitarAxisType.Pickup;
 
     public override bool IsKeyboard => false;
 
@@ -83,7 +88,7 @@ public class GuitarAxis : OutputAxis
         }
     }
 
-    public static PickupSelectorType GetPickupSelectorValue(int val)
+    public static int GetPickupSelectorValue(int val)
     {
         foreach (var (type, range) in PickupSelectorRanges)
         {
@@ -93,7 +98,7 @@ public class GuitarAxis : OutputAxis
             }
         }
 
-        return PickupSelectorType.None;
+        return 0;
     }
 
     private string GetNamedAxisInfo(int val)
@@ -104,7 +109,12 @@ public class GuitarAxis : OutputAxis
             {
                 val += short.MaxValue + 1;
             }
-            return EnumToStringConverter.Convert(GetPickupSelectorValue(val));
+
+            if (Inverted)
+            {
+                val = ushort.MaxValue - val;
+            }
+            return $"Notch {GetPickupSelectorValue(val)}";
         }
 
         var ret = "";
@@ -133,7 +143,7 @@ public class GuitarAxis : OutputAxis
     public override SerializedOutput Serialize()
     {
         return new SerializedGuitarAxis(Input!.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
-            LedIndicesPeripheral.ToArray(),Min, Max,
+            LedIndicesPeripheral.ToArray(),Inverted, Min, Max,
             DeadZone, ChildOfCombined);
     }
 
@@ -325,16 +335,21 @@ public class GuitarAxis : OutputAxis
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup:
                 var ret = new List<string>();
+                var gen = $"({Input.Generate()} >> 8)";
+                if (Inverted)
+                {
+                    gen = $"(255 - {gen})";
+                }
                 foreach (var (key, value) in PickupSelectorRanges)
                 {
                     ret.Add($$"""
-                             if (({{Input.Generate()}} >> 8) < {{value}}) {
+                             if ({{gen}} <= {{value}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[key]}};
                              }
                              """);
                 }
                 return $$"""
-                         if ({{Input.Generate()}}) {
+                         if ({{gen}}) {
                              {{string.Join(" else ", ret)}};
                          }
                          """;
