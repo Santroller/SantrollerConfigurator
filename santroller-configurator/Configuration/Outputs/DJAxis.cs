@@ -184,7 +184,7 @@ public partial class DjAxis : OutputAxis
         if (writer != null && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
         {
             var multiplierBlob = ConfigViewModel.WriteBlob(writer, Multiplier);
-            generatedTable = $"{tableCommand360}({GenerateOutput(mode)},{generated}, {multiplierBlob}";
+            generatedTable = $"{tableCommand360}({GenerateOutput(mode)},{generated}, {multiplierBlob})";
             generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generated}, {multiplierBlob})";
         }
 
