@@ -733,12 +733,11 @@ public abstract partial class Output : ReactiveObject
         }
 
         if (this is EmulationMode) Input = input;
-
-
+        
         if (input.InnermostInputs().First() is not DirectInput && this is OutputAxis axis2)
         {
             // Reset min and max to be safe
-            if (Input.IsUint)
+            if (input.IsUint)
             {
                 axis2.Min = ushort.MinValue;
                 axis2.Max = ushort.MaxValue;

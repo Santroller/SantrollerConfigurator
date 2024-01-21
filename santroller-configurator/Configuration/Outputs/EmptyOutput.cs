@@ -216,7 +216,7 @@ public class EmptyOutput : Output
             {
                 {MouseAxisType: not null} => new MouseAxis(Model, new FixedInput(Model, 0, false), Colors.Black,
                     Colors.Black,
-                    Array.Empty<byte>(),Array.Empty<byte>(), 1, 0, 0,
+                    Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                     MouseAxisType.Value),
                 {MouseButtonType: not null} => new MouseButton(Model, new FixedInput(Model, 0, false), Colors.Black,
                     Colors.Black,

@@ -52,6 +52,9 @@ public abstract partial class OutputAxis : Output
         this.WhenAnyValue(x => x.ValueRaw).Select(s => s > 0 ? s : 0)
             .ToPropertyEx(this, x => x.ValueRawUpper);
 
+        this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MaxValue : short.MaxValue).ToPropertyEx(this, x => x.SliderMax);
+        this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MinValue : short.MinValue).ToPropertyEx(this, x => x.SliderMin);
+
         this
             .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.DeadZone, x => x.Trigger,
                 x => x.Model.DeviceControllerType).Select(Calculate).ToPropertyEx(this, x => x.Value);
@@ -84,9 +87,9 @@ public abstract partial class OutputAxis : Output
     [ObservableAsProperty] public Thickness ComputedDeadZoneMargin { get; }
     [ObservableAsProperty] public Thickness CalibrationMinMaxMargin { get; }
 
-    public int SliderMax => InputIsUint ? ushort.MaxValue : short.MaxValue;
+    [ObservableAsProperty] public int SliderMax { get; }
 
-    public int SliderMin => InputIsUint ? ushort.MinValue : short.MinValue;
+    [ObservableAsProperty] public int SliderMin { get; }
 
     // ReSharper enable UnassignedGetOnlyAutoProperty
     [Reactive] public int Min { get; set; }
@@ -369,6 +372,11 @@ public abstract partial class OutputAxis : Output
             case ConfigField.Xbox360:
                 intBased = true;
                 function = "handle_calibration_xbox";
+                if (ShouldFlip(mode)) function = "-" + function;
+                break;
+            case ConfigField.Mouse:
+                intBased = true;
+                function = "handle_calibration_mouse";
                 if (ShouldFlip(mode)) function = "-" + function;
                 break;
             // For LED stuff (Shared), we can use the standard handle_calibration_ps3 instead.
