@@ -33,6 +33,7 @@ public class GuitarAxis : OutputAxis
         {4, 0x30},
         {5, 0x40},
     };
+    
 
     public GuitarAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff,
         byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max, int deadZone, bool invert, GuitarAxisType type, bool childOfCombined) : base(model,
