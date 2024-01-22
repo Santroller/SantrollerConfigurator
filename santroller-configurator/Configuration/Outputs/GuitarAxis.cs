@@ -344,7 +344,7 @@ public class GuitarAxis : OutputAxis
                 foreach (var (key, value) in PickupSelectorRanges)
                 {
                     ret.Add($$"""
-                             if ({{gen}} <= {{value}}) {
+                             if ({{gen}} < {{value}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[key]}};
                              }
                              """);
