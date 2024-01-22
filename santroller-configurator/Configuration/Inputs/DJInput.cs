@@ -106,7 +106,7 @@ public partial class DjInput : TwiInput
     {
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.XboxOne
             or ConfigField.Xbox360
-            or ConfigField.Ps4 or ConfigField.Universal))
+            or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Mouse or ConfigField.Keyboard or ConfigField.Consumer))
             return "";
         var left = string.Join(";",
             bindings.Where(binding => binding.Item1 is DjInput {Input: DjInputType.LeftTurntable or DjInputType.LeftGreen or DjInputType.LeftRed or DjInputType.LeftBlue})

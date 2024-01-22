@@ -25,6 +25,15 @@ public class GuitarAxis : OutputAxis
         {5, 0xFF},
     };
 
+    public static readonly Dictionary<int, int> PickupSelectorRangesPS = new()
+    {
+        {1, 0x19},
+        {2, 0x4C},
+        {3, 0x96},
+        {4, 0xB2},
+        {5, 0xE5},
+    };
+
     public static readonly Dictionary<int, int> PickupSelectorRangesXb1 = new()
     {
         {1, 0x0},
@@ -33,12 +42,14 @@ public class GuitarAxis : OutputAxis
         {4, 0x30},
         {5, 0x40},
     };
-    
+
 
     public GuitarAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff,
-        byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max, int deadZone, bool invert, GuitarAxisType type, bool childOfCombined) : base(model,
+        byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max, int deadZone, bool invert,
+        GuitarAxisType type, bool childOfCombined) : base(model,
         input, ledOn,
-        ledOff, ledIndices, ledIndicesPeripheral, min, max, deadZone, type is GuitarAxisType.Slider or GuitarAxisType.Whammy, childOfCombined)
+        ledOff, ledIndices, ledIndicesPeripheral, min, max, deadZone,
+        type is GuitarAxisType.Slider or GuitarAxisType.Whammy, childOfCombined)
     {
         Type = type;
         Inverted = invert;
@@ -48,9 +59,8 @@ public class GuitarAxis : OutputAxis
 
     // ReSharper disable once UnassignedGetOnlyAutoProperty
     [ObservableAsProperty] public string NamedAxisInfo { get; } = "";
-    
-    [Reactive]
-    public bool Inverted { get; set; }
+
+    [Reactive] public bool Inverted { get; set; }
 
     public GuitarAxisType Type { get; }
     public bool HasNamedAxis => Type is GuitarAxisType.Slider or GuitarAxisType.Pickup;
@@ -115,6 +125,7 @@ public class GuitarAxis : OutputAxis
             {
                 val = ushort.MaxValue - val;
             }
+
             return $"Notch {GetPickupSelectorValue(val)}";
         }
 
@@ -144,7 +155,7 @@ public class GuitarAxis : OutputAxis
     public override SerializedOutput Serialize()
     {
         return new SerializedGuitarAxis(Input!.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
-            LedIndicesPeripheral.ToArray(),Inverted, Min, Max,
+            LedIndicesPeripheral.ToArray(), Inverted, Min, Max,
             DeadZone, ChildOfCombined);
     }
 
@@ -164,8 +175,10 @@ public class GuitarAxis : OutputAxis
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         if (mode == ConfigField.Shared)
-            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
-        if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360 or ConfigField.XboxOne
+            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
+                writer);
+        if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
+            or ConfigField.XboxOne
             or ConfigField.Universal)) return "";
         // The below is a mess... but essentially we have to handle converting the input to its respective output depending on console
         // We have to do some hyper specific stuff for digital to analog here too so its easiest to capture its value once
@@ -181,19 +194,22 @@ public class GuitarAxis : OutputAxis
         {
             return "";
         }
+
         switch (mode)
         {
             case ConfigField.XboxOne when Model.DeviceControllerType is DeviceControllerType.LiveGuitar:
                 return "";
-            case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
+            case ConfigField.XboxOne or ConfigField.Universal
+                when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
                 // XB1 tilt is uint8_t
                 return $$"""
                          if ({{Input.Generate()}}) {
                              {{GenerateOutput(mode)}} = 255;
                          }
                          """;
-            case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt :
-                return $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};";
+            case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt:
+                return
+                    $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};";
             case ConfigField.Xbox360 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 if (analogOn > 0x80)
@@ -216,13 +232,15 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} |= ({{GenerateOutput(mode)}}) << 8;
                          }
                          """;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
+                when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 return $$"""
                          if ({{Input.Generate()}}) {
                              {{GenerateOutput(mode)}} = {{analogOn & 0xFF}};
                          }
                          """;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
+                when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 return $"{GenerateOutput(mode)} = {Input.Generate()};";
             // Xb1 is RB only, so no slider
             case ConfigField.XboxOne when Type == GuitarAxisType.Slider:
@@ -318,9 +336,25 @@ public class GuitarAxis : OutputAxis
             case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is not DigitalToAnalog:
+                var ret2 = new List<string>();
+                var gen2 = $"({Input.Generate()} >> 8)";
+                if (Inverted)
+                {
+                    gen2 = $"(255 - {gen2})";
+                }
+
+                foreach (var (key, value) in PickupSelectorRanges)
+                {
+                    ret2.Add($$"""
+                              if ({{gen2}} < {{value}}) {
+                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[key]}};
+                              }
+                              """);
+                }
+
                 return $$"""
-                         if ({{Input.Generate()}}) {
-                             {{GenerateOutput(mode)}} = (({{Input.Generate()}} >> 8) & 0xff);
+                         if ({{gen2}}) {
+                             {{string.Join(" else ", ret2)}};
                          }
                          """;
             // Xbox One pickup selector ranges from 0 - 64, so we need to map it correctly.
@@ -341,14 +375,16 @@ public class GuitarAxis : OutputAxis
                 {
                     gen = $"(255 - {gen})";
                 }
+
                 foreach (var (key, value) in PickupSelectorRanges)
                 {
                     ret.Add($$"""
-                             if ({{gen}} < {{value}}) {
-                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[key]}};
-                             }
-                             """);
+                              if ({{gen}} < {{value}}) {
+                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[key]}};
+                              }
+                              """);
                 }
+
                 return $$"""
                          if ({{gen}}) {
                              {{string.Join(" else ", ret)}};
@@ -356,7 +392,8 @@ public class GuitarAxis : OutputAxis
                          """;
             default:
                 if (Input is DigitalToAnalog)
-                    return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+                    return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+                        macros, writer);
                 return
                     $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, Type is GuitarAxisType.Whammy, false, writer)};";
         }
@@ -369,6 +406,7 @@ public class GuitarAxis : OutputAxis
         {
             return "Solo Frets";
         }
+
         return EnumToStringConverter.Convert(Type);
     }
 
