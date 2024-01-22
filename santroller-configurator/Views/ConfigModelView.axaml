@@ -2431,7 +2431,7 @@
                             </StackPanel>
 
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonStandardController}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStandardController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.SwapSwitchFaceButtonLabel}" />
@@ -2442,7 +2442,7 @@
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsNonStandardController}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStandardController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.WindowsControllerModeLabel}" />
