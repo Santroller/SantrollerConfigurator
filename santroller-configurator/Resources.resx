@@ -2926,6 +2926,9 @@
     <data name="WindowsControllerModeLabel" xml:space="preserve">
         <value>Windows Controller Mode</value>
     </data>
+    <data name="RPCS3CompatLabel" xml:space="preserve">
+        <value>Use USB Passthrough with RPCS3</value>
+    </data>
     <data name="HIDGameControllerLabel" xml:space="preserve">
         <value>HID Game Controller</value>
     </data>

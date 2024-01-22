@@ -169,6 +169,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller &&
                 x.Item1 is not EmulationType.FortniteFestival)
             .ToPropertyEx(this, x => x.IsStandardController);
+        this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
+            .Select(x =>
+                GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller &&
+                x.Item2 is DeviceControllerType.Turntable or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar or DeviceControllerType.LiveGuitar)
+            .ToPropertyEx(this, x => x.IsRpcs3CompatibleController);
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.KeyboardMouse)
             .ToPropertyEx(this, x => x.IsKeyboard);
@@ -785,6 +790,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private bool _hasPeripheral;
 
     [Reactive] public bool XInputOnWindows { get; set; }
+    
+    [Reactive] public bool Ps3OnRpcs3 { get; set; }
 
     [Reactive] public bool XInputAuth { get; set; }
 
@@ -886,6 +893,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStageKit { get; }
     [ObservableAsProperty] public bool IsController { get; }
     [ObservableAsProperty] public bool IsStandardController { get; }
+    
+    [ObservableAsProperty] public bool IsRpcs3CompatibleController { get; }
     [ObservableAsProperty] public bool IsFortniteFestival { get; }
     [ObservableAsProperty] public bool IsKeyboard { get; }
     [ObservableAsProperty] public bool IsApa102 { get; }
@@ -1113,6 +1122,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.RaisePropertyChanged(nameof(DeviceControllerType));
         this.RaisePropertyChanged(nameof(EmulationType));
         XInputOnWindows = true;
+        Ps3OnRpcs3 = true;
         XInputAuth = true;
         MouseMovementType = MouseMovementType.Relative;
 
@@ -1343,6 +1353,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define CONFIGURATION_LEN {WriteBlob(writer, configLength)}
                        #define SWAP_SWITCH_FACE_BUTTONS {WriteBlob(writer, SwapSwitchFaceButtons)}
                        #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsStandardController)}
+                       #define RPCS3_COMPAT {WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}
                        #define XINPUT_AUTH {WriteBlob(writer, XInputAuth && UsbHostEnabled)}
                        #define INPUT_QUEUE {WriteBlob(writer, Deque)}
                        #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
@@ -1373,6 +1384,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define CONFIGURATION_LEN {configLength}
                        #define SWAP_SWITCH_FACE_BUTTONS {(!SwapSwitchFaceButtons).ToString().ToLower()}
                        #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsStandardController).ToString().ToLower()}
+                       #define RPCS3_COMPAT {(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}
                        #define XINPUT_AUTH {(XInputAuth && UsbHostEnabled).ToString().ToLower()}
                        #define INPUT_QUEUE {Deque.ToString().ToLower()}
                        #define POLL_RATE {PollRate}

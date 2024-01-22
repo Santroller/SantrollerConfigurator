@@ -2453,6 +2453,18 @@
                             </ComboBox>
 
                         </StackPanel>
+
+                        
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsRpcs3CompatibleController}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.RPCS3CompatLabel}" />
+                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                          HorizontalContentAlignment="Center"
+                                          IsChecked="{Binding Ps3OnRpcs3}"
+                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                        </StackPanel>
                     </StackPanel>
                 </Expander>
                 <Expander HorizontalAlignment="Stretch" Header="{Binding}" IsExpanded="{Binding PollExpanded}">

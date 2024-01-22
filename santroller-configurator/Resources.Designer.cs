@@ -5607,6 +5607,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string RPCS3CompatLabel {
+            get {
+                return ResourceManager.GetString("RPCS3CompatLabel", resourceCulture);
+            }
+        }
+        
         public static string HIDGameControllerLabel {
             get {
                 return ResourceManager.GetString("HIDGameControllerLabel", resourceCulture);

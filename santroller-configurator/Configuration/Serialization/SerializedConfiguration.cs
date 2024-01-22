@@ -1,13 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DynamicData;
-using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ProtoBuf;
-using ReactiveUI;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
@@ -63,6 +60,7 @@ public class SerializedConfiguration
         Stp16OePeripheral = model.Stp16OePeripheral;
         Stp16LePeripheral = model.Stp16LePeripheral;
         Apa102IsFullSize = model.Apa102IsFullSize;
+        Ps3OnRpcs3 = model.Ps3OnRpcs3;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -104,10 +102,13 @@ public class SerializedConfiguration
     [ProtoMember(48)] public int LedBrightness { get; private set; }
     [ProtoMember(49)] public bool Apa102IsFullSize { get; private set; }
 
+    [ProtoMember(50)] public bool Ps3OnRpcs3 { get; private set; } = true;
+
     public void LoadConfiguration(ConfigViewModel model)
     {
         model.SetDeviceTypeAndRhythmTypeWithoutUpdating(DeviceType, EmulationType);
         model.XInputOnWindows = XInputOnWindows;
+        model.Ps3OnRpcs3 = Ps3OnRpcs3;
         model.XInputAuth = XInputAuth;
         model.Bindings.Clear();
         model.Mode = Mode;
