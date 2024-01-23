@@ -166,7 +166,6 @@ public class UsbHostCombinedOutput : CombinedOutput
             {
                 continue;
             } 
-
             var input = new UsbHostInput(value, Model, true);
             int min = input.IsUint ? ushort.MinValue : short.MinValue;
             int max = input.IsUint ? ushort.MaxValue : short.MaxValue;
