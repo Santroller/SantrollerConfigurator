@@ -478,7 +478,7 @@ public abstract partial class Output : ReactiveObject
         if (current == null) return;
         if (current.GetType() == value.GetType() && (int) current == (int) value) return;
 
-        byte debounce = 1;
+        int debounce = 1;
         int min = short.MinValue;
         int max = short.MaxValue;
         var deadzone = 0;

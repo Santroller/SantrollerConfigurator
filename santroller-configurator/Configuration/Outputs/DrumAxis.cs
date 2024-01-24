@@ -182,7 +182,7 @@ public partial class DrumAxis : OutputAxis
         if (Model.EmulationType is not EmulationType.FortniteFestival && (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360 or ConfigField.Universal)) || (Model.EmulationType is EmulationType.FortniteFestival && mode is not ConfigField.Keyboard)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;
-        if (!Model.IsAdvancedMode) debounce = (byte) Model.Debounce;
+        if (!Model.IsAdvancedMode) debounce = Model.Debounce;
         if (!Model.Deque)
         {
             // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms

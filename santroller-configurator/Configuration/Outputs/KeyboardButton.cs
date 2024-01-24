@@ -263,7 +263,7 @@ public class KeyboardButton : OutputButton
 
     public KeyboardButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
-        byte debounce, Key type) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
+        int debounce, Key type) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
         debounce, false)
     {
         Key = type;

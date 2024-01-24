@@ -14,7 +14,7 @@ public class DjButton : OutputButton
 {
     public readonly DjInputType Type;
 
-    public DjButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte debounce,
+    public DjButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int debounce,
         DjInputType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, debounce,
         childOfCombined)
     {

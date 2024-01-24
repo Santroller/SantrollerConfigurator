@@ -10,7 +10,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract(SkipConstructor = true)]
 public class SerializedKeyboardButton : SerializedOutput
 {
-    public SerializedKeyboardButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, byte debounce,
+    public SerializedKeyboardButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int debounce,
         Key type)
     {
         Input = input;
@@ -27,9 +27,9 @@ public class SerializedKeyboardButton : SerializedOutput
     [ProtoMember(3)] public uint LedOff { get; }
 
     [ProtoMember(6)] public byte[] LedIndex { get; }
-    [ProtoMember(4)] public byte Debounce { get; }
     [ProtoMember(5)] public Key Type { get; }
     [ProtoMember(7)] public byte[] LedIndexPeripheral { get; }
+    [ProtoMember(8)] public int Debounce { get; }
 
     public override Output Generate(ConfigViewModel model)
     {

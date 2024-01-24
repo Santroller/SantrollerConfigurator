@@ -18,7 +18,7 @@ public abstract class OutputButton : Output
 {
     private readonly ObservableAsPropertyHelper<float> _debounceDisplay;
     protected OutputButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral,
-        byte debounce, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, childOfCombined)
+        int debounce, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, childOfCombined)
     {
         Debounce = debounce;
         _debounceDisplay = this.WhenAnyValue(x => x.Debounce)
@@ -27,7 +27,7 @@ public abstract class OutputButton : Output
     }
     
     [Reactive]
-    public byte Debounce { get; set; }
+    public int Debounce { get; set; }
 
     public float DebounceDisplay
     {
@@ -64,16 +64,19 @@ public abstract class OutputButton : Output
         var extraStatement = "";
         if (mode == ConfigField.Shared && combinedExtra.Any()) extraStatement = $" && ({combinedExtra})";
 
-        var debounce = Debounce;
+        int debounce = Debounce;
+        Console.WriteLine("What");
         if (!Model.IsAdvancedMode)
         {
             if (this is GuitarButton {IsStrum: true} && Model.StrumDebounce > 0)
             {
-                debounce = (byte) Model.StrumDebounce;
+                Console.WriteLine("WHo");
+                debounce = Model.StrumDebounce;
             }
             else
             {
-                debounce = (byte) Model.Debounce;
+                Console.WriteLine("Why");
+                debounce = Model.Debounce;
             }
         }
         if (!Model.Deque)

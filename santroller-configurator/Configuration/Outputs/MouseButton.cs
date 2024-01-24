@@ -12,7 +12,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class MouseButton : OutputButton
 {
-    public MouseButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte debounce,
+    public MouseButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int debounce,
         MouseButtonType type) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, debounce, false)
     {
         Type = type;
