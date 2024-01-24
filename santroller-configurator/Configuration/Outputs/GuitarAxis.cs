@@ -119,7 +119,6 @@ public class GuitarAxis : OutputAxis
                 return type;
             }
         }
-
         return 0;
     }
 
