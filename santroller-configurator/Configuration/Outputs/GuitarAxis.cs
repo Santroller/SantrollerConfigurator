@@ -83,6 +83,17 @@ public class GuitarAxis : OutputAxis
             };
         }
     }
+    
+    protected override int Calculate(
+        (bool enabled, int value, int min, int max, int deadZone, bool trigger, DeviceControllerType
+            deviceControllerType) values)
+    {
+        return Type switch
+        {
+            GuitarAxisType.Slider or GuitarAxisType.Pickup => values.value,
+            _ => base.Calculate(values)
+        };
+    }
 
     public override string LedOffLabel
     {
