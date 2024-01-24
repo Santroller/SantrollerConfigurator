@@ -70,7 +70,6 @@ public class UsbHostInput : Input
         {
             ret = "(" + ret + " << 8)";
         }
-
         return ret;
     }
 
