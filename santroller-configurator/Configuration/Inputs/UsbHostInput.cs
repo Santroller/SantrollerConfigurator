@@ -145,8 +145,7 @@ public class UsbHostInput : Input
         UsbHostInputType.GreenCymbalVelocity,
         UsbHostInputType.KickVelocity,
         UsbHostInputType.Whammy,
-        UsbHostInputType.Pickup,
-        // UsbHostInputType.Slider, Slider is byte based BUT we need it to stay as a byte as everything is expecting it to be a byte
+        UsbHostInputType.Pickup
     };
 
 
