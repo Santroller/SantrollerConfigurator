@@ -2535,7 +2535,7 @@
                                                Minimum="0"
                                                Increment="1"
                                                Width="200"
-                                               Maximum="25" HorizontalAlignment="Stretch" />
+                                               Maximum="250" HorizontalAlignment="Stretch" />
                             </StackPanel>
                         </StackPanel>
                         <StackPanel IsVisible="{Binding IsGuitar}" Orientation="Horizontal">
