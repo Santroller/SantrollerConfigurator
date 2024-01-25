@@ -64,18 +64,15 @@ public abstract class OutputButton : Output
         var extraStatement = "";
         if (mode == ConfigField.Shared && combinedExtra.Any()) extraStatement = $" && ({combinedExtra})";
 
-        int debounce = Debounce;
-        Console.WriteLine("What");
+        var debounce = Debounce;
         if (!Model.IsAdvancedMode)
         {
             if (this is GuitarButton {IsStrum: true} && Model.StrumDebounce > 0)
             {
-                Console.WriteLine("WHo");
                 debounce = Model.StrumDebounce;
             }
             else
             {
-                Console.WriteLine("Why");
                 debounce = Model.Debounce;
             }
         }

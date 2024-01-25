@@ -28,9 +28,9 @@ public class SerializedRbButton : SerializedOutput
     [ProtoMember(3)] public uint LedOff { get; }
     [ProtoMember(5)] public InstrumentButtonType Type { get; }
     [ProtoMember(6)] public byte[] LedIndex { get; }
-    [ProtoMember(8)] public byte[] LedIndexPeripheral { get; }
     [ProtoMember(7)] public bool ChildOfCombined { get; }
-    [ProtoMember(8)] public int Debounce { get; }
+    [ProtoMember(8)] public byte[] LedIndexPeripheral { get; }
+    [ProtoMember(9)] public int Debounce { get; }
 
     public override Output Generate(ConfigViewModel model)
     {

@@ -305,7 +305,7 @@ public class Ps2Input : SpiInput
         {
             case > 0x75 and < 0x85:
                 break;
-            case < 0x1F:
+            case < 0x2F:
                 lastTapPs2 = BarButton.Green;
                 break;
             case < 0x3F:

@@ -242,14 +242,24 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} |= ({{GenerateOutput(mode)}}) << 8;
                          }
                          """;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
+                when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
+                return $$"""
+                         if ({{Input.Generate()}}) {
+                             {{GenerateOutput(mode)}} = {{(analogOn + 0x80) & 0xFF}};
+                         }
+                         """;
+            case ConfigField.Universal
                 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 return $$"""
                          if ({{Input.Generate()}}) {
                              {{GenerateOutput(mode)}} = {{analogOn & 0xFF}};
                          }
                          """;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
+                when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
+                return $"{GenerateOutput(mode)} = (({Input.Generate()}) + 0x80);";
+            case ConfigField.Universal
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 return $"{GenerateOutput(mode)} = {Input.Generate()};";
             // Xb1 is RB only, so no slider
