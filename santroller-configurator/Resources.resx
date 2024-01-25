@@ -698,6 +698,9 @@
     <data name="DeviceControllerTypeGuitarHeroGuitar" xml:space="preserve">
         <value>Guitar Hero Guitar</value>
     </data>
+    <data name="DeviceControllerTypeGuitarHeroWtGuitar" xml:space="preserve">
+        <value>Guitar Hero Guitar (WT)</value>
+    </data>
     <data name="DeviceControllerTypeRockBandGuitar" xml:space="preserve">
         <value>Rock Band Guitar</value>
     </data>

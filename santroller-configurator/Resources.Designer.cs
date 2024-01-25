@@ -1395,6 +1395,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string DeviceControllerTypeGuitarHeroWtGuitar {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeGuitarHeroWtGuitar", resourceCulture);
+            }
+        }
+        
         public static string DeviceControllerTypeRockBandGuitar {
             get {
                 return ResourceManager.GetString("DeviceControllerTypeRockBandGuitar", resourceCulture);

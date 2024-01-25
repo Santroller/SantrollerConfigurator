@@ -303,30 +303,30 @@ public class Ps2Input : SpiInput
         BarButton lastTapPs2 = 0;
         switch (ps2Data[7])
         {
-            case > 0x75 and < 0x85:
-                break;
-            case < 0x2F:
+            case <= 0x2F:
                 lastTapPs2 = BarButton.Green;
                 break;
-            case < 0x3F:
+            case <= 0x3F:
                 lastTapPs2 = BarButton.Green | BarButton.Red;
                 break;
-            case < 0x5F:
+            case <= 0x5F:
                 lastTapPs2 = BarButton.Red;
                 break;
-            case < 0x6F:
+            case <= 0x6F:
                 lastTapPs2 = BarButton.Red | BarButton.Yellow;
                 break;
-            case < 0x9F:
+            case <= 0x8F:
+                break;
+            case <= 0x9F:
                 lastTapPs2 = BarButton.Yellow;
                 break;
-            case < 0xAF:
+            case <= 0xBF:
                 lastTapPs2 = BarButton.Yellow | BarButton.Blue;
                 break;
-            case < 0xCF:
+            case <= 0xCF:
                 lastTapPs2 = BarButton.Blue;
                 break;
-            case < 0xEF:
+            case <= 0xEF:
                 lastTapPs2 = BarButton.Blue | BarButton.Orange;
                 break;
             default:

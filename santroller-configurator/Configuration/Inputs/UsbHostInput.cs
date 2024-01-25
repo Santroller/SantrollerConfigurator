@@ -101,8 +101,15 @@ public class UsbHostInput : Input
                 }
                 else
                 {
-                    var deviceType = (DeviceControllerType) usbHostRaw[i + 1];
-                    subType = EnumToStringConverter.Convert(deviceType);
+                    if (usbHostRaw[i + 1] == 13)
+                    {
+                        subType = Resources.DeviceControllerTypeGuitarHeroWtGuitar;
+                    }
+                    else
+                    {
+                        var deviceType = (DeviceControllerType) usbHostRaw[i + 1];
+                        subType = EnumToStringConverter.Convert(deviceType);
+                    }
                 }
 
                 buffer += $"{consoleType} {subType}\n";
