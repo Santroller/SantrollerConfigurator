@@ -116,7 +116,6 @@ public class UsbHostInput : Input
             }
 
             ConnectedDevices = usbHostRaw.Length / 2;
-
             UsbHostInfo = buffer.Trim();
         }
         if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;
