@@ -169,7 +169,6 @@ public class UsbHostInput : Input
                 val -= 32;
                 return (buttons2 & (1 << (int) val)) != 0;
             }
-
             return (buttons & (1 << (int) val)) != 0;
         }
 
