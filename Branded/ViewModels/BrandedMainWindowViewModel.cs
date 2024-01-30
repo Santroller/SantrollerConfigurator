@@ -32,10 +32,11 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     public bool HasMultipleConfigs => Config.Configurations.Count > 1;
 
     [RelayCommand]
-    public void LoadSelectedConfig()
+    public async Task LoadSelectedConfig()
     {
         if (SelectedDevice is not Santroller || Model == null) return;
         new SerializedConfiguration(SelectedConfig.Model).LoadConfiguration(Model);
+        await Overwrite();
     }
 
     private string ColorToHex(Avalonia.Media.Color color)
