@@ -2681,7 +2681,7 @@
         <value>Slider Bar Resistance</value>
     </data>
     <data name="SliderAnalogInputPin" xml:space="preserve">
-        <value>Slider Analog Input Pin</value>
+        <value>Slider Input Pin</value>
     </data>
     <data name="SliderS0Pin" xml:space="preserve">
         <value>Slider S0 Pin</value>

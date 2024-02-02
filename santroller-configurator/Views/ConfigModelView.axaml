@@ -494,7 +494,7 @@
                             <ComboBox VerticalAlignment="Center"
                                       DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding Pin}"
-                                      ItemsSource="{Binding AvailablePins}"
+                                      ItemsSource="{Binding AvailablePinsDigital}"
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
                                       Width="200" />
                         </StackPanel>
@@ -2100,7 +2100,7 @@
                                Width="300" Content="{x:Static netCore:Resources.SliderAnalogInputPin}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Pin}"
-                                  ItemsSource="{Binding AvailablePins}"
+                                  ItemsSource="{Binding AvailablePinsDigital}"
                                   DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />

@@ -127,7 +127,6 @@ public class GhWtTapInput : Input
         {PinConfigAnalog, PinConfigS0, PinConfigS1, PinConfigS2};
 
 
-    public ReadOnlyObservableCollection<int> AvailablePins => Model.AvailablePinsAnalog;
     public ReadOnlyObservableCollection<int> AvailablePinsDigital => Model.AvailablePinsDigital;
 
     public GhWtInputType Input { get; set; }

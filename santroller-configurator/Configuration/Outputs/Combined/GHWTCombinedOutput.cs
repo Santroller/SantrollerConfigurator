@@ -98,9 +98,6 @@ public class GhwtCombinedOutput : CombinedOutput
         set => _pinConfigS2.Pin = value;
     }
 
-
-    public ReadOnlyObservableCollection<int> AvailablePins => Model.AvailablePinsAnalog;
-
     public ReadOnlyObservableCollection<int> AvailablePinsDigital => Model.AvailablePinsDigital;
 
     public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
