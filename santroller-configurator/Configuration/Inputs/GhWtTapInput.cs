@@ -193,6 +193,7 @@ public class GhWtTapInput : Input
                 _maximums[i] = Math.Max(_maximums[i], inputs[i]);
             }
         }
+        
         switch (Input)
         {
             case <= GhWtInputType.TapOrange:
