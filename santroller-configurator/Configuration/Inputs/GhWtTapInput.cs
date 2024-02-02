@@ -197,13 +197,13 @@ public class GhWtTapInput : Input
         {
             case <= GhWtInputType.TapOrange:
                 var input = _channelsFromInput[Input];
-                RawValue = inputs[input] > _maximums[input] + Sensitivity ? 1 : 0;
+                RawValue = inputs[input] > _maximums[input] + Model.WtSensitivity ? 1 : 0;
                 break;
             case GhWtInputType.TapBar:
             case GhWtInputType.TapAll:
                 var b =
                     _channels
-                        .Where(s => inputs[s.Value] > _maximums[s.Value] + Sensitivity)
+                        .Where(s => inputs[s.Value] > _maximums[s.Value] + Model.WtSensitivity)
                         .Select(s => s.Key)
                         .Aggregate<BarButton, BarButton>(0, (current, barButton) => current | barButton);
                 RawValue = Gh5NeckInput.Gh5MappingsReversed.GetValueOrDefault(b, 0);

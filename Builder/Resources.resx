@@ -71,6 +71,18 @@
     <data name="SaveUF2Label" xml:space="preserve">
         <value>Export UF2</value>
     </data>
+    <data name="SelectedSectionLabel" xml:space="preserve">
+        <value>Current Section</value>
+    </data>
+    <data name="SelectedSectionNameLabel" xml:space="preserve">
+        <value>Section Name</value>
+    </data>
+    <data name="CreateSection" xml:space="preserve">
+        <value>Create Section</value>
+    </data>
+    <data name="RemoveSection" xml:space="preserve">
+        <value>Remove Section</value>
+    </data>
     <data name="SelectedDeviceTypeLabel" xml:space="preserve">
         <value>Current Variant</value>
     </data>

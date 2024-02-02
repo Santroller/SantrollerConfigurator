@@ -141,6 +141,30 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
             }
         }
         
+        public static string SelectedSectionLabel {
+            get {
+                return ResourceManager.GetString("SelectedSectionLabel", resourceCulture);
+            }
+        }
+        
+        public static string SelectedSectionNameLabel {
+            get {
+                return ResourceManager.GetString("SelectedSectionNameLabel", resourceCulture);
+            }
+        }
+        
+        public static string CreateSection {
+            get {
+                return ResourceManager.GetString("CreateSection", resourceCulture);
+            }
+        }
+        
+        public static string RemoveSection {
+            get {
+                return ResourceManager.GetString("RemoveSection", resourceCulture);
+            }
+        }
+        
         public static string SelectedDeviceTypeLabel {
             get {
                 return ResourceManager.GetString("SelectedDeviceTypeLabel", resourceCulture);
