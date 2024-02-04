@@ -2678,7 +2678,7 @@
         <value>D- (White) Pin</value>
     </data>
     <data name="SliderBarSensitivityLabel" xml:space="preserve">
-        <value>Slider Bar Resistance</value>
+        <value>Slider Bar Threshold</value>
     </data>
     <data name="SliderAnalogInputPin" xml:space="preserve">
         <value>Slider Input Pin</value>
