@@ -7,6 +7,7 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
@@ -17,15 +18,6 @@ public class GhWtTapInput : Input
     public static string GhWtS1PinType = "ghwts1";
     public static string GhWtS2PinType = "ghwts2";
 
-    private readonly Dictionary<GhWtInputType, int> _order = new()
-    {
-        {GhWtInputType.TapGreen, 0},
-        {GhWtInputType.TapRed, 1},
-        {GhWtInputType.TapYellow, 2},
-        {GhWtInputType.TapBlue, 3},
-        {GhWtInputType.TapOrange, 4}
-    };
-
     private readonly Dictionary<BarButton, int> _channels = new()
     {
         {BarButton.Green, 1},
@@ -35,7 +27,7 @@ public class GhWtTapInput : Input
         {BarButton.Orange, 4}
     };
 
-    private readonly Dictionary<GhWtInputType, int> _channelsFromInput = new()
+    public static readonly Dictionary<GhWtInputType, int> ChannelsFromInput = new()
     {
         {GhWtInputType.TapGreen, 1},
         {GhWtInputType.TapRed, 0},
@@ -122,11 +114,14 @@ public class GhWtTapInput : Input
             this.RaisePropertyChanged(nameof(PinConfigs));
         }
     }
+    [Reactive]
+    public int RawTap { get; set; }
 
     public override IList<PinConfig> PinConfigs => new List<PinConfig>
         {PinConfigAnalog, PinConfigS0, PinConfigS1, PinConfigS2};
 
 
+    public ReadOnlyObservableCollection<int> AvailablePins => Model.AvailablePinsAnalog;
     public ReadOnlyObservableCollection<int> AvailablePinsDigital => Model.AvailablePinsDigital;
 
     public GhWtInputType Input { get; set; }
@@ -196,8 +191,9 @@ public class GhWtTapInput : Input
         switch (Input)
         {
             case <= GhWtInputType.TapOrange:
-                var input = _channelsFromInput[Input];
+                var input = ChannelsFromInput[Input];
                 RawValue = inputs[input] > _maximums[input] + Model.WtSensitivity ? 1 : 0;
+                RawTap = inputs[input];
                 break;
             case GhWtInputType.TapBar:
             case GhWtInputType.TapAll:

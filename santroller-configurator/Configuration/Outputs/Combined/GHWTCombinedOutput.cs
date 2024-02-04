@@ -10,6 +10,7 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
@@ -97,6 +98,9 @@ public class GhwtCombinedOutput : CombinedOutput
         get => _pinConfigS2.Pin;
         set => _pinConfigS2.Pin = value;
     }
+    
+    [Reactive]
+    public string RawTaps { get; set; }
 
     public ReadOnlyObservableCollection<int> AvailablePinsDigital => Model.AvailablePinsDigital;
 
@@ -167,6 +171,28 @@ public class GhwtCombinedOutput : CombinedOutput
     public override SerializedOutput Serialize()
     {
         return new SerializedGhwtCombinedOutput(Peripheral, Pin, PinS0, PinS1, PinS2, Outputs.Items.ToList());
+    }
+
+    public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw, ReadOnlySpan<byte> wiiRaw,
+        ReadOnlySpan<byte> djLeftRaw, ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
+        ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
+        ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw)
+    {
+        base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw);
+        var raw = Peripheral ? peripheralWtRaw : ghWtRaw;
+        if (raw.IsEmpty) return;
+        var inputs = new int[5];
+        for (var i = 0; i < inputs.Length; i++)
+        {
+            inputs[i] = BitConverter.ToInt32(raw[(i * 4)..((i + 1) * 4)]);
+        }
+        var ret = "";
+        foreach (var (button, value) in GhWtTapInput.ChannelsFromInput)
+        {
+            ret += $"{inputs[value]} ";
+        }
+
+        RawTaps = ret;
     }
 
     public override void UpdateBindings()

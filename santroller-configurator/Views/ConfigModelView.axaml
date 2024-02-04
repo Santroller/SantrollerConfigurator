@@ -531,6 +531,15 @@
                                       ItemTemplate="{StaticResource PinToStringTemplate}"
                                       Width="200" />
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding !Model.Branded}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="Raw Value" />
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{Binding RawTap}" />
+                        </StackPanel>
+                        
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
@@ -2093,6 +2102,14 @@
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Sensitivity}" Maximum="1000"
                                        VerticalAlignment="Center"
                                        Width="200" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="Raw Values" />
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{Binding RawTaps}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
