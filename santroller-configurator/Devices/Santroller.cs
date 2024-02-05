@@ -548,6 +548,17 @@ public class Santroller : ConfigurableUsbDevice
         return !IsPico() ? "" : GetString(ReadData(0, (byte) Commands.CommandGetBtAddress));
     }
 
+    public int AnalogRead(int pin)
+    {
+        if (_model == null) return 0;
+        var devicePin = new DevicePin(pin, DevicePinMode.Analog);
+        var mask = _model.Microcontroller.GetAnalogMask(devicePin);
+        var wValue = (ushort) (_model.Microcontroller.GetChannel(devicePin.Pin, false) | (mask << 8));
+        var val = BitConverter.ToUInt16(ReadData(wValue, (byte) Commands.CommandReadAnalog,
+            sizeof(ushort)));
+        return val;
+    }
+
     public override void Disconnect()
     {
         _picking = false;

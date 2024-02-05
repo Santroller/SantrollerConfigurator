@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
+using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -147,7 +148,6 @@ public class MultiplexerInput : DirectInput
         return string.Join("\n", bindings.Select(binding => binding.Item2));
     }
 
-    //TODO: not really sure how best to do this?
     public override void Update(Dictionary<int, int> analogRaw,
         Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw,
         ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw, ReadOnlySpan<byte> djRightRaw,
@@ -156,6 +156,17 @@ public class MultiplexerInput : DirectInput
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
         ReadOnlySpan<byte> cloneRaw)
     {
-        RawValue = analogRaw.GetValueOrDefault(Pin, 0);
+        if (Model.Device is not Santroller santroller)
+        {
+            return;
+        }
+        santroller.DigitalWrite(PinS0, (Channel & (1 << 0)) != 0);
+        santroller.DigitalWrite(PinS1, (Channel & (1 << 1)) != 0);
+        santroller.DigitalWrite(PinS2, (Channel & (1 << 2)) != 0);
+        if (IsSixteenChannel)
+        {
+            santroller.DigitalWrite(PinS3, (Channel & (1 << 3)) != 0);
+        }
+        RawValue = santroller.AnalogRead(Pin);
     }
 }
