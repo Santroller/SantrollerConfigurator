@@ -2,6 +2,30 @@
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2882", MODE="666",TAG+="uaccess", TAG+="udev-acl"
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2883", MODE="666",TAG+="uaccess", TAG+="udev-acl"
 
+# Switch
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0f0d", ATTRS{idProduct}=="0092", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+
+# PS3
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="12ba", ATTRS{idProduct}=="0100", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="12ba", ATTRS{idProduct}=="0120", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="12ba", ATTRS{idProduct}=="0140", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="12ba", ATTRS{idProduct}=="0200", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="12ba", ATTRS{idProduct}=="0210", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="12ba", ATTRS{idProduct}=="074b", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+
+# Wii
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1bad", ATTRS{idProduct}=="0004", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1bad", ATTRS{idProduct}=="0005", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1bad", ATTRS{idProduct}=="3010", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1bad", ATTRS{idProduct}=="3110", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+
+# Broken ids from old fw
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1bad", ATTRS{idProduct}=="074b", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0112", ATTRS{idProduct}=="0f0d", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+
+# Guitar Praise
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0314", ATTRS{idProduct}=="0830", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+
 # Atmel DFU
 ### ATmega16U2
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2fef", MODE="666",TAG+="uaccess", TAG+="udev-acl"

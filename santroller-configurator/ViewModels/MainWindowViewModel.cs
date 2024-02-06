@@ -675,13 +675,13 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     }
 
 
-    private static bool CheckDependencies()
+    private static async Task<bool> CheckDependencies()
     {
         // Call check dependencies on startup, and pop up a dialog saying drivers are missing would you like to install if they are missing
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             return DriverStore.ExistingDrivers.Any(s => s.Contains("atmel_usb_dfu"));
 
-        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath);
+        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath) && await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile) ;
     }
 
     [RelayCommand]
@@ -697,7 +697,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     private async Task InstallDependenciesAsync()
     {
-        if (CheckDependencies()) return;
+        if (await CheckDependencies()) return;
         var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
             "There are some drivers missing, would you like to install them?")).ToTask();
         if (!yesNo.Response) return;
@@ -747,7 +747,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             await process.WaitForExitAsync();
         }
 
-        if (!CheckDependencies())
+        if (!await CheckDependencies())
         {
             // Pop open a dialog that it failed and to try again
         }
