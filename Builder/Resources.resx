@@ -33,7 +33,7 @@
         <value>No Tools Created</value>
     </data>
     <data name="NoSections" xml:space="preserve">
-        <value>No Sections Created</value>
+        <value>No Types Created</value>
     </data>
     <data name="NoDevices" xml:space="preserve">
         <value>No Device Types Created</value>
@@ -75,16 +75,16 @@
         <value>Export UF2</value>
     </data>
     <data name="SelectedSectionLabel" xml:space="preserve">
-        <value>Current Section</value>
+        <value>Current Type</value>
     </data>
     <data name="SelectedSectionNameLabel" xml:space="preserve">
-        <value>Section Name</value>
+        <value>Type Name</value>
     </data>
     <data name="CreateSection" xml:space="preserve">
-        <value>Create Section</value>
+        <value>Create Type</value>
     </data>
     <data name="RemoveSection" xml:space="preserve">
-        <value>Remove Section</value>
+        <value>Remove Type</value>
     </data>
     <data name="SelectedDeviceTypeLabel" xml:space="preserve">
         <value>Current Variant</value>
@@ -96,7 +96,7 @@
         <value>Variant Device Vendor</value>
     </data>
     <data name="MoveSelectedDevice" xml:space="preserve">
-        <value>Move Variant to another section</value>
+        <value>Move Variant to another type</value>
     </data>
     <data name="MoveSelectedDeviceLabel" xml:space="preserve">
         <value>Move Variant</value>
@@ -150,6 +150,6 @@
         <value>Reorder Variants</value>
     </data>
     <data name="ReorderSectionLabel" xml:space="preserve">
-        <value>Reorder Sections</value>
+        <value>Reorder Types</value>
     </data>
 </root>
