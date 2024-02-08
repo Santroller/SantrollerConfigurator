@@ -125,6 +125,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         var item = new BrandedConfigurationSection("Type Name", new List<BrandedConfiguration>());
         SelectedTool.Configurations.Add(item);
         SelectedSection = item;
+        SelectedCopySection = SelectedSection;
     }
 
     [RelayCommand]
@@ -134,6 +135,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         if (SelectedSection == null) return;
         SelectedTool.Configurations.Remove(SelectedSection);
         SelectedSection = SelectedTool.Configurations.Any() ? SelectedTool.Configurations.First() : null;
+        SelectedCopySection = SelectedSection;
     }
 
     [RelayCommand]
@@ -272,6 +274,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         SelectedTool.Configurations.Move(from, from + 1);
         SelectedSection = null;
         SelectedSection = old;
+        SelectedCopySection = SelectedSection;
     }
 
     [RelayCommand]
@@ -287,6 +290,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         SelectedTool.Configurations.Move(from, from - 1);
         SelectedSection = null;
         SelectedSection = old;
+        SelectedCopySection = SelectedSection;
     }
 
     [RelayCommand]
