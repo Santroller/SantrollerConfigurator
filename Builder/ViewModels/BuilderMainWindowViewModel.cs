@@ -122,7 +122,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public void AddSection()
     {
         if (SelectedTool == null) return;
-        var item = new BrandedConfigurationSection("Section Name", new List<BrandedConfiguration>());
+        var item = new BrandedConfigurationSection("Type Name", new List<BrandedConfiguration>());
         SelectedTool.Configurations.Add(item);
         SelectedSection = item;
     }

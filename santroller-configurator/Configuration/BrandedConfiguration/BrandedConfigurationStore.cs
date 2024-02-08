@@ -52,7 +52,7 @@ public class BrandedConfigurationStore : ReactiveObject
 
         if (store.OldConfigurations.Any())
         {
-            Configurations.Add(new BrandedConfigurationSection("Section Name", store.OldConfigurations.Select(s => new BrandedConfiguration(s, branded, screen))));   
+            Configurations.Add(new BrandedConfigurationSection("Type Name", store.OldConfigurations.Select(s => new BrandedConfiguration(s, branded, screen))));   
         }
         else
         {
