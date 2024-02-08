@@ -50,7 +50,16 @@ public class BrandedConfigurationStore : ReactiveObject
             Icon = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/icon.png")));
         }
 
-        Configurations.AddRange(store.Configurations.Select(s => new BrandedConfiguration(s, branded, screen)));
+        if (store.OldConfigurations.Any())
+        {
+            Configurations.Add(new BrandedConfigurationSection("Section Name", store.OldConfigurations.Select(s => new BrandedConfiguration(s, branded, screen))));   
+        }
+        else
+        {
+            Configurations.AddRange(
+                store.Configurations.Select(s => new BrandedConfigurationSection(s, branded, screen)));
+        }
+
         this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
             .ToPropertyEx(this, x => x.ToolNameVersioned);
     }
@@ -69,7 +78,7 @@ public class BrandedConfigurationStore : ReactiveObject
     [Reactive] public Bitmap Icon { get; set; }
 
     public WindowIcon WindowIcon => new(Icon);
-    public ObservableCollection<BrandedConfiguration> Configurations { get; } = new();
+    public ObservableCollection<BrandedConfigurationSection> Configurations { get; } = new();
 
     public static BrandedConfigurationStore LoadBranding(MainWindowViewModel model)
     {

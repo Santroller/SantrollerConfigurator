@@ -98,9 +98,8 @@ public class GhwtCombinedOutput : CombinedOutput
         get => _pinConfigS2.Pin;
         set => _pinConfigS2.Pin = value;
     }
-    
-    [Reactive]
-    public string RawTaps { get; set; }
+
+    [Reactive] public string RawTaps { get; set; } = string.Empty;
 
     public ReadOnlyObservableCollection<int> AvailablePinsDigital => Model.AvailablePinsDigital;
 

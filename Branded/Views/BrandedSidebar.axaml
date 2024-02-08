@@ -57,8 +57,18 @@
                                Text="{x:Static netCore:Resources.PresetLabel}"
                                TextAlignment="Center" />
                     <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0"
-                              SelectedItem="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).SelectedConfig}"
+                              SelectedItem="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).SelectedSection}"
                               ItemsSource="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).Config.Configurations}">
+
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox HorizontalAlignment="Stretch" Margin="20 5 20 0"
+                              SelectedItem="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).SelectedConfig}"
+                              ItemsSource="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).SelectedSection.Configurations}">
 
                         <ComboBox.ItemTemplate>
                             <DataTemplate>

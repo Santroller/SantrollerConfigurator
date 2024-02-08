@@ -32,6 +32,9 @@
     <data name="NoConfigurations" xml:space="preserve">
         <value>No Tools Created</value>
     </data>
+    <data name="NoSections" xml:space="preserve">
+        <value>No Sections Created</value>
+    </data>
     <data name="NoDevices" xml:space="preserve">
         <value>No Device Types Created</value>
     </data>
@@ -92,6 +95,15 @@
     <data name="SelectedDeviceVendorLabel" xml:space="preserve">
         <value>Variant Device Vendor</value>
     </data>
+    <data name="MoveSelectedDevice" xml:space="preserve">
+        <value>Move Variant to another section</value>
+    </data>
+    <data name="MoveSelectedDeviceLabel" xml:space="preserve">
+        <value>Move Variant</value>
+    </data>
+    <data name="CopySelectedDevice" xml:space="preserve">
+        <value>Copy Variant</value>
+    </data>
     <data name="ConfigureSelectedDevice" xml:space="preserve">
         <value>Configure Variant</value>
     </data>
@@ -136,5 +148,8 @@
     </data>
     <data name="ReorderVariantLabel" xml:space="preserve">
         <value>Reorder Variants</value>
+    </data>
+    <data name="ReorderSectionLabel" xml:space="preserve">
+        <value>Reorder Sections</value>
     </data>
 </root>

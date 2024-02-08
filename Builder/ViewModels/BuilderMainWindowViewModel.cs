@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -26,6 +27,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public BuilderConfig Config { get; }
 
     [Reactive] public BrandedConfigurationStore? SelectedTool { get; set; }
+    [Reactive] public BrandedConfigurationSection? SelectedSection { get; set; }
+    [Reactive] public BrandedConfigurationSection? SelectedCopySection { get; set; }
     [Reactive] public BrandedConfiguration? Selected { get; set; }
     [Reactive] public bool ImageError { get; set; }
 
@@ -48,6 +51,12 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             SelectedTool = Config.Configurations.First();
         }
 
+        if (SelectedTool != null && SelectedTool.Configurations.Any())
+        {
+            SelectedSection = SelectedTool.Configurations.First();
+            SelectedCopySection = SelectedSection;
+        }
+
         Router.NavigateAndReset.Execute(new BuilderAuthViewModel(this));
         this.WhenAnyValue(s => s.SelectedDevice).Subscribe(s =>
         {
@@ -61,11 +70,37 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         {
             if (SelectedTool != null && SelectedTool.Configurations.Any())
             {
-                Selected = SelectedTool.Configurations.First();
+                SelectedSection = SelectedTool.Configurations.First();
+                SelectedCopySection = SelectedSection;
+            }
+        });
+        
+        this.WhenAnyValue(s => s.SelectedSection).Subscribe(s =>
+        {
+            if (SelectedSection != null && SelectedSection.Configurations.Any())
+            {
+                Selected = SelectedSection.Configurations.First();
             }
         });
     }
 
+    [RelayCommand]
+    public void Move()
+    {
+        if (Selected == null || SelectedSection == null || SelectedCopySection == null) return;
+        var config = Selected;
+        SelectedSection.Configurations.Remove(config);
+        SelectedCopySection.Configurations.Add(config);
+        Selected = SelectedSection.Configurations.First();
+    }
+
+    [RelayCommand]
+    public void Copy()
+    {
+        if (Selected == null || SelectedSection == null) return;
+        SelectedSection.Configurations.Add(new BrandedConfiguration(new SerialisedBrandedConfiguration(Selected), false, this));
+    }
+    
     [RelayCommand]
     public void AddConfig()
     {
@@ -82,23 +117,41 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Config.Configurations.Remove(SelectedTool);
         SelectedTool = Config.Configurations.Any() ? Config.Configurations.First() : null;
     }
+    
+    [RelayCommand]
+    public void AddSection()
+    {
+        if (SelectedTool == null) return;
+        var item = new BrandedConfigurationSection("Section Name", new List<BrandedConfiguration>());
+        SelectedTool.Configurations.Add(item);
+        SelectedSection = item;
+    }
+
+    [RelayCommand]
+    public void RemoveSection()
+    {
+        if (SelectedTool == null) return;
+        if (SelectedSection == null) return;
+        SelectedTool.Configurations.Remove(SelectedSection);
+        SelectedSection = SelectedTool.Configurations.Any() ? SelectedTool.Configurations.First() : null;
+    }
 
     [RelayCommand]
     public void AddDevice()
     {
-        if (SelectedTool == null) return;
+        if (SelectedSection == null) return;
         var item = new BrandedConfiguration("Vendor Name", "Product Name", this);
-        SelectedTool.Configurations.Add(item);
+        SelectedSection.Configurations.Add(item);
         Selected = item;
     }
 
     [RelayCommand]
     public void RemoveDevice()
     {
-        if (SelectedTool == null) return;
+        if (SelectedSection == null) return;
         if (Selected == null) return;
-        SelectedTool.Configurations.Remove(Selected);
-        Selected = SelectedTool.Configurations.Any() ? SelectedTool.Configurations.First() : null;
+        SelectedSection.Configurations.Remove(Selected);
+        Selected = SelectedSection.Configurations.Any() ? SelectedSection.Configurations.First() : null;
     }
 
     [RelayCommand]
@@ -204,19 +257,50 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
         return state;
     }
-
+    
     [RelayCommand]
-    public void MoveDown()
+    public void MoveSectionDown()
     {
-        if (SelectedTool == null || Selected == null) return;
-        var from = SelectedTool.Configurations.IndexOf(Selected);
+        if (SelectedTool == null || SelectedSection == null) return;
+        var from = SelectedTool.Configurations.IndexOf(SelectedSection);
         if (from == SelectedTool.Configurations.Count - 1)
         {
             return;
         }
 
-        var old = Selected;
+        var old = SelectedSection;
         SelectedTool.Configurations.Move(from, from + 1);
+        SelectedSection = null;
+        SelectedSection = old;
+    }
+
+    [RelayCommand]
+    public void MoveSectionUp()
+    {
+        if (SelectedTool == null || SelectedSection == null) return;
+        var from = SelectedTool.Configurations.IndexOf(SelectedSection);
+        if (from == 0)
+        {
+            return;
+        }
+        var old = SelectedSection;
+        SelectedTool.Configurations.Move(from, from - 1);
+        SelectedSection = null;
+        SelectedSection = old;
+    }
+
+    [RelayCommand]
+    public void MoveDown()
+    {
+        if (SelectedSection == null || Selected == null) return;
+        var from = SelectedSection.Configurations.IndexOf(Selected);
+        if (from == SelectedSection.Configurations.Count - 1)
+        {
+            return;
+        }
+
+        var old = Selected;
+        SelectedSection.Configurations.Move(from, from + 1);
         Selected = null;
         Selected = old;
     }
@@ -224,14 +308,14 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     [RelayCommand]
     public void MoveUp()
     {
-        if (SelectedTool == null || Selected == null) return;
-        var from = SelectedTool.Configurations.IndexOf(Selected);
+        if (SelectedSection == null || Selected == null) return;
+        var from = SelectedSection.Configurations.IndexOf(Selected);
         if (from == 0)
         {
             return;
         }
         var old = Selected;
-        SelectedTool.Configurations.Move(from, from - 1);
+        SelectedSection.Configurations.Move(from, from - 1);
         Selected = null;
         Selected = old;
     }
@@ -241,8 +325,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     {
         Save();
         if (SelectedTool == null) return;
-        // Check for duplicate variant names
-        var names = SelectedTool.Configurations.Select(s => s.ProductName).ToList();
+        var names = SelectedTool.Configurations.SelectMany(s => s.Configurations.Select(s2 => s2.ProductName)).ToList();
         if (names.ToHashSet().Count != names.Count)
         {
             ProgressbarColor = ProgressBarError;
@@ -250,25 +333,27 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             Message = Resources.UniqueName;
             return;
         }
-
         // Compile all configs and save the resulting UF2 into the brandedconfiguration
         var start = 0;
-        var steps = 100 / SelectedTool.Configurations.Count;
-        foreach (var config in SelectedTool.Configurations)
+        var steps = 100 / SelectedTool.Configurations.Sum(s => s.Configurations.Count);
+        foreach (var section in SelectedTool.Configurations)
         {
-            if (config.Model.HasError)
+            foreach (var config in section.Configurations)
             {
-                ProgressbarColor = ProgressBarError;
-                Complete(100);
-                Message = string.Format(Resources.ConfigIncomplete, config.ProductName);
-                return;
-            }
+                if (config.Model.HasError)
+                {
+                    ProgressbarColor = ProgressBarError;
+                    Complete(100);
+                    Message = string.Format(Resources.ConfigIncomplete, config.ProductName);
+                    return;
+                }
 
-            config.Model.Variant = config.ProductName;
-            await Write(config.Model, false, config.ExtraConfig(), start, steps);
-            config.LoadUf2();
-            start += steps;
-            Progress = start;
+                config.Model.Variant = config.ProductName;
+                await Write(config.Model, false, config.ExtraConfig(), start, steps);
+                config.LoadUf2();
+                start += steps;
+                Progress = start;
+            }
         }
 
         // Extract linux executable and append branded config into executable.

@@ -72,10 +72,25 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Configurable}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="Device Variant">
+                                   Width="300" Content="Device Type">
                             </Label>
                             <ComboBox HorizontalAlignment="Stretch"
                                       ItemsSource="{Binding BrandedMain.Config.Configurations}"
+                                      SelectedItem="{Binding BrandedMain.SelectedSection}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding !Configurable}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="Device Variant">
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      ItemsSource="{Binding BrandedMain.SelectedSection.Configurations}"
                                       SelectedItem="{Binding BrandedMain.SelectedConfig}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>

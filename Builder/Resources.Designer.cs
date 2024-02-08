@@ -63,6 +63,12 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
             }
         }
         
+        public static string NoSections {
+            get {
+                return ResourceManager.GetString("NoSections", resourceCulture);
+            }
+        }
+        
         public static string NoDevices {
             get {
                 return ResourceManager.GetString("NoDevices", resourceCulture);
@@ -183,6 +189,24 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
             }
         }
         
+        public static string MoveSelectedDevice {
+            get {
+                return ResourceManager.GetString("MoveSelectedDevice", resourceCulture);
+            }
+        }
+        
+        public static string MoveSelectedDeviceLabel {
+            get {
+                return ResourceManager.GetString("MoveSelectedDeviceLabel", resourceCulture);
+            }
+        }
+        
+        public static string CopySelectedDevice {
+            get {
+                return ResourceManager.GetString("CopySelectedDevice", resourceCulture);
+            }
+        }
+        
         public static string ConfigureSelectedDevice {
             get {
                 return ResourceManager.GetString("ConfigureSelectedDevice", resourceCulture);
@@ -270,6 +294,12 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
         public static string ReorderVariantLabel {
             get {
                 return ResourceManager.GetString("ReorderVariantLabel", resourceCulture);
+            }
+        }
+        
+        public static string ReorderSectionLabel {
+            get {
+                return ResourceManager.GetString("ReorderSectionLabel", resourceCulture);
             }
         }
     }

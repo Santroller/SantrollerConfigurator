@@ -20,8 +20,10 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
 {
     public BrandedConfigurationStore Config { get; }
 
+    [Reactive] public BrandedConfigurationSection SelectedSection { get; set; }
+    [Reactive] public BrandedConfiguration SelectedConfig { get; set; }
+
     public ConfigViewModel? Model { get; set; }
-    public BrandedConfiguration SelectedConfig { get; set; }
 
     private TaskCompletionSource<string>? _bootloaderPath;
 
@@ -52,7 +54,8 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
         ProgressBarWarning = ColorToHex(Config.WarningColor);
         ProgressBarError = ColorToHex(Config.ErrorColor);
         ProgressbarColor = ProgressBarPrimary;
-        SelectedConfig = Config.Configurations.First();
+        SelectedSection = Config.Configurations.First();
+        SelectedConfig = SelectedSection.Configurations.First();
         Router.NavigateAndReset.Execute(new BrandedMainViewModel(this));
         AvailableDevices.Connect().ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
         {
@@ -67,6 +70,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
                         break;
                 }
         });
+        this.WhenAnyValue(x => x.SelectedSection).Subscribe(s => { SelectedConfig = s.Configurations.First(); });
         this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
             .Select(s =>
                 s is {Item1: not null, Item2: true} &&
@@ -159,7 +163,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     public void ConfigureBranded()
     {
         if (SelectedDevice is not Santroller santroller) return;
-        SelectedConfig = Config.Configurations.First(s =>
+        SelectedConfig = Config.Configurations.SelectMany(s => s.Configurations).First(s =>
             s.VendorName == santroller.Manufacturer && s.ProductName == santroller.Product);
         Model = new ConfigViewModel(this, SelectedDevice, true);
         new SerializedConfiguration(SelectedConfig.Model).LoadConfiguration(Model);

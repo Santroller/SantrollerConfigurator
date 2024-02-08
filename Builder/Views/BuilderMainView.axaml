@@ -145,18 +145,71 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceTypeLabel}">
+                                       Width="300" Content="{x:Static viewModels:Resources.SelectedSectionLabel}">
 
                                 </Label>
                                 <ComboBox Width="300" HorizontalAlignment="Stretch" IsEnabled="false"
                                           IsVisible="{Binding !BuilderMain.SelectedTool.Configurations.Count}"
                                           SelectedIndex="0">
-                                    <ComboBoxItem Content="{x:Static viewModels:Resources.NoDevices}"></ComboBoxItem>
+                                    <ComboBoxItem Content="{x:Static viewModels:Resources.NoSections}"></ComboBoxItem>
                                 </ComboBox>
                                 <ComboBox Width="300" HorizontalAlignment="Stretch"
                                           IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}"
-                                          SelectedItem="{Binding BuilderMain.Selected}"
+                                          SelectedItem="{Binding BuilderMain.SelectedSection}"
                                           ItemsSource="{Binding BuilderMain.SelectedTool.Configurations}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <Button Width="125" HorizontalContentAlignment="Center"
+                                        Content="{x:Static viewModels:Resources.CreateSection}"
+                                        Command="{Binding BuilderMain.AddSectionCommand}" />
+                                <Button Width="125" HorizontalContentAlignment="Center"
+                                        Content="{x:Static viewModels:Resources.RemoveSection}"
+                                        Command="{Binding BuilderMain.RemoveSectionCommand}"
+                                        IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static viewModels:Resources.ReorderSectionLabel}">
+                                </Label>
+                                <Button Width="150" HorizontalContentAlignment="Center"
+                                        Content="Move Up"
+                                        Command="{Binding BuilderMain.MoveSectionUpCommand}"
+                                        IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" />
+                                <Button Width="150" HorizontalContentAlignment="Center"
+                                        Content="Move Down"
+                                        Command="{Binding BuilderMain.MoveSectionDownCommand}"
+                                        IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Width="300"
+                                           Content="{x:Static viewModels:Resources.SelectedSectionNameLabel}">
+                                    </Label>
+                                    <TextBox Width="300" Text="{Binding BuilderMain.SelectedSection.Name}"></TextBox>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static viewModels:Resources.SelectedDeviceTypeLabel}">
+                                </Label>
+                                <ComboBox Width="300" HorizontalAlignment="Stretch" IsEnabled="false"
+                                          IsVisible="{Binding !BuilderMain.SelectedSection.Configurations.Count}"
+                                          SelectedIndex="0">
+                                    <ComboBoxItem Content="{x:Static viewModels:Resources.NoDevices}"></ComboBoxItem>
+                                </ComboBox>
+                                <ComboBox Width="300" HorizontalAlignment="Stretch"
+                                          IsVisible="{Binding BuilderMain.SelectedSection.Configurations.Count}"
+                                          SelectedItem="{Binding BuilderMain.Selected}"
+                                          ItemsSource="{Binding BuilderMain.SelectedSection.Configurations}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding ProductName}" />
@@ -169,7 +222,7 @@
                                 <Button Width="125" HorizontalContentAlignment="Center"
                                         Content="{x:Static viewModels:Resources.RemoveVariant}"
                                         Command="{Binding BuilderMain.RemoveDeviceCommand}"
-                                        IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" />
+                                        IsEnabled="{Binding BuilderMain.SelectedSection.Configurations.Count}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
@@ -179,13 +232,13 @@
                                 <Button Width="150" HorizontalContentAlignment="Center"
                                         Content="Move Up"
                                         Command="{Binding BuilderMain.MoveUpCommand}"
-                                        IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}"/>
+                                        IsEnabled="{Binding BuilderMain.SelectedSection.Configurations.Count}" />
                                 <Button Width="150" HorizontalContentAlignment="Center"
                                         Content="Move Down"
                                         Command="{Binding BuilderMain.MoveDownCommand}"
-                                        IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}" />
+                                        IsEnabled="{Binding BuilderMain.SelectedSection.Configurations.Count}" />
                             </StackPanel>
-                            <StackPanel IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}">
+                            <StackPanel IsVisible="{Binding BuilderMain.SelectedSection.Configurations.Count}">
                                 <StackPanel Orientation="Horizontal">
                                     <Label VerticalAlignment="Center"
                                            VerticalContentAlignment="Center"
@@ -209,8 +262,41 @@
                                            Content="{x:Static viewModels:Resources.ConfigureSelectedDevice}">
                                     </Label>
                                     <Button Width="300"
+                                            HorizontalContentAlignment="Center"
                                             Content="{x:Static viewModels:Resources.ConfigureSelectedDevice}"
                                             Command="{Binding BuilderMain.StartConfiguringCommand}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Width="300"
+                                           Content="{x:Static viewModels:Resources.CopySelectedDevice}">
+                                    </Label>
+                                    <Button Width="300"
+                                            HorizontalContentAlignment="Center"
+                                            Content="{x:Static viewModels:Resources.CopySelectedDevice}"
+                                            Command="{Binding BuilderMain.CopyCommand}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Width="300"
+                                           Content="{x:Static viewModels:Resources.MoveSelectedDevice}">
+                                    </Label>
+                                    <ComboBox Width="300" HorizontalAlignment="Stretch"
+                                              IsVisible="{Binding BuilderMain.SelectedTool.Configurations.Count}"
+                                              SelectedItem="{Binding BuilderMain.SelectedCopySection}"
+                                              ItemsSource="{Binding BuilderMain.SelectedTool.Configurations}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <Button Width="125"
+                                            HorizontalContentAlignment="Center"
+                                            Content="{x:Static viewModels:Resources.MoveSelectedDeviceLabel}"
+                                            Command="{Binding BuilderMain.MoveCommand}" />
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>
@@ -220,6 +306,7 @@
                                    Width="300" Content="{x:Static viewModels:Resources.SaveConfigTool}">
                             </Label>
                             <Button Width="300" Content="{x:Static viewModels:Resources.SaveConfigTool}"
+                                    HorizontalContentAlignment="Center"
                                     Command="{Binding BuilderMain.SaveCommand}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -228,6 +315,7 @@
                                    Width="300" Content="{x:Static viewModels:Resources.PackageTool}">
                             </Label>
                             <Button Width="300" IsEnabled="{Binding BuilderMain.SelectedTool.Configurations.Count}"
+                                    HorizontalContentAlignment="Center"
                                     Content="{x:Static viewModels:Resources.PackageTool}"
                                     Command="{Binding BuilderMain.PackageCommand}" />
                         </StackPanel>

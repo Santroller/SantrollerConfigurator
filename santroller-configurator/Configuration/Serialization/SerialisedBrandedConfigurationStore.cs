@@ -13,7 +13,7 @@ public class SerialisedBrandedConfigurationStore
 {
     public SerialisedBrandedConfigurationStore()
     {
-        
+       
     }
     public SerialisedBrandedConfigurationStore(BrandedConfigurationStore store)
     {
@@ -21,7 +21,8 @@ public class SerialisedBrandedConfigurationStore
         WarningColor = store.WarningColor;
         PrimaryColor = store.PrimaryColor;
         ErrorColor = store.ErrorColor;
-        Configurations.AddRange(store.Configurations.Select(s => new SerialisedBrandedConfiguration(s)).ToList());
+        Configurations.AddRange(store.Configurations.Select(s => new SerialisedBrandedConfigurationSection(s)).ToList()); 
+        
         var stream = new MemoryStream();
         store.Logo.Save(stream);
         Logo = stream.ToArray();
@@ -31,7 +32,6 @@ public class SerialisedBrandedConfigurationStore
     }
 
     [ProtoMember(1)] public string ToolName { get; set; } = null!;
-    [ProtoMember(4)] public List<SerialisedBrandedConfiguration> Configurations { get; set; } = new();
     
     [ProtoMember(5)] public Color WarningColor { get; set; }
     
@@ -40,4 +40,6 @@ public class SerialisedBrandedConfigurationStore
     [ProtoMember(7)] public Color ErrorColor { get; set; }
     [ProtoMember(8)] public byte[] Logo { get; set; } = Array.Empty<byte>();
     [ProtoMember(9)] public byte[] Icon { get; set; } = Array.Empty<byte>();
+    [ProtoMember(4)] public List<SerialisedBrandedConfiguration> OldConfigurations { get; set; } = new();
+    [ProtoMember(10)] public List<SerialisedBrandedConfigurationSection> Configurations { get; set; } = new();
 }

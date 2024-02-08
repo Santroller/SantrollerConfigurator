@@ -15,7 +15,7 @@ public partial class BrandedMainViewModel : ReactiveObject, IRoutableViewModel
     {
         BrandedMain = screen;
         HostScreen = screen;
-        _validDevices.UnionWith(BrandedMain.Config.Configurations.Select(s => $"{s.VendorName}_{s.ProductName}"));
+        _validDevices.UnionWith(BrandedMain.Config.Configurations.SelectMany(s => s.Configurations).Select(s => $"{s.VendorName}_{s.ProductName}"));
         this.WhenAnyValue(s => s.BrandedMain.SelectedDevice).Select(s =>
                 s is Santroller santroller && _validDevices.Contains($"{santroller.Manufacturer}_{santroller.Product}"))
             .ToPropertyEx(this, x => x.Configurable);
