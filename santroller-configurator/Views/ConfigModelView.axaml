@@ -539,7 +539,7 @@
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{Binding RawTap}" />
                         </StackPanel>
-                        
+
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
@@ -1400,7 +1400,7 @@
                                     Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding DeadZone}" />
                         </StackPanel>
                     </StackPanel>
-                    
+
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding AllowInvert}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
@@ -2471,7 +2471,7 @@
 
                         </StackPanel>
 
-                        
+
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsRpcs3CompatibleController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
@@ -2649,8 +2649,17 @@
                         </StackPanel>
                     </StackPanel>
                 </Expander>
-                <Expander HorizontalAlignment="Stretch" Header="{Binding}" IsVisible="{Binding !Branded}"
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}"
                           IsExpanded="{Binding LedConfigExpanded}">
+                    
+                    <Expander.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                            <Binding Path="!Branded" />
+                            <Binding
+                                Path="IsApa102" />
+                            <Binding Path="IsApa102Peripheral" />
+                        </MultiBinding>
+                    </Expander.IsVisible>
                     <Expander.HeaderTemplate>
                         <DataTemplate DataType="viewModels:ConfigViewModel">
                             <Panel>
@@ -2673,143 +2682,146 @@
                         </DataTemplate>
                     </Expander.HeaderTemplate>
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.LEDTypeLabel}" />
-                            <ComboBox Width="200"
-                                      SelectedItem="{Binding LedType}"
-                                      ItemTemplate="{StaticResource EnumToStringTemplate}"
-                                      ItemsSource="{Binding LedTypes}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsIndexedLed}">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.LEDTypeCountLabel}" />
-                            <NumericUpDown Width="200" FormatString="{}{0:#,0}"
-                                           Value="{Binding LedCount}"
-                                           Minimum="1"
-                                           Maximum="180" />
-                        </StackPanel>
+                        <StackPanel IsVisible="{Binding !Branded}">
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding !Branded}">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.LEDTypeLabel}" />
+                                <ComboBox Width="200"
+                                          SelectedItem="{Binding LedType}"
+                                          ItemTemplate="{StaticResource EnumToStringTemplate}"
+                                          ItemsSource="{Binding LedTypes}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsIndexedLed}">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.LEDTypeCountLabel}" />
+                                <NumericUpDown Width="200" FormatString="{}{0:#,0}"
+                                               Value="{Binding LedCount}"
+                                               Minimum="1"
+                                               Maximum="180" />
+                            </StackPanel>
 
 
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel.IsVisible>
-                                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                    <Binding Path="BindableSpi" />
-                                    <Binding Path="IsIndexedLed" />
-                                </MultiBinding>
-                            </StackPanel.IsVisible>
-                            <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsApa102}"
-                                   Content="{x:Static netCore:Resources.APA102SCKLabel}" />
-                            <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
-                                   Content="{x:Static netCore:Resources.STP16CPC26SCKLabel}" />
-                            <ComboBox Width="200"
-                                      SelectedItem="{Binding LedSck}"
-                                      ItemsSource="{Binding AvailableApaSckPins}"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      ItemTemplate="{StaticResource PinToStringTemplateSpi}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel.IsVisible>
-                                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                    <Binding Path="BindableSpi" />
-                                    <Binding Path="IsIndexedLed" />
-                                </MultiBinding>
-                            </StackPanel.IsVisible>
-                            <Label IsVisible="{Binding IsApa102}" VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.APA102MOSILabel}" />
-                            <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MOSILabel}" />
-                            <ComboBox Width="200"
-                                      SelectedItem="{Binding LedMosi}"
-                                      ItemsSource="{Binding AvailableApaMosiPins}"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      ItemTemplate="{StaticResource PinToStringTemplateSpi}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26OELabel}" />
-                            <ComboBox Width="200"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      SelectedItem="{Binding Stp16Oe}"
-                                      ItemsSource="{Binding AvailablePinsDigital}"
-                                      ItemTemplate="{StaticResource PinToStringTemplate}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26LELabel}" />
-                            <ComboBox Width="200"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      SelectedItem="{Binding Stp16Le}"
-                                      ItemsSource="{Binding AvailablePinsDigital}"
-                                      ItemTemplate="{StaticResource PinToStringTemplate}" />
-                        </StackPanel>
-                        <StackPanel IsVisible="{Binding HasPeripheral}" Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.LEDTypePeripheralLabel}" />
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding Path="BindableSpi" />
+                                        <Binding Path="IsIndexedLed" />
+                                    </MultiBinding>
+                                </StackPanel.IsVisible>
+                                <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsApa102}"
+                                       Content="{x:Static netCore:Resources.APA102SCKLabel}" />
+                                <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
+                                       Content="{x:Static netCore:Resources.STP16CPC26SCKLabel}" />
+                                <ComboBox Width="200"
+                                          SelectedItem="{Binding LedSck}"
+                                          ItemsSource="{Binding AvailableApaSckPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding Path="BindableSpi" />
+                                        <Binding Path="IsIndexedLed" />
+                                    </MultiBinding>
+                                </StackPanel.IsVisible>
+                                <Label IsVisible="{Binding IsApa102}" VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.APA102MOSILabel}" />
+                                <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
+                                       Content="{x:Static netCore:Resources.STP16CPC26MOSILabel}" />
+                                <ComboBox Width="200"
+                                          SelectedItem="{Binding LedMosi}"
+                                          ItemsSource="{Binding AvailableApaMosiPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.STP16CPC26OELabel}" />
+                                <ComboBox Width="200"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          SelectedItem="{Binding Stp16Oe}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.STP16CPC26LELabel}" />
+                                <ComboBox Width="200"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          SelectedItem="{Binding Stp16Le}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding HasPeripheral}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.LEDTypePeripheralLabel}" />
 
-                            <ComboBox VerticalAlignment="Center" Width="200" SelectedItem="{Binding LedTypePeripheral}"
-                                      ItemTemplate="{StaticResource EnumToStringTemplate}"
-                                      ItemsSource="{Binding LedTypes}" />
-                        </StackPanel>
-                        <StackPanel IsVisible="{Binding IsIndexedLedPeripheral}" Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.LEDTypePeripheralCountLabel}" />
-                            <NumericUpDown VerticalAlignment="Center" Width="200" FormatString="{}{0:#,0}"
-                                           Value="{Binding LedCountPeripheral}"
-                                           Minimum="1"
-                                           Maximum="180" HorizontalAlignment="Stretch" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel.IsVisible>
-                                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                    <Binding Path="BindableSpi" />
-                                    <Binding Path="IsIndexedLedPeripheral" />
-                                </MultiBinding>
-                            </StackPanel.IsVisible>
-                            <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.APA102SCKPeripheralLabel}" />
-                            <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26SCKPeripheralLabel}" />
-                            <ComboBox VerticalAlignment="Center" Width="200"
-                                      SelectedItem="{Binding LedSckPeripheral}"
-                                      ItemsSource="{Binding AvailableApaSckPins}"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      ItemTemplate="{StaticResource PinToStringTemplatePeripheralSpi}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel.IsVisible>
-                                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                    <Binding Path="BindableSpi" />
-                                    <Binding Path="IsIndexedLedPeripheral" />
-                                </MultiBinding>
-                            </StackPanel.IsVisible>
-                            <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.APA102MOSIPeripheralLabel}" />
-                            <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26MOSIPeripheralLabel}" />
-                            <ComboBox VerticalAlignment="Center" Width="200"
-                                      SelectedItem="{Binding LedMosiPeripheral}"
-                                      ItemsSource="{Binding AvailableApaMosiPins}"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      ItemTemplate="{StaticResource PinToStringTemplatePeripheralSpi}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26OEPeripheralLabel}" />
-                            <ComboBox Width="200"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      SelectedItem="{Binding Stp16OePeripheral}"
-                                      ItemsSource="{Binding AvailablePinsDigital}"
-                                      ItemTemplate="{StaticResource PinToStringTemplate}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.STP16CPC26LEPeripheralLabel}" />
-                            <ComboBox Width="200"
-                                      SelectedItem="{Binding Stp16LePeripheral}"
-                                      ItemsSource="{Binding AvailablePinsDigital}"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      ItemTemplate="{StaticResource PinToStringTemplate}" />
+                                <ComboBox VerticalAlignment="Center" Width="200"
+                                          SelectedItem="{Binding LedTypePeripheral}"
+                                          ItemTemplate="{StaticResource EnumToStringTemplate}"
+                                          ItemsSource="{Binding LedTypes}" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding IsIndexedLedPeripheral}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.LEDTypePeripheralCountLabel}" />
+                                <NumericUpDown VerticalAlignment="Center" Width="200" FormatString="{}{0:#,0}"
+                                               Value="{Binding LedCountPeripheral}"
+                                               Minimum="1"
+                                               Maximum="180" HorizontalAlignment="Stretch" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding Path="BindableSpi" />
+                                        <Binding Path="IsIndexedLedPeripheral" />
+                                    </MultiBinding>
+                                </StackPanel.IsVisible>
+                                <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.APA102SCKPeripheralLabel}" />
+                                <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.STP16CPC26SCKPeripheralLabel}" />
+                                <ComboBox VerticalAlignment="Center" Width="200"
+                                          SelectedItem="{Binding LedSckPeripheral}"
+                                          ItemsSource="{Binding AvailableApaSckPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplatePeripheralSpi}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding Path="BindableSpi" />
+                                        <Binding Path="IsIndexedLedPeripheral" />
+                                    </MultiBinding>
+                                </StackPanel.IsVisible>
+                                <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.APA102MOSIPeripheralLabel}" />
+                                <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.STP16CPC26MOSIPeripheralLabel}" />
+                                <ComboBox VerticalAlignment="Center" Width="200"
+                                          SelectedItem="{Binding LedMosiPeripheral}"
+                                          ItemsSource="{Binding AvailableApaMosiPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplatePeripheralSpi}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.STP16CPC26OEPeripheralLabel}" />
+                                <ComboBox Width="200"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          SelectedItem="{Binding Stp16OePeripheral}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.STP16CPC26LEPeripheralLabel}" />
+                                <ComboBox Width="200"
+                                          SelectedItem="{Binding Stp16LePeripheral}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}" />
+                            </StackPanel>
                         </StackPanel>
                         <StackPanel>
                             <StackPanel.IsVisible>
