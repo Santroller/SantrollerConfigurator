@@ -575,6 +575,7 @@ public class Santroller : ConfigurableUsbDevice
 
     public int MultiplexerRead(int pinS0, int pinS1, int pinS2, int pinS3, int pin, int channel, bool isSixteenChannel)
     {
+        // Disable standard multiplexer reads otherwise standard controller polls will set digital pins in the background
         WriteData(0, (byte) Commands.CommandDisableMultiplexer,
             new byte[] {1});
         DigitalWrite(pinS0, (channel & (1 << 0)) != 0);
@@ -585,6 +586,7 @@ public class Santroller : ConfigurableUsbDevice
             DigitalWrite(pinS3, (channel & (1 << 3)) != 0);
         }
         var ret = AnalogRead(pin);
+        // Enable them again
         WriteData(0, (byte) Commands.CommandDisableMultiplexer,
             new byte[] {0});
         return ret;
