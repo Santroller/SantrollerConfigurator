@@ -155,7 +155,6 @@ public class Led : Output
         RockBandDrum = 0;
         Turntable = 0;
         StageKitCommand = 0;
-        StrobeSpeed = 0;
         switch (command)
         {
             case LedCommandType.InputReactive:
@@ -190,7 +189,6 @@ public class Led : Output
                 switch (StageKitCommand)
                 {
                     case StageKitCommand.Strobe:
-                        StrobeSpeed = (StageKitStrobeSpeed) param2;
                         break;
                     default:
                         StageKitLed = param2 + 1;
@@ -395,7 +393,6 @@ public class Led : Output
 
     [ObservableAsProperty] public bool UsesPwm { get; }
     [Reactive] public int Player { get; set; }
-    [Reactive] public StageKitStrobeSpeed StrobeSpeed { get; set; }
     [Reactive] public int StageKitLed { get; set; }
 
     [Reactive] public int Combo { get; set; }
@@ -521,11 +518,6 @@ public class Led : Output
                 break;
             case LedCommandType.StageKitLed:
                 param1 = (int) StageKitCommand;
-                param2 = StageKitCommand switch
-                {
-                    StageKitCommand.Strobe => (int) StrobeSpeed,
-                    _ => StageKitLed - 1
-                };
 
                 break;
         }
@@ -743,10 +735,10 @@ public class Led : Output
             case LedCommandType.StageKitLed when StageKitCommand is StageKitCommand.Strobe &&
                                                  mode == ConfigField.StrobeLed:
                 return $$"""
-                         if (last_strobe && last_strobe - millis() > stage_kit_millis[strobe_delay]) {
+                         if (last_strobe && (millis() - last_strobe) > stage_kit_millis[strobe_delay]) {
                          last_strobe = millis();
                              {{on}}
-                         } else if (last_strobe && last_strobe - millis() > 10) {
+                         } else if (last_strobe && (millis() - last_strobe) > 10) {
                              {{off}}
                          }
                          """;
@@ -844,11 +836,12 @@ public class Led : Output
             case StageKitCommand.Strobe:
                 return
                     $$"""
-                      if (rumble_left == 0 && rumble_right >= {{(int) RumbleCommand.StageKitStrobeLightSlow}} && rumble_right <= {{(int) RumbleCommand.StageKitStrobeLightFastest}}) {
+                      if (rumble_left == 0 && rumble_right >= {{(int) RumbleCommand.StageKitStrobeLightSlow}} && rumble_right <= {{(int) RumbleCommand.StageKitStrobeLightOff}}) {
                            strobe_delay = 5 - (rumble_right - {{(int) RumbleCommand.StageKitFogOff}});
+                           last_strobe = millis();
                       }
                       if (strobe_delay == 0) {
-                          strobe_delay = 0;
+                          last_strobe = 0;
                           {{off}}
                       }
                       """;

@@ -660,15 +660,6 @@
                                   ItemTemplate="{StaticResource EnumToStringTemplate}"
                                   ItemsSource="{Binding Turntables}" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding StageKitStrobeSpeedMode}">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.StrobeSpeedLabel}" />
-                        <ComboBox VerticalAlignment="Center"
-                                  SelectedItem="{Binding StrobeSpeed}"
-                                  ItemTemplate="{StaticResource EnumToStringTemplate}"
-                                  ItemsSource="{Binding StageKitStrobeSpeeds}" />
-                    </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding StageKitLedMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
