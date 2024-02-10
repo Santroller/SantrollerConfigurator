@@ -983,7 +983,7 @@
                         <Label VerticalAlignment="Center" Width="300"
                                Content="{x:Static netCore:Resources.ChannelLabel}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Channel}" Minimum="0"
-                                       Maximum="8" />
+                                       Maximum="7" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center" Width="300"
