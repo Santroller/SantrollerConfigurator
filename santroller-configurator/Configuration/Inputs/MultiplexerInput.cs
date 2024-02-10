@@ -160,13 +160,7 @@ public class MultiplexerInput : DirectInput
         {
             return;
         }
-        santroller.DigitalWrite(PinS0, (Channel & (1 << 0)) != 0);
-        santroller.DigitalWrite(PinS1, (Channel & (1 << 1)) != 0);
-        santroller.DigitalWrite(PinS2, (Channel & (1 << 2)) != 0);
-        if (IsSixteenChannel)
-        {
-            santroller.DigitalWrite(PinS3, (Channel & (1 << 3)) != 0);
-        }
-        RawValue = santroller.AnalogRead(Pin);
+
+        RawValue = santroller.MultiplexerRead(PinS0, PinS1, PinS2, PinS3, Pin, Channel, IsSixteenChannel);
     }
 }

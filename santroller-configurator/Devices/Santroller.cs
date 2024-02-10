@@ -63,6 +63,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandWriteAnalog,
         CommandWriteDigital,
         CommandSetBrightness,
+        CommandDisableMultiplexer,
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -570,5 +571,22 @@ public class Santroller : ConfigurableUsbDevice
     public void StopTicking()
     {
         _timer.Stop();
+    }
+
+    public int MultiplexerRead(int pinS0, int pinS1, int pinS2, int pinS3, int pin, int channel, bool isSixteenChannel)
+    {
+        WriteData(0, (byte) Commands.CommandDisableMultiplexer,
+            new byte[] {1});
+        DigitalWrite(pinS0, (channel & (1 << 0)) != 0);
+        DigitalWrite(pinS1, (channel & (1 << 1)) != 0);
+        DigitalWrite(pinS2, (channel & (1 << 2)) != 0);
+        if (isSixteenChannel)
+        {
+            DigitalWrite(pinS3, (channel & (1 << 3)) != 0);
+        }
+        var ret = AnalogRead(pin);
+        WriteData(0, (byte) Commands.CommandDisableMultiplexer,
+            new byte[] {0});
+        return ret;
     }
 }
