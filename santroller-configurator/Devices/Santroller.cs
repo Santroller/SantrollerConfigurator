@@ -45,7 +45,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandGetExtensionWii,
         CommandGetExtensionPs2,
         CommandSetLeds,
-        CommandSetDetect,
+        CommandDisableMultiplexer,
         CommandReadSerial,
         CommandReadRf,
         CommandReadUsbHost,
@@ -63,7 +63,6 @@ public class Santroller : ConfigurableUsbDevice
         CommandWriteAnalog,
         CommandWriteDigital,
         CommandSetBrightness,
-        CommandDisableMultiplexer,
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
