@@ -133,6 +133,7 @@ public class PlatformIo
 
     public async Task<PlatformIoPort[]?> GetPortsAsync()
     {
+        if (!Path.Exists(_pythonExecutable)) return null;
         _portProcess.Start();
         var output = await _portProcess.StandardOutput.ReadToEndAsync();
         await _portProcess.WaitForExitAsync();
