@@ -11,6 +11,7 @@ using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat.ModeDetection;
+using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
@@ -120,6 +121,10 @@ public abstract class OutputButton : Output
         
         var gen = Input.Generate();
         var reset = $"debounce[{debounceIndex}]={debounce};";
+        if (writer != null)
+        {
+            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, Debounce)}";
+        }
 
         if (Input is MacroInput)
         {

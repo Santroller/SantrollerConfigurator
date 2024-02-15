@@ -35,7 +35,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 {
     private const string UpToDate = "Up to date";
     private const string UdevFile = "68-santroller.rules";
-    private const string UdevPath = $"/etc/udev/rules.d/{UdevFile}";
+    private const string UdevPath = $"/usr/lib/udev/rules.d/{UdevFile}";
     private static readonly Regex VersionRegex = new("v\\d+\\.\\d+\\.\\d+$");
     private readonly HashSet<string> _currentDrives = new();
     private readonly HashSet<string> _currentDrivesTemp = new();
@@ -698,12 +698,13 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private async Task InstallDependenciesAsync()
     {
         if (await CheckDependencies()) return;
-        var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
-            "There are some drivers missing, would you like to install them?")).ToTask();
-        if (!yesNo.Response) return;
+        // /usr/lib/udev/rules.d/
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
+            var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
+                "There are some drivers missing, would you like to install them?")).ToTask();
+            if (!yesNo.Response) return;
             var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.System);
             var appdataFolder = AssetUtils.GetAppDataFolder();
             var driverFolder = Path.Combine(appdataFolder, "drivers");
@@ -721,6 +722,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
+            var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
+                "Root required to write proper udev rules for USB support: 68-santroller.rules to /usr/lib/udev/rules.d")).ToTask();
+            if (!yesNo.Response) return;
             // Just copy the file to install it, using pkexec for admin
             var appdataFolder = AssetUtils.GetAppDataFolder();
             var rules = Path.Combine(appdataFolder, UdevFile);

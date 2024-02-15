@@ -11,6 +11,7 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI.Fody.Helpers;
+using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
@@ -194,6 +195,10 @@ public partial class DrumAxis : OutputAxis
         var ifStatement = $"debounce[{debounceIndex}]";
         var input = Input;
         var reset = $"debounce[{debounceIndex}]={debounce};";
+        if (writer != null)
+        {
+            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, Debounce)}";
+        }
         if (Input is WiiInput wii)
         {
             // Wii inputs provide their own digital signals, so don't generate one ourselves.
