@@ -25,7 +25,7 @@ jobs:
           cd out_stage
           xattr -cr SantrollerConfiguratorBranded.app
           xattr -rd com.apple.quarantine SantrollerConfiguratorBranded.app
-          zip -r ../out/SantrollerConfiguratorBranded-macOS.zip SantrollerConfiguratorBranded.app
+          ditto -c -k --keepParent SantrollerConfiguratorBranded.app ../out/SantrollerConfiguratorBranded-macOS.zip
           cd ..
           mv out ..
       - name: Build Standard
@@ -39,7 +39,7 @@ jobs:
           cd out_stage
           xattr -cr SantrollerConfigurator.app
           xattr -rd com.apple.quarantine SantrollerConfigurator.app
-          zip -r ../out/SantrollerConfigurator-macOS.zip SantrollerConfigurator.app
+          ditto -c -k --keepParent SantrollerConfigurator.app ../out/SantrollerConfigurator-macOS.zip
           cd ..
           mv out/SantrollerConfigurator-macOS.zip ../out
       - name: Copy artifacts
@@ -193,7 +193,7 @@ jobs:
           cd out_stage
           xattr -cr SantrollerConfiguratorBuilder.app
           xattr -rd com.apple.quarantine SantrollerConfiguratorBuilder.app
-          zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip SantrollerConfiguratorBuilder.app
+          ditto -c -k --keepParent SantrollerConfiguratorBuilder.app ../out/SantrollerConfiguratorBuilder-macOS.zip
           cd ..
           mv out ..
       - name: Copy artifacts
