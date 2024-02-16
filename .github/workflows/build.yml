@@ -23,8 +23,7 @@ jobs:
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app out_stage
           cp Resources/* out_stage
           cd out_stage
-          codesign --entitlements entitlements.xml -s "guitar-configurator" "SantrollerConfiguratorBranded.app" --timestamp --deep
-          ditto -c -k --keepParent SantrollerConfiguratorBranded.app ../out/SantrollerConfiguratorBranded-macOS.zip
+          zip -r ../out/SantrollerConfiguratorBranded-macOS.zip SantrollerConfiguratorBranded.app
           cd ..
           mv out ..
       - name: Build Standard
@@ -36,8 +35,7 @@ jobs:
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfigurator.app out_stage
           cp Resources/* out_stage
           cd out_stage
-          codesign --entitlements entitlements.xml -s "guitar-configurator" "SantrollerConfigurator.app" --timestamp --deep
-          ditto -c -k --keepParent SantrollerConfigurator.app ../out/SantrollerConfigurator-macOS.zip
+          zip -r ../out/SantrollerConfigurator-macOS.zip SantrollerConfigurator.app
           cd ..
           mv out/SantrollerConfigurator-macOS.zip ../out
       - name: Copy artifacts
@@ -189,8 +187,7 @@ jobs:
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBuilder.app out_stage
           cp Resources/* out_stage
           cd out_stage
-          codesign --entitlements entitlements.xml -s "guitar-configurator" "SantrollerConfiguratorBuilder.app" --timestamp --deep
-          ditto -c -k --keepParent SantrollerConfiguratorBuilder.app ../out/SantrollerConfiguratorBuilder-macOS.zip
+          zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip SantrollerConfiguratorBuilder.app
           cd ..
           mv out ..
       - name: Copy artifacts
