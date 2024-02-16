@@ -60,7 +60,7 @@
         <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
         <UseHardenedRuntime>true</UseHardenedRuntime>
         <CodeSignEntitlements>Resources/entitlements.xml</CodeSignEntitlements>
-        <CodeSignExtraArgs>--deep --force</CodeSignExtraArgs>
+        <CodeSignExtraArgs>--deep</CodeSignExtraArgs>
     </PropertyGroup>
     <ItemGroup>
         <TrimmableAssembly Include="Avalonia.DesignerSupport" />
