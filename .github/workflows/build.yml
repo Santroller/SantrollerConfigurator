@@ -23,7 +23,8 @@ jobs:
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app out_stage
           cp Resources/* out_stage
           cd out_stage
-          find . -name "*.app" -execdir xattr -cr {} \; -execdir xattr -rd com.apple.quarantine {} \;
+          xattr -cr SantrollerConfiguratorBranded.app
+          xattr -rd com.apple.quarantine SantrollerConfiguratorBranded.app
           zip -r ../out/SantrollerConfiguratorBranded-macOS.zip SantrollerConfiguratorBranded.app
           cd ..
           mv out ..
@@ -36,7 +37,8 @@ jobs:
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfigurator.app out_stage
           cp Resources/* out_stage
           cd out_stage
-          find . -name "*.app" -execdir xattr -cr {} \; -execdir xattr -rd com.apple.quarantine {} \;
+          xattr -cr SantrollerConfigurator.app
+          xattr -rd com.apple.quarantine SantrollerConfigurator.app
           zip -r ../out/SantrollerConfigurator-macOS.zip SantrollerConfigurator.app
           cd ..
           mv out/SantrollerConfigurator-macOS.zip ../out
@@ -189,7 +191,8 @@ jobs:
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBuilder.app out_stage
           cp Resources/* out_stage
           cd out_stage
-          find . -name "*.app" -execdir xattr -cr {} \; -execdir xattr -rd com.apple.quarantine {} \;
+          xattr -cr SantrollerConfiguratorBuilder.app
+          xattr -rd com.apple.quarantine SantrollerConfiguratorBuilder.app
           zip -r ../out/SantrollerConfiguratorBuilder-macOS.zip SantrollerConfiguratorBuilder.app
           cd ..
           mv out ..
