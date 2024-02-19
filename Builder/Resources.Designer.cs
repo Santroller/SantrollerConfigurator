@@ -302,5 +302,11 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
                 return ResourceManager.GetString("ReorderSectionLabel", resourceCulture);
             }
         }
+        
+        public static string UnableToFindFirmware {
+            get {
+                return ResourceManager.GetString("UnableToFindFirmware", resourceCulture);
+            }
+        }
     }
 }

@@ -354,7 +354,12 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
                 config.Model.Variant = config.ProductName;
                 await Write(config.Model, false, config.ExtraConfig(), start, steps);
-                config.LoadUf2();
+                if (!config.LoadUf2())
+                {
+                    ProgressbarColor = ProgressBarError;
+                    Message = Resources.UnableToFindFirmware;
+                    return;
+                }
                 start += steps;
                 Progress = start;
             }

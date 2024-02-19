@@ -152,4 +152,7 @@
     <data name="ReorderSectionLabel" xml:space="preserve">
         <value>Reorder Types</value>
     </data>
+    <data name="UnableToFindFirmware" xml:space="preserve">
+        <value>Unable to find built firmware file</value>
+    </data>
 </root>

@@ -132,7 +132,7 @@ public class BrandedConfiguration : ReactiveObject
         }
     }
 
-    public void LoadUf2()
+    public bool LoadUf2()
     {
         var env = "pico";
         if (Model.IsBluetooth)
@@ -142,6 +142,10 @@ public class BrandedConfiguration : ReactiveObject
 
         var uf2File = Path.Combine(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", env,
             "firmware.uf2");
+        if (!File.Exists(uf2File))
+        {
+            return false;
+        }
         var bytes = File.ReadAllBytes(uf2File);
         var blocks = new List<Uf2Block>();
         for (var i = 0; i < bytes.Length; i += 512)
@@ -150,5 +154,6 @@ public class BrandedConfiguration : ReactiveObject
         }
 
         Uf2 = blocks.ToArray();
+        return true;
     }
 }
