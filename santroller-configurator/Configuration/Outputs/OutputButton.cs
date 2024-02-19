@@ -123,7 +123,7 @@ public abstract class OutputButton : Output
         var reset = $"debounce[{debounceIndex}]={debounce};";
         if (writer != null)
         {
-            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)Debounce)};";
+            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
         }
 
         if (Input is MacroInput)

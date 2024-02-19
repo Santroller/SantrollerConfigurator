@@ -197,7 +197,7 @@ public partial class DrumAxis : OutputAxis
         var reset = $"debounce[{debounceIndex}]={debounce};";
         if (writer != null)
         {
-            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)Debounce)};";
+            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
         }
         if (Input is WiiInput wii)
         {
