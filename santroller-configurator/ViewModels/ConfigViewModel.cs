@@ -1733,6 +1733,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void LoadPreset()
     {
         CurrentPreset!.Item2.LoadConfiguration(this);
+        Main.Write(this, true);
     }
 
     [RelayCommand]
