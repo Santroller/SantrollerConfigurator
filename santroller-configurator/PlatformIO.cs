@@ -177,6 +177,8 @@ public class PlatformIo
 
         async Task Process()
         {
+            var uf2File = Path.Combine(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", environment,
+                "firmware.uf2");
             var percentageStep = progressEndingPercentage - progressStartingPercentage;
             var currentProgress = progressStartingPercentage;
             var uploading = command.Length > 1;
@@ -522,6 +524,16 @@ public class PlatformIo
             }
 
             await _currentProcess.WaitForExitAsync();
+
+            if (environment.Contains("pico"))
+            {
+                // If builds fail for some reason, then we wont have an outputted uf2 file
+                if (!File.Exists(uf2File))
+                {
+                    platformIoOutput.OnError(new Exception(string.Format(Resources.ErrorMessage, progressMessage)));
+                    hasError = true;
+                }
+            }
 
             if (!hasError)
             {
