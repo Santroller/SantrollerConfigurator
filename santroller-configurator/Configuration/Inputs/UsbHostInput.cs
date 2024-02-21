@@ -20,6 +20,7 @@ public class UsbHostInput : Input
         Input = input;
         _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
         _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
+        IsAnalog = input is >= UsbHostInputType.LeftTrigger and < UsbHostInputType.GenericButton1 or >= UsbHostInputType.GenericAxisX ;
     }
 
     public bool Combined { get; }
@@ -111,8 +112,15 @@ public class UsbHostInput : Input
                         subType = EnumToStringConverter.Convert(deviceType);
                     }
                 }
-
-                buffer += $"{consoleType} {subType}\n";
+                
+                if (consoleType == ConsoleType.Universal)
+                {
+                    buffer += string.Format(Resources.GenericGamepadLabel, subType); 
+                }
+                else
+                {
+                    buffer += $"{consoleType} {subType}\n";
+                }
             }
 
             ConnectedDevices = usbHostRaw.Length / 2;
@@ -162,14 +170,19 @@ public class UsbHostInput : Input
 
         private bool ButtonPressed(UsbHostInputType inputType)
         {
-            if (inputType >= UsbHostInputType.LeftTrigger) return false;
+            if (inputType is >= UsbHostInputType.LeftTrigger and (< UsbHostInputType.GenericButton1 or > UsbHostInputType.GenericButton16)) return false;
             var val = (uint) inputType;
-            if (val >= 32)
+            switch (val)
             {
-                val -= 32;
-                return (buttons2 & (1 << (int) val)) != 0;
+                case >= (uint)UsbHostInputType.GenericButton1:
+                    val -= (uint)UsbHostInputType.GenericButton1;
+                    return (genericButtons & (1 << (int) val)) != 0;
+                case >= 32:
+                    val -= 32;
+                    return (buttons2 & (1 << (int) val)) != 0;
+                default:
+                    return (buttons & (1 << (int) val)) != 0;
             }
-            return (buttons & (1 << (int) val)) != 0;
         }
 
         private readonly ushort leftTrigger;
@@ -209,6 +222,14 @@ public class UsbHostInput : Input
         private readonly ushort accelZ;
         private readonly ushort accelY;
         private readonly ushort gyro;
+        private readonly ushort genericButtons;
+        private readonly ushort genericX;
+        private readonly ushort genericY;
+        private readonly ushort genericZ;
+        private readonly ushort genericRX;
+        private readonly ushort genericRY;
+        private readonly ushort genericRZ;
+        private readonly ushort genericSlider;
 
         public int RawValue(UsbHostInputType inputType)
         {
@@ -251,6 +272,13 @@ public class UsbHostInput : Input
                 UsbHostInputType.AccelZ => accelZ,
                 UsbHostInputType.AccelY => accelY,
                 UsbHostInputType.Gyro => gyro,
+                UsbHostInputType.GenericAxisX => genericX,
+                UsbHostInputType.GenericAxisY => genericY,
+                UsbHostInputType.GenericAxisZ => genericZ,
+                UsbHostInputType.GenericAxisRx => genericRX,
+                UsbHostInputType.GenericAxisRy => genericRY,
+                UsbHostInputType.GenericAxisRz => genericRZ,
+                UsbHostInputType.GenericAxisSlider => genericSlider,
                 _ => ButtonPressed(inputType) ? 1 : 0
             };
             if (ByteBased.Contains(inputType))

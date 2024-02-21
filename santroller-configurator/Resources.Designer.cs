@@ -2049,6 +2049,144 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string UsbHostInputTypeGenericButton1 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton1", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton2 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton2", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton3 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton3", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton4 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton4", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton5 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton5", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton6 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton6", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton7 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton7", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton8 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton8", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton9 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton9", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton10 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton10", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton11 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton11", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton12 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton12", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton13 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton13", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton14 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton14", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton15 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton15", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericButton16 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericButton16", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericAxisX {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericAxisX", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericAxisY {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericAxisY", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericAxisZ {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericAxisZ", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericAxisRx {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericAxisRx", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericAxisRy {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericAxisRy", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericAxisRz {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericAxisRz", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGenericAxisSlider {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGenericAxisSlider", resourceCulture);
+            }
+        }
+        
         public static string WiiControllerTypeNunchuk {
             get {
                 return ResourceManager.GetString("WiiControllerTypeNunchuk", resourceCulture);
@@ -6204,6 +6342,12 @@ namespace GuitarConfigurator.NetCore {
         public static string RescanLabel {
             get {
                 return ResourceManager.GetString("RescanLabel", resourceCulture);
+            }
+        }
+        
+        public static string GenericGamepadLabel {
+            get {
+                return ResourceManager.GetString("GenericGamepadLabel", resourceCulture);
             }
         }
     }

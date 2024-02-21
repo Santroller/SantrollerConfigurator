@@ -301,7 +301,14 @@ public class UsbHostCombinedOutput : CombinedOutput
             }
             
 
-            buffer += $"{consoleType} {subType}\n";
+            if (consoleType == ConsoleType.Universal)
+            {
+                buffer += string.Format(Resources.GenericGamepadLabel, subType); 
+            }
+            else
+            {
+                buffer += $"{consoleType} {subType}\n";
+            }
         }
 
         ConnectedDevices = usbHostRaw.Length / 2;

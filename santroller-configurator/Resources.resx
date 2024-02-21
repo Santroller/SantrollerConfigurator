@@ -1035,6 +1035,75 @@
     <data name="UsbHostInputTypeGyro" xml:space="preserve">
         <value>Gyro</value>
     </data>
+    <data name="UsbHostInputTypeGenericButton1" xml:space="preserve">
+        <value>Generic Joystick Button 1</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton2" xml:space="preserve">
+        <value>Generic Joystick Button 2</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton3" xml:space="preserve">
+        <value>Generic Joystick Button 3</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton4" xml:space="preserve">
+        <value>Generic Joystick Button 4</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton5" xml:space="preserve">
+        <value>Generic Joystick Button 5</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton6" xml:space="preserve">
+        <value>Generic Joystick Button 6</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton7" xml:space="preserve">
+        <value>Generic Joystick Button 7</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton8" xml:space="preserve">
+        <value>Generic Joystick Button 8</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton9" xml:space="preserve">
+        <value>Generic Joystick Button 9</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton10" xml:space="preserve">
+        <value>Generic Joystick Button 10</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton11" xml:space="preserve">
+        <value>Generic Joystick Button 11</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton12" xml:space="preserve">
+        <value>Generic Joystick Button 12</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton13" xml:space="preserve">
+        <value>Generic Joystick Button 13</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton14" xml:space="preserve">
+        <value>Generic Joystick Button 14</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton15" xml:space="preserve">
+        <value>Generic Joystick Button 15</value>
+    </data>
+    <data name="UsbHostInputTypeGenericButton16" xml:space="preserve">
+        <value>Generic Joystick Button 16</value>
+    </data>
+    <data name="UsbHostInputTypeGenericAxisX" xml:space="preserve">
+        <value>Generic Joystick X Axis</value>
+    </data>
+    <data name="UsbHostInputTypeGenericAxisY" xml:space="preserve">
+        <value>Generic Joystick Y Axis</value>
+    </data>
+    <data name="UsbHostInputTypeGenericAxisZ" xml:space="preserve">
+        <value>Generic Joystick Z Axis</value>
+    </data>
+    <data name="UsbHostInputTypeGenericAxisRx" xml:space="preserve">
+        <value>Generic Joystick RX Axis</value>
+    </data>
+    <data name="UsbHostInputTypeGenericAxisRy" xml:space="preserve">
+        <value>Generic Joystick RY Axis</value>
+    </data>
+    <data name="UsbHostInputTypeGenericAxisRz" xml:space="preserve">
+        <value>Generic Joystick RZ Axis</value>
+    </data>
+    <data name="UsbHostInputTypeGenericAxisSlider" xml:space="preserve">
+        <value>Generic Joystick Slider Axis</value>
+    </data>
     <data name="WiiControllerTypeNunchuk" xml:space="preserve">
         <value>Nunchuk Controller</value>
     </data>
@@ -3226,5 +3295,9 @@
     </data>
     <data name="RescanLabel" xml:space="preserve">
         <value>Refresh devices</value>
+    </data>
+    <data name="GenericGamepadLabel" xml:space="preserve">
+        <value>Generic {0}
+</value>
     </data>
 </root>
