@@ -159,18 +159,60 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
             Windows ? "Waiting for device (Stuck here? Try clicking refresh devices)" : "Waiting for device", null);
     }
 
-    [RelayCommand]
-    public void ConfigureBranded()
+    public void test1()
     {
         if (SelectedDevice is not Santroller santroller) return;
         SelectedConfig = Config.Configurations.SelectMany(s => s.Configurations).First(s =>
             s.VendorName == santroller.Manufacturer && s.ProductName == santroller.Product);
+    }
+
+    public void test2()
+    {
+        if (SelectedDevice is not Santroller santroller) return;
         Model = new ConfigViewModel(this, SelectedDevice, true);
+    }
+
+    public void test3()
+    {
+        if (Model == null) return;
         new SerializedConfiguration(SelectedConfig.Model).LoadConfiguration(Model);
+    }
+
+    public void test4()
+    {
+        if (Model == null) return;
         Model.UpdateBluetoothAddress();
+    }
+
+    public void test5()
+    {
+        if (SelectedDevice is not Santroller santroller) return;
+        if (Model == null) return;
         santroller.LoadConfiguration(Model, true);
+    }
+
+    public void test6()
+    {
+        if (Model == null) return;
         Router.Navigate.Execute(Model);
+    }
+
+    public void test7()
+    {
+        if (Model == null) return;
         Model.SetUpDiff();
+    }
+    [RelayCommand]
+    public void ConfigureBranded()
+    {
+        if (SelectedDevice is not Santroller) return;
+        test1();
+        test2();
+        test3();
+        test4();
+        test5();
+        test6();
+        test7();
     }
 
     [RelayCommand]

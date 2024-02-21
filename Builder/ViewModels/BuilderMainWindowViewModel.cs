@@ -418,6 +418,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public override void SetDifference(bool difference)
     {
         HasChanges = difference;
+
+        if (Working) return;
         if (DeviceNotProgrammed)
         {
             Progress = 100;
@@ -425,8 +427,6 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             ProgressbarColor = ProgressBarError;
             return;
         }
-
-        if (Working) return;
         if (!difference)
         {
             ProgressbarColor = ProgressBarPrimary;
