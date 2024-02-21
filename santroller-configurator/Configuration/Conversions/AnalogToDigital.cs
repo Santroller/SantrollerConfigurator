@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -106,7 +107,7 @@ public class AnalogToDigital : Input
     }
 
     public override InputType? InputType => Child.InputType;
-    public IEnumerable<AnalogToDigitalType> AnalogToDigitalTypes => Enum.GetValues<AnalogToDigitalType>();
+    public IEnumerable<AnalogToDigitalType> AnalogToDigitalTypes => Enum.GetValues<AnalogToDigitalType>().Where(s => s != AnalogToDigitalType.Drum);
 
     public override IList<DevicePin> Pins => Child.Pins;
     public override IList<PinConfig> PinConfigs => Child.PinConfigs;
@@ -120,6 +121,8 @@ public class AnalogToDigital : Input
         if (Child.IsUint)
             switch (AnalogToDigitalType)
             {
+                case AnalogToDigitalType.Drum:
+                    return $"({Child.Generate()}) > {Threshold}";
                 case AnalogToDigitalType.Trigger:
                 case AnalogToDigitalType.JoyHigh:
                     return $"({Child.Generate()}) > {short.MaxValue + Threshold}";
@@ -129,6 +132,7 @@ public class AnalogToDigital : Input
         else
             switch (AnalogToDigitalType)
             {
+                case AnalogToDigitalType.Drum:
                 case AnalogToDigitalType.Trigger:
                 case AnalogToDigitalType.JoyHigh:
                     return $"({Child.Generate()}) > {Math.Abs(Threshold)}";

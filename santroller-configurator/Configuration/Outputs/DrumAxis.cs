@@ -169,14 +169,18 @@ public partial class DrumAxis : OutputAxis
     {
         if (mode == ConfigField.Shared)
         {
-            if (Input is WiiInput || (Model.DeviceControllerType.IsRb() && Type is DrumAxisType.Kick or DrumAxisType.Kick2) || Model.IsKeyboard || Model.IsFortniteFestival)
+            if (Input is not WiiInput &&
+                (!Model.DeviceControllerType.IsRb() || Type is not (DrumAxisType.Kick or DrumAxisType.Kick2)) &&
+                Model is {IsKeyboard: false, IsFortniteFestival: false}) return "";
+            var i = Input;
+            if (i.IsAnalog)
             {
-                return new ControllerButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), (byte) Debounce, StandardButtonType.A,
-                        false)
-                    .Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+                i = new AnalogToDigital(i, AnalogToDigitalType.Drum, Min, Model);
             }
+            return new ControllerButton(Model, i, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), (byte) Debounce, StandardButtonType.A,
+                    false)
+                .Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
 
-            return "";
         }
         
 
@@ -199,7 +203,7 @@ public partial class DrumAxis : OutputAxis
         {
             reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
         }
-        if (Input is WiiInput wii)
+        if (Input is WiiInput {Input: >= WiiInputType.DrumGreen and <= WiiInputType.DrumOrange or WiiInputType.DrumKickPedal} wii)
         {
             // Wii inputs provide their own digital signals, so don't generate one ourselves.
             reset = "";
