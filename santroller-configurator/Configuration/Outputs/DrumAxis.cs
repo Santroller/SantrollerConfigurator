@@ -240,7 +240,7 @@ public partial class DrumAxis : OutputAxis
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
-
+        // XB1 is RB by definition
         if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) && Type is DrumAxisType.Kick or DrumAxisType.Kick2) || mode is ConfigField.Keyboard)
         {
             return $$"""
