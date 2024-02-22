@@ -241,7 +241,7 @@ public partial class DrumAxis : OutputAxis
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
 
-        if ((Model.DeviceControllerType.IsRb() && Type is DrumAxisType.Kick or DrumAxisType.Kick2) || mode is ConfigField.Keyboard)
+        if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) && Type is DrumAxisType.Kick or DrumAxisType.Kick2) || mode is ConfigField.Keyboard)
         {
             return $$"""
                      if ({{ifStatement}}) {
