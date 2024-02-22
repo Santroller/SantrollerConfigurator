@@ -274,7 +274,7 @@ jobs:
     name: Remove temp files
     runs-on: [self-hosted, linux]
     if: ${{ always() }}
-    needs: [pre-release, release]
+    needs: [release]
     steps:
       - name: Remove artifacts
         env:
