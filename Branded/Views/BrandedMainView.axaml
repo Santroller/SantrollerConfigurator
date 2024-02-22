@@ -42,7 +42,7 @@
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Image Source="{Binding BrandedMain.Logo}" Width="200" Margin="0 0 0 40" />
                 <StackPanel IsVisible="{Binding BrandedMain.ReadyToConfigureBranded}">
-                    <Label HorizontalAlignment="Center" IsVisible="{Binding !Configurable}"
+                    <Label HorizontalAlignment="Center" IsVisible="{Binding BrandedMain.SelectedDeviceConfig, Converter={x:Static ObjectConverters.IsNull}}"
                            Content="{Binding EraseText}" />
                 </StackPanel>
                 <Panel Margin="0 0 0 20"></Panel>
@@ -69,7 +69,7 @@
                     </StackPanel>
 
                     <StackPanel IsVisible="{Binding BrandedMain.ReadyToConfigureBranded}">
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding !Configurable}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding BrandedMain.SelectedDeviceConfig, Converter={x:Static ObjectConverters.IsNull}}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="Device Type">
@@ -84,7 +84,7 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding !Configurable}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding BrandedMain.SelectedDeviceConfig, Converter={x:Static ObjectConverters.IsNull}}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="Device Variant">
@@ -100,17 +100,17 @@
                             </ComboBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button IsVisible="{Binding Configurable}"
+                            <Button IsVisible="{Binding BrandedMain.SelectedDeviceConfig, Converter={x:Static ObjectConverters.IsNotNull}}"
                                     Content="{x:Static netCore:Resources.ConfigureButtonLabel}"
                                     Command="{Binding BrandedMain.ConfigureBrandedCommand}"
                                     IsEnabled="{Binding BrandedMain.ReadyToConfigureBranded}" HorizontalAlignment="Center"
                                     Margin="0 20 0 0" />
-                            <Button IsVisible="{Binding Configurable}"
+                            <Button IsVisible="{Binding BrandedMain.SelectedDeviceConfig, Converter={x:Static ObjectConverters.IsNotNull}}"
                                     Content="{x:Static viewModels:Resources.ResetFactoryButtonLabel}"
                                     Command="{Binding BrandedMain.ResetBrandedCommand}"
                                     IsEnabled="{Binding BrandedMain.ReadyToConfigureBranded}" HorizontalAlignment="Center"
                                     Margin="0 20 0 0" />
-                            <Button IsVisible="{Binding !Configurable}"
+                            <Button IsVisible="{Binding BrandedMain.SelectedDeviceConfig, Converter={x:Static ObjectConverters.IsNull}}"
                                     Content="{x:Static viewModels:Resources.EraseButtonLabel}"
                                     Command="{Binding BrandedMain.OverwriteNewCommand}"
                                     IsEnabled="{Binding BrandedMain.ReadyToConfigureBranded}" HorizontalAlignment="Center"
@@ -119,7 +119,7 @@
                     </StackPanel>
                     <StackPanel IsVisible="{Binding !BrandedMain.ReadyToConfigureBranded}">
                         <Button Content="{x:Static netCore:Resources.ConfigureButtonLabel}" Command="{Binding BrandedMain.ConfigureBrandedCommand}"
-                                IsEnabled="{Binding Configurable}" HorizontalAlignment="Center"
+                                IsEnabled="{Binding BrandedMain.SelectedDeviceConfig, Converter={x:Static ObjectConverters.IsNotNull}}" HorizontalAlignment="Center"
                                 Margin="0 20 0 0" />
                     </StackPanel>
                 </StackPanel>
