@@ -104,6 +104,8 @@ public partial class DrumAxis : OutputAxis
         {DrumAxisType.GreenCymbal, "report->greenCymbalVelocity"},
         {DrumAxisType.YellowCymbal, "report->yellowCymbalVelocity"},
         {DrumAxisType.BlueCymbal, "report->blueCymbalVelocity"},
+        {DrumAxisType.Kick, "digitalOnly"},
+        {DrumAxisType.Kick2, "digitalOnly"}
     };
 
     public DrumAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max,
