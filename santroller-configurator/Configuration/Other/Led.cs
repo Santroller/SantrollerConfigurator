@@ -191,7 +191,7 @@ public class Led : Output
                     case StageKitCommand.Strobe:
                         break;
                     default:
-                        StageKitLed = param2 + 1;
+                        StageKitLed = param2;
                         break;
                 }
 
@@ -518,7 +518,14 @@ public class Led : Output
                 break;
             case LedCommandType.StageKitLed:
                 param1 = (int) StageKitCommand;
-
+                switch (StageKitCommand)
+                {
+                    case StageKitCommand.Strobe:
+                        break;
+                    default:
+                        param2 = StageKitLed;
+                        break;
+                }
                 break;
         }
 
