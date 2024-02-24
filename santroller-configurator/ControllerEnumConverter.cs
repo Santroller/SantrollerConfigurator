@@ -228,6 +228,7 @@ public class ControllerEnumConverter : IMultiValueConverter
                     .Cast<object>()
                     .Concat(InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>()),
             DeviceControllerType.DancePad => Array.Empty<object>(),
+            DeviceControllerType.StageKit => Array.Empty<object>(),
             _ => Enum.GetValues<StandardAxisType>().Cast<object>()
         };
         return Enum.GetValues<SimpleType>().Cast<object>()
