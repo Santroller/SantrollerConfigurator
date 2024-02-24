@@ -475,6 +475,7 @@ public class Led : Output
                             or DeviceControllerType.LiveGuitar or DeviceControllerType.Turntable
                             or DeviceControllerType.StageKit => true,
                     LedCommandType.DjEuphoria when type.controllerType is DeviceControllerType.Turntable => true,
+                    LedCommandType.Ps4LightBar when type.controllerType is DeviceControllerType.Gamepad => true,
                     _ => false
                 },
                 _ => false
