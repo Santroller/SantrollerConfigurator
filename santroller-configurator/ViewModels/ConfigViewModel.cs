@@ -1308,6 +1308,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static string WriteBlob(BinaryWriter writer, int data)
     {
         var pos = writer.BaseStream.Length;
+        // uint16_t needs to be 2-byte aligned
+        if ((pos & 1) != 0)
+        {  
+            writer.Write(0);
+            pos += 1;
+        }
         writer.Write((short) data);
         return $"read_int16({pos})";
     }
@@ -1315,6 +1321,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static string WriteBlob(BinaryWriter writer, uint data)
     {
         var pos = writer.BaseStream.Length;
+        // uint16_t needs to be 2-byte aligned
+        if ((pos & 1) != 0)
+        {  
+            writer.Write(0);
+            pos += 1;
+        }
         writer.Write((ushort) data);
         return $"read_uint16({pos})";
     }
@@ -1677,7 +1689,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public PinConfig[] UsbHostPinConfigs()
     {
-        return UsbHostEnabled ? new PinConfig[] {_usbHostDm, _usbHostDp} : Array.Empty<PinConfig>();
+        return UsbHostEnabled ? [_usbHostDm, _usbHostDp] : Array.Empty<PinConfig>();
     }
 
     private byte GetEmulationType()
