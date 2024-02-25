@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -212,7 +213,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Complete(100);
         var output = await SaveUf2Handler.Handle(this);
         if (output == null) return;
-        await Selected.BuildUf2(model, output.Path.AbsolutePath);
+        await Selected.BuildUf2(model, WebUtility.UrlDecode(output.Path.AbsolutePath));
     }
 
     private async void SaveToDevice(ConfigViewModel model)
