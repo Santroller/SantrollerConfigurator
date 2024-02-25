@@ -1689,7 +1689,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public PinConfig[] UsbHostPinConfigs()
     {
-        return UsbHostEnabled ? [_usbHostDm, _usbHostDp] : Array.Empty<PinConfig>();
+        return UsbHostEnabled ? new PinConfig[] {_usbHostDm, _usbHostDp} : Array.Empty<PinConfig>();
     }
 
     private byte GetEmulationType()
