@@ -632,7 +632,7 @@ public abstract partial class Output : ReactiveObject
                 adxlInputType ??= AdxlInputType.Pitch;
                 input = new AdxlInput(adxlInputType.Value, Model, false);
                 break;
-            case InputType.TurntableInput when Input.InnermostInputs().First() is AdxlInput adxl:
+            case InputType.AdxlInput when Input.InnermostInputs().First() is AdxlInput adxl:
                 adxlInputType ??= AdxlInputType.Pitch;
                 input = new AdxlInput(adxlInputType.Value, Model, adxl.Peripheral, adxl.Sda, adxl.Scl);
                 break;
