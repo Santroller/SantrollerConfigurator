@@ -31,7 +31,7 @@ public class AdxlInput : TwiInput
 
     public bool BindableTwi { get; }
 
-    public override InputType? InputType => Types.InputType.WiiInput;
+    public override InputType? InputType => Types.InputType.AdxlInput;
 
     public override bool IsUint => true;
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
