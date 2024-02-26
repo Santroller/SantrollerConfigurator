@@ -937,6 +937,33 @@
                 <StackPanel Orientation="Vertical">
                 </StackPanel>
             </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type inputs:AdxlInput}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding Scl}"
+                                  ItemsSource="{Binding AvailableSclPins}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  Width="200" />
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding Sda}"
+                                  ItemsSource="{Binding AvailableSdaPins}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  Width="200" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type inputs:WiiInput}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
@@ -3065,6 +3092,7 @@
                                                         <Binding Path="IsGh5OrClone" />
                                                         <Binding Path="IsWt" />
                                                         <Binding Path="IsUsb" />
+                                                        <Binding Path="IsAdxl" />
                                                     </MultiBinding>
                                                 </MultiBinding>
                                             </StackPanel.IsVisible>
@@ -3075,6 +3103,11 @@
                                                       IsVisible="{Binding IsWii}"
                                                       SelectedItem="{Binding WiiInputType}"
                                                       ItemsSource="{Binding WiiInputTypes}"
+                                                      ItemTemplate="{StaticResource ImageWithTextTemplate}" />
+                                            <ComboBox VerticalAlignment="Center"
+                                                      IsVisible="{Binding IsAdxl}"
+                                                      SelectedItem="{Binding AdxlInputType}"
+                                                      ItemsSource="{Binding AdxlInputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       IsVisible="{Binding IsUsb}"

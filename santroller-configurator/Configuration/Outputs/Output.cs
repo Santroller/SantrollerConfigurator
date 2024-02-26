@@ -109,6 +109,8 @@ public abstract partial class Output : ReactiveObject
             .ToPropertyEx(this, x => x.IsUsb);
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is WiiInput)
             .ToPropertyEx(this, x => x.IsWii);
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is AdxlInput)
+            .ToPropertyEx(this, x => x.IsAdxl);
         this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is Gh5NeckInput or CloneNeckInput &&
@@ -250,19 +252,19 @@ public abstract partial class Output : ReactiveObject
     public InputType? SelectedInputType
     {
         get => Input.InputType;
-        set => SetInput(value, null, null, null, null, null, null);
+        set => SetInput(value, null, null, null, null, null, null, null);
     }
 
     public WiiInputType WiiInputType
     {
         get => (Input.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
-        set => SetInput(SelectedInputType, value, null, null, null, null, null);
+        set => SetInput(SelectedInputType, value, null, null, null, null, null, null);
     }
 
     public Ps2InputType Ps2InputType
     {
         get => (Input.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
-        set => SetInput(SelectedInputType, null, value, null, null, null, null);
+        set => SetInput(SelectedInputType, null, value, null, null, null, null, null);
     }
 
     public object KeyOrMouse
@@ -274,26 +276,32 @@ public abstract partial class Output : ReactiveObject
     public DjInputType DjInputType
     {
         get => (Input.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
-        set => SetInput(SelectedInputType, null, null, null, null, value, null);
+        set => SetInput(SelectedInputType, null, null, null, null, value, null, null);
     }
 
     public UsbHostInputType UsbInputType
     {
         get => (Input.InnermostInputs().First() as UsbHostInput)?.Input ?? UsbHostInputType.A;
-        set => SetInput(SelectedInputType, null, null, null, null, null, value);
+        set => SetInput(SelectedInputType, null, null, null, null, null, value, null);
     }
 
     public Gh5NeckInputType Gh5NeckInputType
     {
         get => (Input.InnermostInputs().First() as Gh5NeckInput)?.Input ??
                (Input.InnermostInputs().First() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
-        set => SetInput(SelectedInputType, null, null, null, value, null, null);
+        set => SetInput(SelectedInputType, null, null, null, value, null, null, null);
     }
 
     public GhWtInputType GhWtInputType
     {
         get => (Input.InnermostInputs().First() as GhWtTapInput)?.Input ?? GhWtInputType.TapGreen;
-        set => SetInput(SelectedInputType, null, null, value, null, null, null);
+        set => SetInput(SelectedInputType, null, null, value, null, null, null, null);
+    }
+
+    public AdxlInputType AdxlInputType
+    {
+        get => (Input.InnermostInputs().First() as AdxlInput)?.Input ?? AdxlInputType.Pitch;
+        set => SetInput(SelectedInputType, null, null, null, null, null, null, value);
     }
 
     public IEnumerable<GhWtInputType> GhWtInputTypes =>
@@ -313,6 +321,7 @@ public abstract partial class Output : ReactiveObject
         Enum.GetValues<WiiInputType>().OrderBy(s => EnumToStringConverter.Convert(s));
 
     public IEnumerable<DjInputType> DjInputTypes => Enum.GetValues<DjInputType>();
+    public IEnumerable<AdxlInputType> AdxlInputTypes => Enum.GetValues<AdxlInputType>();
 
     public IEnumerable<InputType> InputTypes =>
         Enum.GetValues<InputType>().Where(s =>
@@ -330,6 +339,8 @@ public abstract partial class Output : ReactiveObject
         if (Input.InnermostInputs().First() is WiiInput wii) return wii.Input;
 
         if (Input.InnermostInputs().First() is Ps2Input ps2) return ps2.Input;
+
+        if (Input.InnermostInputs().First() is AdxlInput adxl) return adxl.Input;
 
         if (Input.InnermostInputs().First() is DjInput dj) return dj.Input;
 
@@ -392,6 +403,7 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] public string LocalisedName { get; } = "";
     [ObservableAsProperty] public bool IsDj { get; }
     [ObservableAsProperty] public bool IsWii { get; }
+    [ObservableAsProperty] public bool IsAdxl { get; }
     [ObservableAsProperty] public bool IsUsb { get; }
     [ObservableAsProperty] public bool IsPs2 { get; }
     [ObservableAsProperty] public bool IsGh5OrClone { get; }
@@ -576,7 +588,7 @@ public abstract partial class Output : ReactiveObject
 
     private void SetInput(InputType? inputType, WiiInputType? wiiInput, Ps2InputType? ps2InputType,
         GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
-        UsbHostInputType? usbInputType)
+        UsbHostInputType? usbInputType, AdxlInputType? adxlInputType)
     {
         Input input;
         switch (inputType)
@@ -615,6 +627,14 @@ public abstract partial class Output : ReactiveObject
                 break;
             case InputType.DigitalPeripheralInput:
                 input = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
+                break;
+            case InputType.AdxlInput when Input.InnermostInputs().First() is not AdxlInput:
+                adxlInputType ??= AdxlInputType.Pitch;
+                input = new AdxlInput(adxlInputType.Value, Model, false);
+                break;
+            case InputType.TurntableInput when Input.InnermostInputs().First() is AdxlInput adxl:
+                adxlInputType ??= AdxlInputType.Pitch;
+                input = new AdxlInput(adxlInputType.Value, Model, adxl.Peripheral, adxl.Sda, adxl.Scl);
                 break;
             case InputType.TurntableInput when Input.InnermostInputs().First() is not DjInput:
                 djInputType ??= DjInputType.LeftGreen;
@@ -801,20 +821,20 @@ public abstract partial class Output : ReactiveObject
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
-        ReadOnlySpan<byte> cloneRaw)
+        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw)
     {
         if (Enabled)
             Input.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                 ghWtRaw,
                 ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral,
-                cloneRaw);
+                cloneRaw, adxlRaw);
 
         foreach (var output in AllOutputs)
             if (output != this)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                     ghWtRaw,
                     ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-                    digitalPeripheral, cloneRaw);
+                    digitalPeripheral, cloneRaw, adxlRaw);
     }
 
     public void UpdateErrors()

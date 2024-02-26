@@ -16,5 +16,6 @@ public enum InputType
     BluetoothInput,
     ConstantInput,
     WtNeckPeripheralInput,
-    DigitalPeripheralInput
+    DigitalPeripheralInput,
+    AdxlInput
 }

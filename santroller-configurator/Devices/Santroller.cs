@@ -63,6 +63,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandWriteAnalog,
         CommandWriteDigital,
         CommandSetBrightness,
+        CommandReadAdxl,
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -234,6 +235,7 @@ public class Santroller : ConfigurableUsbDevice
             var usbHostRaw = Array.Empty<byte>();
             var usbHostInputsRaw = Array.Empty<byte>();
             var peripheralWtRaw = Array.Empty<byte>();
+            var adxlRaw = Array.Empty<byte>();
             var peripheralConnected = false;
             if (_model.HasPeripheral)
             {
@@ -247,6 +249,11 @@ public class Santroller : ConfigurableUsbDevice
                 usbHostInputsRaw = ReadData(0, (byte) Commands.CommandReadUsbHostInputs, 100);
             }
 
+            if (_model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(s2 => s2 is AdxlInput)))
+            {
+                adxlRaw = ReadData(0, (byte) Commands.CommandReadAdxl, 2 * sizeof(short));
+            }
+
             var bluetoothRaw = Array.Empty<byte>();
             if (IsPico()) bluetoothRaw = ReadData(0, (byte) Commands.CommandGetBtState, 1);
 
@@ -255,7 +262,7 @@ public class Santroller : ConfigurableUsbDevice
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                     djRightRaw, gh5Raw,
                     ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
-                    peripheralWtRaw, digitalRawPeripheral, cloneRaw);
+                    peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw);
         }
         catch (Exception ex)
         {

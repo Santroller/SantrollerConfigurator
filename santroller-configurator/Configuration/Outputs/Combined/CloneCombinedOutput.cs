@@ -132,11 +132,11 @@ public class CloneCombinedOutput : CombinedTwiOutput
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw, ReadOnlySpan<byte> usbHostInputsRaw,
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-        ReadOnlySpan<byte> cloneRaw)
+        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
             ps2ControllerType,
-            wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw);
+            wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw);
         Detected = !cloneRaw.IsEmpty;
     }
 

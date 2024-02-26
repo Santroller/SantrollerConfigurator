@@ -172,12 +172,16 @@ public class GhwtCombinedOutput : CombinedOutput
         return new SerializedGhwtCombinedOutput(Peripheral, Pin, PinS0, PinS1, PinS2, Outputs.Items.ToList());
     }
 
-    public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw, ReadOnlySpan<byte> wiiRaw,
-        ReadOnlySpan<byte> djLeftRaw, ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
-        ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
-        ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw)
+    public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw,
+        ReadOnlySpan<byte> ps2Raw, ReadOnlySpan<byte> wiiRaw,
+        ReadOnlySpan<byte> djLeftRaw, ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw,
+        ReadOnlySpan<byte> ghWtRaw,
+        ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw,
+        ReadOnlySpan<byte> bluetoothRaw,
+        ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
+        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw)
     {
-        base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw);
+        base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw);
         var raw = Peripheral ? peripheralWtRaw : ghWtRaw;
         if (raw.IsEmpty) return;
         var inputs = new int[5];

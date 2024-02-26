@@ -3393,6 +3393,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string InputTypeAdxlInput {
+            get {
+                return ResourceManager.GetString("InputTypeAdxlInput", resourceCulture);
+            }
+        }
+        
         public static string InputTypeMultiplexerInput {
             get {
                 return ResourceManager.GetString("InputTypeMultiplexerInput", resourceCulture);
@@ -3852,6 +3858,18 @@ namespace GuitarConfigurator.NetCore {
         public static string PickupSelectorTypeNone {
             get {
                 return ResourceManager.GetString("PickupSelectorTypeNone", resourceCulture);
+            }
+        }
+        
+        public static string AdxlInputTypePitch {
+            get {
+                return ResourceManager.GetString("AdxlInputTypePitch", resourceCulture);
+            }
+        }
+        
+        public static string AdxlInputTypeRoll {
+            get {
+                return ResourceManager.GetString("AdxlInputTypeRoll", resourceCulture);
             }
         }
         

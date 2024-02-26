@@ -1784,6 +1784,9 @@
     <data name="InputTypeAnalogPinInput" xml:space="preserve">
         <value>Analog Pin Input</value>
     </data>
+    <data name="InputTypeAdxlInput" xml:space="preserve">
+        <value>ADXL345 Input</value>
+    </data>
     <data name="InputTypeMultiplexerInput" xml:space="preserve">
         <value>Multiplexer Input</value>
     </data>
@@ -2021,6 +2024,12 @@
 
     <data name="PickupSelectorTypeNone" xml:space="preserve">
         <value>None</value>
+    </data>
+    <data name="AdxlInputTypePitch" xml:space="preserve">
+        <value>Pitch Axis</value>
+    </data>
+    <data name="AdxlInputTypeRoll" xml:space="preserve">
+        <value>Roll Axis</value>
     </data>
     <data name="Ps2ControllerTypeDigital" xml:space="preserve">
         <value>PS1 Controller</value>
