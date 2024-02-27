@@ -33,14 +33,20 @@ public class AdxlInput : TwiInput
 
     public override InputType? InputType => Types.InputType.AdxlInput;
 
-    public override bool IsUint => true;
+    public override bool IsUint => false;
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
 
     public override string Title => EnumToStringConverter.Convert(Input);
 
     public override string Generate()
     {
-        return Input is AdxlInputType.Pitch ? "pitch" : "roll";
+        return Input switch
+        {
+            AdxlInputType.AccelX => "filtered[0]",
+            AdxlInputType.AccelY => "filtered[1]",
+            AdxlInputType.AccelZ => "filtered[2]",
+            _ => "filtered[0]"
+        };
     }
 
     public override SerializedInput Serialise()
@@ -56,11 +62,12 @@ public class AdxlInput : TwiInput
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw)
     {
-        if (adxlRaw.IsEmpty) return;
+        if (adxlRaw.IsEmpty || adxlRaw.Length < 6) return;
         RawValue = Input switch
         {
-            AdxlInputType.Pitch => BitConverter.ToUInt16(adxlRaw.ToArray(), 0),
-            AdxlInputType.Roll => BitConverter.ToUInt16(adxlRaw.ToArray(), 2),
+            AdxlInputType.AccelX => BitConverter.ToInt16(adxlRaw.ToArray(), 0),
+            AdxlInputType.AccelY => BitConverter.ToInt16(adxlRaw.ToArray(), 2),
+            AdxlInputType.AccelZ => BitConverter.ToInt16(adxlRaw.ToArray(), 4),
             _ => RawValue
         };
     }

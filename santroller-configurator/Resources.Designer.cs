@@ -3873,6 +3873,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string AdxlInputTypeAccelX {
+            get {
+                return ResourceManager.GetString("AdxlInputTypeAccelX", resourceCulture);
+            }
+        }
+        
+        public static string AdxlInputTypeAccelY {
+            get {
+                return ResourceManager.GetString("AdxlInputTypeAccelY", resourceCulture);
+            }
+        }
+        
+        public static string AdxlInputTypeAccelZ {
+            get {
+                return ResourceManager.GetString("AdxlInputTypeAccelZ", resourceCulture);
+            }
+        }
+        
         public static string Ps2ControllerTypeDigital {
             get {
                 return ResourceManager.GetString("Ps2ControllerTypeDigital", resourceCulture);

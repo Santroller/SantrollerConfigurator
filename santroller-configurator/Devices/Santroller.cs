@@ -251,7 +251,7 @@ public class Santroller : ConfigurableUsbDevice
 
             if (_model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(s2 => s2 is AdxlInput)))
             {
-                adxlRaw = ReadData(0, (byte) Commands.CommandReadAdxl, 2 * sizeof(short));
+                adxlRaw = ReadData(0, (byte) Commands.CommandReadAdxl, 3 * sizeof(short));
             }
 
             var bluetoothRaw = Array.Empty<byte>();

@@ -300,7 +300,7 @@ public abstract partial class Output : ReactiveObject
 
     public AdxlInputType AdxlInputType
     {
-        get => (Input.InnermostInputs().First() as AdxlInput)?.Input ?? AdxlInputType.Pitch;
+        get => (Input.InnermostInputs().First() as AdxlInput)?.Input ?? AdxlInputType.AccelX;
         set => SetInput(SelectedInputType, null, null, null, null, null, null, value);
     }
 
@@ -629,11 +629,11 @@ public abstract partial class Output : ReactiveObject
                 input = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
                 break;
             case InputType.AdxlInput when Input.InnermostInputs().First() is not AdxlInput:
-                adxlInputType ??= AdxlInputType.Pitch;
+                adxlInputType ??= AdxlInputType.AccelX;
                 input = new AdxlInput(adxlInputType.Value, Model, false);
                 break;
             case InputType.AdxlInput when Input.InnermostInputs().First() is AdxlInput adxl:
-                adxlInputType ??= AdxlInputType.Pitch;
+                adxlInputType ??= AdxlInputType.AccelX;
                 input = new AdxlInput(adxlInputType.Value, Model, adxl.Peripheral, adxl.Sda, adxl.Scl);
                 break;
             case InputType.TurntableInput when Input.InnermostInputs().First() is not DjInput:

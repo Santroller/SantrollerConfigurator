@@ -2031,6 +2031,15 @@
     <data name="AdxlInputTypeRoll" xml:space="preserve">
         <value>Roll Axis</value>
     </data>
+    <data name="AdxlInputTypeAccelX" xml:space="preserve">
+        <value>Acceleration on X Axis</value>
+    </data>
+    <data name="AdxlInputTypeAccelY" xml:space="preserve">
+        <value>Acceleration on Y Axis</value>
+    </data>
+    <data name="AdxlInputTypeAccelZ" xml:space="preserve">
+        <value>Acceleration on Z Axis</value>
+    </data>
     <data name="Ps2ControllerTypeDigital" xml:space="preserve">
         <value>PS1 Controller</value>
     </data>
