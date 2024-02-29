@@ -1311,7 +1311,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         // uint16_t needs to be 2-byte aligned
         if ((pos & 1) != 0)
         {  
-            writer.Write(0);
+            writer.Write((byte)0);
             pos += 1;
         }
         writer.Write((short) data);
@@ -1324,7 +1324,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         // uint16_t needs to be 2-byte aligned
         if ((pos & 1) != 0)
         {  
-            writer.Write(0);
+            writer.Write((byte)0);
             pos += 1;
         }
         writer.Write((ushort) data);
