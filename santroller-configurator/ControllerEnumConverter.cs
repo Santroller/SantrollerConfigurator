@@ -187,10 +187,10 @@ public class ControllerEnumConverter : IMultiValueConverter
         switch (deviceControllerType)
         {
             case DeviceControllerType.Gamepad:
+            case DeviceControllerType.StageKit:
                 return true;
             case DeviceControllerType.Turntable:
             case DeviceControllerType.DancePad:
-            case DeviceControllerType.StageKit:
             case DeviceControllerType.GuitarHeroDrums:
             case DeviceControllerType.RockBandDrums:
                 return SupportedButtonsNonGamepad.Contains(button);
@@ -228,7 +228,6 @@ public class ControllerEnumConverter : IMultiValueConverter
                     .Cast<object>()
                     .Concat(InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>()),
             DeviceControllerType.DancePad => Array.Empty<object>(),
-            DeviceControllerType.StageKit => Array.Empty<object>(),
             _ => Enum.GetValues<StandardAxisType>().Cast<object>()
         };
         return Enum.GetValues<SimpleType>().Cast<object>()

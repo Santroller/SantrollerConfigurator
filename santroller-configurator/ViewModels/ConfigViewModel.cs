@@ -1904,6 +1904,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].b);
                  """;
         }
+        
+        ret +=
+            """
+
+            spi_transfer(APA102_SPI_PORT, 0x00);
+            spi_transfer(APA102_SPI_PORT, 0x00);
+            spi_transfer(APA102_SPI_PORT, 0x00);
+            spi_transfer(APA102_SPI_PORT, 0x00);
+            """;
 
         for (var i = 0; i <= ledMax; i += 16)
         {
