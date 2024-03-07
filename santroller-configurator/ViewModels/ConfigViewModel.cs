@@ -172,7 +172,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
             .Select(x =>
                 GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller &&
-                x.Item2 is DeviceControllerType.Turntable or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar or DeviceControllerType.LiveGuitar)
+                x.Item2 is DeviceControllerType.Turntable or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar or DeviceControllerType.LiveGuitar or DeviceControllerType.StageKit)
             .ToPropertyEx(this, x => x.IsRpcs3CompatibleController);
         this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.KeyboardMouse)
@@ -1486,6 +1486,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             {{GenerateTick(ConfigField.LightBarLed, writer)}}
                         #define HANDLE_RUMBLE \
                             {{GenerateTick(ConfigField.RumbleLed, writer)}}
+                        #define HANDLE_RUMBLE_EXPANDED \
+                            {{GenerateTick(ConfigField.RumbleLedExpanded, writer)}}
                         #define HANDLE_KEYBOARD_LED \
                             {{GenerateTick(ConfigField.KeyboardLed, writer)}}
                         #define PIN_INIT_PERIPHERAL \
@@ -1658,6 +1660,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                       #define HANDLE_PLAYER_LED
                       #define HANDLE_LIGHTBAR_LED
                       #define HANDLE_RUMBLE
+                      #define HANDLE_RUMBLE_EXPANDED
                       #define HANDLE_KEYBOARD_LED
                       #define ADC_PINS {}
                       #define ADC_COUNT 0

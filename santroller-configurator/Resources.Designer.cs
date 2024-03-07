@@ -4653,9 +4653,15 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string LedCommandTypeInputReactive {
+        public static string LedCommandTypeNoteMiss {
             get {
-                return ResourceManager.GetString("LedCommandTypeInputReactive", resourceCulture);
+                return ResourceManager.GetString("LedCommandTypeNoteMiss", resourceCulture);
+            }
+        }
+        
+        public static string LedCommandTypeNoteHit {
+            get {
+                return ResourceManager.GetString("LedCommandTypeNoteHit", resourceCulture);
             }
         }
         
@@ -4680,6 +4686,12 @@ namespace GuitarConfigurator.NetCore {
         public static string LedCommandTypeStageKitLed {
             get {
                 return ResourceManager.GetString("LedCommandTypeStageKitLed", resourceCulture);
+            }
+        }
+        
+        public static string LedCommandTypeOpen {
+            get {
+                return ResourceManager.GetString("LedCommandTypeOpen", resourceCulture);
             }
         }
         

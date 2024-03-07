@@ -2445,8 +2445,11 @@
     <data name="LedCommandTypeCombo" xml:space="preserve">
         <value>Combo LEDs</value>
     </data>
-    <data name="LedCommandTypeInputReactive" xml:space="preserve">
-        <value>Input Reactive LEDs</value>
+    <data name="LedCommandTypeNoteMiss" xml:space="preserve">
+        <value>Note Miss LEDs</value>
+    </data>
+    <data name="LedCommandTypeNoteHit" xml:space="preserve">
+        <value>Note Hit LEDs</value>
     </data>
 
     <data name="LedCommandTypeStarPowerInactive" xml:space="preserve">
@@ -2462,6 +2465,10 @@
 
     <data name="LedCommandTypeStageKitLed" xml:space="preserve">
         <value>Stage Kit</value>
+    </data>
+
+    <data name="LedCommandTypeOpen" xml:space="preserve">
+        <value>Open Note</value>
     </data>
 
     <data name="LedCommandTypePs4LightBar" xml:space="preserve">
@@ -3026,7 +3033,7 @@
         <value>XInput</value>
     </data>
     <data name="XboxAuthLabel" xml:space="preserve">
-        <value>Authentication for Xbox 360</value>
+        <value>Use Authentication Controller for Stock Xbox 360 (Disable this for RGH)</value>
     </data>
     <data name="QueueBasedInputsLabel" xml:space="preserve">
         <value>Queue Based Inputs</value>

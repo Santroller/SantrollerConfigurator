@@ -17,6 +17,7 @@ public enum ConfigField
     AuthLed,
     PlayerLed,
     RumbleLed,
+    RumbleLedExpanded,
     KeyboardLed,
     StrobeLed,
     LightBarLed,
