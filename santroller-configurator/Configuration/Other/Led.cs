@@ -819,7 +819,7 @@ public class Led : Output
         {
             case LedCommandType.DjEuphoria when mode is ConfigField.RumbleLed:
                 return $$"""
-                         if (rumble_left != rumble_right) {
+                         if (rumble_right == {{(int) RumbleCommand.SantrollerEuphoriaLed}}) {
                              {{between}}
                          }
                          """;

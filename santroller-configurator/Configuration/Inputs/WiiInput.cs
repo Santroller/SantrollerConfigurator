@@ -124,7 +124,7 @@ public class WiiInput : TwiInput
         {WiiInputType.ClassicLeftTrigger, "((wiiData[3] >> 5) | ((wiiData[2] & 0x60) >> 2))"},
         {WiiInputType.ClassicRightTrigger, "(wiiData[3] & 0x1f) << 3"},
         {WiiInputType.DjCrossfadeSlider, "((wiiData[2] & 0x1E) >> 1) << 12"},
-        {WiiInputType.DjEffectDial, "((wiiData[3] & 0xE0) >> 5 | (wiiData[2] & 0x60) >> 2) << 11"},
+        {WiiInputType.DjEffectDial, "(((wiiData[3] & 0xE0) >> 5 | (wiiData[2] & 0x60) >> 2)) << 11"},
         {WiiInputType.DjStickX, "((wiiData[0] & 0x3F) - 0x20) << 10"},
         {WiiInputType.DjStickY, "((wiiData[1] & 0x3F) - 0x20) << 10"},
         {WiiInputType.DjTurntableLeft, "(ltt_t.ltt << 10)"},
