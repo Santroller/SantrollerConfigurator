@@ -265,8 +265,13 @@ public class PlatformIo
                 {
                     if (environment.Contains("pico"))
                     {
+                        #if Linux
+                        platformIoOutput.OnNext(new PlatformIoState(currentProgress,
+                            string.Format(Resources.LookingForDeviceMessageLinux, progressMessage), null));
+                        #else
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                             string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
+                        #endif
                         currentProgress += percentageStep / sections;
                         sections = 4;
                     }

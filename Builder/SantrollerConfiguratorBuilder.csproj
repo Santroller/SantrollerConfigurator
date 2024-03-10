@@ -12,7 +12,7 @@
 
         <!--        <PublishTrimmed>true</PublishTrimmed>-->
         <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">Windows</DefineConstants>
-        <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">$(DefineConstants);POSIX</DefineConstants>
+        <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">$(DefineConstants);Linux</DefineConstants>
         <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
         <LangVersion>latestmajor</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

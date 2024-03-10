@@ -6273,6 +6273,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string LookingForDeviceMessageLinux {
+            get {
+                return ResourceManager.GetString("LookingForDeviceMessageLinux", resourceCulture);
+            }
+        }
+        
         public static string SettingUpMessage {
             get {
                 return ResourceManager.GetString("SettingUpMessage", resourceCulture);

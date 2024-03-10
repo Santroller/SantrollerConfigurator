@@ -3261,6 +3261,9 @@
     <data name="LookingForDeviceMessage" xml:space="preserve">
         <value>{0} - Looking for device</value>
     </data>
+    <data name="LookingForDeviceMessageLinux" xml:space="preserve">
+        <value>{0} - Looking for device (Make sure the Pi Pico is mounted)</value>
+    </data>
     <data name="SettingUpMessage" xml:space="preserve">
         <value>Setting up</value>
     </data>
