@@ -14,7 +14,7 @@ public class Ps3Axis : OutputAxis
 {
     public Ps3Axis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int min,
         int max,
-        int deadZone, Ps3AxisType type, bool childOfCombined=false) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, min, max, deadZone, true, childOfCombined)
+        int deadZone, Ps3AxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined=false) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, min, max, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
         UpdateDetails();
@@ -78,7 +78,7 @@ public class Ps3Axis : OutputAxis
     public override SerializedOutput Serialize()
     {
         return new SerializedPs3Axis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Min, Max,
-            DeadZone, ChildOfCombined);
+            DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined);
     }
 
     public override void UpdateBindings()

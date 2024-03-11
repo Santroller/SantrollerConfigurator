@@ -51,8 +51,8 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         {Ps2InputType.NegConB, StandardButtonType.Y},
         {Ps2InputType.NegConStart, StandardButtonType.Start}
     };
-    
-    
+
+
     private static readonly Dictionary<Ps2InputType, StandardButtonType> Tap = new()
     {
         {Ps2InputType.GuitarTapGreen, StandardButtonType.A},
@@ -150,7 +150,6 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         set => _attConfig.Pin = value;
     }
 
-    public ReadOnlyObservableCollection<int> AvailablePins => Model.AvailablePinsDigital;
     public ReadOnlyObservableCollection<int> AvailablePinsInterrupt => Model.AvailablePinsInterrupt;
 
     [Reactive] public Ps2ControllerType DetectedType { get; set; }
@@ -168,12 +167,14 @@ public class Ps2CombinedOutput : CombinedSpiOutput
             outputs.Remove(startSelectHome);
             outputs.Add(startSelectHome.ValidOutputs());
         }
+
         var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
         if (joyToDpad?.Enabled == true)
         {
             outputs.Remove(joyToDpad);
             outputs.Add(joyToDpad.ValidOutputs());
         }
+
         var tapAnalog =
             Outputs.Items.FirstOrDefault(s => s is {Enabled: true, Input: Ps2Input {Input: Ps2InputType.GuitarTapBar}});
         var tapFrets =
@@ -184,7 +185,8 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         {
             outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model,
                 new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, true)));
+                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, false, false,
+                false, -1, true)));
 
             outputs.Remove(tapAnalog);
         }
@@ -194,7 +196,8 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         {
             outputs.AddRange(Tap.Select(pair => new ControllerButton(Model,
                 new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, true)));
+                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, false, false,
+                false, -1, true)));
         }
 
         outputs.Remove(tapFrets);
@@ -252,41 +255,46 @@ public class Ps2CombinedOutput : CombinedSpiOutput
             Outputs.Add(new ControllerButton(Model,
                 new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
+                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
                 10,
-                pair.Value, true));
+                pair.Value, false, false ,false, -1, true));
 
         Outputs.Add(new ControllerButton(Model,
             new AnalogToDigital(
                 new Ps2Input(Ps2InputType.NegConI, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                 AnalogToDigitalType.Trigger, 128, Model),
-            Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 10, StandardButtonType.A, true));
+            Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.A, false,
+            false, false, -1, true));
         Outputs.Add(new ControllerButton(Model,
             new AnalogToDigital(
                 new Ps2Input(Ps2InputType.NegConIi, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                 AnalogToDigitalType.Trigger, 128, Model),
-            Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 10, StandardButtonType.X, true));
+            Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.X, false,
+            false, false, -1, true));
         Outputs.Add(new ControllerButton(Model,
             new AnalogToDigital(
                 new Ps2Input(Ps2InputType.NegConL, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                 AnalogToDigitalType.Trigger, 240, Model),
-            Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 10, StandardButtonType.LeftShoulder, true));
+            Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.LeftShoulder,
+            false, false, false, -1, true));
 
         Outputs.Add(new ControllerAxis(Model,
             new DigitalToAnalog(new Ps2Input(Ps2InputType.L2, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                 ushort.MaxValue,
                 Model, DigitalToAnalogType.Trigger),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0, ushort.MaxValue,
-            StandardAxisType.LeftTrigger,
+            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0,
+            ushort.MaxValue,
+            StandardAxisType.LeftTrigger, false, false, false, -1,
             true));
         Outputs.Add(new ControllerAxis(Model,
             new DigitalToAnalog(new Ps2Input(Ps2InputType.R2, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                 ushort.MaxValue,
                 Model, DigitalToAnalogType.Trigger),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0, ushort.MaxValue,
-            StandardAxisType.RightTrigger,
+            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0,
+            ushort.MaxValue,
+            StandardAxisType.RightTrigger, false, false, false, -1,
             true));
         foreach (var pair in Axis)
             if (pair.Value is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger ||
@@ -294,13 +302,15 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                 Outputs.Add(new ControllerAxis(Model,
                     new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                     Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0, ushort.MaxValue, pair.Value,
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0,
+                    ushort.MaxValue, pair.Value, false, false, false, -1,
                     true));
             else
                 Outputs.Add(new ControllerAxis(Model,
                     new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                     Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0, ushort.MaxValue, pair.Value,
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                    ushort.MaxValue, pair.Value, false, false, false, -1,
                     true));
 
         Outputs.Add(new JoystickToDpad(Model, Peripheral, short.MaxValue / 2, false));
@@ -325,7 +335,8 @@ public class Ps2CombinedOutput : CombinedSpiOutput
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
             ps2ControllerType,
-            wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw);
+            wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw,
+            adxlRaw);
         if (ps2ControllerType.IsEmpty)
         {
             ControllerFound = false;
@@ -360,14 +371,16 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                         Outputs.Add(new ControllerAxis(Model,
                             new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                             Colors.Black,
-                            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0, ushort.MaxValue,
-                            pair.Value, true));
+                            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0,
+                            ushort.MaxValue,
+                            pair.Value, false, false ,false, -1, true));
                     else
                         Outputs.Add(new ControllerAxis(Model,
                             new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                             Colors.Black,
-                            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0, ushort.MaxValue,
-                            pair.Value, true));
+                            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                            ushort.MaxValue,
+                            pair.Value, false, false ,false, -1, true));
             }
         }
 
@@ -378,15 +391,17 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                 Outputs.Add(new GuitarAxis(Model,
                     new Ps2Input(Ps2InputType.GuitarWhammy, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                     Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 8000, false, GuitarAxisType.Whammy, true));
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue, 8000, false,
+                    GuitarAxisType.Whammy, false, false ,false, -1, true));
             }
-            
+
             if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Slider}))
             {
                 Outputs.Add(new GuitarAxis(Model,
                     new Ps2Input(Ps2InputType.GuitarTapBar, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                     Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 0, ushort.MaxValue, 0, false, GuitarAxisType.Slider, true));
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue, 0, false,
+                    GuitarAxisType.Slider, false, false ,false, -1, true));
             }
 
             if (!Outputs.Items.Any(s => s.Input.InnermostInputs().First() is Ps2Input {Input: Ps2InputType.GuitarTilt}))
@@ -396,18 +411,22 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                         new Ps2Input(Ps2InputType.GuitarTilt, Model, Peripheral, Miso, Mosi, Sck, Att, Ack,
                             true), 32767,
                         Model, DigitalToAnalogType.Tilt), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
-                    0, false, GuitarAxisType.Tilt, true));
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue,
+                    0, false, GuitarAxisType.Tilt, false, false ,false, -1, true));
             }
         }
         else
         {
-            Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Whammy or GuitarAxisType.Slider}));
+            Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis
+            {
+                Type: GuitarAxisType.Whammy or GuitarAxisType.Slider
+            }));
             Outputs.RemoveMany(Outputs.Items.Where(s => s.Input.InnermostInputs().First() is Ps2Input
             {
                 Input: Ps2InputType.GuitarTilt
             }));
         }
+
         var tapFrets =
             Outputs.Items.FirstOrDefault(s => s is {Input: Ps2Input {Input: Ps2InputType.GuitarTapAll}});
         if (Model.DeviceControllerType.Is5FretGuitar())
@@ -418,7 +437,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                     new Ps2Input(Ps2InputType.GuitarTapAll, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
-                    InstrumentButtonType.SliderToFrets, true)
+                    InstrumentButtonType.SliderToFrets, false, false ,false, -1, true)
                 {
                     Enabled = false
                 });
@@ -447,15 +466,15 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                         Outputs.Remove(output);
                         Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
                             output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), guitarButton.Debounce,
-                            InstrumentButtonTypeExtensions.LiveToGuitar[guitarButton.Type], true));
+                            InstrumentButtonTypeExtensions.LiveToGuitar[guitarButton.Type], false, false ,false, -1, true));
                     }
 
                     if (output is not ControllerButton button) continue;
                     if (!InstrumentButtonTypeExtensions.GuitarMappings.ContainsKey(button.Type)) continue;
                     Outputs.Remove(output);
                     Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
-                        output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),button.Debounce,
-                        InstrumentButtonTypeExtensions.GuitarMappings[button.Type], true));
+                        output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), button.Debounce,
+                        InstrumentButtonTypeExtensions.GuitarMappings[button.Type], false, false ,false, -1, true));
                 }
 
                 break;
@@ -469,16 +488,16 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                         if (!InstrumentButtonTypeExtensions.GuitarToLive.ContainsKey(guitarButton.Type)) continue;
                         Outputs.Remove(output);
                         Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
-                            output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),guitarButton.Debounce,
-                            InstrumentButtonTypeExtensions.GuitarToLive[guitarButton.Type], true));
+                            output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), guitarButton.Debounce,
+                            InstrumentButtonTypeExtensions.GuitarToLive[guitarButton.Type], false, false ,false, -1, true));
                     }
 
                     if (output is not ControllerButton button) continue;
                     if (!InstrumentButtonTypeExtensions.LiveGuitarMappings.ContainsKey(button.Type)) continue;
                     Outputs.Remove(output);
                     Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
-                        output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),button.Debounce,
-                        InstrumentButtonTypeExtensions.LiveGuitarMappings[button.Type], true));
+                        output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), button.Debounce,
+                        InstrumentButtonTypeExtensions.LiveGuitarMappings[button.Type], false, false ,false, -1, true));
                 }
 
                 break;
@@ -490,8 +509,8 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                     if (output is not GuitarButton guitarButton) continue;
                     Outputs.Remove(output);
                     Outputs.Add(new ControllerButton(Model, output.Input, output.LedOn, output.LedOff,
-                        output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),guitarButton.Debounce,
-                        InstrumentButtonTypeExtensions.GuitarToStandard[guitarButton.Type], true));
+                        output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), guitarButton.Debounce,
+                        InstrumentButtonTypeExtensions.GuitarToStandard[guitarButton.Type], false, false ,false, -1, true));
                 }
 
                 break;
@@ -511,7 +530,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0,
                     ushort.MaxValue,
-                    StandardAxisType.LeftTrigger,
+                    StandardAxisType.LeftTrigger, false, false ,false, -1,
                     true));
             }
 
@@ -526,7 +545,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue, ushort.MaxValue, 0,
                     ushort.MaxValue,
-                    StandardAxisType.RightTrigger,
+                    StandardAxisType.RightTrigger, false, false ,false, -1,
                     true));
             }
 
@@ -535,7 +554,8 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                 Outputs.Add(new Ps3Axis(Model,
                     new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                     Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0, pair.Value, true));
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                    pair.Value, false, false ,false, -1, true));
 
             return;
         }

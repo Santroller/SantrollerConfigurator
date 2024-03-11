@@ -11,7 +11,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedDjButton : SerializedOutput
 {
     public SerializedDjButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int debounce,
-        DjInputType type, bool childOfCombined)
+        DjInputType type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -21,6 +21,10 @@ public class SerializedDjButton : SerializedOutput
         Debounce = debounce;
         Type = type;
         ChildOfCombined = childOfCombined;
+        OutputEnabled = outputEnabled;
+        OutputPin = outputPin;
+        OutputInverted = outputInverted;
+        OutputPeripheral = outputPeripheral;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
@@ -31,11 +35,15 @@ public class SerializedDjButton : SerializedOutput
     [ProtoMember(7)] public bool ChildOfCombined { get; }
     [ProtoMember(8)] public byte[] LedIndexPeripheral { get; }
     [ProtoMember(9)] public int Debounce { get; }
+    [ProtoMember(10)] public bool OutputEnabled { get; }
+    [ProtoMember(11)] public int OutputPin { get; }
+    [ProtoMember(12)] public bool OutputInverted { get; }
+    [ProtoMember(13)] public bool OutputPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new DjButton(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Debounce, Type, ChildOfCombined);
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;
     }

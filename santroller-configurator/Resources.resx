@@ -2363,6 +2363,9 @@
     <data name="AnalogToDigitalTypeTrigger" xml:space="preserve">
         <value>Trigger / Button</value>
     </data>
+    <data name="AnalogToDigitalTypeRapidTrigger" xml:space="preserve">
+        <value>RapidTrigger</value>
+    </data>
     <data name="Arduino32U4TypeProMicro" xml:space="preserve">
         <value>Sparkfun Pro Micro</value>
     </data>
@@ -2825,8 +2828,14 @@
     <data name="EnableAnalogOutputTitle" xml:space="preserve">
         <value>Enable Analog Output</value>
     </data>
+    <data name="PeripheralOutputLabel" xml:space="preserve">
+        <value>Output connected to Peripheral</value>
+    </data>
     <data name="InvertLabel" xml:space="preserve">
         <value>Invert</value>
+    </data>
+    <data name="InvertOutputLabel" xml:space="preserve">
+        <value>Invert Output</value>
     </data>
     <data name="AnalogOutputPinLabel" xml:space="preserve">
         <value>Analog Output Pin</value>

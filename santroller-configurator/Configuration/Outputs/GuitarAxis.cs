@@ -46,10 +46,12 @@ public class GuitarAxis : OutputAxis
 
     public GuitarAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff,
         byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max, int deadZone, bool invert,
-        GuitarAxisType type, bool childOfCombined) : base(model,
+        GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
+        bool childOfCombined) : base(model,
         input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, min, max, deadZone,
-        type is GuitarAxisType.Slider or GuitarAxisType.Whammy, childOfCombined)
+        type is GuitarAxisType.Slider or GuitarAxisType.Whammy, outputEnabled, outputInverted, outputPeripheral,
+        outputPin, childOfCombined)
     {
         Type = type;
         Inverted = invert;
@@ -83,7 +85,7 @@ public class GuitarAxis : OutputAxis
             };
         }
     }
-    
+
     protected override int Calculate(
         (bool enabled, int value, int min, int max, int deadZone, bool trigger, DeviceControllerType
             deviceControllerType) values)
@@ -119,6 +121,7 @@ public class GuitarAxis : OutputAxis
                 return type;
             }
         }
+
         return 0;
     }
 
@@ -166,7 +169,7 @@ public class GuitarAxis : OutputAxis
     {
         return new SerializedGuitarAxis(Input!.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Inverted, Min, Max,
-            DeadZone, ChildOfCombined);
+            DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined);
     }
 
     public override string GenerateOutput(ConfigField mode)
@@ -366,10 +369,10 @@ public class GuitarAxis : OutputAxis
                 foreach (var (key, value) in PickupSelectorRanges)
                 {
                     ret2.Add($$"""
-                              if ({{gen2}} < {{value}}) {
-                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[key]}};
-                              }
-                              """);
+                               if ({{gen2}} < {{value}}) {
+                                  {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[key]}};
+                               }
+                               """);
                 }
 
                 return $$"""

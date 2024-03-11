@@ -35,7 +35,7 @@ public class SerializedLed : SerializedOutput
     [ProtoMember(7)] public int Param1 { get; }
     [ProtoMember(8)] public int Param2 { get; }
     [ProtoMember(9)] public bool Inverted { get; }
-    [ProtoMember(10)] private bool Peripheral { get; }
+    [ProtoMember(10)] public bool Peripheral { get; }
     [ProtoMember(11)] public byte[] LedIndexPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)

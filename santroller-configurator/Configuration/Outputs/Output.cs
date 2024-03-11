@@ -74,18 +74,25 @@ public abstract partial class Output : ReactiveObject
     private Color _ledOff;
 
     private Color _ledOn;
+    private bool _outputEnabled;
+
+    private int _outputPin;
 
     public ReactiveCommand<Unit, Unit> MoveUp { get; }
     public ReactiveCommand<Unit, Unit> MoveDown { get; }
 
 
     protected Output(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
-        byte[] ledIndicesPeripheral,
+        byte[] ledIndicesPeripheral, bool outputEnabled, bool outputInverted, bool peripheralOutput, int outputPin, 
         bool childOfCombined)
     {
+        Model = model;
+        OutputEnabled = outputEnabled;
+        OutputInverted = outputInverted;
+        PeripheralOutput = peripheralOutput;
+        OutputPin = outputPin;
         ChildOfCombined = childOfCombined;
         ButtonText = Resources.Assign;
-        Model = model;
         Input = input;
         LedIndices = new ObservableCollection<byte>(ledIndices);
         LedIndicesPeripheral = new ObservableCollection<byte>(ledIndicesPeripheral);
@@ -154,6 +161,13 @@ public abstract partial class Output : ReactiveObject
             .Select(enabled => enabled ? Brush.Parse("#99000000") : Brush.Parse("#33000000"))
             .ToPropertyEx(this, s => s.CombinedBackground);
         this.WhenAnyValue(x => x.Model.HasPeripheral).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
+        this.WhenAnyValue(x => x.UsesPwm).Subscribe(s =>
+        {
+            if (s && !AvailablePwmPins.Contains(_outputPin))
+            {
+                _outputPin = -1;
+            }
+        });
         Outputs = new SourceList<Output>();
         Outputs.Add(this);
         AnalogOutputs = new ReadOnlyObservableCollection<Output>(new ObservableCollection<Output>());
@@ -163,6 +177,107 @@ public abstract partial class Output : ReactiveObject
         _configured = true;
         IsVisible = !Model.Branded || LedIndices.Any() || this is Led || this is BluetoothOutput ||
                     this is CombinedOutput || this is OutputAxis {Input: not DigitalToAnalog};
+    }
+
+    private bool _outputPeripheral;
+
+    public bool PeripheralOutput
+    {
+        get => _outputPeripheral;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _outputPeripheral, value);
+            if (OutputEnabled)
+            {
+                OutputPinConfig = new DirectPinConfig(Model, "led_output", OutputPin, Model.HasPeripheral && value, DevicePinMode.Output);
+            }
+        }
+    }
+    private bool _outputInverted;
+
+    public bool OutputInverted
+    {
+        get => _outputInverted;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _outputInverted, value);
+            if (Model.Device is not Santroller santroller || OutputPin == -1) return;
+            if (UsesPwm)
+            {
+                santroller.AnalogWrite(OutputPin, value ? 255 - Test : Test);
+            }
+            else
+            {
+                santroller.DigitalWrite(OutputPin, value ? Test == 0 : Test != 0);
+            }
+        }
+    }
+    
+    
+    private int _test;
+
+    public int Test
+    {
+        get => _test;
+        set
+        {
+            if (Model.Device is not Santroller santroller || !UsesPwm) return;
+            santroller.AnalogWrite(OutputPin, OutputInverted ? 255 - value : value);
+
+            this.RaiseAndSetIfChanged(ref _test, value);
+        }
+    }
+
+    public bool TestDigital
+    {
+        get => _test != 0;
+        set
+        {
+            if (Model.Device is not Santroller santroller || UsesPwm) return;
+            santroller.DigitalWrite(OutputPin, OutputInverted ? !value : value);
+
+            this.RaiseAndSetIfChanged(ref _test, value ? 255 : 0);
+        }
+    }
+    public virtual bool UsesPwm => false;
+
+    public bool OutputEnabled
+    {
+        get => _outputEnabled;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _outputEnabled, value);
+            if (value)
+            {
+                if (OutputPinConfig != null)
+                {
+                    OutputPinConfig = new DirectPinConfig(Model, "led_output", OutputPin,
+                        Model.HasPeripheral && PeripheralOutput, DevicePinMode.Output);
+                }
+            }
+            else
+            {
+                OutputPinConfig = null;
+            }
+
+            Model.UpdateErrors();
+        }
+    }
+
+    public ReadOnlyObservableCollection<int> AvailablePins => Model.AvailablePinsDigital;
+    public List<int> AvailablePwmPins => Model.Microcontroller.PwmPins;
+
+    public DirectPinConfig? OutputPinConfig { get; private set; }
+
+    public int OutputPin
+    {
+        get => _outputPin;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _outputPin, value);
+            if (OutputPinConfig == null) return;
+            OutputPinConfig.Pin = value;
+        }
     }
 
     private double GetOpacity((int, Input, bool) s)
@@ -509,13 +624,13 @@ public abstract partial class Output : ReactiveObject
         Output? newOutput = value switch
         {
             Key key => new KeyboardButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
-                LedIndicesPeripheral.ToArray(), debounce, key),
+                LedIndicesPeripheral.ToArray(), debounce, key, false, false ,false, -1),
             MouseButtonType mouseButtonType => new MouseButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
                 LedIndicesPeripheral.ToArray(),
-                debounce, mouseButtonType),
+                debounce, mouseButtonType, false, false ,false, -1),
             MouseAxisType axisType => new MouseAxis(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
                 LedIndicesPeripheral.ToArray(), min, max,
-                deadzone, axisType),
+                deadzone, axisType, false, false ,false, -1),
             _ => null
         };
 
@@ -796,15 +911,18 @@ public abstract partial class Output : ReactiveObject
     {
         Model.RemoveOutput(this);
     }
-
+    
     protected virtual IEnumerable<PinConfig> GetOwnPinConfigs()
     {
-        return Enumerable.Empty<PinConfig>();
+        return OutputPinConfig != null ? new[] {OutputPinConfig} : Enumerable.Empty<PinConfig>();
     }
 
     protected virtual IEnumerable<DevicePin> GetOwnPins()
     {
-        return Enumerable.Empty<DevicePin>();
+        return new List<DevicePin>
+        {
+            new(OutputPin, DevicePinMode.Output)
+        };
     }
 
     public IEnumerable<PinConfig> GetPinConfigs()

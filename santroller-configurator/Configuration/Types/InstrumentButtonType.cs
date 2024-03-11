@@ -160,7 +160,7 @@ public static class InstrumentButtonTypeExtensions
                         outputs.Remove(output);
                         outputs.Add(new GuitarButton(model, output.Input, output.LedOn, output.LedOff,
                             output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), guitarButton.Debounce,
-                            LiveToGuitar[guitarButton.Type],
+                            LiveToGuitar[guitarButton.Type], false, false ,false, -1,
                             combined));
                     }
 
@@ -169,7 +169,7 @@ public static class InstrumentButtonTypeExtensions
                     outputs.Remove(output);
                     outputs.Add(new GuitarButton(model, output.Input, output.LedOn, output.LedOff,
                         output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), button.Debounce,
-                        GuitarMappings[button.Type], combined));
+                        GuitarMappings[button.Type], false, false ,false, -1, combined));
                 }
 
                 break;
@@ -184,7 +184,7 @@ public static class InstrumentButtonTypeExtensions
                         outputs.Remove(output);
                         outputs.Add(new GuitarButton(model, output.Input, output.LedOn, output.LedOff,
                             output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), guitarButton.Debounce,
-                            GuitarToLive[guitarButton.Type],
+                            GuitarToLive[guitarButton.Type], false, false ,false, -1,
                             combined));
                     }
 
@@ -193,7 +193,7 @@ public static class InstrumentButtonTypeExtensions
                     outputs.Remove(output);
                     outputs.Add(new GuitarButton(model, output.Input, output.LedOn, output.LedOff,
                         output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), button.Debounce,
-                        LiveGuitarMappings[button.Type], combined));
+                        LiveGuitarMappings[button.Type], false, false ,false, -1, combined));
                 }
 
                 break;
@@ -208,7 +208,7 @@ public static class InstrumentButtonTypeExtensions
                     {
                         outputs.Add(new ControllerButton(model, output.Input, output.LedOn, output.LedOff,
                             output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(), guitarButton.Debounce,
-                            value,
+                            value, false, false ,false, -1,
                             combined));
                     }
                 }

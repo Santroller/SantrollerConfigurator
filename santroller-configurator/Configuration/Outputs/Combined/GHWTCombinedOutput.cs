@@ -130,7 +130,7 @@ public class GhwtCombinedOutput : CombinedOutput
                 true),
             Colors.Black,
             Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
-            false, GuitarAxisType.Slider, true));
+            false, GuitarAxisType.Slider, false, false ,false, -1, true));
         UpdateBindings();
     }
 
@@ -148,7 +148,7 @@ public class GhwtCombinedOutput : CombinedOutput
             outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model,
                 new GhWtTapInput(pair.Key, Model, Peripheral, Pin, PinS0, PinS1, PinS2, true), Colors.Black,
                 Colors.Black,
-                Array.Empty<byte>(),Array.Empty<byte>(), 5, pair.Value, true)));
+                Array.Empty<byte>(),Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true)));
 
             outputs.Remove(tapAnalog);
         }
@@ -159,7 +159,7 @@ public class GhwtCombinedOutput : CombinedOutput
             outputs.Add(new ControllerButton(Model,
                 new GhWtTapInput(pair.Key, Model, Peripheral, Pin, PinS0, PinS1, PinS2, true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5, pair.Value, true));
+                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true));
         }
 
         outputs.Remove(tapFrets);
@@ -210,7 +210,7 @@ public class GhwtCombinedOutput : CombinedOutput
                 var button = new GuitarButton(Model,
                     new GhWtTapInput(GhWtInputType.TapAll, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                         true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5, InstrumentButtonType.SliderToFrets, true);
+                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5, InstrumentButtonType.SliderToFrets, false, false ,false, -1, true);
                 button.Enabled = false;
                 Outputs.Add(button);
             }
@@ -222,7 +222,7 @@ public class GhwtCombinedOutput : CombinedOutput
                     true),
                 Colors.Black,
                 Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
-                false, GuitarAxisType.Slider, true));
+                false, GuitarAxisType.Slider, false, false ,false, -1, true));
         }
         else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
         {
@@ -238,7 +238,7 @@ public class GhwtCombinedOutput : CombinedOutput
                     true),
                 Colors.Black,
                 Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
-                ushort.MaxValue, StandardAxisType.LeftStickX, true));
+                ushort.MaxValue, StandardAxisType.LeftStickX, false, false ,false, -1, true));
         }
         else
         {

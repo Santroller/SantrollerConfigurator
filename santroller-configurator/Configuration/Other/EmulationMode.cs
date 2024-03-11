@@ -20,7 +20,7 @@ public class EmulationMode : Output
     private EmulationModeType _emulationModeType;
 
     public EmulationMode(ConfigViewModel model, Input input, EmulationModeType type) : base(
-        model, input, Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), false)
+        model, input, Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), false, false, false, -1, false)
     {
         Type = type;
         _emulationModes.AddRange(Enum.GetValues<EmulationModeType>());

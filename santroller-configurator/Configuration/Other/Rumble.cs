@@ -15,32 +15,15 @@ namespace GuitarConfigurator.NetCore.Configuration.Other;
 
 public class Rumble : Output
 {
-    private int _pin;
-
     private RumbleMotorType _rumbleMotorType;
 
     public Rumble(ConfigViewModel model, int pin, bool peripheral, RumbleMotorType rumbleMotorType) : base(model,
-        new FixedInput(model, 0, false), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), false)
+        new FixedInput(model, 0, false), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), true, false, peripheral, pin, false)
     {
-        PinConfig = new DirectPinConfig(model, Guid.NewGuid().ToString(), pin, peripheral, DevicePinMode.Output);
-        Pin = pin;
         RumbleMotorType = rumbleMotorType;
-        this.WhenAnyValue(x => x.PinConfig.Pin).Subscribe(_ => this.RaisePropertyChanged(nameof(Pin)));
     }
 
-    public List<int> AvailablePins => Model.Microcontroller.PwmPins;
-
-    public DirectPinConfig PinConfig { get; }
-
-    public int Pin
-    {
-        get => _pin;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _pin, value);
-            PinConfig.Pin = value;
-        }
-    }
+    public override bool UsesPwm => true;
 
     public RumbleMotorType RumbleMotorType
     {
@@ -71,22 +54,9 @@ public class Rumble : Output
         return string.Format(Resources.RumbleCommandTitle, EnumToStringConverter.Convert(RumbleMotorType));
     }
 
-    protected override IEnumerable<PinConfig> GetOwnPinConfigs()
-    {
-        return new[] {PinConfig};
-    }
-
-    protected override IEnumerable<DevicePin> GetOwnPins()
-    {
-        return new List<DevicePin>
-        {
-            new(Pin, DevicePinMode.Output)
-        };
-    }
-
     public override SerializedOutput Serialize()
     {
-        return new SerializedRumble(RumbleMotorType, Pin, PinConfig.Peripheral);
+        return new SerializedRumble(RumbleMotorType, OutputPin, PeripheralOutput);
     }
 
     public override Enum GetOutputType()
@@ -101,8 +71,8 @@ public class Rumble : Output
     {
         return mode is not ConfigField.RumbleLed
             ? ""
-            : Model.Microcontroller.GenerateAnalogWrite(Pin,
-                RumbleMotorType == RumbleMotorType.Left ? "rumble_left" : "rumble_right", PinConfig.Peripheral);
+            : Model.Microcontroller.GenerateAnalogWrite(OutputPin,
+                RumbleMotorType == RumbleMotorType.Left ? "rumble_left" : "rumble_right", PeripheralOutput);
     }
 
     public override void UpdateBindings()

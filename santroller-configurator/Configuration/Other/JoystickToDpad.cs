@@ -49,7 +49,7 @@ public class JoystickToDpad : Output
 
     public JoystickToDpad(ConfigViewModel model, bool peripheral, int threshold, bool wii) : base(
         model, new JoystickToDpadInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
-        true)
+        false ,false, false, -1, true)
     {
         Threshold = threshold;
         Wii = wii;
@@ -62,13 +62,13 @@ public class JoystickToDpad : Output
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow,
                         Threshold,
                         model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
-                    StandardButtonType.DpadLeft,
+                    StandardButtonType.DpadLeft, false, false ,false, -1,
                     true));
                 _outputs.Add(new ControllerButton(model,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh,
                         Threshold,
                         model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
-                    StandardButtonType.DpadRight,
+                    StandardButtonType.DpadRight, false, false ,false, -1,
                     true));
             }
 
@@ -78,12 +78,12 @@ public class JoystickToDpad : Output
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh,
                         Threshold,
                         model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
-                    StandardButtonType.DpadUp, true));
+                    StandardButtonType.DpadUp, false, false ,false, -1, true));
                 _outputs.Add(new ControllerButton(model,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow,
                         Threshold,
                         model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
-                    StandardButtonType.DpadDown,
+                    StandardButtonType.DpadDown, false, false ,false, -1,
                     true));
             }
         }
@@ -93,22 +93,22 @@ public class JoystickToDpad : Output
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral),
                     AnalogToDigitalType.JoyLow, Threshold,
                     model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
-                StandardButtonType.DpadLeft, true));
+                StandardButtonType.DpadLeft, false, false ,false, -1, true));
             _outputs.Add(new ControllerButton(model,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral),
                     AnalogToDigitalType.JoyHigh, Threshold,
                     model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
-                StandardButtonType.DpadRight, true));
+                StandardButtonType.DpadRight, false, false ,false, -1, true));
             _outputs.Add(new ControllerButton(model,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral),
                     AnalogToDigitalType.JoyHigh, Threshold,
                     model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
-                StandardButtonType.DpadUp, true));
+                StandardButtonType.DpadUp, false, false ,false, -1, true));
             _outputs.Add(new ControllerButton(model,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral),
                     AnalogToDigitalType.JoyLow, Threshold,
                     model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
-                StandardButtonType.DpadDown, true));
+                StandardButtonType.DpadDown, false, false ,false, -1, true));
         }
 
         UpdateDetails();

@@ -136,18 +136,15 @@ public class Led : Output
     private readonly SourceList<LedCommandType> _rumbleCommands = new();
 
     private readonly ObservableAsPropertyHelper<bool> _outputHasColours;
-    private bool _outputEnabled;
 
-    private int _pin;
-
-    public Led(ConfigViewModel model, bool outputEnabled, bool inverted, int pin, bool peripheral, Color ledOn,
+    private readonly ObservableAsPropertyHelper<bool> _usesPwm;
+    public Led(ConfigViewModel model, bool outputEnabled, bool outputInverted, int outputPin, bool peripheral, Color ledOn,
         Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, LedCommandType command, int param,
         int param2) : base(model,
         new FixedInput(model, 0, false),
         ledOn, ledOff,
-        ledIndices, ledIndicesPeripheral, false)
+        ledIndices, ledIndicesPeripheral, outputEnabled, outputInverted, peripheral, outputPin, false)
     {
-        _peripheral = peripheral;
         Player = 1;
         Combo = 1;
         StageKitLed = 1;
@@ -200,10 +197,11 @@ public class Led : Output
                 break;
         }
 
-        Pin = pin;
-        OutputEnabled = outputEnabled;
-        Inverted = inverted;
         Command = command;
+        _usesPwm = this.WhenAnyValue(x => x.Command)
+            .Select(commandType => commandType is LedCommandType.DjEuphoria
+                or LedCommandType.StarPowerActive
+                or LedCommandType.StarPowerInactive).ToProperty(this, x => x.UsesPwm);
         _rumbleCommands.AddRange(Enum.GetValues<LedCommandType>());
         _rumbleCommands.Connect()
             .Filter(this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.Model.EmulationType,
@@ -213,10 +211,6 @@ public class Led : Output
         RumbleCommands = rumbleCommands;
         _outputHasColours = this.WhenAnyValue(x => x.Command).Select(s => s is not LedCommandType.Ps4LightBar)
             .ToProperty(this, x => x.LedsHaveColours);
-        this.WhenAnyValue(x => x.Command)
-            .Select(commandType => commandType is LedCommandType.DjEuphoria
-                or LedCommandType.StarPowerActive
-                or LedCommandType.StarPowerInactive).ToPropertyEx(this, x => x.UsesPwm);
 
         this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Player)
             .ToPropertyEx(this, x => x.PlayerMode);
@@ -259,6 +253,8 @@ public class Led : Output
         UpdateDetails();
     }
 
+    public override bool UsesPwm => _usesPwm?.Value ?? false;
+
     public override bool LedsHaveColours =>
         _outputHasColours.Value; // ReSharper disable UnassignedGetOnlyAutoProperty
 
@@ -282,80 +278,6 @@ public class Led : Output
     public GuitarHeroDrum[] GuitarHeroDrums { get; } = Enum.GetValues<GuitarHeroDrum>();
     public Turntable[] Turntables { get; } = Enum.GetValues<Turntable>();
 
-    public bool OutputEnabled
-    {
-        get => _outputEnabled;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _outputEnabled, value);
-            if (value)
-            {
-                if (PinConfig != null) return;
-                PinConfig = new DirectPinConfig(Model, "led_output", Pin, Peripheral, DevicePinMode.Output);
-            }
-            else
-            {
-                PinConfig = null;
-            }
-
-            Model.UpdateErrors();
-        }
-    }
-
-    public ReadOnlyObservableCollection<int> AvailablePins => Model.AvailablePinsDigital;
-    public List<int> AvailablePwmPins => Model.Microcontroller.PwmPins;
-
-    public DirectPinConfig? PinConfig { get; private set; }
-
-    public int Pin
-    {
-        get => _pin;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _pin, value);
-            if (PinConfig == null) return;
-            PinConfig.Pin = value;
-        }
-    }
-
-    private bool _peripheral;
-
-    public bool Peripheral
-    {
-        get => _peripheral;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _peripheral, value);
-            UpdateDetails();
-        }
-    }
-
-    private int _test;
-
-    public int Test
-    {
-        get => _test;
-        set
-        {
-            if (Model.Device is not Santroller santroller || !UsesPwm) return;
-            santroller.AnalogWrite(Pin, Inverted ? 255 - value : value);
-
-            this.RaiseAndSetIfChanged(ref _test, value);
-        }
-    }
-
-    public bool TestDigital
-    {
-        get => _test != 0;
-        set
-        {
-            if (Model.Device is not Santroller santroller || UsesPwm) return;
-            santroller.DigitalWrite(Pin, Inverted ? !value : value);
-
-            this.RaiseAndSetIfChanged(ref _test, value ? 255 : 0);
-        }
-    }
-
     private LedCommandType _command;
 
     public LedCommandType Command
@@ -364,36 +286,10 @@ public class Led : Output
         set
         {
             this.RaiseAndSetIfChanged(ref _command, value);
-            if (UsesPwm && !AvailablePwmPins.Contains(_pin))
-            {
-                _pin = -1;
-            }
-
             UpdateDetails();
         }
     }
 
-    private bool _inverted;
-
-    public bool Inverted
-    {
-        get => _inverted;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _inverted, value);
-            if (Model.Device is not Santroller santroller || Pin == -1) return;
-            if (UsesPwm)
-            {
-                santroller.AnalogWrite(Pin, value ? 255 - Test : Test);
-            }
-            else
-            {
-                santroller.DigitalWrite(Pin, value ? Test == 0 : Test != 0);
-            }
-        }
-    }
-
-    [ObservableAsProperty] public bool UsesPwm { get; }
     [Reactive] public int Player { get; set; }
     [Reactive] public int StageKitLed { get; set; }
 
@@ -440,19 +336,6 @@ public class Led : Output
         bool swapSwitchFaceButtons)
     {
         return string.Format(Resources.LedCommandTitle, EnumToStringConverter.Convert(Command));
-    }
-
-    protected override IEnumerable<PinConfig> GetOwnPinConfigs()
-    {
-        return PinConfig != null ? new[] {PinConfig} : Enumerable.Empty<PinConfig>();
-    }
-
-    protected override IEnumerable<DevicePin> GetOwnPins()
-    {
-        return new List<DevicePin>
-        {
-            new(Pin, DevicePinMode.Output)
-        };
     }
 
     public static Func<LedCommandType, bool> FilterLeds(
@@ -537,8 +420,8 @@ public class Led : Output
 
         return new SerializedLed(LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Command, param1,
             param2, OutputEnabled,
-            Peripheral, Inverted,
-            Pin);
+            PeripheralOutput, OutputInverted,
+            OutputPin);
     }
 
     public override Enum GetOutputType()
@@ -560,14 +443,14 @@ public class Led : Output
         var between = "";
         var starPowerBetween = "";
         var ps4 = "";
-        if (PinConfig != null)
+        if (OutputPinConfig != null)
         {
-            on = $"{Model.Microcontroller.GenerateDigitalWrite(PinConfig.Pin, !Inverted, Peripheral)};";
-            off = $"{Model.Microcontroller.GenerateDigitalWrite(PinConfig.Pin, Inverted, Peripheral)};";
+            on = $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, !OutputInverted, PeripheralOutput)};";
+            off = $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, OutputInverted, PeripheralOutput)};";
             between =
-                $"{Model.Microcontroller.GenerateAnalogWrite(PinConfig.Pin, $"{(Inverted ? "(255-" : "(")}rumble_left)", Peripheral)};";
+                $"{Model.Microcontroller.GenerateAnalogWrite(OutputPinConfig.Pin, $"{(OutputInverted ? "(255-" : "(")}rumble_left)", PeripheralOutput)};";
             starPowerBetween =
-                $"{Model.Microcontroller.GenerateAnalogWrite(PinConfig.Pin, (Inverted ? "(255-" : "(") + "last_star_power)", Peripheral)};";
+                $"{Model.Microcontroller.GenerateAnalogWrite(OutputPinConfig.Pin, (OutputInverted ? "(255-" : "(") + "last_star_power)", PeripheralOutput)};";
         }
 
         if (Model.IsApa102)

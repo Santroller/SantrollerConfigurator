@@ -11,7 +11,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedDjAxis : SerializedOutput
 {
     public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
-        int min, int max, int deadzone, bool childOfCombined)
+        int min, int max, int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -23,9 +23,13 @@ public class SerializedDjAxis : SerializedOutput
         LedIndex = ledIndex;
         LedIndexPeripheral = ledIndexPeripheral;
         ChildOfCombined = childOfCombined;
+        OutputEnabled = outputEnabled;
+        OutputPin = outputPin;
+        OutputInverted = outputInverted;
+        OutputPeripheral = outputPeripheral;
     }
     
-    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int multiplier, int ledMultiplier, bool childOfCombined)
+    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int multiplier, int ledMultiplier, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -51,6 +55,10 @@ public class SerializedDjAxis : SerializedOutput
     [ProtoMember(10)] public DjAxisType Type { get; }
     [ProtoMember(11)] public byte[] LedIndexPeripheral { get; }
     [ProtoMember(12)] public int LedMultiplier { get; }
+    [ProtoMember(13)] public bool OutputEnabled { get; }
+    [ProtoMember(14)] public int OutputPin { get; }
+    [ProtoMember(15)] public bool OutputInverted { get; }
+    [ProtoMember(16)] public bool OutputPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
@@ -59,13 +67,13 @@ public class SerializedDjAxis : SerializedOutput
         {
             combined = new DjAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
                 Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, DeadzoneOrMultiplier, LedMultiplier,
-                Type, ChildOfCombined);
+                Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         }
         else
         {
             combined = new DjAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
                 Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, DeadzoneOrMultiplier,
-                Type, ChildOfCombined);
+                Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         }
         
         model.Bindings.Add(combined);

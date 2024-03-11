@@ -14,9 +14,9 @@ public class ControllerAxis : OutputAxis
 
     public ControllerAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int min,
         int max,
-        int deadZone, int threshold, StandardAxisType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, min,
+        int deadZone, int threshold, StandardAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, min,
         max,
-        deadZone, IsTrigger(type), childOfCombined)
+        deadZone, IsTrigger(type), outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
         Threshold = threshold;
@@ -145,7 +145,7 @@ public class ControllerAxis : OutputAxis
     public override SerializedOutput Serialize()
     {
         return new SerializedControllerAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Min, Max,
-            DeadZone,Threshold, ChildOfCombined);
+            DeadZone,Threshold, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined);
     }
 
     public override void UpdateBindings()

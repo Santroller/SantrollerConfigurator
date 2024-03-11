@@ -14,8 +14,11 @@ public class DjButton : OutputButton
 {
     public readonly DjInputType Type;
 
-    public DjButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int debounce,
-        DjInputType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, debounce,
+    public DjButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral, int debounce,
+        DjInputType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
+        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, debounce,
+        outputEnabled, outputInverted, outputPeripheral, outputPin,
         childOfCombined)
     {
         Type = type;
@@ -38,10 +41,12 @@ public class DjButton : OutputButton
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
-        if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.XboxOne or ConfigField.Xbox360 or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Reset))
+        if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.XboxOne
+            or ConfigField.Xbox360 or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Reset))
             return "";
 
-        if (mode is not ConfigField.Shared) {
+        if (mode is not ConfigField.Shared)
+        {
             // Turntables also hit the standard buttons when you push each button
             switch (Type)
             {
@@ -78,7 +83,8 @@ public class DjButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedDjButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type,
+        return new SerializedDjButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(),
+            LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
             ChildOfCombined);
     }
 }

@@ -46,7 +46,7 @@ public class StartSelectHome : Output
 
     public StartSelectHome(ConfigViewModel model, bool peripheral, bool wii) : base(
         model, new StartSelectHomeInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
-        true)
+        false, false, peripheral, -1, true)
     {
         Wii = wii;
         Peripheral = peripheral;
@@ -57,7 +57,7 @@ public class StartSelectHome : Output
                 _outputs.Add(new ControllerButton(Model,
                     new MacroInput(new WiiInput(StartWii[i], model, peripheral),
                         new WiiInput(SelectWii[i], model, peripheral), Model), Colors.Black, Colors.Black,
-                    Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, true));
+                    Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false, false ,false, -1, true));
             }
         }
         else
@@ -65,7 +65,7 @@ public class StartSelectHome : Output
             _outputs.Add(new ControllerButton(Model,
                 new MacroInput(new Ps2Input(Ps2InputType.Start, model, peripheral),
                     new Ps2Input(Ps2InputType.Select, model, peripheral), Model), Colors.Black, Colors.Black,
-                Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, true));
+                Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false, false ,false, -1, true));
         }
 
         UpdateDetails();

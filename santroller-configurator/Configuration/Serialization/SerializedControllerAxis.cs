@@ -11,7 +11,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedControllerAxis : SerializedOutput
 {
     public SerializedControllerAxis(SerializedInput input, StandardAxisType type, Color ledOn, Color ledOff,
-        byte[] ledIndex, byte[] ledIndexPeripheral, int min, int max, int deadzone, int threshold, bool childOfCombined)
+        byte[] ledIndex, byte[] ledIndexPeripheral, int min, int max, int deadzone, int threshold, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -24,6 +24,10 @@ public class SerializedControllerAxis : SerializedOutput
         LedIndexPeripheral = ledIndexPeripheral;
         ChildOfCombined = childOfCombined;
         Threshold = threshold;
+        OutputEnabled = outputEnabled;
+        OutputPin = outputPin;
+        OutputInverted = outputInverted;
+        OutputPeripheral = outputPeripheral;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
@@ -37,6 +41,10 @@ public class SerializedControllerAxis : SerializedOutput
     [ProtoMember(9)] public bool ChildOfCombined { get; }
     [ProtoMember(10)] public int Threshold { get; }
     [ProtoMember(11)] public byte[] LedIndexPeripheral { get; }
+    [ProtoMember(12)] public bool OutputEnabled { get; }
+    [ProtoMember(13)] public int OutputPin { get; }
+    [ProtoMember(14)] public bool OutputInverted { get; }
+    [ProtoMember(15)] public bool OutputPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
@@ -45,7 +53,7 @@ public class SerializedControllerAxis : SerializedOutput
             Max,
             Deadzone,
             Threshold,
-            Type, ChildOfCombined);
+            Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(output);
         return output;
     }

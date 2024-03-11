@@ -33,6 +33,7 @@ public partial class DrumAxis : OutputAxis
         {DrumAxisType.Kick, StandardButtonType.LeftShoulder},
         {DrumAxisType.Kick2, StandardButtonType.LeftThumbClick}
     };
+
     private static readonly Dictionary<DrumAxisType, Key> KeysFortnite = new()
     {
         {DrumAxisType.Green, Key.D},
@@ -63,7 +64,7 @@ public partial class DrumAxis : OutputAxis
         {DrumAxisType.Orange, StandardButtonType.RightShoulder},
         {DrumAxisType.Kick2, StandardButtonType.RightShoulder}
     };
-    
+
 
     private static readonly Dictionary<DrumAxisType, string> AxisMappings = new()
     {
@@ -78,6 +79,7 @@ public partial class DrumAxis : OutputAxis
         {DrumAxisType.Kick, "report->kickVelocity"},
         {DrumAxisType.Kick2, "report->kickVelocity"}
     };
+
     private static readonly Dictionary<DrumAxisType, string> UniversalAxisMappings = new()
     {
         {DrumAxisType.Green, "report->greenVelocity"},
@@ -98,7 +100,7 @@ public partial class DrumAxis : OutputAxis
         {DrumAxisType.Red, "report->redVelocity"},
         {DrumAxisType.Yellow, "report->yellowVelocity"},
         {DrumAxisType.Blue, "report->blueVelocity"},
-        
+
         // Map orange to green for rb
         {DrumAxisType.Orange, "report->greenVelocity"},
         {DrumAxisType.GreenCymbal, "report->greenCymbalVelocity"},
@@ -108,10 +110,12 @@ public partial class DrumAxis : OutputAxis
         {DrumAxisType.Kick2, "digitalOnly"}
     };
 
-    public DrumAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max,
-        int deadZone, int debounce, DrumAxisType type, bool childOfCombined) : base(model, input, ledOn,
+    public DrumAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral, int min, int max,
+        int deadZone, int debounce, DrumAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted,
+        int outputPin, bool childOfCombined) : base(model, input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral,
-        min, max, deadZone, true, childOfCombined)
+        min, max, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
         Debounce = debounce;
@@ -179,14 +183,18 @@ public partial class DrumAxis : OutputAxis
             {
                 i = new AnalogToDigital(i, AnalogToDigitalType.Drum, Min, Model);
             }
-            return new ControllerButton(Model, i, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), (byte) Debounce, StandardButtonType.A,
-                    false)
+
+            return new ControllerButton(Model, i, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(),
+                    (byte) Debounce, StandardButtonType.A,
+                    false, false, false, -1, false)
                 .Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
-
         }
-        
 
-        if (Model.EmulationType is not EmulationType.FortniteFestival && (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360 or ConfigField.Universal)) || (Model.EmulationType is EmulationType.FortniteFestival && mode is not ConfigField.Keyboard)) return "";
+
+        if (Model.EmulationType is not EmulationType.FortniteFestival && (mode is not (ConfigField.Ps3
+                or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
+                or ConfigField.Universal)) ||
+            (Model.EmulationType is EmulationType.FortniteFestival && mode is not ConfigField.Keyboard)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;
         if (!Model.IsAdvancedMode) debounce = Model.Debounce;
@@ -195,7 +203,7 @@ public partial class DrumAxis : OutputAxis
             // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
             debounce /= 10;
         }
-        
+
         debounce += 1;
 
         var ifStatement = $"debounce[{debounceIndex}]";
@@ -203,9 +211,13 @@ public partial class DrumAxis : OutputAxis
         var reset = $"debounce[{debounceIndex}]={debounce};";
         if (writer != null)
         {
-            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
+            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
         }
-        if (Input is WiiInput {Input: >= WiiInputType.DrumGreen and <= WiiInputType.DrumOrange or WiiInputType.DrumKickPedal} wii)
+
+        if (Input is WiiInput
+            {
+                Input: >= WiiInputType.DrumGreen and <= WiiInputType.DrumOrange or WiiInputType.DrumKickPedal
+            } wii)
         {
             // Wii inputs provide their own digital signals, so don't generate one ourselves.
             reset = "";
@@ -214,6 +226,7 @@ public partial class DrumAxis : OutputAxis
             var typeAxis = Enum.Parse<WiiInputType>($"{type}Pressure");
             input = new WiiInput(typeAxis, Model, wii.Peripheral);
         }
+
         var outputButtons = "";
         switch (mode)
         {
@@ -240,8 +253,10 @@ public partial class DrumAxis : OutputAxis
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
+
         // XB1 is RB by definition
-        if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) && Type is DrumAxisType.Kick or DrumAxisType.Kick2) || mode is ConfigField.Keyboard)
+        if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) &&
+             Type is DrumAxisType.Kick or DrumAxisType.Kick2) || mode is ConfigField.Keyboard)
         {
             return $$"""
                      if ({{ifStatement}}) {
@@ -339,6 +354,7 @@ public partial class DrumAxis : OutputAxis
                                   }
                                   """;
             }
+
             return $$"""
                      if ({{input.Generate()}}) {
                          {{reset}}
@@ -355,6 +371,7 @@ public partial class DrumAxis : OutputAxis
         {
             check = $"({Input.Generate()} - {Min}) < {DeadZone}";
         }
+
         return $$"""
                  if ({{check}}) {
                      if (!{{ifStatement}}) {
@@ -392,7 +409,8 @@ public partial class DrumAxis : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedDrumAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Min, Max,
-            DeadZone, Debounce, ChildOfCombined);
+        return new SerializedDrumAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
+            LedIndicesPeripheral.ToArray(), Min, Max,
+            DeadZone, Debounce, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined);
     }
 }

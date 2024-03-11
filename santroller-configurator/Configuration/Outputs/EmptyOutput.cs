@@ -33,7 +33,7 @@ public class EmptyOutput : Output
     private MouseButtonType? _mouseButtonType;
 
     public EmptyOutput(ConfigViewModel model) : base(model, new FixedInput(model, 0, false), Colors.Black, Colors.Black,
-        Array.Empty<byte>(),Array.Empty<byte>(), false)
+        Array.Empty<byte>(), Array.Empty<byte>(), false, false, false, -1, false)
     {
         this.WhenAnyValue(x => x.Model.EmulationType)
             .Select(x => Model.GetSimpleEmulationType() is EmulationType.Controller)
@@ -56,9 +56,9 @@ public class EmptyOutput : Output
                 (!type.Item1.Item4 || s2 is not SimpleType.WiiInputSimple) &&
                 (!type.Item1.Item5 || s2 is not SimpleType.Ps2InputSimple) &&
                 (!type.Item1.Item6 || s2 is not SimpleType.WtNeckSimple) &&
-                (!type.Item2.Item1 || s2 is not SimpleType.CloneNeckSimple)&&
-                (!type.Item2.Item2 || s2 is not SimpleType.DjTurntableSimple)&&
-                (!type.Item2.Item3 || s2 is not SimpleType.Gh5NeckSimple)&&
+                (!type.Item2.Item1 || s2 is not SimpleType.CloneNeckSimple) &&
+                (!type.Item2.Item2 || s2 is not SimpleType.DjTurntableSimple) &&
+                (!type.Item2.Item3 || s2 is not SimpleType.Gh5NeckSimple) &&
                 (!type.Item2.Item4 || s2 is not SimpleType.UsbHost)
             ))
             .ToProperty(this, x => x.CombinedTypes);
@@ -157,58 +157,58 @@ public class EmptyOutput : Output
                 },
                 StandardAxisType standardAxisType => new ControllerAxis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
                     ushort.MinValue, ushort.MaxValue, 0,
-                    ushort.MaxValue, standardAxisType, false),
+                    ushort.MaxValue, standardAxisType, false, false, false, -1, false),
                 StandardButtonType standardButtonType => new ControllerButton(Model,
                     new DirectInput(-1, false, false, DevicePinMode.PullUp, Model),
                     Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5,
-                    standardButtonType, false),
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5,
+                    standardButtonType, false, false, false, -1, false),
                 InstrumentButtonType standardButtonType => new GuitarButton(Model,
                     new DirectInput(-1, false, false, DevicePinMode.PullUp, Model),
                     Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5,
-                    standardButtonType, false),
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5,
+                    standardButtonType, false, false, false, -1, false),
                 DrumAxisType drumAxisType => new DrumAxis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
-                    ushort.MinValue, ushort.MaxValue, 0, 10, drumAxisType, false),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
+                    ushort.MinValue, ushort.MaxValue, 0, 10, drumAxisType, false, false, false, -1, false),
                 Ps3AxisType ps3AxisType => new Ps3Axis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
                     ushort.MinValue, ushort.MaxValue, 0,
-                    ps3AxisType),
+                    ps3AxisType, false, false, false, -1),
                 GuitarAxisType.Slider => new GuitarAxis(Model,
                     new GhWtTapInput(GhWtInputType.TapBar, Model, false, -1,
                         -1, -1,
                         -1),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
-                    ushort.MinValue, ushort.MaxValue, 0, false, GuitarAxisType.Slider, false),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
+                    ushort.MinValue, ushort.MaxValue, 0, false, GuitarAxisType.Slider, false, false, false, -1, false),
                 GuitarAxisType guitarAxisType => new GuitarAxis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
-                    ushort.MinValue, ushort.MaxValue, 0, false, guitarAxisType, false),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
+                    ushort.MinValue, ushort.MaxValue, 0, false, guitarAxisType, false, false, false, -1, false),
                 DjAxisType.LeftTableVelocity => new DjAxis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
-                    1, 1,DjAxisType.LeftTableVelocity, false),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
+                    1, 1, DjAxisType.LeftTableVelocity, false, false, false, -1, false),
                 DjAxisType.RightTableVelocity => new DjAxis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
-                    1, 1,DjAxisType.RightTableVelocity, false),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
+                    1, 1, DjAxisType.RightTableVelocity, false, false, false, -1, false),
                 DjAxisType.EffectsKnob => new DjAxis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
-                    1, 1,DjAxisType.EffectsKnob, false),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
+                    1, 1, DjAxisType.EffectsKnob, false, false, false, -1, false),
                 DjAxisType djAxisType => new DjAxis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),
-                    ushort.MinValue, ushort.MaxValue, 0, djAxisType, false),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
+                    ushort.MinValue, ushort.MaxValue, 0, djAxisType, false, false, false, -1, false),
                 DjInputType djInputType => new DjButton(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
-                    Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 10,
-                    djInputType, false),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 10,
+                    djInputType, false, false, false, -1, false),
                 _ => null
             },
 
@@ -216,16 +216,16 @@ public class EmptyOutput : Output
             {
                 {MouseAxisType: not null} => new MouseAxis(Model, new FixedInput(Model, 0, false), Colors.Black,
                     Colors.Black,
-                    Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
-                    MouseAxisType.Value),
+                    Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                    MouseAxisType.Value, false, false, false, -1),
                 {MouseButtonType: not null} => new MouseButton(Model, new FixedInput(Model, 0, false), Colors.Black,
                     Colors.Black,
-                    Array.Empty<byte>(),Array.Empty<byte>(), 5,
-                    MouseButtonType.Value),
+                    Array.Empty<byte>(), Array.Empty<byte>(), 5,
+                    MouseButtonType.Value, false, false, false, -1),
                 {Key: not null} => new KeyboardButton(Model, new FixedInput(Model, 0, false), Colors.Black,
                     Colors.Black,
-                    Array.Empty<byte>(),Array.Empty<byte>(), 5,
-                    Key.Value),
+                    Array.Empty<byte>(), Array.Empty<byte>(), 5,
+                    Key.Value, false, false, false, -1),
                 _ => null
             },
             _ => null

@@ -11,7 +11,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedKeyboardButton : SerializedOutput
 {
     public SerializedKeyboardButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int debounce,
-        Key type)
+        Key type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -20,6 +20,10 @@ public class SerializedKeyboardButton : SerializedOutput
         Type = type;
         LedIndex = ledIndex;
         LedIndexPeripheral = ledIndexPeripheral;
+        OutputEnabled = outputEnabled;
+        OutputPin = outputPin;
+        OutputInverted = outputInverted;
+        OutputPeripheral = outputPeripheral;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
@@ -30,11 +34,15 @@ public class SerializedKeyboardButton : SerializedOutput
     [ProtoMember(5)] public Key Type { get; }
     [ProtoMember(7)] public byte[] LedIndexPeripheral { get; }
     [ProtoMember(8)] public int Debounce { get; }
+    [ProtoMember(9)] public bool OutputEnabled { get; }
+    [ProtoMember(10)] public int OutputPin { get; }
+    [ProtoMember(11)] public bool OutputInverted { get; }
+    [ProtoMember(12)] public bool OutputPeripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new KeyboardButton(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Debounce, Type);
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
         model.Bindings.Add(combined);
         return combined;
     }

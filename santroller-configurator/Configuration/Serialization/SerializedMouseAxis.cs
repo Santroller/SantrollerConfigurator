@@ -12,7 +12,7 @@ public class SerializedMouseAxis : SerializedOutput
 {
     public SerializedMouseAxis(SerializedInput input, MouseAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         int min, int max,
-        int deadzone)
+        int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -23,6 +23,10 @@ public class SerializedMouseAxis : SerializedOutput
         Type = type;
         LedIndex = ledIndex;
         LedIndexPeripheral = ledIndexPeripheral;
+        OutputEnabled = outputEnabled;
+        OutputPin = outputPin;
+        OutputInverted = outputInverted;
+        OutputPeripheral = outputPeripheral;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
@@ -33,6 +37,10 @@ public class SerializedMouseAxis : SerializedOutput
     [ProtoMember(6)] public int Deadzone { get; }
     [ProtoMember(7)] public byte[] LedIndex { get; }
     [ProtoMember(8)] public byte[] LedIndexPeripheral { get; }
+    [ProtoMember(9)] public bool OutputEnabled { get; }
+    [ProtoMember(10)] public int OutputPin { get; }
+    [ProtoMember(11)] public bool OutputInverted { get; }
+    [ProtoMember(12)] public bool OutputPeripheral { get; }
 
     public MouseAxisType Type { get; }
 
@@ -40,7 +48,7 @@ public class SerializedMouseAxis : SerializedOutput
     {
         var combined = new MouseAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
             Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, Deadzone,
-            Type);
+            Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
         model.Bindings.Add(combined);
         return combined;
     }

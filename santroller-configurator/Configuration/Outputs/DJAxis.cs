@@ -13,20 +13,25 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public partial class DjAxis : OutputAxis
 {
-    public DjAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max,
-        int deadZone, DjAxisType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, min, max,
+    public DjAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral, int min, int max,
+        int deadZone, DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
+        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, min, max,
         deadZone,
-        false, childOfCombined)
+        false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Multiplier = 0;
         Type = type;
         UpdateDetails();
     }
 
-    public DjAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int multiplier, int ledMultiplier,
-        DjAxisType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, 0, 0,
+    public DjAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral, int multiplier, int ledMultiplier,
+        DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
+        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, 0,
         0,
-        false, childOfCombined)
+        0,
+        false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         if (type == DjAxisType.Crossfader)
         {
@@ -125,17 +130,20 @@ public partial class DjAxis : OutputAxis
     {
         if (IsVelocity)
         {
-            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Multiplier, LedMultiplier,
+            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
+                LedIndicesPeripheral.ToArray(), Multiplier, LedMultiplier, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
                 ChildOfCombined);
         }
 
         if (IsEffectsKnob)
         {
-            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Invert ? -1 : 1, LedMultiplier,
+            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
+                LedIndicesPeripheral.ToArray(), Invert ? -1 : 1, LedMultiplier, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
                 ChildOfCombined);
         }
 
-        return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Min, Max, DeadZone,
+        return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
+            LedIndicesPeripheral.ToArray(), Min, Max, DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
             ChildOfCombined);
     }
 
@@ -150,7 +158,8 @@ public partial class DjAxis : OutputAxis
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         if (mode == ConfigField.Shared)
-            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
+                writer);
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
             or ConfigField.Universal)) return "";
 
@@ -166,7 +175,7 @@ public partial class DjAxis : OutputAxis
         var tableCommand360 = "handle_calibration_turntable_360";
 
         if (InputIsUint)
-        { 
+        {
             // xinput needs int, uint -> int
             generated = $"({generated} - INT16_MAX)";
         }
@@ -180,7 +189,7 @@ public partial class DjAxis : OutputAxis
         // This is the one instance where even PS3 uses int values, because it makes the math easier
         var generatedTable = $"{tableCommand360}({GenerateOutput(mode)},{generated}, {Multiplier})";
         var generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generated}, {Multiplier})";
-        
+
         if (writer != null && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
         {
             var multiplierBlob = ConfigViewModel.WriteBlob(writer, Multiplier);

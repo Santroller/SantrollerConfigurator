@@ -4491,6 +4491,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string AnalogToDigitalTypeRapidTrigger {
+            get {
+                return ResourceManager.GetString("AnalogToDigitalTypeRapidTrigger", resourceCulture);
+            }
+        }
+        
         public static string Arduino32U4TypeProMicro {
             get {
                 return ResourceManager.GetString("Arduino32U4TypeProMicro", resourceCulture);
@@ -5403,9 +5409,21 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string PeripheralOutputLabel {
+            get {
+                return ResourceManager.GetString("PeripheralOutputLabel", resourceCulture);
+            }
+        }
+        
         public static string InvertLabel {
             get {
                 return ResourceManager.GetString("InvertLabel", resourceCulture);
+            }
+        }
+        
+        public static string InvertOutputLabel {
+            get {
+                return ResourceManager.GetString("InvertOutputLabel", resourceCulture);
             }
         }
         

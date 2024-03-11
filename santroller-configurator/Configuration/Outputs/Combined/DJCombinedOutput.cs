@@ -66,13 +66,13 @@ public class DjCombinedOutput : CombinedTwiOutput
         Outputs.AddRange(DjInputTypes.Where(s => s is not (DjInputType.LeftTurntable or DjInputType.RightTurntable))
             .Select(button => new DjButton(Model,
                 new DjInput(button, Model, Peripheral, combined: true),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, button, true)));
+                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, button, false, false ,false, -1, true)));
         Outputs.Add(new DjAxis(Model, new DjInput(DjInputType.LeftTurntable, Model, Peripheral, combined: true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, 1,DjAxisType.LeftTableVelocity, true));
+            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, 1,DjAxisType.LeftTableVelocity, false, false ,false, -1, true));
         Outputs.Add(new DjAxis(Model, new DjInput(DjInputType.RightTurntable, Model, Peripheral, combined: true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, 1,DjAxisType.RightTableVelocity, true));
+            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, 1,DjAxisType.RightTableVelocity, false, false ,false, -1, true));
     }
 
     public override void UpdateBindings()

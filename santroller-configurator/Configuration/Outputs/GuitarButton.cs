@@ -15,13 +15,17 @@ public class GuitarButton : OutputButton
 {
     public readonly InstrumentButtonType Type;
 
-    public GuitarButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int debounce,
-        InstrumentButtonType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, debounce,
+    public GuitarButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral, int debounce,
+        InstrumentButtonType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
+        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, debounce,
+        outputEnabled, outputInverted, outputPeripheral, outputPin,
         childOfCombined)
     {
         Type = type;
         UpdateDetails();
     }
+
     private readonly Dictionary<InstrumentButtonType, Key> _fortniteKeys = new()
     {
         {InstrumentButtonType.Green, Key.D},
@@ -50,19 +54,20 @@ public class GuitarButton : OutputButton
         // PS3 and 360 just set the standard buttons, and rely on the solo flag
         // XB1 however has things broken out
         // For the universal report, we only put standard frets on nav, not solo
-        
+
         var requiresFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal);
         return Type switch
         {
             InstrumentButtonType.StrumUp => GetReportField(StandardButtonType.DpadUp),
             InstrumentButtonType.StrumDown => GetReportField(StandardButtonType.DpadDown),
-            
+
             InstrumentButtonType.Green when mode is ConfigField.Universal => GetReportField(StandardButtonType.A),
             InstrumentButtonType.Red when mode is ConfigField.Universal => GetReportField(StandardButtonType.B),
             InstrumentButtonType.Yellow when mode is ConfigField.Universal => GetReportField(StandardButtonType.Y),
             InstrumentButtonType.Blue when mode is ConfigField.Universal => GetReportField(StandardButtonType.X),
-            InstrumentButtonType.Orange when mode is ConfigField.Universal => GetReportField(StandardButtonType.LeftShoulder),
-            
+            InstrumentButtonType.Orange when mode is ConfigField.Universal => GetReportField(StandardButtonType
+                .LeftShoulder),
+
             InstrumentButtonType.SoloGreen or InstrumentButtonType.Green when requiresFaceButtons =>
                 GetReportField(StandardButtonType.A),
             InstrumentButtonType.SoloRed or InstrumentButtonType.Red when requiresFaceButtons =>
@@ -73,7 +78,7 @@ public class GuitarButton : OutputButton
                 GetReportField(StandardButtonType.X),
             InstrumentButtonType.SoloOrange or InstrumentButtonType.Orange when requiresFaceButtons =>
                 GetReportField(StandardButtonType.LeftShoulder),
-            
+
             InstrumentButtonType.Black1 => GetReportField(StandardButtonType.A),
             InstrumentButtonType.Black2 => GetReportField(StandardButtonType.B),
             InstrumentButtonType.White1 => GetReportField(StandardButtonType.X),
@@ -92,6 +97,7 @@ public class GuitarButton : OutputButton
         {
             return Resources.ResourceManager.GetString("Fortnite" + Type) ?? "";
         }
+
         return EnumToStringConverter.Convert(Type);
     }
 
@@ -105,8 +111,9 @@ public class GuitarButton : OutputButton
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
-        if (mode is not (ConfigField.Shared or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
-            or ConfigField.Universal or ConfigField.Keyboard 
+        if (mode is not (ConfigField.Shared or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
+            or ConfigField.Xbox360
+            or ConfigField.Universal or ConfigField.Keyboard
             or ConfigField.XboxOne or ConfigField.Reset)) return "";
         // If combined debounce is on, then additionally generate extra logic to ignore this input if the opposite debounce flag is active
         if (combinedDebounce && Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
@@ -120,6 +127,7 @@ public class GuitarButton : OutputButton
                 combinedExtra = string.Join(" || ", strumIndexes.Distinct().Select(x => $"debounce[{x}]"));
             }
         }
+
         // GHL Guitars map strum up and strum down to dpad up and down, and also the stick
         if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar &&
             Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp &&
@@ -129,7 +137,8 @@ public class GuitarButton : OutputButton
                 strumIndexes, combinedDebounce, macros, writer);
 
         if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar})
-            return base.Generate(mode, debounceIndex, "", combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+            return base.Generate(mode, debounceIndex, "", combinedExtra, strumIndexes, combinedDebounce, macros,
+                writer);
 
         //This stuff is only relevant for rock band guitars
         // Set solo flag (not relevant for universal)
@@ -147,7 +156,8 @@ public class GuitarButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedRbButton(Input!.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type,
+        return new SerializedRbButton(Input!.Serialise(), LedOn, LedOff, LedIndices.ToArray(),
+            LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
             ChildOfCombined);
     }
 }

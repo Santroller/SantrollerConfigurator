@@ -14,8 +14,8 @@ public class ControllerButton : OutputButton
 {
 
     public ControllerButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral,
-        int debounce, StandardButtonType type, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
-        debounce, childOfCombined)
+        int debounce, StandardButtonType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
+        debounce, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
         UpdateDetails();
@@ -70,7 +70,7 @@ public class ControllerButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedControllerButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type,
+        return new SerializedControllerButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
             ChildOfCombined);
     }
 }

@@ -34,8 +34,8 @@ public abstract partial class OutputAxis : Output
     protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         int min, int max,
-        int deadZone, bool trigger, bool childOfCombined) : base(model, input, ledOn, ledOff,
-        ledIndices, ledIndicesPeripheral, childOfCombined)
+        int deadZone, bool trigger, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff,
+        ledIndices, ledIndicesPeripheral, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Trigger = trigger;
         LedOn = ledOn;
@@ -68,6 +68,7 @@ public abstract partial class OutputAxis : Output
         this.WhenAnyValue(x => x.Input).Select(s => s is DigitalToAnalog)
             .ToPropertyEx(this, x => x.IsDigitalToAnalog);
     }
+    public override bool UsesPwm => true;
 
     public float FullProgressWidth => ProgressWidth;
     public float HalfProgressWidth => ProgressWidth / 2; // ReSharper disable UnassignedGetOnlyAutoProperty

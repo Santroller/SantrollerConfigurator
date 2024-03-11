@@ -19,14 +19,16 @@ public abstract class OutputButton : Output
 {
     private readonly ObservableAsPropertyHelper<float> _debounceDisplay;
     protected OutputButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral,
-        int debounce, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, childOfCombined)
+        int debounce, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Debounce = debounce;
         _debounceDisplay = this.WhenAnyValue(x => x.Debounce)
             .Select(x => x / 10.0f)
             .ToProperty(this, x => x.DebounceDisplay);
     }
-    
+
+    public override bool UsesPwm => false;
+
     [Reactive]
     public int Debounce { get; set; }
 
