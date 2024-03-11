@@ -68,7 +68,7 @@ public class RaiseIssueWindowViewModel : ReactiveObject
         body = HttpUtility.UrlEncode(body);
         title = HttpUtility.UrlEncode(title);
         var url =
-            $"https://github.com/sanjay900/guitar-configurator/issues/new?title={title}&body={body}";
+            $"https://github.com/Santroller/Santroller/issues/new?title={title}&body={body}";
         Process.Start(new ProcessStartInfo {FileName = url, UseShellExecute = true});
     }
 }
