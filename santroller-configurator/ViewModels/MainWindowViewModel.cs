@@ -541,10 +541,15 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 behaviorSubject.OnNext(s);
                 UpdateProgress(s);
                 if (s.Log != null) output.Append(s.Log + "\n");
-            }, _ =>
+            }, s =>
             {
+                var text = output.ToString();
+                if (!text.Trim().Any())
+                {
+                    text = s.ToString();
+                }
                 ProgressbarColor = ProgressBarError;
-                ShowIssueDialog.Handle((output.ToString(), config)).Subscribe(_ => Programming = false);
+                ShowIssueDialog.Handle((text, config)).Subscribe(_ => Programming = false);
             },
             () =>
             {
