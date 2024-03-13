@@ -2988,7 +2988,7 @@
                         </StackPanel>
                     </StackPanel>
                 </Expander>
-                <ItemsControl ItemsSource="{Binding Outputs}">
+                <ItemsControl ItemsSource="{Binding Outputs}" x:Name="OutputsContainer">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="output:Output">
                             <StackPanel>

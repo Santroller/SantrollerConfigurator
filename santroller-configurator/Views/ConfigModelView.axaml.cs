@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Devices;
@@ -41,8 +45,17 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
                     .PointerUpdateKind);
             TopLevel.GetTopLevel(GetValue(VisualParentProperty))!.PointerWheelChanged +=
                 (sender, args) => ViewModel!.OnMouseEvent(args);
+            ((INotifyCollectionChanged) ViewModel.Outputs).CollectionChanged += OutputsChanged;
         });
         InitializeComponent();
+    }
+
+    private void OutputsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            Dispatcher.UIThread.Post(OutputsContainer.ContainerFromItem(e.NewItems![0]!)!.BringIntoView, DispatcherPriority.Background);
+        }
     }
 
     public ConfigViewModel Model => ViewModel!;
