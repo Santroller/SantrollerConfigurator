@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Media;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -11,7 +12,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedPs3Axis : SerializedOutput
 {
     public SerializedPs3Axis(SerializedInput input, Ps3AxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
-        int min, int max, int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined)
+        int min, int max, int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -23,6 +24,7 @@ public class SerializedPs3Axis : SerializedOutput
         LedIndex = ledIndex;
         LedIndexPeripheral = ledIndexPeripheral;
         ChildOfCombined = childOfCombined;
+        LedIndexMpr121 = ledIndexMpr121;
         OutputEnabled = outputEnabled;
         OutputPin = outputPin;
         OutputInverted = outputInverted;
@@ -45,11 +47,13 @@ public class SerializedPs3Axis : SerializedOutput
     [ProtoMember(12)] public int OutputPin { get; }
     [ProtoMember(13)] public bool OutputInverted { get; }
     [ProtoMember(14)] public bool OutputPeripheral { get; }
+    
+    [ProtoMember(15)] public byte[] LedIndexMpr121 { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new Ps3Axis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, Deadzone,
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Min, Max, Deadzone,
             Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;

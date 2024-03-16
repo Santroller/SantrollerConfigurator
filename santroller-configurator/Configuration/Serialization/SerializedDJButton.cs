@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Media;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -11,7 +12,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedDjButton : SerializedOutput
 {
     public SerializedDjButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int debounce,
-        DjInputType type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined)
+        DjInputType type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -21,6 +22,7 @@ public class SerializedDjButton : SerializedOutput
         Debounce = debounce;
         Type = type;
         ChildOfCombined = childOfCombined;
+        LedIndexMpr121 = ledIndexMpr121;
         OutputEnabled = outputEnabled;
         OutputPin = outputPin;
         OutputInverted = outputInverted;
@@ -39,11 +41,13 @@ public class SerializedDjButton : SerializedOutput
     [ProtoMember(11)] public int OutputPin { get; }
     [ProtoMember(12)] public bool OutputInverted { get; }
     [ProtoMember(13)] public bool OutputPeripheral { get; }
+    
+    [ProtoMember(14)] public byte[] LedIndexMpr121 { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new DjButton(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;
     }

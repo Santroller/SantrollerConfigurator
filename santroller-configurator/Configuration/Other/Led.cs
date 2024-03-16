@@ -138,12 +138,14 @@ public class Led : Output
     private readonly ObservableAsPropertyHelper<bool> _outputHasColours;
 
     private readonly ObservableAsPropertyHelper<bool> _usesPwm;
-    public Led(ConfigViewModel model, bool outputEnabled, bool outputInverted, int outputPin, bool peripheral, Color ledOn,
-        Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, LedCommandType command, int param,
+    public Led(ConfigViewModel model, bool outputEnabled, bool outputInverted, int outputPin, bool peripheral,
+        Color ledOn,
+        Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, LedCommandType command,
+        int param,
         int param2) : base(model,
         new FixedInput(model, 0, false),
         ledOn, ledOff,
-        ledIndices, ledIndicesPeripheral, outputEnabled, outputInverted, peripheral, outputPin, false)
+        ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, peripheral, outputPin, false)
     {
         Player = 1;
         Combo = 1;
@@ -421,7 +423,7 @@ public class Led : Output
         return new SerializedLed(LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Command, param1,
             param2, OutputEnabled,
             PeripheralOutput, OutputInverted,
-            OutputPin);
+            OutputPin, LedIndicesMpr121.ToArray());
     }
 
     public override Enum GetOutputType()
@@ -518,6 +520,39 @@ public class Led : Output
                         ledStatePeripheral[{index - 1}].select = 1;
                         {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", index)};
                         """;
+            }
+        }
+        
+        
+        if (Model.HasMpr121)
+        {
+            foreach (var led in LedIndicesMpr121)
+            {
+                var index = led - 1;
+                on += $"""
+
+                       bit_clear(ledStateMpr121Select,{index % 8});
+                       bit_set(ledStateMpr121,{index % 8});
+                       """;
+                off += $"""
+
+                        bit_clear(ledStateMpr121Select,{index % 8});
+                        bit_clear(ledStateMpr121,{index % 8});
+                        """;
+                between +=
+                    $"""
+
+                     bit_set(ledStateMpr121Select,{index % 8});
+                     bit_write(rumble_left, ledStateMpr121,{index % 8});
+                     """;
+                starPowerBetween +=
+                    $"""
+
+                     bit_set(ledStateMpr121Select,{index % 8});
+                     bit_write(last_star_power, ledStateMpr121,{index % 8});
+                     """;
+
+                ps4 += on;
             }
         }
 

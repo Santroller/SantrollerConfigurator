@@ -111,10 +111,10 @@ public partial class DrumAxis : OutputAxis
     };
 
     public DrumAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
-        byte[] ledIndicesPeripheral, int min, int max,
+        byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max,
         int deadZone, int debounce, DrumAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted,
         int outputPin, bool childOfCombined) : base(model, input, ledOn,
-        ledOff, ledIndices, ledIndicesPeripheral,
+        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
         min, max, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
@@ -184,7 +184,7 @@ public partial class DrumAxis : OutputAxis
                 i = new AnalogToDigital(i, AnalogToDigitalType.Drum, Min, Model);
             }
 
-            return new ControllerButton(Model, i, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(),
+            return new ControllerButton(Model, i, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
                     (byte) Debounce, StandardButtonType.A,
                     false, false, false, -1, false)
                 .Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
@@ -411,6 +411,6 @@ public partial class DrumAxis : OutputAxis
     {
         return new SerializedDrumAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Min, Max,
-            DeadZone, Debounce, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined);
+            DeadZone, Debounce, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined, LedIndicesMpr121.ToArray());
     }
 }

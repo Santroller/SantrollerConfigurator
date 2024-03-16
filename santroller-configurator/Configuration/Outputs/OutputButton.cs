@@ -18,8 +18,11 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 public abstract class OutputButton : Output
 {
     private readonly ObservableAsPropertyHelper<float> _debounceDisplay;
-    protected OutputButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral,
-        int debounce, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+    protected OutputButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral,
+        byte[] ledIndicesMpr121,
+        int debounce, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
+        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Debounce = debounce;
         _debounceDisplay = this.WhenAnyValue(x => x.Debounce)

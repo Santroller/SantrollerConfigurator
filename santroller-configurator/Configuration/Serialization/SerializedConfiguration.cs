@@ -61,6 +61,10 @@ public class SerializedConfiguration
         Stp16LePeripheral = model.Stp16LePeripheral;
         Apa102IsFullSize = model.Apa102IsFullSize;
         Ps3OnRpcs3 = model.Ps3OnRpcs3;
+        Mpr121CapacitiveCount = model.Mpr121CapacitiveCount;
+        Mpr121Scl = model.Mpr121Scl;
+        Mpr121Sda = model.Mpr121Sda;
+        HasMpr121 = model.HasMpr121;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -92,7 +96,7 @@ public class SerializedConfiguration
     [ProtoMember(38)] public byte LedCountPeripheral { get; private set; }
     [ProtoMember(39)] public bool HasPeripheral { get; private set; }
     [ProtoMember(40)] public int PeripheralSda { get; private set; }
-    [ProtoMember(41)] public int PeripheralScl{ get; private set; }
+    [ProtoMember(41)] public int PeripheralScl { get; private set; }
     [ProtoMember(42)] public int Stp16Oe { get; private set; }
     [ProtoMember(43)] public int Stp16Le { get; private set; }
     [ProtoMember(44)] public int Stp16OePeripheral { get; private set; }
@@ -103,9 +107,14 @@ public class SerializedConfiguration
     [ProtoMember(49)] public bool Apa102IsFullSize { get; private set; }
 
     [ProtoMember(50)] public bool Ps3OnRpcs3 { get; private set; } = true;
+    [ProtoMember(51)] public int Mpr121CapacitiveCount { get; private set; }
+    [ProtoMember(52)] public bool HasMpr121 { get; private set; }
+    [ProtoMember(53)] public int Mpr121Sda { get; private set; }
+    [ProtoMember(54)] public int Mpr121Scl { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
+        model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
         model.SetDeviceTypeAndRhythmTypeWithoutUpdating(DeviceType, EmulationType);
         model.XInputOnWindows = XInputOnWindows;
         model.Ps3OnRpcs3 = Ps3OnRpcs3;
@@ -122,14 +131,22 @@ public class SerializedConfiguration
         model.Variant = Variant;
         model.BtRxAddr = BtRxMacAddress;
         model.HasPeripheral = HasPeripheral;
+        model.HasMpr121 = HasMpr121;
         model.RolloverMode = RolloverMode;
         model.LedBrightness = LedBrightness == 0 ? 32 : LedBrightness;
         model.Apa102IsFullSize = Apa102IsFullSize;
+        model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
         if (HasPeripheral)
         {
             model.PeripheralScl = PeripheralScl;
             model.PeripheralSda = PeripheralSda;
         }
+        if (HasMpr121)
+        {
+            model.Mpr121Scl = Mpr121Scl;
+            model.Mpr121Sda = Mpr121Sda;
+        }
+
         if (DjPollRate == 0)
         {
             model.DjPollRate = 1;
@@ -157,6 +174,7 @@ public class SerializedConfiguration
             model.LedMosi = LedMosi;
             model.LedSck = LedSck;
         }
+
         if (model.IsApa102Peripheral || model.IsStp16Peripheral)
         {
             model.LedMosiPeripheral = LedMosiPeripheral;

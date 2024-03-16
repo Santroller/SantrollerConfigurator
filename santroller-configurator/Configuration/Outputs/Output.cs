@@ -28,11 +28,12 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class LedIndex : ReactiveObject
 {
-    public LedIndex(Output output, bool peripheral, byte i)
+    public LedIndex(Output output, bool peripheral, bool mpr121, byte i)
     {
         Output = output;
         Index = i;
         Peripheral = peripheral;
+        Mpr121 = mpr121;
         _selected = Collection.Contains(Index);
     }
 
@@ -42,8 +43,10 @@ public class LedIndex : ReactiveObject
     public byte Index { get; }
 
     private bool Peripheral { get; }
+    private bool Mpr121 { get; }
 
-    private ObservableCollection<byte> Collection => Peripheral ? Output.LedIndicesPeripheral : Output.LedIndices;
+    private ObservableCollection<byte> Collection => Peripheral ? Output.LedIndicesPeripheral :
+        Mpr121 ? Output.LedIndicesMpr121 : Output.LedIndices;
 
     public bool Selected
     {
@@ -61,6 +64,7 @@ public class LedIndex : ReactiveObject
 
             _selected = value;
             this.RaisePropertyChanged();
+            Output.Model.UpdateErrors();
         }
     }
 }
@@ -83,7 +87,8 @@ public abstract partial class Output : ReactiveObject
 
 
     protected Output(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
-        byte[] ledIndicesPeripheral, bool outputEnabled, bool outputInverted, bool peripheralOutput, int outputPin, 
+        byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, bool outputEnabled, bool outputInverted,
+        bool peripheralOutput, int outputPin,
         bool childOfCombined)
     {
         Model = model;
@@ -95,6 +100,7 @@ public abstract partial class Output : ReactiveObject
         ButtonText = Resources.Assign;
         Input = input;
         LedIndices = new ObservableCollection<byte>(ledIndices);
+        LedIndicesMpr121 = new ObservableCollection<byte>(ledIndicesMpr121);
         LedIndicesPeripheral = new ObservableCollection<byte>(ledIndicesPeripheral);
         LedOn = ledOn;
         LedOff = ledOff;
@@ -104,11 +110,16 @@ public abstract partial class Output : ReactiveObject
             Model.Bindings.Connect().Select(_ => Model.Bindings.Items.IndexOf(this) != Model.Bindings.Count - 1));
         AvailableIndices = Array.Empty<LedIndex>();
         AvailableIndicesPeripheral = Array.Empty<LedIndex>();
+        AvailableIndicesMpr121 = Array.Empty<LedIndex>();
         this.WhenAnyValue(x => x.Model.LedCount)
-            .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, false, (byte) s)).ToArray())
+            .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, false, false, (byte) s)).ToArray())
             .ToPropertyEx(this, x => x.AvailableIndices);
+        this.WhenAnyValue(x => x.Model.Mpr121CapacitiveCount)
+            .Select(x => x > 4 ? x : 4)
+            .Select(x => Enumerable.Range(x, 12 - x).Select(s => new LedIndex(this, false, true, (byte) s)).ToArray())
+            .ToPropertyEx(this, x => x.AvailableIndicesMpr121);
         this.WhenAnyValue(x => x.Model.LedCountPeripheral)
-            .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, true, (byte) s)).ToArray())
+            .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, true, false, (byte) s)).ToArray())
             .ToPropertyEx(this, x => x.AvailableIndicesPeripheral);
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is DjInput)
             .ToPropertyEx(this, x => x.IsDj);
@@ -118,6 +129,8 @@ public abstract partial class Output : ReactiveObject
             .ToPropertyEx(this, x => x.IsWii);
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is AdxlInput)
             .ToPropertyEx(this, x => x.IsAdxl);
+        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Mpr121Input)
+            .ToPropertyEx(this, x => x.IsMpr121);
         this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is Gh5NeckInput or CloneNeckInput &&
@@ -189,10 +202,12 @@ public abstract partial class Output : ReactiveObject
             this.RaiseAndSetIfChanged(ref _outputPeripheral, value);
             if (OutputEnabled)
             {
-                OutputPinConfig = new DirectPinConfig(Model, "led_output", OutputPin, Model.HasPeripheral && value, DevicePinMode.Output);
+                OutputPinConfig = new DirectPinConfig(Model, "led_output", OutputPin, Model.HasPeripheral && value,
+                    DevicePinMode.Output);
             }
         }
     }
+
     private bool _outputInverted;
 
     public bool OutputInverted
@@ -212,8 +227,8 @@ public abstract partial class Output : ReactiveObject
             }
         }
     }
-    
-    
+
+
     private int _test;
 
     public int Test
@@ -239,6 +254,7 @@ public abstract partial class Output : ReactiveObject
             this.RaiseAndSetIfChanged(ref _test, value ? 255 : 0);
         }
     }
+
     public virtual bool UsesPwm => false;
 
     public bool OutputEnabled
@@ -335,6 +351,13 @@ public abstract partial class Output : ReactiveObject
                     santroller.SetLedPeripheral((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(value));
                 }
             }
+            if (Model.HasMpr121)
+            {
+                foreach (var ledIndex in LedIndicesMpr121)
+                {
+                    santroller.SetLedMpr121((byte) (ledIndex - 1), true);
+                }
+            }
         }
     }
 
@@ -358,6 +381,13 @@ public abstract partial class Output : ReactiveObject
                 foreach (var ledIndex in LedIndicesPeripheral)
                 {
                     santroller.SetLedPeripheral((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(value));
+                }
+            }
+            if (Model.HasMpr121)
+            {
+                foreach (var ledIndex in LedIndicesMpr121)
+                {
+                    santroller.SetLedMpr121((byte) (ledIndex - 1), false);
                 }
             }
         }
@@ -442,10 +472,12 @@ public abstract partial class Output : ReactiveObject
         Enum.GetValues<InputType>().Where(s =>
             (this is not GuitarAxis {Type: GuitarAxisType.Slider} ||
              s is InputType.Gh5NeckInput or InputType.WtNeckInput or InputType.ConstantInput
-                 or InputType.WtNeckPeripheralInput or InputType.CloneNeckInput) &&
+                 or InputType.WtNeckPeripheralInput or InputType.CloneNeckInput ||
+             (s is InputType.Mpr121Input && Model.HasMpr121)) &&
             (s is not InputType.WtNeckPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.MultiplexerInput || Model.IsPico) &&
             (s is not InputType.DigitalPeripheralInput || Model.HasPeripheral) &&
+            (s is not InputType.Mpr121Input || Model.HasMpr121) &&
             s is not InputType.BluetoothInput &&
             (s is not InputType.UsbHostInput || Model.IsPico));
 
@@ -511,6 +543,14 @@ public abstract partial class Output : ReactiveObject
                 santroller.SetLedPeripheral((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(LedOn));
             }
         }
+        
+        if (Model.HasMpr121)
+        {
+            foreach (var ledIndex in LedIndicesMpr121)
+            {
+                santroller.SetLedMpr121((byte) (ledIndex - 1), true);
+            }
+        }
     }
 
     // ReSharper disable UnassignedGetOnlyAutoProperty
@@ -519,6 +559,7 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] public bool IsDj { get; }
     [ObservableAsProperty] public bool IsWii { get; }
     [ObservableAsProperty] public bool IsAdxl { get; }
+    [ObservableAsProperty] public bool IsMpr121 { get; }
     [ObservableAsProperty] public bool IsUsb { get; }
     [ObservableAsProperty] public bool IsPs2 { get; }
     [ObservableAsProperty] public bool IsGh5OrClone { get; }
@@ -529,6 +570,7 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] public bool LedsRequireColoursPeripheral { get; }
     [ObservableAsProperty] public LedIndex[] AvailableIndices { get; }
     [ObservableAsProperty] public LedIndex[] AvailableIndicesPeripheral { get; }
+    [ObservableAsProperty] public LedIndex[] AvailableIndicesMpr121 { get; }
 
     [ObservableAsProperty] public double CombinedOpacity { get; }
     [ObservableAsProperty] public IBrush CombinedBackground { get; } = Brush.Parse("#99000000");
@@ -543,6 +585,7 @@ public abstract partial class Output : ReactiveObject
     public abstract bool IsCombined { get; }
     public ObservableCollection<byte> LedIndices { get; set; }
     public ObservableCollection<byte> LedIndicesPeripheral { get; set; }
+    public ObservableCollection<byte> LedIndicesMpr121 { get; set; }
     public string Id => _id.ToString();
 
 
@@ -568,8 +611,40 @@ public abstract partial class Output : ReactiveObject
     {
         get
         {
-            var text = string.Join(", ",
-                GetPinConfigs().Select(s => s.ErrorText).Distinct().Where(s => !string.IsNullOrEmpty(s)));
+            var strings = GetPinConfigs().Select(s => s.ErrorText).Distinct().Where(s => !string.IsNullOrEmpty(s))
+                .ToList();
+            if (Model.HasMpr121)
+            {
+                foreach (var channel in LedIndicesMpr121)
+                {
+                    if (Model.Outputs.Any(s =>
+                            s.Input.InnermostInputs().Any(s2 =>
+                                s2 is Mpr121Input s3 && s3.Input == channel ||
+                                s2 is Mpr121SliderInput s5 && s5.MappedInputs.Contains(channel))))
+                    {
+                        strings.Add($"Mpr121 Channel Conflict: {channel} used as both LED and input!");
+                    }
+                }
+
+                foreach (var s in Input.InnermostInputs())
+                {
+                    switch (s)
+                    {
+                        case Mpr121Input s2 when
+                            Model.Outputs.Any(s3 => s3 != this && s3.LedIndicesMpr121.Contains((byte) s2.Input)):
+                            strings.Add($"Mpr121 Channel Conflict: {s2.Input} used as both LED and input!");
+                            break;
+                        case Mpr121SliderInput s4:
+                            strings.AddRange(s4.MappedInputs
+                                .Where(mapped =>
+                                    Model.Outputs.Any(s3 => s3 != this && s3.LedIndicesMpr121.Contains((byte) mapped)))
+                                .Select(mapped => $"Mpr121 Channel Conflict: {mapped} used as both LED and input!"));
+                            break;
+                    }
+                }
+            }
+
+            var text = string.Join(", ", strings);
             if (text.Contains("missing")) return Resources.ErrorPinConfigurationMissing;
             return string.IsNullOrEmpty(text) ? "" : text;
         }
@@ -624,13 +699,13 @@ public abstract partial class Output : ReactiveObject
         Output? newOutput = value switch
         {
             Key key => new KeyboardButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
-                LedIndicesPeripheral.ToArray(), debounce, key, false, false ,false, -1),
+                LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), debounce, key, false, false, false, -1),
             MouseButtonType mouseButtonType => new MouseButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
-                LedIndicesPeripheral.ToArray(),
-                debounce, mouseButtonType, false, false ,false, -1),
+                LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
+                debounce, mouseButtonType, false, false, false, -1),
             MouseAxisType axisType => new MouseAxis(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
-                LedIndicesPeripheral.ToArray(), min, max,
-                deadzone, axisType, false, false ,false, -1),
+                LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), min, max,
+                deadzone, axisType, false, false, false, -1),
             _ => null
         };
 
@@ -735,6 +810,12 @@ public abstract partial class Output : ReactiveObject
                 break;
             case InputType.DigitalPinInput:
                 input = new DirectInput(-1, false, false, DevicePinMode.PullUp, Model);
+                break;
+            case InputType.Mpr121Input when this is GuitarAxis {Type: GuitarAxisType.Slider}:
+                input = new Mpr121SliderInput(Model, false, 0, 0, 0, 0, 0);
+                break;
+            case InputType.Mpr121Input:
+                input = new Mpr121Input(0, Model, false);
                 break;
             case InputType.MacroInput:
                 input = new MacroInput(new DirectInput(-1, false, false, DevicePinMode.PullUp, Model),
@@ -868,7 +949,7 @@ public abstract partial class Output : ReactiveObject
         }
 
         if (this is EmulationMode) Input = input;
-        
+
         if (input.InnermostInputs().First() is not DirectInput && this is OutputAxis axis2)
         {
             // Reset min and max to be safe
@@ -911,7 +992,7 @@ public abstract partial class Output : ReactiveObject
     {
         Model.RemoveOutput(this);
     }
-    
+
     protected virtual IEnumerable<PinConfig> GetOwnPinConfigs()
     {
         return OutputPinConfig != null ? new[] {OutputPinConfig} : Enumerable.Empty<PinConfig>();
@@ -939,20 +1020,20 @@ public abstract partial class Output : ReactiveObject
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
-        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw)
+        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
     {
         if (Enabled)
             Input.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                 ghWtRaw,
                 ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral,
-                cloneRaw, adxlRaw);
+                cloneRaw, adxlRaw, mpr121Raw);
 
         foreach (var output in AllOutputs)
             if (output != this)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                     ghWtRaw,
                     ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-                    digitalPeripheral, cloneRaw, adxlRaw);
+                    digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw);
     }
 
     public void UpdateErrors()

@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Media;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -11,7 +12,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedMouseButton : SerializedOutput
 {
     public SerializedMouseButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int debounce,
-        MouseButtonType type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral)
+        MouseButtonType type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, byte[] ledIndexMpr121)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -24,6 +25,7 @@ public class SerializedMouseButton : SerializedOutput
         OutputPin = outputPin;
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
+        LedIndexMpr121 = ledIndexMpr121;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
@@ -37,11 +39,13 @@ public class SerializedMouseButton : SerializedOutput
     [ProtoMember(10)] public int OutputPin { get; }
     [ProtoMember(11)] public bool OutputInverted { get; }
     [ProtoMember(12)] public bool OutputPeripheral { get; }
+    
+    [ProtoMember(13)] public byte[] LedIndexMpr121 { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new MouseButton(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
         model.Bindings.Add(combined);
         return combined;
     }

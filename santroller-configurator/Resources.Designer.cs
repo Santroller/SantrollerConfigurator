@@ -3399,6 +3399,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string InputTypeMpr121Input {
+            get {
+                return ResourceManager.GetString("InputTypeMpr121Input", resourceCulture);
+            }
+        }
+        
         public static string InputTypeMultiplexerInput {
             get {
                 return ResourceManager.GetString("InputTypeMultiplexerInput", resourceCulture);
@@ -5163,15 +5169,33 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string SelectedLEDsLabel {
+        public static string SelectedLEDsApa102Label {
             get {
-                return ResourceManager.GetString("SelectedLEDsLabel", resourceCulture);
+                return ResourceManager.GetString("SelectedLEDsApa102Label", resourceCulture);
             }
         }
         
-        public static string SelectedLEDsPeripheralLabel {
+        public static string SelectedLEDsStpLabel {
             get {
-                return ResourceManager.GetString("SelectedLEDsPeripheralLabel", resourceCulture);
+                return ResourceManager.GetString("SelectedLEDsStpLabel", resourceCulture);
+            }
+        }
+        
+        public static string SelectedLEDsPeripheralApa102Label {
+            get {
+                return ResourceManager.GetString("SelectedLEDsPeripheralApa102Label", resourceCulture);
+            }
+        }
+        
+        public static string SelectedLEDsPeripheralStpLabel {
+            get {
+                return ResourceManager.GetString("SelectedLEDsPeripheralStpLabel", resourceCulture);
+            }
+        }
+        
+        public static string SelectedLEDsMpr121Label {
+            get {
+                return ResourceManager.GetString("SelectedLEDsMpr121Label", resourceCulture);
             }
         }
         
@@ -5931,6 +5955,48 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string HasMpr121Label {
+            get {
+                return ResourceManager.GetString("HasMpr121Label", resourceCulture);
+            }
+        }
+        
+        public static string Mpr121ChannelLabel {
+            get {
+                return ResourceManager.GetString("Mpr121ChannelLabel", resourceCulture);
+            }
+        }
+        
+        public static string Mpr121GreenChannelLabel {
+            get {
+                return ResourceManager.GetString("Mpr121GreenChannelLabel", resourceCulture);
+            }
+        }
+        
+        public static string Mpr121RedChannelLabel {
+            get {
+                return ResourceManager.GetString("Mpr121RedChannelLabel", resourceCulture);
+            }
+        }
+        
+        public static string Mpr121YellowChannelLabel {
+            get {
+                return ResourceManager.GetString("Mpr121YellowChannelLabel", resourceCulture);
+            }
+        }
+        
+        public static string Mpr121BlueChannelLabel {
+            get {
+                return ResourceManager.GetString("Mpr121BlueChannelLabel", resourceCulture);
+            }
+        }
+        
+        public static string Mpr121OrangeChannelLabel {
+            get {
+                return ResourceManager.GetString("Mpr121OrangeChannelLabel", resourceCulture);
+            }
+        }
+        
         public static string HasPeripheralLabel {
             get {
                 return ResourceManager.GetString("HasPeripheralLabel", resourceCulture);
@@ -6114,6 +6180,18 @@ namespace GuitarConfigurator.NetCore {
         public static string PeripheralSettingsLabel {
             get {
                 return ResourceManager.GetString("PeripheralSettingsLabel", resourceCulture);
+            }
+        }
+        
+        public static string Mpr121SettingsLabel {
+            get {
+                return ResourceManager.GetString("Mpr121SettingsLabel", resourceCulture);
+            }
+        }
+        
+        public static string Mpr121CapacativeCountLabel {
+            get {
+                return ResourceManager.GetString("Mpr121CapacativeCountLabel", resourceCulture);
             }
         }
         

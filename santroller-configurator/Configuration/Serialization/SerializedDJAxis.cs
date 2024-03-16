@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Media;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -11,7 +12,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedDjAxis : SerializedOutput
 {
     public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
-        int min, int max, int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined)
+        int min, int max, int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -23,13 +24,14 @@ public class SerializedDjAxis : SerializedOutput
         LedIndex = ledIndex;
         LedIndexPeripheral = ledIndexPeripheral;
         ChildOfCombined = childOfCombined;
+        LedIndexMpr121 = ledIndexMpr121;
         OutputEnabled = outputEnabled;
         OutputPin = outputPin;
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
     }
     
-    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int multiplier, int ledMultiplier, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined)
+    public SerializedDjAxis(SerializedInput input, DjAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int multiplier, int ledMultiplier, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -42,6 +44,7 @@ public class SerializedDjAxis : SerializedOutput
         LedIndex = ledIndex;
         LedIndexPeripheral = ledIndexPeripheral;
         ChildOfCombined = childOfCombined;
+        LedIndexMpr121 = ledIndexMpr121;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
@@ -59,6 +62,7 @@ public class SerializedDjAxis : SerializedOutput
     [ProtoMember(14)] public int OutputPin { get; }
     [ProtoMember(15)] public bool OutputInverted { get; }
     [ProtoMember(16)] public bool OutputPeripheral { get; }
+    [ProtoMember(17)] public byte[] LedIndexMpr121 { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
@@ -66,13 +70,13 @@ public class SerializedDjAxis : SerializedOutput
         if (Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity or DjAxisType.EffectsKnob)
         {
             combined = new DjAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, DeadzoneOrMultiplier, LedMultiplier,
+                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), DeadzoneOrMultiplier, LedMultiplier,
                 Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         }
         else
         {
             combined = new DjAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, DeadzoneOrMultiplier,
+                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Min, Max, DeadzoneOrMultiplier,
                 Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         }
         

@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Media;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Other;
@@ -11,7 +12,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedLed : SerializedOutput
 {
     public SerializedLed(Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, LedCommandType type, int param1, int param2,
-        bool outputEnabled, bool peripheral, bool inverted, int pin)
+        bool outputEnabled, bool peripheral, bool inverted, int pin, byte[] ledIndexMpr121)
     {
         LedOn = ledOn.ToUInt32();
         LedOff = ledOff.ToUInt32();
@@ -20,6 +21,7 @@ public class SerializedLed : SerializedOutput
         Type = type;
         OutputEnabled = outputEnabled;
         Pin = pin;
+        LedIndexMpr121 = ledIndexMpr121;
         Param1 = param1;
         Param2 = param2;
         Inverted = inverted;
@@ -37,11 +39,13 @@ public class SerializedLed : SerializedOutput
     [ProtoMember(9)] public bool Inverted { get; }
     [ProtoMember(10)] public bool Peripheral { get; }
     [ProtoMember(11)] public byte[] LedIndexPeripheral { get; }
+    
+    [ProtoMember(12)] public byte[] LedIndexMpr121 { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new Led(model, OutputEnabled, Inverted, Pin, Peripheral, Color.FromUInt32(LedOn), Color.FromUInt32(LedOff),
-            LedIndex, LedIndexPeripheral, Type, Param1, Param2);
+            LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Type, Param1, Param2);
         model.Bindings.Add(combined);
         return combined;
     }

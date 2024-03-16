@@ -45,7 +45,7 @@ public class StartSelectHome : Output
     private bool Peripheral { get; }
 
     public StartSelectHome(ConfigViewModel model, bool peripheral, bool wii) : base(
-        model, new StartSelectHomeInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),
+        model, new StartSelectHomeInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
         false, false, peripheral, -1, true)
     {
         Wii = wii;
@@ -57,7 +57,7 @@ public class StartSelectHome : Output
                 _outputs.Add(new ControllerButton(Model,
                     new MacroInput(new WiiInput(StartWii[i], model, peripheral),
                         new WiiInput(SelectWii[i], model, peripheral), Model), Colors.Black, Colors.Black,
-                    Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false, false ,false, -1, true));
+                    Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false, false ,false, -1, true));
             }
         }
         else
@@ -65,7 +65,7 @@ public class StartSelectHome : Output
             _outputs.Add(new ControllerButton(Model,
                 new MacroInput(new Ps2Input(Ps2InputType.Start, model, peripheral),
                     new Ps2Input(Ps2InputType.Select, model, peripheral), Model), Colors.Black, Colors.Black,
-                Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false, false ,false, -1, true));
+                Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false, false ,false, -1, true));
         }
 
         UpdateDetails();
@@ -122,15 +122,15 @@ public class StartSelectHome : Output
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
-        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw)
+        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
             ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-            digitalPeripheral, cloneRaw, adxlRaw);
+            digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw);
         foreach (var output in _outputs)
             output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
                 ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-                digitalPeripheral, cloneRaw, adxlRaw);
+                digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw);
 
         if (!Enabled) return;
         Input.RawValue = _outputs.Any(x => x.ValueRaw != 0) ? 1 : 0;

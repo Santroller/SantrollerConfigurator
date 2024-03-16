@@ -64,10 +64,14 @@ public class Santroller : ConfigurableUsbDevice
         CommandWriteDigital,
         CommandSetBrightness,
         CommandReadAdxl,
+        CommandReadMpr121,
+        CommandReadMpr121Valid,
+        CommandSetLedsMpr121
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
     private readonly Dictionary<byte, TimeSpan> _ledTimersPeripheral = new();
+    private readonly Dictionary<byte, TimeSpan> _ledTimersMpr121 = new();
     private readonly Stopwatch _sw = Stopwatch.StartNew();
 
     private DeviceControllerType _deviceControllerType;
@@ -177,6 +181,13 @@ public class Santroller : ConfigurableUsbDevice
             _ledTimersPeripheral.Remove(led);
         }
 
+        foreach (var (led, elapsed) in _ledTimersMpr121)
+        {
+            if (_sw.Elapsed - elapsed <= TimeSpan.FromSeconds(2)) continue;
+            ClearLedMpr121(led);
+            _ledTimersMpr121.Remove(led);
+        }
+
         try
         {
             var direct = _model.Bindings.Items.Where(s => string.IsNullOrEmpty(s.ErrorText))
@@ -236,7 +247,9 @@ public class Santroller : ConfigurableUsbDevice
             var usbHostInputsRaw = Array.Empty<byte>();
             var peripheralWtRaw = Array.Empty<byte>();
             var adxlRaw = Array.Empty<byte>();
+            var mpr121Raw = Array.Empty<byte>();
             var peripheralConnected = false;
+            var mpr121Connected = false;
             if (_model.HasPeripheral)
             {
                 peripheralWtRaw = ReadData(0, (byte) Commands.CommandReadPeripheralWt, 5 * sizeof(int));
@@ -254,15 +267,21 @@ public class Santroller : ConfigurableUsbDevice
                 adxlRaw = ReadData(0, (byte) Commands.CommandReadAdxl, 3 * sizeof(short));
             }
 
+            if (_model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(s2 => s2 is Mpr121Input)))
+            {
+                mpr121Raw = ReadData(0, (byte) Commands.CommandReadMpr121, sizeof(short));
+                mpr121Connected = ReadData(0, (byte) Commands.CommandReadMpr121Valid, 1).Any(x => x != 0);
+            }
+
             var bluetoothRaw = Array.Empty<byte>();
             if (IsPico()) bluetoothRaw = ReadData(0, (byte) Commands.CommandGetBtState, 1);
 
-            _model.Update(bluetoothRaw, peripheralConnected);
+            _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected);
             foreach (var output in _bindings)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                     djRightRaw, gh5Raw,
                     ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
-                    peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw);
+                    peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw);
         }
         catch (Exception ex)
         {
@@ -481,6 +500,11 @@ public class Santroller : ConfigurableUsbDevice
     {
         WriteData(0, (byte) Commands.CommandSetLeds, new byte[] {led, 0, 0, 0});
     }
+    
+    public void ClearLedMpr121(byte led)
+    {
+        WriteData(0, (byte) Commands.CommandSetLedsMpr121, new byte[] {led, 0, 0, 0});
+    }
 
     public void ClearLedPeripheral(byte led)
     {
@@ -524,6 +548,12 @@ public class Santroller : ConfigurableUsbDevice
     {
         _ledTimers[led] = _sw.Elapsed;
         WriteData(0, (byte) Commands.CommandSetLeds, new[] {led, (byte) (state ? 1 : 0)});
+    }
+    
+    public void SetLedMpr121(byte led, bool state)
+    {
+        _ledTimersMpr121[led] = _sw.Elapsed;
+        WriteData(0, (byte) Commands.CommandSetLedsMpr121, new[] {led, (byte) (state ? 1 : 0)});
     }
 
     public void SetLedStpPeripheral(byte led, bool state)

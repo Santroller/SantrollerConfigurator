@@ -27,6 +27,7 @@
         <netCore:PinToStringConverter x:Key="PinToStringConverter" />
         <netCore:ControllerEnumConverter x:Key="ControllerEnumConverter" />
         <netCore:InputImageConverter x:Key="InputImageConverter" />
+        <netCore:Mpr121ChannelToStringConverter x:Key="Mpr121ChannelToStringConverter" />
         <DataTemplate x:Key="PinToStringTemplate" DataType="system:Object">
             <TextBlock>
                 <TextBlock.Text>
@@ -877,6 +878,158 @@
                                   DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type inputs:Mpr121Input}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.Mpr121ChannelLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding Input}"
+                                  ItemsSource="{Binding AvailableInputs}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  Width="200">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
+                                                <Binding />
+                                                <Binding Path="$parent[UserControl].DataContext" />
+                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type inputs:Mpr121SliderInput}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.Mpr121GreenChannelLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding InputGreen}"
+                                  ItemsSource="{Binding AvailableInputs}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  Width="200">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
+                                                <Binding />
+                                                <Binding Path="$parent[UserControl].DataContext" />
+                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.Mpr121RedChannelLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding InputRed}"
+                                  ItemsSource="{Binding AvailableInputs}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  Width="200">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
+                                                <Binding />
+                                                <Binding Path="$parent[UserControl].DataContext" />
+                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.Mpr121YellowChannelLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding InputYellow}"
+                                  ItemsSource="{Binding AvailableInputs}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  Width="200">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
+                                                <Binding />
+                                                <Binding Path="$parent[UserControl].DataContext" />
+                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.Mpr121BlueChannelLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding InputBlue}"
+                                  ItemsSource="{Binding AvailableInputs}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  Width="200">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
+                                                <Binding />
+                                                <Binding Path="$parent[UserControl].DataContext" />
+                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.Mpr121OrangeChannelLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding InputOrange}"
+                                  ItemsSource="{Binding AvailableInputs}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  Width="200">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
+                                                <Binding />
+                                                <Binding Path="$parent[UserControl].DataContext" />
+                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
@@ -2213,8 +2366,11 @@
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300"
-                           Content="{x:Static netCore:Resources.SelectedLEDsLabel}" />
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding LedsRequireColours }"
+                           Content="{x:Static netCore:Resources.SelectedLEDsApa102Label}" />
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding !LedsRequireColours }"
+                           Content="{x:Static netCore:Resources.SelectedLEDsStpLabel}" />
                     <ItemsControl ItemsSource="{Binding AvailableIndices}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -2237,9 +2393,36 @@
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300"
-                           Content="{x:Static netCore:Resources.SelectedLEDsPeripheralLabel}" />
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding LedsRequireColoursPeripheral }"
+                           Content="{x:Static netCore:Resources.SelectedLEDsPeripheralApa102Label}" />
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding !LedsRequireColoursPeripheral }"
+                           Content="{x:Static netCore:Resources.SelectedLEDsPeripheralStpLabel}" />
                     <ItemsControl ItemsSource="{Binding AvailableIndicesPeripheral}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="output:LedIndex">
+                                <ToggleButton IsChecked="{Binding Selected }"
+                                              Content="{Binding Index}" Width="50" HorizontalContentAlignment="Center" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </WrapPanel>
+                <WrapPanel Orientation="Horizontal">
+                    <WrapPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="Model.HasMpr121" />
+                            <Binding Path="!IsCombined" />
+                        </MultiBinding>
+                    </WrapPanel.IsVisible>
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center" Width="300"
+                           Content="{x:Static netCore:Resources.SelectedLEDsMpr121Label}" />
+                    <ItemsControl ItemsSource="{Binding AvailableIndicesMpr121}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel />
@@ -2984,6 +3167,81 @@
                                           DropDownOpened="ReloadPinTemplates"
                                           ItemTemplate="{StaticResource PinToStringTemplateTwi}"
                                           Width="200" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}"
+                          IsExpanded="{Binding Mpr121Expanded}" IsVisible="{Binding !Branded}">
+                    <Expander.HeaderTemplate>
+                        <DataTemplate DataType="viewModels:ConfigViewModel">
+                            <Panel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="75"
+                                           Source="avares://SantrollerConfigurator/Assets/Icons/Combined/Peripheral.png">
+                                    </Image>
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.Mpr121SettingsLabel}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="45 0 0 0" HorizontalAlignment="Center"
+                                            IsVisible="{Binding HasMpr121}">
+                                    <CheckBox IsChecked="{Binding Mpr121Connected}" VerticalAlignment="Center"
+                                              IsEnabled="False"
+                                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                                </StackPanel>
+                                <Label Foreground="Red" Margin="45 0 0 0"
+                                       Content="{Binding Mpr121ErrorText}"
+                                       VerticalAlignment="Bottom"
+                                       HorizontalAlignment="Center"
+                                       HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       IsVisible="{Binding Mpr121ErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            </Panel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <StackPanel>
+                        <StackPanel IsVisible="{Binding IsPico}" Orientation="Horizontal">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.HasMpr121Label}" />
+                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                          HorizontalContentAlignment="Center" IsChecked="{Binding HasMpr121}"
+                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding HasMpr121}">
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding Mpr121Scl}"
+                                          ItemsSource="{Binding AvailableSclPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding Mpr121Sda}"
+                                          ItemsSource="{Binding AvailableSdaPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.Mpr121CapacativeCountLabel}" />
+                                
+                                <NumericUpDown VerticalAlignment="Center" Width="200" FormatString="{}{0:#,0}"
+                                               Value="{Binding Mpr121CapacitiveCount}"
+                                               Minimum="0"
+                                               Maximum="12" HorizontalAlignment="Stretch" />
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>

@@ -45,11 +45,11 @@ public class GuitarAxis : OutputAxis
 
 
     public GuitarAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff,
-        byte[] ledIndices, byte[] ledIndicesPeripheral, int min, int max, int deadZone, bool invert,
+        byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max, int deadZone, bool invert,
         GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model,
         input, ledOn,
-        ledOff, ledIndices, ledIndicesPeripheral, min, max, deadZone,
+        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, deadZone,
         type is GuitarAxisType.Slider or GuitarAxisType.Whammy, outputEnabled, outputInverted, outputPeripheral,
         outputPin, childOfCombined)
     {
@@ -169,7 +169,7 @@ public class GuitarAxis : OutputAxis
     {
         return new SerializedGuitarAxis(Input!.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Inverted, Min, Max,
-            DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined);
+            DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined, LedIndicesMpr121.ToArray());
     }
 
     public override string GenerateOutput(ConfigField mode)

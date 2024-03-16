@@ -33,9 +33,11 @@ public abstract partial class OutputAxis : Output
 
     protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
+        byte[] ledIndicesMpr121,
         int min, int max,
-        int deadZone, bool trigger, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff,
-        ledIndices, ledIndicesPeripheral, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        int deadZone, bool trigger, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
+        bool childOfCombined) : base(model, input, ledOn, ledOff,
+        ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Trigger = trigger;
         LedOn = ledOn;

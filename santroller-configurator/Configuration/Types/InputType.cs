@@ -17,5 +17,6 @@ public enum InputType
     ConstantInput,
     WtNeckPeripheralInput,
     DigitalPeripheralInput,
-    AdxlInput
+    AdxlInput,
+    Mpr121Input,
 }

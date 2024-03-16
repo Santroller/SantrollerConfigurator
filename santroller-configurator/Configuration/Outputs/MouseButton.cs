@@ -12,8 +12,8 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class MouseButton : OutputButton
 {
-    public MouseButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, int debounce,
-        MouseButtonType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, debounce, outputEnabled, outputInverted, outputPeripheral, outputPin, false)
+    public MouseButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int debounce,
+        MouseButtonType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, debounce, outputEnabled, outputInverted, outputPeripheral, outputPin, false)
     {
         Type = type;
         UpdateDetails();
@@ -60,6 +60,6 @@ public class MouseButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedMouseButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput);
+        return new SerializedMouseButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, LedIndicesMpr121.ToArray());
     }
 }

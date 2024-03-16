@@ -129,7 +129,7 @@ public class GhwtCombinedOutput : CombinedOutput
             new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                 true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
             false, GuitarAxisType.Slider, false, false ,false, -1, true));
         UpdateBindings();
     }
@@ -148,7 +148,7 @@ public class GhwtCombinedOutput : CombinedOutput
             outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model,
                 new GhWtTapInput(pair.Key, Model, Peripheral, Pin, PinS0, PinS1, PinS2, true), Colors.Black,
                 Colors.Black,
-                Array.Empty<byte>(),Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true)));
+                Array.Empty<byte>(),Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true)));
 
             outputs.Remove(tapAnalog);
         }
@@ -159,7 +159,7 @@ public class GhwtCombinedOutput : CombinedOutput
             outputs.Add(new ControllerButton(Model,
                 new GhWtTapInput(pair.Key, Model, Peripheral, Pin, PinS0, PinS1, PinS2, true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true));
+                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true));
         }
 
         outputs.Remove(tapFrets);
@@ -179,9 +179,9 @@ public class GhwtCombinedOutput : CombinedOutput
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw,
         ReadOnlySpan<byte> bluetoothRaw,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw)
+        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
     {
-        base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw);
+        base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw);
         var raw = Peripheral ? peripheralWtRaw : ghWtRaw;
         if (raw.IsEmpty) return;
         var inputs = new int[5];
@@ -210,7 +210,7 @@ public class GhwtCombinedOutput : CombinedOutput
                 var button = new GuitarButton(Model,
                     new GhWtTapInput(GhWtInputType.TapAll, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                         true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 5, InstrumentButtonType.SliderToFrets, false, false ,false, -1, true);
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(), 5, InstrumentButtonType.SliderToFrets, false, false ,false, -1, true);
                 button.Enabled = false;
                 Outputs.Add(button);
             }
@@ -221,7 +221,7 @@ public class GhwtCombinedOutput : CombinedOutput
                 new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                 false, GuitarAxisType.Slider, false, false ,false, -1, true));
         }
         else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
@@ -237,7 +237,7 @@ public class GhwtCombinedOutput : CombinedOutput
                 new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                 ushort.MaxValue, StandardAxisType.LeftStickX, false, false ,false, -1, true));
         }
         else

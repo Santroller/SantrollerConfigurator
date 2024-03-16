@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Input;
 using Avalonia.Media;
 using DynamicData;
@@ -10,8 +11,9 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract(SkipConstructor = true)]
 public class SerializedKeyboardButton : SerializedOutput
 {
-    public SerializedKeyboardButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int debounce,
-        Key type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral)
+    public SerializedKeyboardButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex,
+        byte[] ledIndexPeripheral, int debounce,
+        Key type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, byte[] ledIndexMpr121)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -24,6 +26,7 @@ public class SerializedKeyboardButton : SerializedOutput
         OutputPin = outputPin;
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
+        LedIndexMpr121 = ledIndexMpr121;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
@@ -39,10 +42,13 @@ public class SerializedKeyboardButton : SerializedOutput
     [ProtoMember(11)] public bool OutputInverted { get; }
     [ProtoMember(12)] public bool OutputPeripheral { get; }
 
+    [ProtoMember(13)] public byte[] LedIndexMpr121 { get; }
+
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new KeyboardButton(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Debounce,
+            Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
         model.Bindings.Add(combined);
         return combined;
     }

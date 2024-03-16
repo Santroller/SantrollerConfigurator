@@ -13,8 +13,11 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 public class ControllerButton : OutputButton
 {
 
-    public ControllerButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral,
-        int debounce, StandardButtonType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
+    public ControllerButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral,
+        byte[] ledIndicesMpr121,
+        int debounce, StandardButtonType type, bool outputEnabled, bool outputPeripheral, bool outputInverted,
+        int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
         debounce, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
@@ -71,6 +74,6 @@ public class ControllerButton : OutputButton
     public override SerializedOutput Serialize()
     {
         return new SerializedControllerButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
-            ChildOfCombined);
+            ChildOfCombined, LedIndicesMpr121.ToArray());
     }
 }

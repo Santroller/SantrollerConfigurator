@@ -1787,6 +1787,9 @@
     <data name="InputTypeAdxlInput" xml:space="preserve">
         <value>ADXL345 Input</value>
     </data>
+    <data name="InputTypeMpr121Input" xml:space="preserve">
+        <value>MPR121 Input</value>
+    </data>
     <data name="InputTypeMultiplexerInput" xml:space="preserve">
         <value>Multiplexer Input</value>
     </data>
@@ -2705,11 +2708,20 @@
     <data name="ExpandAllLabel" xml:space="preserve">
         <value>Expand All</value>
     </data>
-    <data name="SelectedLEDsLabel" xml:space="preserve">
-        <value>Selected LEDs</value>
+    <data name="SelectedLEDsApa102Label" xml:space="preserve">
+        <value>Selected LEDs on APA102</value>
     </data>
-    <data name="SelectedLEDsPeripheralLabel" xml:space="preserve">
-        <value>Selected LEDs (Peripheral)</value>
+    <data name="SelectedLEDsStpLabel" xml:space="preserve">
+        <value>Selected LEDs on STP16CPC26</value>
+    </data>
+    <data name="SelectedLEDsPeripheralApa102Label" xml:space="preserve">
+        <value>Selected LEDs on Peripheral APA102</value>
+    </data>
+    <data name="SelectedLEDsPeripheralStpLabel" xml:space="preserve">
+        <value>Selected LEDs on Peripheral STP16CPC26</value>
+    </data>
+    <data name="SelectedLEDsMpr121Label" xml:space="preserve">
+        <value>Selected LEDs on MPR121</value>
     </data>
     <data name="TestLEDLabel" xml:space="preserve">
         <value>Test LEDs</value>
@@ -3089,6 +3101,27 @@
     <data name="LEDTypePeripheralLabel" xml:space="preserve">
         <value>Peripheral LED Type</value>
     </data>
+    <data name="HasMpr121Label" xml:space="preserve">
+        <value>MPR121</value>
+    </data>
+    <data name="Mpr121ChannelLabel" xml:space="preserve">
+        <value>MPR121 Channel</value>
+    </data>
+    <data name="Mpr121GreenChannelLabel" xml:space="preserve">
+        <value>Green Channel</value>
+    </data>
+    <data name="Mpr121RedChannelLabel" xml:space="preserve">
+        <value>Red Channel</value>
+    </data>
+    <data name="Mpr121YellowChannelLabel" xml:space="preserve">
+        <value>Yellow Channel</value>
+    </data>
+    <data name="Mpr121BlueChannelLabel" xml:space="preserve">
+        <value>Blue Channel</value>
+    </data>
+    <data name="Mpr121OrangeChannelLabel" xml:space="preserve">
+        <value>Orange Channel</value>
+    </data>
     <data name="HasPeripheralLabel" xml:space="preserve">
         <value>Peripheral</value>
     </data>
@@ -3182,6 +3215,12 @@
     </data>
     <data name="PeripheralSettingsLabel" xml:space="preserve">
         <value>Peripheral Settings</value>
+    </data>
+    <data name="Mpr121SettingsLabel" xml:space="preserve">
+        <value>MPR121 Settings</value>
+    </data>
+    <data name="Mpr121CapacativeCountLabel" xml:space="preserve">
+        <value>MPR121 Capacitive Touch Pad Count</value>
     </data>
     <data name="LEDSettingsLabel" xml:space="preserve">
         <value>LED Settings</value>

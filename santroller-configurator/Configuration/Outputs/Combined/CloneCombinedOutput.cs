@@ -85,7 +85,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
         Outputs.Add(new ControllerAxis(Model,
             new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, combined: true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0, ushort.MaxValue,StandardAxisType.RightStickY, false, false ,false, -1, true));
+            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0, ushort.MaxValue,StandardAxisType.RightStickY, false, false ,false, -1, true));
         UpdateBindings();
     }
 
@@ -104,7 +104,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
         if (tapAnalog != null && Model.DeviceControllerType is DeviceControllerType.RockBandGuitar)
         {
             outputs.AddRange(TapsRb.Select(pair => new GuitarButton(Model,
-                new CloneNeckInput(pair.Key, Model, Peripheral, Sda, Scl, true), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5,
+                new CloneNeckInput(pair.Key, Model, Peripheral, Sda, Scl, true), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5,
                 pair.Value, false, false ,false, -1, true)));
 
             outputs.Remove(tapAnalog);
@@ -113,7 +113,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
         if (tapFrets == null) return outputs;
 
         outputs.AddRange(Taps.Select(pair => new GuitarButton(Model, new CloneNeckInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-            Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true)));
+            Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true)));
 
         outputs.Remove(tapFrets);
 
@@ -132,11 +132,11 @@ public class CloneCombinedOutput : CombinedTwiOutput
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw, ReadOnlySpan<byte> usbHostInputsRaw,
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw)
+        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
             ps2ControllerType,
-            wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw);
+            wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw);
         Detected = !cloneRaw.IsEmpty;
     }
 
@@ -151,7 +151,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
             {
                 var button = new GuitarButton(Model,
                     new CloneNeckInput(Gh5NeckInputType.TapAll, Model, Peripheral, combined: true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, InstrumentButtonType.Slider, false, false ,false, -1, true)
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, InstrumentButtonType.Slider, false, false ,false, -1, true)
                 {
                     Enabled = false
                 };
@@ -164,7 +164,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
                 if (item != null) continue;
                 var button = new GuitarButton(Model,
                     new CloneNeckInput(key, Model, Peripheral, combined: true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, value, false, false ,false, -1, true)
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, value, false, false ,false, -1, true)
                 {
                     Enabled = false
                 };
@@ -177,7 +177,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
                 new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                 false, GuitarAxisType.Slider, false, false ,false, -1, true));
         }
         else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
@@ -204,7 +204,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
                 new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                 ushort.MaxValue, StandardAxisType.LeftStickX, false, false ,false, -1, true));
         }
         else

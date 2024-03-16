@@ -66,13 +66,13 @@ public class DjCombinedOutput : CombinedTwiOutput
         Outputs.AddRange(DjInputTypes.Where(s => s is not (DjInputType.LeftTurntable or DjInputType.RightTurntable))
             .Select(button => new DjButton(Model,
                 new DjInput(button, Model, Peripheral, combined: true),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), 5, button, false, false ,false, -1, true)));
+                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, button, false, false ,false, -1, true)));
         Outputs.Add(new DjAxis(Model, new DjInput(DjInputType.LeftTurntable, Model, Peripheral, combined: true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, 1,DjAxisType.LeftTableVelocity, false, false ,false, -1, true));
+            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, 1,DjAxisType.LeftTableVelocity, false, false ,false, -1, true));
         Outputs.Add(new DjAxis(Model, new DjInput(DjInputType.RightTurntable, Model, Peripheral, combined: true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), 1, 1,DjAxisType.RightTableVelocity, false, false ,false, -1, true));
+            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, 1,DjAxisType.RightTableVelocity, false, false ,false, -1, true));
     }
 
     public override void UpdateBindings()
@@ -91,11 +91,11 @@ public class DjCombinedOutput : CombinedTwiOutput
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw, ReadOnlySpan<byte> usbHostInputsRaw,
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw)
+        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
             ps2ControllerType,
-            wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw);
+            wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw);
         DetectedLeft = !djLeftRaw.IsEmpty;
         DetectedRight = !djRightRaw.IsEmpty;
     }

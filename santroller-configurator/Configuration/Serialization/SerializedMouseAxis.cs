@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Media;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -12,7 +13,7 @@ public class SerializedMouseAxis : SerializedOutput
 {
     public SerializedMouseAxis(SerializedInput input, MouseAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         int min, int max,
-        int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral)
+        int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, byte[] ledIndexMpr121)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -27,6 +28,7 @@ public class SerializedMouseAxis : SerializedOutput
         OutputPin = outputPin;
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
+        LedIndexMpr121 = ledIndexMpr121;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
@@ -41,13 +43,15 @@ public class SerializedMouseAxis : SerializedOutput
     [ProtoMember(10)] public int OutputPin { get; }
     [ProtoMember(11)] public bool OutputInverted { get; }
     [ProtoMember(12)] public bool OutputPeripheral { get; }
+    
+    [ProtoMember(13)] public byte[] LedIndexMpr121 { get; }
 
     public MouseAxisType Type { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new MouseAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, Min, Max, Deadzone,
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Min, Max, Deadzone,
             Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
         model.Bindings.Add(combined);
         return combined;

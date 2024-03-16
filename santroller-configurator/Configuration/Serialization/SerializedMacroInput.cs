@@ -24,7 +24,7 @@ public class SerializedMacroInput : SerializedInput
     public override Input Generate(ConfigViewModel model)
     {
         // Need to make sure a binding exists so that the inputs generated below have an output to grab their pins from (combined only)
-        model.Bindings.Add(new ControllerButton(model, Child1.Generate(model), Colors.Transparent, Colors.Transparent, Array.Empty<byte>(),Array.Empty<byte>(), 10, StandardButtonType.A, false, false, false, -1, false));
+        model.Bindings.Add(new ControllerButton(model, Child1.Generate(model), Colors.Transparent, Colors.Transparent, Array.Empty<byte>(),Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.A, false, false, false, -1, false));
         return new MacroInput(Child1.Generate(model), Child2.Generate(model), model);
     }
 }
