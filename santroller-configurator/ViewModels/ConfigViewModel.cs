@@ -1710,7 +1710,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                            #define MPR121_TWI_PORT {_mpr121TwiConfig.Definition}
                            #define MPR121_TOUCHPADS {Mpr121CapacitiveCount}
-                           #define MPR121_DIR {outputs.SelectMany(s => s.LedIndicesMpr121).Select(s => 1 << s - 4).Aggregate((acc, s) => acc | s)}
+                           #define MPR121_DIR {outputs.SelectMany(s => s.LedIndicesMpr121).Select(s => 1 << s - 4).DefaultIfEmpty(0).Aggregate((acc, s) => acc | s)}
                            #define MPR121_EN {outputs.SelectMany(s => s.LedIndicesMpr121.Select(led => (int)led).Concat(s.Input.InnermostInputs().Where(input => input is Mpr121Input or Mpr121SliderInput).SelectMany(input => input switch
                            {
                                Mpr121Input mpr121Input => new []{mpr121Input.Input},
