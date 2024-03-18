@@ -841,7 +841,7 @@ public class Led : Output
                           {{off}}
                       }
                       """;
-            case StageKitCommand.LedBlue when mode is ConfigField.RumbleLed:
+            case StageKitCommand.LedBlue when mode is ConfigField.RumbleLedExpanded:
             {
                 var led = 1 << (StageKitLed - 1);
                 return
@@ -890,6 +890,19 @@ public class Led : Output
                       }
                       """;
             }
+            case StageKitCommand.LedBlue when mode is ConfigField.RumbleLed:
+            {
+                var led = 1 << (StageKitLed - 1);
+                return
+                    $$"""
+                      if (((rumble_left & {{led}}) == 0) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightBlue}})) {
+                          {{off}}
+                      } else if ((rumble_left & {{led}}) && (rumble_right == {{(int) RumbleCommand.StageKitStrobeLightBlue}})) {
+                          {{on}}
+                      }
+                      """;
+            }
+
             case StageKitCommand.LedGreen when mode is ConfigField.RumbleLed:
             {
                 var led = 1 << (StageKitLed - 1);
