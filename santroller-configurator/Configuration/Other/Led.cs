@@ -138,6 +138,7 @@ public class Led : Output
     private readonly ObservableAsPropertyHelper<bool> _outputHasColours;
 
     private readonly ObservableAsPropertyHelper<bool> _usesPwm;
+
     public Led(ConfigViewModel model, bool outputEnabled, bool outputInverted, int outputPin, bool peripheral,
         Color ledOn,
         Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, LedCommandType command,
@@ -292,18 +293,101 @@ public class Led : Output
         }
     }
 
-    [Reactive] public int Player { get; set; }
-    [Reactive] public int StageKitLed { get; set; }
+    private int _player;
+    private int _stageKitLed;
+    private int _combo;
+    private StageKitCommand _stageKitCommand;
+    private GuitarHeroDrum _guitarHeroDrum;
+    private RockBandDrum _rockBandDrum;
+    private Turntable _turntable;
+    private FiveFretGuitar _fiveFretGuitar;
+    private SixFretGuitar _sixFretGuitar;
 
-    [Reactive] public int Combo { get; set; }
+    public int Player
+    {
+        get => _player;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _player, value);
+            UpdateDetails();
+        }
+    }
 
-    [Reactive] public GuitarHeroDrum GuitarHeroDrum { get; set; }
-    [Reactive] public RockBandDrum RockBandDrum { get; set; }
-    [Reactive] public Turntable Turntable { get; set; }
-    [Reactive] public FiveFretGuitar FiveFretGuitar { get; set; }
-    [Reactive] public SixFretGuitar SixFretGuitar { get; set; }
+    public int StageKitLed
+    {
+        get => _stageKitLed;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _stageKitLed, value);
+            UpdateDetails();
+        }
+    }
 
-    [Reactive] public StageKitCommand StageKitCommand { get; set; }
+    public int Combo
+    {
+        get => _combo;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _combo, value);
+            UpdateDetails();
+        }
+    }
+
+    public GuitarHeroDrum GuitarHeroDrum
+    {
+        get => _guitarHeroDrum;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _guitarHeroDrum, value);
+            UpdateDetails();
+        }
+    }
+    public RockBandDrum RockBandDrum
+    {
+        get => _rockBandDrum;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _rockBandDrum, value);
+            UpdateDetails();
+        }
+    }
+    public Turntable Turntable
+    {
+        get => _turntable;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _turntable, value);
+            UpdateDetails();
+        }
+    }
+    public FiveFretGuitar FiveFretGuitar
+    {
+        get => _fiveFretGuitar;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _fiveFretGuitar, value);
+            UpdateDetails();
+        }
+    }
+    public SixFretGuitar SixFretGuitar
+    {
+        get => _sixFretGuitar;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _sixFretGuitar, value);
+            UpdateDetails();
+        }
+    }
+
+    public StageKitCommand StageKitCommand
+    {
+        get => _stageKitCommand;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _stageKitCommand, value);
+            UpdateDetails();
+        }
+    }
 
     public override bool IsCombined => false;
     public override bool IsStrum => false;
@@ -337,7 +421,39 @@ public class Led : Output
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
-        return string.Format(Resources.LedCommandTitle, EnumToStringConverter.Convert(Command));
+        if (Command is LedCommandType.NoteHit)
+        {
+            switch (deviceControllerType)
+            {
+                case DeviceControllerType.Turntable:
+                    return string.Format(Resources.LedCommandTitleStageKit1, EnumToStringConverter.Convert(Command),
+                        EnumToStringConverter.Convert(Turntable));
+                case DeviceControllerType.GuitarHeroDrums:
+                    return string.Format(Resources.LedCommandTitleStageKit1, EnumToStringConverter.Convert(Command),
+                        EnumToStringConverter.Convert(GuitarHeroDrum));
+                case DeviceControllerType.RockBandDrums:
+                    return string.Format(Resources.LedCommandTitleStageKit1, EnumToStringConverter.Convert(Command),
+                        EnumToStringConverter.Convert(RockBandDrum));
+                case DeviceControllerType.GuitarHeroGuitar:
+                case DeviceControllerType.RockBandGuitar:
+                    return string.Format(Resources.LedCommandTitleStageKit1, EnumToStringConverter.Convert(Command),
+                        EnumToStringConverter.Convert(FiveFretGuitar));
+                case DeviceControllerType.LiveGuitar:
+                    return string.Format(Resources.LedCommandTitleStageKit1, EnumToStringConverter.Convert(Command),
+                        EnumToStringConverter.Convert(SixFretGuitar));
+            }
+        }
+        if (Command != LedCommandType.StageKitLed)
+            return string.Format(Resources.LedCommandTitle, EnumToStringConverter.Convert(Command));
+
+        if (StageKitCommand is StageKitCommand.Fog or StageKitCommand.Strobe)
+        {
+            return string.Format(Resources.LedCommandTitleStageKit1, EnumToStringConverter.Convert(Command),
+                EnumToStringConverter.Convert(StageKitCommand));
+        }
+
+        return string.Format(Resources.LedCommandTitleStageKit2, EnumToStringConverter.Convert(Command),
+            EnumToStringConverter.Convert(StageKitCommand), StageKitLed);
     }
 
     public static Func<LedCommandType, bool> FilterLeds(
@@ -447,8 +563,10 @@ public class Led : Output
         var ps4 = "";
         if (OutputPinConfig != null)
         {
-            on = $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, !OutputInverted, PeripheralOutput)};";
-            off = $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, OutputInverted, PeripheralOutput)};";
+            on =
+                $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, !OutputInverted, PeripheralOutput)};";
+            off =
+                $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, OutputInverted, PeripheralOutput)};";
             between =
                 $"{Model.Microcontroller.GenerateAnalogWrite(OutputPinConfig.Pin, $"{(OutputInverted ? "(255-" : "(")}rumble_left)", PeripheralOutput)};";
             starPowerBetween =
@@ -522,8 +640,8 @@ public class Led : Output
                         """;
             }
         }
-        
-        
+
+
         if (Model.HasMpr121)
         {
             foreach (var led in LedIndicesMpr121)
@@ -847,9 +965,9 @@ public class Led : Output
                 return
                     $$"""
                       if ((report->stageKitBlue & {{led}}) == 0) {
-                          {{on}}
-                      } else {
                           {{off}}
+                      } else {
+                          {{on}}
                       }
                       """;
             }
@@ -860,9 +978,9 @@ public class Led : Output
                 return
                     $$"""
                       if ((report->stageKitGreen & {{led}}) == 0) {
-                          {{on}}
-                      } else {
                           {{off}}
+                      } else {
+                          {{on}}
                       }
                       """;
             }
@@ -872,9 +990,9 @@ public class Led : Output
                 return
                     $$"""
                       if ((report->stageKitRed & {{led}}) == 0) {
-                          {{on}}
-                      } else {
                           {{off}}
+                      } else {
+                          {{on}}
                       }
                       """;
             }
@@ -884,9 +1002,9 @@ public class Led : Output
                 return
                     $$"""
                       if ((report->stageKitYellow & {{led}}) == 0) {
-                          {{on}}
-                      } else {
                           {{off}}
+                      } else {
+                          {{on}}
                       }
                       """;
             }

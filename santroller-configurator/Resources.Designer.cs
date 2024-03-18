@@ -177,6 +177,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string LedCommandTitleStageKit2 {
+            get {
+                return ResourceManager.GetString("LedCommandTitleStageKit2", resourceCulture);
+            }
+        }
+        
+        public static string LedCommandTitleStageKit1 {
+            get {
+                return ResourceManager.GetString("LedCommandTitleStageKit1", resourceCulture);
+            }
+        }
+        
         public static string RumbleCommandTitle {
             get {
                 return ResourceManager.GetString("RumbleCommandTitle", resourceCulture);

@@ -89,6 +89,12 @@
     <data name="LedCommandTitle" xml:space="preserve">
         <value>Led Command - {0}</value>
     </data>
+    <data name="LedCommandTitleStageKit2" xml:space="preserve">
+        <value>Led Command - {0} {1} {2}</value>
+    </data>
+    <data name="LedCommandTitleStageKit1" xml:space="preserve">
+        <value>Led Command - {0} {1}</value>
+    </data>
     <data name="RumbleCommandTitle" xml:space="preserve">
         <value>Rumble Motor - {0}</value>
     </data>
