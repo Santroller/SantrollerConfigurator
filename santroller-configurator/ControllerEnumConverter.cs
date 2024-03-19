@@ -58,7 +58,7 @@ public class ControllerEnumConverter : IMultiValueConverter
             new()
             {
                 {
-                    (DeviceControllerType.LiveGuitar, StandardButtonType.Start),
+                    (DeviceControllerType.LiveGuitar, StandardButtonType.Back),
                     Resources.ButtonLabelHeroPower
                 },
                 {
@@ -74,7 +74,7 @@ public class ControllerEnumConverter : IMultiValueConverter
                     Resources.ButtonLabelGHTV
                 },
                 {
-                    (DeviceControllerType.LiveGuitar, StandardButtonType.Back),
+                    (DeviceControllerType.LiveGuitar, StandardButtonType.Start),
                     Resources.ButtonLabelPause
                 },
                 {
