@@ -76,8 +76,15 @@ public class Mpr121Input : Input
     {
         if (mpr121Raw.IsEmpty) return;
         var raw = BitConverter.ToUInt16(mpr121Raw);
-        // Pull-up, so its inverted
-        RawValue = (raw & (1 << Input)) != 0 ? 0 : 1;
+        if (Input < Model.Mpr121CapacitiveCount)
+        {
+            RawValue = (raw & (1 << Input)) != 0 ? 1 : 0;
+        }
+        else
+        {
+            // Pull-up, so its inverted
+            RawValue = (raw & (1 << Input)) != 0 ? 0 : 1;
+        }
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings,
