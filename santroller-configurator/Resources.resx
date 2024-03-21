@@ -3060,7 +3060,7 @@
         <value>XInput</value>
     </data>
     <data name="XboxAuthLabel" xml:space="preserve">
-        <value>Use Authentication Controller for Stock Xbox 360 (Disable this for RGH)</value>
+        <value>Passthrough Auth for Stock Xbox 360</value>
     </data>
     <data name="QueueBasedInputsLabel" xml:space="preserve">
         <value>Queue Based Inputs</value>

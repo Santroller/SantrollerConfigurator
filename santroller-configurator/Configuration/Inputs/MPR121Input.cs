@@ -57,7 +57,7 @@ public class Mpr121Input : Input
 
     public override string Generate()
     {
-        return $"(mpr121_raw & {1 << Input})";
+        return Input < Model.Mpr121CapacitiveCount ? $"(mpr121_raw & {1 << Input})" : $"((mpr121_raw & {1 << Input}) == 0)";
     }
 
     public override SerializedInput Serialise()
@@ -76,7 +76,8 @@ public class Mpr121Input : Input
     {
         if (mpr121Raw.IsEmpty) return;
         var raw = BitConverter.ToUInt16(mpr121Raw);
-        RawValue = (raw & (1 << Input)) != 0 ? 1 : 0;
+        // Pull-up, so its inverted
+        RawValue = (raw & (1 << Input)) != 0 ? 0 : 1;
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings,
