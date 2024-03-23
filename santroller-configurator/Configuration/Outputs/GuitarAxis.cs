@@ -385,7 +385,7 @@ public class GuitarAxis : OutputAxis
                 // only keep the first byte
                 return $$"""
                          if ({{Input.Generate()}}) {
-                             {{GenerateOutput(mode)}} = {{analogOn & 0xFF}};
+                             {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[GetPickupSelectorValue(analogOn)]}};
                          }
                          """;
             case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
