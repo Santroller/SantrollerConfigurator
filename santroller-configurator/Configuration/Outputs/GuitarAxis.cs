@@ -129,7 +129,7 @@ public class GuitarAxis : OutputAxis
     {
         if (Type is GuitarAxisType.Pickup)
         {
-            if (Input.IsUint)
+            if (!Input.IsUint)
             {
                 val += short.MaxValue + 1;
             }
@@ -138,7 +138,6 @@ public class GuitarAxis : OutputAxis
             {
                 val = ushort.MaxValue - val;
             }
-
             return $"Notch {GetPickupSelectorValue(val)}";
         }
 
