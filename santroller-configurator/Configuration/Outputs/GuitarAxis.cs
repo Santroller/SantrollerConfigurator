@@ -19,9 +19,9 @@ public class GuitarAxis : OutputAxis
     public static readonly Dictionary<int, int> PickupSelectorRanges = new()
     {
         {1, 0x40},
-        {2, 0x70},
+        {2, 0x60},
         {3, 0xA0},
-        {4, 0xC0},
+        {4, 0xB0},
         {5, 0xFF},
     };
 
