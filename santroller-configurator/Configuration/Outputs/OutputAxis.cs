@@ -565,12 +565,12 @@ public abstract partial class OutputAxis : Output
             case ConfigField.XboxOne:
                 break;
             // 360 triggers, and ps3 and ps4 triggers are uint8_t
-            case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
+            case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
                 when Trigger:
                 val >>= 8;
                 break;
             // ps3 and ps4 axis are uint8_t, so we both need to shift and add 128
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 when !Trigger:
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal when !Trigger:
                 val = (val >> 8) + 128;
                 break;
             // Mouse is always not a trigger, and is int8_t
@@ -582,7 +582,7 @@ public abstract partial class OutputAxis : Output
         }
 
         // On the PS3, we need to convert triggers from analog to digital
-        if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 && this is ControllerAxis
+        if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal && this is ControllerAxis
             {
                 Type: StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger
             })
