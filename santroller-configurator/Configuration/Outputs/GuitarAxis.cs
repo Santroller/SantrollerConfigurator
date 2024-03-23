@@ -16,15 +16,6 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class GuitarAxis : OutputAxis
 {
-    public static readonly Dictionary<int, int> PickupSelectorRanges = new()
-    {
-        {1, 0x40},
-        {2, 0x60},
-        {3, 0xA0},
-        {4, 0xB0},
-        {5, 0xFF},
-    };
-
     public static readonly Dictionary<int, int> PickupSelectorRangesPS = new()
     {
         {1, 0x19},
@@ -43,9 +34,15 @@ public class GuitarAxis : OutputAxis
         {5, 0x40},
     };
 
+    public int PickupSelectorNotch2 { get; set; }
+    public int PickupSelectorNotch3 { get; set; }
+    public int PickupSelectorNotch4 { get; set; }
+    public int PickupSelectorNotch5 { get; set; }
+
 
     public GuitarAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff,
-        byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max, int deadZone, bool invert,
+        byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max, int deadZone,
+        bool invert,
         GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model,
         input, ledOn,
@@ -59,6 +56,27 @@ public class GuitarAxis : OutputAxis
         this.WhenAnyValue(x => x.Value).Select(GetNamedAxisInfo).ToPropertyEx(this, x => x.NamedAxisInfo);
     }
 
+    public GuitarAxis(ConfigViewModel model, Input input, int pickupSelectorNotch2,
+        int pickupSelectorNotch3, int pickupSelectorNotch4, int pickupSelectorNotch5, Color ledOn, Color ledOff,
+        byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max, int deadZone,
+        bool invert,
+        GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
+        bool childOfCombined) : base(model,
+        input, ledOn,
+        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, deadZone,
+        true, outputEnabled, outputInverted, outputPeripheral,
+        outputPin, childOfCombined)
+    {
+        PickupSelectorNotch2 = pickupSelectorNotch2;
+        PickupSelectorNotch3 = pickupSelectorNotch3;
+        PickupSelectorNotch4 = pickupSelectorNotch4;
+        PickupSelectorNotch5 = pickupSelectorNotch5;
+        Type = type;
+        Inverted = invert;
+        UpdateDetails();
+        this.WhenAnyValue(x => x.Value).Select(GetNamedAxisInfo).ToPropertyEx(this, x => x.NamedAxisInfo);
+    }
+
     // ReSharper disable once UnassignedGetOnlyAutoProperty
     [ObservableAsProperty] public string NamedAxisInfo { get; } = "";
 
@@ -66,6 +84,7 @@ public class GuitarAxis : OutputAxis
 
     public GuitarAxisType Type { get; }
     public bool HasNamedAxis => Type is GuitarAxisType.Slider or GuitarAxisType.Pickup;
+    public bool IsPickup => Type is GuitarAxisType.Pickup;
 
     public bool AllowInvert => Type is GuitarAxisType.Pickup;
 
@@ -112,17 +131,29 @@ public class GuitarAxis : OutputAxis
         }
     }
 
-    public static int GetPickupSelectorValue(int val)
+    private int GetPickupSelectorValue(int val)
     {
-        foreach (var (type, range) in PickupSelectorRanges)
+        if (Input is DigitalToAnalog or FixedInput)
         {
-            if (val < range << 8)
-            {
-                return type;
-            }
+            return val / (ushort.MaxValue / 5) + 1;
+        } 
+
+        if (val < PickupSelectorNotch2)
+        {
+            return 1;
         }
 
-        return 0;
+        if (val < PickupSelectorNotch3)
+        {
+            return 2;
+        }
+
+        if (val < PickupSelectorNotch4)
+        {
+            return 3;
+        }
+
+        return val < PickupSelectorNotch5 ? 4 : 5;
     }
 
     private string GetNamedAxisInfo(int val)
@@ -131,13 +162,14 @@ public class GuitarAxis : OutputAxis
         {
             if (!Input.IsUint)
             {
-                val += short.MaxValue + 1;
+                val += short.MaxValue;
             }
 
             if (Inverted)
             {
                 val = ushort.MaxValue - val;
             }
+
             return $"Notch {GetPickupSelectorValue(val)}";
         }
 
@@ -166,9 +198,10 @@ public class GuitarAxis : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedGuitarAxis(Input!.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
+        return new SerializedGuitarAxis(Input!.Serialise(), Type, PickupSelectorNotch2, PickupSelectorNotch3, PickupSelectorNotch4, PickupSelectorNotch5,LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Inverted, Min, Max,
-            DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined, LedIndicesMpr121.ToArray());
+            DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined,
+            LedIndicesMpr121.ToArray()); 
     }
 
     public override string GenerateOutput(ConfigField mode)
@@ -358,25 +391,25 @@ public class GuitarAxis : OutputAxis
             case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is not DigitalToAnalog:
-                var ret2 = new List<string>();
                 var gen2 = $"({Input.Generate()} >> 8)";
                 if (Inverted)
                 {
                     gen2 = $"(255 - {gen2})";
                 }
-
-                foreach (var (key, value) in PickupSelectorRanges)
-                {
-                    ret2.Add($$"""
-                               if ({{gen2}} < {{value}}) {
-                                  {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[key]}};
-                               }
-                               """);
-                }
-
+                
                 return $$"""
                          if ({{gen2}}) {
-                             {{string.Join(" else ", ret2)}};
+                             if ({{gen2}} < {{PickupSelectorNotch2}}) {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[1]}};
+                             } else if ({{gen2}} < {{PickupSelectorNotch3}}) {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[2]}};
+                             } else if ({{gen2}} < {{PickupSelectorNotch4}}) {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[3]}};
+                             } else if ({{gen2}} < {{PickupSelectorNotch5}}) {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[4]}};
+                             } else {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[5]}};
+                             }
                          }
                          """;
             // Xbox One pickup selector ranges from 0 - 64, so we need to map it correctly.
@@ -391,25 +424,25 @@ public class GuitarAxis : OutputAxis
             case ConfigField.XboxOne
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup:
-                var ret = new List<string>();
                 var gen = $"({Input.Generate()} >> 8)";
                 if (Inverted)
                 {
                     gen = $"(255 - {gen})";
                 }
-
-                foreach (var (key, value) in PickupSelectorRanges)
-                {
-                    ret.Add($$"""
-                              if ({{gen}} < {{value}}) {
-                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[key]}};
-                              }
-                              """);
-                }
-
+                
                 return $$"""
                          if ({{gen}}) {
-                             {{string.Join(" else ", ret)}};
+                             if ({{gen}} < {{PickupSelectorNotch2}}) {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[1]}};
+                             } else if ({{gen}} < {{PickupSelectorNotch3}}) {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[2]}};
+                             } else if ({{gen}} < {{PickupSelectorNotch4}}) {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[3]}};
+                             } else if ({{gen}} < {{PickupSelectorNotch5}}) {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[4]}};
+                             } else {
+                                {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[5]}};
+                             }
                          }
                          """;
             default:

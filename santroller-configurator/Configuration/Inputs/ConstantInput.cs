@@ -36,10 +36,10 @@ public class ConstantInput : FixedInput
 
     public int PickupSelectorType
     {
-        get => GuitarAxis.GetPickupSelectorValue(Value);
+        get => (Value / (ushort.MaxValue / 5)) + 1;
         set
         {
-            Value = GuitarAxis.PickupSelectorRanges[value] << 8;
+            Value = (value-1) * (ushort.MaxValue / 5);
             this.RaisePropertyChanged();
         }
     }

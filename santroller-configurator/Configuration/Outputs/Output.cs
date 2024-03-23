@@ -931,19 +931,16 @@ public abstract partial class Output : ReactiveObject
                     oldOn = dta.On;
                 }
 
-                if (axis.Trigger)
+                
+                Input = axis switch
                 {
-                    Input = new DigitalToAnalog(input, oldOn, Model, DigitalToAnalogType.Trigger);
-                }
-                else
-                    Input = axis switch
-                    {
-                        GuitarAxis {Type: GuitarAxisType.Pickup} => new DigitalToAnalog(input, oldOn, Model,
-                            DigitalToAnalogType.Pickup),
-                        GuitarAxis {Type: GuitarAxisType.Slider} => new DigitalToAnalog(input, oldOn, Model,
-                            DigitalToAnalogType.TapBar),
-                        _ => new DigitalToAnalog(input, oldOn, Model, DigitalToAnalogType.Normal)
-                    };
+                    GuitarAxis {Type: GuitarAxisType.Pickup} => new DigitalToAnalog(input, oldOn, Model,
+                        DigitalToAnalogType.Pickup),
+                    GuitarAxis {Type: GuitarAxisType.Slider} => new DigitalToAnalog(input, oldOn, Model,
+                        DigitalToAnalogType.TapBar),
+                    {Trigger:true} => new DigitalToAnalog(input, oldOn, Model, DigitalToAnalogType.Trigger),
+                    _ => new DigitalToAnalog(input, oldOn, Model, DigitalToAnalogType.Normal)
+                };
 
                 break;
         }

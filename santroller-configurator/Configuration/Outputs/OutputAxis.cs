@@ -69,6 +69,8 @@ public abstract partial class OutputAxis : Output
             .Select(ComputeMinMaxMargin).ToPropertyEx(this, x => x.CalibrationMinMaxMargin);
         this.WhenAnyValue(x => x.Input).Select(s => s is DigitalToAnalog)
             .ToPropertyEx(this, x => x.IsDigitalToAnalog);
+        this.WhenAnyValue(x => x.Input).Select(s => s is DigitalToAnalog or ConstantInput)
+            .ToPropertyEx(this, x => x.IsDigitalToAnalogOrConstant);
     }
     public override bool UsesPwm => true;
 
@@ -86,6 +88,7 @@ public abstract partial class OutputAxis : Output
 
     [ObservableAsProperty] public bool InputIsUint { get; }
     [ObservableAsProperty] public bool IsDigitalToAnalog { get; }
+    [ObservableAsProperty] public bool IsDigitalToAnalogOrConstant { get; }
 
     [ObservableAsProperty] public Thickness ComputedDeadZoneMargin { get; }
     [ObservableAsProperty] public Thickness CalibrationMinMaxMargin { get; }

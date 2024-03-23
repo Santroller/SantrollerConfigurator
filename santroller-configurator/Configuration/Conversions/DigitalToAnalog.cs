@@ -50,10 +50,10 @@ public class DigitalToAnalog : Input
 
     public int PickupSelectorType
     {
-        get => GuitarAxis.GetPickupSelectorValue(On);
+        get => Math.Min((On / (ushort.MaxValue / 5)) + 1, 5);
         set
         {
-            On = GuitarAxis.PickupSelectorRanges[value] << 8;
+            On = (value-1) * (ushort.MaxValue / 5);
             this.RaisePropertyChanged();
         }
     }
