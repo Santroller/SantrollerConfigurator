@@ -580,29 +580,29 @@ public class Led : Output
                 on += $"""
 
                        ledState[{index - 1}].select = 1;
-                       {Model.LedType.GetLedAssignment(false, LedOn, index, writer)}
+                       {Model.LedType.GetLedAssignment(false, LedOn, index, Model.LedBrightnessOn, writer)}
                        """;
                 off += $"""
 
                         ledState[{index - 1}].select = 0;
-                        {Model.LedType.GetLedAssignment(false, LedOff, index, writer)}
+                        {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
                         """;
                 between +=
                     $"""
 
                      ledState[{index - 1}].select = 1;
-                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, "rumble_left", writer)}
+                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "rumble_left", writer)}
                      """;
                 starPowerBetween +=
                     $"""
 
                      ledState[{index - 1}].select = 1;
-                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, "last_star_power", writer)}
+                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "last_star_power", writer)}
                      """;
 
                 ps4 += $"""
                         ledState[{index - 1}].select = 1;
-                        {Model.LedType.GetLedAssignment(false, "red", "green", "blue", index)};
+                        {Model.LedType.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
                         """;
             }
         }
@@ -614,29 +614,29 @@ public class Led : Output
                 on += $"""
 
                        ledStatePeripheral[{index - 1}].select = 1;
-                       {Model.LedTypePeripheral.GetLedAssignment(true, LedOn, index, writer)}
+                       {Model.LedTypePeripheral.GetLedAssignment(true, LedOn, index, Model.LedBrightnessOn, writer)}
                        """;
                 off += $"""
 
                         ledStatePeripheral[{index - 1}].select = 0;
-                        {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, writer)}
+                        {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
                         """;
                 between +=
                     $"""
 
                      ledStatePeripheral[{index - 1}].select = 1;
-                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, "rumble_left", writer)}
+                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "rumble_left", writer)}
                      """;
                 starPowerBetween +=
                     $"""
 
                      ledStatePeripheral[{index - 1}].select = 1;
-                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, "last_star_power", writer)}
+                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "last_star_power", writer)}
                      """;
 
                 ps4 += $"""
                         ledStatePeripheral[{index - 1}].select = 1;
-                        {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", index)};
+                        {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
                         """;
             }
         }

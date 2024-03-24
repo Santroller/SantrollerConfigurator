@@ -33,7 +33,8 @@ public class SerializedConfiguration
         LedMosi = model.LedMosi;
         LedSck = model.LedSck;
         LedCount = model.LedCount;
-        LedBrightness = model.LedBrightness;
+        LedBrightnessOn = model.LedBrightnessOn;
+        LedBrightnessOff = model.LedBrightnessOff;
         MouseMovementType = model.MouseMovementType;
         WtSensitivity = model.WtSensitivity;
         UsbHostDp = model.UsbHostDp;
@@ -103,7 +104,7 @@ public class SerializedConfiguration
     [ProtoMember(45)] public int Stp16LePeripheral { get; private set; }
     [ProtoMember(46)] public RolloverMode RolloverMode { get; private set; }
     [ProtoMember(47)] public bool XInputAuth { get; private set; }
-    [ProtoMember(48)] public int LedBrightness { get; private set; }
+    [ProtoMember(48)] public int LedBrightnessOn { get; private set; }
     [ProtoMember(49)] public bool Apa102IsFullSize { get; private set; }
 
     [ProtoMember(50)] public bool Ps3OnRpcs3 { get; private set; } = true;
@@ -111,6 +112,7 @@ public class SerializedConfiguration
     [ProtoMember(52)] public bool HasMpr121 { get; private set; }
     [ProtoMember(53)] public int Mpr121Sda { get; private set; }
     [ProtoMember(54)] public int Mpr121Scl { get; private set; }
+    [ProtoMember(55)] public int LedBrightnessOff { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -133,7 +135,8 @@ public class SerializedConfiguration
         model.HasPeripheral = HasPeripheral;
         model.HasMpr121 = HasMpr121;
         model.RolloverMode = RolloverMode;
-        model.LedBrightness = LedBrightness == 0 ? 32 : LedBrightness;
+        model.LedBrightnessOn = (byte) (LedBrightnessOn == 0 ? 32 : LedBrightnessOn);
+        model.LedBrightnessOff = (byte) (LedBrightnessOff == 0 ? 32 : LedBrightnessOff);
         model.Apa102IsFullSize = Apa102IsFullSize;
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
         if (HasPeripheral)
@@ -210,7 +213,8 @@ public class SerializedConfiguration
         model.WtSensitivity = WtSensitivity;
         model.CombinedStrumDebounce = CombinedStrumDebounce;
         model.BtRxAddr = BtRxMacAddress;
-        model.LedBrightness = LedBrightness;
+        model.LedBrightnessOn = (byte) LedBrightnessOn;
+        model.LedBrightnessOff = (byte) LedBrightnessOff;
         var clone = new List<Output>(model.Bindings.Items);
         var generated = Bindings.Select(s => s.Generate(model)).SelectMany(s => s.Outputs.Items)
             .GroupBy(s => s.GetOutputType()).ToDictionary(s => s.Key, s => s);

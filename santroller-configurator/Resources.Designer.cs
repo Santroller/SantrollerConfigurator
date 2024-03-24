@@ -6477,9 +6477,15 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string LedBrightnessLabel {
+        public static string LedBrightnessOnLabel {
             get {
-                return ResourceManager.GetString("LedBrightnessLabel", resourceCulture);
+                return ResourceManager.GetString("LedBrightnessOnLabel", resourceCulture);
+            }
+        }
+        
+        public static string LedBrightnessOffLabel {
+            get {
+                return ResourceManager.GetString("LedBrightnessOffLabel", resourceCulture);
             }
         }
         

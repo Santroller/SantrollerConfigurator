@@ -543,14 +543,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    private int _ledBrightness;
+    private byte _ledBrightnessOn;
 
-    public int LedBrightness
+    public byte LedBrightnessOn
     {
-        get => _ledBrightness;
+        get => _ledBrightnessOn;
         set
         {
-            this.RaiseAndSetIfChanged(ref _ledBrightness, value);
+            this.RaiseAndSetIfChanged(ref _ledBrightnessOn, value);
             if (Device is not Santroller santroller || (LedType is LedType.None or LedType.Stp16Cpc26 &&
                                                         LedTypePeripheral is LedType.None or LedType.Stp16Cpc26))
                 return;
@@ -562,7 +562,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndices)
                     {
-                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn));
+                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn, (byte)value));
                     }
                 }
 
@@ -571,7 +571,43 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndicesPeripheral)
                     {
-                        santroller.SetLedPeripheral((byte) (ledIndex - 1), LedTypePeripheral.GetLedBytes(output.LedOn));
+                        santroller.SetLedPeripheral((byte) (ledIndex - 1), LedTypePeripheral.GetLedBytes(output.LedOn, (byte)value));
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    private byte _ledBrightnessOff;
+
+    public byte LedBrightnessOff
+    {
+        get => _ledBrightnessOff;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _ledBrightnessOff, value);
+            if (Device is not Santroller santroller || (LedType is LedType.None or LedType.Stp16Cpc26 &&
+                                                        LedTypePeripheral is LedType.None or LedType.Stp16Cpc26))
+                return;
+            santroller.SetBrightness(value);
+            foreach (var output in Bindings.Items.SelectMany(binding => binding.ValidOutputs()))
+            {
+                if (LedType is not (LedType.None or LedType.Stp16Cpc26) && output.LedIndices.Any() &&
+                    output.LedOn != Colors.Black)
+                {
+                    foreach (var ledIndex in output.LedIndices)
+                    {
+                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn, (byte)value));
+                    }
+                }
+
+                if (LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26) &&
+                    output.LedIndicesPeripheral.Any() && output.LedOn != Colors.Black)
+                {
+                    foreach (var ledIndex in output.LedIndicesPeripheral)
+                    {
+                        santroller.SetLedPeripheral((byte) (ledIndex - 1), LedTypePeripheral.GetLedBytes(output.LedOn, (byte)value));
                     }
                 }
             }
@@ -1176,7 +1212,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         StrumDebounce = 0;
         Debounce = 10;
         DjPollRate = 10;
-        LedBrightness = 31;
+        LedBrightnessOn = 31;
         Apa102IsFullSize = false;
         DjSmoothing = false;
         SwapSwitchFaceButtons = false;
@@ -1437,7 +1473,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
-                       #define LED_BRIGHTNESS {WriteBlob(writer, LedBrightness)}
+                       #define LED_BRIGHTNESS {WriteBlob(writer, LedBrightnessOn)}
                        """;
 
             if (IsBluetoothRx)
@@ -1468,7 +1504,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WT_SENSITIVITY {WtSensitivity}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {DjPollRate * 1000}
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {DjSmoothing.ToString().ToLower()}
-                       #define LED_BRIGHTNESS {LedBrightness}
+                       #define LED_BRIGHTNESS {LedBrightnessOn}
                        """;
             if (BtRxAddr.Any() && BtRxAddr.Contains(":"))
             {
@@ -1992,7 +2028,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ret +=
                 $"""
 
-                 spi_transfer(APA102_SPI_PORT, brightness | 0xE0);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].brightness | 0xE0);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].r);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].g);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].b);
@@ -2039,7 +2075,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ret +=
                 $"""
 
-                 slaveWriteLED(brightness | 0xE0);
+                 slaveWriteLED(ledStatePeripheral[{i}].brightness | 0xE0);
                  slaveWriteLED(ledStatePeripheral[{i}].r);
                  slaveWriteLED(ledStatePeripheral[{i}].g);
                  slaveWriteLED(ledStatePeripheral[{i}].b);
@@ -2245,9 +2281,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         $$"""
                           led_tmp = {{ledRead}};
                           if({{ledReadCheck}}) {
-                              {{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}}
+                              {{type.GetLedAssignment(peripheral,  led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}}
                           } else {
-                              {{type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, writer)}}
+                              {{type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff, writer)}}
                           }
                           """;
                 }
@@ -2255,7 +2291,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (!analog.Any())
             {
-                analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, writer);
+                analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff, writer);
             }
 
             ret += $$"""
@@ -2268,7 +2304,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 return $$"""
                          
                              if ({{ifStatement}}) {
-                                 {{type.GetLedAssignment(peripheral, tuple.Item1.LedOn, led, writer)}}
+                                 {{type.GetLedAssignment(peripheral, tuple.Item1.LedOn, led, LedBrightnessOn, writer)}}
                              }
                          """;
             }));
@@ -2326,7 +2362,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                 // Now we have the value, calibrated as a uint8_t
                 ret +=
-                    $"led_tmp = {ledRead};{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, "led_tmp", writer)}";
+                    $"led_tmp = {ledRead};{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}";
             }
 
             ret += "}";

@@ -3363,8 +3363,11 @@
     <data name="Apa1022020Label" xml:space="preserve">
         <value>Hide APA102 2020 warning</value>
     </data>
-    <data name="LedBrightnessLabel" xml:space="preserve">
-        <value>LED Brightness</value>
+    <data name="LedBrightnessOnLabel" xml:space="preserve">
+        <value>LED Brightness (On)</value>
+    </data>
+    <data name="LedBrightnessOffLabel" xml:space="preserve">
+        <value>LED Brightness (Off)</value>
     </data>
     <data name="BrightnessNote1" xml:space="preserve">
         <value>If you are using APA102-2020s or SK9822-2020s</value>
