@@ -1,6 +1,7 @@
 # Ardwiino
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2882", MODE="666",TAG+="uaccess", TAG+="udev-acl"
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2883", MODE="666",TAG+="uaccess", TAG+="udev-acl"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="2886", MODE="666",TAG+="uaccess", TAG+="udev-acl"
 
 # Switch
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="0f0d", ATTRS{idProduct}=="0092", MODE="666",TAG+="uaccess", TAG+="udev-acl"
