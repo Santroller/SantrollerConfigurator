@@ -2490,7 +2490,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     $"led_tmp = {ledRead};{Microcontroller.GenerateAnalogWrite(pin, $"{(analogLedOutput.OutputInverted ? "(255-" : "(")}led_tmp)", peripheral)};";
             }
         }
-
         return ret;
     }
     

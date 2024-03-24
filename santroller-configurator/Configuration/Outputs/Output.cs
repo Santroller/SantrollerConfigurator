@@ -265,11 +265,8 @@ public abstract partial class Output : ReactiveObject
             this.RaiseAndSetIfChanged(ref _outputEnabled, value);
             if (value)
             {
-                if (OutputPinConfig != null)
-                {
-                    OutputPinConfig = new DirectPinConfig(Model, "led_output", OutputPin,
-                        Model.HasPeripheral && PeripheralOutput, DevicePinMode.Output);
-                }
+                OutputPinConfig ??= new DirectPinConfig(Model, "led_output", OutputPin,
+                    Model.HasPeripheral && PeripheralOutput, DevicePinMode.Output);
             }
             else
             {
