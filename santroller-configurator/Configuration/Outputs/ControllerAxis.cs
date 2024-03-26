@@ -90,7 +90,7 @@ public class ControllerAxis : OutputAxis
 
     public override string GenerateOutput(ConfigField mode)
     {
-        return mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.XboxOne or ConfigField.Xbox360 or ConfigField.Universal)
+        return mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.XboxOne or ConfigField.Xbox360 or ConfigField.Universal or ConfigField.Xbox)
             ? ""
             : GetReportField(Type);
     }

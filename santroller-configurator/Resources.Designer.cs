@@ -2997,9 +2997,9 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string ConsoleTypeWindowsXb1 {
+        public static string ConsoleTypeXbox {
             get {
-                return ResourceManager.GetString("ConsoleTypeWindowsXb1", resourceCulture);
+                return ResourceManager.GetString("ConsoleTypeXbox", resourceCulture);
             }
         }
         
@@ -3168,6 +3168,12 @@ namespace GuitarConfigurator.NetCore {
         public static string EmulationModeTypeXbox360 {
             get {
                 return ResourceManager.GetString("EmulationModeTypeXbox360", resourceCulture);
+            }
+        }
+        
+        public static string EmulationModeTypeXbox {
+            get {
+                return ResourceManager.GetString("EmulationModeTypeXbox", resourceCulture);
             }
         }
         

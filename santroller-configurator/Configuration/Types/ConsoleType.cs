@@ -10,7 +10,7 @@ public enum ConsoleType
     Ps4,
     XboxOne,
     Ps32,
-    WindowsXb1,
+    Xbox,
     Windows,
     KeyboardMouse,
     Midi,

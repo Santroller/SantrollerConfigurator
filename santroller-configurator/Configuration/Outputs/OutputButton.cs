@@ -115,6 +115,16 @@ public abstract class OutputButton : Output
                           }
                           """;
             }
+
+            if (mode == ConfigField.Xbox && !outputVar.Contains("dpad") && !outputVar.Contains("start") && !outputVar.Contains("back"))
+            {
+                return  $$"""
+                          if ({{ifStatement}}) {
+                              {{outputVar}} = 0xFF;
+                              {{extra}}
+                          }
+                          """;
+            }
             return  $$"""
                       if ({{ifStatement}}) {
                           {{outputVar}} = true;

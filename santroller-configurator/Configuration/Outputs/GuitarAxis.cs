@@ -224,7 +224,7 @@ public class GuitarAxis : OutputAxis
                 writer);
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
             or ConfigField.XboxOne
-            or ConfigField.Universal)) return "";
+            or ConfigField.Universal or ConfigField.Xbox)) return "";
         // The below is a mess... but essentially we have to handle converting the input to its respective output depending on console
         // We have to do some hyper specific stuff for digital to analog here too so its easiest to capture its value once
         var analogOn = 0;
@@ -255,7 +255,7 @@ public class GuitarAxis : OutputAxis
             case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt:
                 return
                     $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};";
-            case ConfigField.Xbox360 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
+            case ConfigField.Xbox360 or ConfigField.Xbox when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 if (analogOn > 0x80)
                     analogOn |= (analogOn - 1) << 8;
@@ -267,7 +267,7 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = {{analogOn}};
                          }
                          """;
-            case ConfigField.Xbox360 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
+            case ConfigField.Xbox360 or ConfigField.Xbox when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 return $$"""
                          {{GenerateOutput(mode)}} = {{Input.Generate()}};
@@ -379,7 +379,7 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} |= {{GenerateAssignment("0", ConfigField.XboxOne, true, false, false, false, writer)}} > 0xE0;
                          }
                          """;
-            case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
+            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is DigitalToAnalog:
                 // only keep the first byte
@@ -388,13 +388,13 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[GetPickupSelectorValue(analogOn)]}};
                          }
                          """;
-            case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
+            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is not DigitalToAnalog:
-                var gen2 = $"({Input.Generate()} >> 8)";
+                var gen2 = $"({Input.Generate()})";
                 if (Inverted)
                 {
-                    gen2 = $"(255 - {gen2})";
+                    gen2 = $"({ushort.MaxValue} - {gen2})";
                 }
                 
                 return $$"""
@@ -424,10 +424,10 @@ public class GuitarAxis : OutputAxis
             case ConfigField.XboxOne
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup:
-                var gen = $"({Input.Generate()} >> 8)";
+                var gen = $"({Input.Generate()})";
                 if (Inverted)
                 {
-                    gen = $"(255 - {gen})";
+                    gen = $"({ushort.MaxValue} - {gen})";
                 }
                 
                 return $$"""

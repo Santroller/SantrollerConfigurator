@@ -7,5 +7,6 @@ public enum EmulationModeType
     Wii,
     Ps3,
     Ps4Or5,
-    Switch
+    Switch,
+    Xbox
 }

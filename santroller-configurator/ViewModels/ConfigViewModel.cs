@@ -1577,6 +1577,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             {{GenerateTick(ConfigField.Ps4, writer)}}
                         #define TICK_XINPUT \
                             {{GenerateTick(ConfigField.Xbox360, writer)}}
+                        #define TICK_OG_XBOX \
+                            {{GenerateTick(ConfigField.Xbox, writer)}}
                         #define TICK_XBOX_ONE \
                             {{GenerateTick(ConfigField.XboxOne, writer)}}
                         #define HANDLE_AUTH_LED \

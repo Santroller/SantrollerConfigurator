@@ -114,7 +114,7 @@ public class GuitarButton : OutputButton
         if (mode is not (ConfigField.Shared or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
             or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Keyboard
-            or ConfigField.XboxOne or ConfigField.Reset)) return "";
+            or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox)) return "";
         // If combined debounce is on, then additionally generate extra logic to ignore this input if the opposite debounce flag is active
         if (combinedDebounce && Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
             combinedExtra = string.Join(" && ",
@@ -131,7 +131,7 @@ public class GuitarButton : OutputButton
         // GHL Guitars map strum up and strum down to dpad up and down, and also the stick
         if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar &&
             Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp &&
-            mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360)
+            mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360 or ConfigField.Xbox)
             return base.Generate(mode, debounceIndex,
                 $"report->strumBar={(Type is InstrumentButtonType.StrumDown ? "0xFF" : "0x00")};", combinedExtra,
                 strumIndexes, combinedDebounce, macros, writer);

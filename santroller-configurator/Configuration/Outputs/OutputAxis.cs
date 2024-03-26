@@ -366,16 +366,16 @@ public abstract partial class OutputAxis : Output
                 function = "handle_calibration_xbox";
                 if (ShouldFlip(mode)) function = "-" + function;
                 break;
-            case ConfigField.Xbox360 when whammy:
+            case ConfigField.Xbox360 or ConfigField.Xbox when whammy:
                 function = "handle_calibration_xbox_whammy";
                 if (ShouldFlip(mode)) function = "-" + function;
                 break;
-            case ConfigField.Xbox360 when trigger:
+            case ConfigField.Xbox360 or ConfigField.Xbox when trigger:
                 singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
-            case ConfigField.Xbox360:
+            case ConfigField.Xbox360 or ConfigField.Xbox:
                 intBased = true;
                 function = "handle_calibration_xbox";
                 if (ShouldFlip(mode)) function = "-" + function;
@@ -559,13 +559,13 @@ public abstract partial class OutputAxis : Output
         switch (mode)
         {
             // x360 triggers are int16_t
-            case ConfigField.Xbox360 when !Trigger:
+            case ConfigField.Xbox360 or ConfigField.Xbox when !Trigger:
                 break;
             // xb1 triggers and axis are already of the above form
             case ConfigField.XboxOne:
                 break;
             // 360 triggers, and ps3 and ps4 triggers are uint8_t
-            case ConfigField.Xbox360 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
+            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
                 when Trigger:
                 val >>= 8;
                 break;

@@ -42,29 +42,29 @@ public class DjButton : OutputButton
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.XboxOne
-            or ConfigField.Xbox360 or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Reset))
+            or ConfigField.Xbox360 or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Reset or ConfigField.Xbox))
             return "";
 
-        if (mode is not ConfigField.Shared)
+        if (mode is ConfigField.Shared)
+            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
+                writer);
+        // Turntables also hit the standard buttons when you push each button
+        switch (Type)
         {
-            // Turntables also hit the standard buttons when you push each button
-            switch (Type)
-            {
-                case DjInputType.LeftGreen:
-                case DjInputType.RightGreen:
-                    extra = "report->a = true;";
-                    break;
-                case DjInputType.LeftRed:
-                case DjInputType.RightRed:
-                    extra = "report->b = true;";
-                    break;
-                case DjInputType.LeftBlue:
-                case DjInputType.RightBlue:
-                    extra = "report->x = true;";
-                    break;
-                default:
-                    return "";
-            }
+            case DjInputType.LeftGreen:
+            case DjInputType.RightGreen:
+                extra = mode == ConfigField.Xbox ? "report->a = 0xFF;" : "report->a = true;";
+                break;
+            case DjInputType.LeftRed:
+            case DjInputType.RightRed:
+                extra = mode == ConfigField.Xbox ? "report->b = 0xFF;" : "report->b = true;";
+                break;
+            case DjInputType.LeftBlue:
+            case DjInputType.RightBlue:
+                extra = mode == ConfigField.Xbox ? "report->x = 0xFF;" : "report->x = true;";
+                break;
+            default:
+                return "";
         }
 
         return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);

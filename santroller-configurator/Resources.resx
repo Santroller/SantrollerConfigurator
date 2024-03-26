@@ -1579,8 +1579,8 @@
     <data name="ConsoleTypePs32" xml:space="preserve">
         <value>PS3</value>
     </data>
-    <data name="ConsoleTypeWindowsXb1" xml:space="preserve">
-        <value>Windows</value>
+    <data name="ConsoleTypeXbox" xml:space="preserve">
+        <value>Original Xbox</value>
     </data>
     <data name="ConsoleTypeWindows" xml:space="preserve">
         <value>Windows</value>
@@ -1671,6 +1671,9 @@
     </data>
     <data name="EmulationModeTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>
+    </data>
+    <data name="EmulationModeTypeXbox" xml:space="preserve">
+        <value>Original Xbox</value>
     </data>
     <data name="EmulationModeTypeXboxOne" xml:space="preserve">
         <value>Xbox One / Series S / Series X</value>

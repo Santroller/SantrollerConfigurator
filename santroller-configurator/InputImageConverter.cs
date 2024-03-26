@@ -104,6 +104,7 @@ public class InputImageConverter : IMultiValueConverter
                 EmulationModeType.Ps3 => "Combined/PS3",
                 EmulationModeType.Ps4Or5 => "Combined/PS4",
                 EmulationModeType.Switch => "Combined/Switch",
+                EmulationModeType.Xbox => "Combined/Xbox",
                 _ => throw new ArgumentOutOfRangeException()
             },
             StandardButtonType type => (deviceControllerType.IsDrum() || deviceControllerType.IsGuitar()) && type is StandardButtonType.Back or StandardButtonType.Start or StandardButtonType.LeftThumbClick ? deviceControllerType + "/" + type : GetPath(type, legendType, swapSwitchFaceButtons),

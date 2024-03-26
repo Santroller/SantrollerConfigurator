@@ -78,7 +78,8 @@ public partial class DjInput : TwiInput
         ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
+        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
+        ReadOnlySpan<byte> mpr121Raw)
     {
         switch (Input)
         {
@@ -105,14 +106,23 @@ public partial class DjInput : TwiInput
         ConfigField mode)
     {
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.XboxOne
-            or ConfigField.Xbox360
-            or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Mouse or ConfigField.Keyboard or ConfigField.Consumer))
+            or ConfigField.Xbox360 or ConfigField.Xbox
+            or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Mouse or ConfigField.Keyboard
+            or ConfigField.Consumer))
             return "";
         var left = string.Join(";",
-            bindings.Where(binding => binding.Item1 is DjInput {Input: DjInputType.LeftTurntable or DjInputType.LeftGreen or DjInputType.LeftRed or DjInputType.LeftBlue})
+            bindings.Where(binding => binding.Item1 is DjInput
+                {
+                    Input: DjInputType.LeftTurntable or DjInputType.LeftGreen or DjInputType.LeftRed
+                    or DjInputType.LeftBlue
+                })
                 .Select(binding => binding.Item2));
         var right = string.Join(";",
-            bindings.Where(binding => binding.Item1 is DjInput {Input: DjInputType.RightTurntable or DjInputType.RightGreen or DjInputType.RightRed or DjInputType.RightBlue})
+            bindings.Where(binding => binding.Item1 is DjInput
+                {
+                    Input: DjInputType.RightTurntable or DjInputType.RightGreen or DjInputType.RightRed
+                    or DjInputType.RightBlue
+                })
                 .Select(binding => binding.Item2));
 
         return $$"""

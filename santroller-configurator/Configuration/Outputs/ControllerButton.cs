@@ -61,11 +61,17 @@ public class ControllerButton : OutputButton
         {
             return GetReportField(fortniteKey);
         }
+        // No guide button on og xbox
+        if (mode is ConfigField.Xbox && Type is StandardButtonType.Guide)
+        {
+            return "";
+        }
+        // capture button only exists on switch (which uses ps3 mappings)
         if (mode is not ConfigField.Ps3 && Type is StandardButtonType.Capture)
         {
             return "";
         }
-        return mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared or ConfigField.XboxOne
+        return mode is ConfigField.Ps3 or ConfigField.Xbox or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared or ConfigField.XboxOne
             or ConfigField.Xbox360 or ConfigField.Universal
             ? GetReportField(Type)
             : "";

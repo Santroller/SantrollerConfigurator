@@ -22,5 +22,6 @@ public enum ConfigField
     StrobeLed,
     LightBarLed,
     InitLed,
-    Detection
+    Detection,
+    Xbox
 }
