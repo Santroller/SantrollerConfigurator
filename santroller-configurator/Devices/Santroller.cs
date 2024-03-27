@@ -267,7 +267,7 @@ public class Santroller : ConfigurableUsbDevice
                 adxlRaw = ReadData(0, (byte) Commands.CommandReadAdxl, 3 * sizeof(short));
             }
 
-            if (_model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(s2 => s2 is Mpr121Input)))
+            if (_model.HasMpr121)
             {
                 mpr121Raw = ReadData(0, (byte) Commands.CommandReadMpr121, sizeof(short));
                 mpr121Connected = ReadData(0, (byte) Commands.CommandReadMpr121Valid, 1).Any(x => x != 0);

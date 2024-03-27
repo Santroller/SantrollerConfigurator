@@ -125,7 +125,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         Router.Navigate.Execute(new MainViewModel(this));
         Router.CurrentViewModel
             .Select(s => s is ConfigViewModel)
-            .ToPropertyEx(this, s => s.HasSidebar);
+            .ToPropertyEx(this, s2 => s2.HasSidebar);
         this.WhenAnyValue(x => x.ProgressbarColor, x => x.Progress)
             .Select(x => ShouldUseDarkTextColorForBackground(x.Item1) && x.Item2 > 45)
             .ToPropertyEx(this, x => x.ProgressBarShouldUseDarkTextColor);

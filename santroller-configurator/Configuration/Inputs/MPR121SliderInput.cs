@@ -163,7 +163,7 @@ public class Mpr121SliderInput : Input
         var raw = BitConverter.ToUInt16(mpr121Raw);
         var touched =
             inputs
-                .Where((_, input) => (raw & 1 << input) != 0)
+                .Where(s => (raw & (1 << s.Item2)) != 0)
                 .Select(s => s.Item1)
                 .Aggregate<BarButton, BarButton>(0, (current, barButton) => current | barButton);
         RawValue = Gh5NeckInput.Gh5MappingsReversed.GetValueOrDefault(touched, 0);
