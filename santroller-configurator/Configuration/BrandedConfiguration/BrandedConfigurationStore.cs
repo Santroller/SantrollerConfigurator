@@ -86,7 +86,7 @@ public class BrandedConfigurationStore : ReactiveObject
         Console.WriteLine("No");
         var stream = File.OpenRead(Environment.ProcessPath!);
         var reader = new BinaryReader(stream);
-        stream.Seek(-sizeof(int),d SeekOrigin.End);
+        stream.Seek(-sizeof(int), SeekOrigin.End);
         var offset = reader.ReadInt32();
         stream.Seek(offset, SeekOrigin.Begin);
 #else
