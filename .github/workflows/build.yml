@@ -17,7 +17,7 @@ jobs:
       - name: Build Branded
         run: |
           cd Branded
-          dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
+          dotnet publish -c Release -r osx-x64 -t:BundleApp -p:PublishSingleFile=true -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
           mkdir out_stage
           mkdir out
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfiguratorBranded.app out_stage
@@ -30,7 +30,7 @@ jobs:
       - name: Build Standard
         run: |
           cd santroller-configurator
-          dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
+          dotnet publish -c Release -r osx-x64 -t:BundleApp -p:PublishSingleFile=true -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
           mkdir out_stage
           mkdir out
           cp -r bin/Release/net7.0/osx-x64/publish/SantrollerConfigurator.app out_stage
