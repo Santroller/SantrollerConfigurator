@@ -95,6 +95,11 @@ public static class ExecutableUtils
     {
         foreach (var oldEntry in archive.Entries.ToList())
         {
+            if (oldEntry.Name.StartsWith("._"))
+            {
+                oldEntry.Delete();
+                continue;
+            }
             var newEntry = archive.CreateEntry(oldEntry.FullName.Replace(oldName, newName));
             await using var oldStream = oldEntry.Open();
             await using var newStream = newEntry.Open();

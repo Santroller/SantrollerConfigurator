@@ -82,18 +82,21 @@ public class BrandedConfigurationStore : ReactiveObject
 
     public static BrandedConfigurationStore LoadBranding(MainWindowViewModel model)
     {
-#if !MacOS && SINGLE_FILE
+#if !OSX && SINGLE_FILE
+        Console.WriteLine("No");
         var stream = File.OpenRead(Environment.ProcessPath!);
         var reader = new BinaryReader(stream);
-        stream.Seek(-sizeof(int), SeekOrigin.End);
+        stream.Seek(-sizeof(int),d SeekOrigin.End);
         var offset = reader.ReadInt32();
         stream.Seek(offset, SeekOrigin.Begin);
 #else
+        Console.WriteLine("Yes");
         var path = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, "branding.bin");
         if (!File.Exists(path))
         {
             path = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(Environment.ProcessPath)!)!, "Resources", "branding.bin");
         }
+        Console.WriteLine(path);
         var stream = File.OpenRead(path);
 #endif
         return new BrandedConfigurationStore(

@@ -396,7 +396,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
         // Since macOS executables are directories, we put the branding in a file instead of appending
         using var archive = new ZipArchive(macosOutput, ZipArchiveMode.Update);
-        var entry = archive.CreateEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/branding.bin");
+        var entry = archive.CreateEntry("SantrollerConfiguratorBranded.app/Contents/Resources/branding.bin");
         await using var branding = entry.Open();
         Serializer.SerializeWithLengthPrefix(branding, new SerialisedBrandedConfigurationStore(SelectedTool),
             PrefixStyle.Base128);

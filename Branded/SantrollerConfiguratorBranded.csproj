@@ -25,7 +25,7 @@
         <!--        <PublishTrimmed>true</PublishTrimmed>-->
         <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">Windows</DefineConstants>
         <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">$(DefineConstants);Linux</DefineConstants>
-        <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">$(DefineConstants);MacOS</DefineConstants>
+        <DefineConstants Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">$(DefineConstants);OSX</DefineConstants>
         <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
         <DefineConstants Condition="'$(PublishSingleFile)' == 'true'">$(DefineConstants);SINGLE_FILE</DefineConstants>
         <LangVersion>latestmajor</LangVersion>
