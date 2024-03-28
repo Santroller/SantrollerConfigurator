@@ -83,7 +83,6 @@ public class BrandedConfigurationStore : ReactiveObject
     public static BrandedConfigurationStore LoadBranding(MainWindowViewModel model)
     {
 #if !OSX && SINGLE_FILE
-        var path = "no";
         var stream = File.OpenRead(Environment.ProcessPath!);
         var reader = new BinaryReader(stream);
         stream.Seek(-sizeof(int), SeekOrigin.End);
@@ -97,7 +96,6 @@ public class BrandedConfigurationStore : ReactiveObject
         }
         var stream = File.OpenRead(path);
 #endif
-        throw new Exception(path);
         return new BrandedConfigurationStore(
             Serializer.DeserializeWithLengthPrefix<SerialisedBrandedConfigurationStore>(stream, PrefixStyle.Base128),
             true,
