@@ -63,6 +63,7 @@
         <UseHardenedRuntime>true</UseHardenedRuntime>
         <CodeSignEntitlements>Resources/entitlements.xml</CodeSignEntitlements>
         <CodeSignExtraArgs>--deep</CodeSignExtraArgs>
+        <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
     </PropertyGroup>
     <ItemGroup>
         <TrimmableAssembly Include="Avalonia.DesignerSupport" />
