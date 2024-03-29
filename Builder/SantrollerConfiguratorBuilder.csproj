@@ -62,6 +62,9 @@
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-macOS.zip" />
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-linux-64" />
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-win-64.exe" />
+        <AvaloniaResource Include="Assets\rcodesign\linux\rcodesign" />
+        <AvaloniaResource Include="Assets\rcodesign\macos\rcodesign" />
+        <AvaloniaResource Include="Assets\rcodesign\win\rcodesign.exe" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AsmResolver" Version="5.5.0" />

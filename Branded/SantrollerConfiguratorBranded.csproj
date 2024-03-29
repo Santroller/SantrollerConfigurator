@@ -135,5 +135,6 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <DebugType>None</DebugType>
         <DebugSymbols>false</DebugSymbols>
+        <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
     </PropertyGroup>
 </Project>

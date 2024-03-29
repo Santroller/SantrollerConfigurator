@@ -65,7 +65,7 @@ public static class ExecutableUtils
         valueTuple.Item1.UpdateOffsets(new RelocationParameters());
     }
 
-    private static ReadOnlySpan<byte> GetIcnsIconType(int width, bool isScale2X)
+    private static byte[] GetIcnsIconType(int width, bool isScale2X)
     {
         var iconType = width switch
         {
@@ -78,7 +78,7 @@ public static class ExecutableUtils
             _ => "ic10"u8
         };
 
-        return iconType;
+        return iconType.ToArray();
     }
 
     private static byte[] GetBigEndianBytes(int value)
@@ -95,11 +95,12 @@ public static class ExecutableUtils
     {
         foreach (var oldEntry in archive.Entries.ToList())
         {
-            if (oldEntry.Name.StartsWith("._"))
+            if (oldEntry.Name.StartsWith("._") || oldEntry.Name.EndsWith(".pdb") || oldEntry.Name.EndsWith(".json") || (oldEntry.FullName.Contains("MacOS") && oldEntry.FullName.EndsWith(".icns")))
             {
                 oldEntry.Delete();
                 continue;
             }
+            
             var newEntry = archive.CreateEntry(oldEntry.FullName.Replace(oldName, newName));
             await using var oldStream = oldEntry.Open();
             await using var newStream = newEntry.Open();
@@ -110,9 +111,9 @@ public static class ExecutableUtils
         }
     }
 
-    public static async Task UpdatePlist(string name, ZipArchiveEntry entry)
+    public static async Task UpdatePlist(string name, string outputFileName)
     {
-        await using var info = entry.Open();
+        await using var info = File.Open(outputFileName, FileMode.Open);
         await using var stream = new MemoryStream();
         await using var infoWriter = new StreamWriter(stream);
         var infoReader = new StreamReader(info);
@@ -140,17 +141,9 @@ public static class ExecutableUtils
         info.Close();
     }
 
-    public static async Task OverwriteIcns(Bitmap img, ZipArchiveEntry entry)
+    public static async Task OverwriteIcns(Bitmap img, string outputFileName)
     {
-        await using var info2 = entry.Open();
-        info2.SetLength(0);
-        info2.Seek(0, SeekOrigin.Begin);
-        ConvertToIcns(img, info2);
-        info2.Close();
-    }
-
-    private static void ConvertToIcns(Bitmap img, Stream outputFile)
-    {
+        await using var outputFile = File.OpenWrite(outputFileName);
         var icnsData = new List<byte>();
         var sizeAll = 0;
 

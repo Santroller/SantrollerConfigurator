@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -17,6 +18,7 @@ using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
+using Mono.Unix;
 using ProtoBuf;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -75,7 +77,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
                 SelectedCopySection = SelectedSection;
             }
         });
-        
+
         this.WhenAnyValue(s => s.SelectedSection).Subscribe(s =>
         {
             if (SelectedSection != null && SelectedSection.Configurations.Any())
@@ -99,9 +101,10 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public void Copy()
     {
         if (Selected == null || SelectedSection == null) return;
-        SelectedSection.Configurations.Add(new BrandedConfiguration(new SerialisedBrandedConfiguration(Selected), false, this));
+        SelectedSection.Configurations.Add(new BrandedConfiguration(new SerialisedBrandedConfiguration(Selected), false,
+            this));
     }
-    
+
     [RelayCommand]
     public void AddConfig()
     {
@@ -118,7 +121,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Config.Configurations.Remove(SelectedTool);
         SelectedTool = Config.Configurations.Any() ? Config.Configurations.First() : null;
     }
-    
+
     [RelayCommand]
     public void AddSection()
     {
@@ -226,6 +229,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         {
             return;
         }
+
         await Selected.BuildUf2(model, Path.Join(path, "firmware.uf2"));
         Complete(100);
     }
@@ -260,7 +264,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
         return state;
     }
-    
+
     [RelayCommand]
     public void MoveSectionDown()
     {
@@ -287,6 +291,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         {
             return;
         }
+
         var old = SelectedSection;
         SelectedTool.Configurations.Move(from, from - 1);
         SelectedSection = null;
@@ -319,6 +324,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         {
             return;
         }
+
         var old = Selected;
         SelectedSection.Configurations.Move(from, from - 1);
         Selected = null;
@@ -338,9 +344,10 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             Message = Resources.UniqueName;
             return;
         }
+
         // Compile all configs and save the resulting UF2 into the brandedconfiguration
         var start = 0;
-        var steps = 100 / SelectedTool.Configurations.Sum(s => s.Configurations.Count);
+        var steps = 100 / (SelectedTool.Configurations.Sum(s => s.Configurations.Count) + 4);
         foreach (var section in SelectedTool.Configurations)
         {
             foreach (var config in section.Configurations)
@@ -361,58 +368,129 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
                     Message = Resources.UnableToFindFirmware;
                     return;
                 }
+
                 start += steps;
                 Progress = start;
             }
         }
+        Message = "Building Linux executable";
+        start += steps;
+        Progress = start;
         var workingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
         // Extract linux executable and append branded config into executable.
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
         var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");
         await using var linuxOutput =
-            File.Open(Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-linux-64"), FileMode.Create,
+            File.Open(Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-linux-64"),
+                FileMode.Create,
                 FileAccess.ReadWrite);
         await using var linuxInput = AssetLoader.Open(uri);
         await linuxInput.CopyToAsync(linuxOutput).ConfigureAwait(false);
         await ExecutableUtils.AppendConfig(linuxOutput, SelectedTool);
 
+        Message = "Building windows executable";
+        start += steps;
+        Progress = start;
         // Extract windows executable and append branded config into executable.
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
         await using var windowsInput = AssetLoader.Open(uri);
         await using var windowsOutput =
-            File.Open(Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-win-64.exe"), FileMode.Create,
+            File.Open(Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-win-64.exe"),
+                FileMode.Create,
                 FileAccess.ReadWrite);
         await ExecutableUtils.UpdatePeFileIcon(SelectedTool.Icon, windowsInput, windowsOutput);
         await ExecutableUtils.AppendConfig(windowsOutput, SelectedTool);
 
+        Message = "Building macOS package";
+        start += steps;
+        Progress = start;
         // Extract macos app zip, insert config and update icons and application name
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-macOS.zip");
-        await using var macosOutput =
-            File.Open(Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip"), FileMode.Create,
-                FileAccess.ReadWrite);
-        await using var macosInput = AssetLoader.Open(uri);
-        await macosInput.CopyToAsync(macosOutput).ConfigureAwait(false);
-        macosOutput.Seek(0, SeekOrigin.Begin);
+        var tempDir = Path.Join(workingDir, "santroller_temp");
+        if (Directory.Exists(tempDir))
+        {
+            Directory.Delete(tempDir, true);
+        }
 
+        Directory.CreateDirectory(tempDir);
+        await using var macosOutputTemp =
+            File.Open(
+                Path.Join(tempDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip"), FileMode.Create,
+                FileAccess.ReadWrite);
+
+        await using var macosInput = AssetLoader.Open(uri);
+        await macosInput.CopyToAsync(macosOutputTemp).ConfigureAwait(false);
+        macosOutputTemp.Seek(0, SeekOrigin.Begin);
+        var zipRoot = Path.Join(workingDir, "santroller_temp", "zip");
+        var contentsRoot = Path.Join(zipRoot, "SantrollerConfiguratorBranded.app", "Contents");
+        int attrs;
         // Since macOS executables are directories, we put the branding in a file instead of appending
-        using var archive = new ZipArchive(macosOutput, ZipArchiveMode.Update);
-        var entry = archive.CreateEntry("SantrollerConfiguratorBranded.app/Contents/Resources/branding.bin");
-        await using var branding = entry.Open();
-        Serializer.SerializeWithLengthPrefix(branding, new SerialisedBrandedConfigurationStore(SelectedTool),
-            PrefixStyle.Base128);
-        branding.Close();
+        using (var archive = new ZipArchive(macosOutputTemp, ZipArchiveMode.Update))
+        {
+            archive.ExtractToDirectory(zipRoot);
+            attrs =
+                archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/SantrollerConfiguratorBranded")!
+                    .ExternalAttributes;
+        }
+
+        await using (var branding = File.OpenWrite(Path.Join(contentsRoot, "Resources", "branding.bin")))
+        {
+            Serializer.SerializeWithLengthPrefix(branding, new SerialisedBrandedConfigurationStore(SelectedTool),
+                PrefixStyle.Base128);
+        }
 
         // Update icons and info.plist so that the executable has the correct name and icons
-        await ExecutableUtils.UpdatePlist(SelectedTool.ToolNameVersioned,
-            archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Info.plist")!);
-        await ExecutableUtils.OverwriteIcns(SelectedTool.Icon,
-            archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/MacOS/Resources/icon.icns")!);
-        await ExecutableUtils.OverwriteIcns(SelectedTool.Icon,
-            archive.GetEntry("SantrollerConfiguratorBranded.app/Contents/Resources/icon.icns")!);
-        await ExecutableUtils.RenameDirectoryInZip("SantrollerConfiguratorBranded.app",
-            SelectedTool.ToolNameVersioned + ".app",
-            archive);
+        await ExecutableUtils.UpdatePlist(SelectedTool.ToolNameVersioned, Path.Join(contentsRoot, "Info.plist"));
 
+        await ExecutableUtils.OverwriteIcns(SelectedTool.Icon, Path.Join(contentsRoot, "Resources", "icon.icns"));
+
+        foreach (var f in Directory.EnumerateFiles(contentsRoot, "._*", SearchOption.AllDirectories))
+        {
+            File.Delete(f);
+        }
+
+        Directory.Delete(Path.Join(contentsRoot, "MacOS", "Resources"), true);
+        Directory.Move(Path.Join(zipRoot, "SantrollerConfiguratorBranded.app"),
+            Path.Join(zipRoot, SelectedTool.ToolNameVersioned + ".app"));
+
+#if Windows
+        var rcodeSign = new Uri($"avares://{assemblyName}/Assets/rcodesign/win/rcodesign.exe");
+        var rcodeSizeExecutable = "rcodesign.exe";
+#elif OSX
+        var rcodeSign = new Uri($"avares://{assemblyName}/Assets/rcodesign/macos/rcodesign");
+        var rcodeSizeExecutable = "rcodesign";
+#else
+        var rcodeSign = new Uri($"avares://{assemblyName}/Assets/rcodesign/linux/rcodesign");
+        var rcodeSizeExecutable = "rcodesign";
+#endif
+        var rcodeSizeProcess = Path.Join(workingDir, "santroller_temp", rcodeSizeExecutable);
+        await using (var rcodeSignTemp = File.OpenWrite(rcodeSizeProcess))
+        {
+            await using var rcodeSignInput = AssetLoader.Open(rcodeSign);
+            await rcodeSignInput.CopyToAsync(rcodeSignTemp).ConfigureAwait(false);
+        }
+#if !Windows
+        var test = new UnixFileInfo(rcodeSizeProcess);
+        test.FileAccessPermissions |= FileAccessPermissions.UserExecute | FileAccessPermissions.GroupExecute |
+                                      FileAccessPermissions.OtherExecute;
+#endif
+        Message = "Signing macOS package";
+        start += steps;
+        Progress = start;
+        var process = Process.Start(rcodeSizeProcess, new[] {"sign", Path.Join(zipRoot, SelectedTool.ToolNameVersioned + ".app")});
+        await process.WaitForExitAsync();
+        var outputZip = Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip");
+        if (File.Exists(outputZip))
+        {
+            File.Delete(outputZip);
+        }
+
+        ZipFile.CreateFromDirectory(zipRoot, outputZip);
+        await using var macosOutput = File.Open(outputZip, FileMode.Open);
+        using var archive2 = new ZipArchive(macosOutput, ZipArchiveMode.Update);
+        archive2.GetEntry($"{SelectedTool.ToolNameVersioned}.app/Contents/MacOS/SantrollerConfiguratorBranded")!
+            .ExternalAttributes = attrs;
+        Directory.Delete(tempDir, true);
         Complete(100);
     }
 
@@ -428,6 +506,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             ProgressbarColor = ProgressBarError;
             return;
         }
+
         if (!difference)
         {
             ProgressbarColor = ProgressBarPrimary;
