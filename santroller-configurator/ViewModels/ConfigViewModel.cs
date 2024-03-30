@@ -1685,7 +1685,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            """;
             }
 
-            var ledCount = Outputs.SelectMany(s => s.LedIndicesMpr121).DefaultIfEmpty<byte>(0).Max();
+            var ledCount = Outputs.SelectMany(s => s.Outputs.Items).SelectMany(s => s.LedIndicesMpr121).DefaultIfEmpty<byte>(0).Max();
             config += $"""
                        
                        #define LED_COUNT_MPR121 {ledCount}
@@ -2541,7 +2541,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         // Handle leds, including when multiple leds are assigned to a single output.
         foreach (var (led, relatedOutputs) in debouncesRelatedToLed)
         {
-            var index = led - 1;
+            // MPR121 leds starts at index 4.
+            var index = led - 4 - 1;
             var analog = "";
             if (analogRelatedToLed.TryGetValue(led, out var analogLedOutputs))
             {
