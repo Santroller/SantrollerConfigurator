@@ -53,7 +53,11 @@ public class Ps2Input : SpiInput
         Ps2InputType.GuitarStart,
         Ps2InputType.GuitarTilt,
         Ps2InputType.GuitarStrumUp,
-        Ps2InputType.GuitarStrumDown
+        Ps2InputType.GuitarStrumDown,
+        Ps2InputType.DpadUp,
+        Ps2InputType.DpadRight,
+        Ps2InputType.DpadDown,
+        Ps2InputType.DpadLeft
     };
 
     public static readonly List<Ps2InputType> DigitalButtons = new()
@@ -85,6 +89,16 @@ public class Ps2Input : SpiInput
         Ps2InputType.RightStickX,
         Ps2InputType.RightStickY,
         Ps2InputType.NegConTwist
+    };
+    
+    // Guitar dpad is special because why wouldn't it be
+    private static readonly Dictionary<Ps2InputType, string> MappingsDpadGuitar = new()
+    {
+
+        {Ps2InputType.DpadUp, $"(ps2Data[5] < {255 / 4})"},
+        {Ps2InputType.DpadLeft, $"(ps2Data[5] < {255 / 4 * 2} && ps2Data[5] > {255 / 4})"},
+        {Ps2InputType.DpadDown, $"(ps2Data[5] < {255 / 4 * 3} && ps2Data[5] > {255 / 4 * 2})"},
+        {Ps2InputType.DpadRight, $"(ps2Data[5] > {255 / 4 * 3} && ps2Data[5] < 250)"},
     };
 
     private static readonly Dictionary<Ps2InputType, string> Mappings = new()
@@ -284,7 +298,8 @@ public class Ps2Input : SpiInput
         ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
+        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
+        ReadOnlySpan<byte> mpr121Raw)
     {
         if (ps2ControllerType.IsEmpty || ps2Data.IsEmpty) return;
         var type = ps2ControllerType[0];
@@ -333,7 +348,6 @@ public class Ps2Input : SpiInput
                 lastTapPs2 = BarButton.Orange;
                 break;
         }
-
         RawValue = Input switch
         {
             Ps2InputType.Dualshock2RightButton when ds2 => ps2Data[9] << 8,
@@ -393,6 +407,10 @@ public class Ps2Input : SpiInput
             Ps2InputType.DpadRight when digital => ~ps2Data[3] & (1 << 5),
             Ps2InputType.DpadDown when digital => ~ps2Data[3] & (1 << 6),
             Ps2InputType.DpadLeft when digital => ~ps2Data[3] & (1 << 7),
+            Ps2InputType.DpadUp when guitar => ps2Data[5] < 255 / 4 ? 1 : 0,
+            Ps2InputType.DpadLeft when guitar => ps2Data[5] < 255 / 4 * 2 && ps2Data[5] > 255 / 4 ? 1 : 0,
+            Ps2InputType.DpadDown when guitar => ps2Data[5] < 255 / 4 * 3 && ps2Data[5] > 255 / 4 * 2 ? 1 : 0,
+            Ps2InputType.DpadRight when guitar => ps2Data[5] > 255 / 4 * 3 && ps2Data[5] < 250 ? 1 : 0,
             Ps2InputType.L2 when digital => ~ps2Data[4] & (1 << 0),
             Ps2InputType.R2 when digital => ~ps2Data[4] & (1 << 1),
             Ps2InputType.L1 when digital => ~ps2Data[4] & (1 << 2),
@@ -432,6 +450,11 @@ public class Ps2Input : SpiInput
         {
             types.Add(Ps2ControllerType.Dualshock);
             types.Add(Ps2ControllerType.FlightStick);
+        }
+        
+        if (GuitarButtons.Contains(Input))
+        {
+            types.Add(Ps2ControllerType.Guitar);
         }
 
         return types.Contains(type);
@@ -480,8 +503,14 @@ public class Ps2Input : SpiInput
                 foreach (var type in types)
                 {
                     if (!mappedBindings.ContainsKey(type)) mappedBindings.Add(type, new List<string>());
-
-                    mappedBindings[type].Add(binding.Item2);
+                    var mapping = binding.Item2;
+                    // Guitar dpad uses a totally different set of bindings, so we need to swap em out
+                    if (type == Ps2ControllerType.Guitar && input.Input is Ps2InputType.DpadDown
+                            or Ps2InputType.DpadLeft or Ps2InputType.DpadRight or Ps2InputType.DpadUp)
+                    {
+                        mapping = mapping.Replace(Mappings[input.Input], MappingsDpadGuitar[input.Input]);
+                    }
+                    mappedBindings[type].Add(mapping);
                 }
             }
 
