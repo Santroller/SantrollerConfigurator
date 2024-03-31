@@ -2542,7 +2542,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         foreach (var (led, relatedOutputs) in debouncesRelatedToLed)
         {
             // MPR121 leds starts at index 4.
-            var index = led - 4 - 1;
+            var index = led - 4;
             var analog = "";
             if (analogRelatedToLed.TryGetValue(led, out var analogLedOutputs))
             {
