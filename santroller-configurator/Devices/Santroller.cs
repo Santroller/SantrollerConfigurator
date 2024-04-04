@@ -66,7 +66,9 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadAdxl,
         CommandReadMpr121,
         CommandReadMpr121Valid,
-        CommandSetLedsMpr121
+        CommandSetLedsMpr121,
+        CommandReadMax1270X,
+        CommandReadMax1270XValid,
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -250,6 +252,8 @@ public class Santroller : ConfigurableUsbDevice
             var mpr121Raw = Array.Empty<byte>();
             var peripheralConnected = false;
             var mpr121Connected = false;
+            var max1270XRaw = Array.Empty<byte>();
+            var max1270XConnected = false;
             if (_model.HasPeripheral)
             {
                 peripheralWtRaw = ReadData(0, (byte) Commands.CommandReadPeripheralWt, 5 * sizeof(int));
@@ -273,10 +277,16 @@ public class Santroller : ConfigurableUsbDevice
                 mpr121Connected = ReadData(0, (byte) Commands.CommandReadMpr121Valid, 1).Any(x => x != 0);
             }
 
+            if (_model.HasMax1704X)
+            {
+                max1270XRaw = ReadData(0, (byte) Commands.CommandReadMax1270X, sizeof(byte));
+                max1270XConnected = ReadData(0, (byte) Commands.CommandReadMax1270XValid, 1).Any(x => x != 0);
+            }
+
             var bluetoothRaw = Array.Empty<byte>();
             if (IsPico()) bluetoothRaw = ReadData(0, (byte) Commands.CommandGetBtState, 1);
 
-            _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected);
+            _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw);
             foreach (var output in _bindings)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                     djRightRaw, gh5Raw,

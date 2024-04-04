@@ -3110,7 +3110,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Subscribe(_ => Main.GoBack.Execute(new Unit()));
     }
 
-    public void Update(byte[] btRaw, bool peripheralConnected, bool mpr121Connected)
+    public void Update(byte[] btRaw, bool peripheralConnected, bool mpr121Connected, bool max1270XConnected, byte[] max1270XRaw)
     {
         if (IsBluetoothTx && btRaw.Any())
         {
@@ -3120,6 +3120,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         PeripheralConnected = peripheralConnected;
 
         Mpr121Connected = mpr121Connected;
+        Max1704XConnected = max1270XConnected;
+        if (max1270XRaw.Any())
+        {
+            Max1704XStatus = max1270XRaw[0];
+        }
     }
 
     public TwiConfig? GetTwiForType(string twiType, bool peripheral)
