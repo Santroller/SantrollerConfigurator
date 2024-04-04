@@ -5973,6 +5973,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string HasMax1704xLabel {
+            get {
+                return ResourceManager.GetString("HasMax1704xLabel", resourceCulture);
+            }
+        }
+        
+        public static string Max1704xStatusLabel {
+            get {
+                return ResourceManager.GetString("Max1704xStatusLabel", resourceCulture);
+            }
+        }
+        
         public static string HasMpr121Label {
             get {
                 return ResourceManager.GetString("HasMpr121Label", resourceCulture);
@@ -6204,6 +6216,12 @@ namespace GuitarConfigurator.NetCore {
         public static string Mpr121SettingsLabel {
             get {
                 return ResourceManager.GetString("Mpr121SettingsLabel", resourceCulture);
+            }
+        }
+        
+        public static string MAX1704xSettingsLabel {
+            get {
+                return ResourceManager.GetString("MAX1704xSettingsLabel", resourceCulture);
             }
         }
         

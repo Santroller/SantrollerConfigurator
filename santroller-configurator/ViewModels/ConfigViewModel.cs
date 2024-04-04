@@ -49,6 +49,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly int PeripheralTwiClock = 500000;
     public static readonly string Mpr121TwiType = "mpr121";
     public static readonly int Mpr121TwiFreq = 400000;
+    public static readonly string Max170XTwiType = "max170x";
+    public static readonly int Max170XTwiFreq = 400000;
     public static readonly string UsbHostPinTypeDm = "DM";
     public static readonly string UsbHostPinTypeDp = "DP";
     public static readonly string UnoPinTypeTx = "Uno Serial Tx Pin";
@@ -63,6 +65,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private SpiConfig? _ledSpiConfigPeripheral;
     private TwiConfig? _peripheralTwiConfig;
     private TwiConfig? _mpr121TwiConfig;
+    private TwiConfig? _max170xTwiConfig;
     private DirectPinConfig? _stp16Oe;
     private DirectPinConfig? _stp16Le;
     private DirectPinConfig? _stp16OePeripheral;
@@ -339,6 +342,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public string? PeripheralErrorText { get; set; }
 
     [Reactive] public string? Mpr121ErrorText { get; set; }
+
+    [Reactive] public string? Max170XErrorText { get; set; }
     [Reactive] public string? LedErrorText { get; set; }
 
     public ReadOnlyObservableCollection<Output> Outputs { get; }
@@ -471,6 +476,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool LedConfigExpanded { get; set; }
     [Reactive] public bool PeripheralExpanded { get; set; }
     [Reactive] public bool Mpr121Expanded { get; set; }
+    
+    [Reactive] public bool Max170XExpanded { get; set; }
 
     [Reactive] public MouseMovementType MouseMovementType { get; set; }
 
@@ -614,6 +621,28 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
+    public int Max1704XSda
+    {
+        get => _max170xTwiConfig?.Sda ?? 0;
+        set
+        {
+            if (_max170xTwiConfig == null) return;
+            _max170xTwiConfig.Sda = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int Max1704XScl
+    {
+        get => _max170xTwiConfig?.Scl ?? 0;
+        set
+        {
+            if (_max170xTwiConfig == null) return;
+            _max170xTwiConfig.Scl = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
     public int Mpr121Sda
     {
         get => _mpr121TwiConfig?.Sda ?? 0;
@@ -729,6 +758,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool Connected { get; set; }
     [Reactive] public bool PeripheralConnected { get; set; }
     [Reactive] public bool Mpr121Connected { get; set; }
+    [Reactive] public bool Max1704XConnected { get; set; }
+    [Reactive] public int Max1704XStatus { get; set; }
 
 
     public int UsbHostDm
@@ -893,6 +924,30 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             UpdateErrors();
         }
     }
+
+    private bool _hasMax1704X;
+    public bool HasMax1704X
+    {
+        get => _hasMax1704X;
+        set
+        {
+            if (!value)
+            {
+                _max170xTwiConfig = null;
+                this.RaiseAndSetIfChanged(ref _hasMax1704X, value);
+                UpdateErrors();
+            }
+
+            _max170xTwiConfig =
+                value
+                    ? Microcontroller.AssignTwiPins(this, Max170XTwiType, false, -1, -1, Max170XTwiFreq)
+                    : null;
+            this.RaisePropertyChanged(nameof(Max1704XSda));
+            this.RaisePropertyChanged(nameof(Max1704XScl));
+            this.RaiseAndSetIfChanged(ref _hasMax1704X, value);
+            UpdateErrors();
+        }
+    }
     public bool HasPeripheral
     {
         get => _hasPeripheral;
@@ -1046,7 +1101,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         new PinConfig?[]
             {
                 _ledSpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
-                _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig
+                _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig, _max170xTwiConfig
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -1281,6 +1336,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (emulationType is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
         {
             ResetBluetoothRelated();
+        }
+        else
+        {
+            // Reset max1704x state when we disable bluetooth.
+            HasMax1704X = false;
         }
 
         if (DeviceControllerType.IsDrum() && emulationType == EmulationType.FortniteFestival)
@@ -1739,6 +1799,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             if (_peripheralTwiConfig != null)
             {
                 config += $"\n#define SLAVE_TWI_PORT {_peripheralTwiConfig.Definition}";
+            }
+            if (_max170xTwiConfig != null)
+            {
+                config += $"\n#define MAX1704X_TWI_PORT {_max170xTwiConfig.Definition}";
             }
             if (_mpr121TwiConfig != null)
             {
@@ -2898,6 +2962,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             pins[PeripheralTwiType] = _peripheralTwiConfig.Pins.ToList();
         }
 
+        if (_max170xTwiConfig != null && type != Max170XTwiType && !twi && !peripheral)
+        {
+            pins[Max170XTwiType] = _max170xTwiConfig.Pins.ToList();
+        }
+
+        if (_mpr121TwiConfig != null && type != Mpr121TwiType && !twi && !peripheral)
+        {
+            pins[Mpr121TwiType] = _mpr121TwiConfig.Pins.ToList();
+        }
+
         return pins;
     }
 
@@ -2960,6 +3034,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         else
         {
             Mpr121ErrorText = null;
+        }
+        
+        if (HasMax1704X && _max170xTwiConfig?.ErrorText != null)
+        {
+            foundError = true;
+            Max170XErrorText = _max170xTwiConfig.ErrorText;
+        }
+        else
+        {
+            Max170XErrorText = null;
         }
 
         HasError = foundError;

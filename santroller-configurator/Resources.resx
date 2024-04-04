@@ -3110,6 +3110,12 @@
     <data name="LEDTypePeripheralLabel" xml:space="preserve">
         <value>Peripheral LED Type</value>
     </data>
+    <data name="HasMax1704xLabel" xml:space="preserve">
+        <value>MAX1704x</value>
+    </data>
+    <data name="Max1704xStatusLabel" xml:space="preserve">
+        <value>Battery Percentage</value>
+    </data>
     <data name="HasMpr121Label" xml:space="preserve">
         <value>MPR121</value>
     </data>
@@ -3227,6 +3233,9 @@
     </data>
     <data name="Mpr121SettingsLabel" xml:space="preserve">
         <value>MPR121 Settings</value>
+    </data>
+    <data name="MAX1704xSettingsLabel" xml:space="preserve">
+        <value>MAX1704x Settings</value>
     </data>
     <data name="Mpr121CapacativeCountLabel" xml:space="preserve">
         <value>MPR121 Capacitive Touch Pad Count</value>

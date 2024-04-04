@@ -3341,6 +3341,83 @@
                         </StackPanel>
                     </StackPanel>
                 </Expander>
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}"
+                          IsExpanded="{Binding Max170XExpanded}">
+                    <Expander.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="IsBluetoothTx" />
+                            <Binding Path="!Branded" />
+                        </MultiBinding>
+                    </Expander.IsVisible>
+                    <Expander.HeaderTemplate>
+                        <DataTemplate DataType="viewModels:ConfigViewModel">
+                            <Panel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="75"
+                                           Source="avares://SantrollerConfigurator/Assets/Icons/Combined/Battery.png">
+                                    </Image>
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.MAX1704xSettingsLabel}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="45 0 0 0" HorizontalAlignment="Center"
+                                            IsVisible="{Binding HasMax1704X}">
+                                    <CheckBox IsChecked="{Binding Max1704XConnected}" VerticalAlignment="Center"
+                                              IsEnabled="False"
+                                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.Max1704xStatusLabel}" />
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{Binding Max1704XStatus}" />
+                                </StackPanel>
+                                <Label Foreground="Red" Margin="45 0 0 0"
+                                       Content="{Binding Max170XErrorText}"
+                                       VerticalAlignment="Bottom"
+                                       HorizontalAlignment="Center"
+                                       HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       IsVisible="{Binding Max170XErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            </Panel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <StackPanel>
+                        <StackPanel IsVisible="{Binding IsPico}" Orientation="Horizontal">
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.HasMax1704xLabel}" />
+                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                          HorizontalContentAlignment="Center" IsChecked="{Binding HasMax1704X}"
+                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                        </StackPanel>
+
+                        <StackPanel IsVisible="{Binding HasMax1704X}">
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding Max1704XScl}"
+                                          ItemsSource="{Binding AvailableSclPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding Max1704XSda}"
+                                          ItemsSource="{Binding AvailableSdaPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
                 <ItemsControl ItemsSource="{Binding Outputs}" x:Name="OutputsContainer">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="output:Output">

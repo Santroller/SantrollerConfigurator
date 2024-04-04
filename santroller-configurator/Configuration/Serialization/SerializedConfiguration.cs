@@ -66,6 +66,9 @@ public class SerializedConfiguration
         Mpr121Scl = model.Mpr121Scl;
         Mpr121Sda = model.Mpr121Sda;
         HasMpr121 = model.HasMpr121;
+        HasMax1704X = model.HasMax1704X;
+        Max1704XSda = model.Max1704XSda;
+        Max1704XScl = model.Max1704XScl;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -112,7 +115,10 @@ public class SerializedConfiguration
     [ProtoMember(52)] public bool HasMpr121 { get; private set; }
     [ProtoMember(53)] public int Mpr121Sda { get; private set; }
     [ProtoMember(54)] public int Mpr121Scl { get; private set; }
-    [ProtoMember(55)] public int LedBrightnessOff { get; private set; }
+    [ProtoMember(56)] public int LedBrightnessOff { get; private set; }
+    [ProtoMember(57)] public bool HasMax1704X { get; private set; }
+    [ProtoMember(58)] public int Max1704XSda { get; private set; }
+    [ProtoMember(59)] public int Max1704XScl { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -134,6 +140,7 @@ public class SerializedConfiguration
         model.BtRxAddr = BtRxMacAddress;
         model.HasPeripheral = HasPeripheral;
         model.HasMpr121 = HasMpr121;
+        model.HasMax1704X = HasMax1704X;
         model.RolloverMode = RolloverMode;
         model.LedBrightnessOn = (byte) (LedBrightnessOn == 0 ? 32 : LedBrightnessOn);
         model.LedBrightnessOff = (byte) (LedBrightnessOff == 0 ? 32 : LedBrightnessOff);
@@ -148,6 +155,11 @@ public class SerializedConfiguration
         {
             model.Mpr121Scl = Mpr121Scl;
             model.Mpr121Sda = Mpr121Sda;
+        }
+        if (HasMax1704X)
+        {
+            model.Max1704XScl = Max1704XScl;
+            model.Max1704XSda = Max1704XSda;
         }
 
         if (DjPollRate == 0)
