@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using Avalonia.Threading;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
@@ -545,12 +546,30 @@ public class Santroller : ConfigurableUsbDevice
     public void SetLed(byte led, byte[] color)
     {
         _ledTimers[led] = _sw.Elapsed;
+        
+        // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
+        if (_model != null)
+        {
+            if (_model.LastLedType != _model.LedType)
+            {
+                color = _model.LastLedType.GetLedBytes(Color.FromRgb(color[1], color[2], color[3]), color[0]);
+            }
+        }
+
         WriteData(0, (byte) Commands.CommandSetLeds, new[] {led}.Concat(color).ToArray());
     }
 
     public void SetLedPeripheral(byte led, byte[] color)
     {
         _ledTimersPeripheral[led] = _sw.Elapsed;
+        // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
+        if (_model != null)
+        {
+            if (_model.LastLedTypePeripheral != _model.LedTypePeripheral)
+            {
+                color = _model.LastLedTypePeripheral.GetLedBytes(Color.FromRgb(color[1], color[2], color[3]), color[0]);
+            }
+        }
         WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led}.Concat(color).ToArray());
     }
 

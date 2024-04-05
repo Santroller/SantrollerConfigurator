@@ -8,9 +8,9 @@ public class AvrSpiConfig : SpiConfig
 {
     private readonly int _ss;
 
-    public AvrSpiConfig(ConfigViewModel model, string type, bool peripheral, bool includesMiso, int mosi, int miso,
+    public AvrSpiConfig(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso, int mosi, int miso,
         int sck, int ss, bool cpol, bool cpha,
-        bool msbfirst, uint clock) : base(model, type, peripheral, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst,
+        bool msbfirst, uint clock) : base(model, type, peripheral, includesSck, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst,
         clock)
     {
         _ss = ss;

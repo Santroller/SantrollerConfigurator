@@ -39,8 +39,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 {
     public static readonly string Apa102SpiType = "APA102";
     public static readonly string Stp16SpiType = "STP16CPC26";
+    public static readonly string WS2812SpiType = "WS2812";
     public static readonly string Stp16PeripheralSpiType = "Peripheral STP16CPC26";
     public static readonly string Apa102PeripheralSpiType = "Peripheral APA102";
+    public static readonly string WS2812PeripheralSpiType = "Peripheral WS2812";
     public static readonly string Stp16LeType = "STP16CPC26 Latch Enable";
     public static readonly string Stp16LePeripheralType = "Peripheral STP16CPC26 Latch Enable";
     public static readonly string Stp16OeType = "STP16CPC26 Output Enable";
@@ -189,6 +191,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Select(x => x is LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
                 or LedType.Apa102Rbg or LedType.Apa102Rgb)
             .ToPropertyEx(this, x => x.IsApa102);
+        this.WhenAnyValue(x => x.LedType)
+            .Select(x => x is LedType.Ws2812)
+            .ToPropertyEx(this, x => x.IsWs2812);
+        this.WhenAnyValue(x => x.LedTypePeripheral)
+            .Select(x => x is LedType.Ws2812)
+            .ToPropertyEx(this, x => x.IsWs2812Peripheral);
         this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
             .Select(x => x is
             {
@@ -208,7 +216,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         this.WhenAnyValue(x => x.LedType)
             .Select(x => x is LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
-                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26)
+                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26 or LedType.Ws2812)
             .ToPropertyEx(this, x => x.IsIndexedLed);
         this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
             .Select(x => x is
@@ -476,7 +484,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool LedConfigExpanded { get; set; }
     [Reactive] public bool PeripheralExpanded { get; set; }
     [Reactive] public bool Mpr121Expanded { get; set; }
-    
+
     [Reactive] public bool Max170XExpanded { get; set; }
 
     [Reactive] public MouseMovementType MouseMovementType { get; set; }
@@ -569,7 +577,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndices)
                     {
-                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn, (byte)value));
+                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn, (byte) value));
                     }
                 }
 
@@ -578,14 +586,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndicesPeripheral)
                     {
-                        santroller.SetLedPeripheral((byte) (ledIndex - 1), LedTypePeripheral.GetLedBytes(output.LedOn, (byte)value));
+                        santroller.SetLedPeripheral((byte) (ledIndex - 1),
+                            LedTypePeripheral.GetLedBytes(output.LedOn, (byte) value));
                     }
                 }
             }
         }
     }
-    
-    
+
+
     private byte _ledBrightnessOff;
 
     public byte LedBrightnessOff
@@ -605,7 +614,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndices)
                     {
-                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn, (byte)value));
+                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn, (byte) value));
                     }
                 }
 
@@ -614,7 +623,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndicesPeripheral)
                     {
-                        santroller.SetLedPeripheral((byte) (ledIndex - 1), LedTypePeripheral.GetLedBytes(output.LedOn, (byte)value));
+                        santroller.SetLedPeripheral((byte) (ledIndex - 1),
+                            LedTypePeripheral.GetLedBytes(output.LedOn, (byte) value));
                     }
                 }
             }
@@ -800,45 +810,58 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _ledType;
         set
         {
-            if (value == LedType.None)
-            {
-                _ledSpiConfig = null;
-                UpdateErrors();
-            }
-
             if (value != _ledType)
             {
-                if (value == LedType.Stp16Cpc26)
+                switch (value)
                 {
-                    _ledSpiConfig = Microcontroller.AssignSpiPins(this, Apa102SpiType, false, false,
-                        _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, false,
-                        false,
-                        true,
-                        Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
-                    _stp16Le = new DirectPinConfig(this, Stp16LeType, -1, false, DevicePinMode.Output);
-                    _stp16Oe = new DirectPinConfig(this, Stp16OeType, -1, false, DevicePinMode.Output);
-                    this.RaisePropertyChanged(nameof(Stp16Le));
-                    this.RaisePropertyChanged(nameof(Stp16Oe));
-                    this.RaisePropertyChanged(nameof(LedMosi));
-                    this.RaisePropertyChanged(nameof(LedSck));
-                    UpdateErrors();
-                }
-                else
-                {
-                    if (value != LedType.None)
+                    case LedType.None:
+                        _ledSpiConfig = null;
+                        _stp16Le = null;
+                        _stp16Oe = null;
+                        UpdateErrors();
+                        break;
+                    case LedType.Stp16Cpc26:
+                        _ledSpiConfig = Microcontroller.AssignSpiPins(this, Stp16SpiType, false, true, false,
+                            _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, false,
+                            false,
+                            true,
+                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
+                        _stp16Le = new DirectPinConfig(this, Stp16LeType, -1, false, DevicePinMode.Output);
+                        _stp16Oe = new DirectPinConfig(this, Stp16OeType, -1, false, DevicePinMode.Output);
+                        this.RaisePropertyChanged(nameof(Stp16Le));
+                        this.RaisePropertyChanged(nameof(Stp16Oe));
+                        this.RaisePropertyChanged(nameof(LedMosi));
+                        this.RaisePropertyChanged(nameof(LedSck));
+                        UpdateErrors();
+                        break;
+                    case LedType.Ws2812:
+                        _ledSpiConfig = Microcontroller.AssignSpiPins(this, WS2812SpiType, false, false, false,
+                            _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, true,
+                            true,
+                            true,
+                            3200000);
+                        this.RaisePropertyChanged(nameof(LedMosi));
+                        this.RaisePropertyChanged(nameof(LedSck));
+
+                        _stp16Le = null;
+                        _stp16Oe = null;
+                        UpdateErrors();
+                        break;
+                    default:
                     {
-                        _ledSpiConfig = Microcontroller.AssignSpiPins(this, Apa102SpiType, false, false,
+                        _ledSpiConfig = Microcontroller.AssignSpiPins(this, Apa102SpiType, false, true, false,
                             _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, true,
                             true,
                             true,
                             Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
                         this.RaisePropertyChanged(nameof(LedMosi));
                         this.RaisePropertyChanged(nameof(LedSck));
-                    }
 
-                    _stp16Le = null;
-                    _stp16Oe = null;
-                    UpdateErrors();
+                        _stp16Le = null;
+                        _stp16Oe = null;
+                        UpdateErrors();
+                        break;
+                    }
                 }
             }
 
@@ -851,39 +874,58 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _ledTypePeripheral;
         set
         {
-            if (value == LedType.None)
+            if (value != _ledType)
             {
-                _ledSpiConfigPeripheral = null;
-            }
-            else if (_ledTypePeripheral == LedType.None)
-            {
-                _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102PeripheralSpiType, true, false, -1,
-                    -1, -1,
-                    true, true,
-                    true,
-                    Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
-                this.RaisePropertyChanged(nameof(LedMosiPeripheral));
-                this.RaisePropertyChanged(nameof(LedSckPeripheral));
-                UpdateErrors();
-            }
+                switch (value)
+                {
+                    case LedType.None:
+                        _ledSpiConfigPeripheral = null;
+                        _stp16LePeripheral = null;
+                        _stp16OePeripheral = null;
+                        UpdateErrors();
+                        break;
+                    case LedType.Stp16Cpc26:
+                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Stp16PeripheralSpiType, false, true, false,
+                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1, _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, false,
+                            false,
+                            true,
+                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
+                        _stp16LePeripheral = new DirectPinConfig(this, Stp16LePeripheralType, -1, false, DevicePinMode.Output);
+                        _stp16OePeripheral = new DirectPinConfig(this, Stp16OePeripheralType, -1, false, DevicePinMode.Output);
+                        this.RaisePropertyChanged(nameof(Stp16LePeripheral));
+                        this.RaisePropertyChanged(nameof(Stp16OePeripheral));
+                        this.RaisePropertyChanged(nameof(LedMosiPeripheral));
+                        this.RaisePropertyChanged(nameof(LedSckPeripheral));
+                        UpdateErrors();
+                        break;
+                    case LedType.Ws2812:
+                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, WS2812PeripheralSpiType, false, false, false,
+                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1, _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
+                            true,
+                            true,
+                            3200000);
+                        this.RaisePropertyChanged(nameof(LedMosiPeripheral));
+                        this.RaisePropertyChanged(nameof(LedSckPeripheral));
 
-            if (value != _ledTypePeripheral)
-            {
-                if (value == LedType.Stp16Cpc26)
-                {
-                    _stp16LePeripheral =
-                        new DirectPinConfig(this, Stp16LePeripheralType, -1, true, DevicePinMode.Output);
-                    _stp16OePeripheral =
-                        new DirectPinConfig(this, Stp16OePeripheralType, -1, true, DevicePinMode.Output);
-                    this.RaisePropertyChanged(nameof(Stp16LePeripheral));
-                    this.RaisePropertyChanged(nameof(Stp16OePeripheral));
-                    UpdateErrors();
-                }
-                else
-                {
-                    _stp16LePeripheral = null;
-                    _stp16OePeripheral = null;
-                    UpdateErrors();
+                        _stp16LePeripheral = null;
+                        _stp16OePeripheral = null;
+                        UpdateErrors();
+                        break;
+                    default:
+                    {
+                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102PeripheralSpiType, false, true, false,
+                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1, _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
+                            true,
+                            true,
+                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
+                        this.RaisePropertyChanged(nameof(LedMosiPeripheral));
+                        this.RaisePropertyChanged(nameof(LedSckPeripheral));
+
+                        _stp16LePeripheral = null;
+                        _stp16OePeripheral = null;
+                        UpdateErrors();
+                        break;
+                    }
                 }
             }
 
@@ -901,6 +943,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private bool _hasPeripheral;
 
     private bool _hasMpr121;
+
     public bool HasMpr121
     {
         get => _hasMpr121;
@@ -909,7 +952,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             if (!value)
             {
                 _mpr121TwiConfig = null;
-                Bindings.RemoveMany(Bindings.Items.Where(s => s.Input.InnermostInputs().Any(s2 => s2 is Mpr121Input or Mpr121SliderInput)));
+                Bindings.RemoveMany(Bindings.Items.Where(s =>
+                    s.Input.InnermostInputs().Any(s2 => s2 is Mpr121Input or Mpr121SliderInput)));
                 this.RaiseAndSetIfChanged(ref _hasMpr121, value);
                 UpdateErrors();
             }
@@ -926,6 +970,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     private bool _hasMax1704X;
+
     public bool HasMax1704X
     {
         get => _hasMax1704X;
@@ -948,6 +993,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             UpdateErrors();
         }
     }
+
     public bool HasPeripheral
     {
         get => _hasPeripheral;
@@ -1051,6 +1097,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsFortniteFestival { get; }
     [ObservableAsProperty] public bool IsKeyboard { get; }
     [ObservableAsProperty] public bool IsApa102 { get; }
+    [ObservableAsProperty] public bool IsWs2812 { get; }
+    [ObservableAsProperty] public bool IsWs2812Peripheral { get; }
     [ObservableAsProperty] public bool IsApa102Peripheral { get; }
 
     [ObservableAsProperty] public bool IsIndexedLed { get; }
@@ -1101,7 +1149,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         new PinConfig?[]
             {
                 _ledSpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
-                _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig, _max170xTwiConfig
+                _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
+                _max170xTwiConfig
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -1196,49 +1245,55 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 case StandardButtonType buttonType:
                     Bindings.Add(new ControllerButton(this,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, buttonType, false, false ,false, -1, false));
+                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1,
+                        buttonType, false, false, false, -1, false));
                     break;
                 case InstrumentButtonType buttonType:
                     Bindings.Add(new GuitarButton(this,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, buttonType, false, false ,false, -1, false));
+                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1,
+                        buttonType, false, false, false, -1, false));
                     break;
                 case StandardAxisType axisType:
                     Bindings.Add(new ControllerAxis(this,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                        ushort.MinValue,
                         ushort.MaxValue,
-                        0, ushort.MaxValue, axisType, false, false ,false, -1, false));
+                        0, ushort.MaxValue, axisType, false, false, false, -1, false));
                     break;
                 case GuitarAxisType.Slider:
                     break;
                 case GuitarAxisType axisType:
                     Bindings.Add(new GuitarAxis(this, new DirectInput(-1,
                             false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                        ushort.MinValue,
                         ushort.MaxValue,
-                        0, false, axisType, false, false ,false, -1, false));
+                        0, false, axisType, false, false, false, -1, false));
                     break;
                 case DrumAxisType axisType:
                     Bindings.Add(new DrumAxis(this,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                        ushort.MinValue,
                         ushort.MaxValue,
-                        0, 10, axisType, false, false ,false, -1, false));
+                        0, 10, axisType, false, false, false, -1, false));
                     break;
                 case DjAxisType.EffectsKnob:
                     Bindings.Add(new DjAxis(this,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, 1,
-                        DjAxisType.EffectsKnob, false, false ,false, -1,
+                        DjAxisType.EffectsKnob, false, false, false, -1,
                         false));
                     break;
                 case DjAxisType axisType:
                     if (axisType is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity) continue;
                     Bindings.Add(new DjAxis(this,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), ushort.MinValue,
-                        ushort.MaxValue, 0, axisType, false, false ,false, -1,
+                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                        ushort.MinValue,
+                        ushort.MaxValue, 0, axisType, false, false, false, -1,
                         false));
                     break;
             }
@@ -1415,7 +1470,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                 isTrigger ? ushort.MinValue : short.MinValue,
                 isTrigger ? ushort.MaxValue : short.MaxValue, 0,
-                ushort.MaxValue, type, false, false ,false, -1, false));
+                ushort.MaxValue, type, false, false, false, -1, false));
         }
 
         foreach (var type in Enum.GetValues<StandardButtonType>())
@@ -1424,7 +1479,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     .Any()) continue;
             Bindings.Add(new ControllerButton(this,
                 new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, type, false, false ,false, -1, false));
+                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, type,
+                false, false, false, -1, false));
         }
 
         UpdateErrors();
@@ -1615,10 +1671,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define USB_HOST_STACK {{UsbHostEnabled.ToString().ToLower()}}
                         #define USB_HOST_DP_PIN {{UsbHostDp}}
                         #define DIGITAL_COUNT {{CalculateDebounceTicks()}}
-                        #define LED_COUNT {{(LedType is not (LedType.None or LedType.Stp16Cpc26) ? LedCount : 0)}}
-                        #define LED_COUNT_PERIPHERAL {{(LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26) ? LedCountPeripheral : 0)}}
+                        #define LED_COUNT {{(LedType is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812) ? LedCount : 0)}}
+                        #define LED_COUNT_PERIPHERAL {{(LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812) ? LedCountPeripheral : 0)}}
                         #define LED_COUNT_STP {{(LedType is LedType.Stp16Cpc26 ? LedCount : 0)}}
                         #define LED_COUNT_PERIPHERAL_STP {{(LedTypePeripheral is LedType.Stp16Cpc26 ? LedCountPeripheral : 0)}}
+                        #define LED_COUNT_WS2812 {{(LedType is LedType.Ws2812 ? LedCount : 0)}}
+                        #define LED_COUNT_PERIPHERAL_WS2812 {{(LedTypePeripheral is LedType.Ws2812 ? LedCountPeripheral : 0)}}
                         #define ADC_PINS {{{string.Join(",", analogPins)}}}
                         #define ADC_COUNT {{analogPins.Count}}
                         #define TICK_SHARED \
@@ -1726,6 +1784,24 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                {GenerateApa102LedPeripheralTick()}
                            """;
             }
+            
+            if (IsWs2812)
+            {
+                config += $"""
+
+                           #define TICK_LED \
+                               {GenerateWs2812LedTick()}
+                           """;
+            }
+
+            if (IsWs2812Peripheral)
+            {
+                config += $"""
+
+                           #define TICK_LED_PERIPHERAL \
+                               {GenerateWs2812PeripheralLedTick()}
+                           """;
+            }
 
             if (IsStp16)
             {
@@ -1745,9 +1821,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            """;
             }
 
-            var ledCount = Outputs.SelectMany(s => s.Outputs.Items).SelectMany(s => s.LedIndicesMpr121).DefaultIfEmpty<byte>(0).Max();
+            var ledCount = Outputs.SelectMany(s => s.Outputs.Items).SelectMany(s => s.LedIndicesMpr121)
+                .DefaultIfEmpty<byte>(0).Max();
             config += $"""
-                       
+
                        #define LED_COUNT_MPR121 {ledCount}
                        """;
 
@@ -1800,10 +1877,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 config += $"\n#define SLAVE_TWI_PORT {_peripheralTwiConfig.Definition}";
             }
+
             if (_max170xTwiConfig != null)
             {
                 config += $"\n#define MAX1704X_TWI_PORT {_max170xTwiConfig.Definition}";
             }
+
             if (_mpr121TwiConfig != null)
             {
                 // GPIO bit 0 is actually sensor 4
@@ -1813,9 +1892,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            #define MPR121_TWI_PORT {_mpr121TwiConfig.Definition}
                            #define MPR121_TOUCHPADS {Mpr121CapacitiveCount}
                            #define MPR121_DDR {outputs.SelectMany(s => s.LedIndicesMpr121).Select(s => 1 << s - 4).DefaultIfEmpty(0).Aggregate((acc, s) => acc | s)}
-                           #define MPR121_ENABLE {outputs.SelectMany(s => s.LedIndicesMpr121.Select(led => (int)led).Concat(s.Input.InnermostInputs().Where(input => input is Mpr121Input or Mpr121SliderInput).SelectMany(input => input switch
+                           #define MPR121_ENABLE {outputs.SelectMany(s => s.LedIndicesMpr121.Select(led => (int) led).Concat(s.Input.InnermostInputs().Where(input => input is Mpr121Input or Mpr121SliderInput).SelectMany(input => input switch
                            {
-                               Mpr121Input mpr121Input => new []{mpr121Input.Input},
+                               Mpr121Input mpr121Input => new[] {mpr121Input.Input},
                                Mpr121SliderInput mpr121SliderInput => mpr121SliderInput.MappedInputs,
                                _ => Array.Empty<int>()
                            }))).Where(s => s >= Mpr121CapacitiveCount && s >= 4).Select(s => 1 << s - 4).DefaultIfEmpty(0).Aggregate((acc, s) => acc | s)}
@@ -2065,7 +2144,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Bindings.Add(new EmptyOutput(this));
         else if (IsKeyboard)
             Bindings.Add(new KeyboardButton(this, new DirectInput(0, false, false, DevicePinMode.PullUp, this),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, Key.Space, false, false ,false, -1));
+                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, Key.Space,
+                false, false, false, -1));
 
         UpdateErrors();
     }
@@ -2082,6 +2162,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (LedType == LedType.None) return "";
         var ret = "";
         var ledMax = LedCount;
+        var strings = LedType.GetLedStrings("brightness", "r", "g", "b").ToArray();
         ret +=
             """
 
@@ -2095,10 +2176,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ret +=
                 $"""
 
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].brightness | 0xE0);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].{strings[0]} | 0xE0);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].{strings[1]});
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].{strings[2]});
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].{strings[3]});
                  """;
         }
 
@@ -2117,6 +2198,65 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                    spi_transfer(APA102_SPI_PORT, 0xff);
                    """;
+        }
+
+        return FixNewlines(ret);
+    }
+    private string GenerateWs2812LedTick()
+    {
+        var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
+        if (!outputs.Any(s => s.LedIndices.Any())) return "";
+        if (LedType == LedType.None) return "";
+        var ret = "";
+        var ledMax = LedCount;
+        for (var i = 0; i < ledMax; i++)
+        {
+            ret +=
+                $"""
+
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[0]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[1]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[2]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[3]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g[0]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g[1]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g[2]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g[3]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b[0]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b[1]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b[2]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b[3]);
+                 """;
+        }
+
+        return FixNewlines(ret);
+    }
+    
+    private string GenerateWs2812PeripheralLedTick()
+    {
+        var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
+        if (!outputs.Any(s => s.LedIndices.Any())) return "";
+        if (LedType == LedType.None) return "";
+        var ret = "";
+        var ledMax = LedCount;
+        for (var i = 0; i < ledMax; i++)
+        {
+            ret +=
+                $"""
+
+                 slaveWriteLED(ledState[{i}].r[0]);
+                 slaveWriteLED(ledState[{i}].r[1]);
+                 slaveWriteLED(ledState[{i}].r[2]);
+                 slaveWriteLED(ledState[{i}].r[3]);
+                 slaveWriteLED(ledState[{i}].g[0]);
+                 slaveWriteLED(ledState[{i}].g[1]);
+                 slaveWriteLED(ledState[{i}].g[2]);
+                 slaveWriteLED(ledState[{i}].g[3]);
+                 slaveWriteLED(ledState[{i}].b[0]);
+                 slaveWriteLED(ledState[{i}].b[1]);
+                 slaveWriteLED(ledState[{i}].b[2]);
+                 slaveWriteLED(ledState[{i}].b[3]);
+                 """;
         }
 
         return FixNewlines(ret);
@@ -2279,7 +2419,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         return ret;
     }
 
-    private string ComputeLeds(ConfigField mode, bool peripheral,
+    private string ComputeLedsWs2812(ConfigField mode, bool peripheral,
         Dictionary<byte, List<(Output, int)>> debouncesRelatedToLed,
         Dictionary<byte, List<OutputAxis>> analogRelatedToLed, BinaryWriter? writer)
     {
@@ -2287,10 +2427,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var type = peripheral ? LedTypePeripheral : LedType;
         var variable = peripheral ? "ledStatePeripheral" : "ledState";
         if (mode != ConfigField.Shared || type is LedType.None) return "";
-        if (type == LedType.Stp16Cpc26)
-        {
-            return ComputeLedsStp16(peripheral, debouncesRelatedToLed, analogRelatedToLed);
-        }
 
         // Handle leds, including when multiple leds are assigned to a single output.
         foreach (var (led, relatedOutputs) in debouncesRelatedToLed)
@@ -2348,7 +2484,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         $$"""
                           led_tmp = {{ledRead}};
                           if({{ledReadCheck}}) {
-                              {{type.GetLedAssignment(peripheral,  led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}}
+                              {{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}}
                           } else {
                               {{type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff, writer)}}
                           }
@@ -2358,7 +2494,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (!analog.Any())
             {
-                analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff, writer);
+                analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff,
+                    writer);
             }
 
             ret += $$"""
@@ -2437,7 +2574,172 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         return ret;
     }
-    
+
+    private string ComputeLeds(ConfigField mode, bool peripheral,
+        Dictionary<byte, List<(Output, int)>> debouncesRelatedToLed,
+        Dictionary<byte, List<OutputAxis>> analogRelatedToLed, BinaryWriter? writer)
+    {
+        var ret = "";
+        var type = peripheral ? LedTypePeripheral : LedType;
+        var variable = peripheral ? "ledStatePeripheral" : "ledState";
+        if (mode != ConfigField.Shared || type is LedType.None) return "";
+        if (type == LedType.Stp16Cpc26)
+        {
+            return ComputeLedsStp16(peripheral, debouncesRelatedToLed, analogRelatedToLed);
+        }
+
+        if (type == LedType.Ws2812)
+        {
+            return ComputeLedsWs2812(mode, peripheral, debouncesRelatedToLed, analogRelatedToLed, writer);
+        }
+
+        // Handle leds, including when multiple leds are assigned to a single output.
+        foreach (var (led, relatedOutputs) in debouncesRelatedToLed)
+        {
+            var analog = "";
+            if (analogRelatedToLed.TryGetValue(led, out var analogLedOutputs))
+            {
+                foreach (var analogLedOutput in analogLedOutputs)
+                {
+                    var ledRead =
+                        analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
+
+                    var ledReadCheck = "led_tmp";
+                    // Turntable velocities are different to most axis, as they don't use standard calibration.
+                    if (analogLedOutput is DjAxis
+                        {
+                            Type: DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
+                        } djAxis)
+                    {
+                        var multiplier = djAxis.LedMultiplier;
+                        var generated = $"({analogLedOutput.Input.Generate()})";
+                        var isI2C = analogLedOutput.Input is DjInput
+                        {
+                            Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
+                        };
+                        ledReadCheck = analogLedOutput.Input.Generate();
+                        if (analogLedOutput.InputIsUint)
+                        {
+                            ledReadCheck = $"({generated} - INT16_MAX)";
+                        }
+                        else
+                        {
+                            generated = $"({generated} + INT16_MAX)";
+                        }
+
+                        ledRead = isI2C
+                            ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
+                            : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
+                    }
+
+                    if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
+                    {
+                        var generated = $"({analogLedOutput.Input.Generate()})";
+                        if (!analogLedOutput.InputIsUint)
+                        {
+                            generated = $"({generated} + INT16_MAX)";
+                        }
+
+                        ledRead = $"(({generated} >> 8))";
+                    }
+
+                    // Now we have the value, calibrated as a uint8_t
+                    // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
+                    analog +=
+                        $$"""
+                          led_tmp = {{ledRead}};
+                          if({{ledReadCheck}}) {
+                              {{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}}
+                          } else {
+                              {{type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff, writer)}}
+                          }
+                          """;
+                }
+            }
+
+            if (!analog.Any())
+            {
+                analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff,
+                    writer);
+            }
+
+            ret += $$"""
+
+                     if ({{variable}}[{{led - 1}}].select == 0) {
+                     """;
+            ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
+            {
+                var ifStatement = $"debounce[{tuple.Item2}]";
+                return $$"""
+                         
+                             if ({{ifStatement}}) {
+                                 {{type.GetLedAssignment(peripheral, tuple.Item1.LedOn, led, LedBrightnessOn, writer)}}
+                             }
+                         """;
+            }));
+            ret += $$"""
+                         else {
+                             {{analog}}
+                         }
+                     }
+                     """;
+        }
+
+        foreach (var (led, analogLedOutputs) in analogRelatedToLed)
+        {
+            if (debouncesRelatedToLed.ContainsKey(led)) continue;
+            ret += $$"""
+
+                     if ({{variable}}[{{led - 1}}].select == 0) {
+                     """;
+            foreach (var analogLedOutput in analogLedOutputs)
+            {
+                var ledRead =
+                    analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
+                // Turntable velocities are different to most axis, as they don't use standard calibration.
+                if (analogLedOutput is DjAxis
+                    {
+                        Type: DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
+                    } djAxis)
+                {
+                    var multiplier = djAxis.LedMultiplier;
+                    var generated = $"({analogLedOutput.Input.Generate()})";
+                    var isI2C = analogLedOutput.Input is DjInput
+                    {
+                        Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
+                    };
+                    if (!analogLedOutput.InputIsUint)
+                    {
+                        generated = $"({generated} + INT16_MAX)";
+                    }
+
+                    ledRead = isI2C
+                        ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
+                        : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
+                }
+
+                if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
+                {
+                    var generated = $"({analogLedOutput.Input.Generate()})";
+                    if (!analogLedOutput.InputIsUint)
+                    {
+                        generated = $"({generated} + INT16_MAX)";
+                    }
+
+                    ledRead = $"(({generated} >> 8))";
+                }
+
+                // Now we have the value, calibrated as a uint8_t
+                ret +=
+                    $"led_tmp = {ledRead};{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}";
+            }
+
+            ret += "}";
+        }
+
+        return ret;
+    }
+
     private string ComputeLedsPin(ConfigField mode, bool peripheral,
         Dictionary<int, List<(Output, int)>> debouncesRelatedToLed,
         Dictionary<int, List<OutputAxis>> analogRelatedToLed, BinaryWriter? writer)
@@ -2505,7 +2807,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                           """;
                 }
             }
-            
+
             // If there are any analog outputs here, then we need to convert the matching digital writes to analog writes
             if (analog.Any())
             {
@@ -2513,7 +2815,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     var ifStatement = $"debounce[{tuple.Item2}]";
                     return $$"""
-                             
+
                              if ({{ifStatement}}) {
                                  {{Microcontroller.GenerateAnalogWrite(pin, (tuple.Item1.OutputInverted ? 0 : 255).ToString(), peripheral)}};
                              }
@@ -2532,7 +2834,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     var ifStatement = $"debounce[{tuple.Item2}]";
                     return $$"""
-                             
+
                              if ({{ifStatement}}) {
                                  {{Microcontroller.GenerateDigitalWrite(pin, !tuple.Item1.OutputInverted, peripheral)}};
                              }
@@ -2544,8 +2846,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                          }
                          """;
             }
-
-            
         }
 
         foreach (var (pin, analogLedOutputs) in analogRelatedToLed)
@@ -2593,9 +2893,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     $"led_tmp = {ledRead};{Microcontroller.GenerateAnalogWrite(pin, $"{(analogLedOutput.OutputInverted ? "(255-" : "(")}led_tmp)", peripheral)};";
             }
         }
+
         return ret;
     }
-    
+
     private string ComputeLedsMpr121(ConfigField mode, Dictionary<byte, List<(Output, int)>> debouncesRelatedToLed,
         Dictionary<byte, List<OutputAxis>> analogRelatedToLed)
     {
@@ -2660,7 +2961,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         return ret;
     }
-    
+
 
     private string GenerateTick(ConfigField mode, BinaryWriter? writer)
     {
@@ -2757,7 +3058,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                     if (output.OutputPinConfig.Peripheral)
                                     {
                                         if (!debouncesRelatedToLedPeripheralPin.ContainsKey(output.OutputPin))
-                                            debouncesRelatedToLedPeripheralPin[output.OutputPin] = new List<(Output, int)>();
+                                            debouncesRelatedToLedPeripheralPin[output.OutputPin] =
+                                                new List<(Output, int)>();
                                         debouncesRelatedToLedPeripheralPin[output.OutputPin].Add((output, index));
                                     }
                                     else
@@ -2783,6 +3085,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                                     debouncesRelatedToLedMpr121[led].Add((output, index));
                                 }
+
                                 foreach (var led in output.LedIndicesPeripheral)
                                 {
                                     if (!debouncesRelatedToLedPeripheral.ContainsKey(led))
@@ -2801,7 +3104,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                                     analogRelatedToLed[led].Add(axis);
                                 }
-                                
+
                                 foreach (var led in output.LedIndicesMpr121)
                                 {
                                     if (!analogRelatedToLedMpr121.ContainsKey(led))
@@ -2817,6 +3120,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                                     analogRelatedToLedPeripheral[led].Add(axis);
                                 }
+
                                 if (output.OutputPinConfig != null)
                                 {
                                     if (output.OutputPinConfig.Peripheral)
@@ -2881,10 +3185,18 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         if (peripheral)
         {
-            return IsApa102Peripheral ? Apa102PeripheralSpiType : Stp16PeripheralSpiType;
+            if (IsApa102Peripheral)
+                return Apa102PeripheralSpiType;
+            if (IsWs2812Peripheral)
+                return WS2812PeripheralSpiType;
+            return Stp16PeripheralSpiType;
         }
 
-        return IsApa102 ? Apa102SpiType : Stp16SpiType;
+        if (IsApa102)
+            return Apa102SpiType;
+        if (IsWs2812)
+            return WS2812SpiType;
+        return Stp16SpiType;
     }
 
     public Dictionary<string, List<int>> GetPins(string type, bool twi, bool spi, bool peripheral)
@@ -2926,10 +3238,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             pins[UnoPinTypeRx] = new List<int> {UnoPinTypeRxPin};
         }
 
-        if (IsIndexedLed && _ledSpiConfig != null && type != Apa102SpiType && !peripheral)
+        if (IsIndexedLed && _ledSpiConfig != null && type != LedSpiType(false) && !peripheral)
             pins[LedSpiType(false)] = _ledSpiConfig.Pins.ToList();
 
-        if (IsIndexedLedPeripheral && _ledSpiConfigPeripheral != null && type != Apa102PeripheralSpiType && peripheral)
+        if (IsIndexedLedPeripheral && _ledSpiConfigPeripheral != null && type != LedSpiType(true) && peripheral)
         {
             pins[LedSpiType(true)] = _ledSpiConfigPeripheral.Pins.ToList();
         }
@@ -3035,7 +3347,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             Mpr121ErrorText = null;
         }
-        
+
         if (HasMax1704X && _max170xTwiConfig?.ErrorText != null)
         {
             foundError = true;
@@ -3110,7 +3422,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Subscribe(_ => Main.GoBack.Execute(new Unit()));
     }
 
-    public void Update(byte[] btRaw, bool peripheralConnected, bool mpr121Connected, bool max1270XConnected, byte[] max1270XRaw)
+    public void Update(byte[] btRaw, bool peripheralConnected, bool mpr121Connected, bool max1270XConnected,
+        byte[] max1270XRaw)
     {
         if (IsBluetoothTx && btRaw.Any())
         {
@@ -3195,6 +3508,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private byte[]? _currentConfigData;
     private SerializedConfiguration? _currentConfig;
     private readonly DispatcherTimer _timer;
+    public LedType LastLedType { get; set; } = LedType.None;
+    public LedType LastLedTypePeripheral { get; set; } = LedType.None;
     public bool WasBluetooth { get; set; }
 
     private void Diff(object? sender, EventArgs e)
@@ -3226,6 +3541,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void SetUpDiff()
     {
         WasBluetooth = IsBluetooth;
+        LastLedType = LedType;
+        LastLedTypePeripheral = LedTypePeripheral;
         var lastConfig = new SerializedConfiguration(this);
         using var outputStream = new MemoryStream();
         Serializer.Serialize(outputStream, lastConfig);

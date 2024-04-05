@@ -17,10 +17,11 @@ public abstract class SpiConfig : PinConfig
 
     private int _sck;
 
-    protected SpiConfig(ConfigViewModel model, string type, bool peripheral, bool includesMiso, int mosi, int miso, int sck, bool cpol, bool cpha,
+    protected SpiConfig(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso, int mosi, int miso, int sck, bool cpol, bool cpha,
         bool msbfirst, uint clock) : base(model, peripheral)
     {
         IncludesMiso = includesMiso;
+        IncludesSck = includesSck;
         Type = type;
         _mosi = mosi;
         _miso = miso;
@@ -34,6 +35,7 @@ public abstract class SpiConfig : PinConfig
     public override string Type { get; }
     
     public bool IncludesMiso { get; }
+    public bool IncludesSck { get; }
 
     public int Mosi
     {
@@ -62,23 +64,42 @@ public abstract class SpiConfig : PinConfig
         get => _sck;
         set
         {
-            if (!Reassignable) return;
+            if (!Reassignable || !IncludesSck) return;
             this.RaiseAndSetIfChanged(ref _sck, value);
             Update();
         }
     }
 
-    public override IEnumerable<int> Pins => IncludesMiso ? new List<int> {_mosi, _miso, _sck} : new List<int> {_mosi, _sck};
+    public override IEnumerable<int> Pins
+    {
+        get
+        {
+            var pins = new List<int>();
+            pins.Add(_mosi);
+            if (IncludesMiso)
+            {
+                pins.Add(_miso);
+            }
+            if (IncludesSck)
+            {
+                pins.Add(_sck);
+            }
+
+            return pins;
+        }
+    }
 
     public override string Generate()
     {
         // On apa102, miso isn't used.
         var miso = IncludesMiso ? $"#define {Definition}_MISO {_miso}" : "";
+        // On ws2812, sck isn't used.
+        var sck = IncludesSck ? $"#define {Definition}SCK {_sck}" : "";
         return $"""
 
                 {miso}
+                {sck}
                 #define {Definition}_MOSI {_mosi}
-                #define {Definition}_SCK {_sck}
                 #define {Definition}_CPOL {(_cpol ? 1 : 0)}
                 #define {Definition}_CPHA {(_cpha ? 1 : 0)}
                 #define {Definition}_MSBFIRST {(_msbfirst ? 1 : 0)}

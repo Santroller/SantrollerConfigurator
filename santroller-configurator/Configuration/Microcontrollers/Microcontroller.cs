@@ -57,7 +57,7 @@ public abstract class Microcontroller
         return ret;
     }
 
-    public abstract SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesMiso,
+    public abstract SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso,
         int mosi, int miso,
         int sck, bool cpol,
         bool cpha,

@@ -169,14 +169,14 @@ public class Pico : Microcontroller
     }
 
 
-    public override SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesMiso,
+    public override SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso,
         int mosi, int miso,
         int sck, bool cpol,
         bool cpha,
         bool msbfirst,
         uint clock)
     {
-        return new PicoSpiConfig(model, type, peripheral, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst, clock);
+        return new PicoSpiConfig(model, type, peripheral, includesSck, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst, clock);
     }
 
     public override TwiConfig AssignTwiPins(ConfigViewModel model, string type, bool peripheral, int sda, int scl,

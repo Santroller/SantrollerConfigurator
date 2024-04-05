@@ -5,9 +5,9 @@ namespace GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 
 public class PicoSpiConfig : SpiConfig
 {
-    public PicoSpiConfig(ConfigViewModel model, string type,bool peripheral,  bool includesMiso, int mosi, int miso, int sck, bool cpol, bool cpha,
+    public PicoSpiConfig(ConfigViewModel model, string type,bool peripheral,  bool includesSck,  bool includesMiso, int mosi, int miso, int sck, bool cpol, bool cpha,
         bool msbfirst, uint clock) :
-        base(model, type, peripheral, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst, clock)
+        base(model, type, peripheral, includesSck, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst, clock)
     {
     }
 
@@ -23,7 +23,7 @@ public class PicoSpiConfig : SpiConfig
         {
             return Resources.DifferentSPIGroup;
         }
-        if (Pico.SpiIndexByPin[Mosi] != Pico.SpiIndexByPin[Sck])
+        if (IncludesSck && Pico.SpiIndexByPin[Mosi] != Pico.SpiIndexByPin[Sck])
         {
             return Resources.DifferentSPIGroup;
         }

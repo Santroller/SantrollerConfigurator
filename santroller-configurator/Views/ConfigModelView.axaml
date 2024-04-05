@@ -2448,10 +2448,13 @@
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding LedsRequireColours }"
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsApa102 }"
                            Content="{x:Static netCore:Resources.SelectedLEDsApa102Label}" />
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding !LedsRequireColours }"
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsWs2812 }"
+                           Content="{x:Static netCore:Resources.SelectedLEDsWS2812Label}" />
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsStp }"
                            Content="{x:Static netCore:Resources.SelectedLEDsStpLabel}" />
                     <ItemsControl ItemsSource="{Binding AvailableIndices}">
                         <ItemsControl.ItemsPanel>
@@ -2475,10 +2478,13 @@
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding LedsRequireColoursPeripheral }"
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsApa102Peripheral }"
                            Content="{x:Static netCore:Resources.SelectedLEDsPeripheralApa102Label}" />
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding !LedsRequireColoursPeripheral }"
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsWs2812Peripheral }"
+                           Content="{x:Static netCore:Resources.SelectedLEDsPeripheralWS2812Label}" />
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsStpPeripheral }"
                            Content="{x:Static netCore:Resources.SelectedLEDsPeripheralStpLabel}" />
                     <ItemsControl ItemsSource="{Binding AvailableIndicesPeripheral}">
                         <ItemsControl.ItemsPanel>
@@ -2522,8 +2528,8 @@
                     <StackPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="!LedsRequireColours" />
-                                <Binding Path="!LedsRequireColoursPeripheral" />
+                                <Binding Path="!IsApa102" />
+                                <Binding Path="!IsApa102Peripheral" />
                             </MultiBinding>
                             <Binding Path="!IsCombined" />
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
@@ -2544,8 +2550,8 @@
                     <StackPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="LedsRequireColours" />
-                                <Binding Path="LedsRequireColoursPeripheral" />
+                                <Binding Path="LedsUseColours" />
+                                <Binding Path="LedsUseColoursPeripheral" />
                             </MultiBinding>
                             <Binding Path="!IsCombined" />
                             <Binding Path="LedsHaveColours" />
@@ -2561,8 +2567,8 @@
                     <StackPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="LedsRequireColours" />
-                                <Binding Path="LedsRequireColoursPeripheral" />
+                                <Binding Path="LedsUseColours" />
+                                <Binding Path="LedsUseColoursPeripheral" />
                             </MultiBinding>
                             <Binding Path="!IsCombined" />
                             <Binding Path="LedsHaveColours" />
@@ -2989,6 +2995,7 @@
                                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                                         <Binding Path="BindableSpi" />
                                         <Binding Path="IsIndexedLed" />
+                                        <Binding Path="!IsWs2812" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
                                 <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsApa102}"
@@ -3008,6 +3015,8 @@
                                         <Binding Path="IsIndexedLed" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
+                                <Label IsVisible="{Binding IsWs2812}" VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.WS2812MOSILabel}" />
                                 <Label IsVisible="{Binding IsApa102}" VerticalAlignment="Center" Width="300"
                                        Content="{x:Static netCore:Resources.APA102MOSILabel}" />
                                 <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"

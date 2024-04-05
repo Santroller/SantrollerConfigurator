@@ -1931,6 +1931,9 @@
     <data name="LedTypeNone" xml:space="preserve">
         <value>None</value>
     </data>
+    <data name="LedTypeWs2812" xml:space="preserve">
+        <value>WS2812</value>
+    </data>
     <data name="LedTypeApa102Rgb" xml:space="preserve">
         <value>APA102 - RGB</value>
     </data>
@@ -2720,8 +2723,14 @@
     <data name="SelectedLEDsApa102Label" xml:space="preserve">
         <value>Selected LEDs on APA102</value>
     </data>
+    <data name="SelectedLEDsWS2812Label" xml:space="preserve">
+        <value>Selected LEDs on WS2812</value>
+    </data>
     <data name="SelectedLEDsStpLabel" xml:space="preserve">
         <value>Selected LEDs on STP16CPC26</value>
+    </data>
+    <data name="SelectedLEDsPeripheralWS2812Label" xml:space="preserve">
+        <value>Selected LEDs on WS2812</value>
     </data>
     <data name="SelectedLEDsPeripheralApa102Label" xml:space="preserve">
         <value>Selected LEDs on Peripheral APA102</value>
@@ -3094,6 +3103,9 @@
     </data>
     <data name="APA102MOSILabel" xml:space="preserve">
         <value>APA102 DI / MOSI Pin</value>
+    </data>
+    <data name="WS2812MOSILabel" xml:space="preserve">
+        <value>WS2812 Data Pin</value>
     </data>
     <data name="STP16CPC26SCKLabel" xml:space="preserve">
         <value>STP16CPC26 CLK / SCK Pin</value>

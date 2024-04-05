@@ -16,11 +16,14 @@ public enum LedType
     Apa102Gbr,
     Apa102Brg,
     Apa102Bgr,
-    Stp16Cpc26
+    Stp16Cpc26,
+    Ws2812
 }
 
 public static class LedTypeMethods
 {
+    private static readonly byte[] Ws2812Bits = {0x88, 0x8C, 0xC8, 0xCC};
+
     public static byte[] GetLedBytes(this LedType type, Color color, byte brightness)
     {
         return type switch
@@ -35,49 +38,7 @@ public static class LedTypeMethods
         };
     }
 
-    public static void WriteToWriter(this LedType type, Color color, byte brightness, BinaryWriter writer)
-    {
-        switch (type)
-        {
-            case LedType.None:
-                break;
-            case LedType.Apa102Rgb:
-                writer.Write((ushort) color.R);
-                writer.Write((ushort) color.G);
-                writer.Write((ushort) color.B);
-                break;
-            case LedType.Apa102Rbg:
-                writer.Write((ushort) color.R);
-                writer.Write((ushort) color.B);
-                writer.Write((ushort) color.G);
-                break;
-            case LedType.Apa102Grb:
-                writer.Write((ushort) color.G);
-                writer.Write((ushort) color.R);
-                writer.Write((ushort) color.B);
-                break;
-            case LedType.Apa102Gbr:
-                writer.Write((ushort) color.G);
-                writer.Write((ushort) color.B);
-                writer.Write((ushort) color.R);
-                break;
-            case LedType.Apa102Brg:
-                writer.Write((ushort) color.B);
-                writer.Write((ushort) color.R);
-                writer.Write((ushort) color.G);
-                break;
-            case LedType.Apa102Bgr:
-                writer.Write((ushort) color.B);
-                writer.Write((ushort) color.G);
-                writer.Write((ushort) color.R);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-        }
-        writer.Write((ushort) brightness);
-    }
-
-    private static IEnumerable<string> GetLedStrings(this LedType type, string brightness, string r, string g, string b)
+    public static IEnumerable<string> GetLedStrings(this LedType type, string brightness, string r, string g, string b)
     {
         return type switch
         {
@@ -91,50 +52,148 @@ public static class LedTypeMethods
         };
     }
 
-    public static string GetLedAssignment(this LedType type, bool peripheral, Color color, byte index, byte brightness, BinaryWriter? writer)
-    {
-        var data = GetLedBytes(type, color, brightness);
-        var variable = peripheral ? "ledStatePeripheral" : "ledState";
-        return string.Join("\n",
-            writer != null
-                ? data.Zip(new[] {"brightness", "r", "g", "b"}).Select(pair =>
-                    $"{variable}[{index - 1}].{pair.Second} = {WriteBlob(writer, pair.First)};")
-                : data.Zip(new[] {"brightness", "r", "g", "b"})
-                    .Select(pair => $"{variable}[{index - 1}].{pair.Second} = {pair.First};"));
-    }
-
-    public static string GetLedAssignment(this LedType type, bool peripheral, string brightness, string r, string g, string b, byte index)
-    {
-        var variable = peripheral ? "ledStatePeripheral" : "ledState";
-        var data = GetLedStrings(type, brightness, r, g, b);
-        return string.Join("\n",
-            data.Zip(new[] {"brightness", "r", "g", "b"}).Select(pair => $"{variable}[{index - 1}].{pair.Second} = {pair.First};"));
-    }
-
-    public static string GetLedAssignment(this LedType type, bool peripheral, int index, Color on, Color off, byte brightnessOn, byte brightnessOff, string var,
+    public static string GetLedAssignment(this LedType type, bool peripheral, Color color, byte index, byte brightness,
         BinaryWriter? writer)
     {
         var variable = peripheral ? "ledStatePeripheral" : "ledState";
-        var rScale = on.R - off.R;
-        var gScale = on.G - off.G;
-        var bScale = on.B - off.B;
-        var brightnessScale = brightnessOn - brightnessOff;
-        var offBytes = GetLedBytes(type, off, brightnessOff);
-        var mulStrings = GetLedStrings(type, brightnessScale.ToString(), rScale.ToString(), gScale.ToString(), bScale.ToString());
-        // If the scale is zero (aka the on and off rgb values for a channel are the same) we can shortcut the lerp.
-        if (writer != null)
+        if (type == LedType.Ws2812)
         {
-            return string.Join("\n",
-                new[] {"brightness", "r", "g", "b"}.Zip(offBytes, mulStrings).Select(pair =>
-                    pair.Third == "0"
-                        ? $"{variable}[{index - 1}].{pair.First} = {WriteBlob(writer, pair.Second)};"
-                        : $"{variable}[{index - 1}].{pair.First} = ({var} * {pair.Third} / 255) + {WriteBlob(writer, pair.Second)};"));
+            return writer == null
+                ? $"""
+                        {variable}[{index - 1}].r[0] = {Ws2812Bits[(color.R >> 6) & 0x3]};
+                        {variable}[{index - 1}].r[1] = {Ws2812Bits[(color.R >> 4) & 0x3]};
+                        {variable}[{index - 1}].r[2] = {Ws2812Bits[(color.R >> 2) & 0x3]};
+                        {variable}[{index - 1}].r[3] = {Ws2812Bits[color.R & 0x3]};
+                        {variable}[{index - 1}].g[0] = {Ws2812Bits[(color.G >> 6) & 0x3]};
+                        {variable}[{index - 1}].g[1] = {Ws2812Bits[(color.G >> 4) & 0x3]};
+                        {variable}[{index - 1}].g[2] = {Ws2812Bits[(color.G >> 2) & 0x3]};
+                        {variable}[{index - 1}].g[3] = {Ws2812Bits[color.G & 0x3]};
+                        {variable}[{index - 1}].b[0] = {Ws2812Bits[(color.B >> 6) & 0x3]};
+                        {variable}[{index - 1}].b[1] = {Ws2812Bits[(color.B >> 4) & 0x3]};
+                        {variable}[{index - 1}].b[2] = {Ws2812Bits[(color.B >> 2) & 0x3]};
+                        {variable}[{index - 1}].b[3] = {Ws2812Bits[color.B & 0x3]};
+
+                   """
+                : $"""
+                        {variable}[{index - 1}].r[0] = {WriteBlob(writer, Ws2812Bits[(color.R >> 6) & 0x3])};
+                        {variable}[{index - 1}].r[1] = {WriteBlob(writer, Ws2812Bits[(color.R >> 4) & 0x3])};
+                        {variable}[{index - 1}].r[2] = {WriteBlob(writer, Ws2812Bits[(color.R >> 2) & 0x3])};
+                        {variable}[{index - 1}].r[3] = {WriteBlob(writer, Ws2812Bits[color.R & 0x3])};
+                        {variable}[{index - 1}].g[0] = {WriteBlob(writer, Ws2812Bits[(color.G >> 6) & 0x3])};
+                        {variable}[{index - 1}].g[1] = {WriteBlob(writer, Ws2812Bits[(color.G >> 4) & 0x3])};
+                        {variable}[{index - 1}].g[2] = {WriteBlob(writer, Ws2812Bits[(color.G >> 2) & 0x3])};
+                        {variable}[{index - 1}].g[3] = {WriteBlob(writer, Ws2812Bits[color.G & 0x3])};
+                        {variable}[{index - 1}].b[0] = {WriteBlob(writer, Ws2812Bits[(color.B >> 6) & 0x3])};
+                        {variable}[{index - 1}].b[1] = {WriteBlob(writer, Ws2812Bits[(color.B >> 4) & 0x3])};
+                        {variable}[{index - 1}].b[2] = {WriteBlob(writer, Ws2812Bits[(color.B >> 2) & 0x3])};
+                        {variable}[{index - 1}].b[3] = {WriteBlob(writer, Ws2812Bits[color.B & 0x3])};
+
+                   """;
         }
 
-        return string.Join("\n",
-            new[] {"brightness", "r", "g", "b"}.Zip(offBytes, mulStrings).Select(pair =>
-                pair.Third == "0"
-                    ? $"{variable}[{index - 1}].{pair.First} = {pair.Second};"
-                    : $"{variable}[{index - 1}].{pair.First} = ({var} * {pair.Third} / 255) + {pair.Second};"));
+        return $"""
+                     {variable}[{index - 1}].brightness = {brightness};
+                     {variable}[{index - 1}].r = {color.R};
+                     {variable}[{index - 1}].g = {color.G};
+                     {variable}[{index - 1}].b = {color.B};
+                """;
+    }
+
+    public static string GetLedAssignment(this LedType type, bool peripheral, string brightness, string r, string g,
+        string b, byte index)
+    {
+        var variable = peripheral ? "ledStatePeripheral" : "ledState";
+        if (type == LedType.Ws2812)
+        {
+            return $"""
+                         {variable}[{index - 1}].r[0] = Ws2812Bits[({r} >> 6) & 0x3];
+                         {variable}[{index - 1}].r[1] = Ws2812Bits[({r} >> 4) & 0x3];
+                         {variable}[{index - 1}].r[2] = Ws2812Bits[({r} >> 2) & 0x3];
+                         {variable}[{index - 1}].r[3] = Ws2812Bits[{r} & 0x3];
+                         {variable}[{index - 1}].g[0] = Ws2812Bits[({g} >> 6) & 0x3];
+                         {variable}[{index - 1}].g[1] = Ws2812Bits[({g} >> 4) & 0x3];
+                         {variable}[{index - 1}].g[2] = Ws2812Bits[({g} >> 2) & 0x3];
+                         {variable}[{index - 1}].g[3] = Ws2812Bits[{g} & 0x3];
+                         {variable}[{index - 1}].b[0] = Ws2812Bits[({b} >> 6) & 0x3];
+                         {variable}[{index - 1}].b[1] = Ws2812Bits[({b} >> 4) & 0x3];
+                         {variable}[{index - 1}].b[2] = Ws2812Bits[({b} >> 2) & 0x3];
+                         {variable}[{index - 1}].b[3] = Ws2812Bits[({b} & 0x3];
+
+                    """;
+        }
+        return $"""
+                     {variable}[{index - 1}].brightness = {brightness};
+                     {variable}[{index - 1}].r = {r};
+                     {variable}[{index - 1}].g = {g};
+                     {variable}[{index - 1}].b = {b};
+                """;
+    }
+
+    public static string GetLedAssignment(this LedType type, bool peripheral, int index, Color on, Color off,
+        byte brightnessOn, byte brightnessOff, string var,
+        BinaryWriter? writer)
+    {
+        var variable = peripheral ? "ledStatePeripheral" : "ledState";
+        var r = $"({var} * {on.R - off.R} / 255) + {off.R}";
+        var g = $"({var} * {on.G - off.G} / 255) + {off.G}";
+        var b = $"({var} * {on.B - off.B} / 255) + {off.B}";
+        var brightness = $"({var} * {brightnessOn - brightnessOff} / 255) + {brightnessOff}";
+        if (writer != null)
+        {
+            var rOnBlob = WriteBlob(writer, on.R);
+            var gOnBlob = WriteBlob(writer, on.G);
+            var bOnBlob = WriteBlob(writer, on.G);
+            var rOffBlob = WriteBlob(writer, off.R);
+            var gOffBlob = WriteBlob(writer, off.G);
+            var bOffBlob = WriteBlob(writer, off.G);
+            r = $"({var} * {rOnBlob} - {rOffBlob} / 255) + {rOffBlob}";
+            g = $"({var} * {gOnBlob} - {gOffBlob} / 255) + {gOffBlob}";
+            b = $"({var} * {bOnBlob} - {bOffBlob} / 255) + {bOffBlob}";
+        }
+        else
+        {
+            // If the scale is zero (aka the on and off rgb values for a channel are the same) we can shortcut the lerp.
+            // but only if the led colours aren't blobs
+            if (on.R == off.R)
+            {
+                r = off.R.ToString();
+            }
+
+            if (on.G == off.G)
+            {
+                g = off.G.ToString();
+            }
+
+            if (on.B == off.B)
+            {
+                b = off.B.ToString();
+            }
+        }
+
+        if (type == LedType.Ws2812)
+        {
+            return $"""
+                         {variable}[{index - 1}].r[0] = Ws2812Bits[(({r}) >> 6) & 0x3];
+                         {variable}[{index - 1}].r[1] = Ws2812Bits[(({r}) >> 4) & 0x3];
+                         {variable}[{index - 1}].r[2] = Ws2812Bits[(({r}) >> 2) & 0x3];
+                         {variable}[{index - 1}].r[3] = Ws2812Bits[({r}) & 0x3];
+                         {variable}[{index - 1}].g[0] = Ws2812Bits[(({g}) >> 6) & 0x3];
+                         {variable}[{index - 1}].g[1] = Ws2812Bits[(({g}) >> 4) & 0x3];
+                         {variable}[{index - 1}].g[2] = Ws2812Bits[(({g}) >> 2) & 0x3];
+                         {variable}[{index - 1}].g[3] = Ws2812Bits[({g}) & 0x3];
+                         {variable}[{index - 1}].b[0] = Ws2812Bits[(({b}) >> 6) & 0x3];
+                         {variable}[{index - 1}].b[1] = Ws2812Bits[(({b}) >> 4) & 0x3];
+                         {variable}[{index - 1}].b[2] = Ws2812Bits[(({b}) >> 2) & 0x3];
+                         {variable}[{index - 1}].b[3] = Ws2812Bits[({b}) & 0x3];
+
+                    """;
+        }
+
+        return $"""
+                     {variable}[{index - 1}].brightness = {brightness};
+                     {variable}[{index - 1}].r = {r};
+                     {variable}[{index - 1}].g = {g};
+                     {variable}[{index - 1}].b = {b};
+                """;
     }
 }

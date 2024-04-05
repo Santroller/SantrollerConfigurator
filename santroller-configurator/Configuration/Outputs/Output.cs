@@ -150,10 +150,22 @@ public abstract partial class Output : ReactiveObject
             .ToPropertyEx(this, x => x.AreLedsEnabled);
         this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not LedType.None)
             .ToPropertyEx(this, x => x.AreLedsEnabledPeripheral);
+        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812))
+            .ToPropertyEx(this, x => x.IsApa102);
+        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812))
+            .ToPropertyEx(this, x => x.IsApa102Peripheral);
         this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
-            .ToPropertyEx(this, x => x.LedsRequireColours);
+            .ToPropertyEx(this, x => x.LedsUseColours);
         this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
-            .ToPropertyEx(this, x => x.LedsRequireColoursPeripheral);
+            .ToPropertyEx(this, x => x.LedsUseColoursPeripheral);
+        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is LedType.Ws2812)
+            .ToPropertyEx(this, x => x.IsWs2812);
+        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is LedType.Ws2812)
+            .ToPropertyEx(this, x => x.IsWs2812Peripheral);
+        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is LedType.Stp16Cpc26)
+            .ToPropertyEx(this, x => x.IsStp);
+        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is LedType.Stp16Cpc26)
+            .ToPropertyEx(this, x => x.IsStpPeripheral);
         this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails, x => x.Model.LegendType,
                 x => x.Model.SwapSwitchFaceButtons)
             .Select(x => GetName(x.Item1, x.Item3, x.Item4))
@@ -563,8 +575,14 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] public bool IsWt { get; }
     [ObservableAsProperty] public bool AreLedsEnabled { get; }
     [ObservableAsProperty] public bool AreLedsEnabledPeripheral { get; }
-    [ObservableAsProperty] public bool LedsRequireColours { get; }
-    [ObservableAsProperty] public bool LedsRequireColoursPeripheral { get; }
+    [ObservableAsProperty] public bool IsApa102 { get; }
+    [ObservableAsProperty] public bool IsApa102Peripheral { get; }
+    [ObservableAsProperty] public bool LedsUseColours { get; }
+    [ObservableAsProperty] public bool LedsUseColoursPeripheral { get; }
+    [ObservableAsProperty] public bool IsStp { get; }
+    [ObservableAsProperty] public bool IsStpPeripheral { get; }
+    [ObservableAsProperty] public bool IsWs2812 { get; }
+    [ObservableAsProperty] public bool IsWs2812Peripheral { get; }
     [ObservableAsProperty] public LedIndex[] AvailableIndices { get; }
     [ObservableAsProperty] public LedIndex[] AvailableIndicesPeripheral { get; }
     [ObservableAsProperty] public LedIndex[] AvailableIndicesMpr121 { get; }

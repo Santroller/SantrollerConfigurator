@@ -3687,6 +3687,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string LedTypeWs2812 {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812", resourceCulture);
+            }
+        }
+        
         public static string LedTypeApa102Rgb {
             get {
                 return ResourceManager.GetString("LedTypeApa102Rgb", resourceCulture);
@@ -5193,9 +5199,21 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SelectedLEDsWS2812Label {
+            get {
+                return ResourceManager.GetString("SelectedLEDsWS2812Label", resourceCulture);
+            }
+        }
+        
         public static string SelectedLEDsStpLabel {
             get {
                 return ResourceManager.GetString("SelectedLEDsStpLabel", resourceCulture);
+            }
+        }
+        
+        public static string SelectedLEDsPeripheralWS2812Label {
+            get {
+                return ResourceManager.GetString("SelectedLEDsPeripheralWS2812Label", resourceCulture);
             }
         }
         
@@ -5940,6 +5958,12 @@ namespace GuitarConfigurator.NetCore {
         public static string APA102MOSILabel {
             get {
                 return ResourceManager.GetString("APA102MOSILabel", resourceCulture);
+            }
+        }
+        
+        public static string WS2812MOSILabel {
+            get {
+                return ResourceManager.GetString("WS2812MOSILabel", resourceCulture);
             }
         }
         

@@ -184,13 +184,13 @@ public class SerializedConfiguration
         model.WtSensitivity = WtSensitivity;
         model.MouseMovementType = MouseMovementType;
         model.CombinedStrumDebounce = CombinedStrumDebounce;
-        if (model.IsApa102 || model.IsStp16)
+        if (model.IsApa102 || model.IsStp16 || model.IsWs2812)
         {
             model.LedMosi = LedMosi;
             model.LedSck = LedSck;
         }
 
-        if (model.IsApa102Peripheral || model.IsStp16Peripheral)
+        if (model.IsApa102Peripheral || model.IsStp16Peripheral || model.IsWs2812Peripheral)
         {
             model.LedMosiPeripheral = LedMosiPeripheral;
             model.LedSckPeripheral = LedSckPeripheral;
