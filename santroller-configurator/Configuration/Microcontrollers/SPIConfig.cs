@@ -94,7 +94,7 @@ public abstract class SpiConfig : PinConfig
         // On apa102, miso isn't used.
         var miso = IncludesMiso ? $"#define {Definition}_MISO {_miso}" : "";
         // On ws2812, sck isn't used.
-        var sck = IncludesSck ? $"#define {Definition}SCK {_sck}" : "";
+        var sck = IncludesSck ? $"#define {Definition}_SCK {_sck}" : "";
         return $"""
 
                 {miso}
