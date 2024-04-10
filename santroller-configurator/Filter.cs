@@ -11,12 +11,18 @@ using DynamicData.Kernel;
 
 namespace GuitarConfigurator.NetCore;
 
-internal class Filter<T>(IObservable<IChangeSet<T>> source, Func<T, bool> predicate)
+internal class Filter<T>
     where T : notnull
 {
-    private readonly Func<T, bool> _predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
+    private readonly Func<T, bool> _predicate;
 
-    private readonly IObservable<IChangeSet<T>> _source = source ?? throw new ArgumentNullException(nameof(source));
+    private readonly IObservable<IChangeSet<T>> _source;
+
+    public Filter(IObservable<IChangeSet<T>> source, Func<T, bool> predicate)
+    {
+        _source = source ?? throw new ArgumentNullException(nameof(source));
+        _predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
+    }
 
     public IObservable<IChangeSet<T>> Run() => Observable.Create<IChangeSet<T>>(
         observer =>
