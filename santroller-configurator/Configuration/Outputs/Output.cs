@@ -150,9 +150,11 @@ public abstract partial class Output : ReactiveObject
             .ToPropertyEx(this, x => x.AreLedsEnabled);
         this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not LedType.None)
             .ToPropertyEx(this, x => x.AreLedsEnabledPeripheral);
-        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812))
+        this.WhenAnyValue(x => x.Model.LedType)
+            .Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812))
             .ToPropertyEx(this, x => x.IsApa102);
-        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812))
+        this.WhenAnyValue(x => x.Model.LedTypePeripheral)
+            .Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812))
             .ToPropertyEx(this, x => x.IsApa102Peripheral);
         this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
             .ToPropertyEx(this, x => x.LedsUseColours);
@@ -357,9 +359,11 @@ public abstract partial class Output : ReactiveObject
             {
                 foreach (var ledIndex in LedIndicesPeripheral)
                 {
-                    santroller.SetLedPeripheral((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(value, Model.LedBrightnessOn));
+                    santroller.SetLedPeripheral((byte) (ledIndex - 1),
+                        Model.LedTypePeripheral.GetLedBytes(value, Model.LedBrightnessOn));
                 }
             }
+
             if (Model.HasMpr121)
             {
                 foreach (var ledIndex in LedIndicesMpr121)
@@ -389,9 +393,11 @@ public abstract partial class Output : ReactiveObject
             {
                 foreach (var ledIndex in LedIndicesPeripheral)
                 {
-                    santroller.SetLedPeripheral((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(value, Model.LedBrightnessOff));
+                    santroller.SetLedPeripheral((byte) (ledIndex - 1),
+                        Model.LedTypePeripheral.GetLedBytes(value, Model.LedBrightnessOff));
                 }
             }
+
             if (Model.HasMpr121)
             {
                 foreach (var ledIndex in LedIndicesMpr121)
@@ -549,10 +555,11 @@ public abstract partial class Output : ReactiveObject
         {
             foreach (var ledIndex in LedIndicesPeripheral)
             {
-                santroller.SetLedPeripheral((byte) (ledIndex - 1), Model.LedTypePeripheral.GetLedBytes(LedOn, Model.LedBrightnessOn));
+                santroller.SetLedPeripheral((byte) (ledIndex - 1),
+                    Model.LedTypePeripheral.GetLedBytes(LedOn, Model.LedBrightnessOn));
             }
         }
-        
+
         if (Model.HasMpr121)
         {
             foreach (var ledIndex in LedIndicesMpr121)
@@ -946,14 +953,14 @@ public abstract partial class Output : ReactiveObject
                     oldOn = dta.On;
                 }
 
-                
+
                 Input = axis switch
                 {
                     GuitarAxis {Type: GuitarAxisType.Pickup} => new DigitalToAnalog(input, oldOn, Model,
                         DigitalToAnalogType.Pickup),
                     GuitarAxis {Type: GuitarAxisType.Slider} => new DigitalToAnalog(input, oldOn, Model,
                         DigitalToAnalogType.TapBar),
-                    {Trigger:true} => new DigitalToAnalog(input, oldOn, Model, DigitalToAnalogType.Trigger),
+                    {Trigger: true} => new DigitalToAnalog(input, oldOn, Model, DigitalToAnalogType.Trigger),
                     _ => new DigitalToAnalog(input, oldOn, Model, DigitalToAnalogType.Normal)
                 };
 

@@ -19,6 +19,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
+using DynamicData.Binding;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -255,10 +256,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.IsBluetooth, x => x.WasBluetooth)
             .Select(x => x.Item1 || x.Item2)
             .ToPropertyEx(this, x => x.IsOrWasBluetooth);
-        Bindings.Connect()
-            .Filter(s => s.IsVisible)
-            .Bind(out var outputs)
-            .Subscribe();
+        // Standard filter doesn't support the move operation - i've patched that in for the one case we need it for
+        new Filter<Output>(Bindings.Connect(), x => x.IsVisible).Run().Bind(out _outputs).Subscribe();
         _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>());
         _deviceControllerTypes.Connect().Filter(
                 this.WhenAnyValue(s => s.EmulationType)
@@ -268,7 +267,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Bind(out var controllerTypes)
             .Subscribe();
         DeviceControllerRhythmTypes = controllerTypes;
-        Outputs = outputs;
         AllPins = new SourceList<int>();
         AllPins.AddRange(Microcontroller.GetAllPins());
         AllPins.Connect().Filter(this.WhenAnyValue(s => s.IsBluetooth)
@@ -354,7 +352,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public string? Max170XErrorText { get; set; }
     [Reactive] public string? LedErrorText { get; set; }
 
-    public ReadOnlyObservableCollection<Output> Outputs { get; }
+    private readonly ReadOnlyObservableCollection<Output> _outputs;
+    public ReadOnlyObservableCollection<Output> Outputs => _outputs;
 
     public bool Branded { get; }
     public bool Builder { get; }
