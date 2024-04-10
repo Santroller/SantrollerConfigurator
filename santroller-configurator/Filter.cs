@@ -183,13 +183,20 @@ internal class Filter<T>
         return filtered.CaptureChanges();
     }
     
-    private sealed class ItemWithMatch(T item, bool isMatch, bool wasMatch = false) : IEquatable<ItemWithMatch>
+    private sealed class ItemWithMatch : IEquatable<ItemWithMatch>
     {
-        public T Item { get; } = item;
+        public ItemWithMatch(T item, bool isMatch, bool wasMatch = false)
+        {
+            Item = item;
+            IsMatch = isMatch;
+            WasMatch = wasMatch;
+        }
 
-        public bool IsMatch { get; set; } = isMatch;
+        public T Item { get; }
 
-        public bool WasMatch { get; set; } = wasMatch;
+        public bool IsMatch { get; set; }
+
+        public bool WasMatch { get; set; }
 
         public static bool operator ==(ItemWithMatch? left, ItemWithMatch? right) =>
             Equals(left, right);
