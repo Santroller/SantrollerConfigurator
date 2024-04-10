@@ -256,8 +256,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.IsBluetooth, x => x.WasBluetooth)
             .Select(x => x.Item1 || x.Item2)
             .ToPropertyEx(this, x => x.IsOrWasBluetooth);
-        // Standard filter doesn't support the move operation - i've patched that in for the one case we need it for
-        new Filter<Output>(Bindings.Connect(), x => x.IsVisible).Run().Bind(out _outputs).Subscribe();
+        if (Branded)
+        {
+            // Filters break being able to reorder inputs, but we only need the filter for branded, which doesn't let you reorder anyways
+            Bindings.Connect().Filter(x => x.IsVisible).Bind(out _outputs).Subscribe();
+        }
+        else
+        {
+            Bindings.Connect().Bind(out _outputs).Subscribe();
+        }
         _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>());
         _deviceControllerTypes.Connect().Filter(
                 this.WhenAnyValue(s => s.EmulationType)
