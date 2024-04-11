@@ -76,6 +76,18 @@
                               SelectedItem="{Binding LegendType}"
                               ItemTemplate="{StaticResource EnumToStringTemplate}"
                               ItemsSource="{Binding LegendTypes}" />
+                    <TextBlock HorizontalAlignment="Stretch" Margin="0 5 0 0" Foreground="LightGray"
+                               Text="{x:Static netCore:Resources.ControllerViewTypeLabel2}"
+                               TextAlignment="Center" FontSize="12"/>
+                    <TextBlock HorizontalAlignment="Stretch" Margin="0 0 0 0" Foreground="LightGray"
+                               Text="{x:Static netCore:Resources.ControllerViewTypeLabel3}"
+                               TextAlignment="Center" FontSize="12"/>
+                    <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"
+                               Text="{x:Static netCore:Resources.ControllerViewTypeShowLabel}"
+                               TextAlignment="Center" />
+                    <ToggleSwitch HorizontalAlignment="Center"
+                                  IsChecked="{Binding HideControllerView}" OffContent="{x:Static netCore:Resources.ShowLabel}"
+                                  OnContent="{x:Static netCore:Resources.HideLabel}" />
                 </StackPanel>
                 <StackPanel>
                     <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"

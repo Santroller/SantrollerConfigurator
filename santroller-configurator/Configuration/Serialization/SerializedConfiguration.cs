@@ -69,6 +69,8 @@ public class SerializedConfiguration
         HasMax1704X = model.HasMax1704X;
         Max1704XSda = model.Max1704XSda;
         Max1704XScl = model.Max1704XScl;
+        SliderbarDisabled = !model.Sliderbar;
+        HideControllerView = model.HideControllerView;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -119,9 +121,12 @@ public class SerializedConfiguration
     [ProtoMember(57)] public bool HasMax1704X { get; private set; }
     [ProtoMember(58)] public int Max1704XSda { get; private set; }
     [ProtoMember(59)] public int Max1704XScl { get; private set; }
+    [ProtoMember(60)] public bool SliderbarDisabled { get; private set; }
+    [ProtoMember(61)] public bool HideControllerView { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
+        model.HideControllerView = HideControllerView;
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
         model.SetDeviceTypeAndRhythmTypeWithoutUpdating(DeviceType, EmulationType);
         model.XInputOnWindows = XInputOnWindows;
@@ -132,6 +137,7 @@ public class SerializedConfiguration
         model.PollRate = PollRate;
         model.Debounce = Debounce;
         model.StrumDebounce = StrumDebounce;
+        model.Sliderbar = !SliderbarDisabled;
         model.Deque = QueueBasedInputs;
         model.DjPollRate = DjPollRate;
         model.DjSmoothing = DjSmooth;
@@ -215,6 +221,7 @@ public class SerializedConfiguration
     {
         model.XInputOnWindows = XInputOnWindows;
         model.XInputAuth = XInputAuth;
+        model.Sliderbar = !SliderbarDisabled;
         model.PollRate = PollRate;
         model.Debounce = Debounce;
         model.StrumDebounce = StrumDebounce;

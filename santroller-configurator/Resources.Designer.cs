@@ -2373,6 +2373,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string GuitarTapBarEnabled {
+            get {
+                return ResourceManager.GetString("GuitarTapBarEnabled", resourceCulture);
+            }
+        }
+        
         public static string WiiInputTypeGuitarTapBar {
             get {
                 return ResourceManager.GetString("WiiInputTypeGuitarTapBar", resourceCulture);
@@ -5241,6 +5247,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string CopyOtherLedLabel {
+            get {
+                return ResourceManager.GetString("CopyOtherLedLabel", resourceCulture);
+            }
+        }
+        
         public static string OnLabel {
             get {
                 return ResourceManager.GetString("OnLabel", resourceCulture);
@@ -5262,6 +5274,18 @@ namespace GuitarConfigurator.NetCore {
         public static string DisabledLabel {
             get {
                 return ResourceManager.GetString("DisabledLabel", resourceCulture);
+            }
+        }
+        
+        public static string HideLabel {
+            get {
+                return ResourceManager.GetString("HideLabel", resourceCulture);
+            }
+        }
+        
+        public static string ShowLabel {
+            get {
+                return ResourceManager.GetString("ShowLabel", resourceCulture);
             }
         }
         
@@ -5856,6 +5880,24 @@ namespace GuitarConfigurator.NetCore {
         public static string ControllerViewTypeLabel {
             get {
                 return ResourceManager.GetString("ControllerViewTypeLabel", resourceCulture);
+            }
+        }
+        
+        public static string ControllerViewTypeShowLabel {
+            get {
+                return ResourceManager.GetString("ControllerViewTypeShowLabel", resourceCulture);
+            }
+        }
+        
+        public static string ControllerViewTypeLabel2 {
+            get {
+                return ResourceManager.GetString("ControllerViewTypeLabel2", resourceCulture);
+            }
+        }
+        
+        public static string ControllerViewTypeLabel3 {
+            get {
+                return ResourceManager.GetString("ControllerViewTypeLabel3", resourceCulture);
             }
         }
         

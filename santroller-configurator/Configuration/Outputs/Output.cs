@@ -671,7 +671,7 @@ public abstract partial class Output : ReactiveObject
             return string.IsNullOrEmpty(text) ? "" : text;
         }
     }
-
+    
 
     public abstract string LedOnLabel { get; }
 
@@ -748,6 +748,18 @@ public abstract partial class Output : ReactiveObject
         return $"{field}->{char.ToLower(typeName[0])}{typeName[1..]}";
     }
 
+    [RelayCommand]
+    public void CopyOn()
+    {
+        LedOff = LedOn;
+    }
+
+    [RelayCommand]
+    public void CopyOff()
+    {
+        LedOn = LedOff;
+    }
+    
     [RelayCommand]
     private async Task FindAndAssignAsync()
     {

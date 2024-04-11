@@ -43,7 +43,13 @@
             <StackPanel Margin="0 0 0 40">
                 <Image Source="{Binding Main.Logo}" Width="200" Margin="40 5 40 40"
                        IsVisible="{Binding $parent[Window].Height, Converter={StaticResource SidebarHeightConverter }}" />
-                <StackPanel IsVisible="{Binding IsController}">
+                <StackPanel>
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="IsController" />
+                            <Binding Path="!HideControllerView" />
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
                     <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"
                                Text="{x:Static netCore:Resources.ControllerViewTypeLabel}"
                                TextAlignment="Center" />
@@ -51,6 +57,12 @@
                               SelectedItem="{Binding LegendType}"
                               ItemTemplate="{StaticResource EnumToStringTemplate}"
                               ItemsSource="{Binding LegendTypes}" />
+                    <TextBlock HorizontalAlignment="Stretch" Margin="0 5 0 0" Foreground="LightGray"
+                               Text="{x:Static netCore:Resources.ControllerViewTypeLabel2}"
+                               TextAlignment="Center" FontSize="12"/>
+                    <TextBlock HorizontalAlignment="Stretch" Margin="0 0 0 0" Foreground="LightGray"
+                               Text="{x:Static netCore:Resources.ControllerViewTypeLabel3}"
+                               TextAlignment="Center" FontSize="12"/>
                 </StackPanel>
                 <StackPanel IsVisible="{Binding ((viewModels1:BrandedMainWindowViewModel)Main).HasMultipleConfigs}">
                     <TextBlock HorizontalAlignment="Stretch" Margin="40 5 40 0"

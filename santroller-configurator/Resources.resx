@@ -1211,6 +1211,9 @@
     <data name="WiiInputTypeGuitarWhammy" xml:space="preserve">
         <value>Guitar - Whammy</value>
     </data>
+    <data name="GuitarTapBarEnabled" xml:space="preserve">
+        <value>Slider Bar</value>
+    </data>
     <data name="WiiInputTypeGuitarTapBar" xml:space="preserve">
         <value>Guitar - Slider Axis</value>
     </data>
@@ -2744,6 +2747,9 @@
     <data name="TestLEDLabel" xml:space="preserve">
         <value>Test LEDs</value>
     </data>
+    <data name="CopyOtherLedLabel" xml:space="preserve">
+        <value>Copy Colour From Other LED</value>
+    </data>
     <data name="OnLabel" xml:space="preserve">
         <value>On</value>
     </data>
@@ -2755,6 +2761,12 @@
     </data>
     <data name="DisabledLabel" xml:space="preserve">
         <value>Disabled</value>
+    </data>
+    <data name="HideLabel" xml:space="preserve">
+        <value>Hide</value>
+    </data>
+    <data name="ShowLabel" xml:space="preserve">
+        <value>Show</value>
     </data>
     <data name="AttentionLabel" xml:space="preserve">
         <value>Attention (Yellow) Pin</value>
@@ -3051,7 +3063,16 @@
         <value>Mouse Movement Type</value>
     </data>
     <data name="ControllerViewTypeLabel" xml:space="preserve">
-        <value>Controller View Type</value>
+        <value>Display Buttons For</value>
+    </data>
+    <data name="ControllerViewTypeShowLabel" xml:space="preserve">
+        <value>Show Display Buttons For</value>
+    </data>
+    <data name="ControllerViewTypeLabel2" xml:space="preserve">
+        <value>Changes how buttons are displayed</value>
+    </data>
+    <data name="ControllerViewTypeLabel3" xml:space="preserve">
+        <value>Does not change the emulated console</value>
     </data>
     <data name="LoadPresetButtonLabel" xml:space="preserve">
         <value>Load Preset</value>

@@ -159,6 +159,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 or DeviceControllerType.FortniteGuitarStrum)
             .ToPropertyEx(this, x => x.IsGuitar);
         this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(x => x is DeviceControllerType.GuitarHeroGuitar)
+            .ToPropertyEx(this, x => x.IsGuitarHeroGuitar);
+        this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.StageKit)
             .ToPropertyEx(this, x => x.IsStageKit);
         this.WhenAnyValue(x => x.EmulationType)
@@ -487,6 +490,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool PresetsExpanded { get; set; }
     [Reactive] public bool ControllerConfigExpanded { get; set; }
     [Reactive] public bool BluetoothConfigExpanded { get; set; }
+    [Reactive] public bool HideControllerView { get; set; }
     [Reactive] public bool LedConfigExpanded { get; set; }
     [Reactive] public bool PeripheralExpanded { get; set; }
     [Reactive] public bool Mpr121Expanded { get; set; }
@@ -945,6 +949,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public bool XInputAuth { get; set; }
 
+    [Reactive] public bool Sliderbar { get; set; }
+
 
     private bool _hasPeripheral;
 
@@ -1095,6 +1101,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStandardMode { get; }
     [ObservableAsProperty] public bool IsAdvancedMode { get; }
     [ObservableAsProperty] public bool IsGuitar { get; }
+    
+    [ObservableAsProperty] public bool IsGuitarHeroGuitar { get; }
     [ObservableAsProperty] public bool IsStageKit { get; }
     [ObservableAsProperty] public bool IsController { get; }
     [ObservableAsProperty] public bool IsStandardController { get; }
@@ -1590,6 +1598,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsStandardController)}
                        #define RPCS3_COMPAT {WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}
                        #define XINPUT_AUTH {WriteBlob(writer, XInputAuth && UsbHostEnabled)}
+                       #define SLIDER_BAR {WriteBlob(writer, Sliderbar)}
                        #define INPUT_QUEUE {WriteBlob(writer, Deque)}
                        #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
@@ -1621,6 +1630,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsStandardController).ToString().ToLower()}
                        #define RPCS3_COMPAT {(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}
                        #define XINPUT_AUTH {(XInputAuth && UsbHostEnabled).ToString().ToLower()}
+                       #define SLIDER_BAR {Sliderbar.ToString().ToLower()}
                        #define INPUT_QUEUE {Deque.ToString().ToLower()}
                        #define POLL_RATE {PollRate}
                        #define WT_SENSITIVITY {WtSensitivity}

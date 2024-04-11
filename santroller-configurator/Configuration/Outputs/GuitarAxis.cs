@@ -263,40 +263,42 @@ public class GuitarAxis : OutputAxis
                     analogOn |= analogOn << 8;
 
                 return $$"""
-                         if ({{Input.Generate()}}) {
+                         if (SLIDER_BAR && {{Input.Generate()}}) {
                              {{GenerateOutput(mode)}} = {{analogOn}};
                          }
                          """;
             case ConfigField.Xbox360 or ConfigField.Xbox when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 return $$"""
-                         {{GenerateOutput(mode)}} = {{Input.Generate()}};
-                         if ({{GenerateOutput(mode)}} > 0x80) {
-                             {{GenerateOutput(mode)}} |= ({{GenerateOutput(mode)}}-1) << 8;
-                         } else {
-                             {{GenerateOutput(mode)}} |= ({{GenerateOutput(mode)}}) << 8;
+                         if (SLIDER_BAR) {
+                             {{GenerateOutput(mode)}} = {{Input.Generate()}};
+                             if ({{GenerateOutput(mode)}} > 0x80) {
+                                 {{GenerateOutput(mode)}} |= ({{GenerateOutput(mode)}}-1) << 8;
+                             } else {
+                                 {{GenerateOutput(mode)}} |= ({{GenerateOutput(mode)}}) << 8;
+                             }
                          }
                          """;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
                 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 return $$"""
-                         if ({{Input.Generate()}}) {
+                         if (SLIDER_BAR && {{Input.Generate()}}) {
                              {{GenerateOutput(mode)}} = {{(analogOn + 0x80) & 0xFF}};
                          }
                          """;
             case ConfigField.Universal
                 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 return $$"""
-                         if ({{Input.Generate()}}) {
+                         if (SLIDER_BAR && {{Input.Generate()}}) {
                              {{GenerateOutput(mode)}} = {{analogOn & 0xFF}};
                          }
                          """;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
-                return $"{GenerateOutput(mode)} = (({Input.Generate()}) + 0x80);";
+                return $"if (SLIDER_BAR) {{{GenerateOutput(mode)} = (({Input.Generate()}) + 0x80);}}";
             case ConfigField.Universal
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
-                return $"{GenerateOutput(mode)} = {Input.Generate()};";
+                return $"if (SLIDER_BAR) {{{GenerateOutput(mode)} = {Input.Generate()};}}";
             // Xb1 is RB only, so no slider
             case ConfigField.XboxOne when Type == GuitarAxisType.Slider:
                 return "";
