@@ -312,8 +312,8 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
                     ushort.MaxValue, pair.Value, false, false, false, -1,
                     true));
-
-        Outputs.Add(new JoystickToDpad(Model, Peripheral, short.MaxValue / 2, false));
+    
+        Outputs.Add(new JoystickToDpad(Model, Peripheral, short.MaxValue / 2, false) {Enabled = false});
         Outputs.Add(new StartSelectHome(Model, Peripheral, false) {Enabled = false});
         UpdateBindings();
     }
