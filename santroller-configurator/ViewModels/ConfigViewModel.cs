@@ -2230,14 +2230,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ret +=
                 $"""
 
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[0]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[1]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[2]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[3]);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].g[0]);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].g[1]);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].g[2]);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].g[3]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[0]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[1]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[2]);
+                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[3]);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].b[0]);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].b[1]);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].b[2]);
@@ -2260,14 +2260,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ret +=
                 $"""
 
-                 slaveWriteLED(ledState[{i}].r[0]);
-                 slaveWriteLED(ledState[{i}].r[1]);
-                 slaveWriteLED(ledState[{i}].r[2]);
-                 slaveWriteLED(ledState[{i}].r[3]);
                  slaveWriteLED(ledState[{i}].g[0]);
                  slaveWriteLED(ledState[{i}].g[1]);
                  slaveWriteLED(ledState[{i}].g[2]);
                  slaveWriteLED(ledState[{i}].g[3]);
+                 slaveWriteLED(ledState[{i}].r[0]);
+                 slaveWriteLED(ledState[{i}].r[1]);
+                 slaveWriteLED(ledState[{i}].r[2]);
+                 slaveWriteLED(ledState[{i}].r[3]);
                  slaveWriteLED(ledState[{i}].b[0]);
                  slaveWriteLED(ledState[{i}].b[1]);
                  slaveWriteLED(ledState[{i}].b[2]);

@@ -34,6 +34,13 @@ public static class LedTypeMethods
             LedType.Apa102Gbr => new[] {brightness, color.G, color.B, color.R},
             LedType.Apa102Brg => new[] {brightness, color.B, color.R, color.G},
             LedType.Apa102Bgr => new[] {brightness, color.B, color.G, color.R},
+            LedType.Ws2812 => new[]
+            {
+                Ws2812Bits[(color.R >> 6) & 0x3], Ws2812Bits[(color.R >> 4) & 0x3], Ws2812Bits[(color.R >> 2) & 0x3],
+                Ws2812Bits[color.R & 0x3], Ws2812Bits[(color.G >> 6) & 0x3], Ws2812Bits[(color.G >> 4) & 0x3],
+                Ws2812Bits[(color.G >> 2) & 0x3], Ws2812Bits[color.G & 0x3], Ws2812Bits[(color.B >> 6) & 0x3],
+                Ws2812Bits[(color.B >> 4) & 0x3], Ws2812Bits[(color.B >> 2) & 0x3], Ws2812Bits[color.B & 0x3]
+            },
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
@@ -121,6 +128,7 @@ public static class LedTypeMethods
 
                     """;
         }
+
         return $"""
                      {variable}[{index - 1}].brightness = {brightness};
                      {variable}[{index - 1}].r = {r};
