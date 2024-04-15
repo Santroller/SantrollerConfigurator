@@ -548,7 +548,7 @@ public class Santroller : ConfigurableUsbDevice
         _ledTimers[led] = _sw.Elapsed;
         
         // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
-        if (_model != null)
+        if (_model != null && _model.LedType != LedType.Ws2812)
         {
             if (_model.LastLedType != _model.LedType)
             {
@@ -563,7 +563,7 @@ public class Santroller : ConfigurableUsbDevice
     {
         _ledTimersPeripheral[led] = _sw.Elapsed;
         // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
-        if (_model != null)
+        if (_model != null && _model.LedTypePeripheral != LedType.Ws2812)
         {
             if (_model.LastLedTypePeripheral != _model.LedTypePeripheral)
             {
