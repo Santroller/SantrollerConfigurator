@@ -113,18 +113,18 @@ public static class LedTypeMethods
         if (type == LedType.Ws2812)
         {
             return $"""
-                         {variable}[{index - 1}].r[0] = Ws2812Bits[({r} >> 6) & 0x3];
-                         {variable}[{index - 1}].r[1] = Ws2812Bits[({r} >> 4) & 0x3];
-                         {variable}[{index - 1}].r[2] = Ws2812Bits[({r} >> 2) & 0x3];
-                         {variable}[{index - 1}].r[3] = Ws2812Bits[{r} & 0x3];
-                         {variable}[{index - 1}].g[0] = Ws2812Bits[({g} >> 6) & 0x3];
-                         {variable}[{index - 1}].g[1] = Ws2812Bits[({g} >> 4) & 0x3];
-                         {variable}[{index - 1}].g[2] = Ws2812Bits[({g} >> 2) & 0x3];
-                         {variable}[{index - 1}].g[3] = Ws2812Bits[{g} & 0x3];
-                         {variable}[{index - 1}].b[0] = Ws2812Bits[({b} >> 6) & 0x3];
-                         {variable}[{index - 1}].b[1] = Ws2812Bits[({b} >> 4) & 0x3];
-                         {variable}[{index - 1}].b[2] = Ws2812Bits[({b} >> 2) & 0x3];
-                         {variable}[{index - 1}].b[3] = Ws2812Bits[({b} & 0x3];
+                         {variable}[{index - 1}].r[0] = ws2812_bits[({r} >> 6) & 0x3];
+                         {variable}[{index - 1}].r[1] = ws2812_bits[({r} >> 4) & 0x3];
+                         {variable}[{index - 1}].r[2] = ws2812_bits[({r} >> 2) & 0x3];
+                         {variable}[{index - 1}].r[3] = ws2812_bits[{r} & 0x3];
+                         {variable}[{index - 1}].g[0] = ws2812_bits[({g} >> 6) & 0x3];
+                         {variable}[{index - 1}].g[1] = ws2812_bits[({g} >> 4) & 0x3];
+                         {variable}[{index - 1}].g[2] = ws2812_bits[({g} >> 2) & 0x3];
+                         {variable}[{index - 1}].g[3] = ws2812_bits[{g} & 0x3];
+                         {variable}[{index - 1}].b[0] = ws2812_bits[({b} >> 6) & 0x3];
+                         {variable}[{index - 1}].b[1] = ws2812_bits[({b} >> 4) & 0x3];
+                         {variable}[{index - 1}].b[2] = ws2812_bits[({b} >> 2) & 0x3];
+                         {variable}[{index - 1}].b[3] = ws2812_bits[({b} & 0x3];
 
                     """;
         }
@@ -160,7 +160,7 @@ public static class LedTypeMethods
         }
         else
         {
-            // If the scale is zero (aka the on and off rgb values for a channel are the same) we can shortcut the lerp.
+            // If the on and off rgb values for a channel are the same we can shortcut the lerp.
             // but only if the led colours aren't blobs
             if (on.R == off.R)
             {
@@ -181,18 +181,18 @@ public static class LedTypeMethods
         if (type == LedType.Ws2812)
         {
             return $"""
-                         {variable}[{index - 1}].r[0] = Ws2812Bits[(({r}) >> 6) & 0x3];
-                         {variable}[{index - 1}].r[1] = Ws2812Bits[(({r}) >> 4) & 0x3];
-                         {variable}[{index - 1}].r[2] = Ws2812Bits[(({r}) >> 2) & 0x3];
-                         {variable}[{index - 1}].r[3] = Ws2812Bits[({r}) & 0x3];
-                         {variable}[{index - 1}].g[0] = Ws2812Bits[(({g}) >> 6) & 0x3];
-                         {variable}[{index - 1}].g[1] = Ws2812Bits[(({g}) >> 4) & 0x3];
-                         {variable}[{index - 1}].g[2] = Ws2812Bits[(({g}) >> 2) & 0x3];
-                         {variable}[{index - 1}].g[3] = Ws2812Bits[({g}) & 0x3];
-                         {variable}[{index - 1}].b[0] = Ws2812Bits[(({b}) >> 6) & 0x3];
-                         {variable}[{index - 1}].b[1] = Ws2812Bits[(({b}) >> 4) & 0x3];
-                         {variable}[{index - 1}].b[2] = Ws2812Bits[(({b}) >> 2) & 0x3];
-                         {variable}[{index - 1}].b[3] = Ws2812Bits[({b}) & 0x3];
+                         {variable}[{index - 1}].r[0] = ws2812_bits[(({r}) >> 6) & 0x3];
+                         {variable}[{index - 1}].r[1] = ws2812_bits[(({r}) >> 4) & 0x3];
+                         {variable}[{index - 1}].r[2] = ws2812_bits[(({r}) >> 2) & 0x3];
+                         {variable}[{index - 1}].r[3] = ws2812_bits[({r}) & 0x3];
+                         {variable}[{index - 1}].g[0] = ws2812_bits[(({g}) >> 6) & 0x3];
+                         {variable}[{index - 1}].g[1] = ws2812_bits[(({g}) >> 4) & 0x3];
+                         {variable}[{index - 1}].g[2] = ws2812_bits[(({g}) >> 2) & 0x3];
+                         {variable}[{index - 1}].g[3] = ws2812_bits[({g}) & 0x3];
+                         {variable}[{index - 1}].b[0] = ws2812_bits[(({b}) >> 6) & 0x3];
+                         {variable}[{index - 1}].b[1] = ws2812_bits[(({b}) >> 4) & 0x3];
+                         {variable}[{index - 1}].b[2] = ws2812_bits[(({b}) >> 2) & 0x3];
+                         {variable}[{index - 1}].b[3] = ws2812_bits[({b}) & 0x3];
 
                     """;
         }
