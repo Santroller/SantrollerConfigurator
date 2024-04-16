@@ -261,7 +261,7 @@
         <value>Orange</value>
     </data>
     <data name="AxisMinCalibrationTilt" xml:space="preserve">
-        <value>Tilt the guitar down</value>
+        <value>Hold the guitar in its normal position</value>
     </data>
     <data name="AxisMinCalibrationWhammy" xml:space="preserve">
         <value>Release the whammy</value>

@@ -101,8 +101,11 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public void Copy()
     {
         if (Selected == null || SelectedSection == null) return;
-        SelectedSection.Configurations.Add(new BrandedConfiguration(new SerialisedBrandedConfiguration(Selected), false,
-            this));
+        var c = new BrandedConfiguration(new SerialisedBrandedConfiguration(Selected), false,
+            this);
+        c.ProductName += " (Copy)";
+        SelectedSection.Configurations.Add(c);
+        Selected = c;
     }
 
     [RelayCommand]
