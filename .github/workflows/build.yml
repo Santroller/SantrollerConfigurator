@@ -40,12 +40,12 @@ jobs:
         shell: bash
         run: |
           cd santroller-configurator
-          echo "version=$(dotnet-gitversion /output json /showvariable SemVer)" >> $GITHUB_OUTPUT
+          echo "version=$(~/.dotnet/tools/dotnet-gitversion /output json /showvariable SemVer)" >> $GITHUB_OUTPUT
       - name: Create Velopack Release
         run: |
           cd santroller-configurator
-          vpk download github --repoUrl https://github.com/Santroller/Santroller
-          vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish
+          ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/Santroller
+          ~/.dotnet/tools/vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -247,12 +247,12 @@ jobs:
         shell: bash
         run: |
           cd Builder
-          echo "version=$(dotnet-gitversion /output json /showvariable SemVer)" >> $GITHUB_OUTPUT
+          echo "version=$(~/.dotnet/tools/dotnet-gitversion /output json /showvariable SemVer)" >> $GITHUB_OUTPUT
       - name: Create Velopack Release
         run: |
           cd Builder
-          vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.GITHUB_TOKEN }}
-          vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish
+          ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.GITHUB_TOKEN }}
+          ~/.dotnet/tools/vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
