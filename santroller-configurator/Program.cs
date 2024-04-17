@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
+using Velopack;
 
 namespace GuitarConfigurator.NetCore;
 
@@ -19,6 +20,7 @@ public static class Program
 #else
     public static void Main(string[] args)
     {
+        VelopackApp.Build().Run();
         Directory.CreateDirectory(AssetUtils.GetAppDataFolder());
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
     }

@@ -3342,6 +3342,9 @@
     <data name="ErrorMessage" xml:space="preserve">
         <value>{0} - Error</value>
     </data>
+    <data name="ErrorMessageUf2" xml:space="preserve">
+        <value>{0} - Error, Unable to find UF2 File!</value>
+    </data>
     <data name="WaitingMessage" xml:space="preserve">
         <value>{0} - Waiting for Device</value>
     </data>

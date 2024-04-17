@@ -82,10 +82,6 @@
     </ItemGroup>
     <ItemGroup Condition="'$(SkipAssets)' != 'Skip'">
         <AvaloniaResource Include="Assets\dfu.tar.xz" />
-        <AvaloniaResource Include="Assets\firmware.tar.xz" />
-        <AvaloniaResource Include="Assets\platformio.tar.xz" />
-        <AvaloniaResource Include="Assets\firmware.version" />
-        <AvaloniaResource Include="Assets\platformio.version" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AsmResolver" Version="5.5.1" />
@@ -119,7 +115,12 @@
         <PackageReference Include="GitVersion.MsBuild" Version="6.0.0-beta.3">
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Velopack" Version="0.0.359" />
     </ItemGroup>
+    <PropertyGroup>
+        <DefaultItemExcludes>$(DefaultItemExcludes);$(PublishDir)\Binaries\**\*</DefaultItemExcludes>
+    </PropertyGroup>
+
     <ItemGroup>
         <Compile Update="Views\RaiseIssueWindow.axaml.cs">
             <DependentUpon>RaiseIssueWindow.axaml</DependentUpon>
@@ -182,7 +183,7 @@
         <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net7.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
     </Target>
     <Target Name="ZipOutputPath" BeforeTargets="ResolveReferences">
-        <Builder Parameter1="$(TargetDir)" Parameter2="$(MSBuildProjectDirectory)" />
+        <Builder Parameter1="$(TargetDir)" Parameter2="$(PublishDir)" />
     </Target>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

@@ -24,18 +24,29 @@ public class PlatformIo
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     private string? _lastBootloaderPort;
 
+    public static string GetAssetDir()
+    {
+        return Path.Combine(Path.GetDirectoryName(Environment.ProcessPath!)!, "Binaries");
+    }
+    
     public PlatformIo()
     {
+        var assetDir = GetAssetDir();
         var appdataFolder = AssetUtils.GetAppDataFolder();
         if (!File.Exists(appdataFolder)) Directory.CreateDirectory(appdataFolder);
 
-        var pioFolder = Path.Combine(appdataFolder, "platformio");
-        _pythonExecutable = Path.Combine(appdataFolder, "python", "bin", "python3.11");
+        var pioFolder = Path.Combine(assetDir, "platformio");
+        _pythonExecutable = Path.Combine(assetDir, "python", "bin", "python3.11");
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            _pythonExecutable = Path.Combine(appdataFolder, "python", "python.exe");
+            _pythonExecutable = Path.Combine(assetDir, "python", "python.exe");
 
         FirmwareDir = Path.Combine(appdataFolder, "Santroller");
+        if (Directory.Exists(FirmwareDir))
+        {
+            Directory.Delete(FirmwareDir, true);
+        }
 
+        AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
         _portProcess = new Process();
         _portProcess.EnableRaisingEvents = true;
         _portProcess.StartInfo.FileName = _pythonExecutable;
@@ -55,82 +66,6 @@ public class PlatformIo
     {
         _currentProcess?.Kill(true);
     }
-
-    private async Task InitialisePlatformIoAsync(IObserver<PlatformIoState> platformIoOutput)
-    {
-        platformIoOutput.OnNext(new PlatformIoState(0, Resources.ExtractingFirmwareMessage, ""));
-        var appdataFolder = AssetUtils.GetAppDataFolder();
-        var firmwareVersion = Path.Combine(appdataFolder, "firmware.version");
-        if (!Directory.Exists(FirmwareDir))
-        {
-            // If the firmware has not been extracted, make sure the user has enough free space for it.
-            var matching = 0;
-            long free = 0;
-            var info = DriveInfo.GetDrives().First();
-            foreach (var driveInfo in DriveInfo.GetDrives())
-            {
-                if (driveInfo.RootDirectory.FullName.Length <= matching ||
-                    !Path.GetFullPath(FirmwareDir).StartsWith(driveInfo.RootDirectory.FullName)) continue;
-                matching = driveInfo.RootDirectory.FullName.Length;
-                free = driveInfo.AvailableFreeSpace;
-                info = driveInfo;
-            }
-
-            free = free / 1024 / 1024 / 1024;
-            if (free < 3)
-            {
-                platformIoOutput.OnError(new Exception(
-                    string.Format(Resources.NoFreeSpaceMessage, info.Name)));
-                return;
-            }
-        }
-        else
-        {
-            Directory.Delete(FirmwareDir, true);
-        }
-
-        await AssetUtils.ExtractXzAsync("firmware.tar.xz", appdataFolder,
-            progress => platformIoOutput.OnNext(new PlatformIoState(progress * 10, Resources.ExtractingFirmwareMessage,
-                "")));
-
-        var pythonDir = Path.Combine(appdataFolder, "python");
-        var platformIoDir = Path.Combine(appdataFolder, "platformio");
-        var platformIoVersion = Path.Combine(appdataFolder, "platformio.version");
-        if (Directory.Exists(platformIoDir))
-        {
-            var outdated = true;
-            if (File.Exists(platformIoVersion))
-                outdated = await File.ReadAllTextAsync(platformIoVersion) !=
-                           await AssetUtils.ReadFileAsync("platformio.version");
-
-            if (outdated)
-            {
-                Directory.Delete(platformIoDir, true);
-                Directory.Delete(pythonDir, true);
-            }
-        }
-
-        if (!Directory.Exists(platformIoDir))
-        {
-            platformIoOutput.OnNext(new PlatformIoState(10, Resources.ExtractingPlatformIoMessage, ""));
-            await AssetUtils.ExtractXzAsync("platformio.tar.xz", appdataFolder,
-                progress => platformIoOutput.OnNext(
-                    new PlatformIoState(10 + progress * 90, Resources.ExtractingFirmwareMessage, "")));
-
-            await AssetUtils.ExtractFileAsync("platformio.version", platformIoVersion);
-        }
-
-        platformIoOutput.OnCompleted();
-    }
-
-    public IObservable<PlatformIoState> InitialisePlatformIo()
-    {
-        var platformIoOutput =
-            new BehaviorSubject<PlatformIoState>(new PlatformIoState(0, Resources.SettingUpMessage, null));
-        _ = InitialisePlatformIoAsync(platformIoOutput).ConfigureAwait(false);
-        return platformIoOutput;
-    }
-
     public async Task<PlatformIoPort[]?> GetPortsAsync()
     {
         if (!Path.Exists(_pythonExecutable)) return null;
@@ -177,7 +112,7 @@ public class PlatformIo
 
         async Task Process()
         {
-            var uf2File = Path.Combine(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", environment,
+            var uf2File = Path.Combine(FirmwareDir, ".pio", "build", environment,
                 "firmware.uf2");
             var percentageStep = progressEndingPercentage - progressStartingPercentage;
             var currentProgress = progressStartingPercentage;
@@ -265,13 +200,13 @@ public class PlatformIo
                 {
                     if (environment.Contains("pico"))
                     {
-                        #if Linux
+#if Linux
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                             string.Format(Resources.LookingForDeviceMessageLinux, progressMessage), null));
-                        #else
+#else
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                             string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
-                        #endif
+#endif
                         currentProgress += percentageStep / sections;
                         sections = 4;
                     }
@@ -492,6 +427,8 @@ public class PlatformIo
                     }
 
                     if (!line.Contains("FAILED")) continue;
+                    Console.WriteLine("Has error!");
+                    Console.WriteLine(line);
                     platformIoOutput.OnError(new Exception(string.Format(Resources.ErrorMessage, progressMessage)));
                     hasError = true;
                     break;
@@ -535,7 +472,7 @@ public class PlatformIo
                 // If builds fail for some reason, then we wont have an outputted uf2 file
                 if (!File.Exists(uf2File))
                 {
-                    platformIoOutput.OnError(new Exception(string.Format(Resources.ErrorMessage, progressMessage)));
+                    platformIoOutput.OnError(new Exception(string.Format(Resources.ErrorMessageUf2, progressMessage)));
                     hasError = true;
                 }
             }

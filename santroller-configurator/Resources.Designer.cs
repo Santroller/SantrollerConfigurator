@@ -6435,6 +6435,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ErrorMessageUf2 {
+            get {
+                return ResourceManager.GetString("ErrorMessageUf2", resourceCulture);
+            }
+        }
+        
         public static string WaitingMessage {
             get {
                 return ResourceManager.GetString("WaitingMessage", resourceCulture);

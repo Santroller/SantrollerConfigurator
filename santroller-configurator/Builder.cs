@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -16,6 +17,7 @@ public class Builder : Task
 
     public override bool Execute()
     {
+        Console.WriteLine(Parameter2);
         var platform = "linux";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) platform = "windows";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) platform = "macos";
@@ -29,36 +31,99 @@ public class Builder : Task
             }
         }
 
+        Directory.CreateDirectory(Path.Combine(Parameter1, "Binaries"));
+        Directory.CreateDirectory(Path.Combine(Parameter2, "Binaries"));
+
         Console.WriteLine("Copying firmware");
-        CopyFile("firmware", "firmware.tar.xz");
-        CopyFile("firmware", "firmware.version");
+        CopyIfNew(Parameter1, new[] {"firmware", "firmware.version"}, new[] {"firmware", "firmware.tar.xz"});
+        CopyIfNew(Parameter2, new[] {"firmware", "firmware.version"}, new[] {"firmware", "firmware.tar.xz"});
         Console.WriteLine("Copying platformio");
-        CopyFile("libs", platform, "platformio.tar.xz");
-        CopyFile("libs", platform, "platformio.version");
+        CopyIfNew(Parameter1, new[] {"libs", platform, "platformio.version"}, new[] {"libs", platform, "platformio.tar.xz"});
+        CopyIfNew(Parameter2, new[] {"libs", platform, "platformio.version"}, new[] {"libs", platform, "platformio.tar.xz"});
         return true;
     }
 
-    private void CopyFile(params string[] file)
+    private void CopyIfNew(string dir, string[] version, string[] file)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && Environment.GetEnvironmentVariable("GITHUB_ACTIONS") != null)
+        var assets = Path.Combine(dir, "Binaries");
+        var versionFile = Path.Combine(assets, version.Last());
+        var oldVersion = "";
+        if (File.Exists(versionFile))
+        {
+            oldVersion = File.ReadAllText(versionFile);
+        }
+
+        CopyFile(dir, version);
+        var newVersion = File.ReadAllText(versionFile);
+        if (newVersion != oldVersion)
+        {
+            Console.WriteLine("Changed, updating");
+            CopyFile(dir, file);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var info = new ProcessStartInfo("7z", $"x \"{file.Last()}\"")
+                {
+                    WorkingDirectory = assets
+                };
+                Start(info)?.WaitForExit();
+                info = new ProcessStartInfo("tar", $"xf \"{file.Last().Replace("tar.xz", "tar")}\"")
+                {
+                    WorkingDirectory = assets
+                };
+                Start(info)?.WaitForExit();
+            }
+            else
+            {
+                var info = new ProcessStartInfo("tar", $"xf \"{file.Last()}\"")
+                {
+                    WorkingDirectory = assets
+                };
+                Start(info)?.WaitForExit();
+            }
+
+            File.Delete(Path.Combine(assets, file.Last()));
+        }
+        else
+
+        {
+            Console.WriteLine("No change, leaving as is");
+        }
+    }
+
+    private void CopyFile(string dir, params string[] file)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) &&
+            Environment.GetEnvironmentVariable("GITHUB_ACTIONS") != null)
         {
             file = new[] {Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "artifacts"}.Concat(file)
                 .ToArray();
-            File.Copy(Path.Combine(file), Path.Combine(Parameter2, "Assets", file.Last()), true);
+            File.Copy(Path.Combine(file), Path.Combine(dir, "Binaries", file.Last()), true);
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             file = new[] {".", "artifacts"}.Concat(file).ToArray();
             Start("scp",
-                    $"sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}")
+                    $"sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(dir, "Binaries", file.Last())}")
                 .WaitForExit();
         }
         else
         {
             file = new[] {".", "artifacts"}.Concat(file).ToArray();
             Start("rsync",
-                    $"-avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(Parameter2, "Assets", file.Last())}")
+                    $"-avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(dir, "Binaries", file.Last())}")
                 .WaitForExit();
         }
+    }
+    public static string GetAppDataFolder()
+    {
+        var folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            folder = "/Users/Shared/Library/Application Support";
+        }
+
+        var path = Path.Combine(folder, "SantrollerConfigurator");
+
+        return path;
     }
 }
