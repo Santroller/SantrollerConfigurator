@@ -54,7 +54,7 @@ jobs:
         run: |
           cd santroller-configurator
           vpk download github --repoUrl https://github.com/Santroller/Santroller
-          vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p publish
+          vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -95,7 +95,7 @@ jobs:
         run: |
           cd santroller-configurator
           vpk download github --repoUrl https://github.com/Santroller/Santroller
-          vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p publish
+          vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/linux-x64/publish
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -119,7 +119,7 @@ jobs:
       - name: Build Branded
         run: |
           cd Branded
-          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal 
           mkdir out
           cp bin/Release/net8.0/win-x64/publish/SantrollerConfiguratorBranded.exe out/SantrollerConfiguratorBranded-win-64.exe
           mv out ..
@@ -136,7 +136,7 @@ jobs:
         run: |
           cd santroller-configurator
           vpk download github --repoUrl https://github.com/Santroller/Santroller
-          vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p publish
+          vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/win-x64/publish
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -164,6 +164,9 @@ jobs:
         run: |
           cd Builder
           dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          mkdir out
+          cp bin/Release/net7.0/linux-x64/publish/SantrollerConfiguratorBuilder out/SantrollerConfiguratorBuilder-linux-64
+          mv out ..
       - name: Get Version from Project File
         id: get-version
         shell: bash
@@ -174,7 +177,7 @@ jobs:
         run: |
           cd Builder
           vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.GITHUB_TOKEN }}
-          vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p publish
+          vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net7.0/linux-x64/publish
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -223,7 +226,7 @@ jobs:
         run: |
           cd Builder
           vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.GITHUB_TOKEN }}
-          vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p publish
+          vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/win-x64/publish
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -275,7 +278,7 @@ jobs:
         run: |
           cd Builder
           vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.GITHUB_TOKEN }}
-          vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p publish
+          vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
