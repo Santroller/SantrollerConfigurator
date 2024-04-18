@@ -135,7 +135,8 @@ public class GuitarAxis : OutputAxis
     {
         if (Input is DigitalToAnalog or FixedInput)
         {
-            return val / (ushort.MaxValue / 5) + 1;
+            Console.WriteLine(val);
+            return Math.Min(val / (ushort.MaxValue / 5) + 1, 5);
         } 
 
         if (val < PickupSelectorNotch2)
@@ -180,9 +181,8 @@ public class GuitarAxis : OutputAxis
         }
 
         val &= 0xFF;
-        if (Type is not GuitarAxisType.Slider || !Gh5NeckInput.Gh5Mappings.ContainsKey(val))
+        if (Type is not GuitarAxisType.Slider || !Gh5NeckInput.Gh5Mappings.TryGetValue(val, out var info))
             return ret + Resources.TapBarCurrentFretsNone;
-        var info = Gh5NeckInput.Gh5Mappings[val];
         if (info.HasFlag(BarButton.Green)) ret += $"{Resources.TapBarCurrentFretsGreen} ";
         if (info.HasFlag(BarButton.Red)) ret += $"{Resources.TapBarCurrentFretsRed} ";
         if (info.HasFlag(BarButton.Yellow)) ret += $"{Resources.TapBarCurrentFretsYellow} ";

@@ -92,10 +92,10 @@ public abstract partial class Output : ReactiveObject
         bool childOfCombined)
     {
         Model = model;
+        OutputPin = outputPin;
         OutputEnabled = outputEnabled;
         OutputInverted = outputInverted;
         PeripheralOutput = peripheralOutput;
-        OutputPin = outputPin;
         ChildOfCombined = childOfCombined;
         ButtonText = Resources.Assign;
         Input = input;

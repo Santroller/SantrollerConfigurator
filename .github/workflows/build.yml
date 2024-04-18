@@ -279,45 +279,6 @@ jobs:
           mv Releases ~/
           mv BuilderReleases Releases
           vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }} --token ${{ secrets.BINARY_GITHUB_TOKEN }}
-  
-#  pre-release:
-#    name: Release Preview Build
-#    runs-on: [self-hosted, linux]
-#    needs: [build-linux, build-mac, build-windows, build-mac-builder, build-linux-builder, build-windows-builder]
-#    steps:
-#      - name: Copy artifacts
-#        env:
-#          RUN_ID: ${{ github.run_id }}
-#        run: |
-#          cp -r ~/artifacts/$RUN_ID/* .
-#          rm -rf ~/artifacts/latest_release
-#          cp -r ~/artifacts/$RUN_ID ~/artifacts/latest_release
-#      - uses: dev-drprasad/delete-tag-and-release@v0.2.1
-#        with:
-#          delete_release: true
-#          tag_name: preview
-#          repo: Santroller/SantrollerConfiguratorBinaries
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
-#      - name: Sleep for 10 seconds
-#        run: sleep 10s
-#        shell: bash
-#      - name: Release
-#        uses: softprops/action-gh-release@v1
-#        with:
-#          tag_name: preview
-#          prerelease: true
-#          repository: Santroller/SantrollerConfiguratorBinaries
-#          name: "Preview Build"
-#          files: |
-#            ./windows/SantrollerConfigurator-win-64.exe
-#            ./macos/SantrollerConfigurator-macOS.zip
-#            ./linux/SantrollerConfigurator-linux-64
-#            ./windows-builder/*.exe
-#            ./macos-builder/*
-#            ./linux-builder/*
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.BINARY_GITHUB_TOKEN }}
   cleanup:
     name: Remove temp files
     runs-on: [self-hosted, linux]

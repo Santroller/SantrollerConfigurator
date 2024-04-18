@@ -145,11 +145,11 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
             var firstError = UsbDevice.LastErrorString;
             if (!Device.ControlTransfer(ref sp, buffer, buffer.Length, out length))
             {
-                Trace.TraceError($"Failed to read data from device: {UsbDevice.LastErrorString}");
+                Console.WriteLine($"Failed to read data from device: {UsbDevice.LastErrorString}");
                 return Array.Empty<byte>();
             }
 
-            Trace.TraceWarning($"Failed to read data from device (retry succeeded): {firstError}");
+            Console.WriteLine($"Failed to read data from device (retry succeeded): {firstError}");
         }
 
         Array.Resize(ref buffer, length);
