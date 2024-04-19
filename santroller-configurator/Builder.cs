@@ -35,7 +35,7 @@ public class Builder : Task
             Parameter1 = Path.Combine(Parameter1, Parameter2 + ".app", "Contents", "Resources");
             Console.WriteLine(Parameter1);
         }
-        Directory.CreateDirectory(Path.Combine(Parameter1, "Resources"));
+        Directory.CreateDirectory(Path.Combine(Parameter1, "Binaries"));
 
         Console.WriteLine("Copying firmware");
         CopyIfNew(Parameter1, new[] {"firmware", "firmware.version"}, new[] {"firmware", "firmware.tar.xz"});
