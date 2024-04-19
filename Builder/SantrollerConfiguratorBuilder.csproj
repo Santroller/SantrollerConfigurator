@@ -142,10 +142,18 @@
     <ItemGroup>
         <ProjectReference Include="..\santroller-configurator\SantrollerConfigurator.csproj">
             <IncludeAssets>true</IncludeAssets>
+            <Properties>SkipAssets=Skip</Properties>
         </ProjectReference>
     </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
         <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' "/>
         <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' "/>
+    </Target>
+
+    <Target Name="ZipOutputPath" BeforeTargets="PostBuildEvent">
+        <Builder Parameter1="$(TargetDir)" Parameter2="None" />
+    </Target>
+    <Target Name="ZipOutputPath2" AfterTargets="BundleApp">
+        <Builder Parameter1="$(PublishDir)" Parameter2="SantrollerConfiguratorBuilder" />
     </Target>
 </Project>

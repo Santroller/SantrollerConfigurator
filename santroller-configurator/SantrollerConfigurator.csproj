@@ -178,16 +178,16 @@
         <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
-        <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
-            <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' " />
-            <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
-        </Target>
-        <Target Name="ZipOutputPath" BeforeTargets="PostBuildEvent" Condition="'$(SkipAssets)' != 'Skip'">
-            <Builder Parameter1="$(TargetDir)" Parameter2="None" />
-        </Target>
-        <Target Name="ZipOutputPath2" AfterTargets="Publish" Condition="'$(SkipAssets)' != 'Skip'">
-            <Builder Parameter1="$(PublishDir)" Parameter2="SantrollerConfigurator" />
-        </Target>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
+        <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' " />
+        <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
+    </Target>
+    <Target Name="ZipOutputPath" BeforeTargets="PostBuildEvent" Condition="'$(SkipAssets)' != 'Skip'">
+        <Builder Parameter1="$(TargetDir)" Parameter2="None" />
+    </Target>
+    <Target Name="ZipOutputPath2" AfterTargets="BundleApp" Condition="'$(SkipAssets)' != 'Skip'">
+        <Builder Parameter1="$(PublishDir)" Parameter2="SantrollerConfigurator" />
+    </Target>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <DebugType>None</DebugType>
