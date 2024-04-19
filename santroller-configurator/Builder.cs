@@ -35,7 +35,7 @@ public class Builder : Task
         Directory.CreateDirectory(Path.Combine(Parameter1, "Binaries"));
         if (platform == "macos")
         {
-            Parameter2 = Path.Combine(Parameter2, Parameter3 + ".app", "Contents", "Resources", "Binaries");
+            Parameter2 = Path.Combine(Parameter2, Parameter3 + ".app", "Contents", "Resources");
         }
         Directory.CreateDirectory(Path.Combine(Parameter2, "Binaries"));
 
