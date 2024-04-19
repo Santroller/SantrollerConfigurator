@@ -14,6 +14,7 @@ public class Builder : Task
 {
     public string Parameter1 { get; set; } = "";
     public string Parameter2 { get; set; } = "";
+    public string Parameter3 { get; set; } = "";
 
     public override bool Execute()
     {
@@ -32,6 +33,10 @@ public class Builder : Task
         }
 
         Directory.CreateDirectory(Path.Combine(Parameter1, "Binaries"));
+        if (platform == "macos")
+        {
+            Parameter2 = Path.Combine(Parameter2, Parameter3 + ".app", "Contents", "Resources", "Binaries");
+        }
         Directory.CreateDirectory(Path.Combine(Parameter2, "Binaries"));
 
         Console.WriteLine("Copying firmware");

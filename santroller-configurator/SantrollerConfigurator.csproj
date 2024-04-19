@@ -3,6 +3,7 @@
         <ParameterGroup>
             <Parameter1 ParameterType="System.String" />
             <Parameter2 ParameterType="System.String" />
+            <Parameter3 ParameterType="System.String" />
         </ParameterGroup>
         <Task>
             <Using Namespace="System.Text" />
@@ -40,8 +41,8 @@
         <NSPrincipalClass>NSApplication</NSPrincipalClass>
         <NSHighResolutionCapable>true</NSHighResolutionCapable>
         <Company>TangentMC</Company>
-        <Copyright>Copyright © 2023</Copyright>
-        <RepositoryUrl>https://github.com/sanjay900/guitar-configurator</RepositoryUrl>
+        <Copyright>Copyright © 2024</Copyright>
+        <RepositoryUrl>https://github.com/Santroller/Santroller</RepositoryUrl>
         <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
@@ -183,7 +184,7 @@
         <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
     </Target>
     <Target Name="ZipOutputPath" BeforeTargets="ResolveReferences">
-        <Builder Parameter1="$(TargetDir)" Parameter2="$(PublishDir)" />
+        <Builder Parameter1="$(TargetDir)" Parameter2="$(PublishDir)" Parameter3="$(SolutionName)" />
     </Target>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
