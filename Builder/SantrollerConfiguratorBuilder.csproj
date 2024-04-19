@@ -92,7 +92,6 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
-        <PackageReference Include="Joveler.Compression.XZ" Version="4.3.0" />
         <PackageReference Include="LibUsbDotNet" Version="2.2.29" />
         <PackageReference Include="Microsoft.Build.Framework" Version="17.9.5">
             <PrivateAssets>all</PrivateAssets>

@@ -69,7 +69,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             Router.NavigateAndReset.Execute(Router.NavigationStack.First()));
         ProgressbarColor = ProgressBarPrimary;
         Working = true;
-        AssetUtils.InitNativeLibrary();
         _allDeviceInputTypes.AddRange(Enum.GetValues<DeviceInputType>());
         _allDeviceInputTypes
             .Connect()
@@ -704,7 +703,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.System);
             var appdataFolder = AssetUtils.GetAppDataFolder();
             var driverFolder = Path.Combine(appdataFolder, "drivers");
-            await AssetUtils.ExtractXzAsync("dfu.tar.xz", appdataFolder, _ => { });
+            // TODO: i think we can do this when installing instead? if not, we can probably just bundle the files in a zip instead of a xz
+            // await AssetUtils.ExtractXzAsync("dfu.tar.xz", appdataFolder, _ => { });
 
             var info = new ProcessStartInfo(Path.Combine(windowsDir, "pnputil.exe"));
             info.ArgumentList.AddRange(new[] {"-i", "-a", Path.Combine(driverFolder, "atmel_usb_dfu.inf")});
