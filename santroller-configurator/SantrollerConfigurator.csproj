@@ -184,7 +184,7 @@
         <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
     </Target>
     <Target Name="ZipOutputPath" BeforeTargets="ResolveReferences">
-        <Builder Parameter1="$(TargetDir)" Parameter2="$(PublishDir)" Parameter3="$(SolutionName)" />
+        <Builder Parameter1="$(TargetDir)" Parameter2="$(PublishDir)" Parameter3="SantrollerConfigurator" />
     </Target>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
