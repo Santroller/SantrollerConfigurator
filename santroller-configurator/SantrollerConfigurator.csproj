@@ -182,14 +182,12 @@
             <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' " />
             <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
         </Target>
-        <ItemGroup Condition="'$(SkipAssets)' != 'Skip'">
-            <Target Name="ZipOutputPath" BeforeTargets="PostBuildEvent">
-                <Builder Parameter1="$(TargetDir)" Parameter2="None" />
-            </Target>
-            <Target Name="ZipOutputPath2" AfterTargets="Publish">
-                <Builder Parameter1="$(PublishDir)" Parameter2="SantrollerConfigurator" />
-            </Target>
-        </ItemGroup>
+        <Target Name="ZipOutputPath" BeforeTargets="PostBuildEvent" Condition="'$(SkipAssets)' != 'Skip'">
+            <Builder Parameter1="$(TargetDir)" Parameter2="None" />
+        </Target>
+        <Target Name="ZipOutputPath2" AfterTargets="Publish" Condition="'$(SkipAssets)' != 'Skip'">
+            <Builder Parameter1="$(PublishDir)" Parameter2="SantrollerConfigurator" />
+        </Target>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <DebugType>None</DebugType>
