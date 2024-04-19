@@ -183,7 +183,7 @@
         <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' " />
         <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
     </Target>
-    <Target Name="ZipOutputPath" BeforeTargets="ResolveReferences">
+    <Target Name="ZipOutputPath" BeforeTargets="PostBuildEvent">
         <Builder Parameter1="$(TargetDir)" Parameter2="$(PublishDir)" Parameter3="SantrollerConfigurator" />
     </Target>
 

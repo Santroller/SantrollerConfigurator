@@ -98,7 +98,7 @@ public class Ps2Input : SpiInput
         {Ps2InputType.DpadUp, $"(ps2Data[5] < {255 / 4})"},
         {Ps2InputType.DpadLeft, $"(ps2Data[5] < {255 / 4 * 2} && ps2Data[5] > {255 / 4})"},
         {Ps2InputType.DpadDown, $"(ps2Data[5] < {255 / 4 * 3} && ps2Data[5] > {255 / 4 * 2})"},
-        {Ps2InputType.DpadRight, $"(ps2Data[5] > {255 / 4 * 3} && ps2Data[5] < 250)"},
+        {Ps2InputType.DpadRight, $"(ps2Data[5] > {255 / 4 * 3} && ps2Data[5] < 250 && ps2Data[5] != 127)"},
     };
 
     private static readonly Dictionary<Ps2InputType, string> Mappings = new()
@@ -409,7 +409,7 @@ public class Ps2Input : SpiInput
             Ps2InputType.DpadLeft when digital => ~ps2Data[3] & (1 << 7),
             Ps2InputType.DpadUp when guitar => ps2Data[5] < 255 / 4 ? 1 : 0,
             Ps2InputType.DpadLeft when guitar => ps2Data[5] < 255 / 4 * 2 && ps2Data[5] > 255 / 4 ? 1 : 0,
-            Ps2InputType.DpadDown when guitar => ps2Data[5] < 255 / 4 * 3 && ps2Data[5] > 255 / 4 * 2 ? 1 : 0,
+            Ps2InputType.DpadDown when guitar => ps2Data[5] != 127 && ps2Data[5] < 255 / 4 * 3 && ps2Data[5] > 255 / 4 * 2 ? 1 : 0,
             Ps2InputType.DpadRight when guitar => ps2Data[5] > 255 / 4 * 3 && ps2Data[5] < 250 ? 1 : 0,
             Ps2InputType.L2 when digital => ~ps2Data[4] & (1 << 0),
             Ps2InputType.R2 when digital => ~ps2Data[4] & (1 << 1),
