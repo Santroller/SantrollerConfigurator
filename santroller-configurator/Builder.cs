@@ -14,11 +14,9 @@ public class Builder : Task
 {
     public string Parameter1 { get; set; } = "";
     public string Parameter2 { get; set; } = "";
-    public string Parameter3 { get; set; } = "";
 
     public override bool Execute()
     {
-        Console.WriteLine(Parameter2);
         var platform = "linux";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) platform = "windows";
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) platform = "macos";
@@ -32,20 +30,17 @@ public class Builder : Task
             }
         }
 
-        Directory.CreateDirectory(Path.Combine(Parameter1, "Binaries"));
-        if (platform == "macos")
+        if (platform == "macos" && Parameter2 != "None")
         {
-            Parameter2 = Path.Combine(Parameter2, Parameter3 + ".app", "Contents", "Resources");
-            Console.WriteLine(Parameter2);
+            Parameter2 = Path.Combine(Parameter1, Parameter1 + ".app", "Contents", "Resources");
+            Console.WriteLine(Parameter1);
         }
-        Directory.CreateDirectory(Path.Combine(Parameter2, "Binaries"));
+        Directory.CreateDirectory(Path.Combine(Parameter1, "Binaries"));
 
         Console.WriteLine("Copying firmware");
         CopyIfNew(Parameter1, new[] {"firmware", "firmware.version"}, new[] {"firmware", "firmware.tar.xz"});
-        CopyIfNew(Parameter2, new[] {"firmware", "firmware.version"}, new[] {"firmware", "firmware.tar.xz"});
         Console.WriteLine("Copying platformio");
         CopyIfNew(Parameter1, new[] {"libs", platform, "platformio.version"}, new[] {"libs", platform, "platformio.tar.xz"});
-        CopyIfNew(Parameter2, new[] {"libs", platform, "platformio.version"}, new[] {"libs", platform, "platformio.tar.xz"});
         return true;
     }
 
