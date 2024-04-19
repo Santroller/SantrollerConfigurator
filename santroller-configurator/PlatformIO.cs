@@ -26,9 +26,12 @@ public class PlatformIo
 
     public static string GetAssetDir()
     {
-        return Path.Combine(Path.GetDirectoryName(Environment.ProcessPath!)!, "Binaries");
+        return RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+            ? Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(Environment.ProcessPath!)!)!, "Resources",
+                "Binaries")
+            : Path.Combine(Path.GetDirectoryName(Environment.ProcessPath!)!, "Binaries");
     }
-    
+
     public PlatformIo()
     {
         var assetDir = GetAssetDir();
@@ -66,6 +69,7 @@ public class PlatformIo
     {
         _currentProcess?.Kill(true);
     }
+
     public async Task<PlatformIoPort[]?> GetPortsAsync()
     {
         if (!Path.Exists(_pythonExecutable)) return null;

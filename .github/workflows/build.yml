@@ -45,7 +45,7 @@ jobs:
         run: |
           cd santroller-configurator
           ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/Santroller
-          ~/.dotnet/tools/vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish --signAppIdentity "guitar-configurator" --signInstallIdentity "guitar-configurator" --noInst
+          ~/.dotnet/tools/vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish/SantrollerConfigurator.app --signAppIdentity "guitar-configurator" --signInstallIdentity "guitar-configurator" --noInst
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -251,7 +251,7 @@ jobs:
         run: |
           cd Builder
           ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.GITHUB_TOKEN }}
-          ~/.dotnet/tools/vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish --signAppIdentity "guitar-configurator" --signInstallIdentity "guitar-configurator" --noInst
+          ~/.dotnet/tools/vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish/SantrollerConfiguratorBuilder.app --signAppIdentity "guitar-configurator" --signInstallIdentity "guitar-configurator" --noInst
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
