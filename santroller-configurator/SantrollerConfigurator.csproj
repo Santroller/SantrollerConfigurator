@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <UsingTask TaskName="Builder" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
         <ParameterGroup>
-            <Parameter1 ParameterType="System.String" />
-            <Parameter2 ParameterType="System.String" />
+            <Parameter1 ParameterType="System.String"/>
+            <Parameter2 ParameterType="System.String"/>
         </ParameterGroup>
         <Task>
-            <Using Namespace="System.Text" />
-            <Using Namespace="System.Text.Json" />
-            <Code Type="Class" Language="cs" Source="Builder.cs" />
+            <Using Namespace="System.Text"/>
+            <Using Namespace="System.Text.Json"/>
+            <Code Type="Class" Language="cs" Source="Builder.cs"/>
         </Task>
     </UsingTask>
     <PropertyGroup>
@@ -64,7 +64,7 @@
         <CodeSignExtraArgs>--deep</CodeSignExtraArgs>
     </PropertyGroup>
     <ItemGroup>
-        <TrimmableAssembly Include="Avalonia.DesignerSupport" />
+        <TrimmableAssembly Include="Avalonia.DesignerSupport"/>
     </ItemGroup>
     <ItemGroup>
         <Content Include="Resources\icon.icns">
@@ -75,46 +75,46 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-        <AvaloniaResource Include="Assets\icon.png" />
-        <AvaloniaResource Include="Assets\Icons\**" />
-        <AvaloniaResource Include="Assets\Images\**" />
-        <AvaloniaResource Include="Assets\68-santroller.rules" />
+        <AvaloniaResource Include="Assets\icon.png"/>
+        <AvaloniaResource Include="Assets\Icons\**"/>
+        <AvaloniaResource Include="Assets\Images\**"/>
+        <AvaloniaResource Include="Assets\68-santroller.rules"/>
     </ItemGroup>
     <ItemGroup Condition="'$(SkipAssets)' != 'Skip'">
-        <AvaloniaResource Include="Assets\dfu.tar.xz" />
+        <AvaloniaResource Include="Assets\dfu.tar.xz"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="AsmResolver" Version="5.5.1" />
-        <PackageReference Include="AsmResolver.PE" Version="5.5.1" />
-        <PackageReference Include="AsmResolver.PE.File" Version="5.5.1" />
-        <PackageReference Include="AsmResolver.PE.Win32Resources" Version="5.5.1" />
-        <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-        <PackageReference Include="Microsoft.Net.ILLink.Tasks" Version="8.0.100-1.23067.1" />
-        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
+        <PackageReference Include="AsmResolver" Version="5.5.1"/>
+        <PackageReference Include="AsmResolver.PE" Version="5.5.1"/>
+        <PackageReference Include="AsmResolver.PE.File" Version="5.5.1"/>
+        <PackageReference Include="AsmResolver.PE.Win32Resources" Version="5.5.1"/>
+        <PackageReference Include="Dotnet.Bundle" Version="0.9.13"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2"/>
+        <PackageReference Include="Microsoft.Net.ILLink.Tasks" Version="8.0.100-1.23067.1"/>
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.0.10"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.10"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10" />
-        <PackageReference Include="LibUsbDotNet" Version="2.2.29" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.10"/>
+        <PackageReference Include="LibUsbDotNet" Version="2.2.29"/>
         <PackageReference Include="Microsoft.Build.Framework" Version="17.9.5">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.8.3">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview" />
-        <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.18.1" />
-        <PackageReference Include="protobuf-net" Version="3.2.30" />
-        <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
-        <PackageReference Include="System.IO.Ports" Version="8.0.0" />
-        <PackageReference Include="SemanticVersioning" Version="3.0.0-beta2" />
-        <PackageReference Include="System.Text.Json" Version="8.0.3" />
+        <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview"/>
+        <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.18.1"/>
+        <PackageReference Include="protobuf-net" Version="3.2.30"/>
+        <PackageReference Include="ReactiveUI.Fody" Version="19.5.41"/>
+        <PackageReference Include="System.IO.Ports" Version="8.0.0"/>
+        <PackageReference Include="SemanticVersioning" Version="3.0.0-beta2"/>
+        <PackageReference Include="System.Text.Json" Version="8.0.3"/>
         <PackageReference Include="GitVersion.MsBuild" Version="6.0.0-beta.3">
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Velopack" Version="0.0.359" />
+        <PackageReference Include="Velopack" Version="0.0.359"/>
     </ItemGroup>
     <PropertyGroup>
         <DefaultItemExcludes>$(DefaultItemExcludes);$(PublishDir)\Binaries\**\*</DefaultItemExcludes>
@@ -166,26 +166,39 @@
             <SubType>Code</SubType>
         </Compile>
         <Compile Update="Resources.Designer.cs">
-          <DesignTime>True</DesignTime>
-          <AutoGen>True</AutoGen>
-          <DependentUpon>Resources.resx</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Update="Resources.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+        <EmbeddedResource Update="Resources.resx">
+            <Generator>PublicResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
-        <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' " />
-        <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
+        <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' "/>
+        <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' "/>
     </Target>
     <Target Name="ZipOutputPath" BeforeTargets="PostBuildEvent" Condition="'$(SkipAssets)' != 'Skip'">
-        <Builder Parameter1="$(TargetDir)" Parameter2="None" />
+        <Builder Parameter1="$(TargetDir)" Parameter2="None"/>
     </Target>
+    <!--  Only macOS runs bundleapp  -->
     <Target Name="ZipOutputPath2" AfterTargets="BundleApp" Condition="'$(SkipAssets)' != 'Skip'">
-        <Builder Parameter1="$(PublishDir)" Parameter2="SantrollerConfigurator" />
+        <ItemGroup>
+            <MySourceFiles Include="$(TargetDir)\Binaries\**\*.*"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(MySourceFiles)"
+              DestinationFolder="$(PublishDir)\SantrollerConfigurator.app\Contents\Resources\Binaries\%(RecursiveDir)"/>
+    </Target>
+    <!--  Everything else is handled here  -->
+    <Target Name="ZipOutputPath3" AfterTargets="ZipOutputPath" Condition="'$(SkipAssets)' != 'Skip' And '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'false'">
+        <ItemGroup>
+            <MySourceFiles Include="$(TargetDir)\Binaries\**\*.*"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(MySourceFiles)"
+              DestinationFolder="$(PublishDir)\Binaries\%(RecursiveDir)"/>
     </Target>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

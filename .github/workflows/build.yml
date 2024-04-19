@@ -14,10 +14,6 @@ jobs:
         env:
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: security unlock-keychain -p $KEYCHAIN_PASSWORD login.keychain
-      - name: Install deps
-        run: |
-          dotnet tool update -g GitVersion.Tool
-          dotnet tool update -g vpk --prerelease
       - name: Build Branded
         run: |
           cd Branded
@@ -61,10 +57,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install deps
-        run: |
-          dotnet tool update -g GitVersion.Tool
-          dotnet tool update -g vpk --prerelease
       - name: Build Branded
         run: |
           cd Branded
@@ -103,10 +95,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install deps
-        run: |
-          dotnet tool update -g GitVersion.Tool
-          dotnet tool update -g vpk --prerelease
       - name: Build Branded
         run: |
           cd Branded
