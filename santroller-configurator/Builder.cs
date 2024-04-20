@@ -72,6 +72,7 @@ public class Builder : Task
                     WorkingDirectory = assets
                 };
                 Start(info)?.WaitForExit();
+                File.Delete(Path.Combine(assets, file.Last().Replace("tar.xz", "tar")));
             }
             else
             {
