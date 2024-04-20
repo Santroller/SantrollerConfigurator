@@ -158,7 +158,7 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir -p ~/artifacts/$RUN_ID/BuilderReleases
-          mv Builder/Releases ~/artifacts/$RUN_ID/BuilderReleases
+          mv Builder/Releases/* ~/artifacts/$RUN_ID/BuilderReleases
   build-windows-builder:
     name: Build Builder (Windows)
     needs: [build-linux, build-mac, build-windows]

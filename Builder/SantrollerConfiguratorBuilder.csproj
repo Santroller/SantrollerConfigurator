@@ -161,14 +161,22 @@
     </Target>
 
     <Target Name="ZipOutputPath" BeforeTargets="PostBuildEvent">
-        <Builder Parameter1="$(TargetDir)" Parameter2="None" />
+        <Builder Parameter1="$(TargetDir)" Parameter2="None"/>
     </Target>
+    <!--  Only macOS runs bundleapp  -->
     <Target Name="ZipOutputPath2" AfterTargets="BundleApp">
-        <Builder Parameter1="$(PublishDir)" Parameter2="SantrollerConfiguratorBuilder" />
         <ItemGroup>
             <MySourceFiles Include="$(TargetDir)\Binaries\**\*.*"/>
         </ItemGroup>
         <Copy SourceFiles="@(MySourceFiles)"
               DestinationFolder="$(PublishDir)\SantrollerConfiguratorBuilder.app\Contents\Resources\Binaries\%(RecursiveDir)"/>
+    </Target>
+    <!--  Everything else is handled here  -->
+    <Target Name="ZipOutputPath3" AfterTargets="ZipOutputPath" Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'false'">
+        <ItemGroup>
+            <MySourceFiles Include="$(TargetDir)\Binaries\**\*.*"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(MySourceFiles)"
+              DestinationFolder="$(PublishDir)\Binaries\%(RecursiveDir)"/>
     </Target>
 </Project>
