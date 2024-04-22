@@ -98,12 +98,17 @@ public static class LedTypeMethods
                    """;
         }
 
-        return $"""
-                     {variable}[{index - 1}].brightness = {brightness};
-                     {variable}[{index - 1}].r = {color.R};
-                     {variable}[{index - 1}].g = {color.G};
-                     {variable}[{index - 1}].b = {color.B};
-                """;
+        return writer != null ? $"""
+                                      {variable}[{index - 1}].brightness = {WriteBlob(writer, brightness)};
+                                      {variable}[{index - 1}].r = {WriteBlob(writer, color.R)};
+                                      {variable}[{index - 1}].g = {WriteBlob(writer, color.G)};
+                                      {variable}[{index - 1}].b = {WriteBlob(writer, color.B)};
+                                 """ : $"""
+                                             {variable}[{index - 1}].brightness = {brightness};
+                                             {variable}[{index - 1}].r = {color.R};
+                                             {variable}[{index - 1}].g = {color.G};
+                                             {variable}[{index - 1}].b = {color.B};
+                                        """;
     }
 
     public static string GetLedAssignment(this LedType type, bool peripheral, string brightness, string r, string g,
