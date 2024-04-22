@@ -6626,5 +6626,59 @@ namespace GuitarConfigurator.NetCore {
                 return ResourceManager.GetString("GenericGamepadLabel", resourceCulture);
             }
         }
+        
+        public static string DownloadingUpdate {
+            get {
+                return ResourceManager.GetString("DownloadingUpdate", resourceCulture);
+            }
+        }
+        
+        public static string UnplugReplugMessage {
+            get {
+                return ResourceManager.GetString("UnplugReplugMessage", resourceCulture);
+            }
+        }
+        
+        public static string DriversMissingMessage {
+            get {
+                return ResourceManager.GetString("DriversMissingMessage", resourceCulture);
+            }
+        }
+        
+        public static string RootRequiredMessage {
+            get {
+                return ResourceManager.GetString("RootRequiredMessage", resourceCulture);
+            }
+        }
+        
+        public static string DoneMessage {
+            get {
+                return ResourceManager.GetString("DoneMessage", resourceCulture);
+            }
+        }
+        
+        public static string WritingMessage {
+            get {
+                return ResourceManager.GetString("WritingMessage", resourceCulture);
+            }
+        }
+        
+        public static string BuildingVariantMessage {
+            get {
+                return ResourceManager.GetString("BuildingVariantMessage", resourceCulture);
+            }
+        }
+        
+        public static string LibUsbMissingMessage {
+            get {
+                return ResourceManager.GetString("LibUsbMissingMessage", resourceCulture);
+            }
+        }
+        
+        public static string ConnectedMessage {
+            get {
+                return ResourceManager.GetString("ConnectedMessage", resourceCulture);
+            }
+        }
     }
 }

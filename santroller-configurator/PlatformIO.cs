@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.Utils;
 using Resources = GuitarConfigurator.NetCore.Resources;
@@ -34,7 +35,7 @@ public class PlatformIo
 
     private async Task InitialisePlatformIoAsync(IObserver<PlatformIoState> platformIoOutput)
     {
-        platformIoOutput.OnNext(new PlatformIoState(0, Resources.CopyingFirmwareMessage, ""));
+        platformIoOutput.OnNext(new PlatformIoState(0, Resources.CopyingFirmwareMessage, false, ""));
         await Task.Run(() =>
         {
             if (Directory.Exists(FirmwareDir))
@@ -51,7 +52,7 @@ public class PlatformIo
     public IObservable<PlatformIoState> InitialisePlatformIo()
     {
         var platformIoOutput =
-            new BehaviorSubject<PlatformIoState>(new PlatformIoState(0, Resources.SettingUpMessage, null));
+            new BehaviorSubject<PlatformIoState>(new PlatformIoState(0, Resources.SettingUpMessage, false, null));
         _ = InitialisePlatformIoAsync(platformIoOutput).ConfigureAwait(false);
         return platformIoOutput;
     }
@@ -130,7 +131,7 @@ public class PlatformIo
     {
         var platformIoOutput =
             new BehaviorSubject<PlatformIoState>(new PlatformIoState(progressStartingPercentage, progressMessage,
-                null));
+                false, null));
 
         async Task Process()
         {
@@ -179,7 +180,7 @@ public class PlatformIo
                 if (hasDfu)
                 {
                     platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                        string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
+                        string.Format(Resources.LookingForDeviceMessage, progressMessage), false, null));
                     currentProgress += percentageStep / sections;
 
                     sections = 11;
@@ -224,7 +225,7 @@ public class PlatformIo
                     {
 #if Linux
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.LookingForDeviceMessageLinux, progressMessage), null));
+                            string.Format(Resources.LookingForDeviceMessageLinux, progressMessage), false, null));
 #else
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
                             string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
@@ -346,22 +347,20 @@ public class PlatformIo
                             var message = string.Format(Resources.BuildingMessage, progressMessage);
 
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                message, null));
+                                message, false, null));
                             currentProgress += percentageStep / sections;
                         }
 
                         if (line.StartsWith("Looking for device in DFU mode") && device is not Santroller && !inDfu)
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                string.Format(Resources.DfuMessage, progressMessage), null));
+                                string.Format(Resources.DfuMessage,  progressMessage), true, null, true));
                         }
 
-                        if (platformIoOutput.Value.Message ==
-                            string.Format(Resources.DfuMessage, progressMessage) &&
-                            line.StartsWith("Calling"))
+                        if (platformIoOutput.Value.Dfu && line.StartsWith("Calling"))
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                string.Format(Resources.BuildingMessage, progressMessage), null));
+                                string.Format(Resources.BuildingMessage, progressMessage), false, null));
                         }
 
                         if (line.StartsWith("Detecting microcontroller type"))
@@ -376,13 +375,13 @@ public class PlatformIo
                         if (line.StartsWith("searching for uno"))
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                string.Format(Resources.WaitingMessageReplug, progressMessage), null));
+                                string.Format(Resources.WaitingMessageReplug, progressMessage), false, null));
                         }
 
                         if (line.StartsWith("Looking for upload port..."))
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                string.Format(Resources.LookingForPortMessage, progressMessage), null));
+                                string.Format(Resources.LookingForPortMessage, progressMessage), false, null));
                             currentProgress += percentageStep / sections;
 
 
@@ -392,7 +391,7 @@ public class PlatformIo
                         if (line.StartsWith("Looking for upload disk..."))
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                string.Format(Resources.LookingForPortMessage, progressMessage), null));
+                                string.Format(Resources.LookingForPortMessage, progressMessage), false, null));
                             currentProgress += percentageStep / sections;
                         }
 
@@ -404,21 +403,21 @@ public class PlatformIo
                     if (line.Contains("AVR device initialized and ready to accept instructions"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.ReadingSettingsMessage, progressMessage), null));
+                            string.Format(Resources.ReadingSettingsMessage, progressMessage), false, null));
                         state = 1;
                     }
 
                     if (line.Contains("writing flash"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.UploadingMessage, progressMessage), null));
+                            string.Format(Resources.UploadingMessage, progressMessage), false, null));
                         state = 2;
                     }
 
                     if (line.Contains("rp2040load"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.UploadingMessage, progressMessage), null));
+                            string.Format(Resources.UploadingMessage, progressMessage), false, null));
                         ;
                     }
 
@@ -427,13 +426,13 @@ public class PlatformIo
                         var done = line.Count(s => s == '=') / 30.0;
                         platformIoOutput.OnNext(new PlatformIoState(
                             currentProgress + percentageStep / sections * done,
-                            string.Format(Resources.UploadingMessage, progressMessage), null));
+                            string.Format(Resources.UploadingMessage, progressMessage), false, null));
                     }
 
                     if (line.Contains("reading on-chip flash data"))
                     {
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.VerifyingMessage, progressMessage), null));
+                            string.Format(Resources.VerifyingMessage, progressMessage), false, null));
                         state = 3;
                     }
 
@@ -472,15 +471,15 @@ public class PlatformIo
                         {
                             case 1:
                                 platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                    string.Format(Resources.ReadingSettingsMessage, progressMessage), null));
+                                    string.Format(Resources.ReadingSettingsMessage, progressMessage), false, null));
                                 break;
                             case 2:
                                 platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                    string.Format(Resources.UploadingMessage, progressMessage), null));
+                                    string.Format(Resources.UploadingMessage, progressMessage), false, null));
                                 break;
                             case 3:
                                 platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                    string.Format(Resources.VerifyingMessage, progressMessage), null));
+                                    string.Format(Resources.VerifyingMessage, progressMessage), false, null));
                                 break;
                         }
                     }
@@ -508,20 +507,20 @@ public class PlatformIo
                     {
 #if Windows
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.WaitingMessageReplugWindows, progressMessage), null));
+                            string.Format(Resources.WaitingMessageReplugWindows, progressMessage), true, null));
 #else
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.WaitingMessageReplug, progressMessage), null));
+                            string.Format(Resources.WaitingMessageReplug, progressMessage), true, null));
 #endif
                     }
                     else
                     {
 #if Windows
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                string.Format(Resources.WaitingMessageWindows, progressMessage), null));
+                                string.Format(Resources.WaitingMessageWindows, progressMessage), false, null));
 #else
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.WaitingMessage, progressMessage), null));
+                            string.Format(Resources.WaitingMessage, progressMessage), false, null));
 #endif
                     }
                 }
@@ -536,7 +535,7 @@ public class PlatformIo
         return platformIoOutput;
     }
 
-    public record PlatformIoState(double Percentage, string Message, string? Log)
+    public record PlatformIoState(double Percentage, string Message, bool Warning, string? Log, bool Dfu = false)
     {
         public PlatformIoState WithLog(string log)
         {

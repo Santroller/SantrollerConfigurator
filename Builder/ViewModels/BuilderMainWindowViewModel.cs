@@ -254,7 +254,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         {
             if (!extra.Any() || !write) return;
             Progress = 50;
-            Message = "Writing";
+            Message = GuitarConfigurator.NetCore.Resources.WritingMessage;
             SaveToDevice(config);
         });
 
@@ -264,7 +264,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
     public override IObservable<PlatformIo.PlatformIoState> SaveUf2(ConfigViewModel model)
     {
-        if (Selected == null) return Observable.Return(new PlatformIo.PlatformIoState(100, "Done", null));
+        if (Selected == null) return Observable.Return(new PlatformIo.PlatformIoState(100, GuitarConfigurator.NetCore.Resources.DoneMessage, false, null));
         var state = Write(model, false);
 
         state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, () => SaveUf2File(model));

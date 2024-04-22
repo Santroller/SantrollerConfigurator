@@ -49,7 +49,7 @@
                                 Margin="0 0 0 20">
                         <Label Content="{Binding BuilderMain.UpdateMessage}" VerticalAlignment="Center"
                                VerticalContentAlignment="Center" />
-                        <Button Command="{Binding BuilderMain.OpenReleasesPageCommand}"
+                        <Button Command="{Binding BuilderMain.UpdateAppCommand}"
                                 Content="{x:Static netCore:Resources.UpdateDesc}" />
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center">

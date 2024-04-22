@@ -135,7 +135,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     [RelayCommand]
     public async Task<PlatformIo.PlatformIoState> OverwriteNew()
     {
-        if (SelectedDevice == null) return new PlatformIo.PlatformIoState(100, "No device selected", null);
+        if (SelectedDevice == null) return new PlatformIo.PlatformIoState(100, "No device selected", false, null);
         Model = null;
         return await Overwrite();
     }
@@ -143,7 +143,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     [RelayCommand]
     public async Task<PlatformIo.PlatformIoState> Overwrite()
     {
-        if (SelectedDevice == null) return new PlatformIo.PlatformIoState(100, "No device selected", null);
+        if (SelectedDevice == null) return new PlatformIo.PlatformIoState(100, "No device selected", false, null);
         if (Model == null)
         {
             Model = new ConfigViewModel(this, SelectedDevice, true);
@@ -171,7 +171,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
         Message = "Writing";
         await SelectedConfig.BuildUf2(Model, Path.Combine(path, "firmware.uf2"));
         return new PlatformIo.PlatformIoState(90,
-            Windows ? "Waiting for device (Stuck here? Try clicking refresh devices)" : "Waiting for device", null);
+            Windows ? "Waiting for device (Stuck here? Try clicking refresh devices)" : "Waiting for device", false, null);
     }
 
     [RelayCommand]

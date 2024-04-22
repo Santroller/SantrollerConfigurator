@@ -54,7 +54,7 @@
                             Margin="0 0 0 20">
                     <Label Content="{Binding Main.UpdateMessage}" VerticalAlignment="Center"
                            VerticalContentAlignment="Center" />
-                    <Button Command="{Binding Main.OpenReleasesPageCommand}" Content="{x:Static netCore:Resources.UpdateDesc}" />
+                    <Button Command="{Binding Main.UpdateAppCommand}" Content="{x:Static netCore:Resources.UpdateDesc}" />
                 </StackPanel>
                 <TextBlock IsVisible="{Binding !Main.MigrationSupported}"
                            Text="{x:Static netCore:Resources.FirmwareTooOldDesc}" />

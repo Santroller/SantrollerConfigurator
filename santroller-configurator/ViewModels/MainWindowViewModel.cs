@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net.Http;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -86,7 +84,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             _updateInfo = _mgr.CheckForUpdates();
         }
 
-        Message = "Connected";
+        Message = Resources.ConnectedMessage;
         GoBack = ReactiveCommand.CreateFromObservable(() =>
             Router.NavigateAndReset.Execute(Router.NavigationStack.First()));
         ProgressbarColor = ProgressBarPrimary;
@@ -104,7 +102,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         catch (DllNotFoundException e)
         {
             Message =
-                "You are missing libusb-1.0.so. On ubuntu or other debian based distributions, you will need to install 'libusb-1.0-0-dev'";
+                Resources.LibUsbMissingMessage;
             ProgressbarColor = ProgressBarError;
             Progress = 100;
             hasLibUsb = false;
@@ -430,7 +428,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     public virtual IObservable<PlatformIo.PlatformIoState> SaveUf2(ConfigViewModel model)
     {
-        return Observable.Return(new PlatformIo.PlatformIoState(100, "Done", ""));
+        return Observable.Return(new PlatformIo.PlatformIoState(100, Resources.DoneMessage, false, ""));
     }
 
     public virtual IObservable<PlatformIo.PlatformIoState> Write(ConfigViewModel config, bool write, string extra = "",
@@ -463,7 +461,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             environment += "_usb_serial";
         }
 
-        var state = Observable.Return(new PlatformIo.PlatformIoState(startingPercentage, "", null));
+        var state = Observable.Return(new PlatformIo.PlatformIoState(startingPercentage, "", false, null));
 
         // When programming, the last 10 percentage is waiting for the device to show up
         if (write)
@@ -477,13 +475,13 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         if (!write || extra.Any())
         {
             command = Pio.RunPlatformIo(env, new[] {"run"},
-                "Building " + config.Variant,
+                Resources.BuildingVariantMessage + config.Variant,
                 startingPercentage, endingPercentage, null);
         }
         else
         {
             command = Pio.RunPlatformIo(env, new[] {"run", "--target", "upload"},
-                "Writing",
+                Resources.WritingMessage,
                 startingPercentage, endingPercentage, config.Device);
         }
 
@@ -493,7 +491,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         var output = new StringBuilder();
         var behaviorSubject =
             new BehaviorSubject<PlatformIo.PlatformIoState>(
-                new PlatformIo.PlatformIoState(startingPercentage, "", null));
+                new PlatformIo.PlatformIoState(startingPercentage, "", false, null));
 
         state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
             {
@@ -539,10 +537,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     }
 
     [RelayCommand]
-    public async Task OpenReleasesPage()
+    public async Task UpdateApp()
     {
         Working = true;
-        Message = "Downloading Update";
+        Message = Resources.DownloadingUpdate;
         await _mgr.DownloadUpdatesAsync(_updateInfo!, i => Progress = i);
         _mgr.ApplyUpdatesAndRestart(null, null);
     }
@@ -562,7 +560,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public void Complete(int total)
     {
         Working = false;
-        Message = "Done";
+        Message = Resources.DoneMessage;
         Progress = total;
         ProgressbarColor = ProgressBarPrimary;
     }
@@ -576,10 +574,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     protected void UpdateProgress(PlatformIo.PlatformIoState state)
     {
         if (!Working) return;
-        LookingForDfu = state.Message.Contains("Looking for device in DFU mode");
+        LookingForDfu = state.Dfu;
         ProgressbarColor =
-            state.Message.Contains("Please Unplug") ||
-            LookingForDfu
+            state.Warning
                 ? ProgressBarWarning
                 : ProgressBarPrimary;
         Progress = state.Percentage;
@@ -656,7 +653,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
            await _manager?.RescanAsync()!;
         #endif
 
-        await ShowInformationDialog.Handle("Please unplug and replug your controller");
+        await ShowInformationDialog.Handle(Resources.UnplugReplugMessage);
 
     }
 
@@ -667,7 +664,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
-                "There are some drivers missing, would you like to install them?")).ToTask();
+                Resources.DriversMissingMessage)).ToTask();
             if (!yesNo.Response) return;
             var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.System);
             var appdataFolder = AssetUtils.GetAppDataFolder();
@@ -686,7 +683,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
-                "Root required to write proper udev rules for USB support: 68-santroller.rules to /usr/lib/udev/rules.d")).ToTask();
+                Resources.RootRequiredMessage)).ToTask();
             if (!yesNo.Response) return;
             // Just copy the file to install it, using pkexec for admin
             var appdataFolder = AssetUtils.GetAppDataFolder();
@@ -740,13 +737,13 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         {
             if (!difference)
             {
-                Message = "Done";
+                Message = Resources.DoneMessage;
                 ProgressbarColor = ProgressBarPrimary;
                 Complete(100);
             }
             else
             {
-                Message = "Done";
+                Message = Resources.DoneMessage;
                 ProgressbarColor = ProgressBarWarning;
                 Message = Resources.SaveChangesWarning;
             }

@@ -3439,4 +3439,31 @@
         <value>Generic {0}
 </value>
     </data>
+    <data name="DownloadingUpdate" xml:space="preserve">
+        <value>Downloading Update</value>
+    </data>
+    <data name="UnplugReplugMessage" xml:space="preserve">
+        <value>Please unplug and replug your controller</value>
+    </data>
+    <data name="DriversMissingMessage" xml:space="preserve">
+        <value>There are some drivers missing, would you like to install them?</value>
+    </data>
+    <data name="RootRequiredMessage" xml:space="preserve">
+        <value>Root required to write proper udev rules for USB support: 68-santroller.rules to /usr/lib/udev/rules.d</value>
+    </data>
+    <data name="DoneMessage" xml:space="preserve">
+        <value>Done</value>
+    </data>
+    <data name="WritingMessage" xml:space="preserve">
+        <value>Writing</value>
+    </data>
+    <data name="BuildingVariantMessage" xml:space="preserve">
+        <value>Building </value>
+    </data>
+    <data name="LibUsbMissingMessage" xml:space="preserve">
+        <value>You are missing libusb-1.0.so. On ubuntu or other debian based distributions, you will need to install 'libusb-1.0-0-dev'</value>
+    </data>
+    <data name="ConnectedMessage" xml:space="preserve">
+        <value>Connected</value>
+    </data>
 </root>
