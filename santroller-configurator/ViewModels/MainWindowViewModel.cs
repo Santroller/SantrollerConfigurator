@@ -310,11 +310,19 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 #endif
         if (platformIo)
         {
-            Complete(100);
-            Working = false;
-            Installed = true;
-            _manager?.Register();
-            _timer.Start();
+            Pio.InitialisePlatformIo().Subscribe(UpdateProgress, ex =>
+            {
+                Complete(100);
+                ProgressbarColor = ProgressBarError;
+                Message = ex.Message;
+            }, () =>
+            {
+                Complete(100);
+                Working = false;
+                Installed = true;
+                _manager?.Register();
+                _timer.Start();
+            });
             _ = InstallDependenciesAsync();
         }
         else

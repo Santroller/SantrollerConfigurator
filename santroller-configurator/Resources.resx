@@ -3369,6 +3369,9 @@
     <data name="SettingUpMessage" xml:space="preserve">
         <value>Setting up</value>
     </data>
+    <data name="CopyingFirmwareMessage" xml:space="preserve">
+        <value>Copying Firmware</value>
+    </data>
     <data name="ExtractingFirmwareMessage" xml:space="preserve">
         <value>Extracting Firmware</value>
     </data>

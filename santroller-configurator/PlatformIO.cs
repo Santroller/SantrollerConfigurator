@@ -32,6 +32,30 @@ public class PlatformIo
             : Path.Combine(Path.GetDirectoryName(Environment.ProcessPath!)!, "Binaries");
     }
 
+    private async Task InitialisePlatformIoAsync(IObserver<PlatformIoState> platformIoOutput)
+    {
+        platformIoOutput.OnNext(new PlatformIoState(0, Resources.CopyingFirmwareMessage, ""));
+        await Task.Run(() =>
+        {
+            if (Directory.Exists(FirmwareDir))
+            {
+                Directory.Delete(FirmwareDir, true);
+            }
+
+            var assetDir = GetAssetDir();
+            AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
+            platformIoOutput.OnCompleted();
+        });
+    }
+    
+    public IObservable<PlatformIoState> InitialisePlatformIo()
+    {
+        var platformIoOutput =
+            new BehaviorSubject<PlatformIoState>(new PlatformIoState(0, Resources.SettingUpMessage, null));
+        _ = InitialisePlatformIoAsync(platformIoOutput).ConfigureAwait(false);
+        return platformIoOutput;
+    }
+
     public PlatformIo()
     {
         var assetDir = GetAssetDir();
@@ -44,12 +68,6 @@ public class PlatformIo
             _pythonExecutable = Path.Combine(assetDir, "python", "python.exe");
 
         FirmwareDir = Path.Combine(appdataFolder, "Santroller");
-        if (Directory.Exists(FirmwareDir))
-        {
-            Directory.Delete(FirmwareDir, true);
-        }
-
-        AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
         _portProcess = new Process();
         _portProcess.EnableRaisingEvents = true;
         _portProcess.StartInfo.FileName = _pythonExecutable;

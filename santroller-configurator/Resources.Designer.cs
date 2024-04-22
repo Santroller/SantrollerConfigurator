@@ -6489,6 +6489,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string CopyingFirmwareMessage {
+            get {
+                return ResourceManager.GetString("CopyingFirmwareMessage", resourceCulture);
+            }
+        }
+        
         public static string ExtractingFirmwareMessage {
             get {
                 return ResourceManager.GetString("ExtractingFirmwareMessage", resourceCulture);
