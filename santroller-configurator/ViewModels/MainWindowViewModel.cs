@@ -46,7 +46,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public string ProgressBarWarning;
     private readonly Timer _timer = new();
     private bool hasLibUsb = true;
-    private UpdateManager _mgr;
+    private UpdateManager? _mgr = null;
     private UpdateInfo? _updateInfo;
     public string ToolName => Resources.ToolName + " - v" + GitVersionInformation.SemVer;
 
@@ -55,35 +55,19 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private readonly ConfigurableUsbDeviceManager? _manager;
     private readonly bool _picoOnly;
     public bool LibUsbMissing = false;
-    public virtual bool Builder => false;
+    public bool Builder { get; }
     public bool Windows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
     public MainWindowViewModel(bool builder, bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
         string error = "red")
     {
+        Builder = builder;
         Logo = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/Icons/logo.png")));
         ProgressBarError = error;
         ProgressBarPrimary = primary;
         ProgressBarWarning = warning;
         _picoOnly = picoOnly;
         
-        if (builder)
-        {
-            var file = Path.Combine(AssetUtils.GetAppDataFolder(), "auth");
-            var tokens = File.ReadAllText(file);
-            var accessToken = HttpUtility.ParseQueryString(tokens).Get("access_token")!;
-            _mgr = new(new GithubSource("https://github.com/Santroller/SantrollerConfiguratorBinaries", accessToken, false));
-        }
-        else
-        {
-            _mgr = new(new GithubSource("https://github.com/Santroller/Santroller", null, false));
-        }
-
-        if (_mgr.IsInstalled)
-        {
-            _updateInfo = _mgr.CheckForUpdates();
-        }
-
         Message = Resources.ConnectedMessage;
         GoBack = ReactiveCommand.CreateFromObservable(() =>
             Router.NavigateAndReset.Execute(Router.NavigationStack.First()));
@@ -202,6 +186,39 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             DeviceInputType = DeviceInputType.Direct;
             this.RaisePropertyChanged(nameof(DeviceInputType));
         });
+        Task.Run(CheckForUpdates);
+    }
+
+    public async void CheckForUpdates()
+    {
+        GithubSource source;
+        if (Builder)
+        {
+            var file = Path.Combine(AssetUtils.GetAppDataFolder(), "auth");
+            var tokens = await File.ReadAllTextAsync(file);
+            var accessToken = HttpUtility.ParseQueryString(tokens).Get("access_token")!;
+            source = new GithubSource("https://github.com/Santroller/SantrollerConfiguratorBinaries", accessToken,
+                false);
+        }
+        else
+        {
+            source = new GithubSource("https://github.com/Santroller/Santroller", null, false);
+        }
+
+        _mgr = new(source);
+        if (!_mgr.IsInstalled) return;
+        try
+        {
+            _updateInfo = await _mgr.CheckForUpdatesAsync();
+        }
+        catch (Exception ex)
+        {
+             Console.WriteLine(ex);   
+        }
+
+        UpdateMessage = _updateInfo == null
+            ? Resources.UpToDate
+            : string.Format(Resources.NewVersion, _updateInfo.TargetFullRelease.Version);
     }
 
     public bool Programming { get; private set; }
@@ -412,9 +429,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     [Reactive] public string Message { get; set; }
 
-    public string UpdateMessage => _updateInfo == null
-        ? Resources.UpToDate
-        : string.Format(Resources.NewVersion, _updateInfo.TargetFullRelease.Version);
+    [Reactive] public string UpdateMessage { get; set; } = Resources.UpToDate;
 
     public bool HasUpdate => _updateInfo != null;
 
@@ -539,6 +554,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [RelayCommand]
     public async Task UpdateApp()
     {
+        if (_mgr == null) return;
         Working = true;
         Message = Resources.DownloadingUpdate;
         await _mgr.DownloadUpdatesAsync(_updateInfo!, i => Progress = i);

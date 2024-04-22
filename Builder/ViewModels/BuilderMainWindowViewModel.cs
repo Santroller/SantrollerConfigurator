@@ -35,8 +35,6 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     [Reactive] public BrandedConfiguration? Selected { get; set; }
     [Reactive] public bool ImageError { get; set; }
 
-    public override bool Builder => true;
-
     public Interaction<BuilderMainWindowViewModel, IStorageFile?>
         LoadConfig { get; } =
         new();

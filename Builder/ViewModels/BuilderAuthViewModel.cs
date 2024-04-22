@@ -73,6 +73,7 @@ public partial class BuilderAuthViewModel : ReactiveObject, IRoutableViewModel
     public void Continue()
     {
         BuilderMain.Router.NavigateAndReset.Execute(new BuilderMainViewModel(BuilderMain));
+        
     }
 
     public BuilderMainWindowViewModel BuilderMain { get; }
