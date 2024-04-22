@@ -45,8 +45,12 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         SaveUf2Handler { get; } =
         new();
 
+    public Interaction<BuilderMainWindowViewModel, IStorageFolder?>
+        SaveBinaryHandler { get; } =
+        new();
 
-    public BuilderMainWindowViewModel() : base(true)
+
+    public BuilderMainWindowViewModel() : base(true, true)
     {
         Config = new BuilderConfig(this);
         if (Config.Configurations.Any())
@@ -379,7 +383,14 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Message = "Building Linux executable";
         start += steps;
         Progress = start;
-        var workingDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+        var folder = await SaveBinaryHandler.Handle(this);
+        if (folder == null)
+        {
+            Complete(100);
+            return;
+        }
+
+        var workingDir = folder.Path.AbsolutePath;
         // Extract linux executable and append branded config into executable.
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
         var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");

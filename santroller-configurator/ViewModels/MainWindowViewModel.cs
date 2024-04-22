@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Web;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -26,6 +27,8 @@ using GuitarConfigurator.NetCore.Devices;
 using Nefarius.Utilities.DeviceManagement.Drivers;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Velopack;
+using Velopack.Sources;
 #if Windows
 using Microsoft.Win32;
 #endif
@@ -34,7 +37,6 @@ namespace GuitarConfigurator.NetCore.ViewModels;
 
 public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 {
-    private const string UpToDate = "Up to date";
     private const string UdevFile = "68-santroller.rules";
     private const string UdevPath = $"/usr/lib/udev/rules.d/{UdevFile}";
     private static readonly Regex VersionRegex = new("v\\d+\\.\\d+\\.\\d+$");
@@ -46,6 +48,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public string ProgressBarWarning;
     private readonly Timer _timer = new();
     private bool hasLibUsb = true;
+    private UpdateManager _mgr;
+    private UpdateInfo? _updateInfo;
     public string ToolName => Resources.ToolName + " - v" + GitVersionInformation.SemVer;
 
 
@@ -56,7 +60,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public virtual bool Builder => false;
     public bool Windows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-    public MainWindowViewModel(bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
+    public MainWindowViewModel(bool builder, bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
         string error = "red")
     {
         Logo = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/Icons/logo.png")));
@@ -64,7 +68,24 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         ProgressBarPrimary = primary;
         ProgressBarWarning = warning;
         _picoOnly = picoOnly;
-        UpdateMessage = CheckForUpdates();
+        
+        if (builder)
+        {
+            var file = Path.Combine(AssetUtils.GetAppDataFolder(), "auth");
+            var tokens = File.ReadAllText(file);
+            var accessToken = HttpUtility.ParseQueryString(tokens).Get("access_token")!;
+            _mgr = new(new GithubSource("https://github.com/Santroller/SantrollerConfiguratorBinaries", accessToken, false));
+        }
+        else
+        {
+            _mgr = new(new GithubSource("https://github.com/Santroller/Santroller", null, false));
+        }
+
+        if (_mgr.IsInstalled)
+        {
+            _updateInfo = _mgr.CheckForUpdates();
+        }
+
         Message = "Connected";
         GoBack = ReactiveCommand.CreateFromObservable(() =>
             Router.NavigateAndReset.Execute(Router.NavigationStack.First()));
@@ -220,69 +241,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         var c = Color.Parse(color);
         return c.R * 0.299 + c.G * 0.587 + c.B * 0.114 > 140;
     }
-
-    private string CheckForUpdates()
-    {
-        try
-        {
-            using var client = new HttpClient();
-            client.BaseAddress = new Uri("https://github.com");
-            var response = client.GetAsync($"Santroller/Santroller/info/refs?service=git-upload-pack").Result;
-            response.EnsureSuccessStatusCode();
-            var res = response.Content.ReadAsStringAsync().Result.Split("\n")[2..^1];
-            var latestTagVer = new Version(GitVersionInformation.SemVer);
-            var isPreRelease = int.Parse(GitVersionInformation.CommitsSinceVersionSource) != 0;
-            var preReleaseTag = "";
-            bool preReleaseOutdated = false;
-            foreach (var re in res)
-            {
-                var split = re.Split(" ");
-                var tagHash = split[0][4..];
-                var tag = split[1];
-                if (!tag.StartsWith("refs/tags/"))
-                {
-                    continue;
-                }
-
-                tag = tag.Replace("refs/tags/", "");
-                if (isPreRelease && tag == "preview" && !tagHash.StartsWith(GitVersionInformation.Sha))
-                {
-                    preReleaseTag = tagHash[..5];
-                }
-
-                if (!VersionRegex.Match(tag).Success)
-                {
-                    continue;
-                }
-
-                tag = tag.Replace("v", "");
-
-                if (new Version(tag) > latestTagVer)
-                {
-                    latestTagVer = new Version(tag);
-                }
-            }
-
-            if (isPreRelease)
-            {
-                if (preReleaseOutdated)
-                {
-                    return string.Format(Resources.NewPreRelease, preReleaseTag);
-                }
-            }
-            else if (latestTagVer != new Version(GitVersionInformation.SemVer))
-            {
-                return string.Format(Resources.NewVersion, latestTagVer);
-            }
-        }
-        catch (Exception ex)
-        {
-            return Resources.UnableToCheckForUpdates + ex.Message;
-        }
-
-        return UpToDate;
-    }
-
     public void AddDevice(IConfigurableDevice device)
     {
         if (_picoOnly && !device.IsPico()) return;
@@ -456,9 +414,11 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     [Reactive] public string Message { get; set; }
 
-    public string UpdateMessage { get; }
+    public string UpdateMessage => _updateInfo == null
+        ? Resources.UpToDate
+        : string.Format(Resources.NewVersion, _updateInfo.TargetFullRelease.Version);
 
-    public bool HasUpdate => UpdateMessage != UpToDate && !UpdateMessage.StartsWith(Resources.UnableToCheckForUpdates);
+    public bool HasUpdate => _updateInfo != null;
 
     public PlatformIo Pio { get; } = new();
 
@@ -579,11 +539,12 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     }
 
     [RelayCommand]
-    public void OpenReleasesPage()
+    public async Task OpenReleasesPage()
     {
-        NavigateToUrl(Builder
-            ? "https://github.com/Santroller/SantrollerConfiguratorBinaries/releases"
-            : "https://github.com/Santroller/Santroller/releases");
+        Working = true;
+        Message = "Downloading Update";
+        await _mgr.DownloadUpdatesAsync(_updateInfo!, i => Progress = i);
+        _mgr.ApplyUpdatesAndRestart(null, null);
     }
 
     [RelayCommand]

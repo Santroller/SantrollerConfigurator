@@ -3384,6 +3384,9 @@
     <data name="UnableToCheckForUpdates" xml:space="preserve">
         <value>Unable to check for updates: </value>
     </data>
+    <data name="UpToDate" xml:space="preserve">
+        <value>Up to date</value>
+    </data>
     <data name="NewVersion" xml:space="preserve">
         <value>New Version: {0}</value>
     </data>

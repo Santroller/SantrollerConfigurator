@@ -6519,6 +6519,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string UpToDate {
+            get {
+                return ResourceManager.GetString("UpToDate", resourceCulture);
+            }
+        }
+        
         public static string NewVersion {
             get {
                 return ResourceManager.GetString("NewVersion", resourceCulture);

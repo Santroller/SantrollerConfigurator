@@ -23,6 +23,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
             disposables(ViewModel!.ShowIssueDialog.RegisterHandler(DoShowIssueDialogAsync));
             disposables(ViewModel!.LoadConfig.RegisterHandler(LoadImageAsync));
             disposables(ViewModel!.SaveUf2Handler.RegisterHandler(SaveUf2Async));
+            disposables(ViewModel!.SaveBinaryHandler.RegisterHandler(SaveBinaryAsync));
             ViewModel!.Begin(true);
         });
         InitializeComponent();
@@ -50,6 +51,14 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
             SuggestedFileName = "firmware.uf2"
         });
         obj.SetOutput(file);
+    }
+    private async Task SaveBinaryAsync(IInteractionContext<BuilderMainWindowViewModel, IStorageFolder?> obj)
+    {
+        var dir = await ((Window) VisualRoot!).StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
+        {
+            Title="Customer tool output location"
+        });
+        obj.SetOutput(dir.FirstOrDefault());
     }
     private async Task DoShowIssueDialogAsync(
         IInteractionContext<(string _platformIOText, ConfigViewModel), RaiseIssueWindowViewModel?> interaction)

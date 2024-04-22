@@ -71,7 +71,7 @@ public class Builder : Task
                     }
                     else
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                        Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!);
                         entry.ExtractToFile(fullPath, true);
                     }
                 }

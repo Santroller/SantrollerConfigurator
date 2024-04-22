@@ -23,7 +23,7 @@ public class App : Application
             throw new Exception("Invalid ApplicationLifetime");
 
         // Make sure we kill all python processes on exit
-        Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(false));
+        Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(false, false));
         Locator.CurrentMutable.Register<IViewFor<ConfigViewModel>>(() => new ConfigView());
         Locator.CurrentMutable.Register<IViewFor<RestoreViewModel>>(() => new RestoreView());
         Locator.CurrentMutable.Register<IViewFor<InitialConfigViewModel>>(() => new InitialConfigureView());
