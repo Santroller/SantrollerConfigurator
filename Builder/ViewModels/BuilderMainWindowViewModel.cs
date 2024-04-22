@@ -388,7 +388,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             return;
         }
 
-        var workingDir = folder.Path.AbsolutePath;
+        var workingDir = WebUtility.UrlDecode(folder.Path.AbsolutePath);
         // Extract linux executable and append branded config into executable.
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
         var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");
