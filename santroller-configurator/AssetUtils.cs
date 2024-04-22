@@ -1,6 +1,7 @@
 using System;
 using System.Formats.Tar;
 using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Platform;
@@ -21,7 +22,13 @@ public class AssetUtils
         await using var target = AssetLoader.Open(uri);
         await target.CopyToAsync(f).ConfigureAwait(false);
     }
-
+    public static async Task ExtractZipAsync(string archiveFile, string location)
+    {
+        var assemblyName = typeof(AssetUtils).Assembly.GetName().Name!;
+        var uri = new Uri($"avares://{assemblyName}/Assets/{archiveFile}");
+        await using var target = AssetLoader.Open(uri);
+        ZipFile.ExtractToDirectory(target, location);
+    }
 
     public static async Task<string> ReadFileAsync(string file)
     {

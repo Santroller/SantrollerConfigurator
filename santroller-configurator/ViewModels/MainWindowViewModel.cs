@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Reactive;
@@ -701,7 +702,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private async Task InstallDependenciesAsync()
     {
         if (await CheckDependencies()) return;
-        // /usr/lib/udev/rules.d/
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -711,9 +711,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.System);
             var appdataFolder = AssetUtils.GetAppDataFolder();
             var driverFolder = Path.Combine(appdataFolder, "drivers");
-            // TODO: i think we can do this when installing instead? if not, we can probably just bundle the files in a zip instead of a xz
-            // await AssetUtils.ExtractXzAsync("dfu.tar.xz", appdataFolder, _ => { });
-
+            await AssetUtils.ExtractZipAsync("dfu.zip", appdataFolder);
             var info = new ProcessStartInfo(Path.Combine(windowsDir, "pnputil.exe"));
             info.ArgumentList.AddRange(new[] {"-i", "-a", Path.Combine(driverFolder, "atmel_usb_dfu.inf")});
             info.UseShellExecute = true;

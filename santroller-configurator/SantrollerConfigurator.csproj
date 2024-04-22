@@ -81,7 +81,7 @@
         <AvaloniaResource Include="Assets\68-santroller.rules"/>
     </ItemGroup>
     <ItemGroup Condition="'$(SkipAssets)' != 'Skip'">
-        <AvaloniaResource Include="Assets\dfu.tar.xz"/>
+        <AvaloniaResource Include="Assets\dfu.zip"/>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AsmResolver" Version="5.5.1"/>
