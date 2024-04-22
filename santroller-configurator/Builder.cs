@@ -64,18 +64,15 @@ public class Builder : Task
             {
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    var dest = Path.Combine(assets, entry.FullName);
-                    if (entry.FullName.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                    var fullPath = Path.Combine(assets, entry.FullName);
+                    if (Path.GetFileName(fullPath).Length == 0)
                     {
-                        Directory.CreateDirectory(dest);
+                        Directory.CreateDirectory(fullPath);
                     }
                     else
                     {
-                        if (File.Exists(dest))
-                        {
-                            File.Delete(dest);
-                        }
-                        entry.ExtractToFile(dest);
+                        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                        entry.ExtractToFile(fullPath, true);
                     }
                 }
             } 
