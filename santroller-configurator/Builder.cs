@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
-using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
-using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Text;
 using Microsoft.Build.Utilities;
 using static System.Diagnostics.Process;
 
@@ -38,9 +37,9 @@ public class Builder : Task
         Directory.CreateDirectory(Path.Combine(Parameter1, "Binaries"));
 
         Console.WriteLine("Copying firmware");
-        CopyIfNew(Parameter1, new[] {"firmware", "firmware.version"}, new[] {"firmware", "firmware.tar.xz"});
+        CopyIfNew(Parameter1, new[] {"firmware", "firmware.version"}, new[] {"firmware", "firmware.zip"});
         Console.WriteLine("Copying platformio");
-        CopyIfNew(Parameter1, new[] {"libs", platform, "platformio.version"}, new[] {"libs", platform, "platformio.tar.xz"});
+        CopyIfNew(Parameter1, new[] {"libs", platform, "platformio.version"}, new[] {"libs", platform, "platformio.zip"});
         return true;
     }
 
@@ -60,33 +59,29 @@ public class Builder : Task
         {
             Console.WriteLine("Changed, updating");
             CopyFile(dir, file);
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            var zipFile = Path.Combine(assets, file.Last());
+            using (ZipArchive archive = ZipFile.OpenRead(zipFile))
             {
-                var info = new ProcessStartInfo("7z", $"x \"{file.Last()}\"")
+                foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    WorkingDirectory = assets
-                };
-                Start(info)?.WaitForExit();
-                info = new ProcessStartInfo("tar", $"xf \"{file.Last().Replace("tar.xz", "tar")}\"")
-                {
-                    WorkingDirectory = assets
-                };
-                Start(info)?.WaitForExit();
-                File.Delete(Path.Combine(assets, file.Last().Replace("tar.xz", "tar")));
-            }
-            else
-            {
-                var info = new ProcessStartInfo("tar", $"xf \"{file.Last()}\"")
-                {
-                    WorkingDirectory = assets
-                };
-                Start(info)?.WaitForExit();
-            }
-
-            File.Delete(Path.Combine(assets, file.Last()));
+                    var dest = Path.Combine(assets, entry.FullName);
+                    if (entry.FullName.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                    {
+                        Directory.CreateDirectory(dest);
+                    }
+                    else
+                    {
+                        if (File.Exists(dest))
+                        {
+                            File.Delete(dest);
+                        }
+                        entry.ExtractToFile(dest);
+                    }
+                }
+            } 
+            File.Delete(zipFile);
         }
         else
-
         {
             Console.WriteLine("No change, leaving as is");
         }
