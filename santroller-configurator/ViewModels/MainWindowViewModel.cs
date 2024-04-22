@@ -219,6 +219,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         UpdateMessage = _updateInfo == null
             ? Resources.UpToDate
             : string.Format(Resources.NewVersion, _updateInfo.TargetFullRelease.Version);
+        HasUpdate = _updateInfo != null;
     }
 
     public bool Programming { get; private set; }
@@ -431,7 +432,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     [Reactive] public string UpdateMessage { get; set; } = Resources.UpToDate;
 
-    public bool HasUpdate => _updateInfo != null;
+    [Reactive] public bool HasUpdate { get; set; } = false;
 
     public PlatformIo Pio { get; } = new();
 
