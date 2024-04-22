@@ -228,7 +228,7 @@ public class PlatformIo
                             string.Format(Resources.LookingForDeviceMessageLinux, progressMessage), false, null));
 #else
                         platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                            string.Format(Resources.LookingForDeviceMessage, progressMessage), null));
+                            string.Format(Resources.LookingForDeviceMessage, progressMessage), false, null));
 #endif
                         currentProgress += percentageStep / sections;
                         sections = 4;
