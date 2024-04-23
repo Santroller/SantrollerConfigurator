@@ -61,7 +61,7 @@ public class RestoreViewModel : ReactiveObject, IRoutableViewModel
 
     private void AddDevice(IConfigurableDevice device)
     {
-        var configFile = Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "packages", "tool-avrdude",
+        var configFile = Path.Combine(PlatformIo.GetAssetDir(), "platformio", "packages", "tool-avrdude",
             "avrdude.conf");
         if (_santroller.IsPico() && device is PicoDevice)
         {
@@ -69,7 +69,7 @@ public class RestoreViewModel : ReactiveObject, IRoutableViewModel
             Main.Message = "Programming";
             Main.Progress = 50;
             // Copy blank firmware back to device
-            var firmware = Path.Combine(AssetUtils.GetAppDataFolder(), "default_firmwares", "pico.uf2");
+            var firmware = Path.Combine(PlatformIo.GetAssetDir(), "default_firmwares", "pico.uf2");
             File.Copy(firmware, Path.Combine(device.GetUploadPortAsync().Result!, "firmware.uf2"));
             Main.Complete(100);
             _done = true;
