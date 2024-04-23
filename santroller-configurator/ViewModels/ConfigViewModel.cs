@@ -587,7 +587,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndices)
                     {
-                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn, (byte) value));
+                        santroller.SetLed((byte) (ledIndex - 1), output.LedOn, value);
                     }
                 }
 
@@ -596,8 +596,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndicesPeripheral)
                     {
-                        santroller.SetLedPeripheral((byte) (ledIndex - 1),
-                            LedTypePeripheral.GetLedBytes(output.LedOn, (byte) value));
+                        santroller.SetLedPeripheral((byte) (ledIndex - 1), output.LedOn, value);
                     }
                 }
             }
@@ -624,7 +623,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndices)
                     {
-                        santroller.SetLed((byte) (ledIndex - 1), LedType.GetLedBytes(output.LedOn, (byte) value));
+                        santroller.SetLed((byte) (ledIndex - 1), output.LedOn, (byte) value);
                     }
                 }
 
@@ -633,8 +632,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var ledIndex in output.LedIndicesPeripheral)
                     {
-                        santroller.SetLedPeripheral((byte) (ledIndex - 1),
-                            LedTypePeripheral.GetLedBytes(output.LedOn, (byte) value));
+                        santroller.SetLedPeripheral((byte) (ledIndex - 1), output.LedOn, (byte) value);
                     }
                 }
             }

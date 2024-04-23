@@ -351,7 +351,7 @@ public abstract partial class Output : ReactiveObject
             {
                 foreach (var ledIndex in LedIndices)
                 {
-                    santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(value, Model.LedBrightnessOn));
+                    santroller.SetLed((byte) (ledIndex - 1), value, Model.LedBrightnessOn);
                 }
             }
 
@@ -359,8 +359,7 @@ public abstract partial class Output : ReactiveObject
             {
                 foreach (var ledIndex in LedIndicesPeripheral)
                 {
-                    santroller.SetLedPeripheral((byte) (ledIndex - 1),
-                        Model.LedTypePeripheral.GetLedBytes(value, Model.LedBrightnessOn));
+                    santroller.SetLedPeripheral((byte) (ledIndex - 1), value, Model.LedBrightnessOn);
                 }
             }
 
@@ -385,7 +384,7 @@ public abstract partial class Output : ReactiveObject
             {
                 foreach (var ledIndex in LedIndices)
                 {
-                    santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(value, Model.LedBrightnessOff));
+                    santroller.SetLed((byte) (ledIndex - 1), value, Model.LedBrightnessOff);
                 }
             }
 
@@ -393,8 +392,7 @@ public abstract partial class Output : ReactiveObject
             {
                 foreach (var ledIndex in LedIndicesPeripheral)
                 {
-                    santroller.SetLedPeripheral((byte) (ledIndex - 1),
-                        Model.LedTypePeripheral.GetLedBytes(value, Model.LedBrightnessOff));
+                    santroller.SetLedPeripheral((byte) (ledIndex - 1), value, Model.LedBrightnessOff);
                 }
             }
 
@@ -540,7 +538,7 @@ public abstract partial class Output : ReactiveObject
         {
             foreach (var ledIndex in LedIndices)
             {
-                santroller.SetLed((byte) (ledIndex - 1), Model.LedType.GetLedBytes(LedOn, Model.LedBrightnessOn));
+                santroller.SetLed((byte) (ledIndex - 1), LedOn, Model.LedBrightnessOn);
             }
         }
 
@@ -555,8 +553,7 @@ public abstract partial class Output : ReactiveObject
         {
             foreach (var ledIndex in LedIndicesPeripheral)
             {
-                santroller.SetLedPeripheral((byte) (ledIndex - 1),
-                    Model.LedTypePeripheral.GetLedBytes(LedOn, Model.LedBrightnessOn));
+                santroller.SetLedPeripheral((byte) (ledIndex - 1), LedOn, Model.LedBrightnessOn);
             }
         }
 

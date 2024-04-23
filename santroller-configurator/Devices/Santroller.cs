@@ -543,34 +543,41 @@ public class Santroller : ConfigurableUsbDevice
             new[] {(byte)brightness});
     }
 
-    public void SetLed(byte led, byte[] color)
+    public void SetLed(byte led, Color color, byte brightness)
     {
+        if (_model == null) return;
         _ledTimers[led] = _sw.Elapsed;
+        var bytes = _model.LedType.GetLedBytes(color, brightness);
         
         // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
-        if (_model != null && _model.LedType != LedType.Ws2812 && !_model.Branded)
+        if (_model.LedType != LedType.Ws2812 && !_model.Branded)
         {
             if (_model.LastLedType != _model.LedType)
             {
-                color = _model.LastLedType.GetLedBytes(Color.FromRgb(color[1], color[2], color[3]), color[0]);
+                bytes = _model.LastLedType.TranslateLedBytes(bytes);
             }
         }
 
-        WriteData(0, (byte) Commands.CommandSetLeds, new[] {led}.Concat(color).ToArray());
+        WriteData(0, (byte) Commands.CommandSetLeds, new[] {led}.Concat(bytes).ToArray());
     }
 
-    public void SetLedPeripheral(byte led, byte[] color)
+    public void SetLedPeripheral(byte led, Color color, byte brightness)
     {
+        if (_model == null) return;
         _ledTimersPeripheral[led] = _sw.Elapsed;
+        
+        var bytes = _model.LedType.GetLedBytes(color, brightness);
+        
         // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
-        if (_model != null && _model.LedTypePeripheral != LedType.Ws2812 && !_model.Branded)
+        if (_model.LedTypePeripheral != LedType.Ws2812 && !_model.Branded)
         {
             if (_model.LastLedTypePeripheral != _model.LedTypePeripheral)
             {
-                color = _model.LastLedTypePeripheral.GetLedBytes(Color.FromRgb(color[1], color[2], color[3]), color[0]);
+                bytes = _model.LastLedType.TranslateLedBytes(bytes);
             }
         }
-        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led}.Concat(color).ToArray());
+
+        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led}.Concat(bytes).ToArray());
     }
 
     public void SetLedStp(byte led, bool state)

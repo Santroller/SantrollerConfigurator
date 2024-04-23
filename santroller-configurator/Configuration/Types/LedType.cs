@@ -28,12 +28,7 @@ public static class LedTypeMethods
     {
         return type switch
         {
-            LedType.Apa102Rgb => new[] {brightness, color.R, color.G, color.B},
-            LedType.Apa102Rbg => new[] {brightness, color.R, color.B, color.G},
-            LedType.Apa102Grb => new[] {brightness, color.G, color.R, color.B},
-            LedType.Apa102Gbr => new[] {brightness, color.G, color.B, color.R},
-            LedType.Apa102Brg => new[] {brightness, color.B, color.R, color.G},
-            LedType.Apa102Bgr => new[] {brightness, color.B, color.G, color.R},
+            LedType.Apa102Rgb or LedType.Apa102Rbg or LedType.Apa102Grb or LedType.Apa102Gbr or LedType.Apa102Brg or LedType.Apa102Bgr => new[] {brightness, color.R, color.G, color.B},
             LedType.Ws2812 => new[]
             {
                 Ws2812Bits[(color.R >> 6) & 0x3], Ws2812Bits[(color.R >> 4) & 0x3], Ws2812Bits[(color.R >> 2) & 0x3],
@@ -41,6 +36,27 @@ public static class LedTypeMethods
                 Ws2812Bits[(color.G >> 2) & 0x3], Ws2812Bits[color.G & 0x3], Ws2812Bits[(color.B >> 6) & 0x3],
                 Ws2812Bits[(color.B >> 4) & 0x3], Ws2812Bits[(color.B >> 2) & 0x3], Ws2812Bits[color.B & 0x3]
             },
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
+    }
+    public static byte[] TranslateLedBytes(this LedType type, byte[] led)
+    {
+        if (type == LedType.Ws2812)
+        {
+            return led;
+        }
+        var brightness = led[0];
+        var r = led[1];
+        var g = led[2];
+        var b = led[3];
+        return type switch
+        {
+            LedType.Apa102Rgb => new[] {brightness, r, g, b},
+            LedType.Apa102Rbg => new[] {brightness, r, b, g},
+            LedType.Apa102Grb => new[] {brightness, g, r, b},
+            LedType.Apa102Gbr => new[] {brightness, g, b, r},
+            LedType.Apa102Brg => new[] {brightness, b, r, g},
+            LedType.Apa102Bgr => new[] {brightness, b, g, r},
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
