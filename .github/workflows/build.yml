@@ -128,10 +128,6 @@ jobs:
     needs: [build-linux, build-mac, build-windows]
     runs-on: [self-hosted, linux]
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          clean: false
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -167,10 +163,6 @@ jobs:
     steps:
       - name: git configure long path
         run: git config --global core.longpaths true
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          clean: false
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
@@ -204,10 +196,6 @@ jobs:
     needs: [ build-linux, build-mac, build-windows ]
     runs-on: [self-hosted, macos]
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          clean: false
       - name: Unlock Keychain
         env:
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
