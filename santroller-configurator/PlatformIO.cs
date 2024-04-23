@@ -45,7 +45,6 @@ public class PlatformIo
 
             var assetDir = GetAssetDir();
             AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
-            AssetUtils.CopyDirectory(Path.Combine(assetDir, "platformio"), Path.Combine(AssetUtils.GetAppDataFolder(), "platformio"), true);
             platformIoOutput.OnCompleted();
         });
     }
@@ -75,6 +74,8 @@ public class PlatformIo
         _portProcess.StartInfo.FileName = _pythonExecutable;
         _portProcess.StartInfo.WorkingDirectory = FirmwareDir;
         _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_CORE_DIR"] = pioFolder;
+        _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PLATFORMS_DIR"] = Path.Combine(assetDir, "platformio", "platforms");
+        _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PACKAGES_DIR"] = Path.Combine(assetDir, "platformio", "packages");
 
         _portProcess.StartInfo.Arguments = "-m platformio device list --json-output";
         _portProcess.StartInfo.UseShellExecute = false;
@@ -278,13 +279,15 @@ public class PlatformIo
 
             await _semaphore.WaitAsync();
             if (_currentProcess is {HasExited: false}) _currentProcess.Kill(true);
-
+            var assetDir = GetAssetDir();
             _currentProcess = new Process();
             _currentProcess.EnableRaisingEvents = true;
             _currentProcess.StartInfo.FileName = _pythonExecutable;
             _currentProcess.StartInfo.WorkingDirectory = FirmwareDir;
             _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_CORE_DIR"] = pioFolder;
             _currentProcess.StartInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
+            _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PLATFORMS_DIR"] = Path.Combine(assetDir, "platformio", "platforms");
+            _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PACKAGES_DIR"] = Path.Combine(assetDir, "platformio", "packages");
             if (extraEnvs != null)
             {
                 _currentProcess.StartInfo.EnvironmentVariables[extraEnvs] = "1";
