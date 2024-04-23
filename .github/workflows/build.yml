@@ -243,7 +243,7 @@ jobs:
     if: contains(github.ref, 'tags/v')
     name: Release Linux Build
     runs-on: [self-hosted, linux]
-    needs: [build-linux, build-mac, build-windows, build-linux-builder, build-mac-builder, build-windows-builder]
+    needs: [build-linux, build-linux-builder]
     steps:
       - name: Release
         run: |
@@ -255,7 +255,7 @@ jobs:
     if: contains(github.ref, 'tags/v')
     name: Release macOS Build
     runs-on: [self-hosted, macos]
-    needs: [build-linux, build-mac, build-windows, build-linux-builder, build-mac-builder, build-windows-builder]
+    needs: [build-mac, build-mac-builder]
     steps:
       - name: Release
         run: |
@@ -267,7 +267,7 @@ jobs:
     if: contains(github.ref, 'tags/v')
     name: Release windows Build
     runs-on: [self-hosted, macos]
-    needs: [build-linux, build-mac, build-windows, build-linux-builder, build-mac-builder, build-windows-builder]
+    needs: [build-windows, build-windows-builder]
     steps:
       - name: Release
         run: |
