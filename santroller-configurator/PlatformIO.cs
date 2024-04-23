@@ -45,6 +45,7 @@ public class PlatformIo
 
             var assetDir = GetAssetDir();
             AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
+            AssetUtils.CopyDirectory(Path.Combine(assetDir, "platformio"), Path.Combine(AssetUtils.GetAppDataFolder(), "platformio"), true);
             platformIoOutput.OnCompleted();
         });
     }
@@ -63,7 +64,7 @@ public class PlatformIo
         var appdataFolder = AssetUtils.GetAppDataFolder();
         if (!File.Exists(appdataFolder)) Directory.CreateDirectory(appdataFolder);
 
-        var pioFolder = Path.Combine(assetDir, "platformio");
+        var pioFolder = Path.Combine(appdataFolder, "platformio");
         _pythonExecutable = Path.Combine(assetDir, "python", "bin", "python3.11");
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             _pythonExecutable = Path.Combine(assetDir, "python", "python.exe");
@@ -140,8 +141,8 @@ public class PlatformIo
             var percentageStep = progressEndingPercentage - progressStartingPercentage;
             var currentProgress = progressStartingPercentage;
             var uploading = command.Length > 1;
-            var assetDir = GetAssetDir();
-            var pioFolder = Path.Combine(assetDir, "platformio");
+            var appdataFolder = AssetUtils.GetAppDataFolder();
+            var pioFolder = Path.Combine(appdataFolder, "platformio");
 
             var args = new List<string>(command);
             args.Insert(0, _pythonExecutable);

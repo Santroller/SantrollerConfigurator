@@ -61,8 +61,6 @@ public class RestoreViewModel : ReactiveObject, IRoutableViewModel
 
     private void AddDevice(IConfigurableDevice device)
     {
-        var configFile = Path.Combine(PlatformIo.GetAssetDir(), "platformio", "packages", "tool-avrdude",
-            "avrdude.conf");
         if (_santroller.IsPico() && device is PicoDevice)
         {
             if (_done) return;
