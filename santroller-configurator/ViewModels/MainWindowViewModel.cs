@@ -58,7 +58,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public bool Builder { get; }
     public bool Windows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
-    public MainWindowViewModel(bool builder, bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
+    public MainWindowViewModel(bool builder, bool branded, bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
         string error = "red")
     {
         Builder = builder;
@@ -186,7 +186,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             DeviceInputType = DeviceInputType.Direct;
             this.RaisePropertyChanged(nameof(DeviceInputType));
         });
-        Task.Run(CheckForUpdates);
+        if (!branded)
+        {
+            Task.Run(CheckForUpdates);
+        }
     }
 
     public async void CheckForUpdates()

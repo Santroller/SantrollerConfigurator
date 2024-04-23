@@ -48,7 +48,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         new();
 
 
-    public BuilderMainWindowViewModel() : base(true, true)
+    public BuilderMainWindowViewModel() : base(true, false, true)
     {
         Config = new BuilderConfig(this);
         if (Config.Configurations.Any())

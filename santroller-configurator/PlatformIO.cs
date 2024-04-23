@@ -140,8 +140,8 @@ public class PlatformIo
             var percentageStep = progressEndingPercentage - progressStartingPercentage;
             var currentProgress = progressStartingPercentage;
             var uploading = command.Length > 1;
-            var appdataFolder = AssetUtils.GetAppDataFolder();
-            var pioFolder = Path.Combine(appdataFolder, "platformio");
+            var assetDir = GetAssetDir();
+            var pioFolder = Path.Combine(assetDir, "platformio");
 
             var args = new List<string>(command);
             args.Insert(0, _pythonExecutable);
