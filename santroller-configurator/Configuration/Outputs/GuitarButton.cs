@@ -55,7 +55,7 @@ public class GuitarButton : OutputButton
         // XB1 however has things broken out
         // For the universal report, we only put standard frets on nav, not solo
 
-        var requiresFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal);
+        var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal);
         return Type switch
         {
             InstrumentButtonType.StrumUp => GetReportField(StandardButtonType.DpadUp),
@@ -68,15 +68,15 @@ public class GuitarButton : OutputButton
             InstrumentButtonType.Orange when mode is ConfigField.Universal => GetReportField(StandardButtonType
                 .LeftShoulder),
 
-            InstrumentButtonType.SoloGreen or InstrumentButtonType.Green when requiresFaceButtons =>
+            InstrumentButtonType.SoloGreen or InstrumentButtonType.Green when usesFaceButtons =>
                 GetReportField(StandardButtonType.A),
-            InstrumentButtonType.SoloRed or InstrumentButtonType.Red when requiresFaceButtons =>
+            InstrumentButtonType.SoloRed or InstrumentButtonType.Red when usesFaceButtons =>
                 GetReportField(StandardButtonType.B),
-            InstrumentButtonType.SoloYellow or InstrumentButtonType.Yellow when requiresFaceButtons =>
+            InstrumentButtonType.SoloYellow or InstrumentButtonType.Yellow when usesFaceButtons =>
                 GetReportField(StandardButtonType.Y),
-            InstrumentButtonType.SoloBlue or InstrumentButtonType.Blue when requiresFaceButtons =>
+            InstrumentButtonType.SoloBlue or InstrumentButtonType.Blue when usesFaceButtons =>
                 GetReportField(StandardButtonType.X),
-            InstrumentButtonType.SoloOrange or InstrumentButtonType.Orange when requiresFaceButtons =>
+            InstrumentButtonType.SoloOrange or InstrumentButtonType.Orange when usesFaceButtons =>
                 GetReportField(StandardButtonType.LeftShoulder),
 
             InstrumentButtonType.Black1 => GetReportField(StandardButtonType.A),
@@ -136,8 +136,12 @@ public class GuitarButton : OutputButton
                 $"report->strumBar={(Type is InstrumentButtonType.StrumDown ? "0xFF" : "0x00")};", combinedExtra,
                 strumIndexes, combinedDebounce, macros, writer);
 
+        // XB1 also needs to set the normal face buttons, which can conveniently be done using the PS3 format
+        if (mode is ConfigField.XboxOne && Type is not (InstrumentButtonType.StrumUp or InstrumentButtonType.StrumDown))
+            extra = $"{GenerateOutput(ConfigField.Ps3)}=true;";
+        
         if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar})
-            return base.Generate(mode, debounceIndex, "", combinedExtra, strumIndexes, combinedDebounce, macros,
+            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
 
         //This stuff is only relevant for rock band guitars
@@ -145,10 +149,9 @@ public class GuitarButton : OutputButton
         if (Type is InstrumentButtonType.SoloBlue or InstrumentButtonType.SoloGreen
                 or InstrumentButtonType.SoloOrange or InstrumentButtonType.SoloRed
                 or InstrumentButtonType.SoloYellow && mode is not (ConfigField.Shared or ConfigField.Universal))
-            extra = "report->solo=true;";
-        // XB1 also needs to set the normal face buttons, which can conveniently be done using the PS3 format
-        if (mode is ConfigField.XboxOne && Type is not (InstrumentButtonType.StrumUp or InstrumentButtonType.StrumDown))
-            extra += $"{GenerateOutput(ConfigField.Ps3)}=true;";
+            extra += "report->solo=true;";
+        
+        Console.WriteLine(extra);
 
 
         return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
