@@ -47,7 +47,7 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir $RUN_ID
-          mv santroller-configurator/Releases $RUN_ID
+          cp -rf santroller-configurator/Releases $RUN_ID
           mv out $RUN_ID/macos 
           rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
   build-linux:
@@ -84,8 +84,8 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir -p ~/artifacts/$RUN_ID/Releases
-          mv santroller-configurator/Releases/* ~/artifacts/$RUN_ID/Releases
-          mv out ~/artifacts/$RUN_ID/linux 
+          cp -rf santroller-configurator/Releases/* ~/artifacts/$RUN_ID/Releases
+          cp -rf out ~/artifacts/$RUN_ID/linux 
   build-windows:
     name: Build (Windows)
     runs-on: [self-hosted, windows]
@@ -121,7 +121,7 @@ jobs:
         run: |
           mkdir $Env:RUN_ID
           mv out $Env:RUN_ID/windows 
-          mv santroller-configurator/Releases $Env:RUN_ID/Releases
+          cp -rf santroller-configurator/Releases $Env:RUN_ID/Releases
           scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
   build-linux-builder:
     name: Build Builder (Linux)
@@ -158,7 +158,7 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir -p ~/artifacts/$RUN_ID/BuilderReleases
-          mv Builder/Releases/* ~/artifacts/$RUN_ID/BuilderReleases
+          cp -rf Builder/Releases/* ~/artifacts/$RUN_ID/BuilderReleases
   build-windows-builder:
     name: Build Builder (Windows)
     needs: [build-linux, build-mac, build-windows]
@@ -195,7 +195,7 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir -Force $Env:RUN_ID
-          mv Builder/Releases $Env:RUN_ID/BuilderReleases
+          cp -rf Builder/Releases $Env:RUN_ID/BuilderReleases
           scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts  
   build-mac-builder:
     name: Build Builder (macOS)
@@ -237,23 +237,44 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir -p $RUN_ID
-          mv Builder/Releases $RUN_ID/BuilderReleases
+          cp -rf Builder/Releases $RUN_ID/BuilderReleases
           rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
   release:
     if: contains(github.ref, 'tags/v')
-    name: Release Build
+    name: Release Linux Build
     runs-on: [self-hosted, linux]
     needs: [build-linux, build-mac, build-windows, build-linux-builder, build-mac-builder, build-windows-builder]
     steps:
-      - name: Copy artifacts
-        env:
-          RUN_ID: ${{ github.run_id }}
+      - name: Release
         run: |
-          cp -r ~/artifacts/$RUN_ID/* .
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }}
-          mv Releases ~/
-          mv BuilderReleases Releases
-          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }}
+          cd santroller-configurator
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }}} --merge
+          cd ../Builder
+          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }}} --merge
+  release-mac:
+    if: contains(github.ref, 'tags/v')
+    name: Release macOS Build
+    runs-on: [self-hosted, macos]
+    needs: [build-linux, build-mac, build-windows, build-linux-builder, build-mac-builder, build-windows-builder]
+    steps:
+      - name: Release
+        run: |
+          cd santroller-configurator
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          cd ../Builder
+          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }}} --merge
+  release-win:
+    if: contains(github.ref, 'tags/v')
+    name: Release windows Build
+    runs-on: [self-hosted, macos]
+    needs: [build-linux, build-mac, build-windows, build-linux-builder, build-mac-builder, build-windows-builder]
+    steps:
+      - name: Release
+        run: |
+          cd santroller-configurator
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }}} --merge
+          cd ../Builder
+          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }}} --merge
   cleanup:
     name: Remove temp files
     runs-on: [self-hosted, linux]
