@@ -198,6 +198,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         if (Builder)
         {
             var file = Path.Combine(AssetUtils.GetAppDataFolder(), "auth");
+            if (!File.Exists(file))
+            {
+                return;
+            }
             var tokens = await File.ReadAllTextAsync(file);
             var accessToken = HttpUtility.ParseQueryString(tokens).Get("access_token")!;
             source = new GithubSource("https://github.com/Santroller/SantrollerConfiguratorBinaries", accessToken,
