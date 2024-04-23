@@ -121,7 +121,7 @@ jobs:
         run: |
           mkdir $Env:RUN_ID
           mv out $Env:RUN_ID/windows 
-          cp -rf santroller-configurator/Releases $Env:RUN_ID/Releases
+          cp -force -recursive santroller-configurator/Releases $Env:RUN_ID/Releases
           scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
   build-linux-builder:
     name: Build Builder (Linux)
@@ -195,7 +195,7 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir -Force $Env:RUN_ID
-          cp -rf Builder/Releases $Env:RUN_ID/BuilderReleases
+          cp -force -recursive Builder/Releases $Env:RUN_ID/BuilderReleases
           scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts  
   build-mac-builder:
     name: Build Builder (macOS)
