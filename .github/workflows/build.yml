@@ -257,7 +257,7 @@ jobs:
   release-win:
     if: contains(github.ref, 'tags/v')
     name: Release windows Build
-    runs-on: [self-hosted, macos]
+    runs-on: [self-hosted, windows]
     needs: [build-windows, build-windows-builder]
     steps:
       - name: Release
