@@ -564,6 +564,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     {
         if (_mgr == null) return;
         Working = true;
+        PlatformIo.Exit();
         Message = Resources.DownloadingUpdate;
         await _mgr.DownloadUpdatesAsync(_updateInfo!, i => Progress = i);
         _mgr.ApplyUpdatesAndRestart(null, null);

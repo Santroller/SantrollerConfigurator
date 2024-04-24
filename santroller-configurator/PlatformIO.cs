@@ -42,9 +42,10 @@ public class PlatformIo
             {
                 Directory.Delete(FirmwareDir, true);
             }
-
+            
             var assetDir = GetAssetDir();
             AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
+            AssetUtils.CopyDirectory(Path.Combine(assetDir, "platformio", ".cache"), Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", ".cache"), true);
             platformIoOutput.OnCompleted();
         });
     }
