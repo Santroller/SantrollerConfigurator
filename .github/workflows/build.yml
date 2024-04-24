@@ -40,7 +40,7 @@ jobs:
       - name: Create Velopack Release
         run: |
           cd santroller-configurator
-#          ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/Santroller no point in doing deltas until we do packages
+          # ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/Santroller no point in doing deltas until we do packages
           ~/.dotnet/tools/vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish/SantrollerConfigurator.app --signAppIdentity "guitar-configurator" --signInstallIdentity "guitar-configurator" --noInst --icon Resources/icon.icns
       - name: Copy artifacts
         env:
@@ -221,7 +221,7 @@ jobs:
       - name: Create Velopack Release
         run: |
           cd Builder
-#          ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.BINARY_GITHUB_TOKEN }} no point in doing deltas until we build packages
+          # ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.BINARY_GITHUB_TOKEN }} no point in doing deltas until we build packages
           ~/.dotnet/tools/vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish/SantrollerConfiguratorBuilder.app --signAppIdentity "guitar-configurator" --signInstallIdentity "guitar-configurator" --noInst --icon Resources/icon.icns
       - name: Copy artifacts
         env:
