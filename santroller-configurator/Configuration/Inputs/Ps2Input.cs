@@ -97,8 +97,8 @@ public class Ps2Input : SpiInput
 
         {Ps2InputType.DpadUp, $"(ps2Data[5] < {255 / 4})"},
         {Ps2InputType.DpadLeft, $"(ps2Data[5] < {255 / 4 * 2} && ps2Data[5] > {255 / 4})"},
-        {Ps2InputType.DpadDown, $"(ps2Data[5] < {255 / 4 * 3} && ps2Data[5] > {255 / 4 * 2})"},
-        {Ps2InputType.DpadRight, $"(ps2Data[5] > {255 / 4 * 3} && ps2Data[5] < 250 && ps2Data[5] != 127)"},
+        {Ps2InputType.DpadDown, $"(ps2Data[5] < {255 / 4 * 3} && ps2Data[5] > {255 / 4 * 2} && ps2Data[5] != 127)"},
+        {Ps2InputType.DpadRight, $"(ps2Data[5] > {255 / 4 * 3} && ps2Data[5] < 250)"},
     };
 
     private static readonly Dictionary<Ps2InputType, string> Mappings = new()
