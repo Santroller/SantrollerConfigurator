@@ -92,6 +92,11 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             hasLibUsb = false;
             Console.WriteLine(e);
         }
+        
+        if (!branded)
+        {
+            _ = CheckForUpdates();
+        }
 
         ConfigureCommand = ReactiveCommand.CreateFromObservable(
             () => Router.Navigate.Execute(new ConfigViewModel(this, SelectedDevice!, false))
@@ -186,13 +191,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             DeviceInputType = DeviceInputType.Direct;
             this.RaisePropertyChanged(nameof(DeviceInputType));
         });
-        if (!branded)
-        {
-            Task.Run(CheckForUpdates);
-        }
     }
 
-    public async void CheckForUpdates()
+    public async Task CheckForUpdates()
     {
         GithubSource source;
         if (Builder)
@@ -564,8 +565,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     {
         if (_mgr == null) return;
         Working = true;
-        PlatformIo.Exit();
         Message = Resources.DownloadingUpdate;
+        PlatformIo.Exit();
         await _mgr.DownloadUpdatesAsync(_updateInfo!, i => Progress = i);
         _mgr.ApplyUpdatesAndRestart(null, null);
     }
