@@ -55,7 +55,7 @@ public class GuitarButton : OutputButton
         // XB1 however has things broken out
         // For the universal report, we only put standard frets on nav, not solo
 
-        var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal);
+        var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal or ConfigField.Ps4);
         return Type switch
         {
             InstrumentButtonType.StrumUp => GetReportField(StandardButtonType.DpadUp),
@@ -137,7 +137,7 @@ public class GuitarButton : OutputButton
                 strumIndexes, combinedDebounce, macros, writer);
 
         // XB1 also needs to set the normal face buttons, which can conveniently be done using the PS3 format
-        if (mode is ConfigField.XboxOne && Type is not (InstrumentButtonType.StrumUp or InstrumentButtonType.StrumDown))
+        if (mode is ConfigField.XboxOne or ConfigField.Ps4 && Type is not (InstrumentButtonType.StrumUp or InstrumentButtonType.StrumDown))
             extra = $"{GenerateOutput(ConfigField.Ps3)}=true;";
         
         if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar})

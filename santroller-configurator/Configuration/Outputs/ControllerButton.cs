@@ -71,6 +71,11 @@ public class ControllerButton : OutputButton
         {
             return "";
         }
+        // RB on PS4 uses dpad left for star power activation
+        if (mode is ConfigField.Ps4 && Type is StandardButtonType.Back && Model.DeviceControllerType.Is5FretGuitar())
+        {
+            return GetReportField(StandardButtonType.DpadLeft);
+        }
         return mode is ConfigField.Ps3 or ConfigField.Xbox or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared or ConfigField.XboxOne
             or ConfigField.Xbox360 or ConfigField.Universal
             ? GetReportField(Type)

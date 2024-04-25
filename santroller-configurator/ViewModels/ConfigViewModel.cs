@@ -154,6 +154,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Select(x => x.Item1 is EmulationType.Controller && x.Item2 is ModeType.Standard)
             .ToPropertyEx(this, x => x.SupportsDeque);
         this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(x => x is DeviceControllerType.GuitarHeroGuitar
+                or DeviceControllerType.RockBandGuitar or DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums)
+            .ToPropertyEx(this, x => x.SupportsPS4Instrument);
+        this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarHeroGuitar
                 or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar
                 or DeviceControllerType.FortniteGuitarStrum)
@@ -947,7 +951,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public bool XInputAuth { get; set; }
 
-    [Reactive] public bool Sliderbar { get; set; }
+    [Reactive] public bool Ps4Instruments { get; set; }
+
+    [Reactive] public bool SliderBar { get; set; }
 
 
     private bool _hasPeripheral;
@@ -1099,6 +1105,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStandardMode { get; }
     [ObservableAsProperty] public bool IsAdvancedMode { get; }
     [ObservableAsProperty] public bool IsGuitar { get; }
+    
+    [ObservableAsProperty] public bool SupportsPS4Instrument { get; }
     
     [ObservableAsProperty] public bool IsGuitarHeroGuitar { get; }
     [ObservableAsProperty] public bool IsStageKit { get; }
@@ -1345,6 +1353,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         XInputOnWindows = true;
         Ps3OnRpcs3 = true;
         XInputAuth = true;
+        Ps4Instruments = false;
         MouseMovementType = MouseMovementType.Relative;
 
         switch (Main.DeviceInputType)
@@ -1596,7 +1605,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsStandardController)}
                        #define RPCS3_COMPAT {WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}
                        #define XINPUT_AUTH {WriteBlob(writer, XInputAuth && UsbHostEnabled)}
-                       #define SLIDER_BAR {WriteBlob(writer, Sliderbar)}
+                       #define PS4_INSTRUMENT {WriteBlob(writer, Ps4Instruments && UsbHostEnabled && DeviceControllerType is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar)}
+                       #define SLIDER_BAR {WriteBlob(writer, SliderBar)}
                        #define INPUT_QUEUE {WriteBlob(writer, Deque)}
                        #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
@@ -1628,7 +1638,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsStandardController).ToString().ToLower()}
                        #define RPCS3_COMPAT {(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}
                        #define XINPUT_AUTH {(XInputAuth && UsbHostEnabled).ToString().ToLower()}
-                       #define SLIDER_BAR {Sliderbar.ToString().ToLower()}
+                       #define PS4_INSTRUMENT {(Ps4Instruments && UsbHostEnabled && DeviceControllerType is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar).ToString().ToLower()}
+                       #define SLIDER_BAR {SliderBar.ToString().ToLower()}
                        #define INPUT_QUEUE {Deque.ToString().ToLower()}
                        #define POLL_RATE {PollRate}
                        #define WT_SENSITIVITY {WtSensitivity}

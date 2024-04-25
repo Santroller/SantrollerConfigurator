@@ -5271,6 +5271,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string PS4ModeLabel {
+            get {
+                return ResourceManager.GetString("PS4ModeLabel", resourceCulture);
+            }
+        }
+        
+        public static string PS4Label {
+            get {
+                return ResourceManager.GetString("PS4Label", resourceCulture);
+            }
+        }
+        
+        public static string PS3Label {
+            get {
+                return ResourceManager.GetString("PS3Label", resourceCulture);
+            }
+        }
+        
         public static string DisabledLabel {
             get {
                 return ResourceManager.GetString("DisabledLabel", resourceCulture);

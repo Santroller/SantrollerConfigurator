@@ -2759,6 +2759,15 @@
     <data name="EnabledLabel" xml:space="preserve">
         <value>Enabled</value>
     </data>
+    <data name="PS4ModeLabel" xml:space="preserve">
+        <value>Emulation Mode for PS4/5</value>
+    </data>
+    <data name="PS4Label" xml:space="preserve">
+        <value>PS4</value>
+    </data>
+    <data name="PS3Label" xml:space="preserve">
+        <value>PS3</value>
+    </data>
     <data name="DisabledLabel" xml:space="preserve">
         <value>Disabled</value>
     </data>

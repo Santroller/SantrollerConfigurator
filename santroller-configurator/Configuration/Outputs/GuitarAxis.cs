@@ -293,15 +293,15 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = {{analogOn & 0xFF}};
                          }
                          """;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
+            // Xb1 is RB only, so no slider
+            case ConfigField.XboxOne or ConfigField.Ps4 when Type == GuitarAxisType.Slider:
+                return "";
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 return $"if (SLIDER_BAR) {{{GenerateOutput(mode)} = (({Input.Generate()}) + 0x80);}}";
             case ConfigField.Universal
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 return $"if (SLIDER_BAR) {{{GenerateOutput(mode)} = {Input.Generate()};}}";
-            // Xb1 is RB only, so no slider
-            case ConfigField.XboxOne when Type == GuitarAxisType.Slider:
-                return "";
 
             // PS3 GH expects tilt on the tilt axis
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
