@@ -21,9 +21,6 @@ public class DigitalToAnalog : Input
         _trigger = type is DigitalToAnalogType.Trigger;
         Child = child;
         On = type is DigitalToAnalogType.Tilt ? 32767: on;
-        Tilt = type is DigitalToAnalogType.Tilt;
-        RbPickup = type is DigitalToAnalogType.Pickup;
-        TapBar = type is DigitalToAnalogType.TapBar;
         this.WhenAnyValue(x => x.Child.RawValue).Subscribe(s => RawValue = s > 0 ? On : 0);
         if (_trigger)
         {
@@ -41,12 +38,12 @@ public class DigitalToAnalog : Input
     public DigitalToAnalogType Type { get; }
     public Input Child { get; }
     public int On { get; set; }
-    public bool Tilt { get; }
+    public bool Tilt => Type is DigitalToAnalogType.Tilt;
+
+    public bool TapBar => Type is DigitalToAnalogType.TapBar;
+    public bool RbPickup => Type is DigitalToAnalogType.Pickup;
     
-    public bool TapBar { get; }
-    public bool RbPickup { get; }
-    
-    public bool Normal => !Tilt && !RbPickup && IsAnalog;
+    public bool Normal => Type is DigitalToAnalogType.Normal;
 
     public int PickupSelectorType
     {
