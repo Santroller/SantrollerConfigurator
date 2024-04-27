@@ -3033,6 +3033,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ConsoleTypeSantroller {
+            get {
+                return ResourceManager.GetString("ConsoleTypeSantroller", resourceCulture);
+            }
+        }
+        
         public static string DjAxisTypeEffectsKnob {
             get {
                 return ResourceManager.GetString("DjAxisTypeEffectsKnob", resourceCulture);

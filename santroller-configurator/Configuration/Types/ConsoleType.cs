@@ -14,5 +14,6 @@ public enum ConsoleType
     Windows,
     KeyboardMouse,
     Midi,
+    Santroller = 13,
     Unknown = 0xFF
 }
