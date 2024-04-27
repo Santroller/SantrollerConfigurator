@@ -153,9 +153,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.EmulationType, x => x.Mode, x => x.DeviceControllerType)
             .Select(x => x.Item1 is EmulationType.Controller && x.Item2 is ModeType.Standard)
             .ToPropertyEx(this, x => x.SupportsDeque);
-        this.WhenAnyValue(x => x.DeviceControllerType)
-            .Select(x => x is DeviceControllerType.GuitarHeroGuitar
-                or DeviceControllerType.RockBandGuitar or DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums)
+        this.WhenAnyValue(x => x.DeviceControllerType, x => x.Branded)
+            .Select(x => x.Item1 is DeviceControllerType.GuitarHeroGuitar
+                or DeviceControllerType.RockBandGuitar or DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums && !x.Item2)
             .ToPropertyEx(this, x => x.SupportsPS4Instrument);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarHeroGuitar
@@ -952,6 +952,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool XInputAuth { get; set; }
 
     [Reactive] public bool Ps4Instruments { get; set; }
+    [Reactive] public bool Ps2KramerMode { get; set; }
 
     [Reactive] public bool SliderBar { get; set; }
 
@@ -1605,7 +1606,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsStandardController)}
                        #define RPCS3_COMPAT {WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}
                        #define XINPUT_AUTH {WriteBlob(writer, XInputAuth && UsbHostEnabled)}
-                       #define PS4_INSTRUMENT {WriteBlob(writer, Ps4Instruments && UsbHostEnabled && DeviceControllerType is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar)}
                        #define SLIDER_BAR {WriteBlob(writer, SliderBar)}
                        #define INPUT_QUEUE {WriteBlob(writer, Deque)}
                        #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
@@ -1613,6 +1613,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
                        #define LED_BRIGHTNESS {WriteBlob(writer, LedBrightnessOn)}
+                       #define KRAMER_STRIKER {WriteBlob(writer, Ps2KramerMode)}
                        """;
 
             if (IsBluetoothRx)
@@ -1638,13 +1639,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsStandardController).ToString().ToLower()}
                        #define RPCS3_COMPAT {(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}
                        #define XINPUT_AUTH {(XInputAuth && UsbHostEnabled).ToString().ToLower()}
-                       #define PS4_INSTRUMENT {(Ps4Instruments && UsbHostEnabled && DeviceControllerType is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar).ToString().ToLower()}
                        #define SLIDER_BAR {SliderBar.ToString().ToLower()}
                        #define INPUT_QUEUE {Deque.ToString().ToLower()}
                        #define POLL_RATE {PollRate}
                        #define WT_SENSITIVITY {WtSensitivity}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {DjPollRate * 1000}
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {DjSmoothing.ToString().ToLower()}
+                       #define KRAMER_STRIKER {Ps2KramerMode.ToString().ToLower()}
                        #define LED_BRIGHTNESS {LedBrightnessOn}
                        """;
             if (BtRxAddr.Any() && BtRxAddr.Contains(":"))
@@ -1662,6 +1663,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                    #define ARDWIINO_BOARD "{Microcontroller.Board.ArdwiinoName}"
                    #define EMULATION_TYPE {GetEmulationType()}
                    #define DEVICE_TYPE {(byte) DeviceControllerType}
+                   #define PS4_INSTRUMENT {(Ps4Instruments && UsbHostEnabled && DeviceControllerType is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar).ToString().ToLower()}
                    """;
 
         // Actually write the config as configured

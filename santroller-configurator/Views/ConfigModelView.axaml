@@ -2356,6 +2356,17 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type combined:Ps2CombinedOutput}">
                 <StackPanel>
+                    <StackPanel Orientation="Horizontal" >
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.PS2KramerModeLabel}" />
+
+                        <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                      HorizontalContentAlignment="Center"
+                                      IsChecked="{Binding Model.Ps2KramerMode}"
+                                      OnContent="{x:Static netCore:Resources.OnLabel}"
+                                      OffContent="{x:Static netCore:Resources.OffLabel}" />
+                    </StackPanel>
                     <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"

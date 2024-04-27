@@ -2762,6 +2762,9 @@
     <data name="PS4ModeLabel" xml:space="preserve">
         <value>Emulation Mode for PS4/5</value>
     </data>
+    <data name="PS2KramerModeLabel" xml:space="preserve">
+        <value>Use slower poll rate (needed for some guitars)</value>
+    </data>
     <data name="PS4Label" xml:space="preserve">
         <value>PS4</value>
     </data>
