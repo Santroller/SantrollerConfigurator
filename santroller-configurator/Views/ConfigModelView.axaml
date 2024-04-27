@@ -2613,8 +2613,14 @@
                             HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
                             Content="{x:Static netCore:Resources.CopyOtherLedLabel}" />
                 </StackPanel>
-                <StackPanel IsVisible="{Binding !UsesPwm}">
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
+                <StackPanel>
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!IsCombined" />
+                            <Binding Path="!UsesPwm" />
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.EnableDigitalOutputTitle}" />
