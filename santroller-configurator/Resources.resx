@@ -1600,6 +1600,9 @@
     <data name="ConsoleTypeSantroller" xml:space="preserve">
         <value>Santroller</value>
     </data>
+    <data name="ConsoleTypeRaphnet" xml:space="preserve">
+        <value>Raphnet</value>
+    </data>
     <data name="DjAxisTypeEffectsKnob" xml:space="preserve">
         <value>Effects Knob</value>
     </data>

@@ -15,5 +15,6 @@ public enum ConsoleType
     KeyboardMouse,
     Midi,
     Santroller = 13,
+    Raphnet = 14,
     Unknown = 0xFF
 }
