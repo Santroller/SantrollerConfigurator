@@ -134,14 +134,14 @@
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
                         Content="{x:Static viewModels1:Resources.SaveAndReturn}"
                         Foreground="{Binding WarningTextColor}" Background="{Binding WarningColor}"
-                        Command="{Binding GoBackCommand}" />
+                        Command="{Binding ReturnAndWriteCommand}" />
                 <Button IsVisible="{Binding Main.Windows}" Content="{x:Static netCore:Resources.RescanLabel}"
                         Command="{Binding Main.RescanCommand}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0" />
                 <Button IsVisible="{Binding !Main.HasChanges}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
                         Content="{x:Static viewModels1:Resources.SaveAndReturn}"
-                        Command="{Binding GoBackCommand}" />
+                        Command="{Binding ReturnAndWriteCommand}" />
             </StackPanel>
         </ScrollViewer>
     </Panel>

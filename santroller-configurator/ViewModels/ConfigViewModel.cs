@@ -3564,6 +3564,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Main.SetDifference(true);
         }
     }
+    [RelayCommand]
+    public void ReturnAndWrite()
+    {
+        Main.SaveConfiguration();
+        GoBackCommand.Execute(null);
+    }
 
     public void SetUpDiff()
     {

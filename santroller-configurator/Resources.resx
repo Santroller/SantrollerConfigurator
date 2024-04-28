@@ -464,6 +464,9 @@
     <data name="KeyD9" xml:space="preserve">
         <value>9 and ( Keys</value>
     </data>
+    <data name="KeyReturn" xml:space="preserve">
+        <value>Enter Key</value>
+    </data>
     <data name="KeyEnter" xml:space="preserve">
         <value>Enter Key</value>
     </data>
@@ -508,6 +511,9 @@
     </data>
     <data name="KeyOemPeriod" xml:space="preserve">
         <value>. and &gt; Keys</value>
+    </data>
+    <data name="KeyOem2" xml:space="preserve">
+        <value>/ and ? Keys</value>
     </data>
     <data name="KeyOemQuestion" xml:space="preserve">
         <value>/ and ? Keys</value>
@@ -604,6 +610,12 @@
     </data>
     <data name="KeyPageUp" xml:space="preserve">
         <value>Page Up Key</value>
+    </data>
+    <data name="KeyPrior" xml:space="preserve">
+        <value>Page Up Key</value>
+    </data>
+    <data name="KeyNext" xml:space="preserve">
+        <value>Page Down Key</value>
     </data>
     <data name="KeyPageDown" xml:space="preserve">
         <value>Page Down Key</value>

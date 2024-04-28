@@ -927,6 +927,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string KeyReturn {
+            get {
+                return ResourceManager.GetString("KeyReturn", resourceCulture);
+            }
+        }
+        
         public static string KeyEnter {
             get {
                 return ResourceManager.GetString("KeyEnter", resourceCulture);
@@ -1014,6 +1020,12 @@ namespace GuitarConfigurator.NetCore {
         public static string KeyOemPeriod {
             get {
                 return ResourceManager.GetString("KeyOemPeriod", resourceCulture);
+            }
+        }
+        
+        public static string KeyOem2 {
+            get {
+                return ResourceManager.GetString("KeyOem2", resourceCulture);
             }
         }
         
@@ -1206,6 +1218,18 @@ namespace GuitarConfigurator.NetCore {
         public static string KeyPageUp {
             get {
                 return ResourceManager.GetString("KeyPageUp", resourceCulture);
+            }
+        }
+        
+        public static string KeyPrior {
+            get {
+                return ResourceManager.GetString("KeyPrior", resourceCulture);
+            }
+        }
+        
+        public static string KeyNext {
+            get {
+                return ResourceManager.GetString("KeyNext", resourceCulture);
             }
         }
         

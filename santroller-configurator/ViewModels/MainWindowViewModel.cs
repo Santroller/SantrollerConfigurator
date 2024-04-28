@@ -775,4 +775,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             }
         }
     }
+
+    public virtual void SaveConfiguration()
+    {
+        
+    }
 }

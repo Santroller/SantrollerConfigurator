@@ -262,7 +262,9 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
     public override IObservable<PlatformIo.PlatformIoState> SaveUf2(ConfigViewModel model)
     {
-        if (Selected == null) return Observable.Return(new PlatformIo.PlatformIoState(100, GuitarConfigurator.NetCore.Resources.DoneMessage, false, null));
+        if (Selected == null)
+            return Observable.Return(new PlatformIo.PlatformIoState(100,
+                GuitarConfigurator.NetCore.Resources.DoneMessage, false, null));
         var state = Write(model, false);
 
         state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, () => SaveUf2File(model));
@@ -378,6 +380,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
                 Progress = start;
             }
         }
+
         Message = "Building Linux executable";
         start += steps;
         Progress = start;
@@ -427,7 +430,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Directory.CreateDirectory(tempDir);
         await using var macosOutputTemp =
             File.Open(
-                Path.Join(tempDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip"), FileMode.Create,
+                Path.Join(tempDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip"),
+                FileMode.Create,
                 FileAccess.ReadWrite);
 
         await using var macosInput = AssetLoader.Open(uri);
@@ -489,7 +493,8 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Message = "Signing macOS package";
         start += steps;
         Progress = start;
-        var process = Process.Start(rcodeSizeProcess, new[] {"sign", Path.Join(zipRoot, SelectedTool.ToolNameVersioned + ".app")});
+        var process = Process.Start(rcodeSizeProcess,
+            new[] {"sign", Path.Join(zipRoot, SelectedTool.ToolNameVersioned + ".app")});
         await process.WaitForExitAsync();
         var outputZip = Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip");
         if (File.Exists(outputZip))
@@ -529,5 +534,10 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             ProgressbarColor = ProgressBarWarning;
             Message = "You have unsaved changes, click `Save Changes and return` to save them";
         }
+    }
+
+    public override void SaveConfiguration()
+    {
+        Save();
     }
 }
