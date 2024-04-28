@@ -72,6 +72,7 @@ public partial class BuilderAuthViewModel : ReactiveObject, IRoutableViewModel
     [RelayCommand]
     public void Continue()
     {
+        _ = BuilderMain.CheckForUpdates();
         BuilderMain.Router.NavigateAndReset.Execute(new BuilderMainViewModel(BuilderMain));
         
     }

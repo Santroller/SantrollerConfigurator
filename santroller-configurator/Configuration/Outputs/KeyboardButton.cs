@@ -297,14 +297,26 @@ public class KeyboardButton : OutputButton
 
     public override string GenerateOutput(ConfigField mode)
     {
-        switch (IsMediaKey)
+        // Standard keys need to be handled in keyboard
+        if (!IsMediaKey && mode is not ConfigField.Keyboard)
         {
-            case true when mode is not ConfigField.Consumer:
-            case false when mode is not ConfigField.Keyboard:
-                return "";
-            default:
-                return Key == Key.Delete ? GetReportField("Del") : GetReportField(Key);
+            return "";
         }
+        // Media keys need to be handled in consumer
+        if (IsMediaKey && mode is not ConfigField.Consumer)
+        {
+            return "";
+        }
+        // Some keys have multiple names, so we need to make sure the correct one is used.
+        return Key switch
+        {
+            Key.Return => GetReportField("Enter"),
+            Key.Next => GetReportField("PageDown"),
+            Key.Prior => GetReportField("PageUp"),
+            Key.Oem2 => GetReportField("OemQuestion"),
+            Key.Delete => GetReportField("Del"),
+            _ => GetReportField(Key)
+        };
     }
 
     public override SerializedOutput Serialize()
