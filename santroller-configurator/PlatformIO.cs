@@ -42,19 +42,20 @@ public class PlatformIo
             {
                 Directory.Delete(FirmwareDir, true);
             }
-            
+
             var assetDir = GetAssetDir();
             AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
-            AssetUtils.CopyDirectory(Path.Combine(assetDir, "platformio", ".cache"), Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", ".cache"), true);
+            AssetUtils.CopyDirectory(Path.Combine(assetDir, "platformio", ".cache"),
+                Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", ".cache"), true);
             // Swap programming command from avrdude to dfu-programmer on windows
-            #if Windows
+#if Windows
             var iniFile = Path.Combine(FirmwareDir, "platformio.ini");
-            File.WriteAllText(iniFile, File.ReadAllText(iniFile).Replace("${platformio.packages_dir}/tool-avrdude/avrdude $UPLOAD_FLAGS -U flash:w:$SOURCE:i", "${platformio.core_dir}/dfu-programmer ${BOARD_MCU} flash $SOURCE --force"));          
-            #endif
+            File.WriteAllText(iniFile, File.ReadAllText(iniFile).Replace("${platformio.packages_dir}/tool-avrdude/avrdude $UPLOAD_FLAGS -U flash:w:$SOURCE:i", "${platformio.core_dir}/dfu-programmer ${BOARD_MCU} flash $SOURCE"));
+#endif
             platformIoOutput.OnCompleted();
         });
     }
-    
+
     public IObservable<PlatformIoState> InitialisePlatformIo()
     {
         var platformIoOutput =
@@ -80,8 +81,10 @@ public class PlatformIo
         _portProcess.StartInfo.FileName = _pythonExecutable;
         _portProcess.StartInfo.WorkingDirectory = FirmwareDir;
         _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_CORE_DIR"] = pioFolder;
-        _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PLATFORMS_DIR"] = Path.Combine(assetDir, "platformio", "platforms");
-        _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PACKAGES_DIR"] = Path.Combine(assetDir, "platformio", "packages");
+        _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PLATFORMS_DIR"] =
+            Path.Combine(assetDir, "platformio", "platforms");
+        _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PACKAGES_DIR"] =
+            Path.Combine(assetDir, "platformio", "packages");
 
         _portProcess.StartInfo.Arguments = "-m platformio device list --json-output";
         _portProcess.StartInfo.UseShellExecute = false;
@@ -292,8 +295,10 @@ public class PlatformIo
             _currentProcess.StartInfo.WorkingDirectory = FirmwareDir;
             _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_CORE_DIR"] = pioFolder;
             _currentProcess.StartInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
-            _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PLATFORMS_DIR"] = Path.Combine(assetDir, "platformio", "platforms");
-            _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PACKAGES_DIR"] = Path.Combine(assetDir, "platformio", "packages");
+            _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PLATFORMS_DIR"] =
+                Path.Combine(assetDir, "platformio", "platforms");
+            _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PACKAGES_DIR"] =
+                Path.Combine(assetDir, "platformio", "packages");
             if (extraEnvs != null)
             {
                 _currentProcess.StartInfo.EnvironmentVariables[extraEnvs] = "1";
@@ -364,7 +369,7 @@ public class PlatformIo
                         if (line.StartsWith("Looking for device in DFU mode") && device is not Santroller && !inDfu)
                         {
                             platformIoOutput.OnNext(new PlatformIoState(currentProgress,
-                                string.Format(Resources.DfuMessage,  progressMessage), true, null, true));
+                                string.Format(Resources.DfuMessage, progressMessage), true, null, true));
                         }
 
                         if (platformIoOutput.Value.Dfu && line.StartsWith("Calling"))
