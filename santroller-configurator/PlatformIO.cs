@@ -46,6 +46,11 @@ public class PlatformIo
             var assetDir = GetAssetDir();
             AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
             AssetUtils.CopyDirectory(Path.Combine(assetDir, "platformio", ".cache"), Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", ".cache"), true);
+            // Swap programming command from avrdude to dfu-programmer on windows
+            #if Windows
+            var iniFile = Path.Combine(FirmwareDir, "platformio.ini");
+            File.WriteAllText(iniFile, File.ReadAllText(iniFile).Replace("${platformio.packages_dir}/tool-avrdude/avrdude $UPLOAD_FLAGS -U flash:w:$SOURCE:i", "${platformio.core_dir}/dfu-programmer ${BOARD_MCU} flash $SOURCE --force"));          
+            #endif
             platformIoOutput.OnCompleted();
         });
     }
