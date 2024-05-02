@@ -1719,7 +1719,7 @@
         <value>Controller</value>
     </data>
     <data name="EmulationTypeFortniteFestival" xml:space="preserve">
-        <value>Fortnite Festival</value>
+        <value>Fortnite Festival (Pad mode)</value>
     </data>
     <data name="EmulationTypeKeyboardMouse" xml:space="preserve">
         <value>Keyboard + Mouse</value>
