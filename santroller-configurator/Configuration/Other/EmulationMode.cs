@@ -67,6 +67,7 @@ public class EmulationMode : Output
             EmulationModeType.Ps3 => "REAL_PS3",
             EmulationModeType.Ps4Or5 => "PS4",
             EmulationModeType.Switch => "SWITCH",
+            EmulationModeType.Fnf => "FNF",
             _ => throw new ArgumentOutOfRangeException()
         };
     }

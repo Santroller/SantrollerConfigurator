@@ -8,5 +8,6 @@ public enum EmulationModeType
     Ps3,
     Ps4Or5,
     Switch,
-    Xbox
+    Xbox,
+    Fnf
 }

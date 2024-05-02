@@ -3207,6 +3207,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string EmulationModeTypeFnf {
+            get {
+                return ResourceManager.GetString("EmulationModeTypeFnf", resourceCulture);
+            }
+        }
+        
         public static string EmulationModeTypeXbox360 {
             get {
                 return ResourceManager.GetString("EmulationModeTypeXbox360", resourceCulture);
