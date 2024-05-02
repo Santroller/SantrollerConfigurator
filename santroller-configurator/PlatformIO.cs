@@ -49,6 +49,8 @@ public class PlatformIo
                 Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", ".cache"), true);
             // Swap programming command from avrdude to dfu-programmer on windows
 #if Windows
+            File.Copy(Path.Combine(assetDir, "platformio", "dfu-programmer.exe"),
+                Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "dfu-programmer.exe"), true);
             var iniFile = Path.Combine(FirmwareDir, "platformio.ini");
             File.WriteAllText(iniFile, File.ReadAllText(iniFile).Replace("${platformio.packages_dir}/tool-avrdude/avrdude $UPLOAD_FLAGS -U flash:w:$SOURCE:i", "${platformio.core_dir}/dfu-programmer ${BOARD_MCU} flash $SOURCE"));
 #endif
