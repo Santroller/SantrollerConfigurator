@@ -51,6 +51,8 @@ public class PlatformIo
 #if Windows
             File.Copy(Path.Combine(assetDir, "platformio", "dfu-programmer.exe"),
                 Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "dfu-programmer.exe"), true);
+            File.Copy(Path.Combine(assetDir, "platformio", "libusb0.dll"),
+                Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "libusb0.dll"), true);
             var iniFile = Path.Combine(FirmwareDir, "platformio.ini");
             File.WriteAllText(iniFile, File.ReadAllText(iniFile).Replace("${platformio.packages_dir}/tool-avrdude/avrdude $UPLOAD_FLAGS -U flash:w:$SOURCE:i", "${platformio.core_dir}/dfu-programmer ${BOARD_MCU} flash $SOURCE"));
 #endif
