@@ -693,9 +693,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 Resources.DriversMissingMessage)).ToTask();
             if (!yesNo.Response) return;
             var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.System);
-            var appdataFolder = AssetUtils.GetAppDataFolder();
-            var driverFolder = Path.Combine(appdataFolder, "drivers");
-            await AssetUtils.ExtractZipAsync("dfu.zip", appdataFolder);
+            var assetDir = PlatformIo.GetAssetDir();
+            var driverFolder = Path.Combine(assetDir, "platformio", "drivers");
             var info = new ProcessStartInfo(Path.Combine(windowsDir, "pnputil.exe"));
             info.ArgumentList.AddRange(new[] {"-i", "-a", Path.Combine(driverFolder, "atmel_usb_dfu.inf")});
             info.UseShellExecute = true;
