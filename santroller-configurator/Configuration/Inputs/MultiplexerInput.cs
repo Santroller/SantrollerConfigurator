@@ -47,7 +47,7 @@ public class MultiplexerInput : DirectInput
         get => _multiplexerType;
         set
         {
-            if (value == MultiplexerType.EightChannel && _multiplexerType == MultiplexerType.SixteenChannel)
+            if (value.IsEightChannel() && _multiplexerType.IsSixteenChannel())
                 if (Channel > 7)
                     Channel = 7;
 
@@ -105,9 +105,9 @@ public class MultiplexerInput : DirectInput
 
     public override InputType? InputType => Types.InputType.MultiplexerInput;
 
-    public override IList<PinConfig> PinConfigs => MultiplexerType == MultiplexerType.SixteenChannel
-        ? new List<PinConfig> {PinConfig, PinConfigS0, PinConfigS1, PinConfigS2, PinConfigS3}
-        : new List<PinConfig> {PinConfig, PinConfigS0, PinConfigS1, PinConfigS2};
+    public override IList<PinConfig> PinConfigs => MultiplexerType.IsSixteenChannel()
+        ? [PinConfig, PinConfigS0, PinConfigS1, PinConfigS2, PinConfigS3]
+        : [PinConfig, PinConfigS0, PinConfigS1, PinConfigS2];
 
     public override string Generate()
     {

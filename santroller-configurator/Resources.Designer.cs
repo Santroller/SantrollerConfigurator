@@ -3909,6 +3909,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string MultiplexerTypeEightChannelSlow {
+            get {
+                return ResourceManager.GetString("MultiplexerTypeEightChannelSlow", resourceCulture);
+            }
+        }
+        
+        public static string MultiplexerTypeSixteenChannelSlow {
+            get {
+                return ResourceManager.GetString("MultiplexerTypeSixteenChannelSlow", resourceCulture);
+            }
+        }
+        
         public static string PickupSelectorTypeChorus {
             get {
                 return ResourceManager.GetString("PickupSelectorTypeChorus", resourceCulture);

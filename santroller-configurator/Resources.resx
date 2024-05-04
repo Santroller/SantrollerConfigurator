@@ -2044,6 +2044,13 @@
     <data name="MultiplexerTypeSixteenChannel" xml:space="preserve">
         <value>4067 or other 16 channel multiplexer</value>
     </data>
+    <data name="MultiplexerTypeEightChannelSlow" xml:space="preserve">
+        <value>Slow 8 channel multiplexer, such as CD4051BE</value>
+    </data>
+
+    <data name="MultiplexerTypeSixteenChannelSlow" xml:space="preserve">
+        <value>Slow 16 channel multiplexer, such as CD4067B</value>
+    </data>
 
     <data name="PickupSelectorTypeChorus" xml:space="preserve">
         <value>Chorus</value>

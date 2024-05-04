@@ -1933,6 +1933,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 config += $"\n#define APA102_SPI_PORT {_ledSpiConfig.Definition}";
             }
+            
+            if (Outputs.Any(output => output.Input.InnermostInputs().Any(input => input is MultiplexerInput{MultiplexerType: MultiplexerType.EightChannelSlow or MultiplexerType.SixteenChannelSlow})))
+            {
+                config += "\n#define CD4051BE";
+            }
         }
         else
         {
