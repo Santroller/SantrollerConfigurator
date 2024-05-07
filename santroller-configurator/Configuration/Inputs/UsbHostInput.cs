@@ -95,8 +95,13 @@ public class UsbHostInput : Input
             {
                 var consoleType = (ConsoleType) usbHostRaw[i];
                 string subType;
-                if (consoleType == ConsoleType.Xbox360)
+                if (consoleType is ConsoleType.Xbox360 or ConsoleType.Xbox360W)
                 {
+                    if (consoleType is ConsoleType.Xbox360W && usbHostRaw[i + 1] == 0xFF)
+                    {
+                        continue;
+                    }
+
                     var xInputSubType = (XInputSubType) usbHostRaw[i + 1];
                     subType = EnumToStringConverter.Convert(xInputSubType);
                 }
@@ -119,7 +124,7 @@ public class UsbHostInput : Input
                 }
                 else
                 {
-                    buffer += $"{consoleType} {subType}\n";
+                    buffer += $"{EnumToStringConverter.Convert(consoleType)} {subType}\n";
                 }
             }
 

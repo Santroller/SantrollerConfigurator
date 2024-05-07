@@ -438,7 +438,7 @@
                                Width="300" Content="{x:Static netCore:Resources.ConnectedDevicesLabel}" />
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="200" Content="{Binding UsbHostInfo}" />
+                               Width="400" Content="{Binding UsbHostInfo}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
@@ -762,7 +762,7 @@
                                Width="300" Content="{x:Static netCore:Resources.ConnectedDevicesLabel}" />
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="200" Content="{Binding UsbHostInfo}" />
+                               Width="400" Content="{Binding UsbHostInfo}" />
                     </StackPanel>
                     <StackPanel IsVisible="{Binding ShouldShowPins}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"

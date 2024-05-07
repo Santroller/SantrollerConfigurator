@@ -281,12 +281,19 @@ public class UsbHostCombinedOutput : CombinedOutput
             ConnectedDevices = 0;
             return;
         }
+
+        var devices = 0;
         for (var i = 0; i < usbHostRaw.Length; i += 2)
         {
             var consoleType = (ConsoleType) usbHostRaw[i];
             string subType;
-            if (consoleType == ConsoleType.Xbox360)
+            if (consoleType is ConsoleType.Xbox360 or ConsoleType.Xbox360W)
             {
+                if (consoleType is ConsoleType.Xbox360W && usbHostRaw[i + 1] == 0xFF)
+                {
+                    continue;
+                }
+
                 var xInputSubType = (XInputSubType) usbHostRaw[i + 1];
                 subType = EnumToStringConverter.Convert(xInputSubType);
             }
@@ -310,11 +317,13 @@ public class UsbHostCombinedOutput : CombinedOutput
             }
             else
             {
-                buffer += $"{consoleType} {subType}\n";
+                buffer += $"{EnumToStringConverter.Convert(consoleType)} {subType}\n";
             }
+
+            devices += 1;
         }
 
-        ConnectedDevices = usbHostRaw.Length / 2;
+        ConnectedDevices = devices;
 
         UsbHostInfo = buffer.Trim();
         UpdateDetails();

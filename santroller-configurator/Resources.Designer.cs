@@ -2949,6 +2949,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string XInputSubTypeGuitarHeroWt {
+            get {
+                return ResourceManager.GetString("XInputSubTypeGuitarHeroWt", resourceCulture);
+            }
+        }
+        
         public static string XInputSubTypeDrums {
             get {
                 return ResourceManager.GetString("XInputSubTypeDrums", resourceCulture);
@@ -2988,6 +2994,12 @@ namespace GuitarConfigurator.NetCore {
         public static string ConsoleTypeXbox360 {
             get {
                 return ResourceManager.GetString("ConsoleTypeXbox360", resourceCulture);
+            }
+        }
+        
+        public static string ConsoleTypeXbox360W {
+            get {
+                return ResourceManager.GetString("ConsoleTypeXbox360W", resourceCulture);
             }
         }
         

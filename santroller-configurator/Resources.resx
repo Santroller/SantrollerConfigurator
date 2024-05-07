@@ -1555,6 +1555,9 @@
     <data name="XInputSubTypeGuitarAlternate" xml:space="preserve">
         <value>Guitar Alternate</value>
     </data>
+    <data name="XInputSubTypeGuitarHeroWt" xml:space="preserve">
+        <value>Guitar Alternate</value>
+    </data>
     <data name="XInputSubTypeDrums" xml:space="preserve">
         <value>Drums</value>
     </data>
@@ -1575,6 +1578,9 @@
     </data>
     <data name="ConsoleTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>
+    </data>
+    <data name="ConsoleTypeXbox360W" xml:space="preserve">
+        <value>Xbox 360 Wireless</value>
     </data>
     <data name="ConsoleTypePs3" xml:space="preserve">
         <value>PS3</value>

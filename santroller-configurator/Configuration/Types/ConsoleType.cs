@@ -16,5 +16,6 @@ public enum ConsoleType
     Midi,
     Santroller = 13,
     Raphnet = 14,
+    Xbox360W = 16,
     Unknown = 0xFF
 }
