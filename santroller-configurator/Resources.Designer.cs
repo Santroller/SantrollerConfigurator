@@ -3045,6 +3045,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ConsoleTypeXbox360BigButton {
+            get {
+                return ResourceManager.GetString("ConsoleTypeXbox360BigButton", resourceCulture);
+            }
+        }
+        
         public static string ConsoleTypeKeyboard {
             get {
                 return ResourceManager.GetString("ConsoleTypeKeyboard", resourceCulture);

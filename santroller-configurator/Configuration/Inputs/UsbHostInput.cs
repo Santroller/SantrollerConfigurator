@@ -187,7 +187,7 @@ public class UsbHostInput : Input
                 buffer += consoleType switch
                 {
                     ConsoleType.Universal => string.Format(Resources.GenericGamepadLabel, subType),
-                    ConsoleType.Keyboard or ConsoleType.Mouse => $"{EnumToStringConverter.Convert(consoleType)}\n",
+                    ConsoleType.Keyboard or ConsoleType.Mouse or ConsoleType.Xbox360BigButton => $"{EnumToStringConverter.Convert(consoleType)}\n",
                     _ => $"{EnumToStringConverter.Convert(consoleType)} {subType}\n"
                 };
             }

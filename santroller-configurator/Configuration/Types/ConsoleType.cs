@@ -19,5 +19,6 @@ public enum ConsoleType
     Xbox360W = 16,
     Keyboard = 17,
     Mouse = 18,
+    Xbox360BigButton = 19,
     Unknown = 0xFF
 }

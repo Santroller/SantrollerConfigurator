@@ -1604,6 +1604,9 @@
     <data name="ConsoleTypeXbox360W" xml:space="preserve">
         <value>Xbox 360 Wireless</value>
     </data>
+    <data name="ConsoleTypeXbox360BigButton" xml:space="preserve">
+        <value>Xbox 360 Big Button Controller</value>
+    </data>
     <data name="ConsoleTypeKeyboard" xml:space="preserve">
         <value>Keyboard</value>
     </data>
