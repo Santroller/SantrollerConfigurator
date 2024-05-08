@@ -184,14 +184,12 @@ public class UsbHostInput : Input
                     }
                 }
 
-                if (consoleType == ConsoleType.Universal)
+                buffer += consoleType switch
                 {
-                    buffer += string.Format(Resources.GenericGamepadLabel, subType);
-                }
-                else
-                {
-                    buffer += $"{EnumToStringConverter.Convert(consoleType)} {subType}\n";
-                }
+                    ConsoleType.Universal => string.Format(Resources.GenericGamepadLabel, subType),
+                    ConsoleType.Keyboard or ConsoleType.Mouse => $"{EnumToStringConverter.Convert(consoleType)}\n",
+                    _ => $"{EnumToStringConverter.Convert(consoleType)} {subType}\n"
+                };
             }
 
             ConnectedDevices = usbHostRaw.Length / 2;
