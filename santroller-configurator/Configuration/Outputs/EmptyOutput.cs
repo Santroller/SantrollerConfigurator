@@ -100,7 +100,6 @@ public class EmptyOutput : Output
         }
     }
 
-    public IEnumerable<MouseAxisType> MouseAxisTypes => Enum.GetValues<MouseAxisType>();
 
     public MouseButtonType? MouseButtonType
     {
@@ -112,8 +111,6 @@ public class EmptyOutput : Output
             this.RaiseAndSetIfChanged(ref _key, null, nameof(Key));
         }
     }
-
-    public IEnumerable<MouseButtonType> MouseButtonTypes => Enum.GetValues<MouseButtonType>();
 
     public override string ErrorText => Resources.ErrorInputUnbound;
 

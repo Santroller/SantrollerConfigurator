@@ -603,6 +603,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string AssignKeyboard {
+            get {
+                return ResourceManager.GetString("AssignKeyboard", resourceCulture);
+            }
+        }
+        
+        public static string AssignMouseAxis {
+            get {
+                return ResourceManager.GetString("AssignMouseAxis", resourceCulture);
+            }
+        }
+        
+        public static string AssignMouseButton {
+            get {
+                return ResourceManager.GetString("AssignMouseButton", resourceCulture);
+            }
+        }
+        
         public static string AxisCalibrationSetDeadzone {
             get {
                 return ResourceManager.GetString("AxisCalibrationSetDeadzone", resourceCulture);
@@ -2223,6 +2241,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string UsbHostInputTypeKeyboardInput {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeKeyboardInput", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeMouseAxis {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeMouseAxis", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeMouseButton {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeMouseButton", resourceCulture);
+            }
+        }
+        
         public static string WiiControllerTypeNunchuk {
             get {
                 return ResourceManager.GetString("WiiControllerTypeNunchuk", resourceCulture);
@@ -3000,6 +3036,18 @@ namespace GuitarConfigurator.NetCore {
         public static string ConsoleTypeXbox360W {
             get {
                 return ResourceManager.GetString("ConsoleTypeXbox360W", resourceCulture);
+            }
+        }
+        
+        public static string ConsoleTypeKeyboard {
+            get {
+                return ResourceManager.GetString("ConsoleTypeKeyboard", resourceCulture);
+            }
+        }
+        
+        public static string ConsoleTypeMouse {
+            get {
+                return ResourceManager.GetString("ConsoleTypeMouse", resourceCulture);
             }
         }
         
@@ -5238,6 +5286,24 @@ namespace GuitarConfigurator.NetCore {
         public static string OutputTypeLabel {
             get {
                 return ResourceManager.GetString("OutputTypeLabel", resourceCulture);
+            }
+        }
+        
+        public static string KeyTypeLabel {
+            get {
+                return ResourceManager.GetString("KeyTypeLabel", resourceCulture);
+            }
+        }
+        
+        public static string MouseButtonTypeLabel {
+            get {
+                return ResourceManager.GetString("MouseButtonTypeLabel", resourceCulture);
+            }
+        }
+        
+        public static string MouseAxisTypeLabel {
+            get {
+                return ResourceManager.GetString("MouseAxisTypeLabel", resourceCulture);
             }
         }
         

@@ -3567,6 +3567,7 @@
                                                       ItemsSource="{Binding InputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplateGeneric}" />
                                         </StackPanel>
+                                        
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel.IsVisible>
                                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
@@ -3626,6 +3627,46 @@
                                         </StackPanel>
                                         <ContentControl ContentTemplate="{StaticResource OutputTemplate}"
                                                         Content="{Binding}" />
+                                        
+                                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostKeyboard}">
+                                            <Label VerticalAlignment="Center"
+                                                   VerticalContentAlignment="Center"
+                                                   Width="300" Content="{x:Static netCore:Resources.KeyTypeLabel}" />
+                                            <ComboBox VerticalAlignment="Center"
+                                                      SelectedItem="{Binding UsbHostKey}"
+                                                      ItemsSource="{Binding KeyboardButtons}"
+                                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                                            <Button Command="{Binding FindAndAssignUsbHostKeyCommand}"
+                                                    IsEnabled="{Binding ConfigurableInput}"
+                                                    Content="{Binding ButtonTextUsbHostKey}" />
+                                        </StackPanel>
+                                        
+                                        
+                                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostMouseAxis}">
+                                            <Label VerticalAlignment="Center"
+                                                   VerticalContentAlignment="Center"
+                                                   Width="300" Content="{x:Static netCore:Resources.MouseAxisTypeLabel}" />
+                                            <ComboBox VerticalAlignment="Center"
+                                                      SelectedItem="{Binding UsbHostKeyMouseAxisType}"
+                                                      ItemsSource="{Binding MouseAxisTypes}"
+                                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                                            <Button Command="{Binding FindAndAssignUsbHostMouseAxisCommand}"
+                                                    IsEnabled="{Binding ConfigurableInput}"
+                                                    Content="{Binding ButtonTextUsbHostKey}" />
+                                        </StackPanel>
+                                        
+                                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostMouseButton}">
+                                            <Label VerticalAlignment="Center"
+                                                   VerticalContentAlignment="Center"
+                                                   Width="300" Content="{x:Static netCore:Resources.MouseButtonTypeLabel}" />
+                                            <ComboBox VerticalAlignment="Center"
+                                                      SelectedItem="{Binding UsbHostKeyMouseButtonType}"
+                                                      ItemsSource="{Binding MouseButtonTypes}"
+                                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                                            <Button Command="{Binding FindAndAssignUsbHostMouseButtonCommand}"
+                                                    IsEnabled="{Binding ConfigurableInput}"
+                                                    Content="{Binding ButtonTextUsbHostKey}" />
+                                        </StackPanel>
                                         <ItemsControl IsVisible="{Binding IsCombined}"
                                                       HorizontalAlignment="Stretch"
                                                       IsEnabled="{Binding IsCombined}"

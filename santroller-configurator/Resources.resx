@@ -302,6 +302,15 @@
     <data name="AssignMouseKeyboard" xml:space="preserve">
         <value>Move the mouse or click / press any key to use that input</value>
     </data>
+    <data name="AssignKeyboard" xml:space="preserve">
+        <value>Press any key to use that input</value>
+    </data>
+    <data name="AssignMouseAxis" xml:space="preserve">
+        <value>Move the mouse to use that input</value>
+    </data>
+    <data name="AssignMouseButton" xml:space="preserve">
+        <value>Click a to use that input</value>
+    </data>
     <data name="AxisCalibrationSetDeadzone" xml:space="preserve">
         <value>Set Deadzone</value>
     </data>
@@ -1122,6 +1131,16 @@
     <data name="UsbHostInputTypeGenericAxisSlider" xml:space="preserve">
         <value>Generic Joystick Slider Axis</value>
     </data>
+
+    <data name="UsbHostInputTypeKeyboardInput" xml:space="preserve">
+        <value>Keyboard Input</value>
+    </data>
+    <data name="UsbHostInputTypeMouseAxis" xml:space="preserve">
+        <value>Mouse Axis</value>
+    </data>
+    <data name="UsbHostInputTypeMouseButton" xml:space="preserve">
+        <value>Mouse Button</value>
+    </data>
     <data name="WiiControllerTypeNunchuk" xml:space="preserve">
         <value>Nunchuk Controller</value>
     </data>
@@ -1581,6 +1600,12 @@
     </data>
     <data name="ConsoleTypeXbox360W" xml:space="preserve">
         <value>Xbox 360 Wireless</value>
+    </data>
+    <data name="ConsoleTypeKeyboard" xml:space="preserve">
+        <value>Keyboard</value>
+    </data>
+    <data name="ConsoleTypeMouse" xml:space="preserve">
+        <value>Mouse</value>
     </data>
     <data name="ConsoleTypePs3" xml:space="preserve">
         <value>PS3</value>
@@ -2744,6 +2769,15 @@
     </data>
     <data name="OutputTypeLabel" xml:space="preserve">
         <value>Output Type</value>
+    </data>
+    <data name="KeyTypeLabel" xml:space="preserve">
+        <value>Keyboard Key</value>
+    </data>
+    <data name="MouseButtonTypeLabel" xml:space="preserve">
+        <value>Mouse Button</value>
+    </data>
+    <data name="MouseAxisTypeLabel" xml:space="preserve">
+        <value>Mouse Axis</value>
     </data>
     <data name="InputTypeLabel" xml:space="preserve">
         <value>Input Type</value>

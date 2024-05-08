@@ -98,6 +98,9 @@ public abstract partial class Output : ReactiveObject
         PeripheralOutput = peripheralOutput;
         ChildOfCombined = childOfCombined;
         ButtonText = Resources.Assign;
+        ButtonTextUsbHostKey = Resources.Assign;
+        ButtonTextUsbHostMouseAxis = Resources.Assign;
+        ButtonTextUsbHostMouseButton = Resources.Assign;
         Input = input;
         LedIndices = new ObservableCollection<byte>(ledIndices);
         LedIndicesMpr121 = new ObservableCollection<byte>(ledIndicesMpr121);
@@ -136,6 +139,18 @@ public abstract partial class Output : ReactiveObject
                 x.InnermostInputs().First() is Gh5NeckInput or CloneNeckInput &&
                 this is not GuitarAxis {Type: GuitarAxisType.Slider})
             .ToPropertyEx(this, x => x.IsGh5OrClone);
+        this.WhenAnyValue(x => x.Input)
+            .Select(x =>
+                x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.KeyboardInput})
+            .ToPropertyEx(this, x => x.IsUsbHostKeyboard);
+        this.WhenAnyValue(x => x.Input)
+            .Select(x =>
+                x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.MouseAxis})
+            .ToPropertyEx(this, x => x.IsUsbHostMouseAxis);
+        this.WhenAnyValue(x => x.Input)
+            .Select(x =>
+                x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.MouseButton})
+            .ToPropertyEx(this, x => x.IsUsbHostMouseButton);
         this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Ps2Input)
             .ToPropertyEx(this, x => x.IsPs2);
         this.WhenAnyValue(x => x.Input)
@@ -413,6 +428,24 @@ public abstract partial class Output : ReactiveObject
         set => SetInput(value, null, null, null, null, null, null, null);
     }
 
+    public Key UsbHostKey
+    {
+        get => GetUsbHostKey() ?? Key.A;
+        set => SetUsbHostKey(value);
+    }
+
+    public MouseAxisType UsbHostKeyMouseAxisType
+    {
+        get => GetUsbHostMouseAxis() ?? MouseAxisType.X;
+        set => SetUsbHostMouseAxis(value);
+    }
+
+    public MouseButtonType UsbHostKeyMouseButtonType
+    {
+        get => GetUsbHostMouseButton() ?? MouseButtonType.Left;
+        set => SetUsbHostMouseButton(value);
+    }
+
     public WiiInputType WiiInputType
     {
         get => (Input.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
@@ -472,6 +505,11 @@ public abstract partial class Output : ReactiveObject
 
     public IEnumerable<object> KeyOrMouseInputs => Enum.GetValues<MouseButtonType>().Cast<object>()
         .Concat(Enum.GetValues<MouseAxisType>().Cast<object>()).Concat(KeyboardButton.Keys.Cast<object>());
+
+    public IEnumerable<Key> KeyboardButtons => KeyboardButton.Keys;
+    public IEnumerable<MouseButtonType> MouseButtonTypes => Enum.GetValues<MouseButtonType>();
+    public IEnumerable<MouseAxisType> MouseAxisTypes => Enum.GetValues<MouseAxisType>();
+
 
     public IEnumerable<Ps2InputType> Ps2InputTypes => Enum.GetValues<Ps2InputType>();
 
@@ -576,6 +614,10 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] public bool IsUsb { get; }
     [ObservableAsProperty] public bool IsPs2 { get; }
     [ObservableAsProperty] public bool IsGh5OrClone { get; }
+
+    [ObservableAsProperty] public bool IsUsbHostKeyboard { get; }
+    [ObservableAsProperty] public bool IsUsbHostMouseAxis { get; }
+    [ObservableAsProperty] public bool IsUsbHostMouseButton { get; }
     [ObservableAsProperty] public bool IsWt { get; }
     [ObservableAsProperty] public bool AreLedsEnabled { get; }
     [ObservableAsProperty] public bool AreLedsEnabledPeripheral { get; }
@@ -625,6 +667,9 @@ public abstract partial class Output : ReactiveObject
     public bool IsEmpty => this is EmptyOutput;
 
     [Reactive] public string ButtonText { get; set; }
+    [Reactive] public string ButtonTextUsbHostKey { get; set; }
+    [Reactive] public string ButtonTextUsbHostMouseAxis { get; set; }
+    [Reactive] public string ButtonTextUsbHostMouseButton { get; set; }
 
     public virtual string ErrorText
     {
@@ -668,7 +713,7 @@ public abstract partial class Output : ReactiveObject
             return string.IsNullOrEmpty(text) ? "" : text;
         }
     }
-    
+
 
     public abstract string LedOnLabel { get; }
 
@@ -680,17 +725,52 @@ public abstract partial class Output : ReactiveObject
 
     private object? GetKey()
     {
-        switch (this)
+        return this switch
         {
-            case KeyboardButton button:
-                return button.Key;
-            case MouseAxis axis:
-                return axis.Type;
-            case MouseButton button:
-                return button.Type;
-        }
+            KeyboardButton button => button.Key,
+            MouseAxis axis => axis.Type,
+            MouseButton button => button.Type,
+            _ => null
+        };
+    }
 
-        return null;
+    private Key? GetUsbHostKey()
+    {
+        return (Input.InnermostInputs().First() as UsbHostInput)?.Key;
+    }
+    
+    private MouseAxisType? GetUsbHostMouseAxis()
+    {
+        return (Input.InnermostInputs().First() as UsbHostInput)?.MouseAxisType;
+    }
+    
+    private MouseButtonType? GetUsbHostMouseButton()
+    {
+        return (Input.InnermostInputs().First() as UsbHostInput)?.MouseButtonType;
+    }
+
+    private void SetUsbHostKey(Key value)
+    {
+        var current = GetUsbHostKey();
+        if (current == null) return;
+        if (current == value) return;
+        Input = new UsbHostInput(value, Model);
+    }
+    
+    private void SetUsbHostMouseAxis(MouseAxisType value)
+    {
+        var current = GetUsbHostMouseAxis();
+        if (current == null) return;
+        if (current == value) return;
+        Input = new UsbHostInput(value, Model);
+    }
+    
+    private void SetUsbHostMouseButton(MouseButtonType value)
+    {
+        var current = GetUsbHostMouseButton();
+        if (current == null) return;
+        if (current == value) return;
+        Input = new UsbHostInput(value, Model);
     }
 
     private void SetKey(object value)
@@ -756,7 +836,45 @@ public abstract partial class Output : ReactiveObject
     {
         LedOn = LedOff;
     }
-    
+
+    [RelayCommand]
+    private async Task FindAndAssignUsbHostMouseAxisAsync()
+    {
+        ButtonTextUsbHostMouseAxis = Resources.AssignMouseAxis;
+        var lastPoint = await Model.KeyOrPointerEvent.OfType<Point>().Take(1).ToTask();
+        await Task.Delay(100);
+        var point = await Model.KeyOrPointerEvent.OfType<Point>().Take(1).ToTask();
+        var diff = lastPoint - point;
+        UsbHostKeyMouseAxisType = Math.Abs(diff.X) > Math.Abs(diff.Y) ? MouseAxisType.X : MouseAxisType.Y;
+
+        ButtonTextUsbHostMouseAxis = Resources.Assign;
+        this.RaisePropertyChanged(nameof(UsbHostKeyMouseAxisType));
+    }
+    [RelayCommand]
+    private async Task FindAndAssignUsbHostMouseButtonAsync()
+    {
+        ButtonTextUsbHostMouseButton = Resources.AssignMouseButton;
+        var pointerUpdateKind = await Model.KeyOrPointerEvent.OfType<PointerUpdateKind>().Take(1).ToTask();
+        UsbHostKeyMouseButtonType = pointerUpdateKind switch
+        {
+            PointerUpdateKind.LeftButtonPressed or PointerUpdateKind.LeftButtonReleased => MouseButtonType.Left,
+            PointerUpdateKind.MiddleButtonPressed or PointerUpdateKind.MiddleButtonReleased => MouseButtonType.Middle,
+            PointerUpdateKind.RightButtonPressed or PointerUpdateKind.RightButtonReleased => MouseButtonType.Right,
+            _ => UsbHostKeyMouseButtonType
+        };
+        ButtonTextUsbHostMouseButton = Resources.Assign;
+        this.RaisePropertyChanged(nameof(UsbHostKeyMouseButtonType));
+    }
+    [RelayCommand]
+    private async Task FindAndAssignUsbHostKeyAsync()
+    {
+        ButtonTextUsbHostKey = Resources.AssignKeyboard;
+        var keyEventArgs = await Model.KeyOrPointerEvent.OfType<KeyEventArgs>().Take(1).ToTask();
+        UsbHostKey = keyEventArgs.Key;
+        ButtonTextUsbHostKey = Resources.Assign;
+        this.RaisePropertyChanged(nameof(UsbHostKey));
+    }
+
     [RelayCommand]
     private async Task FindAndAssignAsync()
     {

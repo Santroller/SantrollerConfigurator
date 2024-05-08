@@ -17,5 +17,7 @@ public enum ConsoleType
     Santroller = 13,
     Raphnet = 14,
     Xbox360W = 16,
+    Keyboard = 17,
+    Mouse = 18,
     Unknown = 0xFF
 }

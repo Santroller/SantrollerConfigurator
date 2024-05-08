@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Avalonia.Input;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -16,28 +17,83 @@ public class UsbHostInput : Input
 {
     public UsbHostInput(UsbHostInputType input, ConfigViewModel model, bool combined = false) : base(model)
     {
+        Key = Key.A;
+        MouseButtonType = MouseButtonType.Left;
+        MouseAxisType = MouseAxisType.X;
         Combined = combined;
         Input = input;
         _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
         _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
-        IsAnalog = input is >= UsbHostInputType.LeftTrigger and < UsbHostInputType.GenericButton1 or >= UsbHostInputType.GenericAxisX ;
+        IsAnalog = input is (>= UsbHostInputType.LeftTrigger and < UsbHostInputType.GenericButton1
+            or >= UsbHostInputType.GenericAxisX) and not UsbHostInputType.KeyboardInput
+            and not UsbHostInputType.MouseButton;
+    }
+
+    public UsbHostInput(Key key, ConfigViewModel model, bool combined = false) : base(model)
+    {
+        Key = key;
+        MouseButtonType = MouseButtonType.Left;
+        MouseAxisType = MouseAxisType.X;
+        Combined = combined;
+        Input = UsbHostInputType.KeyboardInput;
+        _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
+        _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
+        IsAnalog = false;
+    }
+
+    public UsbHostInput(MouseButtonType mouseButtonType, ConfigViewModel model, bool combined = false) : base(model)
+    {
+        Key = Key.A;
+        MouseButtonType = mouseButtonType;
+        MouseAxisType = MouseAxisType.X;
+        Combined = combined;
+        Input = UsbHostInputType.MouseButton;
+        _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
+        _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
+        IsAnalog = false;
+    }
+
+    public UsbHostInput(MouseAxisType mouseAxisType, ConfigViewModel model, bool combined = false) : base(model)
+    {
+        Key = Key.A;
+        MouseButtonType = MouseButtonType.Left;
+        MouseAxisType = mouseAxisType;
+        Input = UsbHostInputType.MouseAxis;
+        Combined = combined;
+        _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
+        _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
+        IsAnalog = true;
     }
 
     public bool Combined { get; }
-    public bool ShouldShowPins => !Combined && !Model.Branded; 
+    public bool ShouldShowPins => !Combined && !Model.Branded;
     public override bool Peripheral => false;
 
     public UsbHostInputType Input { get; }
 
+    public Key Key { get; }
+
+    public MouseAxisType MouseAxisType { get; }
+
+    public MouseButtonType MouseButtonType { get; }
+
     public override bool IsUint => Input is not (UsbHostInputType.LeftStickX or UsbHostInputType.LeftStickY
         or UsbHostInputType.RightStickX or UsbHostInputType.RightStickY or UsbHostInputType.Crossfader
         or UsbHostInputType.LeftTableVelocity or UsbHostInputType.RightTableVelocity
-        or UsbHostInputType.EffectsKnob or UsbHostInputType.Tilt);
+        or UsbHostInputType.EffectsKnob or UsbHostInputType.Tilt or UsbHostInputType.MouseAxis);
 
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
     public override IList<PinConfig> PinConfigs => Model.UsbHostPinConfigs();
     public override InputType? InputType => Types.InputType.UsbHostInput;
-    public override string Title => EnumToStringConverter.Convert(Input);
+
+    public override string Title =>
+        Input switch
+        {
+            UsbHostInputType.KeyboardInput => EnumToStringConverter.Convert(Key),
+            UsbHostInputType.MouseAxis => EnumToStringConverter.Convert(MouseAxisType),
+            UsbHostInputType.MouseButton => EnumToStringConverter.Convert(MouseButtonType),
+            _ => EnumToStringConverter.Convert(Input)
+        };
 
     // Since DM and DP need to be next to eachother, you cannot use pins at the far ends
     public List<int> AvailablePinsDm => Model.AvailablePinsDigital.Skip(1).ToList();
@@ -47,12 +103,13 @@ public class UsbHostInput : Input
 
     [Reactive] public string UsbHostInfo { get; set; } = "";
     [Reactive] public int ConnectedDevices { get; set; }
+
     public int UsbHostDm
     {
         get => _usbHostDm.Value;
         set => Model.UsbHostDm = value;
     }
-    
+
     public int UsbHostDp
     {
         get => _usbHostDp.Value;
@@ -66,17 +123,25 @@ public class UsbHostInput : Input
 
     public override string Generate()
     {
-        var ret = Output.GetReportField(Input, "usb_host_data").Replace("->", ".");
+        var ret = (Input switch
+        {
+            UsbHostInputType.KeyboardInput => Output.GetReportField(Key, "usb_host_data.keyboard"),
+            UsbHostInputType.MouseAxis  => Output.GetReportField(MouseAxisType, "usb_host_data.mouse"),
+            UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, "usb_host_data.mouse"),
+            _ => Output.GetReportField(Input, "usb_host_data")
+        }).Replace("->", ".");
+
         if (ByteBased.Contains(Input))
         {
             ret = "(" + ret + " << 8)";
         }
+
         return ret;
     }
 
     public override SerializedInput Serialise()
     {
-        return new SerializedUsbHostInput(Input, Combined);
+        return new SerializedUsbHostInput(Input, Key, MouseButtonType, MouseAxisType, Combined);
     }
 
     public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw,
@@ -85,7 +150,8 @@ public class UsbHostInput : Input
         ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
+        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
+        ReadOnlySpan<byte> mpr121Raw)
     {
         var buffer = "";
         // When combined, the combined output renders this, so we don't need to calculate it
@@ -117,10 +183,10 @@ public class UsbHostInput : Input
                         subType = EnumToStringConverter.Convert(deviceType);
                     }
                 }
-                
+
                 if (consoleType == ConsoleType.Universal)
                 {
-                    buffer += string.Format(Resources.GenericGamepadLabel, subType); 
+                    buffer += string.Format(Resources.GenericGamepadLabel, subType);
                 }
                 else
                 {
@@ -131,9 +197,10 @@ public class UsbHostInput : Input
             ConnectedDevices = usbHostRaw.Length / 2;
             UsbHostInfo = buffer.Trim();
         }
+
         if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;
         var inputs = StructTools.RawDeserialize<UsbHostInputs>(usbHostInputsRaw, 0);
-        RawValue = inputs.RawValue(Input);
+        RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType);
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings, ConfigField mode)
@@ -141,7 +208,7 @@ public class UsbHostInput : Input
         return string.Join("\n", bindings.Select(binding => binding.Item2));
     }
 
-    private static readonly HashSet<UsbHostInputType> ByteBased = new ()
+    private static readonly HashSet<UsbHostInputType> ByteBased = new()
     {
         UsbHostInputType.PressureDpadUp,
         UsbHostInputType.PressureDpadRight,
@@ -163,7 +230,8 @@ public class UsbHostInput : Input
         UsbHostInputType.GreenCymbalVelocity,
         UsbHostInputType.KickVelocity,
         UsbHostInputType.Whammy,
-        UsbHostInputType.Pickup
+        UsbHostInputType.Pickup,
+        UsbHostInputType.MouseAxis
     };
 
 
@@ -175,12 +243,13 @@ public class UsbHostInput : Input
 
         private bool ButtonPressed(UsbHostInputType inputType)
         {
-            if (inputType is >= UsbHostInputType.LeftTrigger and (< UsbHostInputType.GenericButton1 or > UsbHostInputType.GenericButton16)) return false;
+            if (inputType is >= UsbHostInputType.LeftTrigger
+                and (< UsbHostInputType.GenericButton1 or > UsbHostInputType.GenericButton16)) return false;
             var val = (uint) inputType;
             switch (val)
             {
-                case >= (uint)UsbHostInputType.GenericButton1:
-                    val -= (uint)UsbHostInputType.GenericButton1;
+                case >= (uint) UsbHostInputType.GenericButton1:
+                    val -= (uint) UsbHostInputType.GenericButton1;
                     return (genericButtons & (1 << (int) val)) != 0;
                 case >= 32:
                     val -= 32;
@@ -235,8 +304,16 @@ public class UsbHostInput : Input
         private readonly ushort genericRY;
         private readonly ushort genericRZ;
         private readonly ushort genericSlider;
+        private readonly byte reserved1;
+        private readonly UInt128 keys;
+        private readonly byte mouseButtons;
+        private readonly sbyte mouseX;
+        private readonly sbyte mouseY;
+        private readonly sbyte scrollY;
+        private readonly sbyte scrollX;
 
-        public int RawValue(UsbHostInputType inputType)
+        public int RawValue(UsbHostInputType inputType, Key key, MouseAxisType mouseAxisType,
+            MouseButtonType mouseButtonType)
         {
             var val = inputType switch
             {
@@ -284,12 +361,41 @@ public class UsbHostInput : Input
                 UsbHostInputType.GenericAxisRy => genericRY,
                 UsbHostInputType.GenericAxisRz => genericRZ,
                 UsbHostInputType.GenericAxisSlider => genericSlider,
+                UsbHostInputType.KeyboardInput when key is Key.LeftAlt or Key.LeftCtrl or Key.LeftShift or Key.RightAlt
+                    or Key.RightShift
+                    or Key.RightShift => (keys &
+                                          ((UInt128) 1 <<
+                                           KeyboardButton.Keys.IndexOf(key))) != 0
+                    ? 1
+                    : 0,
+                UsbHostInputType.KeyboardInput => (keys &
+                                                   ((UInt128) 1 <<
+                                                    (KeyboardButton.KeyCodes.IndexOf(Output.GetReportField(key)) +
+                                                     8))) != 0
+                    ? 1
+                    : 0,
+                UsbHostInputType.MouseAxis => mouseAxisType switch
+                {
+                    MouseAxisType.X => mouseX,
+                    MouseAxisType.Y => mouseY,
+                    MouseAxisType.ScrollY => scrollY,
+                    MouseAxisType.ScrollX => scrollX,
+                    _ => 0
+                },
+                UsbHostInputType.MouseButton => mouseButtonType switch
+                {
+                    MouseButtonType.Left => (mouseButtons & 1 << 1) != 0 ? 1 : 0,
+                    MouseButtonType.Right => (mouseButtons & 1 << 2) != 0 ? 1 : 0,
+                    MouseButtonType.Middle => (mouseButtons & 1 << 3) != 0 ? 1 : 0,
+                    _ => 0
+                },
                 _ => ButtonPressed(inputType) ? 1 : 0
             };
             if (ByteBased.Contains(inputType))
             {
                 val <<= 8;
             }
+
             return val;
         }
     }

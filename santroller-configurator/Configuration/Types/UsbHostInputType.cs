@@ -106,4 +106,7 @@ public enum UsbHostInputType
     GenericAxisRy,
     GenericAxisRz,
     GenericAxisSlider,
+    KeyboardInput,
+    MouseAxis,
+    MouseButton
 }
