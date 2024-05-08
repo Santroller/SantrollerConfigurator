@@ -1574,6 +1574,9 @@
     <data name="XInputSubTypeGuitarAlternate" xml:space="preserve">
         <value>Guitar Alternate</value>
     </data>
+    <data name="XInputSubTypeGuitarBass" xml:space="preserve">
+        <value>Guitar Bass</value>
+    </data>
     <data name="XInputSubTypeGuitarHeroWt" xml:space="preserve">
         <value>Guitar Alternate</value>
     </data>

@@ -2985,6 +2985,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string XInputSubTypeGuitarBass {
+            get {
+                return ResourceManager.GetString("XInputSubTypeGuitarBass", resourceCulture);
+            }
+        }
+        
         public static string XInputSubTypeGuitarHeroWt {
             get {
                 return ResourceManager.GetString("XInputSubTypeGuitarHeroWt", resourceCulture);
