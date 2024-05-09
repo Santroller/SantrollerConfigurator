@@ -3141,6 +3141,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ConsoleTypePs5 {
+            get {
+                return ResourceManager.GetString("ConsoleTypePs5", resourceCulture);
+            }
+        }
+        
         public static string ConsoleTypeWii {
             get {
                 return ResourceManager.GetString("ConsoleTypeWii", resourceCulture);

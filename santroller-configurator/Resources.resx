@@ -1652,6 +1652,9 @@
     <data name="ConsoleTypePs3" xml:space="preserve">
         <value>PS3</value>
     </data>
+    <data name="ConsoleTypePs5" xml:space="preserve">
+        <value>PS5</value>
+    </data>
     <data name="ConsoleTypeWii" xml:space="preserve">
         <value>Wii Rock Band</value>
     </data>
