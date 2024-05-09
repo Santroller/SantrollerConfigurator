@@ -20,5 +20,7 @@ public enum ConsoleType
     Keyboard = 17,
     Mouse = 18,
     Xbox360BigButton = 19,
+    Ps5 = 21,
+    StreamDeck = 21,
     Unknown = 0xFF
 }

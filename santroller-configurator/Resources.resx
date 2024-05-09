@@ -1607,6 +1607,42 @@
     <data name="ConsoleTypeXbox360BigButton" xml:space="preserve">
         <value>Xbox 360 Big Button Controller</value>
     </data>
+    <data name="ConsoleTypeStreamDeck" xml:space="preserve">
+        <value>Stream Deck</value>
+    </data>
+    <data name="StreamDeckTypeUnknown" xml:space="preserve">
+        <value>Unknown</value>
+    </data>
+    <data name="StreamDeckTypeOriginal" xml:space="preserve">
+        <value>Original</value>
+    </data>
+    <data name="StreamDeckTypeMini" xml:space="preserve">
+        <value>Mini</value>
+    </data>
+    <data name="StreamDeckTypeXl" xml:space="preserve">
+        <value>XL</value>
+    </data>
+    <data name="StreamDeckTypeV2" xml:space="preserve">
+        <value>Original</value>
+    </data>
+    <data name="StreamDeckTypeMk2" xml:space="preserve">
+        <value>MK2</value>
+    </data>
+    <data name="StreamDeckTypePlus" xml:space="preserve">
+        <value>+</value>
+    </data>
+    <data name="StreamDeckTypePedal" xml:space="preserve">
+        <value>Pedal</value>
+    </data>
+    <data name="StreamDeckTypeXlV2" xml:space="preserve">
+        <value>XL</value>
+    </data>
+    <data name="StreamDeckTypeMiniV2" xml:space="preserve">
+        <value>Mini</value>
+    </data>
+    <data name="StreamDeckTypeNeo" xml:space="preserve">
+        <value>Neo</value>
+    </data>
     <data name="ConsoleTypeKeyboard" xml:space="preserve">
         <value>Keyboard</value>
     </data>

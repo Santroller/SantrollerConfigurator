@@ -126,7 +126,7 @@ public class UsbHostInput : Input
         var ret = (Input switch
         {
             UsbHostInputType.KeyboardInput => Output.GetReportField(Key, "usb_host_data.keyboard"),
-            UsbHostInputType.MouseAxis  => Output.GetReportField(MouseAxisType, "usb_host_data.mouse"),
+            UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, "usb_host_data.mouse"),
             UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, "usb_host_data.mouse"),
             _ => Output.GetReportField(Input, "usb_host_data")
         }).Replace("->", ".");
@@ -161,33 +161,43 @@ public class UsbHostInput : Input
             {
                 var consoleType = (ConsoleType) usbHostRaw[i];
                 string subType;
-                if (consoleType is ConsoleType.Xbox360 or ConsoleType.Xbox360W)
+                switch (consoleType)
                 {
-                    if (consoleType is ConsoleType.Xbox360W && usbHostRaw[i + 1] == 0xFF)
-                    {
+                    case ConsoleType.Xbox360W when usbHostRaw[i + 1] == 0xFF:
                         continue;
+                    case ConsoleType.Xbox360 or ConsoleType.Xbox360W:
+                    {
+                        var xInputSubType = (XInputSubType) usbHostRaw[i + 1];
+                        subType = EnumToStringConverter.Convert(xInputSubType);
+                        break;
                     }
+                    case ConsoleType.StreamDeck:
+                    {
+                        var streamDeckType = (StreamDeckType) usbHostRaw[i + 1];
+                        subType = EnumToStringConverter.Convert(streamDeckType);
+                        break;
+                    }
+                    default:
+                    {
+                        if (usbHostRaw[i + 1] == 13)
+                        {
+                            subType = Resources.DeviceControllerTypeGuitarHeroWtGuitar;
+                        }
+                        else
+                        {
+                            var deviceType = (DeviceControllerType) usbHostRaw[i + 1];
+                            subType = EnumToStringConverter.Convert(deviceType);
+                        }
 
-                    var xInputSubType = (XInputSubType) usbHostRaw[i + 1];
-                    subType = EnumToStringConverter.Convert(xInputSubType);
-                }
-                else
-                {
-                    if (usbHostRaw[i + 1] == 13)
-                    {
-                        subType = Resources.DeviceControllerTypeGuitarHeroWtGuitar;
-                    }
-                    else
-                    {
-                        var deviceType = (DeviceControllerType) usbHostRaw[i + 1];
-                        subType = EnumToStringConverter.Convert(deviceType);
+                        break;
                     }
                 }
 
                 buffer += consoleType switch
                 {
                     ConsoleType.Universal => string.Format(Resources.GenericGamepadLabel, subType),
-                    ConsoleType.Keyboard or ConsoleType.Mouse or ConsoleType.Xbox360BigButton => $"{EnumToStringConverter.Convert(consoleType)}\n",
+                    ConsoleType.Keyboard or ConsoleType.Mouse or ConsoleType.Xbox360BigButton =>
+                        $"{EnumToStringConverter.Convert(consoleType)}\n",
                     _ => $"{EnumToStringConverter.Convert(consoleType)} {subType}\n"
                 };
             }

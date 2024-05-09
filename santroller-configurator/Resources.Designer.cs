@@ -3051,6 +3051,78 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ConsoleTypeStreamDeck {
+            get {
+                return ResourceManager.GetString("ConsoleTypeStreamDeck", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypeUnknown {
+            get {
+                return ResourceManager.GetString("StreamDeckTypeUnknown", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypeOriginal {
+            get {
+                return ResourceManager.GetString("StreamDeckTypeOriginal", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypeMini {
+            get {
+                return ResourceManager.GetString("StreamDeckTypeMini", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypeXl {
+            get {
+                return ResourceManager.GetString("StreamDeckTypeXl", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypeV2 {
+            get {
+                return ResourceManager.GetString("StreamDeckTypeV2", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypeMk2 {
+            get {
+                return ResourceManager.GetString("StreamDeckTypeMk2", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypePlus {
+            get {
+                return ResourceManager.GetString("StreamDeckTypePlus", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypePedal {
+            get {
+                return ResourceManager.GetString("StreamDeckTypePedal", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypeXlV2 {
+            get {
+                return ResourceManager.GetString("StreamDeckTypeXlV2", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypeMiniV2 {
+            get {
+                return ResourceManager.GetString("StreamDeckTypeMiniV2", resourceCulture);
+            }
+        }
+        
+        public static string StreamDeckTypeNeo {
+            get {
+                return ResourceManager.GetString("StreamDeckTypeNeo", resourceCulture);
+            }
+        }
+        
         public static string ConsoleTypeKeyboard {
             get {
                 return ResourceManager.GetString("ConsoleTypeKeyboard", resourceCulture);
