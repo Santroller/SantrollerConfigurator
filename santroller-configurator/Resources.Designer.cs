@@ -6926,5 +6926,11 @@ namespace GuitarConfigurator.NetCore {
                 return ResourceManager.GetString("ConnectedMessage", resourceCulture);
             }
         }
+        
+        public static string ButtonTestLabel {
+            get {
+                return ResourceManager.GetString("ButtonTestLabel", resourceCulture);
+            }
+        }
     }
 }

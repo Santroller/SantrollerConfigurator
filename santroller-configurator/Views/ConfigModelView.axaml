@@ -866,7 +866,7 @@
                 <StackPanel Orientation="Vertical">
                 </StackPanel>
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type inputs:AdxlInput}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
@@ -911,7 +911,8 @@
                                             <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
                                                 <Binding />
                                                 <Binding Path="$parent[UserControl].DataContext" />
-                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                                <Binding
+                                                    Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
@@ -939,7 +940,8 @@
                                             <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
                                                 <Binding />
                                                 <Binding Path="$parent[UserControl].DataContext" />
-                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                                <Binding
+                                                    Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
@@ -963,7 +965,8 @@
                                             <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
                                                 <Binding />
                                                 <Binding Path="$parent[UserControl].DataContext" />
-                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                                <Binding
+                                                    Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
@@ -987,7 +990,8 @@
                                             <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
                                                 <Binding />
                                                 <Binding Path="$parent[UserControl].DataContext" />
-                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                                <Binding
+                                                    Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
@@ -1011,7 +1015,8 @@
                                             <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
                                                 <Binding />
                                                 <Binding Path="$parent[UserControl].DataContext" />
-                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                                <Binding
+                                                    Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
@@ -1035,7 +1040,8 @@
                                             <MultiBinding Converter="{StaticResource Mpr121ChannelToStringConverter }">
                                                 <Binding />
                                                 <Binding Path="$parent[UserControl].DataContext" />
-                                                <Binding Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
+                                                <Binding
+                                                    Path="$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Mpr121CapacitiveCount" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
@@ -1499,7 +1505,7 @@
                                     Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding DeadZone}" />
                         </StackPanel>
                     </StackPanel>
-                    
+
                     <StackPanel IsVisible="{Binding IsPickup}">
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalogOrConstant}">
                             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
@@ -1547,7 +1553,8 @@
 
                         </StackPanel>
 
-                        <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal" Height="50">
+                        <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
+                                    Height="50">
                             <Label VerticalAlignment="Center" Width="300" Content="Notch 2 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1555,7 +1562,8 @@
                                     Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding PickupSelectorNotch2}" />
                         </StackPanel>
 
-                        <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal" Height="50">
+                        <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
+                                    Height="50">
                             <Label VerticalAlignment="Center" Width="300" Content="Notch 3 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1563,7 +1571,8 @@
                                     Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding PickupSelectorNotch3}" />
                         </StackPanel>
 
-                        <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal" Height="50">
+                        <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
+                                    Height="50">
                             <Label VerticalAlignment="Center" Width="300" Content="Notch 4 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1571,7 +1580,8 @@
                                     Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding PickupSelectorNotch4}" />
                         </StackPanel>
 
-                        <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal" Height="50">
+                        <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
+                                    Height="50">
                             <Label VerticalAlignment="Center" Width="300" Content="Notch 5 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1579,7 +1589,7 @@
                                     Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding PickupSelectorNotch5}" />
                         </StackPanel>
 
-                        
+
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding AllowInvert}">
@@ -2356,7 +2366,7 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type combined:Ps2CombinedOutput}">
                 <StackPanel>
-                    <StackPanel Orientation="Horizontal" >
+                    <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.PS2KramerModeLabel}" />
@@ -2583,14 +2593,14 @@
                     <Label VerticalAlignment="Center"
                            VerticalContentAlignment="Center" Width="300"
                            Content="{Binding LedOnLabel}" />
-                    
+
                     <StackPanel Orientation="Horizontal">
-                    <ColorPicker IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"
-                                 Color="{Binding LedOn}" />
-                    
-                    <Button Command="{Binding CopyOff}"
-                            HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
-                            Content="{x:Static netCore:Resources.CopyOtherLedLabel}" />
+                        <ColorPicker IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"
+                                     Color="{Binding LedOn}" />
+
+                        <Button Command="{Binding CopyOff}"
+                                HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                Content="{x:Static netCore:Resources.CopyOtherLedLabel}" />
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -2621,94 +2631,107 @@
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.EnableDigitalOutputTitle}" />
-                            <ToggleSwitch IsChecked="{Binding OutputEnabled}"
-                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.EnableDigitalOutputTitle}" />
+                        <ToggleSwitch IsChecked="{Binding OutputEnabled}"
+                                      OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                      OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                     </StackPanel>
-                    <StackPanel IsVisible="{Binding UsesPwm}">
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.EnableAnalogOutputTitle}" />
-                            <ToggleSwitch IsChecked="{Binding OutputEnabled}"
-                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
+                </StackPanel>
+                <StackPanel IsVisible="{Binding UsesPwm}">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.EnableAnalogOutputTitle}" />
+                        <ToggleSwitch IsChecked="{Binding OutputEnabled}"
+                                      OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                      OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                     </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           Width="300" Content="{x:Static netCore:Resources.InvertOutputLabel}" />
+                    <ToggleSwitch IsChecked="{Binding OutputInverted}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="Model.HasPeripheral" />
+                            <Binding Path="OutputEnabled" />
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           Width="300" Content="{x:Static netCore:Resources.PeripheralOutputLabel}" />
+                    <ToggleSwitch IsChecked="{Binding PeripheralOutput}" />
+                </StackPanel>
+                <StackPanel IsVisible="{Binding UsesPwm}">
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.InvertOutputLabel}" />
-                        <ToggleSwitch IsChecked="{Binding OutputInverted}" />
+                               IsVisible="{Binding UsesPwm}"
+                               Width="300" Content="{x:Static netCore:Resources.TestLabel}" />
+                        <Slider Value="{Binding Test}"
+                                Minimum="1"
+                                Maximum="255"
+                                IsSnapToTickEnabled="True"
+                                TickFrequency="1" Width="240" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel.IsVisible>
-                            <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                <Binding Path="Model.HasPeripheral" />
-                                <Binding Path="OutputEnabled" />
-                            </MultiBinding>
-                        </StackPanel.IsVisible>
+                </StackPanel>
+                <StackPanel IsVisible="{Binding !UsesPwm}">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.PeripheralOutputLabel}" />
-                        <ToggleSwitch IsChecked="{Binding PeripheralOutput}" />
+                               IsVisible="{Binding !UsesPwm}"
+                               Width="300" Content="{x:Static netCore:Resources.TestLabelDigital}" />
+                        <ToggleSwitch IsChecked="{Binding TestDigital}" />
                     </StackPanel>
-                    <StackPanel IsVisible="{Binding UsesPwm}">
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   IsVisible="{Binding UsesPwm}"
-                                   Width="300" Content="{x:Static netCore:Resources.TestLabel}" />
-                            <Slider Value="{Binding Test}"
-                                    Minimum="1"
-                                    Maximum="255"
-                                    IsSnapToTickEnabled="True"
-                                    TickFrequency="1" Width="240" />
-                        </StackPanel>
+                </StackPanel>
+                <StackPanel IsVisible="{Binding UsesPwm}">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.AnalogOutputPinLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding OutputPin}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  ItemsSource="{Binding AvailablePwmPins}" />
                     </StackPanel>
-                    <StackPanel IsVisible="{Binding !UsesPwm}">
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   IsVisible="{Binding !UsesPwm}"
-                                   Width="300" Content="{x:Static netCore:Resources.TestLabelDigital}" />
-                            <ToggleSwitch IsChecked="{Binding TestDigital}" />
-                        </StackPanel>
+                </StackPanel>
+                <StackPanel IsVisible="{Binding !UsesPwm}">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.DigitalOutputPinLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding OutputPin}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  ItemsSource="{Binding AvailablePins}" />
                     </StackPanel>
-                    <StackPanel IsVisible="{Binding UsesPwm}">
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.AnalogOutputPinLabel}" />
-                            <ComboBox VerticalAlignment="Center"
-                                      SelectedItem="{Binding OutputPin}"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      ItemTemplate="{StaticResource PinToStringTemplate}"
-                                      ItemsSource="{Binding AvailablePwmPins}" />
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel IsVisible="{Binding !UsesPwm}">
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.DigitalOutputPinLabel}" />
-                            <ComboBox VerticalAlignment="Center"
-                                      SelectedItem="{Binding OutputPin}"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      ItemTemplate="{StaticResource PinToStringTemplate}"
-                                      ItemsSource="{Binding AvailablePins}" />
-                        </StackPanel>
-                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
         <DataTemplate DataType="output:Output" x:Key="CombinedOutputTemplate">
             <ContentControl Content="{Binding}"
                             ContentTemplate="{StaticResource OutputTemplate}" Background="{Binding CombinedBackground}"
                             Padding="10" Margin="0 5 10 5" Width="720" />
+        </DataTemplate>
+        <DataTemplate DataType="output:Output" x:Key="DigitalOutputTemplate">
+            <StackPanel Opacity="{Binding CombinedOpacity}">
+                <Panel>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <ContentControl ContentTemplate="{StaticResource ImageOutputTemplate}"
+                                            HorizontalAlignment="Left" Width="75" Margin="0 0 10 10"
+                                            Content="{Binding }" />
+                        </StackPanel>
+                    </StackPanel>
+                </Panel>
+            </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
     <Panel>
@@ -2810,7 +2833,7 @@
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
-                        
+
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsGuitarHeroGuitar}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
@@ -2990,7 +3013,7 @@
                 </Expander>
                 <Expander HorizontalAlignment="Stretch" Header="{Binding}"
                           IsExpanded="{Binding LedConfigExpanded}">
-                    
+
                     <Expander.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.Or}">
                             <Binding Path="!Branded" />
@@ -3391,7 +3414,7 @@
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
                                        Width="300" Content="{x:Static netCore:Resources.Mpr121CapacativeCountLabel}" />
-                                
+
                                 <NumericUpDown VerticalAlignment="Center" Width="200" FormatString="{}{0:#,0}"
                                                Value="{Binding Mpr121CapacitiveCount}"
                                                Minimum="0"
@@ -3567,7 +3590,7 @@
                                                       ItemsSource="{Binding InputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplateGeneric}" />
                                         </StackPanel>
-                                        
+
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel.IsVisible>
                                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
@@ -3627,7 +3650,7 @@
                                         </StackPanel>
                                         <ContentControl ContentTemplate="{StaticResource OutputTemplate}"
                                                         Content="{Binding}" />
-                                        
+
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostKeyboard}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
@@ -3640,12 +3663,13 @@
                                                     IsEnabled="{Binding ConfigurableInput}"
                                                     Content="{Binding ButtonTextUsbHostKey}" />
                                         </StackPanel>
-                                        
-                                        
+
+
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostMouseAxis}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300" Content="{x:Static netCore:Resources.MouseAxisTypeLabel}" />
+                                                   Width="300"
+                                                   Content="{x:Static netCore:Resources.MouseAxisTypeLabel}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       SelectedItem="{Binding UsbHostKeyMouseAxisType}"
                                                       ItemsSource="{Binding MouseAxisTypes}"
@@ -3654,11 +3678,12 @@
                                                     IsEnabled="{Binding ConfigurableInput}"
                                                     Content="{Binding ButtonTextUsbHostKey}" />
                                         </StackPanel>
-                                        
+
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostMouseButton}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300" Content="{x:Static netCore:Resources.MouseButtonTypeLabel}" />
+                                                   Width="300"
+                                                   Content="{x:Static netCore:Resources.MouseButtonTypeLabel}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       SelectedItem="{Binding UsbHostKeyMouseButtonType}"
                                                       ItemsSource="{Binding MouseButtonTypes}"
@@ -3698,6 +3723,34 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}"
+                          IsExpanded="{Binding TestExpanded}" IsVisible="{Binding Branded}">
+                    <Expander.HeaderTemplate>
+                        <DataTemplate DataType="viewModels:ConfigViewModel">
+                            <Panel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="75"
+                                           Source="avares://SantrollerConfigurator/Assets/Icons/Generic.png">
+                                    </Image>
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.ButtonTestLabel}" />
+                                </StackPanel>
+                            </Panel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <StackPanel>
+                        <ItemsControl HorizontalAlignment="Stretch"
+                                      ItemsSource="{Binding DigitalOutputs}"
+                                      ItemTemplate="{StaticResource DigitalOutputTemplate}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
+                </Expander>
             </StackPanel>
         </ScrollViewer>
     </Panel>

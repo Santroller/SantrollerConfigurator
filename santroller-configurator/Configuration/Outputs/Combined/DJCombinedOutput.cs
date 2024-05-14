@@ -26,8 +26,12 @@ public class DjCombinedOutput : CombinedTwiOutput
             .Filter(s => s.IsVisible)
             .Bind(out var digitalOutputs)
             .Subscribe();
+        Outputs.Connect().Filter(x => x is OutputButton)
+            .Bind(out var allDigitalOutputs)
+            .Subscribe();
         AnalogOutputs = analogOutputs;
         DigitalOutputs = digitalOutputs;
+        AllDigitalOutputs = allDigitalOutputs;
         this.WhenAnyValue(x => x.Model.DjPollRate).Subscribe(_ => this.RaisePropertyChanged(nameof(PollRate)));
     }
     public int PollRate

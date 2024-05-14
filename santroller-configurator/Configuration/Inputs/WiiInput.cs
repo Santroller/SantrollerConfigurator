@@ -14,7 +14,7 @@ public class WiiInput : TwiInput
     public static readonly string WiiTwiType = "wii";
     public static readonly int WiiTwiFreq = 400000;
 
-    private static readonly Dictionary<WiiInputType, WiiControllerType> AxisToType =
+    public static readonly Dictionary<WiiInputType, WiiControllerType> AxisToType =
         new()
         {
             {WiiInputType.ClassicLeftStickX, WiiControllerType.ClassicController},
@@ -94,6 +94,7 @@ public class WiiInput : TwiInput
             {WiiInputType.GuitarGreen, WiiControllerType.Guitar},
             {WiiInputType.GuitarBlue, WiiControllerType.Guitar},
             {WiiInputType.GuitarRed, WiiControllerType.Guitar},
+            {WiiInputType.GuitarPedal, WiiControllerType.Guitar},
             {WiiInputType.GuitarOrange, WiiControllerType.Guitar},
             {WiiInputType.GuitarTapAll, WiiControllerType.Guitar},
             {WiiInputType.GuitarTapYellow, WiiControllerType.Guitar},

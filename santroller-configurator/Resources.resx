@@ -3591,4 +3591,7 @@
     <data name="ConnectedMessage" xml:space="preserve">
         <value>Connected</value>
     </data>
+    <data name="ButtonTestLabel" xml:space="preserve">
+        <value>Button Tester</value>
+    </data>
 </root>

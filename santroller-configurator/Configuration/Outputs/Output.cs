@@ -212,8 +212,13 @@ public abstract partial class Output : ReactiveObject
         });
         Outputs = new SourceList<Output>();
         Outputs.Add(this);
-        AnalogOutputs = new ReadOnlyObservableCollection<Output>(new ObservableCollection<Output>());
-        DigitalOutputs = new ReadOnlyObservableCollection<Output>(new ObservableCollection<Output>());
+        AnalogOutputs = ReadOnlyObservableCollection<Output>.Empty;
+        DigitalOutputs = ReadOnlyObservableCollection<Output>.Empty;
+        AllDigitalOutputs = ReadOnlyObservableCollection<Output>.Empty;
+        if (this is OutputButton)
+        {
+            AllDigitalOutputs = new ReadOnlyObservableCollection<Output>(new ObservableCollection<Output>([this]));
+        }
         Outputs.Connect().Bind(out var allOutputs).Subscribe();
         AllOutputs = allOutputs;
         _configured = true;
@@ -656,6 +661,7 @@ public abstract partial class Output : ReactiveObject
 
     public ReadOnlyObservableCollection<Output> AnalogOutputs { get; protected set; }
     public ReadOnlyObservableCollection<Output> DigitalOutputs { get; protected set; }
+    public ReadOnlyObservableCollection<Output> AllDigitalOutputs { get; protected set; }
     private ReadOnlyObservableCollection<Output> AllOutputs { get; set; }
 
     public abstract bool IsKeyboard { get; }

@@ -134,8 +134,16 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                 .Select(CreateFilter))
             .Bind(out var digitalOutputs)
             .Subscribe();
+        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome)
+            .AutoRefresh(s => s.LocalisedName)
+            .Filter(s => s.LocalisedName.Any())
+            .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
+                .Select(CreateFilter))
+            .Bind(out var allDigitalOutputs)
+            .Subscribe();
         AnalogOutputs = analogOutputs;
         DigitalOutputs = digitalOutputs;
+        AllDigitalOutputs = allDigitalOutputs;
     }
 
     public int Ack
@@ -157,7 +165,6 @@ public class Ps2CombinedOutput : CombinedSpiOutput
     public IEnumerable<Ps2ControllerType> Ps2ControllerTypes => Enum.GetValues<Ps2ControllerType>();
 
     [Reactive] public bool ControllerFound { get; set; }
-
     public override IEnumerable<Output> ValidOutputs()
     {
         var outputs = base.ValidOutputs().ToList();

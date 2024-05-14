@@ -263,6 +263,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.IsBluetooth, x => x.WasBluetooth)
             .Select(x => x.Item1 || x.Item2)
             .ToPropertyEx(this, x => x.IsOrWasBluetooth);
+        Bindings.Connect().TransformMany(s => s.AllDigitalOutputs).Bind(out _digitalOutputs).Subscribe();
         if (Branded)
         {
             // Filters break being able to reorder inputs, but we only need the filter for branded, which doesn't let you reorder anyways
@@ -368,6 +369,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private readonly ReadOnlyObservableCollection<Output> _outputs;
     public ReadOnlyObservableCollection<Output> Outputs => _outputs;
+    
+    private readonly ReadOnlyObservableCollection<Output> _digitalOutputs;
+    public ReadOnlyObservableCollection<Output> DigitalOutputs => _digitalOutputs;
 
     public bool Branded { get; }
     public bool Builder { get; }
@@ -494,6 +498,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool PresetsExpanded { get; set; }
     [Reactive] public bool ControllerConfigExpanded { get; set; }
     [Reactive] public bool BluetoothConfigExpanded { get; set; }
+
+    [Reactive] public bool TestExpanded { get; set; } = true;
     [Reactive] public bool HideControllerView { get; set; }
     [Reactive] public bool LedConfigExpanded { get; set; }
     [Reactive] public bool PeripheralExpanded { get; set; }

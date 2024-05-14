@@ -219,8 +219,16 @@ public class WiiCombinedOutput : CombinedTwiOutput
                 .Select(CreateFilter))
             .Bind(out var digitalOutputs)
             .Subscribe();
+        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome)
+            .AutoRefresh(s => s.LocalisedName)
+            .Filter(s => s.LocalisedName.Any())
+            .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
+                .Select(CreateFilter))
+            .Bind(out var allDigitalOutputs)
+            .Subscribe();
         AnalogOutputs = analogOutputs;
         DigitalOutputs = digitalOutputs;
+        AllDigitalOutputs = allDigitalOutputs;
     }
 
     // ReSharper disable once UnassignedGetOnlyAutoProperty

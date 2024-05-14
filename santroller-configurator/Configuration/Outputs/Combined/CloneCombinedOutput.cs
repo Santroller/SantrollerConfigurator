@@ -53,8 +53,12 @@ public class CloneCombinedOutput : CombinedTwiOutput
             .Filter(s => s.IsVisible)
             .Bind(out var digitalOutputs)
             .Subscribe();
+        Outputs.Connect().Filter(x => x is OutputButton)
+            .Bind(out var allDigitalOutputs)
+            .Subscribe();
         AnalogOutputs = analogOutputs;
         DigitalOutputs = digitalOutputs;
+        AllDigitalOutputs = allDigitalOutputs;
     }
 
     [Reactive] public bool Detected { get; set; }
