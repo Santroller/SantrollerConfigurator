@@ -25,25 +25,25 @@ public class JoystickToDpadInput : FixedInput
 
 public class JoystickToDpad : Output
 {
-    private static readonly List<WiiInputType> JoystickToDpadXWii = new()
-    {
+    private static readonly List<WiiInputType> JoystickToDpadXWii =
+    [
         WiiInputType.ClassicLeftStickX,
         WiiInputType.NunchukStickX,
         WiiInputType.GuitarJoystickX,
         WiiInputType.DrumJoystickX,
         WiiInputType.DjStickX
-    };
+    ];
 
-    private static readonly List<WiiInputType> JoystickToDpadYWii = new()
-    {
+    private static readonly List<WiiInputType> JoystickToDpadYWii =
+    [
         WiiInputType.ClassicLeftStickY,
         WiiInputType.NunchukStickY,
         WiiInputType.GuitarJoystickY,
         WiiInputType.DrumJoystickY,
         WiiInputType.DjStickY
-    };
+    ];
 
-    private readonly List<ControllerButton> _outputs = new();
+    private readonly List<ControllerButton> _outputs = [];
 
     private bool Peripheral { get; }
 

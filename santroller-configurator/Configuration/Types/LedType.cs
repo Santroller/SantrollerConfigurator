@@ -22,20 +22,21 @@ public enum LedType
 
 public static class LedTypeMethods
 {
-    private static readonly byte[] Ws2812Bits = {0x88, 0x8C, 0xC8, 0xCC};
+    private static readonly byte[] Ws2812Bits = [0x88, 0x8C, 0xC8, 0xCC];
 
     public static byte[] GetLedBytes(this LedType type, Color color, byte brightness)
     {
         return type switch
         {
-            LedType.Apa102Rgb or LedType.Apa102Rbg or LedType.Apa102Grb or LedType.Apa102Gbr or LedType.Apa102Brg or LedType.Apa102Bgr => new[] {brightness, color.R, color.G, color.B},
-            LedType.Ws2812 => new[]
-            {
+            LedType.Apa102Rgb or LedType.Apa102Rbg or LedType.Apa102Grb or LedType.Apa102Gbr or LedType.Apa102Brg or LedType.Apa102Bgr =>
+                [brightness, color.R, color.G, color.B],
+            LedType.Ws2812 =>
+            [
                 Ws2812Bits[(color.R >> 6) & 0x3], Ws2812Bits[(color.R >> 4) & 0x3], Ws2812Bits[(color.R >> 2) & 0x3],
                 Ws2812Bits[color.R & 0x3], Ws2812Bits[(color.G >> 6) & 0x3], Ws2812Bits[(color.G >> 4) & 0x3],
                 Ws2812Bits[(color.G >> 2) & 0x3], Ws2812Bits[color.G & 0x3], Ws2812Bits[(color.B >> 6) & 0x3],
                 Ws2812Bits[(color.B >> 4) & 0x3], Ws2812Bits[(color.B >> 2) & 0x3], Ws2812Bits[color.B & 0x3]
-            },
+            ],
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
@@ -51,12 +52,12 @@ public static class LedTypeMethods
         var b = led[3];
         return type switch
         {
-            LedType.Apa102Rgb => new[] {brightness, r, g, b},
-            LedType.Apa102Rbg => new[] {brightness, r, b, g},
-            LedType.Apa102Grb => new[] {brightness, g, r, b},
-            LedType.Apa102Gbr => new[] {brightness, g, b, r},
-            LedType.Apa102Brg => new[] {brightness, b, r, g},
-            LedType.Apa102Bgr => new[] {brightness, b, g, r},
+            LedType.Apa102Rgb => [brightness, r, g, b],
+            LedType.Apa102Rbg => [brightness, r, b, g],
+            LedType.Apa102Grb => [brightness, g, r, b],
+            LedType.Apa102Gbr => [brightness, g, b, r],
+            LedType.Apa102Brg => [brightness, b, r, g],
+            LedType.Apa102Bgr => [brightness, b, g, r],
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
@@ -65,11 +66,11 @@ public static class LedTypeMethods
     {
         return type switch
         {
-            LedType.Apa102Rgb => new[] {brightness, r, g, b},
-            LedType.Apa102Rbg => new[] {brightness, r, b, g},
-            LedType.Apa102Grb => new[] {brightness, g, r, b},
-            LedType.Apa102Gbr => new[] {brightness, g, b, r},
-            LedType.Apa102Brg => new[] {brightness, b, r, g},
+            LedType.Apa102Rgb => [brightness, r, g, b],
+            LedType.Apa102Rbg => [brightness, r, b, g],
+            LedType.Apa102Grb => [brightness, g, r, b],
+            LedType.Apa102Gbr => [brightness, g, b, r],
+            LedType.Apa102Brg => [brightness, b, r, g],
             LedType.Apa102Bgr => new[] {brightness, b, g, r},
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };

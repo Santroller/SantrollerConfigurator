@@ -119,12 +119,12 @@ public class PlatformIo
         return device switch
         {
             Arduino {Is32U4Bootloader: true} => RunPlatformIo("microdetect",
-                new[] {"run", "-t", "micro_clean",}, progressMessage, progressStartingPercentage,
+                ["run", "-t", "micro_clean"], progressMessage, progressStartingPercentage,
                 progressEndingPercentage, device, true),
             Santroller or Ardwiino => RunPlatformIo("microdetect",
-                new[] {"run", "-t", "micro_clean_existing",}, progressMessage, progressStartingPercentage,
+                ["run", "-t", "micro_clean_existing"], progressMessage, progressStartingPercentage,
                 progressEndingPercentage, device, true),
-            _ => RunPlatformIo("microdetect", new[] {"run", "-t", "micro_clean_jump",}, progressMessage,
+            _ => RunPlatformIo("microdetect", ["run", "-t", "micro_clean_jump"], progressMessage,
                 progressStartingPercentage, progressEndingPercentage, device, true)
         };
     }
@@ -133,10 +133,9 @@ public class PlatformIo
         double progressStartingPercentage, double progressEndingPercentage, Board board)
     {
         return RunPlatformIo("arduino_uno_usb",
-            new[]
-            {
-                "run", "-t", $"{board.Environment}_{dfu.GetRestoreSuffix()}_clean"
-            }, progressMessage, progressStartingPercentage, progressEndingPercentage, dfu, true);
+        [
+            "run", "-t", $"{board.Environment}_{dfu.GetRestoreSuffix()}_clean"
+        ], progressMessage, progressStartingPercentage, progressEndingPercentage, dfu, true);
     }
 
     public BehaviorSubject<PlatformIoState> RunPlatformIo(string environment, string[] command,

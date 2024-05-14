@@ -6,7 +6,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 public class Mega : AvrController
 {
     private static readonly int[] PinIndex =
-    {
+    [
         0, // PE 0 ** 0 ** USART0_RX	
         1, // PE 1 ** 1 ** USART0_TX	
         4, // PE 4 ** 2 ** PWM2	
@@ -77,7 +77,7 @@ public class Mega : AvrController
         5, // PK 5 ** 67 ** A13	
         6, // PK 6 ** 68 ** A14	
         7 // PK 7 ** 69 ** A15	
-    };
+    ];
 
     public static readonly Dictionary<int, int> Interrupts = new()
     {
@@ -90,7 +90,7 @@ public class Mega : AvrController
     };
 
     private static readonly char[] Ports =
-    {
+    [
         'E', // 'E' 0 ** 0 ** USART0_RX	
         'E', // 'E' 1 ** 1 ** USART0_TX	
         'E', // 'E' 4 ** 2 ** 'W'M2	
@@ -161,7 +161,7 @@ public class Mega : AvrController
         'K', // 'K' 5 ** 67 ** A13	
         'K', // 'K' 6 ** 68 ** A14	
         'K' // 'K' 7 ** 69 ** A15            
-    };
+    ];
 
     public Mega(Board board)
     {
@@ -181,7 +181,7 @@ public class Mega : AvrController
 
     public override int PinCount => PinIndex.Length;
 
-    protected override char[] PortNames => new[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'L'};
+    protected override char[] PortNames => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'L'];
 
     protected override int PinA0 => 54;
 

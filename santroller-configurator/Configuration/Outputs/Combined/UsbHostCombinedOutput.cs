@@ -24,18 +24,18 @@ public class UsbHostCombinedOutput : CombinedOutput
         Outputs.Connect().Filter(x => x is OutputAxis)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Any())
+            .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var analogOutputs)
             .Subscribe();
         Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Any())
+            .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var digitalOutputs)
             .Subscribe();
         Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad)
             .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Any())
+            .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var allDigitalOutputs)
             .Subscribe();
         AnalogOutputs = analogOutputs;
@@ -158,7 +158,7 @@ public class UsbHostCombinedOutput : CombinedOutput
     public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
     {
         Outputs.Clear();
-        if (outputs.Any())
+        if (outputs.Count != 0)
             Outputs.AddRange(outputs);
         else
             CreateDefaults();

@@ -30,7 +30,7 @@ public class SerializedCloneCombinedOutput : SerializedOutput
     [ProtoMember(4)] public int Sda { get; }
     [ProtoMember(5)] public int Scl { get; }
 
-    [ProtoMember(6)] public List<SerializedOutput> Outputs { get; } = new();
+    [ProtoMember(6)] public List<SerializedOutput> Outputs { get; } = [];
 
     [ProtoMember(7)] public byte[] Enabled { get; } = Array.Empty<byte>();
     [ProtoMember(8)] private bool Peripheral { get; }

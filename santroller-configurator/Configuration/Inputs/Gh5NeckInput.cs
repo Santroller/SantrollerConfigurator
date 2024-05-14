@@ -59,14 +59,14 @@ public class Gh5NeckInput : TwiInput
         {Gh5NeckInputType.Blue, 6},
         {Gh5NeckInputType.Orange, 0},
     };
-    private static readonly List<Gh5NeckInputType> Tap = new()
-    {
+    private static readonly List<Gh5NeckInputType> Tap =
+    [
         Gh5NeckInputType.TapGreen,
         Gh5NeckInputType.TapRed,
         Gh5NeckInputType.TapYellow,
         Gh5NeckInputType.TapBlue,
         Gh5NeckInputType.TapOrange
-    };
+    ];
 
     private static readonly Dictionary<Gh5NeckInputType, BarButton> InputToButton = new()
     {

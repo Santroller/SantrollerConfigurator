@@ -51,7 +51,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public BuilderMainWindowViewModel() : base(true, false, true)
     {
         Config = new BuilderConfig(this);
-        if (Config.Configurations.Any())
+        if (Config.Configurations.Count != 0)
         {
             SelectedTool = Config.Configurations.First();
         }
@@ -73,11 +73,9 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
         this.WhenAnyValue(s => s.SelectedTool).Subscribe(s =>
         {
-            if (SelectedTool != null && SelectedTool.Configurations.Any())
-            {
-                SelectedSection = SelectedTool.Configurations.First();
-                SelectedCopySection = SelectedSection;
-            }
+            if (SelectedTool == null || !SelectedTool.Configurations.Any()) return;
+            SelectedSection = SelectedTool.Configurations.First();
+            SelectedCopySection = SelectedSection;
         });
 
         this.WhenAnyValue(s => s.SelectedSection).Subscribe(s =>
@@ -250,7 +248,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         var state = base.Write(config, false, extra, startingPercentage, endingPercentage);
         state.ObserveOn(RxApp.MainThreadScheduler).Subscribe(UpdateProgress, _ => { }, () =>
         {
-            if (!extra.Any() || !write) return;
+            if (extra.Length == 0 || !write) return;
             Progress = 50;
             Message = GuitarConfigurator.NetCore.Resources.WritingMessage;
             SaveToDevice(config);

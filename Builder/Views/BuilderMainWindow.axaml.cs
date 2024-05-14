@@ -36,7 +36,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
             AllowMultiple = false,
             FileTypeFilter = new[] {new FilePickerFileType("Image File") {Patterns = new[] {"*.png"}}}
         });
-        if (!file.Any())
+        if (file.Count == 0)
         {
             obj.SetOutput(null);
             return;

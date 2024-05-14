@@ -14,8 +14,8 @@ public class KeyboardButton : OutputButton
 {
     // 6KRO doesn't use the standard bitfield logic everything else uses. Its easier to use the same logic anyways
     // and then do a lookup to resolve the generated bitfields back to standard keycodes when doing the final build.
-    public static readonly List<string> KeyCodes = new()
-    {
+    public static readonly List<string> KeyCodes =
+    [
         "blank",
         "blank",
         "blank",
@@ -132,10 +132,10 @@ public class KeyboardButton : OutputButton
         "report->f22",
         "report->f23",
         "report->f24"
-    };
+    ];
 
-    public static readonly List<Key> Keys = new()
-    {
+    public static readonly List<Key> Keys =
+    [
         Key.LeftCtrl,
         Key.LeftAlt,
         Key.LeftShift,
@@ -256,8 +256,8 @@ public class KeyboardButton : OutputButton
         Key.MediaPlayPause,
         Key.VolumeMute,
         Key.VolumeUp,
-        Key.VolumeDown,
-    };
+        Key.VolumeDown
+    ];
 
     public Key Key;
 

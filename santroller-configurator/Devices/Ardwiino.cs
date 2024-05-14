@@ -35,9 +35,8 @@ public class Ardwiino : ConfigurableUsbDevice
     private const ControllerAxisType XboxWhammy = ControllerAxisType.XboxRx;
     private const ControllerAxisType XboxTilt = ControllerAxisType.XboxRy;
 
-    public static readonly List<(int vendorId, int productId)> HardwareIds = new()
-    {
-        // Main IDs
+    public static readonly List<(int vendorId, int productId)> HardwareIds =
+    [
         (0x1209, 0x2882),
 
         // PS3 IDs
@@ -61,7 +60,7 @@ public class Ardwiino : ConfigurableUsbDevice
 
         // Guitar Praise Guitar
         (0x0314, 0x0830)
-    };
+    ];
 
     public const ushort SerialArdwiinoRevision = 0x3122;
 
@@ -116,12 +115,12 @@ public class Ardwiino : ConfigurableUsbDevice
 
     private readonly bool _failed = false;
 
-    private readonly List<StandardButtonType> _frets = new()
-    {
+    private readonly List<StandardButtonType> _frets =
+    [
         StandardButtonType.A, StandardButtonType.B, StandardButtonType.X, StandardButtonType.Y,
         StandardButtonType.LeftShoulder,
         StandardButtonType.RightShoulder
-    };
+    ];
 
     public Ardwiino(string path, UsbDevice device, string serial, ushort versionNumber)
         : base(device, path, serial, versionNumber)
@@ -497,7 +496,7 @@ public class Ardwiino : ConfigurableUsbDevice
                 if (colors.ContainsKey(axis + XboxBtnCount)) on = colors[axis + XboxBtnCount];
 
                 var ledIndex = Array.Empty<byte>();
-                if (ledIndexes.ContainsKey(axis + XboxBtnCount)) ledIndex = new[] {ledIndexes[axis + XboxBtnCount]};
+                if (ledIndexes.ContainsKey(axis + XboxBtnCount)) ledIndex = [ledIndexes[axis + XboxBtnCount]];
 
                 var off = Color.FromRgb(0, 0, 0);
                 if (deviceType.IsGuitar() &&
@@ -550,7 +549,7 @@ public class Ardwiino : ConfigurableUsbDevice
                 if (colors.TryGetValue(button, out var color)) on = color;
 
                 var ledIndex = Array.Empty<byte>();
-                if (ledIndexes.TryGetValue(button, out var index)) ledIndex = new[] {index};
+                if (ledIndexes.TryGetValue(button, out var index)) ledIndex = [index];
 
                 var off = Color.FromRgb(0, 0, 0);
                 var genButton = ButtonToStandard[(ControllerButtons) button];
@@ -605,7 +604,7 @@ public class Ardwiino : ConfigurableUsbDevice
                     var off = Color.FromRgb(0, 0, 0);
                     var ledIndex = Array.Empty<byte>();
                     if (ledIndexes.TryGetValue((int) (XboxTilt + XboxBtnCount), out var index))
-                        ledIndex = new[] {index};
+                        ledIndex = [index];
 
                     bindings.Add(new GuitarAxis(model,
                         new DigitalToAnalog(new DirectInput(pin.pin, false, false, DevicePinMode.PullUp, model), 32767,

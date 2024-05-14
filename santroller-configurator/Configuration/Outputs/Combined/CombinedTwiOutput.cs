@@ -51,7 +51,7 @@ public abstract class CombinedTwiOutput : CombinedOutput, ITwi
 
     public List<int> TwiPins()
     {
-        return new List<int> {Sda, Scl};
+        return [Sda, Scl];
     }
 
     private List<int> GetSdaPins()

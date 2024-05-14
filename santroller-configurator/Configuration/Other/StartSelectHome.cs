@@ -24,23 +24,23 @@ public class StartSelectHomeInput : FixedInput
 
 public class StartSelectHome : Output
 {
-    private static readonly List<WiiInputType> StartWii = new()
-    {
+    private static readonly List<WiiInputType> StartWii =
+    [
         WiiInputType.ClassicPlus,
         WiiInputType.GuitarPlus,
         WiiInputType.DrumPlus,
         WiiInputType.DjHeroPlus
-    };
+    ];
 
-    private static readonly List<WiiInputType> SelectWii = new()
-    {
+    private static readonly List<WiiInputType> SelectWii =
+    [
         WiiInputType.ClassicMinus,
         WiiInputType.GuitarMinus,
         WiiInputType.DrumMinus,
         WiiInputType.DjHeroMinus
-    };
+    ];
 
-    private readonly List<ControllerButton> _outputs = new();
+    private readonly List<ControllerButton> _outputs = [];
 
     private bool Peripheral { get; }
 

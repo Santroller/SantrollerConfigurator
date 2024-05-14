@@ -22,8 +22,8 @@ public class Ps2Input : SpiInput
     public static readonly string Ps2AckType = "ps2_ack";
     public static readonly string Ps2AttType = "ps2_att";
 
-    public static readonly List<Ps2InputType> Dualshock2Order = new()
-    {
+    public static readonly List<Ps2InputType> Dualshock2Order =
+    [
         Ps2InputType.RightStickX,
         Ps2InputType.RightStickY,
         Ps2InputType.LeftStickX,
@@ -40,10 +40,10 @@ public class Ps2Input : SpiInput
         Ps2InputType.Dualshock2R1,
         Ps2InputType.Dualshock2L2,
         Ps2InputType.Dualshock2R2
-    };
+    ];
 
-    public static readonly List<Ps2InputType> GuitarButtons = new()
-    {
+    public static readonly List<Ps2InputType> GuitarButtons =
+    [
         Ps2InputType.GuitarGreen,
         Ps2InputType.GuitarRed,
         Ps2InputType.GuitarYellow,
@@ -58,10 +58,10 @@ public class Ps2Input : SpiInput
         Ps2InputType.DpadRight,
         Ps2InputType.DpadDown,
         Ps2InputType.DpadLeft
-    };
+    ];
 
-    public static readonly List<Ps2InputType> DigitalButtons = new()
-    {
+    public static readonly List<Ps2InputType> DigitalButtons =
+    [
         Ps2InputType.L3,
         Ps2InputType.R3,
         Ps2InputType.Start,
@@ -78,10 +78,10 @@ public class Ps2Input : SpiInput
         Ps2InputType.Circle,
         Ps2InputType.Cross,
         Ps2InputType.Square
-    };
+    ];
 
-    private static readonly List<Ps2InputType> IntInputs = new()
-    {
+    private static readonly List<Ps2InputType> IntInputs =
+    [
         Ps2InputType.LeftStickX,
         Ps2InputType.LeftStickY,
         Ps2InputType.MouseX,
@@ -89,7 +89,7 @@ public class Ps2Input : SpiInput
         Ps2InputType.RightStickX,
         Ps2InputType.RightStickY,
         Ps2InputType.NegConTwist
-    };
+    ];
     
     // Guitar dpad is special because why wouldn't it be
     private static readonly Dictionary<Ps2InputType, string> MappingsDpadGuitar = new()
@@ -474,7 +474,7 @@ public class Ps2Input : SpiInput
                 }
                 else if (Dualshock2Order.Contains(input.Input))
                 {
-                    if (!ds2Axis.ContainsKey(input.Input)) ds2Axis.Add(input.Input, new List<string>());
+                    if (!ds2Axis.ContainsKey(input.Input)) ds2Axis.Add(input.Input, []);
                     ds2Axis[input.Input].Add(binding.Item2);
                 }
                 else if (DigitalButtons.Contains(input.Input))
@@ -501,7 +501,7 @@ public class Ps2Input : SpiInput
 
                 foreach (var type in types)
                 {
-                    if (!mappedBindings.ContainsKey(type)) mappedBindings.Add(type, new List<string>());
+                    if (!mappedBindings.ContainsKey(type)) mappedBindings.Add(type, []);
                     var mapping = binding.Item2;
                     // Guitar dpad uses a totally different set of bindings, so we need to swap em out
                     if (type == Ps2ControllerType.Guitar && input.Input is Ps2InputType.DpadDown
@@ -524,7 +524,7 @@ public class Ps2Input : SpiInput
 
         if (!string.IsNullOrEmpty(retDs2))
         {
-            var mappings = mappedBindings.GetValueOrDefault(Ps2ControllerType.Dualshock2, new List<string>());
+            var mappings = mappedBindings.GetValueOrDefault(Ps2ControllerType.Dualshock2, []);
             mappings.Add(retDs2);
             mappedBindings[Ps2ControllerType.Dualshock2] = mappings;
         }

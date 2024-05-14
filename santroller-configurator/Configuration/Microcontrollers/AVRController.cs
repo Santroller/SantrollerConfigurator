@@ -70,22 +70,22 @@ public abstract class AvrController : Microcontroller
 
     public override List<KeyValuePair<int, SpiPinType>> SpiPins()
     {
-        return new List<KeyValuePair<int, SpiPinType>>
-        {
+        return
+        [
             new(SpiCSn, SpiPinType.CSn),
             new(SpiMiso, SpiPinType.Miso),
             new(SpiMosi, SpiPinType.Mosi),
             new(SpiSck, SpiPinType.Sck)
-        };
+        ];
     }
 
     public override List<KeyValuePair<int, TwiPinType>> TwiPins()
     {
-        return new List<KeyValuePair<int, TwiPinType>>
-        {
+        return
+        [
             new(I2CScl, TwiPinType.Scl),
             new(I2CSda, TwiPinType.Sda)
-        };
+        ];
     }
 
     public override void PinsFromPortMask(int port, int mask, byte pins,

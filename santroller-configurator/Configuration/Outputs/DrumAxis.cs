@@ -380,7 +380,7 @@ public partial class DrumAxis : OutputAxis
         // If someone has mapped digital inputs to the drums, then we can shortcut a bunch of the tests, and just need to use the calculated value from above
         if (input is DigitalToAnalog)
         {
-            if (outputButtons.Any())
+            if (outputButtons.Length != 0)
             {
                 outputButtons = $$"""
                                   if ({{ifStatement}}) {

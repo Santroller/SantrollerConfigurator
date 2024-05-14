@@ -60,7 +60,7 @@ public abstract class CombinedSpiOutput : CombinedOutput, ISpi
 
     public List<int> SpiPins()
     {
-        return new List<int> {Mosi, Miso, Sck};
+        return [Mosi, Miso, Sck];
     }
 
     private List<int> GetMosiPins()

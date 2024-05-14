@@ -216,8 +216,8 @@ public class UsbHostInput : Input
         return string.Join("\n", bindings.Select(binding => binding.Item2));
     }
 
-    private static readonly HashSet<UsbHostInputType> ByteBased = new()
-    {
+    private static readonly HashSet<UsbHostInputType> ByteBased =
+    [
         UsbHostInputType.PressureDpadUp,
         UsbHostInputType.PressureDpadRight,
         UsbHostInputType.PressureDpadLeft,
@@ -240,7 +240,7 @@ public class UsbHostInput : Input
         UsbHostInputType.Whammy,
         UsbHostInputType.Pickup,
         UsbHostInputType.MouseAxis
-    };
+    ];
 
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]

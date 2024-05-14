@@ -130,8 +130,8 @@ public class WiiCombinedOutput : CombinedTwiOutput
         {WiiInputType.GuitarWhammy, StandardAxisType.RightStickX}
     };
 
-    public static readonly List<WiiInputType> UIntInputs = new()
-    {
+    public static readonly List<WiiInputType> UIntInputs =
+    [
         WiiInputType.ClassicLeftTrigger,
         WiiInputType.ClassicRightTrigger,
         WiiInputType.DrumGreenPressure,
@@ -146,7 +146,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
         WiiInputType.DrawsomePenPressure,
         WiiInputType.DjCrossfadeSlider,
         WiiInputType.DjEffectDial
-    };
+    ];
 
     private static readonly Dictionary<DjAxisType, StandardAxisType> DjToStandard = new()
     {
@@ -206,7 +206,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
         Outputs.Connect().Filter(x => x is OutputAxis)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Any())
+            .Filter(s => s.LocalisedName.Length != 0)
             .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
                 .Select(CreateFilter))
             .Bind(out var analogOutputs)
@@ -214,14 +214,14 @@ public class WiiCombinedOutput : CombinedTwiOutput
         Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Any())
+            .Filter(s => s.LocalisedName.Length != 0)
             .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
                 .Select(CreateFilter))
             .Bind(out var digitalOutputs)
             .Subscribe();
         Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome)
             .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Any())
+            .Filter(s => s.LocalisedName.Length != 0)
             .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
                 .Select(CreateFilter))
             .Bind(out var allDigitalOutputs)
@@ -246,7 +246,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
     public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
     {
         Outputs.Clear();
-        if (outputs.Any())
+        if (outputs.Count != 0)
             Outputs.AddRange(outputs);
         else
             CreateDefaults();

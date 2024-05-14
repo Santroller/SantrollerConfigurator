@@ -172,7 +172,7 @@ public class Dfu : IConfigurableDevice
                 8);
             var buffer = new byte[8];
             device.ControlTransfer(ref sp, buffer, buffer.Length, out _);
-            buffer = new byte[] {0x04, 0x03, 0x01, 0x00, 0x00};
+            buffer = [0x04, 0x03, 0x01, 0x00, 0x00];
             requestType = UsbCtrlFlags.Direction_Out | UsbCtrlFlags.RequestType_Class |
                           UsbCtrlFlags.Recipient_Interface;
 

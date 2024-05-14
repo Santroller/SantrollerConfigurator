@@ -26,6 +26,6 @@ public class PicoTwiConfig : TwiConfig
             .Where(output => output.GetPinConfigs().OfType<PicoTwiConfig>().Any(s => s != this && s.Index == Index && !(s.Sda == Sda && s.Scl == Scl)))
             .Select(output => string.Format(Resources.I2CGroup, output.LocalisedName, Index))
             .ToList();
-        return ret2.Any() ? string.Join(", ", ret2) : null;
+        return ret2.Count != 0 ? string.Join(", ", ret2) : null;
     }
 }

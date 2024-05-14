@@ -10,21 +10,18 @@ namespace GuitarConfigurator.NetCore;
 
 public class ControllerEnumConverter : IMultiValueConverter
 {
-    private static readonly List<StandardButtonType> SupportedButtonsGuitar = new()
-    {
+    private static readonly List<StandardButtonType> SupportedButtonsGuitar =
+    [
         StandardButtonType.DpadLeft,
         StandardButtonType.DpadRight,
         StandardButtonType.Start,
         StandardButtonType.Back,
         StandardButtonType.Guide
-    };
-    private static readonly List<StandardButtonType> SupportedButtonsFortnite = new()
-    {
-        StandardButtonType.Back
-    };
+    ];
+    private static readonly List<StandardButtonType> SupportedButtonsFortnite = [StandardButtonType.Back];
 
-    private static readonly List<StandardButtonType> SupportedButtonsNonGamepad = new()
-    {
+    private static readonly List<StandardButtonType> SupportedButtonsNonGamepad =
+    [
         StandardButtonType.A,
         StandardButtonType.B,
         StandardButtonType.X,
@@ -36,7 +33,7 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.Start,
         StandardButtonType.Back,
         StandardButtonType.Guide
-    };
+    ];
 
     private static readonly Dictionary<StandardButtonType, string> PlaystationLabels = new()
     {

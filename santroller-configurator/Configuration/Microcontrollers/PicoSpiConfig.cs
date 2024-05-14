@@ -30,6 +30,6 @@ public class PicoSpiConfig : SpiConfig
         var ret2 = Model.Bindings.Items
             .Where(output => output.GetPinConfigs().OfType<PicoSpiConfig>().Any(s => s != this && s.Index == Index))
             .Select(output => string.Format(Resources.SPIGroup, output.LocalisedName, Index)).ToList();
-        return ret2.Any() ? string.Join(", ", ret2) : null;
+        return ret2.Count != 0 ? string.Join(", ", ret2) : null;
     }
 }

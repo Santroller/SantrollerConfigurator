@@ -125,8 +125,8 @@ public class Pico : Microcontroller
 
     public override Board Board { get; }
 
-    public override List<int> AnalogPins => new() {26, 27, 28, 29};
-    public List<int> BluetoothPins => new() {23, 24, 25, 29};
+    public override List<int> AnalogPins => [26, 27, 28, 29];
+    public List<int> BluetoothPins => [23, 24, 25, 29];
 
     // All pins support pwm
     public override List<int> PwmPins { get; } =

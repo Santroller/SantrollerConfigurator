@@ -177,7 +177,7 @@ public class SerializedConfiguration
         }
 
         var generated = Bindings.Select(s => s.Generate(model)).ToList();
-        if (generated.Any())
+        if (generated.Count != 0)
         {
             model.Bindings.Clear();
             model.Bindings.AddRange(generated);
@@ -242,43 +242,41 @@ public class SerializedConfiguration
             .GroupBy(s => s.GetOutputType()).ToDictionary(s => s.Key, s => s);
         model.Bindings.Clear();
         model.Bindings.AddRange(clone);
-        if (generated.Any())
+        if (generated.Count == 0) return;
         {
             var current = model.Bindings.Items.SelectMany(s => s.Outputs.Items).GroupBy(s => s.GetOutputType())
                 .ToDictionary(s => s.Key, s => s);
             foreach (var (key, currentOutputs) in current)
             {
-                if (generated.TryGetValue(key, out var outputs))
+                if (!generated.TryGetValue(key, out var outputs)) continue;
+                // Group up outputs by type, and then copy them across in order. This does mean that if someone uses multiple of the same output type, and changes the order around, calibration and LEDs may swap places, but that is fine.
+                foreach (var (output, outputToMerge) in currentOutputs.Zip(outputs))
                 {
-                    // Group up outputs by type, and then copy them across in order. This does mean that if someone uses multiple of the same output type, and changes the order around, calibration and LEDs may swap places, but that is fine.
-                    foreach (var (output, outputToMerge) in currentOutputs.Zip(outputs))
+                    output.LedOn = outputToMerge.LedOn;
+                    output.LedOff = outputToMerge.LedOff;
+                    output.LedIndices = outputToMerge.LedIndices;
+                    output.LedIndicesPeripheral = outputToMerge.LedIndicesPeripheral;
+                    if (outputToMerge is DjAxis djToMerge && output is DjAxis outputDj)
                     {
-                        output.LedOn = outputToMerge.LedOn;
-                        output.LedOff = outputToMerge.LedOff;
-                        output.LedIndices = outputToMerge.LedIndices;
-                        output.LedIndicesPeripheral = outputToMerge.LedIndicesPeripheral;
-                        if (outputToMerge is DjAxis djToMerge && output is DjAxis outputDj)
-                        {
-                            outputDj.Multiplier = djToMerge.Multiplier;
-                            outputDj.Invert = djToMerge.Invert;
-                        }
+                        outputDj.Multiplier = djToMerge.Multiplier;
+                        outputDj.Invert = djToMerge.Invert;
+                    }
 
-                        if (outputToMerge is DrumAxis drumToMerge && output is DrumAxis outputDrum)
-                        {
-                            outputDrum.Debounce = drumToMerge.Debounce;
-                        }
+                    if (outputToMerge is DrumAxis drumToMerge && output is DrumAxis outputDrum)
+                    {
+                        outputDrum.Debounce = drumToMerge.Debounce;
+                    }
 
-                        if (outputToMerge is OutputAxis axisToMerge && output is OutputAxis outputAxis)
-                        {
+                    switch (outputToMerge)
+                    {
+                        case OutputAxis axisToMerge when output is OutputAxis outputAxis:
                             outputAxis.Min = axisToMerge.Min;
                             outputAxis.Max = axisToMerge.Max;
                             outputAxis.DeadZone = axisToMerge.DeadZone;
-                        }
-
-                        if (outputToMerge is OutputButton buttonToMerge && output is OutputButton outputButton)
-                        {
+                            break;
+                        case OutputButton buttonToMerge when output is OutputButton outputButton:
                             outputButton.Debounce = buttonToMerge.Debounce;
-                        }
+                            break;
                     }
                 }
             }

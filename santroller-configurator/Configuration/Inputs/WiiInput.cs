@@ -216,15 +216,15 @@ public class WiiInput : TwiInput
         {WiiInputType.GuitarTapOrange, GetMappingForTapBar(0x66, 0x7F)}
     };
 
-    private static readonly List<string> HiResMapOrder = new()
-    {
+    private static readonly List<string> HiResMapOrder =
+    [
         Mappings[WiiInputType.ClassicLeftStickX],
         Mappings[WiiInputType.ClassicLeftStickY],
         Mappings[WiiInputType.ClassicRightStickX],
         Mappings[WiiInputType.ClassicRightStickY],
         Mappings[WiiInputType.ClassicLeftTrigger],
         Mappings[WiiInputType.ClassicRightTrigger]
-    };
+    ];
 
     private static readonly Dictionary<string, string> HiResMap = new()
     {
@@ -558,7 +558,7 @@ public class WiiInput : TwiInput
             if (binding.Item1.InnermostInputs().First() is not WiiInput input) continue;
 
             if (!mappedBindings.ContainsKey(input.WiiControllerType))
-                mappedBindings.Add(input.WiiControllerType, new List<string>());
+                mappedBindings.Add(input.WiiControllerType, []);
 
             mappedBindings[input.WiiControllerType].Add(binding.Item2);
         }
@@ -578,7 +578,7 @@ public class WiiInput : TwiInput
             var mappings2 = mappings.Select(mapping =>
                 HiResMapOrder.Aggregate(mapping, (current, key) => current.Replace(key, HiResMap[key]))).ToList();
 
-            var analogMappings = mappings.Any()
+            var analogMappings = mappings.Count != 0
                 ? $$"""
                               if (hiRes) {
                                  {{string.Join("\n             ", mappings2)}}
@@ -608,7 +608,7 @@ public class WiiInput : TwiInput
                     """;
         }
 
-        return ret.Any()
+        return ret.Length != 0
             ? $$"""
                 if (wiiValid) {
                    switch(wiiControllerType) {

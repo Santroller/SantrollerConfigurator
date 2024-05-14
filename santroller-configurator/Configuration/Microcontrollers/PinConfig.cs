@@ -41,16 +41,11 @@ public abstract class PinConfig : ReactiveObject
         var configs = Model.GetPins(Type, this is TwiConfig, this is SpiConfig, Peripheral);
 
         var ret = configs.Select(pinConfig => new {pinConfig, conflicting = pinConfig.Value.Intersect(Pins).ToList()})
-            .Where(t => t.conflicting.Any())
+            .Where(t => t.conflicting.Count != 0)
             .Select(t =>
                 string.Format(Resources.ConflictLabel, t.pinConfig.Key, string.Join(", ", t.conflicting.Select(s => Model.Microcontroller.GetPinForMicrocontroller(s, this is TwiConfig, this is SpiConfig)))))
             .ToList();
 
-        if (ret.Any()) 
-        {
-            Console.WriteLine(ret.Any());
-        }
-
-        return ret.Any() ? string.Join(", ", ret) : null;
+        return ret.Count != 0 ? string.Join(", ", ret) : null;
     }
 }

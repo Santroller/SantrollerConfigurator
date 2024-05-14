@@ -92,7 +92,7 @@ public static class InstrumentButtonTypeExtensions
     };
 
     private static readonly InstrumentButtonType[] GuitarButtons =
-    {
+    [
         InstrumentButtonType.Green,
         InstrumentButtonType.Red,
         InstrumentButtonType.Yellow,
@@ -100,10 +100,10 @@ public static class InstrumentButtonTypeExtensions
         InstrumentButtonType.Orange,
         InstrumentButtonType.StrumDown,
         InstrumentButtonType.StrumUp
-    };
+    ];
 
     private static readonly InstrumentButtonType[] RbButtons =
-    {
+    [
         InstrumentButtonType.Green,
         InstrumentButtonType.Red,
         InstrumentButtonType.Yellow,
@@ -116,10 +116,10 @@ public static class InstrumentButtonTypeExtensions
         InstrumentButtonType.SoloOrange,
         InstrumentButtonType.StrumDown,
         InstrumentButtonType.StrumUp
-    };
+    ];
 
     private static readonly InstrumentButtonType[] GhlButtons =
-    {
+    [
         InstrumentButtonType.Black1,
         InstrumentButtonType.Black2,
         InstrumentButtonType.Black3,
@@ -128,7 +128,7 @@ public static class InstrumentButtonTypeExtensions
         InstrumentButtonType.White3,
         InstrumentButtonType.StrumDown,
         InstrumentButtonType.StrumUp
-    };
+    ];
 
     public static IEnumerable<InstrumentButtonType> GetButtons(DeviceControllerType deviceControllerType)
     {

@@ -31,8 +31,8 @@ public struct Board
         MultipleFrequencies = multipleFrequencies;
     }
 
-    public static readonly List<string> PicoArdwiinoNames = new()
-    {
+    public static readonly List<string> PicoArdwiinoNames =
+    [
         "pico",
         "picow",
         "0xcb_helios",
@@ -99,45 +99,45 @@ public struct Board
         "wiznet_5100s_evb_pico",
         "wiznet_wizfi360_evb_pico",
         "wiznet_5500_evb_pico"
-    };
+    ];
 
-    public static readonly Board Generic = new("generic", "Generic Serial Device", 0, "generic", new List<uint>(),
+    public static readonly Board Generic = new("generic", "Generic Serial Device", 0, "generic", [],
         false);
 
     public static readonly Board[] Atmega32U4Boards =
-    {
-        new("a-micro", "Arduino Micro", 16000000, "arduino_micro_16", new List<uint> {0x8037, 0x8237}, false, true),
-        new("micro", "Sparkfun Pro Micro 3.3V", 8000000, "sparkfun_promicro_8", new List<uint> {0x9204}, false, true),
-        new("micro", "Sparkfun Pro Micro 5V", 16000000, "sparkfun_promicro_16", new List<uint> {0x9206}, false, true),
-        new("leonardo", "Arduino Leonardo", 16000000, "arduino_leonardo_16", new List<uint> {0x8036, 0x800c}, false,
+    [
+        new("a-micro", "Arduino Micro", 16000000, "arduino_micro_16", [0x8037, 0x8237], false, true),
+        new("micro", "Sparkfun Pro Micro 3.3V", 8000000, "sparkfun_promicro_8", [0x9204], false, true),
+        new("micro", "Sparkfun Pro Micro 5V", 16000000, "sparkfun_promicro_16", [0x9206], false, true),
+        new("leonardo", "Arduino Leonardo", 16000000, "arduino_leonardo_16", [0x8036, 0x800c], false,
             true),
-        new("leonardo", "Arduino Leonardo 3.3V", 8000000, "arduino_leonardo_8", new List<uint>(), false, true),
+        new("leonardo", "Arduino Leonardo 3.3V", 8000000, "arduino_leonardo_8", [], false, true),
         new("a-micro", "Arduino Micro in Bootloader Mode", 16000000, "arduino_micro_16",
-            new List<uint> {0x0037, 0x0237},
+            [0x0037, 0x0237],
             false, true),
         new("leonardo", "Arduino Micro / Pro Micro / Leonardo in Bootloader Mode", 16000000, "sparkfun_promicro_8",
-            new List<uint> {0x0036}, false, true),
+            [0x0036], false, true),
         new("micro", "Arduino Pro Micro in Bootloader Mode", 8000000, "sparkfun_promicro_8",
-            new List<uint> {0x9203, 0x9207},
+            [0x9203, 0x9207],
             false, true),
-        new("micro", "Arduino Pro Micro in Bootloader Mode", 16000000, "sparkfun_promicro_16", new List<uint> {0x9205},
+        new("micro", "Arduino Pro Micro in Bootloader Mode", 16000000, "sparkfun_promicro_16", [0x9205],
             false, true)
-    };
+    ];
 
     public static readonly Board PicoBoard = new("pico", "Raspberry PI Pico", 125000000, "pico",
-        new List<uint> {0x000a}, false);
+        [0x000a], false);
 
     public static readonly Board[] MegaBoards =
-    {
-        new("mega2560", "Arduino Mega 2560", 16000000, "arduino_mega_2560", new List<uint> {0x0010, 0x0042}, true),
-        new("megaadk", "Arduino Mega ADK", 16000000, "arduino_mega_adk", new List<uint> {0x003f, 0x0044}, true)
-    };
+    [
+        new("mega2560", "Arduino Mega 2560", 16000000, "arduino_mega_2560", [0x0010, 0x0042], true),
+        new("megaadk", "Arduino Mega ADK", 16000000, "arduino_mega_adk", [0x003f, 0x0044], true)
+    ];
 
     public static readonly Board DfuBoard = new("usb", "Arduino Uno / Mega / Mega ADK in DFU mode", 0, "",
-        new List<uint> {0x2FF7, 0x2FEF}, true);
+        [0x2FF7, 0x2FEF], true);
 
     public static readonly Board Uno = new("uno", "Arduino Uno", 16000000, "arduino_uno",
-        new List<uint> {0x0043, 0x0001, 0x0243}, true);
+        [0x0043, 0x0001, 0x0243], true);
 
     public static readonly Board[] Boards = MegaBoards
         .Concat(Atmega32U4Boards)

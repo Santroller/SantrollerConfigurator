@@ -528,7 +528,7 @@ public abstract partial class OutputAxis : Output
         }
 
         var output = GenerateOutput(mode);
-        if (!output.Any()) return "";
+        if (output.Length == 0) return "";
 
         if (Input is not DigitalToAnalog dta)
         {

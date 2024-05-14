@@ -37,7 +37,7 @@ public class BrandedConfigurationStore : ReactiveObject
         PrimaryColor = store.PrimaryColor;
         WarningColor = store.WarningColor;
         ErrorColor = store.ErrorColor;
-        if (store.Logo.Any())
+        if (store.Logo.Length != 0)
         {
             var stream = new MemoryStream(store.Logo);
             Logo = new Bitmap(stream);
@@ -50,7 +50,7 @@ public class BrandedConfigurationStore : ReactiveObject
             Icon = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/icon.png")));
         }
 
-        if (store.OldConfigurations.Any())
+        if (store.OldConfigurations.Count != 0)
         {
             Configurations.Add(new BrandedConfigurationSection("Type Name", store.OldConfigurations.Select(s => new BrandedConfiguration(s, branded, screen))));   
         }

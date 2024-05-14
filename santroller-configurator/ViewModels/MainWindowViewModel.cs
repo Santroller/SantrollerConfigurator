@@ -38,9 +38,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private const string UdevFile = "68-santroller.rules";
     private const string UdevPath = $"/usr/lib/udev/rules.d/{UdevFile}";
     private static readonly Regex VersionRegex = new("v\\d+\\.\\d+\\.\\d+$");
-    private readonly HashSet<string> _currentDrives = new();
-    private readonly HashSet<string> _currentDrivesTemp = new();
-    private readonly HashSet<string> _currentPorts = new();
+    private readonly HashSet<string> _currentDrives = [];
+    private readonly HashSet<string> _currentDrivesTemp = [];
+    private readonly HashSet<string> _currentPorts = [];
     public string ProgressBarError;
     public string ProgressBarPrimary;
     public string ProgressBarWarning;
@@ -460,7 +460,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     {
         StartWorking();
         var configFile = Path.Combine(Pio.FirmwareDir, "include", "config_data.h");
-        File.WriteAllText(configFile, extra + config.Generate(extra.Any() ? new MemoryStream() : null));
+        File.WriteAllText(configFile, extra + config.Generate(extra.Length != 0 ? new MemoryStream() : null));
         var environment = config.Microcontroller.Board.Environment;
         if (config.IsBluetooth) environment = "picow";
         if (DeviceInputType is DeviceInputType.Peripheral)
@@ -496,15 +496,15 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         var env = environment;
         Programming = true;
         BehaviorSubject<PlatformIo.PlatformIoState> command;
-        if (!write || extra.Any())
+        if (!write || extra.Length != 0)
         {
-            command = Pio.RunPlatformIo(env, new[] {"run"},
+            command = Pio.RunPlatformIo(env, ["run"],
                 Resources.BuildingVariantMessage + config.Variant,
                 startingPercentage, endingPercentage, null);
         }
         else
         {
-            command = Pio.RunPlatformIo(env, new[] {"run", "--target", "upload"},
+            command = Pio.RunPlatformIo(env, ["run", "--target", "upload"],
                 Resources.WritingMessage,
                 startingPercentage, endingPercentage, config.Device);
         }
@@ -525,7 +525,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             }, s =>
             {
                 var text = output.ToString();
-                if (!text.Trim().Any())
+                if (text.Trim().Length == 0)
                 {
                     text = s.ToString();
                 }

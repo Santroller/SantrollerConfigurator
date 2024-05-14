@@ -6,7 +6,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 public class Micro : AvrController
 {
     private static readonly int[] PinIndex =
-    {
+    [
         2, // D0 - PD2
         3, // D1 - PD3
         1, // D2 - PD1
@@ -34,10 +34,10 @@ public class Micro : AvrController
         4, // D21 - A3 - PF4
         1, // D22 - A4 - PF1
         0 // D23 - A5 - PF0
-    };
+    ];
 
     private static readonly char[] Ports =
-    {
+    [
         'D', // D0 - 'D'2
         'D', // D1 - 'D'3
         'D', // D2 - 'D'1
@@ -73,10 +73,10 @@ public class Micro : AvrController
         'B', // D28 / D10 - A10 - 'B'6
         'D', // D29 / D12 - A11 - 'D'6
         'D' // D30 / TX Led - 'D'5            
-    };
+    ];
 
     private static readonly int[] Channels =
-    {
+    [
         7, // A0				PF7					ADC7
         6, // A1				PF6					ADC6	
         5, // A2				PF5					ADC5	
@@ -89,7 +89,7 @@ public class Micro : AvrController
         12, // A9		D9		PB5					ADC12
         13, // A10		D10		PB6					ADC13
         9 // A11		D12		PD6					ADC9
-    };
+    ];
 
     public static readonly Dictionary<int, int> Interrupts = new()
     {
@@ -118,7 +118,7 @@ public class Micro : AvrController
 
     public override int PinCount => PinIndex.Length;
 
-    protected override char[] PortNames { get; } = {'B', 'C', 'D', 'E', 'F'};
+    protected override char[] PortNames { get; } = ['B', 'C', 'D', 'E', 'F'];
 
     //Skip the duplicate analog pins
     protected override Dictionary<(char, int), int> PinByMask { get; } = Ports.Zip(PinIndex)
@@ -133,7 +133,7 @@ public class Micro : AvrController
     public override List<int> AnalogPins =>
         Enumerable.Range(PinA0, 6).Concat(new List<int> {4, 6, 8, 9, 10, 12}).ToList();
 
-    public override List<int> PwmPins { get; } = new() {3, 5, 6, 9, 10, 11, 13};
+    public override List<int> PwmPins { get; } = [3, 5, 6, 9, 10, 11, 13];
 
     protected override string? AnalogName(int pin)
     {

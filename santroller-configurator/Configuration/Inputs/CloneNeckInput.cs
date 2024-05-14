@@ -50,14 +50,14 @@ public class CloneNeckInput : TwiInput
         {Gh5NeckInputType.TapBlue, BarButton.Blue},
         {Gh5NeckInputType.TapOrange, BarButton.Orange}
     };
-    private static readonly List<Gh5NeckInputType> Taps = new()
-    {
+    private static readonly List<Gh5NeckInputType> Taps =
+    [
         Gh5NeckInputType.TapGreen,
         Gh5NeckInputType.TapRed,
         Gh5NeckInputType.TapYellow,
         Gh5NeckInputType.TapBlue,
         Gh5NeckInputType.TapOrange
-    };
+    ];
 
     public CloneNeckInput(Gh5NeckInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
         int scl = -1, bool combined = false) : base(

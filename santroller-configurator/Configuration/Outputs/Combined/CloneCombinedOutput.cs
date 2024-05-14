@@ -66,7 +66,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
     public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
     {
         Outputs.Clear();
-        if (outputs.Any())
+        if (outputs.Count != 0)
             Outputs.AddRange(outputs);
         else
             CreateDefaults();

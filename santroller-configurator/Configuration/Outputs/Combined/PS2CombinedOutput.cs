@@ -121,7 +121,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         Outputs.Connect().Filter(x => x is OutputAxis)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Any())
+            .Filter(s => s.LocalisedName.Length != 0)
             .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
                 .Select(CreateFilter))
             .Bind(out var analogOutputs)
@@ -129,14 +129,14 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Any())
+            .Filter(s => s.LocalisedName.Length != 0)
             .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
                 .Select(CreateFilter))
             .Bind(out var digitalOutputs)
             .Subscribe();
         Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome)
             .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Any())
+            .Filter(s => s.LocalisedName.Length != 0)
             .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
                 .Select(CreateFilter))
             .Bind(out var allDigitalOutputs)
@@ -215,7 +215,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
     public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
     {
         Outputs.Clear();
-        if (outputs.Any())
+        if (outputs.Count != 0)
             Outputs.AddRange(outputs);
         else
             CreateDefaults();

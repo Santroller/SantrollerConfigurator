@@ -116,7 +116,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 return Main.Write(this, true);
             },
             this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected, x => x.HasError, x => x.Builder)
-                .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: true, Item3: false, Item4: false} or {Item1: false, Item2: true, Item4: true}));
+                .ObserveOn(RxApp.MainThreadScheduler).Select(x =>
+                    x is {Item1: false, Item2: true, Item3: false, Item4: false} or
+                        {Item1: false, Item2: true, Item4: true}));
 
         WriteUf2Command = ReactiveCommand.CreateFromObservable(() => Main.SaveUf2(this),
             this.WhenAnyValue(x => x.Main.Working)
@@ -155,7 +157,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .ToPropertyEx(this, x => x.SupportsDeque);
         this.WhenAnyValue(x => x.DeviceControllerType, x => x.Branded)
             .Select(x => x.Item1 is DeviceControllerType.GuitarHeroGuitar
-                or DeviceControllerType.RockBandGuitar or DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums && !x.Item2)
+                or DeviceControllerType.RockBandGuitar or DeviceControllerType.GuitarHeroDrums
+                or DeviceControllerType.RockBandDrums && !x.Item2)
             .ToPropertyEx(this, x => x.SupportsPS4Instrument);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarHeroGuitar
@@ -273,6 +276,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             Bindings.Connect().Bind(out _outputs).Subscribe();
         }
+
         _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>());
         _deviceControllerTypes.Connect().Filter(
                 this.WhenAnyValue(s => s.EmulationType)
@@ -369,7 +373,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private readonly ReadOnlyObservableCollection<Output> _outputs;
     public ReadOnlyObservableCollection<Output> Outputs => _outputs;
-    
+
     private readonly ReadOnlyObservableCollection<Output> _digitalOutputs;
     public ReadOnlyObservableCollection<Output> DigitalOutputs => _digitalOutputs;
 
@@ -903,13 +907,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         UpdateErrors();
                         break;
                     case LedType.Stp16Cpc26:
-                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Stp16PeripheralSpiType, false, true, false,
-                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1, _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, false,
+                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Stp16PeripheralSpiType, false,
+                            true, false,
+                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
+                            _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, false,
                             false,
                             true,
                             Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
-                        _stp16LePeripheral = new DirectPinConfig(this, Stp16LePeripheralType, -1, false, DevicePinMode.Output);
-                        _stp16OePeripheral = new DirectPinConfig(this, Stp16OePeripheralType, -1, false, DevicePinMode.Output);
+                        _stp16LePeripheral =
+                            new DirectPinConfig(this, Stp16LePeripheralType, -1, false, DevicePinMode.Output);
+                        _stp16OePeripheral =
+                            new DirectPinConfig(this, Stp16OePeripheralType, -1, false, DevicePinMode.Output);
                         this.RaisePropertyChanged(nameof(Stp16LePeripheral));
                         this.RaisePropertyChanged(nameof(Stp16OePeripheral));
                         this.RaisePropertyChanged(nameof(LedMosiPeripheral));
@@ -917,8 +925,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         UpdateErrors();
                         break;
                     case LedType.Ws2812:
-                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, WS2812PeripheralSpiType, false, false, false,
-                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1, _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
+                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, WS2812PeripheralSpiType, false,
+                            false, false,
+                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
+                            _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
                             true,
                             true,
                             3200000);
@@ -931,8 +941,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         break;
                     default:
                     {
-                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102PeripheralSpiType, false, true, false,
-                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1, _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
+                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102PeripheralSpiType, false,
+                            true, false,
+                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
+                            _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
                             true,
                             true,
                             Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
@@ -1084,7 +1096,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public Tuple<string, SerializedConfiguration>? CurrentPreset { get; set; }
 
-    public ObservableCollection<Tuple<string, SerializedConfiguration>> Presets { get; } = new();
+    public ObservableCollection<Tuple<string, SerializedConfiguration>> Presets { get; } = [];
     public bool BindableSpi => IsPico;
 
     public IDisposable RegisterConnections()
@@ -1112,9 +1124,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStandardMode { get; }
     [ObservableAsProperty] public bool IsAdvancedMode { get; }
     [ObservableAsProperty] public bool IsGuitar { get; }
-    
+
     [ObservableAsProperty] public bool SupportsPS4Instrument { get; }
-    
+
     [ObservableAsProperty] public bool IsGuitarHeroGuitar { get; }
     [ObservableAsProperty] public bool IsStageKit { get; }
     [ObservableAsProperty] public bool IsController { get; }
@@ -1490,8 +1502,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         foreach (var type in Enum.GetValues<StandardAxisType>())
         {
-            if (!ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
-                    .Any()) continue;
+            if (ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
+                    .Length == 0) continue;
             var isTrigger = type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger;
             Bindings.Add(new ControllerAxis(this,
                 new DirectInput(-1, false, false, DevicePinMode.Analog, this),
@@ -1503,8 +1515,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         foreach (var type in Enum.GetValues<StandardButtonType>())
         {
-            if (!ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
-                    .Any()) continue;
+            if (ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
+                    .Length == 0) continue;
             Bindings.Add(new ControllerButton(this,
                 new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, type,
@@ -1626,7 +1638,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 var addr = new byte[Santroller.BtAddressLength];
                 // If we have a valid bluetooth address, write it
-                if (BtRxAddr.Any() && BtRxAddr.Contains(":"))
+                if (BtRxAddr.Length != 0 && BtRxAddr.Contains(":"))
                 {
                     addr = Encoding.UTF8.GetBytes(BtRxAddr);
                 }
@@ -1654,7 +1666,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define KRAMER_STRIKER {Ps2KramerMode.ToString().ToLower()}
                        #define LED_BRIGHTNESS {LedBrightnessOn}
                        """;
-            if (BtRxAddr.Any() && BtRxAddr.Contains(":"))
+            if (BtRxAddr.Length != 0 && BtRxAddr.Contains(':'))
             {
                 config += $"""
 
@@ -1755,7 +1767,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             var keyboardTick = GenerateTick(ConfigField.Keyboard, writer);
             if (IsKeyboard || IsFortniteFestival)
             {
-                if (keyboardTick.Any())
+                if (keyboardTick.Length != 0)
                 {
                     switch (RolloverMode)
                     {
@@ -1785,7 +1797,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
 
             var consumerTick = GenerateTick(ConfigField.Consumer, writer);
-            if (consumerTick.Any())
+            if (consumerTick.Length != 0)
                 config += $"""
 
                            #define TICK_CONSUMER \
@@ -1793,7 +1805,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            """;
 
             var mouseTick = GenerateTick(ConfigField.Mouse, writer);
-            if (mouseTick.Any())
+            if (mouseTick.Length != 0)
                 config += $"""
 
                            #define TICK_MOUSE \
@@ -1817,7 +1829,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                {GenerateApa102LedPeripheralTick()}
                            """;
             }
-            
+
             if (IsWs2812)
             {
                 config += $"""
@@ -1862,7 +1874,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        """;
 
             var ledTick = GenerateTick(ConfigField.StrobeLed, writer);
-            if (ledTick.Any())
+            if (ledTick.Length != 0)
             {
                 config += $"""
 
@@ -1873,7 +1885,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
 
             var offLed = GenerateTick(ConfigField.OffLed, writer);
-            if (offLed.Any())
+            if (offLed.Length != 0)
                 config += $"""
 
                            #define HANDLE_LED_RUMBLE_OFF \
@@ -1939,8 +1951,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 config += $"\n#define APA102_SPI_PORT {_ledSpiConfig.Definition}";
             }
-            
-            if (Outputs.Any(output => output.Input.InnermostInputs().Any(input => input is MultiplexerInput{MultiplexerType: MultiplexerType.EightChannelSlow or MultiplexerType.SixteenChannelSlow})))
+
+            if (Outputs.Any(output => output.Input.InnermostInputs().Any(input => input is MultiplexerInput
+                {
+                    MultiplexerType: MultiplexerType.EightChannelSlow or MultiplexerType.SixteenChannelSlow
+                })))
             {
                 config += "\n#define CD4051BE";
             }
@@ -2002,7 +2017,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public PinConfig[] UsbHostPinConfigs()
     {
-        return UsbHostEnabled ? new PinConfig[] {_usbHostDm, _usbHostDp} : Array.Empty<PinConfig>();
+        return UsbHostEnabled ? [_usbHostDm, _usbHostDp] : Array.Empty<PinConfig>();
     }
 
     private byte GetEmulationType()
@@ -2240,6 +2255,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         return FixNewlines(ret);
     }
+
     private string GenerateWs2812LedTick()
     {
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
@@ -2269,7 +2285,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         return FixNewlines(ret);
     }
-    
+
     private string GenerateWs2812PeripheralLedTick()
     {
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
@@ -2412,7 +2428,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         $"bit_write({analogLedOutput.Input.Generate()}, {variable}[{index / 8}],{index % 8});");
             }
 
-            if (!analog.Any())
+            if (analog.Length == 0)
             {
                 analog = $"bit_clear({variable}[{index / 8}],{index % 8});";
             }
@@ -2530,7 +2546,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 }
             }
 
-            if (!analog.Any())
+            if (analog.Length == 0)
             {
                 analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff,
                     writer);
@@ -2695,7 +2711,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 }
             }
 
-            if (!analog.Any())
+            if (analog.Length == 0)
             {
                 analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff,
                     writer);
@@ -2847,7 +2863,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
 
             // If there are any analog outputs here, then we need to convert the matching digital writes to analog writes
-            if (analog.Any())
+            if (analog.Length != 0)
             {
                 ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
                 {
@@ -2955,7 +2971,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         $"bit_write({analogLedOutput.Input.Generate()}, {variable},{index % 8});");
             }
 
-            if (!analog.Any())
+            if (analog.Length == 0)
             {
                 analog = $"bit_clear({variable},{index % 8});";
             }
@@ -3026,7 +3042,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     foreach (var input in output.Input.Inputs())
                     {
                         var gen = input.Generate();
-                        macros.TryAdd(gen, new List<(int, Input)>());
+                        macros.TryAdd(gen, []);
                         macros[gen].AddRange(output.Input.Inputs().Where(s => s != input).Select(s => (0, s)));
                     }
                 }
@@ -3038,7 +3054,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     })
                     strumIndices.Add(debounces[generatedInput]);
 
-                if (!inputs.ContainsKey(generatedInput)) inputs[generatedInput] = new List<int>();
+                if (!inputs.ContainsKey(generatedInput)) inputs[generatedInput] = [];
 
                 inputs[generatedInput].Add(debounces[generatedInput]);
             }
@@ -3097,13 +3113,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                     {
                                         if (!debouncesRelatedToLedPeripheralPin.ContainsKey(output.OutputPin))
                                             debouncesRelatedToLedPeripheralPin[output.OutputPin] =
-                                                new List<(Output, int)>();
+                                                [];
                                         debouncesRelatedToLedPeripheralPin[output.OutputPin].Add((output, index));
                                     }
                                     else
                                     {
                                         if (!debouncesRelatedToLedPin.ContainsKey(output.OutputPin))
-                                            debouncesRelatedToLedPin[output.OutputPin] = new List<(Output, int)>();
+                                            debouncesRelatedToLedPin[output.OutputPin] = [];
                                         debouncesRelatedToLedPin[output.OutputPin].Add((output, index));
                                     }
                                 }
@@ -3111,7 +3127,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 foreach (var led in output.LedIndices)
                                 {
                                     if (!debouncesRelatedToLed.ContainsKey(led))
-                                        debouncesRelatedToLed[led] = new List<(Output, int)>();
+                                        debouncesRelatedToLed[led] = [];
 
                                     debouncesRelatedToLed[led].Add((output, index));
                                 }
@@ -3119,7 +3135,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 foreach (var led in output.LedIndicesMpr121)
                                 {
                                     if (!debouncesRelatedToLedMpr121.ContainsKey(led))
-                                        debouncesRelatedToLedMpr121[led] = new List<(Output, int)>();
+                                        debouncesRelatedToLedMpr121[led] = [];
 
                                     debouncesRelatedToLedMpr121[led].Add((output, index));
                                 }
@@ -3127,7 +3143,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 foreach (var led in output.LedIndicesPeripheral)
                                 {
                                     if (!debouncesRelatedToLedPeripheral.ContainsKey(led))
-                                        debouncesRelatedToLedPeripheral[led] = new List<(Output, int)>();
+                                        debouncesRelatedToLedPeripheral[led] = [];
 
                                     debouncesRelatedToLedPeripheral[led].Add((output, index));
                                 }
@@ -3138,7 +3154,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 foreach (var led in output.LedIndices)
                                 {
                                     if (!analogRelatedToLed.ContainsKey(led))
-                                        analogRelatedToLed[led] = new List<OutputAxis>();
+                                        analogRelatedToLed[led] = [];
 
                                     analogRelatedToLed[led].Add(axis);
                                 }
@@ -3146,7 +3162,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 foreach (var led in output.LedIndicesMpr121)
                                 {
                                     if (!analogRelatedToLedMpr121.ContainsKey(led))
-                                        analogRelatedToLedMpr121[led] = new List<OutputAxis>();
+                                        analogRelatedToLedMpr121[led] = [];
 
                                     analogRelatedToLedMpr121[led].Add(axis);
                                 }
@@ -3154,7 +3170,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 foreach (var led in output.LedIndicesPeripheral)
                                 {
                                     if (!analogRelatedToLedPeripheral.ContainsKey(led))
-                                        analogRelatedToLedPeripheral[led] = new List<OutputAxis>();
+                                        analogRelatedToLedPeripheral[led] = [];
 
                                     analogRelatedToLedPeripheral[led].Add(axis);
                                 }
@@ -3164,13 +3180,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                     if (output.OutputPinConfig.Peripheral)
                                     {
                                         if (!analogRelatedToLedPeripheralPin.ContainsKey(output.OutputPin))
-                                            analogRelatedToLedPeripheralPin[output.OutputPin] = new List<OutputAxis>();
+                                            analogRelatedToLedPeripheralPin[output.OutputPin] = [];
                                         analogRelatedToLedPeripheralPin[output.OutputPin].Add(axis);
                                     }
                                     else
                                     {
                                         if (!analogRelatedToLedPin.ContainsKey(output.OutputPin))
-                                            analogRelatedToLedPin[output.OutputPin] = new List<OutputAxis>();
+                                            analogRelatedToLedPin[output.OutputPin] = [];
                                         analogRelatedToLedPin[output.OutputPin].Add(axis);
                                     }
                                 }
@@ -3266,14 +3282,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 break;
             }
 
-            if (!pins.ContainsKey(binding.LocalisedName)) pins[binding.LocalisedName] = new List<int>();
+            if (!pins.ContainsKey(binding.LocalisedName)) pins[binding.LocalisedName] = [];
             pins[binding.LocalisedName].AddRange((pins2));
         }
 
         if ((Main.IsUno || Main.IsMega) && !peripheral)
         {
-            pins[UnoPinTypeTx] = new List<int> {UnoPinTypeTxPin};
-            pins[UnoPinTypeRx] = new List<int> {UnoPinTypeRxPin};
+            pins[UnoPinTypeTx] = [UnoPinTypeTxPin];
+            pins[UnoPinTypeRx] = [UnoPinTypeRxPin];
         }
 
         if (IsIndexedLed && _ledSpiConfig != null && type != LedSpiType(false) && !peripheral)
@@ -3305,7 +3321,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
 
         if (UsbHostEnabled && type != UsbHostPinTypeDm && type != UsbHostPinTypeDp && !peripheral)
-            pins["USB Host"] = new List<int> {UsbHostDm, UsbHostDp};
+            pins["USB Host"] = [UsbHostDm, UsbHostDp];
 
         if (_peripheralTwiConfig != null && type != PeripheralTwiType && !twi && !peripheral)
         {
@@ -3402,7 +3418,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public List<PinConfig> LedPinConfigs()
     {
-        List<PinConfig> configs = new List<PinConfig>();
+        List<PinConfig> configs = [];
         if (_ledSpiConfig != null)
         {
             configs.Add(_ledSpiConfig);
@@ -3463,7 +3479,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void Update(byte[] btRaw, bool peripheralConnected, bool mpr121Connected, bool max1270XConnected,
         byte[] max1270XRaw)
     {
-        if (IsBluetoothTx && btRaw.Any())
+        if (IsBluetoothTx && btRaw.Length != 0)
         {
             Connected = btRaw[0] != 0;
         }
@@ -3472,7 +3488,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         Mpr121Connected = mpr121Connected;
         Max1704XConnected = max1270XConnected;
-        if (max1270XRaw.Any())
+        if (max1270XRaw.Length != 0)
         {
             Max1704XStatus = max1270XRaw[0];
         }
@@ -3575,6 +3591,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Main.SetDifference(true);
         }
     }
+
     [RelayCommand]
     public void ReturnAndWrite()
     {

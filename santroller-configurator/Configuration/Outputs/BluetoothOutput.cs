@@ -35,7 +35,7 @@ public partial class BluetoothOutput : CombinedOutput
                 scanTimer == 11 ? Resources.BluetoothStartScan : string.Format(Resources.BluetoothScanning, scanTimer))
             .ToPropertyEx(this, x => x.ScanText);
         this.WhenAnyValue(s => s.ScanTimer).Select(scanTimer => scanTimer != 11).ToPropertyEx(this, x => x.Scanning);
-        Addresses.Add(model.BtRxAddr.Any() ? model.BtRxAddr : Resources.BluetoothNoDevice);
+        Addresses.Add(model.BtRxAddr.Length != 0 ? model.BtRxAddr : Resources.BluetoothNoDevice);
         if (Model.Device is Santroller santroller)
             LocalAddress = santroller.GetBluetoothAddress();
         else

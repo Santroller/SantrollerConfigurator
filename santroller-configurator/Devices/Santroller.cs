@@ -303,7 +303,7 @@ public class Santroller : ConfigurableUsbDevice
     private void Load()
     {
         var fCpuStr = GetString(ReadData(0, (byte) Commands.CommandReadFCpu, 32)).Replace("L", "").Trim();
-        if (!fCpuStr.Any()) return;
+        if (fCpuStr.Length == 0) return;
 
         var fCpu = uint.Parse(fCpuStr);
         var board = GetString(ReadData(0, (byte) Commands.CommandReadBoard, 32));
@@ -320,7 +320,7 @@ public class Santroller : ConfigurableUsbDevice
         while (true)
         {
             var chunk = ReadData(start, (byte) Commands.CommandReadConfig, 64);
-            if (!chunk.Any()) break;
+            if (chunk.Length == 0) break;
             inputStream.Write(chunk);
             start += 64;
         }
@@ -509,22 +509,22 @@ public class Santroller : ConfigurableUsbDevice
 
     public void ClearLed(byte led)
     {
-        WriteData(0, (byte) Commands.CommandSetLeds, new byte[] {led, 0, 0, 0});
+        WriteData(0, (byte) Commands.CommandSetLeds, [led, 0, 0, 0]);
     }
     
     public void ClearLedMpr121(byte led)
     {
-        WriteData(0, (byte) Commands.CommandSetLedsMpr121, new byte[] {led, 0, 0, 0});
+        WriteData(0, (byte) Commands.CommandSetLedsMpr121, [led, 0, 0, 0]);
     }
 
     public void ClearLedPeripheral(byte led)
     {
-        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new byte[] {led, 0, 0, 0});
+        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, [led, 0, 0, 0]);
     }
 
     public void AnalogWrite(int pin, int value)
     {
-        WriteData(0, (byte) Commands.CommandWriteAnalog, new byte[] {(byte) pin, (byte) value, 0, 0});
+        WriteData(0, (byte) Commands.CommandWriteAnalog, [(byte) pin, (byte) value, 0, 0]);
     }
 
     public void DigitalWrite(int pin, bool value)
@@ -533,14 +533,14 @@ public class Santroller : ConfigurableUsbDevice
         foreach (var (port, mask) in ports)
         {
             WriteData(0, (byte) Commands.CommandWriteDigital,
-                new byte[] {(byte) port, (byte) mask, (byte) (value ? mask : 0), 0});
+                [(byte) port, (byte) mask, (byte) (value ? mask : 0), 0]);
         }
     }
     
     public void SetBrightness(int brightness)
     {
         WriteData(0, (byte) Commands.CommandSetBrightness,
-            new[] {(byte)brightness});
+            [(byte)brightness]);
     }
 
     public void SetLed(byte led, Color color, byte brightness)
@@ -583,19 +583,19 @@ public class Santroller : ConfigurableUsbDevice
     public void SetLedStp(byte led, bool state)
     {
         _ledTimers[led] = _sw.Elapsed;
-        WriteData(0, (byte) Commands.CommandSetLeds, new[] {led, (byte) (state ? 1 : 0)});
+        WriteData(0, (byte) Commands.CommandSetLeds, [led, (byte) (state ? 1 : 0)]);
     }
     
     public void SetLedMpr121(byte led, bool state)
     {
         _ledTimersMpr121[led] = _sw.Elapsed;
-        WriteData(0, (byte) Commands.CommandSetLedsMpr121, new[] {led, (byte) (state ? 1 : 0)});
+        WriteData(0, (byte) Commands.CommandSetLedsMpr121, [led, (byte) (state ? 1 : 0)]);
     }
 
     public void SetLedStpPeripheral(byte led, bool state)
     {
         _ledTimersPeripheral[led] = _sw.Elapsed;
-        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led, (byte) (state ? 1 : 0)});
+        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, [led, (byte) (state ? 1 : 0)]);
     }
 
     public void StartScan()
@@ -649,7 +649,7 @@ public class Santroller : ConfigurableUsbDevice
     {
         // Disable standard multiplexer reads otherwise standard controller polls will set digital pins in the background
         WriteData(0, (byte) Commands.CommandDisableMultiplexer,
-            new byte[] {1});
+            [1]);
         DigitalWrite(pinS0, (channel & (1 << 0)) != 0);
         DigitalWrite(pinS1, (channel & (1 << 1)) != 0);
         DigitalWrite(pinS2, (channel & (1 << 2)) != 0);
@@ -660,7 +660,7 @@ public class Santroller : ConfigurableUsbDevice
         var ret = AnalogRead(pin);
         // Enable them again
         WriteData(0, (byte) Commands.CommandDisableMultiplexer,
-            new byte[] {0});
+            [0]);
         return ret;
     }
 }

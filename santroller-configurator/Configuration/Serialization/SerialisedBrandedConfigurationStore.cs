@@ -40,6 +40,6 @@ public class SerialisedBrandedConfigurationStore
     [ProtoMember(7)] public Color ErrorColor { get; set; }
     [ProtoMember(8)] public byte[] Logo { get; set; } = Array.Empty<byte>();
     [ProtoMember(9)] public byte[] Icon { get; set; } = Array.Empty<byte>();
-    [ProtoMember(4)] public List<SerialisedBrandedConfiguration> OldConfigurations { get; set; } = new();
-    [ProtoMember(10)] public List<SerialisedBrandedConfigurationSection> Configurations { get; set; } = new();
+    [ProtoMember(4)] public List<SerialisedBrandedConfiguration> OldConfigurations { get; set; } = [];
+    [ProtoMember(10)] public List<SerialisedBrandedConfigurationSection> Configurations { get; set; } = [];
 }

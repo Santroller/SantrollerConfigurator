@@ -83,7 +83,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
             AllowMultiple = false,
             FileTypeFilter = new[] {new FilePickerFileType(extension) {Patterns = new[] {"*" + extension}}}
         });
-        if (!file.Any()) return;
+        if (file.Count == 0) return;
         await using var stream = await file[0].OpenReadAsync();
         Serializer.Deserialize<SerializedConfiguration>(stream).LoadConfiguration(obj.Input);
     }

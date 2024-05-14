@@ -8,21 +8,21 @@ public class Uno : AvrController
     private static readonly int A0 = 14;
 
     private static readonly int[] PinIndex =
-    {
+    [
         0, /* 0, port D */
         1, 2, 3, 4, 5, 6,
         7, 0, /* 8, port B */
         1, 2, 3, 4, 5, 0, /* 14, port C */
         1, 2, 3, 4, 5
-    };
+    ];
 
     private static readonly char[] Ports =
-    {
+    [
         'D', /* 0 */
         'D', 'D', 'D', 'D', 'D', 'D', 'D', 'B', /* 8 */
         'B', 'B', 'B', 'B', 'B', 'C', /* 14 */
         'C', 'C', 'C', 'C', 'C'
-    };
+    ];
 
     public static readonly Dictionary<int, int> Interrupts = new()
     {
@@ -46,7 +46,7 @@ public class Uno : AvrController
 
     protected override int I2CScl => 19;
 
-    protected override char[] PortNames { get; } = {'B', 'C', 'D'};
+    protected override char[] PortNames { get; } = ['B', 'C', 'D'];
 
     protected override Dictionary<(char, int), int> PinByMask { get; } = Ports.Zip(PinIndex)
         .Select((tuple, i) => (tuple.First, tuple.Second, i))
@@ -60,7 +60,7 @@ public class Uno : AvrController
 
     public override List<int> AnalogPins { get; } = Enumerable.Range(A0, 6).ToList();
 
-    public override List<int> PwmPins { get; } = new() {3, 5, 6, 9, 10, 11};
+    public override List<int> PwmPins { get; } = [3, 5, 6, 9, 10, 11];
 
     protected override int GetInterruptForPin(int ack)
     {

@@ -68,7 +68,7 @@ public abstract class OutputButton : Output
     {
         var ifStatement = $"debounce[{debounceIndex}]";
         var extraStatement = "";
-        if (mode == ConfigField.Shared && combinedExtra.Any()) extraStatement = $" && ({combinedExtra})";
+        if (mode == ConfigField.Shared && combinedExtra.Length != 0) extraStatement = $" && ({combinedExtra})";
 
         var debounce = Debounce;
         if (!Model.IsAdvancedMode)
@@ -101,7 +101,7 @@ public abstract class OutputButton : Output
                 ifStatement = $"{GenerateOutput(ConfigField.Shared).Replace("report->", "current_queue_report.")}";
             }
             var outputVar = GenerateOutput(mode);
-            if (!outputVar.Any()) return "";
+            if (outputVar.Length == 0) return "";
             var keyCode = KeyboardButton.KeyCodes.IndexOf(outputVar);
             // Modifiers still go via the normal system, only standard keys go via 6kro mode.
             if ((Model.IsKeyboard || Model.IsFortniteFestival) && Model.RolloverMode == RolloverMode.SixKro && keyCode != -1)
