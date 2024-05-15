@@ -2679,6 +2679,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string WiiInputTypeGuitarPedal {
+            get {
+                return ResourceManager.GetString("WiiInputTypeGuitarPedal", resourceCulture);
+            }
+        }
+        
         public static string WiiInputTypeGuitarStrumUp {
             get {
                 return ResourceManager.GetString("WiiInputTypeGuitarStrumUp", resourceCulture);

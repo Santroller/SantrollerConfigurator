@@ -1392,6 +1392,9 @@
     <data name="WiiInputTypeGuitarPlus" xml:space="preserve">
         <value>Guitar - Plus Button</value>
     </data>
+    <data name="WiiInputTypeGuitarPedal" xml:space="preserve">
+        <value>Guitar - Pedal</value>
+    </data>
 
     <data name="WiiInputTypeGuitarStrumUp" xml:space="preserve">
         <value>Guitar - Strum Up Button</value>
