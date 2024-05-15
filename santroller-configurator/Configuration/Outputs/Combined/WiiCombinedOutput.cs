@@ -275,7 +275,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
             }
         }
 
-        return output => output is JoystickToDpad or StartSelectHome || output.Input is WiiInput wiiInput &&
+        return output => output is JoystickToDpad or StartSelectHome || output.Input.InnermostInputs().First() is WiiInput wiiInput &&
             wiiInput.WiiControllerType == controllerType;
     }
 
