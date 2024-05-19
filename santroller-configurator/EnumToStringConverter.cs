@@ -19,6 +19,6 @@ public class EnumToStringConverter : IValueConverter
 
     public static string Convert(object value)
     {
-        return Resources.ResourceManager.GetString(value.GetType().Name + value) ?? "";
+        return Resources.ResourceManager.GetString(value.GetType().Name + value, Resources.Culture) ?? "";
     }
 }

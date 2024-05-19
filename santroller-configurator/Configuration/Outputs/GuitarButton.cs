@@ -95,7 +95,7 @@ public class GuitarButton : OutputButton
     {
         if (deviceControllerType.IsFortnite())
         {
-            return Resources.ResourceManager.GetString("Fortnite" + Type) ?? "";
+            return Resources.ResourceManager.GetString("Fortnite" + Type, Resources.Culture) ?? "";
         }
 
         return EnumToStringConverter.Convert(Type);

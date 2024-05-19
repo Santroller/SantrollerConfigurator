@@ -61,6 +61,7 @@ public class AssetUtils
         }
         catch (Exception)
         {
+            
             // Config is broken, reset to defaults so the tool doesnt crash.
             return new ToolConfig();
         }
@@ -70,6 +71,7 @@ public class AssetUtils
     {
         var configFile = Path.Combine(GetAppDataFolder(), "config.bin");
         using var outputStream = new FileStream(configFile, FileMode.OpenOrCreate);
+        outputStream.SetLength(0);
         Serializer.Serialize(outputStream, config);
     }
     public static void CopyDirectory(string sourceDir, string destinationDir, bool recursive)

@@ -5571,6 +5571,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SelectLanguage {
+            get {
+                return ResourceManager.GetString("SelectLanguage", resourceCulture);
+            }
+        }
+        
+        public static string LanguageEn {
+            get {
+                return ResourceManager.GetString("LanguageEn", resourceCulture);
+            }
+        }
+        
+        public static string LanguageEs {
+            get {
+                return ResourceManager.GetString("LanguageEs", resourceCulture);
+            }
+        }
+        
         public static string SelectedDeviceLabel {
             get {
                 return ResourceManager.GetString("SelectedDeviceLabel", resourceCulture);

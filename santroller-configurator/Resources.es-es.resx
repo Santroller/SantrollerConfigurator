@@ -24,736 +24,736 @@
         </value>
     </resheader>
     <data name="ConsoleModeBindingTitle" xml:space="preserve">
-        <value>Console Mode Binding</value>
+        <value>Mapeo de Modo Consola</value>
     </data>
     <data name="DetectAxis" xml:space="preserve">
-        <value>Move the axis to detect</value>
+        <value>Mueve el eje para detectar</value>
     </data>
     <data name="DetectButton" xml:space="preserve">
-        <value>Press the button to detect</value>
+        <value>Presiona el botón para detectar</value>
     </data>
     <data name="FixedInputTitle" xml:space="preserve">
-        <value>Fixed</value>
+        <value>Fijado</value>
     </data>
     <data name="FindPin" xml:space="preserve">
-        <value>Find Pin</value>
+        <value>Encontrar Pin</value>
     </data>
     <data name="DifferentSPIGroup" xml:space="preserve">
-        <value>Selected pins are not from the same SPI group</value>
+        <value>Los pins seleccionados no son del mismo grupo SPI</value>
     </data>
     <data name="SPIGroup" xml:space="preserve">
-        <value>Conflict with {0}: SPI Group {1}</value>
+        <value>Conflicto con {0}: Grupo SPI {1}</value>
     </data>
     <data name="DifferentI2CGroup" xml:space="preserve">
-        <value>Selected pins are not from the same I2C group</value>
+        <value>Los pins seleccionados no son del mismo grupo I2C</value>
     </data>
     <data name="I2CGroup" xml:space="preserve">
-        <value>Conflict with {0}: I2C Group {1}</value>
+        <value>Conflicto con {0}: Grupo I2C {1}</value>
     </data>
     <data name="ErrorPinConfigurationMissing" xml:space="preserve">
-        <value>Pin configuration missing!</value>
+        <value>¡Configuración de Pin perdida!</value>
     </data>
     <data name="JoystickToDpadTitle" xml:space="preserve">
-        <value>Map joystick to Dpad</value>
+        <value>Mapear Joystick a Dpad</value>
     </data>
     <data name="StartSelectHomeTitle" xml:space="preserve">
-        <value>Map Start+Select to Home</value>
+        <value>Mapear Start+Select a Guía</value>
     </data>
     <data name="LeftJoystickToDpadTitle" xml:space="preserve">
-        <value>Map Left joystick to Dpad</value>
+        <value>Mapear Joystick Izquierdo a Dpad</value>
     </data>
     <data name="LEDColourActiveFog" xml:space="preserve">
-        <value>Fog Active LED Colour</value>
+        <value>Color de LED de Niebla Activa</value>
     </data>
     <data name="LedColourActiveStarPower" xml:space="preserve">
-        <value>Star Power Full Colour</value>
+        <value>Color de Poder Estrella Lleno</value>
     </data>
     <data name="LedColourActiveDjEuphoria" xml:space="preserve">
-        <value>Euphoria Full Colour</value>
+        <value>Color de Euphoria Llena</value>
     </data>
     <data name="LedColourActive" xml:space="preserve">
-        <value>Active LED Colour</value>
+        <value>Color de LED Activo</value>
     </data>
     <data name="LedColourInactiveFog" xml:space="preserve">
-        <value>Fog Inactive LED Colour</value>
+        <value>Color de LED de Niebla Inactiva</value>
     </data>
     <data name="LedColourInactiveStarPower" xml:space="preserve">
-        <value>Star Power Empty Colour</value>
+        <value>Color de Star Power Vacío</value>
     </data>
     <data name="LedColourInactiveDjEuphoria" xml:space="preserve">
-        <value>Euphoria Empty Colour</value>
+        <value>Color de Euphoria Vacía</value>
     </data>
     <data name="LedColourInactive" xml:space="preserve">
-        <value>Inactive LED Colour</value>
+        <value>Color de LED Inactivo</value>
     </data>
     <data name="LedCommandTitle" xml:space="preserve">
-        <value>Led Command - {0}</value>
+        <value>Comando Led - {0}</value>
     </data>
     <data name="LedCommandTitleStageKit2" xml:space="preserve">
-        <value>Led Command - {0} {1} {2}</value>
+        <value>Comando Led - {0} {1} {2}</value>
     </data>
     <data name="LedCommandTitleStageKit1" xml:space="preserve">
-        <value>Led Command - {0} {1}</value>
+        <value>Comando Led - {0} {1}</value>
     </data>
     <data name="RumbleCommandTitle" xml:space="preserve">
-        <value>Rumble Motor - {0}</value>
+        <value>Motor de Vibración - {0}</value>
     </data>
     <data name="DjCombinedTitle" xml:space="preserve">
-        <value>DJ Turntable Inputs</value>
+        <value>Entradas de Tornamesa de DJ</value>
     </data>
     <data name="Gh5CombinedTitle" xml:space="preserve">
-        <value>GH5 Neck Inputs</value>
+        <value>Entradas de Mástil de GH5</value>
     </data>
     <data name="CloneCombinedTitle" xml:space="preserve">
-        <value>Crazy Guitar Neck Inputs</value>
+        <value>Entradas del Mástil de Crazy Guitar</value>
     </data>
     <data name="GhwtCombinedTitle" xml:space="preserve">
-        <value>GHWT Slider Inputs</value>
+        <value>Entradas de Slider de GHWT</value>
     </data>
     <data name="GhwtCombinedPeripheralTitle" xml:space="preserve">
-        <value>GHWT Slider Inputs (Peripheral)</value>
+        <value>Entradas de Slider de GHWT (Periférico)</value>
     </data>
     <data name="Ps2CombinedTitle" xml:space="preserve">
-        <value>PS2 Controller Inputs</value>
+        <value>Entradas de Control de PS2</value>
     </data>
     <data name="UsbHostCombinedTitle" xml:space="preserve">
-        <value>Usb Host Inputs</value>
+        <value>Entradas de Host por USB</value>
     </data>
     <data name="WiiCombinedTitle" xml:space="preserve">
-        <value>Wii Extension Inputs</value>
+        <value>Entradas de Extensión de Wii</value>
     </data>
     <data name="BluetoothCombinedTitle" xml:space="preserve">
-        <value>Bluetooth Input</value>
+        <value>Entrada Bluetooth</value>
     </data>
     <data name="BluetoothStartScan" xml:space="preserve">
-        <value>Start Scan</value>
+        <value>Iniciar Escaneo</value>
     </data>
     <data name="BluetoothScanning" xml:space="preserve">
-        <value>Scanning... ({0})</value>
+        <value>Escaneando... ({0})</value>
     </data>
     <data name="BluetoothWriteConfigMessage" xml:space="preserve">
-        <value>Write config to retrieve address</value>
+        <value>Escribir configuración para obtener dirección</value>
     </data>
     <data name="BluetoothTitle" xml:space="preserve">
         <value>Bluetooth</value>
     </data>
     <data name="BluetoothNoDevice" xml:space="preserve">
-        <value>No Device Found</value>
+        <value>Dispositivo No Encontrado</value>
     </data>
     <data name="LedColourActiveAxisX" xml:space="preserve">
-        <value>Right LED Colour</value>
+        <value>Color de LED Derecho</value>
     </data>
     <data name="LedColourActiveAxisY" xml:space="preserve">
-        <value>Highest LED Colour</value>
+        <value>Color de LED más alto</value>
     </data>
     <data name="LedColourActiveAxisTrigger" xml:space="preserve">
-        <value>Pressed LED Color</value>
+        <value>Color de LED Presionado</value>
     </data>
     <data name="LedColourInactiveAxisX" xml:space="preserve">
-        <value>Left LED Colour</value>
+        <value>Color de LED Izquierdo</value>
     </data>
     <data name="LedColourInactiveAxisY" xml:space="preserve">
-        <value>Lowest LED Colour</value>
+        <value>Color de LED Más Bajo</value>
     </data>
     <data name="LedColourInactiveAxisTrigger" xml:space="preserve">
-        <value>Released LED Color</value>
+        <value>Color de LED Suelto</value>
     </data>
     <data name="AxisCalibrationMinX" xml:space="preserve">
-        <value>Move axis to the leftmost position</value>
+        <value>Mueve el eje lo más que puedas a la izquierda</value>
     </data>
     <data name="AxisCalibrationMinY" xml:space="preserve">
-        <value>Move axis to the lowest position</value>
+        <value>Mueve el eje a la posición más baja que puedas</value>
     </data>
     <data name="AxisCalibrationTrigger" xml:space="preserve">
-        <value>Release the trigger</value>
+        <value>Suelta el gatillo</value>
     </data>
     <data name="AxisCalibrationMaxX" xml:space="preserve">
-        <value>Move axis to the rightmost position</value>
+        <value>Mueve el eje lo más que puedas a la derecha</value>
     </data>
     <data name="AxisCalibrationMaxY" xml:space="preserve">
-        <value>Move axis to the highest position</value>
+        <value>Mueve el eje a la posición más alta que puedas</value>
     </data>
     <data name="AxisCalibraitonMaxTrigger" xml:space="preserve">
-        <value>Push the trigger all the way in</value>
+        <value>Presiona el gatillo hasta el fondo</value>
     </data>
     <data name="LedColourActiveButtonColour" xml:space="preserve">
-        <value>Pressed LED Colour</value>
+        <value>Color de LED Presionado</value>
     </data>
     <data name="LedColourInactiveButtonColour" xml:space="preserve">
-        <value>Released LED Colour</value>
+        <value>Color de LED Suelto</value>
     </data>
     <data name="LedColourActiveDjVelocity" xml:space="preserve">
-        <value>Positive Spin Velocity Colour</value>
+        <value>Color de Velocidad de Giro Positivo</value>
     </data>
     <data name="LedColourInactiveDjVelocity" xml:space="preserve">
-        <value>Negative Spin Velocity Colour</value>
+        <value>Color de Velocidad de Giro Negativa</value>
     </data>
     <data name="AxisCalibraitonMinDjCrossfader" xml:space="preserve">
-        <value>Move fader to the leftmost position</value>
+        <value>Mueve el 'fader' lo más que puedas hacia la izquierda</value>
     </data>
     <data name="AxisCalibrationMinEffectsKnob" xml:space="preserve">
-        <value>Turn knob until the bar is at the leftmost position</value>
+        <value>Gira la perilla hasta que la barra esté hacia la izquierda</value>
     </data>
     <data name="AxisCalibrationMinDjVelocityLeft" xml:space="preserve">
-        <value>Spin the left table the fastest you can to the left</value>
+        <value>Gira el plato izquierdo lo más rápido que puedas hacia la izquierda</value>
     </data>
     <data name="AxisCalibrationMinDjVelocityRight" xml:space="preserve">
-        <value>Spin the right table the fastest you can to the left</value>
+        <value>Gira el plato derecho lo más rápido que puedas hacia la izquierda</value>
     </data>
     <data name="AxisCalibrationMaxDjCrossfader" xml:space="preserve">
-        <value>Move fader to the rightmost position</value>
+        <value>Mueve el 'fader' lo más que puedas hacia la derecha</value>
     </data>
     <data name="AxisCalibrationMaxDjEffectsKnob" xml:space="preserve">
-        <value>Turn knob until the bar is at the rightmost position</value>
+        <value>Gira la perilla hasta que la barra esté hacia la derecha</value>
     </data>
     <data name="AxisCalibrationMaxDjVelocityLeft" xml:space="preserve">
-        <value>Spin the left table the fastest you can to the right</value>
+        <value>Gira el plato izquierdo lo más rápido que puedas hacia la derecha</value>
     </data>
     <data name="AxisCalibrationMaxDjVelocityRight" xml:space="preserve">
-        <value>Spin the right table the fastest you can to the right</value>
+        <value>Gira el plato derecho lo más rápido que puedas hacia la derecha</value>
     </data>
     <data name="ErrorInputUnbound" xml:space="preserve">
-        <value>Input is not bound!</value>
+        <value>¡La entrada no se ha mapeado!</value>
     </data>
     <data name="LEDColourActiveTilt" xml:space="preserve">
-        <value>Highest Tilt LED Colour</value>
+        <value>Color de LED de Inclinación Más Alta</value>
     </data>
     <data name="LEDColourActiveWhammy" xml:space="preserve">
-        <value>Whammy Pressed LED Colour</value>
+        <value>Color de LED de Whammy Presionado</value>
     </data>
     <data name="LEDColourActiveSlider" xml:space="preserve">
-        <value>Highest Position LED Colour</value>
+        <value>Color de LED de Posición Más Alta</value>
     </data>
     <data name="LEDColourActivePickup" xml:space="preserve">
-        <value>Highest Position LED Colour</value>
+        <value>Color de LED de Posición Más Alta</value>
     </data>
     <data name="LEDColourInctiveTilt" xml:space="preserve">
-        <value>Lowest Tilt LED Colour</value>
+        <value>Color de LED de Inclinación Más Baja</value>
     </data>
     <data name="LEDColourInctiveWhammy" xml:space="preserve">
-        <value>Whammy Released LED Colour</value>
+        <value>Color de LED de Whammy Suelto</value>
     </data>
     <data name="LEDColourInctivePickup" xml:space="preserve">
-        <value>Lowest Position LED Colour</value>
+        <value>Color de LED de Posición Más Baja</value>
     </data>
     <data name="LEDColourInctiveSlider" xml:space="preserve">
-        <value>Lowest Position LED Colour</value>
+        <value>Color de LED de Posición Más Baja</value>
     </data>
     <data name="TapBarCurrentFrets" xml:space="preserve">
-        <value>Current Frets: </value>
+        <value>Trastes Actuales: </value>
     </data>
     <data name="TapBarCurrentFretsNone" xml:space="preserve">
-        <value>None</value>
+        <value>Ninguno</value>
     </data>
     <data name="TapBarCurrentFretsGreen" xml:space="preserve">
-        <value>Green</value>
+        <value>Verde</value>
     </data>
     <data name="TapBarCurrentFretsRed" xml:space="preserve">
-        <value>Red</value>
+        <value>Rojo</value>
     </data>
     <data name="TapBarCurrentFretsYellow" xml:space="preserve">
-        <value>Yellow</value>
+        <value>Amarillo</value>
     </data>
     <data name="TapBarCurrentFretsBlue" xml:space="preserve">
-        <value>Blue</value>
+        <value>Azul</value>
     </data>
     <data name="TapBarCurrentFretsOrange" xml:space="preserve">
-        <value>Orange</value>
+        <value>Naranja</value>
     </data>
     <data name="AxisMinCalibrationTilt" xml:space="preserve">
-        <value>Hold the guitar in its normal position</value>
+        <value>Sostén la guitarra en la posición normal</value>
     </data>
     <data name="AxisMinCalibrationWhammy" xml:space="preserve">
-        <value>Release the whammy</value>
+        <value>Suelta el 'whammy'</value>
     </data>
     <data name="AxisMaxCalibrationTilt" xml:space="preserve">
-        <value>Tilt the guitar up</value>
+        <value>Inclina la guitarra hacia arriba</value>
     </data>
     <data name="AxisMaxCalibrationWhammy" xml:space="preserve">
-        <value>Push the whammy all the way in</value>
+        <value>Presiona el 'whammy' hasta el fondo</value>
     </data>
     <data name="LedColourActiveMouseX" xml:space="preserve">
-        <value>Right Movement LED</value>
+        <value>LED de Movimiento Derecho</value>
     </data>
     <data name="LedColourActiveMouseY" xml:space="preserve">
-        <value>Up Movement LED</value>
+        <value>LED de Movimiento Arriba</value>
     </data>
     <data name="LedColourInactiveMouseX" xml:space="preserve">
-        <value>Left Movement LED</value>
+        <value>LED de Movimiento Izquierdo</value>
     </data>
     <data name="LedColourInactiveMouseY" xml:space="preserve">
-        <value>Down Movement LED</value>
+        <value>LED de Movimiento Abajo</value>
     </data>
     <data name="AxisCalibrationMinMouseX" xml:space="preserve">
-        <value>Move axis to the leftmost position</value>
+        <value>Mueve el eje lo más que puedas a la izquierda</value>
     </data>
     <data name="AxisCalibrationMinMouseY" xml:space="preserve">
-        <value>Move axis to the lowest position</value>
+        <value>Mueve el eje a la posición más baja que puedas</value>
     </data>
     <data name="AxisCalibrationMaxMouseX" xml:space="preserve">
-        <value>Move axis to the rightmost position</value>
+        <value>Mueve el eje lo más que puedas a la derecha</value>
     </data>
     <data name="AxisCalibrationMaxMouseY" xml:space="preserve">
-        <value>Move axis to the highest position</value>
+        <value>Mueve el eje a la posición más alta que puedas</value>
     </data>
     <data name="Assign" xml:space="preserve">
-        <value>Click to assign</value>
+        <value>Click para asignar</value>
     </data>
     <data name="AssignMouseKeyboard" xml:space="preserve">
-        <value>Move the mouse or click / press any key to use that input</value>
+        <value>Mueve el mouse o haz click / presiona cualquier tecla para usar esa entrada</value>
     </data>
     <data name="AssignKeyboard" xml:space="preserve">
-        <value>Press any key to use that input</value>
+        <value>Presiona cualquier tecla para usar esa entrada</value>
     </data>
     <data name="AssignMouseAxis" xml:space="preserve">
-        <value>Move the mouse to use that input</value>
+        <value>Mueve el mouse para usar esa entrada</value>
     </data>
     <data name="AssignMouseButton" xml:space="preserve">
-        <value>Click a button to use that input</value>
+        <value>Haz click en un botón para usar esa entrada</value>
     </data>
     <data name="AxisCalibrationSetDeadzone" xml:space="preserve">
-        <value>Set Deadzone</value>
+        <value>Ajustar Zona Muerta</value>
     </data>
     <data name="AxisCalibrationCalibrate" xml:space="preserve">
-        <value>Calibrate</value>
+        <value>Calibrar</value>
     </data>
     <data name="AxisCalibrationNext" xml:space="preserve">
-        <value>Next</value>
+        <value>Siguiente</value>
     </data>
     <data name="AxisCalibrationMinStatus" xml:space="preserve">
-        <value>Step 1/3</value>
+        <value>Paso 1/3</value>
     </data>
     <data name="AxisCalibrationMaxStatus" xml:space="preserve">
-        <value>Step 2/3</value>
+        <value>Paso 2/3</value>
     </data>
     <data name="AxisCalibrationDeadzoneStatus" xml:space="preserve">
-        <value>Step 3/3</value>
+        <value>Paso 3/3</value>
     </data>
     <data name="AxisCalibrationButtonMin" xml:space="preserve">
-        <value>Release the button</value>
+        <value>Suelta el botón</value>
     </data>
     <data name="AxisCalibrationButtonMax" xml:space="preserve">
-        <value>Press the button</value>
+        <value>Presiona el botón</value>
     </data>
     <data name="ErrorArdwiinoReading" xml:space="preserve">
-        <value>An ardwiino device had issues reading, please unplug and replug it.</value>
+        <value>Un dispositivo ardwiino tuvo problemas leyendo, por favor desconéctalo y reconéctalo.</value>
     </data>
     <data name="ErrorNotPCMode" xml:space="preserve">
-        <value>Santroller - please disconnect and reconnect in PC mode</value>
+        <value>Santroller - por favor desconecta y reconecta en modo PC</value>
     </data>
     <data name="KeyLeftCtrl" xml:space="preserve">
-        <value>Left Control Key</value>
+        <value>Tecla Control Izquierda</value>
     </data>
     <data name="KeyLeftAlt" xml:space="preserve">
-        <value>Left Alt Key</value>
+        <value>Tecla Alt Izquierda</value>
     </data>
     <data name="KeyLeftShift" xml:space="preserve">
-        <value>Left Shift Key</value>
+        <value>Tecla Shift Izquierda</value>
     </data>
     <data name="KeyLWin" xml:space="preserve">
-        <value>Left Windows Key</value>
+        <value>Tecla Windows Izquierda</value>
     </data>
     <data name="KeyRightCtrl" xml:space="preserve">
-        <value>Right Control Key</value>
+        <value>Tecla Control Derecha</value>
     </data>
     <data name="KeyRightAlt" xml:space="preserve">
-        <value>Right Alt Key</value>
+        <value>Tecla Alt Derecha</value>
     </data>
     <data name="KeyRightShift" xml:space="preserve">
-        <value>Right Shift Key</value>
+        <value>Tecla Shift Derecha</value>
     </data>
     <data name="KeyRWin" xml:space="preserve">
-        <value>Right Windows Key</value>
+        <value>Tecla Windows Derecha</value>
     </data>
     <data name="KeyA" xml:space="preserve">
-        <value>A Key</value>
+        <value>Tecla A</value>
     </data>
     <data name="KeyB" xml:space="preserve">
-        <value>B Key</value>
+        <value>Tecla B</value>
     </data>
     <data name="KeyC" xml:space="preserve">
-        <value>C Key</value>
+        <value>Tecla C</value>
     </data>
     <data name="KeyD" xml:space="preserve">
-        <value>D Key</value>
+        <value>Tecla D</value>
     </data>
     <data name="KeyE" xml:space="preserve">
-        <value>E Key</value>
+        <value>Tecla E</value>
     </data>
     <data name="KeyF" xml:space="preserve">
-        <value>F Key</value>
+        <value>Tecla F</value>
     </data>
     <data name="KeyG" xml:space="preserve">
-        <value>G Key</value>
+        <value>Tecla G</value>
     </data>
     <data name="KeyH" xml:space="preserve">
-        <value>H Key</value>
+        <value>Tecla H</value>
     </data>
     <data name="KeyI" xml:space="preserve">
-        <value>I Key</value>
+        <value>Tecla I</value>
     </data>
     <data name="KeyJ" xml:space="preserve">
-        <value>J Key</value>
+        <value>Tecla J</value>
     </data>
     <data name="KeyK" xml:space="preserve">
-        <value>K Key</value>
+        <value>Tecla K</value>
     </data>
     <data name="KeyL" xml:space="preserve">
-        <value>L Key</value>
+        <value>Tecla L</value>
     </data>
     <data name="KeyM" xml:space="preserve">
-        <value>M Key</value>
+        <value>Tecla M</value>
     </data>
     <data name="KeyN" xml:space="preserve">
-        <value>N Key</value>
+        <value>Tecla N</value>
     </data>
     <data name="KeyO" xml:space="preserve">
-        <value>O Key</value>
+        <value>Tecla O</value>
     </data>
     <data name="KeyP" xml:space="preserve">
-        <value>P Key</value>
+        <value>Tecla P</value>
     </data>
     <data name="KeyQ" xml:space="preserve">
-        <value>Q Key</value>
+        <value>Tecla Q</value>
     </data>
     <data name="KeyR" xml:space="preserve">
-        <value>R Key</value>
+        <value>Tecla R</value>
     </data>
     <data name="KeyS" xml:space="preserve">
-        <value>S Key</value>
+        <value>Tecla S</value>
     </data>
     <data name="KeyT" xml:space="preserve">
-        <value>T Key</value>
+        <value>Tecla T</value>
     </data>
     <data name="KeyU" xml:space="preserve">
-        <value>U Key</value>
+        <value>Tecla U</value>
     </data>
     <data name="KeyV" xml:space="preserve">
-        <value>V Key</value>
+        <value>Tecla V</value>
     </data>
     <data name="KeyW" xml:space="preserve">
-        <value>W Key</value>
+        <value>Tecla W</value>
     </data>
     <data name="KeyX" xml:space="preserve">
-        <value>X Key</value>
+        <value>Tecla X</value>
     </data>
     <data name="KeyY" xml:space="preserve">
-        <value>Y Key</value>
+        <value>Tecla Y</value>
     </data>
     <data name="KeyZ" xml:space="preserve">
-        <value>Z Key</value>
+        <value>Tecla Z</value>
     </data>
     <data name="KeyD0" xml:space="preserve">
-        <value>0 and ) Keys</value>
+        <value>Teclas 0 y )</value>
     </data>
     <data name="KeyD1" xml:space="preserve">
-        <value>1 and ! Keys</value>
+        <value>Teclas 1 y !</value>
     </data>
     <data name="KeyD2" xml:space="preserve">
-        <value>2 and @ Keys</value>
+        <value>Teclas 2 y @</value>
     </data>
     <data name="KeyD3" xml:space="preserve">
-        <value>3 and # Keys</value>
+        <value>Teclas 3 y #</value>
     </data>
     <data name="KeyD4" xml:space="preserve">
-        <value>4 and $ Keys</value>
+        <value>Teclas 4 y $</value>
     </data>
     <data name="KeyD5" xml:space="preserve">
-        <value>5 and % Keys</value>
+        <value>Teclas 5 y %</value>
     </data>
     <data name="KeyD6" xml:space="preserve">
-        <value>6 and % Keys</value>
+        <value>Teclas 6 y %</value>
     </data>
     <data name="KeyD7" xml:space="preserve">
-        <value>7 and &amp; Keys</value>
+        <value>Teclas 7 y &amp;</value>
     </data>
     <data name="KeyD8" xml:space="preserve">
-        <value>8 and * Keys</value>
+        <value>Teclas 8 y *</value>
     </data>
     <data name="KeyD9" xml:space="preserve">
-        <value>9 and ( Keys</value>
+        <value>Teclas 9 y (</value>
     </data>
     <data name="KeyReturn" xml:space="preserve">
-        <value>Enter Key</value>
+        <value>Tecla Enter</value>
     </data>
     <data name="KeyEnter" xml:space="preserve">
-        <value>Enter Key</value>
+        <value>Tecla Enter</value>
     </data>
     <data name="KeyEscape" xml:space="preserve">
-        <value>Escape Key</value>
+        <value>Tecla Escape</value>
     </data>
     <data name="KeyBack" xml:space="preserve">
-        <value>Back Key</value>
+        <value>Tecla Back</value>
     </data>
     <data name="KeyTab" xml:space="preserve">
-        <value>Tab Key</value>
+        <value>Tecla Tab</value>
     </data>
     <data name="KeySpace" xml:space="preserve">
-        <value>Space Key</value>
+        <value>Tecla Espacio</value>
     </data>
     <data name="KeyOemMinus" xml:space="preserve">
-        <value>_ and - Keys</value>
+        <value>Teclas _ y -</value>
     </data>
     <data name="KeyOemPlus" xml:space="preserve">
-        <value>= and + Keys</value>
+        <value>Teclas = y +</value>
     </data>
     <data name="KeyOemOpenBrackets" xml:space="preserve">
-        <value>{ and [ Keys</value>
+        <value>Teclas { y [</value>
     </data>
     <data name="KeyOemCloseBrackets" xml:space="preserve">
-        <value>} and ] Keys</value>
+        <value>Teclas } y ]</value>
     </data>
     <data name="KeyOemPipe" xml:space="preserve">
-        <value>| and \ Keys</value>
+        <value>Teclas | y \</value>
     </data>
     <data name="KeyOemSemicolon" xml:space="preserve">
-        <value>; and : Keys</value>
+        <value>Teclas ; y :</value>
     </data>
     <data name="KeyOemQuotes" xml:space="preserve">
-        <value>' and " Keys</value>
+        <value>Teclas ' y " </value>
     </data>
     <data name="KeyOemTilde" xml:space="preserve">
-        <value>~ and ` Keys</value>
+        <value>Teclas ~ y `</value>
     </data>
     <data name="KeyOemComma" xml:space="preserve">
-        <value>, and &lt; Keys</value>
+        <value>Teclas , y &lt;</value>
     </data>
     <data name="KeyOemPeriod" xml:space="preserve">
-        <value>. and &gt; Keys</value>
+        <value>Teclas . y &gt;</value>
     </data>
     <data name="KeyOem2" xml:space="preserve">
-        <value>/ and ? Keys</value>
+        <value>Teclas / y ?</value>
     </data>
     <data name="KeyOemQuestion" xml:space="preserve">
-        <value>/ and ? Keys</value>
+        <value>Teclas / y ?</value>
     </data>
     <data name="KeyCapsLock" xml:space="preserve">
-        <value>Caps Lock Key</value>
+        <value>Tecla Bloq. Mayús.</value>
     </data>
     <data name="KeyF1" xml:space="preserve">
-        <value>F1 Key</value>
+        <value>Tecla F1</value>
     </data>
     <data name="KeyF2" xml:space="preserve">
-        <value>F2 Key</value>
+        <value>Tecla F2</value>
     </data>
     <data name="KeyF3" xml:space="preserve">
-        <value>F3 Key</value>
+        <value>Tecla F3</value>
     </data>
     <data name="KeyF4" xml:space="preserve">
-        <value>F4 Key</value>
+        <value>Tecla F4</value>
     </data>
     <data name="KeyF5" xml:space="preserve">
-        <value>F5 Key</value>
+        <value>Tecla F5</value>
     </data>
     <data name="KeyF6" xml:space="preserve">
-        <value>F6 Key</value>
+        <value>Tecla F6</value>
     </data>
     <data name="KeyF7" xml:space="preserve">
-        <value>F7 Key</value>
+        <value>Tecla F7</value>
     </data>
     <data name="KeyF8" xml:space="preserve">
-        <value>F8 Key</value>
+        <value>Tecla F8</value>
     </data>
     <data name="KeyF9" xml:space="preserve">
-        <value>F9 Key</value>
+        <value>Tecla F9</value>
     </data>
     <data name="KeyF10" xml:space="preserve">
-        <value>F10 Key</value>
+        <value>Tecla F10</value>
     </data>
     <data name="KeyF11" xml:space="preserve">
-        <value>F11 Key</value>
+        <value>Tecla F11</value>
     </data>
     <data name="KeyF12" xml:space="preserve">
-        <value>F12 Key</value>
+        <value>Tecla F12</value>
     </data>
     <data name="KeyF13" xml:space="preserve">
-        <value>F13 Key</value>
+        <value>Tecla F13</value>
     </data>
     <data name="KeyF14" xml:space="preserve">
-        <value>F14 Key</value>
+        <value>Tecla F14</value>
     </data>
     <data name="KeyF15" xml:space="preserve">
-        <value>F15 Key</value>
+        <value>Tecla F15</value>
     </data>
     <data name="KeyF16" xml:space="preserve">
-        <value>F16 Key</value>
+        <value>Tecla F16</value>
     </data>
     <data name="KeyF17" xml:space="preserve">
-        <value>F17 Key</value>
+        <value>Tecla F17</value>
     </data>
     <data name="KeyF18" xml:space="preserve">
-        <value>F18 Key</value>
+        <value>Tecla F18</value>
     </data>
     <data name="KeyF19" xml:space="preserve">
-        <value>F19 Key</value>
+        <value>Tecla F19</value>
     </data>
     <data name="KeyF20" xml:space="preserve">
-        <value>F20 Key</value>
+        <value>Tecla F20</value>
     </data>
     <data name="KeyF21" xml:space="preserve">
-        <value>F21 Key</value>
+        <value>Tecla F21</value>
     </data>
     <data name="KeyF22" xml:space="preserve">
-        <value>F22 Key</value>
+        <value>Tecla F22</value>
     </data>
     <data name="KeyF23" xml:space="preserve">
-        <value>F23 Key</value>
+        <value>Tecla F23</value>
     </data>
     <data name="KeyF24" xml:space="preserve">
-        <value>F24 Key</value>
+        <value>Tecla F24</value>
     </data>
     <data name="KeyPrintScreen" xml:space="preserve">
-        <value>Print Screen Key</value>
+        <value>Tecla Impr. Pant.</value>
     </data>
     <data name="KeyScroll" xml:space="preserve">
-        <value>Scroll Lock Key</value>
+        <value>Tecla Bloq. Des.</value>
     </data>
     <data name="KeyPause" xml:space="preserve">
-        <value>Pause / Break Key</value>
+        <value>Tecla Pausa / Inter</value>
     </data>
     <data name="KeyInsert" xml:space="preserve">
-        <value>Insert Key</value>
+        <value>Tecla Insertar</value>
     </data>
     <data name="KeyHome" xml:space="preserve">
-        <value>Home Key</value>
+        <value>Tecla Inicio</value>
     </data>
     <data name="KeyPageUp" xml:space="preserve">
-        <value>Page Up Key</value>
+        <value>Tecla Re. Pág.</value>
     </data>
     <data name="KeyPrior" xml:space="preserve">
-        <value>Page Up Key</value>
+        <value>Tecla Re. Pág.</value>
     </data>
     <data name="KeyNext" xml:space="preserve">
-        <value>Page Down Key</value>
+        <value>Tecla Av. Pág.</value>
     </data>
     <data name="KeyPageDown" xml:space="preserve">
-        <value>Page Down Key</value>
+        <value>Tecla Av. Pág.</value>
     </data>
     <data name="KeyDelete" xml:space="preserve">
-        <value>Delete Key</value>
+        <value>Tecla Suprimir</value>
     </data>
     <data name="KeyEnd" xml:space="preserve">
-        <value>End Key</value>
+        <value>Tecla Fin</value>
     </data>
     <data name="KeyRight" xml:space="preserve">
-        <value>Right Key</value>
+        <value>Tecla Derecha</value>
     </data>
     <data name="KeyLeft" xml:space="preserve">
-        <value>Left Key</value>
+        <value>Tecla Izquierda</value>
     </data>
     <data name="KeyUp" xml:space="preserve">
-        <value>Up Key</value>
+        <value>Tecla Arriba</value>
     </data>
     <data name="KeyDown" xml:space="preserve">
-        <value>Down Key</value>
+        <value>Tecla Abajo</value>
     </data>
     <data name="KeyNumLock" xml:space="preserve">
-        <value>Num Lock Key</value>
+        <value>Tecla Bloq. Num.</value>
     </data>
     <data name="KeyDivide" xml:space="preserve">
-        <value>NumPad / Key</value>
+        <value>Tecla NumPad /</value>
     </data>
     <data name="KeyMultiply" xml:space="preserve">
-        <value>NumPad * Key</value>
+        <value>Tecla NumPad *</value>
     </data>
     <data name="KeySubtract" xml:space="preserve">
-        <value>NumPad - Key</value>
+        <value>Tecla NumPad -</value>
     </data>
     <data name="KeyAdd" xml:space="preserve">
-        <value>NumPad + Key</value>
+        <value>Tecla NumPad +</value>
     </data>
     <data name="KeyNumPad0" xml:space="preserve">
-        <value>NumPad 0 Key</value>
+        <value>Tecla NumPad 0</value>
     </data>
     <data name="KeyNumPad1" xml:space="preserve">
-        <value>NumPad 1 Key</value>
+        <value>Tecla NumPad 1</value>
     </data>
     <data name="KeyNumPad2" xml:space="preserve">
-        <value>NumPad 2 Key</value>
+        <value>Tecla NumPad 2</value>
     </data>
     <data name="KeyNumPad3" xml:space="preserve">
-        <value>NumPad 3 Key</value>
+        <value>Tecla NumPad 3</value>
     </data>
     <data name="KeyNumPad4" xml:space="preserve">
-        <value>NumPad 4 Key</value>
+        <value>Tecla NumPad 4</value>
     </data>
     <data name="KeyNumPad5" xml:space="preserve">
-        <value>NumPad 5 Key</value>
+        <value>Tecla NumPad 5</value>
     </data>
     <data name="KeyNumPad6" xml:space="preserve">
-        <value>NumPad 6 Key</value>
+        <value>Tecla NumPad 6</value>
     </data>
     <data name="KeyNumPad7" xml:space="preserve">
-        <value>NumPad 7 Key</value>
+        <value>Tecla NumPad 7</value>
     </data>
     <data name="KeyNumPad8" xml:space="preserve">
-        <value>NumPad 8 Key</value>
+        <value>Tecla NumPad 8</value>
     </data>
     <data name="KeyNumPad9" xml:space="preserve">
-        <value>NumPad 9 Key</value>
+        <value>Tecla NumPad 9</value>
     </data>
     <data name="KeyDecimal" xml:space="preserve">
-        <value>NumPad . Key</value>
+        <value>Tecla NumPad .</value>
     </data>
     <data name="KeyMediaNextTrack" xml:space="preserve">
-        <value>Next Track Key</value>
+        <value>Tecla Siguiente Pista</value>
     </data>
     <data name="KeyMediaPreviousTrack" xml:space="preserve">
-        <value>Previous Track Key</value>
+        <value>Tecla Pista Previa</value>
     </data>
     <data name="KeyMediaStop" xml:space="preserve">
-        <value>Stop Key</value>
+        <value>Tecla Stop</value>
     </data>
     <data name="KeyVolumeMute" xml:space="preserve">
-        <value>Mute Key</value>
+        <value>Tecla Mute</value>
     </data>
     <data name="KeyMediaPlayPause" xml:space="preserve">
-        <value>Play / Pause Key</value>
+        <value>Tecla Reproducir / Pausa</value>
     </data>
     <data name="KeyVolumeUp" xml:space="preserve">
-        <value>Volume Up Key</value>
+        <value>Tecla Volumen Arriba</value>
     </data>
     <data name="KeyVolumeDown" xml:space="preserve">
-        <value>Volume Down Key</value>
+        <value>Tecla Volumen Abajo</value>
     </data>
     <data name="DeviceControllerTypeGamepad" xml:space="preserve">
         <value>Gamepad</value>
     </data>
     <data name="DeviceControllerTypeDancePad" xml:space="preserve">
-        <value>Dance Pad</value>
+        <value>Pad de Baile</value>
     </data>
     <data name="DeviceControllerTypeGuitarHeroGuitar" xml:space="preserve">
-        <value>Guitar Hero Guitar</value>
+        <value>Guitarra de Guitar Hero</value>
     </data>
     <data name="DeviceControllerTypeGuitarHeroWtGuitar" xml:space="preserve">
-        <value>Guitar Hero Guitar (WT)</value>
+        <value>Guitarra de Guitar Hero (WT)</value>
     </data>
     <data name="DeviceControllerTypeRockBandGuitar" xml:space="preserve">
-        <value>Rock Band Guitar</value>
+        <value>Guitarra de Rock Band</value>
     </data>
     <data name="DeviceControllerTypeGuitarHeroDrums" xml:space="preserve">
-        <value>Guitar Hero Drums</value>
+        <value>Batería de Guitar Hero</value>
     </data>
     <data name="DeviceControllerTypeRockBandDrums" xml:space="preserve">
-        <value>Rock Band Drums</value>
+        <value>Batería de Rock Band</value>
     </data>
     <data name="DeviceControllerTypeLiveGuitar" xml:space="preserve">
-        <value>Guitar Hero Live Guitar</value>
+        <value>Guitarra de Guitar Hero Live</value>
     </data>
     <data name="DeviceControllerTypeTurntable" xml:space="preserve">
-        <value>DJ Hero Turntable</value>
+        <value>Tornamesa de DJ Hero</value>
     </data>
     <data name="DeviceControllerTypeStageKit" xml:space="preserve">
-        <value>Rock Band Stage Kit</value>
+        <value>Kit de Escenario de Rock Band</value>
     </data>
     <data name="DeviceControllerTypeFortniteGuitar" xml:space="preserve">
-        <value>Guitar</value>
+        <value>Guitarra</value>
     </data>
     <data name="DeviceControllerTypeFortniteGuitarStrum" xml:space="preserve">
-        <value>Guitar (with strum)</value>
+        <value>Guitarra (con rasgueo)</value>
     </data>
     <data name="DeviceControllerTypeFortniteDrums" xml:space="preserve">
-        <value>Drums</value>
+        <value>Batería</value>
     </data>
     <data name="TwiPinTypeSda" xml:space="preserve">
         <value>SDA</value>
@@ -774,375 +774,375 @@
         <value>MISO</value>
     </data>
     <data name="StandardAxisTypeLeftStickX" xml:space="preserve">
-        <value>Left Joystick X Axis</value>
+        <value>Eje X de Joystick Izquierdo</value>
     </data>
     <data name="StandardAxisTypeLeftStickY" xml:space="preserve">
-        <value>Left Joystick Y Axis</value>
+        <value>Eje Y de Joystick Izquierdo</value>
     </data>
     <data name="StandardAxisTypeRightStickX" xml:space="preserve">
-        <value>Right Joystick X Axis</value>
+        <value>Eje X de Joystick Derecho</value>
     </data>
     <data name="StandardAxisTypeRightStickY" xml:space="preserve">
-        <value>Right Joystick Y Axis</value>
+        <value>Eje Y de Joystick Derecho</value>
     </data>
     <data name="StandardAxisTypeLeftTrigger" xml:space="preserve">
-        <value>Left Trigger Axis</value>
+        <value>Eje de Gatillo Izquierdo</value>
     </data>
     <data name="StandardAxisTypeRightTrigger" xml:space="preserve">
-        <value>Right Trigger Axis</value>
+        <value>Eje de Gatillo Derecho</value>
     </data>
     <data name="StandardButtonTypeA" xml:space="preserve">
-        <value>A Button</value>
+        <value>Botón A</value>
     </data>
     <data name="StandardButtonTypeB" xml:space="preserve">
-        <value>B Button</value>
+        <value>Botón B</value>
     </data>
     <data name="StandardButtonTypeX" xml:space="preserve">
-        <value>X Button</value>
+        <value>Botón X</value>
     </data>
     <data name="StandardButtonTypeY" xml:space="preserve">
-        <value>Y Button</value>
+        <value>Botón Y</value>
     </data>
     <data name="StandardButtonTypeLeftShoulder" xml:space="preserve">
-        <value>Left Bumper</value>
+        <value>Bumper Izquierdo</value>
     </data>
     <data name="StandardButtonTypeRightShoulder" xml:space="preserve">
-        <value>Right Bumper</value>
+        <value>Bumper Derecho</value>
     </data>
     <data name="StandardButtonTypeDpadUp" xml:space="preserve">
-        <value>D-pad up</value>
+        <value>D-pad Arriba</value>
     </data>
     <data name="StandardButtonTypeDpadDown" xml:space="preserve">
-        <value>D-pad down</value>
+        <value>D-pad Abajo</value>
     </data>
     <data name="StandardButtonTypeDpadLeft" xml:space="preserve">
-        <value>D-pad Left</value>
+        <value>D-pad Izquierdo</value>
     </data>
     <data name="StandardButtonTypeDpadRight" xml:space="preserve">
-        <value>D-pad Right</value>
+        <value>D-pad Derecho</value>
     </data>
     <data name="StandardButtonTypeStart" xml:space="preserve">
-        <value>Start Button</value>
+        <value>Botón Start</value>
     </data>
     <data name="StandardButtonTypeBack" xml:space="preserve">
-        <value>Select Button</value>
+        <value>Botón Select</value>
     </data>
     <data name="StandardButtonTypeGuide" xml:space="preserve">
-        <value>Home Button</value>
+        <value>Botón Guía</value>
     </data>
     <data name="StandardButtonTypeCapture" xml:space="preserve">
-        <value>Capture Button</value>
+        <value>Botón de Capturas</value>
     </data>
     <data name="StandardButtonTypeLeftThumbClick" xml:space="preserve">
-        <value>Left Stick Click</value>
+        <value>Click de Stick Izquierdo</value>
     </data>
     <data name="StandardButtonTypeRightThumbClick" xml:space="preserve">
-        <value>Right Stick Click</value>
+        <value>Click de Stick Derecho</value>
     </data>
     <data name="UsbHostInputTypeX" xml:space="preserve">
-        <value>X Button</value>
+        <value>Botón X</value>
     </data>
     <data name="UsbHostInputTypeA" xml:space="preserve">
-        <value>A Button</value>
+        <value>Botón A</value>
     </data>
     <data name="UsbHostInputTypeB" xml:space="preserve">
-        <value>B Button</value>
+        <value>Botón B</value>
     </data>
     <data name="UsbHostInputTypeY" xml:space="preserve">
-        <value>Y Button</value>
+        <value>Botón Y</value>
     </data>
 
     <data name="UsbHostInputTypeLeftShoulder" xml:space="preserve">
-        <value>Left Bumper</value>
+        <value>Bumper Izquierdo</value>
     </data>
     <data name="UsbHostInputTypeRightShoulder" xml:space="preserve">
-        <value>Right Bumper</value>
+        <value>Bumper Derecho</value>
     </data>
 
     <data name="UsbHostInputTypeKick1" xml:space="preserve">
-        <value>Kick Pedal 1</value>
+        <value>Pedal de Bombo 1</value>
     </data>
     <data name="UsbHostInputTypeKick2" xml:space="preserve">
-        <value>Kick Pedal 2</value>
+        <value>Pedal de Bombo 2</value>
     </data>
 
     <data name="UsbHostInputTypeBack" xml:space="preserve">
-        <value>Back Button</value>
+        <value>Botón Atrás</value>
     </data>
     <data name="UsbHostInputTypeStart" xml:space="preserve">
-        <value>Start Button</value>
+        <value>Botón Start</value>
     </data>
 
     <data name="UsbHostInputTypeLeftThumbClick" xml:space="preserve">
-        <value>Left Stick Click</value>
+        <value>Click de Stick Izquierdo</value>
     </data>
     <data name="UsbHostInputTypeRightThumbClick" xml:space="preserve">
-        <value>Right Stick Click</value>
+        <value>Click de Stick Derecho</value>
     </data>
 
     <data name="UsbHostInputTypeGuide" xml:space="preserve">
-        <value>Home Button</value>
+        <value>Botón Guía</value>
     </data>
     <data name="UsbHostInputTypeCapture" xml:space="preserve">
-        <value>Capture Button</value>
+        <value>Botón de Capturas</value>
     </data>
 
     <data name="UsbHostInputTypeLeftBlue" xml:space="preserve">
-        <value>Left Turntable Blue Fret</value>
+        <value>Botón Azul de Tornamesa Izquierda</value>
     </data>
     <data name="UsbHostInputTypeLeftRed" xml:space="preserve">
-        <value>Left Turntable Red Fret</value>
+        <value>Botón Rojo de Tornamesa Izquierda</value>
     </data>
     <data name="UsbHostInputTypeLeftGreen" xml:space="preserve">
-        <value>Left Turntable Green Fret</value>
+        <value>Botón Verde de Tornamesa Izquierda</value>
     </data>
     <data name="UsbHostInputTypeRightBlue" xml:space="preserve">
-        <value>Right Turntable Blue Fret</value>
+        <value>Botón Azul de Tornamesa Derecha</value>
     </data>
     <data name="UsbHostInputTypeRightRed" xml:space="preserve">
-        <value>Right Turntable Red Fret</value>
+        <value>Botón Rojo de Tornamesa Derecha</value>
     </data>
     <data name="UsbHostInputTypeRightGreen" xml:space="preserve">
-        <value>Right Turntable Green Fret</value>
+        <value>Botón Verde de Tornamesa Derecha</value>
     </data>
     <data name="UsbHostInputTypeSoloGreen" xml:space="preserve">
-        <value>Solo Green Fret</value>
+        <value>Traste de Solo Verde</value>
     </data>
     <data name="UsbHostInputTypeSoloRed" xml:space="preserve">
-        <value>Solo Red Fret</value>
+        <value>Traste de Solo Rojo</value>
     </data>
     <data name="UsbHostInputTypeSoloYellow" xml:space="preserve">
-        <value>Solo Yellow Fret</value>
+        <value>Traste de Solo Amarillo</value>
     </data>
     <data name="UsbHostInputTypeSoloBlue" xml:space="preserve">
-        <value>Solo Blue Fret</value>
+        <value>Traste de Solo Azul</value>
     </data>
     <data name="UsbHostInputTypeSoloOrange" xml:space="preserve">
-        <value>Solo Orange Fret</value>
+        <value>Traste de Solo Naranjo</value>
     </data>
 
     <data name="UsbHostInputTypeGreen" xml:space="preserve">
-        <value>Green Fret</value>
+        <value>Traste Verde</value>
     </data>
     <data name="UsbHostInputTypeRed" xml:space="preserve">
-        <value>Red Fret</value>
+        <value>Traste Rojo</value>
     </data>
     <data name="UsbHostInputTypeYellow" xml:space="preserve">
-        <value>Yellow Fret</value>
+        <value>Traste Amarillo</value>
     </data>
     <data name="UsbHostInputTypeBlue" xml:space="preserve">
-        <value>Blue Fret</value>
+        <value>Traste Azul</value>
     </data>
     <data name="UsbHostInputTypeOrange" xml:space="preserve">
-        <value>Orange Fret</value>
+        <value>Traste Naranjo</value>
     </data>
     <data name="UsbHostInputTypeDpadUp" xml:space="preserve">
-        <value>D-pad Up</value>
+        <value>D-pad Arriba</value>
     </data>
     <data name="UsbHostInputTypeDpadDown" xml:space="preserve">
-        <value>D-pad Down</value>
+        <value>D-pad Abajo</value>
     </data>
     <data name="UsbHostInputTypeDpadLeft" xml:space="preserve">
-        <value>D-pad Left</value>
+        <value>D-pad Izquierdo</value>
     </data>
     <data name="UsbHostInputTypeDpadRight" xml:space="preserve">
-        <value>D-pad Right</value>
+        <value>D-pad Derecho</value>
     </data>
 
     <data name="UsbHostInputTypeLeftTrigger" xml:space="preserve">
-        <value>Left Trigger Axis</value>
+        <value>Eje de Gatillo Izquierdo</value>
     </data>
     <data name="UsbHostInputTypeRightTrigger" xml:space="preserve">
-        <value>Right Trigger Axis</value>
+        <value>Eje de Gatillo Derecho</value>
     </data>
 
     <data name="UsbHostInputTypeLeftStickX" xml:space="preserve">
-        <value>Left Joystick X Axis</value>
+        <value>Eje X de Joystick Izquierdo</value>
     </data>
     <data name="UsbHostInputTypeLeftStickY" xml:space="preserve">
-        <value>Left Joystick Y Axis</value>
+        <value>Eje Y de Joystick Izquierdo</value>
     </data>
     <data name="UsbHostInputTypeRightStickX" xml:space="preserve">
-        <value>Right Joystick X Axis</value>
+        <value>Eje X de Joystick Derecho</value>
     </data>
     <data name="UsbHostInputTypeRightStickY" xml:space="preserve">
-        <value>Right Joystick Y Axis</value>
+        <value>Eje Y de Joystick Derecho</value>
     </data>
 
     <data name="UsbHostInputTypePressureDpadUp" xml:space="preserve">
-        <value>Dpad Up Pressure</value>
+        <value>Presión de Dpad Arriba</value>
     </data>
     <data name="UsbHostInputTypePressureDpadRight" xml:space="preserve">
-        <value>Dpad Right Pressure</value>
+        <value>Presión de Dpad Derecho</value>
     </data>
     <data name="UsbHostInputTypePressureDpadLeft" xml:space="preserve">
-        <value>Dpad Left Pressure</value>
+        <value>Presión de Dpad Izquierdo</value>
     </data>
     <data name="UsbHostInputTypePressureDpadDown" xml:space="preserve">
-        <value>Dpad Down Pressure</value>
+        <value>Presión de Dpad Abajo</value>
     </data>
     <data name="UsbHostInputTypePressureL1" xml:space="preserve">
-        <value>L1 Pressure</value>
+        <value>Presión de L1</value>
     </data>
     <data name="UsbHostInputTypePressureR1" xml:space="preserve">
-        <value>R1 Pressure</value>
+        <value>Presión de R1</value>
     </data>
     <data name="UsbHostInputTypePressureTriangle" xml:space="preserve">
-        <value>Triangle Pressure</value>
+        <value>Presión de Triángulo</value>
     </data>
     <data name="UsbHostInputTypePressureCircle" xml:space="preserve">
-        <value>Circle Pressure</value>
+        <value>Presión de Círculo</value>
     </data>
     <data name="UsbHostInputTypePressureCross" xml:space="preserve">
-        <value>Cross Pressure</value>
+        <value>Presión de Cruz</value>
     </data>
     <data name="UsbHostInputTypePressureSquare" xml:space="preserve">
-        <value>Square Pressure</value>
+        <value>Presión de Cuadrado</value>
     </data>
     <data name="UsbHostInputTypeRedVelocity" xml:space="preserve">
-        <value>Red Velocity</value>
+        <value>Velocidad Rojo</value>
     </data>
     <data name="UsbHostInputTypeYellowVelocity" xml:space="preserve">
-        <value>Yellow Velocity</value>
+        <value>Velocidad Amarillo</value>
     </data>
     <data name="UsbHostInputTypeBlueVelocity" xml:space="preserve">
-        <value>Blue Velocity</value>
+        <value>Velocidad Azul</value>
     </data>
     <data name="UsbHostInputTypeGreenVelocity" xml:space="preserve">
-        <value>Green Velocity</value>
+        <value>Velocidad Verde</value>
     </data>
     <data name="UsbHostInputTypeOrangeVelocity" xml:space="preserve">
-        <value>Orange Velocity</value>
+        <value>Velocidad Naranja</value>
     </data>
     <data name="UsbHostInputTypeBlueCymbalVelocity" xml:space="preserve">
-        <value>Blue Cymbal Velocity</value>
+        <value>Velocidad de Platillo Azul</value>
     </data>
     <data name="UsbHostInputTypeYellowCymbalVelocity" xml:space="preserve">
-        <value>Yellow Cymbal Velocity</value>
+        <value>Velocidad de Platillo Amarillo</value>
     </data>
     <data name="UsbHostInputTypeGreenCymbalVelocity" xml:space="preserve">
-        <value>Green Cymbal Velocity</value>
+        <value>Velocidad de Platillo Verde</value>
     </data>
     <data name="UsbHostInputTypeKickVelocity" xml:space="preserve">
-        <value>Kick Velocity</value>
+        <value>Velocidad de Bombo</value>
     </data>
     <data name="UsbHostInputTypeWhammy" xml:space="preserve">
         <value>Whammy</value>
     </data>
     <data name="UsbHostInputTypeTilt" xml:space="preserve">
-        <value>Tilt</value>
+        <value>Inclinación</value>
     </data>
     <data name="UsbHostInputTypePickup" xml:space="preserve">
         <value>Pickup</value>
     </data>
     <data name="UsbHostInputTypeSlider" xml:space="preserve">
-        <value>Slider</value>
+        <value>Barra Slider</value>
     </data>
     <data name="UsbHostInputTypeLeftTableVelocity" xml:space="preserve">
-        <value>Left Turntable Spin</value>
+        <value>Giro de Tornamesa Izquierda</value>
     </data>
     <data name="UsbHostInputTypeRightTableVelocity" xml:space="preserve">
-        <value>Right Turntable Spin</value>
+        <value>Giro de Tornamesa Derecha</value>
     </data>
     <data name="UsbHostInputTypeEffectsKnob" xml:space="preserve">
-        <value>EffectsKnob</value>
+        <value>Perilla de Efectos</value>
     </data>
     <data name="UsbHostInputTypeCrossfader" xml:space="preserve">
         <value>Crossfader</value>
     </data>
     <data name="UsbHostInputTypeAccelX" xml:space="preserve">
-        <value>Acceleration X</value>
+        <value>Aceleración X</value>
     </data>
     <data name="UsbHostInputTypeAccelY" xml:space="preserve">
-        <value>Acceleration Y</value>
+        <value>Aceleración Y</value>
     </data>
     <data name="UsbHostInputTypeAccelZ" xml:space="preserve">
-        <value>Acceleration Z</value>
+        <value>Aceleración Z</value>
     </data>
     <data name="UsbHostInputTypeGyro" xml:space="preserve">
-        <value>Gyro</value>
+        <value>Giroscópio</value>
     </data>
     <data name="UsbHostInputTypeGenericButton1" xml:space="preserve">
-        <value>Generic Joystick Button 1</value>
+        <value>Botón de Joystick Genérico 1</value>
     </data>
     <data name="UsbHostInputTypeGenericButton2" xml:space="preserve">
-        <value>Generic Joystick Button 2</value>
+        <value>Botón de Joystick Genérico 2</value>
     </data>
     <data name="UsbHostInputTypeGenericButton3" xml:space="preserve">
-        <value>Generic Joystick Button 3</value>
+        <value>Botón de Joystick Genérico 3</value>
     </data>
     <data name="UsbHostInputTypeGenericButton4" xml:space="preserve">
-        <value>Generic Joystick Button 4</value>
+        <value>Botón de Joystick Genérico 4</value>
     </data>
     <data name="UsbHostInputTypeGenericButton5" xml:space="preserve">
-        <value>Generic Joystick Button 5</value>
+        <value>Botón de Joystick Genérico 5</value>
     </data>
     <data name="UsbHostInputTypeGenericButton6" xml:space="preserve">
-        <value>Generic Joystick Button 6</value>
+        <value>Botón de Joystick Genérico 6</value>
     </data>
     <data name="UsbHostInputTypeGenericButton7" xml:space="preserve">
-        <value>Generic Joystick Button 7</value>
+        <value>Botón de Joystick Genérico 7</value>
     </data>
     <data name="UsbHostInputTypeGenericButton8" xml:space="preserve">
-        <value>Generic Joystick Button 8</value>
+        <value>Botón de Joystick Genérico 8</value>
     </data>
     <data name="UsbHostInputTypeGenericButton9" xml:space="preserve">
-        <value>Generic Joystick Button 9</value>
+        <value>Botón de Joystick Genérico 9</value>
     </data>
     <data name="UsbHostInputTypeGenericButton10" xml:space="preserve">
-        <value>Generic Joystick Button 10</value>
+        <value>Botón de Joystick Genérico 10</value>
     </data>
     <data name="UsbHostInputTypeGenericButton11" xml:space="preserve">
-        <value>Generic Joystick Button 11</value>
+        <value>Botón de Joystick Genérico 11</value>
     </data>
     <data name="UsbHostInputTypeGenericButton12" xml:space="preserve">
-        <value>Generic Joystick Button 12</value>
+        <value>Botón de Joystick Genérico 12</value>
     </data>
     <data name="UsbHostInputTypeGenericButton13" xml:space="preserve">
-        <value>Generic Joystick Button 13</value>
+        <value>Botón de Joystick Genérico 13</value>
     </data>
     <data name="UsbHostInputTypeGenericButton14" xml:space="preserve">
-        <value>Generic Joystick Button 14</value>
+        <value>Botón de Joystick Genérico 14</value>
     </data>
     <data name="UsbHostInputTypeGenericButton15" xml:space="preserve">
-        <value>Generic Joystick Button 15</value>
+        <value>Botón de Joystick Genérico 15</value>
     </data>
     <data name="UsbHostInputTypeGenericButton16" xml:space="preserve">
-        <value>Generic Joystick Button 16</value>
+        <value>Botón de Joystick Genérico 16</value>
     </data>
     <data name="UsbHostInputTypeGenericAxisX" xml:space="preserve">
-        <value>Generic Joystick X Axis</value>
+        <value>Eje de Joystick Genérico X</value>
     </data>
     <data name="UsbHostInputTypeGenericAxisY" xml:space="preserve">
-        <value>Generic Joystick Y Axis</value>
+        <value>Eje de Joystick Genérico Y</value>
     </data>
     <data name="UsbHostInputTypeGenericAxisZ" xml:space="preserve">
-        <value>Generic Joystick Z Axis</value>
+        <value>Eje de Joystick Genérico Z</value>
     </data>
     <data name="UsbHostInputTypeGenericAxisRx" xml:space="preserve">
-        <value>Generic Joystick RX Axis</value>
+        <value>Eje de Joystick Genérico RX</value>
     </data>
     <data name="UsbHostInputTypeGenericAxisRy" xml:space="preserve">
-        <value>Generic Joystick RY Axis</value>
+        <value>Eje de Joystick Genérico RY</value>
     </data>
     <data name="UsbHostInputTypeGenericAxisRz" xml:space="preserve">
-        <value>Generic Joystick RZ Axis</value>
+        <value>Eje de Joystick Genérico RZ</value>
     </data>
     <data name="UsbHostInputTypeGenericAxisSlider" xml:space="preserve">
-        <value>Generic Joystick Slider Axis</value>
+        <value>Eje de Slider de Joystick Genérico</value>
     </data>
 
     <data name="UsbHostInputTypeKeyboardInput" xml:space="preserve">
-        <value>Keyboard Input</value>
+        <value>Entrada de Teclado</value>
     </data>
     <data name="UsbHostInputTypeMouseAxis" xml:space="preserve">
-        <value>Mouse Axis</value>
+        <value>Eje de Mouse</value>
     </data>
     <data name="UsbHostInputTypeMouseButton" xml:space="preserve">
-        <value>Mouse Button</value>
+        <value>Botón de Mouse</value>
     </data>
     <data name="WiiControllerTypeNunchuk" xml:space="preserve">
-        <value>Nunchuk Controller</value>
+        <value>Control Nunchuk</value>
     </data>
     <data name="WiiControllerTypeClassicController" xml:space="preserve">
         <value>Classic Controller</value>
@@ -1151,449 +1151,449 @@
         <value>Classic Controller Pro</value>
     </data>
     <data name="WiiControllerTypeUDraw" xml:space="preserve">
-        <value>THQ UDraw Tablet</value>
+        <value>Tablet UDraw de THQ</value>
     </data>
     <data name="WiiControllerTypeDrawsome" xml:space="preserve">
-        <value>Drawsome Tablet</value>
+        <value>Tablet de Drawsome</value>
     </data>
     <data name="WiiControllerTypeGuitar" xml:space="preserve">
-        <value>Guitar Hero Guitar</value>
+        <value>Guitarra de Guitar Hero</value>
     </data>
     <data name="WiiControllerTypeDrum" xml:space="preserve">
-        <value>Guitar Hero Drums</value>
+        <value>Batería de Guitar Hero</value>
     </data>
     <data name="WiiControllerTypeDj" xml:space="preserve">
-        <value>DJ Hero Turntable</value>
+        <value>Tornamesa de DJ Hero</value>
     </data>
     <data name="WiiControllerTypeTaiko" xml:space="preserve">
-        <value>Taiko Drums</value>
+        <value>Tambor de Taiko</value>
     </data>
     <data name="WiiControllerTypeMotionPlus" xml:space="preserve">
         <value>Wii Motion Plus</value>
     </data>
     <data name="WiiControllerTypeSelected" xml:space="preserve">
-        <value>Plugged in extension</value>
+        <value>Extensión conectada</value>
     </data>
     <data name="WiiControllerTypeAll" xml:space="preserve">
-        <value>All Inputs</value>
+        <value>Todas las Entradas</value>
     </data>
     <data name="WiiInputTypeClassicLeftStickX" xml:space="preserve">
-        <value>Classic Controller - Left Stick X Axis</value>
+        <value>Classic Controller - Eje X del Stick Izquierdo</value>
     </data>
 
     <data name="WiiInputTypeClassicLeftStickY" xml:space="preserve">
-        <value>Classic Controller - Left Stick Y Axis</value>
+        <value>Classic Controller - Eje Y del Stick Izquierdo</value>
     </data>
 
     <data name="WiiInputTypeClassicRightStickX" xml:space="preserve">
-        <value>Classic Controller - Right Stick X Axis</value>
+        <value>Classic Controller - Eje X del Stick Derecho</value>
     </data>
 
     <data name="WiiInputTypeClassicRightStickY" xml:space="preserve">
-        <value>Classic Controller - Right Stick Y Axis</value>
+        <value>Classic Controller - Eje Y del Stick Derecho</value>
     </data>
 
     <data name="WiiInputTypeClassicLeftTrigger" xml:space="preserve">
-        <value>Classic Controller - Left Trigger</value>
+        <value>Classic Controller - Gatillo Izquierdo</value>
     </data>
 
     <data name="WiiInputTypeClassicRightTrigger" xml:space="preserve">
-        <value>Classic Controller - Right Trigger</value>
+        <value>Classic Controller - Gatillo Derecho</value>
     </data>
 
     <data name="WiiInputTypeDrumJoystickX" xml:space="preserve">
-        <value>Drum - Joystick X Axis</value>
+        <value>Batería - Eje X de Joystick</value>
     </data>
 
     <data name="WiiInputTypeDrumJoystickY" xml:space="preserve">
-        <value>Drum - Joystick Y Axis</value>
+        <value>Batería - Eje Y de Joystick</value>
     </data>
     <data name="WiiInputTypeDrumGreenPressure" xml:space="preserve">
-        <value>Drum - Green Pad Pressure</value>
+        <value>Batería - Presión de Pad Verde</value>
     </data>
 
     <data name="WiiInputTypeDrumRedPressure" xml:space="preserve">
-        <value>Drum - Red Pad Pressure</value>
+        <value>Batería - Presión de Pad Rojo</value>
     </data>
 
     <data name="WiiInputTypeDrumYellowPressure" xml:space="preserve">
-        <value>Drum - Yellow Pad Pressure</value>
+        <value>Batería - Presión de Pad Amarillo</value>
     </data>
 
     <data name="WiiInputTypeDrumBluePressure" xml:space="preserve">
-        <value>Drum - Blue Pad Pressure</value>
+        <value>Batería - Presión de Pad Azul</value>
     </data>
 
     <data name="WiiInputTypeDrumOrangePressure" xml:space="preserve">
-        <value>Drum - Orange Pad Pressure</value>
+        <value>Batería - Presión de Pad Naranjo</value>
     </data>
 
     <data name="WiiInputTypeDrumKickPedalPressure" xml:space="preserve">
-        <value>Drum - Kick Pedal Pressure</value>
+        <value>Batería - Presión de Pedal de Bombo</value>
     </data>
 
     <data name="WiiInputTypeGuitarJoystickX" xml:space="preserve">
-        <value>Guitar - Joystick X Axis</value>
+        <value>Guitarra - Eje X de Joystick</value>
     </data>
 
     <data name="WiiInputTypeGuitarJoystickY" xml:space="preserve">
-        <value>Guitar - Joystick Y Axis</value>
+        <value>Guitarra - Eje Y de Joystick</value>
     </data>
     <data name="WiiInputTypeGuitarWhammy" xml:space="preserve">
-        <value>Guitar - Whammy</value>
+        <value>Guitarra - Whammy</value>
     </data>
     <data name="GuitarTapBarEnabled" xml:space="preserve">
-        <value>Slider Bar</value>
+        <value>Barra Slider</value>
     </data>
     <data name="WiiInputTypeGuitarTapBar" xml:space="preserve">
-        <value>Guitar - Slider Axis</value>
+        <value>Guitarra - Eje de Slider</value>
     </data>
 
     <data name="Ps2InputTypeGuitarTapBar" xml:space="preserve">
-        <value>Guitar - Slider Axis</value>
+        <value>Guitarra - Eje de Slider</value>
     </data>
     <data name="Ps2InputTypeGuitarTapAll" xml:space="preserve">
-        <value>Guitar - Slider To Frets</value>
+        <value>Guitarra - Slider a Trastes</value>
     </data>
 
     <data name="Ps2InputTypeGuitarTapGreen" xml:space="preserve">
-        <value>Guitar - Slider Green Fret</value>
+        <value>Guitarra - Panel de Slider Verde</value>
     </data>
 
     <data name="Ps2InputTypeGuitarTapRed" xml:space="preserve">
-        <value>Guitar - Slider Red Fret</value>
+        <value>Guitarra - Panel de Slider Rojo</value>
     </data>
 
     <data name="Ps2InputTypeGuitarTapYellow" xml:space="preserve">
-        <value>Guitar - Slider Yellow Fret</value>
+        <value>Guitarra - Panel de Slider Amarillo</value>
     </data>
 
     <data name="Ps2InputTypeGuitarTapBlue" xml:space="preserve">
-        <value>Guitar - Slider Blue Fret</value>
+        <value>Guitarra - Panel de Slider Azul</value>
     </data>
 
     <data name="Ps2InputTypeGuitarTapOrange" xml:space="preserve">
-        <value>Guitar - Slider Orange Fret</value>
+        <value>Guitarra - Panel de Slider Naranjo</value>
     </data>
 
     <data name="WiiInputTypeNunchukStickX" xml:space="preserve">
-        <value>Nunchuk - Joystick X Axis</value>
+        <value>Nunchuk - Eje X de Joystick</value>
     </data>
 
     <data name="WiiInputTypeNunchukStickY" xml:space="preserve">
-        <value>Nunchuk - Joystick Y Axis</value>
+        <value>Nunchuk - Eje Y de Joystick</value>
     </data>
 
     <data name="WiiInputTypeNunchukAccelerationX" xml:space="preserve">
-        <value>Nunchuk - Acceleration X Axis</value>
+        <value>Nunchuk - Aceleración de Eje X</value>
     </data>
 
     <data name="WiiInputTypeNunchukAccelerationY" xml:space="preserve">
-        <value>Nunchuk - Acceleration Y Axis</value>
+        <value>Nunchuk - Aceleración de Eje Y</value>
     </data>
 
     <data name="WiiInputTypeNunchukAccelerationZ" xml:space="preserve">
-        <value>Nunchuk - Acceleration Z Axis</value>
+        <value>Nunchuk - Aceleración de Eje Z</value>
     </data>
     <data name="WiiInputTypeNunchukRotationPitch" xml:space="preserve">
-        <value>Nunchuk - Pitch</value>
+        <value>Nunchuk - Inclinación (Pitch)</value>
     </data>
     <data name="WiiInputTypeNunchukRotationRoll" xml:space="preserve">
-        <value>Nunchuk - Roll</value>
+        <value>Nunchuk - Giro (Roll)</value>
     </data>
     <data name="WiiInputTypeDjTurntableLeft" xml:space="preserve">
-        <value>Turntable - Left Spin</value>
+        <value>Tornamesa - Giro Izquierdo</value>
     </data>
 
     <data name="WiiInputTypeDjTurntableRight" xml:space="preserve">
-        <value>Turntable - Right Spin</value>
+        <value>Tornamesa - Giro Derecho</value>
     </data>
 
     <data name="WiiInputTypeDjCrossfadeSlider" xml:space="preserve">
-        <value>Turntable - Crossfader</value>
+        <value>Tornamesa - Crossfader</value>
     </data>
 
     <data name="WiiInputTypeDjEffectDial" xml:space="preserve">
-        <value>Turntable - Effects Knob</value>
+        <value>Tornamesa - Perilla de Efectos</value>
     </data>
 
     <data name="WiiInputTypeDjStickX" xml:space="preserve">
-        <value>Turntable - Joystick X Axis</value>
+        <value>Tornamesa - Eje X de Joystick</value>
     </data>
 
     <data name="WiiInputTypeDjStickY" xml:space="preserve">
-        <value>Turntable - Joystick Y Axis</value>
+        <value>Tornamesa - Eje Y de Joystick</value>
     </data>
 
     <data name="WiiInputTypeUDrawPenX" xml:space="preserve">
-        <value>UDraw - Pen X Position</value>
+        <value>UDraw - Posición X de Lápiz</value>
     </data>
 
     <data name="WiiInputTypeUDrawPenY" xml:space="preserve">
-        <value>UDraw - Pen Y Position</value>
+        <value>UDraw - Posición Y de Lápiz</value>
     </data>
     <data name="WiiInputTypeUDrawPenPressure" xml:space="preserve">
-        <value>UDraw - Pen Pressure</value>
+        <value>UDraw - Presión de Lápiz </value>
     </data>
 
     <data name="WiiInputTypeDrawsomePenX" xml:space="preserve">
-        <value>Drawsome - Pen X Position</value>
+        <value>Drawsome - Posición X de Lápiz</value>
     </data>
 
     <data name="WiiInputTypeDrawsomePenY" xml:space="preserve">
-        <value>Drawsome - Pen Y Position</value>
+        <value>Drawsome - Posición Y de Lápiz</value>
     </data>
 
     <data name="WiiInputTypeDrawsomePenPressure" xml:space="preserve">
-        <value>Drawsome - Pen Pressure</value>
+        <value>Drawsome - Presión de Lápiz</value>
     </data>
     <data name="WiiInputTypeGuitarGreen" xml:space="preserve">
-        <value>Guitar - Green Fret</value>
+        <value>Guitarra - Traste Verde</value>
     </data>
     <data name="WiiInputTypeGuitarRed" xml:space="preserve">
-        <value>Guitar - Red Fret</value>
+        <value>Guitarra - Traste Rojo</value>
     </data>
     <data name="WiiInputTypeGuitarYellow" xml:space="preserve">
-        <value>Guitar - Yellow Fret</value>
+        <value>Guitarra - Traste Amarillo</value>
     </data>
     <data name="WiiInputTypeGuitarBlue" xml:space="preserve">
-        <value>Guitar - Blue Fret</value>
+        <value>Guitarra - Traste Azul</value>
     </data>
     <data name="WiiInputTypeGuitarOrange" xml:space="preserve">
-        <value>Guitar - Orange Fret</value>
+        <value>Guitarra - Traste Naranjo</value>
     </data>
 
     <data name="WiiInputTypeGuitarTapAll" xml:space="preserve">
-        <value>Guitar - Slider To Frets</value>
+        <value>Guitarra - Slider a Trastes</value>
     </data>
 
     <data name="WiiInputTypeGuitarTapGreen" xml:space="preserve">
-        <value>Guitar - Slider Green Fret</value>
+        <value>Guitarra - Panel de Slider Verde</value>
     </data>
 
     <data name="WiiInputTypeGuitarTapRed" xml:space="preserve">
-        <value>Guitar - Slider Red Fret</value>
+        <value>Guitarra - Panel de Slider Rojo</value>
     </data>
 
     <data name="WiiInputTypeGuitarTapYellow" xml:space="preserve">
-        <value>Guitar - Slider Yellow Fret</value>
+        <value>Guitarra - Panel de Slider Amarillo</value>
     </data>
 
     <data name="WiiInputTypeGuitarTapBlue" xml:space="preserve">
-        <value>Guitar - Slider Blue Fret</value>
+        <value>Guitarra - Panel de Slider Azul</value>
     </data>
 
     <data name="WiiInputTypeGuitarTapOrange" xml:space="preserve">
-        <value>Guitar - Slider Orange Fret</value>
+        <value>Guitarra - Panel de Slider Naranjo</value>
     </data>
     <data name="WiiInputTypeGuitarMinus" xml:space="preserve">
-        <value>Guitar - Minus Button</value>
+        <value>Guitarra - Botón Menos</value>
     </data>
     <data name="WiiInputTypeGuitarPlus" xml:space="preserve">
-        <value>Guitar - Plus Button</value>
+        <value>Guitarra - Botón Más</value>
     </data>
     <data name="WiiInputTypeGuitarPedal" xml:space="preserve">
-        <value>Guitar - Pedal</value>
+        <value>Guitarra - Pedal</value>
     </data>
 
     <data name="WiiInputTypeGuitarStrumUp" xml:space="preserve">
-        <value>Guitar - Strum Up Button</value>
+        <value>Guitarra - Botón Rasgueo Arriba</value>
     </data>
 
     <data name="WiiInputTypeGuitarStrumDown" xml:space="preserve">
-        <value>Guitar - Strum Down Button</value>
+        <value>Guitarra - Botón Rasgueo Abajo</value>
     </data>
     <data name="WiiInputTypeDrumGreen" xml:space="preserve">
-        <value>Drum - Green Pad</value>
+        <value>Batería - Pad Verde</value>
     </data>
     <data name="WiiInputTypeDrumRed" xml:space="preserve">
-        <value>Drum - Red Pad</value>
+        <value>Batería - Pad Rojo</value>
     </data>
     <data name="WiiInputTypeDrumYellow" xml:space="preserve">
-        <value>Drum - Yellow Pad</value>
+        <value>Batería - Pad Amarillo</value>
     </data>
     <data name="WiiInputTypeDrumBlue" xml:space="preserve">
-        <value>Drum - Blue Pad</value>
+        <value>Batería - Pad Azul</value>
     </data>
     <data name="WiiInputTypeDrumOrange" xml:space="preserve">
-        <value>Drum - Orange Pad</value>
+        <value>Batería - Pad Naranjo</value>
     </data>
     <data name="WiiInputTypeDrumMinus" xml:space="preserve">
-        <value>Drum - Minus Button</value>
+        <value>Batería - Botón Menos</value>
     </data>
     <data name="WiiInputTypeDrumPlus" xml:space="preserve">
-        <value>Drum - Plus Button</value>
+        <value>Batería - Botón Más</value>
     </data>
     <data name="WiiInputTypeDrumKickPedal" xml:space="preserve">
-        <value>Drum - Kick Pedal</value>
+        <value>Batería - Pedal de Bombo</value>
     </data>
     <data name="WiiInputTypeNunchukC" xml:space="preserve">
-        <value>Nunchuk - C Button</value>
+        <value>Nunchuk - Botón C</value>
     </data>
     <data name="WiiInputTypeNunchukZ" xml:space="preserve">
-        <value>Nunchuk - Z Button</value>
+        <value>Nunchuk - Botón Z</value>
     </data>
     <data name="WiiInputTypeUDrawPenClick" xml:space="preserve">
-        <value>UDraw - Pen Click</value>
+        <value>UDraw - Click de Lápiz</value>
     </data>
     <data name="WiiInputTypeUDrawPenButton1" xml:space="preserve">
-        <value>UDraw - Pen Button 1</value>
+        <value>UDraw - Botón de Lápiz 1</value>
     </data>
     <data name="WiiInputTypeUDrawPenButton2" xml:space="preserve">
-        <value>UDraw - Pen Button 2</value>
+        <value>UDraw - Botón de Lápiz 2</value>
     </data>
     <data name="WiiInputTypeTaTaConLeftDrumRim" xml:space="preserve">
-        <value>Taiko - Left Rim Hit</value>
+        <value>Taiko - Golpe de Borde Izquierdo</value>
     </data>
 
     <data name="WiiInputTypeTaTaConLeftDrumCenter" xml:space="preserve">
-        <value>Taiko - Left Center Hit</value>
+        <value>Taiko - Golpe Central Izquierdo</value>
     </data>
     <data name="WiiInputTypeTaTaConRightDrumRim" xml:space="preserve">
-        <value>Taiko - Right Rim Hit</value>
+        <value>Taiko - Golpe de Borde Derecho</value>
     </data>
 
     <data name="WiiInputTypeTaTaConRightDrumCenter" xml:space="preserve">
-        <value>Taiko - Right Center Hit</value>
+        <value>Taiko - Golpe Central Derecho</value>
     </data>
 
     <data name="WiiInputTypeDjHeroEuphoria" xml:space="preserve">
-        <value>Turntable - Euphoria Button</value>
+        <value>Tornamesa - Botón Euphoria</value>
     </data>
 
     <data name="WiiInputTypeDjHeroLeftGreen" xml:space="preserve">
-        <value>Turntable - Left Green Fret</value>
+        <value>Tornamesa - Botón Verde Izquierdo</value>
     </data>
 
     <data name="WiiInputTypeDjHeroLeftRed" xml:space="preserve">
-        <value>Turntable - Left Red Fret</value>
+        <value>Tornamesa - Botón Rojo Izquierdo</value>
     </data>
 
     <data name="WiiInputTypeDjHeroLeftBlue" xml:space="preserve">
-        <value>Turntable - Left Blue Fret</value>
+        <value>Tornamesa - Botón Azul Izquierdo</value>
     </data>
 
     <data name="WiiInputTypeDjHeroRightGreen" xml:space="preserve">
-        <value>Turntable - Right Green Fret</value>
+        <value>Tornamesa - Botón Verde Derecho</value>
     </data>
 
     <data name="WiiInputTypeDjHeroRightRed" xml:space="preserve">
-        <value>Turntable - Right Red Fret</value>
+        <value>Tornamesa - Botón Rojo Derecho</value>
     </data>
 
     <data name="WiiInputTypeDjHeroRightBlue" xml:space="preserve">
-        <value>Turntable - Right Blue Fret</value>
+        <value>Tornamesa - Botón Azul Derecho</value>
     </data>
 
     <data name="WiiInputTypeDjHeroMinus" xml:space="preserve">
-        <value>Turntable - Minus Button</value>
+        <value>Tornamesa - Botón Menos</value>
     </data>
 
     <data name="WiiInputTypeDjHeroPlus" xml:space="preserve">
-        <value>Turntable - Plus Button</value>
+        <value>Tornamesa - Botón Más</value>
     </data>
 
     <data name="WiiInputTypeClassicA" xml:space="preserve">
-        <value>Classic Controller - A Button</value>
+        <value>Classic Controller - Botón A</value>
     </data>
 
     <data name="WiiInputTypeClassicB" xml:space="preserve">
-        <value>Classic Controller - B Button</value>
+        <value>Classic Controller - Botón B</value>
     </data>
 
     <data name="WiiInputTypeClassicX" xml:space="preserve">
-        <value>Classic Controller - X Button</value>
+        <value>Classic Controller - Botón X</value>
     </data>
 
     <data name="WiiInputTypeClassicY" xml:space="preserve">
-        <value>Classic Controller - Y Button</value>
+        <value>Classic Controller - Botón Y</value>
     </data>
 
     <data name="WiiInputTypeClassicDPadUp" xml:space="preserve">
-        <value>Classic Controller - D-Pad Up</value>
+        <value>Classic Controller - D-Pad Arriba</value>
     </data>
 
     <data name="WiiInputTypeClassicDPadDown" xml:space="preserve">
-        <value>Classic Controller - D-Pad Down</value>
+        <value>Classic Controller - D-Pad Abajo</value>
     </data>
 
     <data name="WiiInputTypeClassicDPadLeft" xml:space="preserve">
-        <value>Classic Controller - D-Pad Left</value>
+        <value>Classic Controller - D-Pad Izquierdo</value>
     </data>
 
     <data name="WiiInputTypeClassicDPadRight" xml:space="preserve">
-        <value>Classic Controller - D-Pad Right</value>
+        <value>Classic Controller - D-Pad Derecho</value>
     </data>
 
     <data name="WiiInputTypeClassicZl" xml:space="preserve">
-        <value>Classic Controller - Zl Button</value>
+        <value>Classic Controller - Botón ZL</value>
     </data>
 
     <data name="WiiInputTypeClassicZr" xml:space="preserve">
-        <value>Classic Controller - Zr Button</value>
+        <value>Classic Controller - Botón ZR</value>
     </data>
 
     <data name="WiiInputTypeClassicLt" xml:space="preserve">
-        <value>Classic Controller - L Button</value>
+        <value>Classic Controller - Botón L</value>
     </data>
 
     <data name="WiiInputTypeClassicRt" xml:space="preserve">
-        <value>Classic Controller - R Button</value>
+        <value>Classic Controller - Botón R</value>
     </data>
 
     <data name="WiiInputTypeClassicPlus" xml:space="preserve">
-        <value>Classic Controller - Plus Button</value>
+        <value>Classic Controller - Botón Más</value>
     </data>
 
     <data name="WiiInputTypeClassicMinus" xml:space="preserve">
-        <value>Classic Controller - Minus Button</value>
+        <value>Classic Controller - Botón Menos</value>
     </data>
 
     <data name="WiiInputTypeClassicHome" xml:space="preserve">
-        <value>Classic Controller - Home Button</value>
+        <value>Classic Controller - Botón Home</value>
     </data>
 
     <data name="WiiInputTypeJoystickToDpad" xml:space="preserve">
-        <value>All - Map Joystick To Dpad</value>
+        <value>All - Mapear Joystick a Dpad</value>
     </data>
     <data name="XInputSubTypeGamepad" xml:space="preserve">
         <value>Gamepad</value>
     </data>
     <data name="XInputSubTypeWheel" xml:space="preserve">
-        <value>Wheel</value>
+        <value>Volante</value>
     </data>
     <data name="XInputSubTypeArcadeStick" xml:space="preserve">
-        <value>Arcade Stick</value>
+        <value>Stick de Arcade</value>
     </data>
     <data name="XInputSubTypeFlightStick" xml:space="preserve">
-        <value>Flight Stick</value>
+        <value>Stick de Vuelo</value>
     </data>
     <data name="XInputSubTypeDancePad" xml:space="preserve">
-        <value>Dance Pad</value>
+        <value>Pad de Baile</value>
     </data>
     <data name="XInputSubTypeGuitar" xml:space="preserve">
-        <value>Guitar</value>
+        <value>Guitarra</value>
     </data>
     <data name="XInputSubTypeGuitarAlternate" xml:space="preserve">
-        <value>Guitar Alternate</value>
+        <value>Guitarra Alterna</value>
     </data>
     <data name="XInputSubTypeGuitarBass" xml:space="preserve">
-        <value>Guitar Bass</value>
+        <value>Bajo (Guitarra)</value>
     </data>
     <data name="XInputSubTypeGuitarHeroWt" xml:space="preserve">
-        <value>Guitar Alternate</value>
+        <value>Guitarra Alterna</value>
     </data>
     <data name="XInputSubTypeDrums" xml:space="preserve">
-        <value>Drums</value>
+        <value>Batería</value>
     </data>
     <data name="XInputSubTypeStageKit" xml:space="preserve">
-        <value>Stage Kit</value>
+        <value>Kit de Escenario</value>
     </data>
     <data name="XInputSubTypeArcadePad" xml:space="preserve">
-        <value>Arcade Pad</value>
+        <value>Pad de Arcade</value>
     </data>
     <data name="XInputSubTypeTurntable" xml:space="preserve">
-        <value>Turntable</value>
+        <value>Tornamesa</value>
     </data>
     <data name="XInputSubTypeGuitarHeroLive" xml:space="preserve">
         <value>Guitar Hero Live</value>
@@ -1605,16 +1605,16 @@
         <value>Xbox 360</value>
     </data>
     <data name="ConsoleTypeXbox360W" xml:space="preserve">
-        <value>Xbox 360 Wireless</value>
+        <value>Xbox 360 Inalámbrico</value>
     </data>
     <data name="ConsoleTypeXbox360BigButton" xml:space="preserve">
-        <value>Xbox 360 Big Button Controller</value>
+        <value>Control de Botones Grandes para Xbox 360</value>
     </data>
     <data name="ConsoleTypeStreamDeck" xml:space="preserve">
         <value>Stream Deck</value>
     </data>
     <data name="StreamDeckTypeUnknown" xml:space="preserve">
-        <value>Unknown</value>
+        <value>Desconocido</value>
     </data>
     <data name="StreamDeckTypeOriginal" xml:space="preserve">
         <value>Original</value>
@@ -1647,7 +1647,7 @@
         <value>Neo</value>
     </data>
     <data name="ConsoleTypeKeyboard" xml:space="preserve">
-        <value>Keyboard</value>
+        <value>Teclado</value>
     </data>
     <data name="ConsoleTypeMouse" xml:space="preserve">
         <value>Mouse</value>
@@ -1659,7 +1659,7 @@
         <value>PS5</value>
     </data>
     <data name="ConsoleTypeWii" xml:space="preserve">
-        <value>Wii Rock Band</value>
+        <value>Rock Band de Wii</value>
     </data>
     <data name="ConsoleTypeSwitch" xml:space="preserve">
         <value>Switch</value>
@@ -1674,19 +1674,19 @@
         <value>PS3</value>
     </data>
     <data name="ConsoleTypeXbox" xml:space="preserve">
-        <value>Original Xbox</value>
+        <value>Xbox Original</value>
     </data>
     <data name="ConsoleTypeWindows" xml:space="preserve">
         <value>Windows</value>
     </data>
     <data name="ConsoleTypeKeyboardMouse" xml:space="preserve">
-        <value>Keyboard + Mouse</value>
+        <value>Teclado + Mouse</value>
     </data>
     <data name="ConsoleTypeMidi" xml:space="preserve">
         <value>Midi</value>
     </data>
     <data name="ConsoleTypeUnknown" xml:space="preserve">
-        <value>Unknown</value>
+        <value>Desconocido</value>
     </data>
     <data name="ConsoleTypeSantroller" xml:space="preserve">
         <value>Santroller</value>
@@ -1695,98 +1695,98 @@
         <value>Raphnet</value>
     </data>
     <data name="DjAxisTypeEffectsKnob" xml:space="preserve">
-        <value>Effects Knob</value>
+        <value>Perilla de Efectos</value>
     </data>
     <data name="DjAxisTypeCrossfader" xml:space="preserve">
         <value>Crossfader</value>
     </data>
     <data name="DjAxisTypeLeftTableVelocity" xml:space="preserve">
-        <value>Left Turntable Spin</value>
+        <value>Giro Izquierdo de Tornamesa</value>
     </data>
     <data name="DjAxisTypeRightTableVelocity" xml:space="preserve">
-        <value>Right Turntable Spin</value>
+        <value>Giro Derecho de Tornamesa</value>
     </data>
     <data name="DjInputTypeLeftTurntable" xml:space="preserve">
-        <value>Left Turntable Spin</value>
+        <value>Giro de Tornamesa Izquierda</value>
     </data>
     <data name="DjInputTypeRightTurntable" xml:space="preserve">
-        <value>Right Turntable Spin</value>
+        <value>Giro de Tornamesa Derecha</value>
     </data>
 
     <data name="DjInputTypeLeftGreen" xml:space="preserve">
-        <value>Left Turntable Green Fret</value>
+        <value>Botón Verde de Tornamesa Izquierda</value>
     </data>
 
     <data name="DjInputTypeLeftRed" xml:space="preserve">
-        <value>Left Turntable Red Fret</value>
+        <value>Botón Rojo de Tornamesa Izquierda</value>
     </data>
 
     <data name="DjInputTypeLeftBlue" xml:space="preserve">
-        <value>Left Turntable Blue Fret</value>
+        <value>Botón Azul de Tornamesa Izquierda</value>
     </data>
 
     <data name="DjInputTypeRightGreen" xml:space="preserve">
-        <value>Right Turntable Green Fret</value>
+        <value>Botón Verde de Tornamesa Derecha</value>
     </data>
 
     <data name="DjInputTypeRightRed" xml:space="preserve">
-        <value>Right Turntable Red Fret</value>
+        <value>Botón Rojo de Tornamesa Derecha</value>
     </data>
 
     <data name="DjInputTypeRightBlue" xml:space="preserve">
-        <value>Right Turntable Blue Fret</value>
+        <value>Botón Azul de Tornamesa Derecha</value>
     </data>
     <data name="DrumAxisTypeGreen" xml:space="preserve">
-        <value>Green</value>
+        <value>Verde</value>
     </data>
     <data name="DrumAxisTypeRed" xml:space="preserve">
-        <value>Red</value>
+        <value>Rojo</value>
     </data>
     <data name="DrumAxisTypeYellow" xml:space="preserve">
-        <value>Yellow</value>
+        <value>Amarillo</value>
     </data>
     <data name="DrumAxisTypeBlue" xml:space="preserve">
-        <value>Blue</value>
+        <value>Azul</value>
     </data>
     <data name="DrumAxisTypeOrange" xml:space="preserve">
-        <value>Orange</value>
+        <value>Naranja</value>
     </data>
     <data name="DrumAxisTypeGreenCymbal" xml:space="preserve">
-        <value>Green Cymbal</value>
+        <value>Platillo Verde</value>
     </data>
     <data name="DrumAxisTypeYellowCymbal" xml:space="preserve">
-        <value>Yellow Cymbal</value>
+        <value>Platillo Amarillo</value>
     </data>
     <data name="DrumAxisTypeBlueCymbal" xml:space="preserve">
-        <value>Blue Cymbal</value>
+        <value>Platillo Azul</value>
     </data>
     <data name="DrumAxisTypeKick" xml:space="preserve">
-        <value>Kick</value>
+        <value>Bombo</value>
     </data>
     <data name="DrumAxisTypeKick2" xml:space="preserve">
-        <value>Kick 2</value>
+        <value>Bombo 2</value>
     </data>
     <data name="EmptyTypeEmpty" xml:space="preserve">
-        <value>Empty</value>
+        <value>Vacío</value>
     </data>
     <data name="EmulationModeTypeFnf" xml:space="preserve">
-        <value>Fortnite Festival PC (Instrument Mode)</value>
+        <value>Fortnite Festival para PC (Modo Instrumento)</value>
     </data>
     <data name="EmulationModeTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>
     </data>
     <data name="EmulationModeTypeXbox" xml:space="preserve">
-        <value>Original Xbox</value>
+        <value>Xbox Original</value>
     </data>
     <data name="EmulationModeTypeXboxOne" xml:space="preserve">
         <value>Xbox One / Series S / Series X</value>
     </data>
     <data name="EmulationModeTypeWii" xml:space="preserve">
-        <value>Wii Rock Band</value>
+        <value>Rock Band de Wii</value>
     </data>
 
     <data name="EmulationModeTypePs3" xml:space="preserve">
-        <value>PS3 (PS2 / Wii GH with optional modules)</value>
+        <value>PS3 (GH de PS2 / Wii con módulos opcionales)</value>
     </data>
     <data name="EmulationModeTypePs4Or5" xml:space="preserve">
         <value>PS4 / PS5</value>
@@ -1795,91 +1795,91 @@
         <value>Switch</value>
     </data>
     <data name="EmulationTypeController" xml:space="preserve">
-        <value>Controller</value>
+        <value>Control</value>
     </data>
     <data name="EmulationTypeFortniteFestival" xml:space="preserve">
-        <value>Fortnite Festival (Pad mode)</value>
+        <value>Fortnite Festival</value>
     </data>
     <data name="EmulationTypeKeyboardMouse" xml:space="preserve">
-        <value>Keyboard + Mouse</value>
+        <value>Teclado + Mouse</value>
     </data>
     <data name="EmulationTypeBluetooth" xml:space="preserve">
-        <value>Bluetooth Controller</value>
+        <value>Control con Bluetooth</value>
     </data>
     <data name="EmulationTypeBluetoothKeyboardMouse" xml:space="preserve">
-        <value>Bluetooth Keyboard + Mouse</value>
+        <value>Teclado + Mouse con Bluetooth</value>
     </data>
     <data name="Gh5NeckInputTypeGreen" xml:space="preserve">
-        <value>Green Fret</value>
+        <value>Traste Verde</value>
     </data>
     <data name="Gh5NeckInputTypeRed" xml:space="preserve">
-        <value>Red Fret</value>
+        <value>Traste Rojo</value>
     </data>
     <data name="Gh5NeckInputTypeYellow" xml:space="preserve">
-        <value>Yellow Fret</value>
+        <value>Traste Amarillo</value>
     </data>
     <data name="Gh5NeckInputTypeBlue" xml:space="preserve">
-        <value>Blue Fret</value>
+        <value>Traste Azul</value>
     </data>
     <data name="Gh5NeckInputTypeOrange" xml:space="preserve">
-        <value>Orange Fret</value>
+        <value>Traste Naranjo</value>
     </data>
     <data name="Gh5NeckInputTypeTapGreen" xml:space="preserve">
-        <value>Slider Green Fret</value>
+        <value>Panel de Slider Verde</value>
     </data>
     <data name="Gh5NeckInputTypeTapRed" xml:space="preserve">
-        <value>Slider Red Fret</value>
+        <value>Panel de Slider Rojo</value>
     </data>
     <data name="Gh5NeckInputTypeTapYellow" xml:space="preserve">
-        <value>Slider Yellow Fret</value>
+        <value>Panel de Slider Amarillo</value>
     </data>
     <data name="Gh5NeckInputTypeTapBlue" xml:space="preserve">
-        <value>Slider Blue Fret</value>
+        <value>Panel de Slider Azul</value>
     </data>
     <data name="Gh5NeckInputTypeTapOrange" xml:space="preserve">
-        <value>Slider Orange Fret</value>
+        <value>Panel de Slider Naranjo</value>
     </data>
     <data name="Gh5NeckInputTypeTapAll" xml:space="preserve">
-        <value>Slider To Frets</value>
+        <value>Slider a Trastes</value>
     </data>
     <data name="Gh5NeckInputTypeTapBar" xml:space="preserve">
-        <value>Slider Axis</value>
+        <value>Eje de Slider</value>
     </data>
     <data name="BarButtonGreen" xml:space="preserve">
-        <value>Green Fret</value>
+        <value>Traste Verde</value>
     </data>
     <data name="BarButtonRed" xml:space="preserve">
-        <value>Red Fret</value>
+        <value>Traste Rojo</value>
     </data>
     <data name="BarButtonYellow" xml:space="preserve">
-        <value>Yellow Fret</value>
+        <value>Traste Amarillo</value>
     </data>
     <data name="BarButtonBlue" xml:space="preserve">
-        <value>Blue Fret</value>
+        <value>Traste Azul</value>
     </data>
     <data name="BarButtonOrange" xml:space="preserve">
-        <value>Orange Fret</value>
+        <value>Traste Naranjo</value>
     </data>
     <data name="GhWtInputTypeTapGreen" xml:space="preserve">
-        <value>Slider Green Fret</value>
+        <value>Panel de Slider Verde</value>
     </data>
     <data name="GhWtInputTypeTapRed" xml:space="preserve">
-        <value>Slider Red Fret</value>
+        <value>Panel de Slider Rojo</value>
     </data>
     <data name="GhWtInputTypeTapYellow" xml:space="preserve">
-        <value>Slider Yellow Fret</value>
+        <value>Panel de Slider Amarillo</value>
     </data>
     <data name="GhWtInputTypeTapBlue" xml:space="preserve">
-        <value>Slider Blue Fret</value>
+        <value>Panel de Slider Azul</value>
     </data>
     <data name="GhWtInputTypeTapOrange" xml:space="preserve">
-        <value>Slider Orange Fret</value>
+        <value>Panel de Slider Naranjo</value>
     </data>
     <data name="GhWtInputTypeTapAll" xml:space="preserve">
-        <value>Slider To Frets</value>
+        <value>Slider a Trastes</value>
     </data>
     <data name="GhWtInputTypeTapBar" xml:space="preserve">
-        <value>Slider Axis</value>
+        <value>Eje de Slider</value>
     </data>
     <data name="GuitarAxisTypeWhammy" xml:space="preserve">
         <value>Whammy</value>
@@ -1891,148 +1891,148 @@
         <value>Slider</value>
     </data>
     <data name="GuitarAxisTypeTilt" xml:space="preserve">
-        <value>Tilt</value>
+        <value>Inclinación</value>
     </data>
     <data name="InputTypeAnalogPinInput" xml:space="preserve">
-        <value>Analog Pin Input</value>
+        <value>Entrada de Pin Análogo</value>
     </data>
     <data name="InputTypeAdxlInput" xml:space="preserve">
-        <value>ADXL345 Input</value>
+        <value>Entrada de ADXL345</value>
     </data>
     <data name="InputTypeMpr121Input" xml:space="preserve">
-        <value>MPR121 Input</value>
+        <value>Entrada de MPR121</value>
     </data>
     <data name="InputTypeMultiplexerInput" xml:space="preserve">
-        <value>Multiplexer Input</value>
+        <value>Entrada de Multiplexer</value>
     </data>
     <data name="InputTypeDigitalPinInput" xml:space="preserve">
-        <value>Digital Pin Input</value>
+        <value>Entrada de Pin Digital</value>
     </data>
     <data name="InputTypeAnalogPeripheralInput" xml:space="preserve">
-        <value>Analog Pin Input (Peripheral)</value>
+        <value>Entrada de Pin Análogo (Periférico)</value>
     </data>
     <data name="InputTypeMultiplexerPeripheralInput" xml:space="preserve">
-        <value>Multiplexer Input (Peripheral)</value>
+        <value>Entrada de Multiplexer (Periférico)</value>
     </data>
     <data name="InputTypeDigitalPeripheralInput" xml:space="preserve">
-        <value>Digital Pin Input (Peripheral)</value>
+        <value>Entrada de Pin Digital (Periférico)</value>
     </data>
     <data name="InputTypeWtNeckPeripheralInput" xml:space="preserve">
-        <value>Wt Neck Input (Peripheral)</value>
+        <value>Entrada de Mástil de WT (Periférico)</value>
     </data>
     <data name="InputTypeWiiInput" xml:space="preserve">
-        <value>Wii Input</value>
+        <value>Entrada de Wii</value>
     </data>
     <data name="InputTypePs2Input" xml:space="preserve">
-        <value>PS2 Input</value>
+        <value>Entrada de PS2</value>
     </data>
     <data name="InputTypeTurntableInput" xml:space="preserve">
-        <value>Turntable Input</value>
+        <value>Entrada de Tornamesa</value>
     </data>
     <data name="InputTypeWtNeckInput" xml:space="preserve">
-        <value>Wt Neck Input</value>
+        <value>Entrada de Mástil de WT</value>
     </data>
     <data name="InputTypeGh5NeckInput" xml:space="preserve">
-        <value>GH5 Neck Input</value>
+        <value>Entrada de Mástil de GH5</value>
     </data>
     <data name="InputTypeCloneNeckInput" xml:space="preserve">
-        <value>Crazy Guitar Neck Input</value>
+        <value>Entrada de Mástil de Crazy Guitar</value>
     </data>
     <data name="InputTypeMacroInput" xml:space="preserve">
-        <value>Shortcut</value>
+        <value>Atajo</value>
     </data>
     <data name="InputTypeUsbHostInput" xml:space="preserve">
-        <value>USB Host Input</value>
+        <value>Entrada de Host por USB</value>
     </data>
     <data name="InputTypeBluetoothInput" xml:space="preserve">
-        <value>Bluetooth Input</value>
+        <value>Entrada de Bluetooth</value>
     </data>
     <data name="InputTypeConstantInput" xml:space="preserve">
-        <value>Constant Input</value>
+        <value>Entrada Constante</value>
     </data>
     <data name="FortniteGreen" xml:space="preserve">
-        <value>Lane 1</value>
+        <value>Línea 1</value>
     </data>
     <data name="FortniteRed" xml:space="preserve">
-        <value>Lane 2</value>
+        <value>Línea 2</value>
     </data>
     <data name="FortniteYellow" xml:space="preserve">
-        <value>Lane 3</value>
+        <value>Línea 3</value>
     </data>
     <data name="FortniteBlue" xml:space="preserve">
-        <value>Lane 4</value>
+        <value>Línea 4</value>
     </data>
     <data name="FortniteOrange" xml:space="preserve">
-        <value>Lane 5</value>
+        <value>Línea 5</value>
     </data>
     <data name="FortniteStrumUp" xml:space="preserve">
-        <value>Strum Up</value>
+        <value>Rasgueo Arriba</value>
     </data>
     <data name="FortniteStrumDown" xml:space="preserve">
-        <value>Strum Down</value>
+        <value>Rasgueo Abajo</value>
     </data>
     <data name="InstrumentButtonTypeGreen" xml:space="preserve">
-        <value>Green Fret</value>
+        <value>Traste Verde</value>
     </data>
     <data name="InstrumentButtonTypeRed" xml:space="preserve">
-        <value>Red Fret</value>
+        <value>Traste Rojo</value>
     </data>
     <data name="InstrumentButtonTypeYellow" xml:space="preserve">
-        <value>Yellow Fret</value>
+        <value>Traste Amarillo</value>
     </data>
     <data name="InstrumentButtonTypeBlue" xml:space="preserve">
-        <value>Blue Fret</value>
+        <value>Traste Azul</value>
     </data>
     <data name="InstrumentButtonTypeOrange" xml:space="preserve">
-        <value>Orange Fret</value>
+        <value>Traste Naranjo</value>
     </data>
     <data name="InstrumentButtonTypeSoloGreen" xml:space="preserve">
-        <value>Solo Green Fret</value>
+        <value>Traste de Solo Verde</value>
     </data>
     <data name="InstrumentButtonTypeSoloRed" xml:space="preserve">
-        <value>Solo Red Fret</value>
+        <value>Traste de Solo Rojo</value>
     </data>
     <data name="InstrumentButtonTypeSoloYellow" xml:space="preserve">
-        <value>Solo Yellow Fret</value>
+        <value>Traste de Solo Amarillo</value>
     </data>
     <data name="InstrumentButtonTypeSoloBlue" xml:space="preserve">
-        <value>Solo Blue Fret</value>
+        <value>Traste de Solo Azul</value>
     </data>
     <data name="InstrumentButtonTypeSoloOrange" xml:space="preserve">
-        <value>Solo Orange Fret</value>
+        <value>Traste de Solo Naranjo</value>
     </data>
     <data name="InstrumentButtonTypeBlack1" xml:space="preserve">
-        <value>Black 1</value>
+        <value>Negro 1</value>
     </data>
     <data name="InstrumentButtonTypeBlack2" xml:space="preserve">
-        <value>Black 2</value>
+        <value>Negro 2</value>
     </data>
     <data name="InstrumentButtonTypeBlack3" xml:space="preserve">
-        <value>Black 3</value>
+        <value>Negro 3</value>
     </data>
     <data name="InstrumentButtonTypeWhite1" xml:space="preserve">
-        <value>White 1</value>
+        <value>Blanco 1</value>
     </data>
     <data name="InstrumentButtonTypeWhite2" xml:space="preserve">
-        <value>White 2</value>
+        <value>Blanco 2</value>
     </data>
     <data name="InstrumentButtonTypeWhite3" xml:space="preserve">
-        <value>White 3</value>
+        <value>Blanco 3</value>
     </data>
     <data name="InstrumentButtonTypeStrumUp" xml:space="preserve">
-        <value>Strum Up</value>
+        <value>Rasgueo Arriba</value>
     </data>
     <data name="InstrumentButtonTypeStrumDown" xml:space="preserve">
-        <value>Strum Down</value>
+        <value>Rasgueo Abajo</value>
     </data>
     <data name="InstrumentButtonTypeSliderToFrets" xml:space="preserve">
-        <value>Slider To Frets</value>
+        <value>Slider a Trastes</value>
     </data>
     <data name="InstrumentButtonTypeSlider" xml:space="preserve">
         <value>Slider</value>
     </data>
     <data name="LedTypeNone" xml:space="preserve">
-        <value>None</value>
+        <value>Ninguno</value>
     </data>
     <data name="LedTypeWs2812" xml:space="preserve">
         <value>WS2812</value>
@@ -2068,71 +2068,71 @@
         <value>Switch</value>
     </data>
     <data name="MidiTypeNote" xml:space="preserve">
-        <value>Note</value>
+        <value>Nota</value>
     </data>
     <data name="MidiTypeControlChange" xml:space="preserve">
-        <value>Control Change</value>
+        <value>Cambio de Control</value>
     </data>
     <data name="MidiTypeProgramChange" xml:space="preserve">
-        <value>Program Change</value>
+        <value>Cambio de Programa</value>
     </data>
     <data name="MidiTypeChannelPressure" xml:space="preserve">
-        <value>Channel Pressure</value>
+        <value>Presión de Canal</value>
     </data>
     <data name="MidiTypePitchWheel" xml:space="preserve">
-        <value>Pitch Wheel</value>
+        <value>Rueda de Tono</value>
     </data>
     <data name="ModeTypeStandard" xml:space="preserve">
-        <value>Standard</value>
+        <value>Estándar</value>
     </data>
     <data name="ModeTypeAdvanced" xml:space="preserve">
-        <value>Advanced</value>
+        <value>Avanzado</value>
     </data>
     <data name="MouseAxisTypeX" xml:space="preserve">
-        <value>Mouse X Axis</value>
+        <value>Eje X de Mouse</value>
     </data>
     <data name="MouseAxisTypeY" xml:space="preserve">
-        <value>Mouse Y Axis</value>
+        <value>Eje Y de Mouse</value>
     </data>
     <data name="MouseAxisTypeScrollY" xml:space="preserve">
-        <value>Mouse Scroll</value>
+        <value>Scroll de Mouse</value>
     </data>
 
     <data name="MouseAxisTypeScrollX" xml:space="preserve">
-        <value>Mouse Horizontal Scroll</value>
+        <value>Scroll Horizontal de Mouse</value>
     </data>
     <data name="MouseButtonTypeLeft" xml:space="preserve">
-        <value>Left Click</value>
+        <value>Click Izquierdo</value>
     </data>
     <data name="MouseButtonTypeRight" xml:space="preserve">
-        <value>Right Click</value>
+        <value>Click Derecho</value>
     </data>
     <data name="MouseButtonTypeMiddle" xml:space="preserve">
-        <value>Middle Click</value>
+        <value>Click Medio</value>
     </data>
     <data name="MouseMovementTypeAbsolute" xml:space="preserve">
-        <value>Absolute Movement</value>
+        <value>Movimiento Absoluto</value>
     </data>
     <data name="MouseMovementTypeRelative" xml:space="preserve">
-        <value>Relative Movement</value>
+        <value>Movimiento Relativo</value>
     </data>
     <data name="MultiplexerTypeEightChannel" xml:space="preserve">
-        <value>4051 or other 8 channel multiplexer</value>
+        <value>4051 u otro multiplexer de 8 canales</value>
     </data>
 
     <data name="MultiplexerTypeSixteenChannel" xml:space="preserve">
-        <value>4067 or other 16 channel multiplexer</value>
+        <value>4067 u otro multiplexer de 16 canales</value>
     </data>
     <data name="MultiplexerTypeEightChannelSlow" xml:space="preserve">
-        <value>Slow 8 channel multiplexer, such as CD4051BE</value>
+        <value>Multiplexer lento de 8 canales, como CD4051BE</value>
     </data>
 
     <data name="MultiplexerTypeSixteenChannelSlow" xml:space="preserve">
-        <value>Slow 16 channel multiplexer, such as CD4067B</value>
+        <value>Multiplexer lento de 16 canales, como CD4067B</value>
     </data>
 
     <data name="PickupSelectorTypeChorus" xml:space="preserve">
-        <value>Chorus</value>
+        <value>Coro</value>
     </data>
 
     <data name="PickupSelectorTypeWahWah" xml:space="preserve">
@@ -2144,41 +2144,41 @@
     </data>
 
     <data name="PickupSelectorTypeEcho" xml:space="preserve">
-        <value>Echo</value>
+        <value>Eco</value>
     </data>
 
     <data name="PickupSelectorTypeNone" xml:space="preserve">
-        <value>None</value>
+        <value>Ninguno</value>
     </data>
     <data name="AdxlInputTypePitch" xml:space="preserve">
-        <value>Pitch Axis</value>
+        <value>Eje de Inclinación (Pitch)</value>
     </data>
     <data name="AdxlInputTypeRoll" xml:space="preserve">
-        <value>Roll Axis</value>
+        <value>Eje de Giro (Roll)</value>
     </data>
     <data name="AdxlInputTypeAccelX" xml:space="preserve">
-        <value>Acceleration on X Axis</value>
+        <value>Aceleración en Eje X</value>
     </data>
     <data name="AdxlInputTypeAccelY" xml:space="preserve">
-        <value>Acceleration on Y Axis</value>
+        <value>Aceleración en Eje Y</value>
     </data>
     <data name="AdxlInputTypeAccelZ" xml:space="preserve">
-        <value>Acceleration on Z Axis</value>
+        <value>Aceleración en Eje Z</value>
     </data>
     <data name="Ps2ControllerTypeDigital" xml:space="preserve">
-        <value>PS1 Controller</value>
+        <value>Control de PS1</value>
     </data>
     <data name="Ps2ControllerTypeDualshock" xml:space="preserve">
-        <value>Dualshock 1</value>
+        <value>DualShock 1</value>
     </data>
     <data name="Ps2ControllerTypeDualshock2" xml:space="preserve">
-        <value>Dualshock 2</value>
+        <value>DualShock 2</value>
     </data>
     <data name="Ps2ControllerTypeGuitar" xml:space="preserve">
-        <value>Guitar Hero Guitar</value>
+        <value>Guitarra de Guitar Hero</value>
     </data>
     <data name="Ps2ControllerTypeFlightStick" xml:space="preserve">
-        <value>FlightStick</value>
+        <value>Stick de Vuelo</value>
     </data>
     <data name="Ps2ControllerTypeNegCon" xml:space="preserve">
         <value>NegCon</value>
@@ -2193,303 +2193,303 @@
         <value>Mouse</value>
     </data>
     <data name="Ps2ControllerTypeSelected" xml:space="preserve">
-        <value>Plugged in controller</value>
+        <value>Control conectado</value>
     </data>
     <data name="Ps2ControllerTypeAll" xml:space="preserve">
-        <value>All Inputs</value>
+        <value>Todas las Entradas</value>
     </data>
     <data name="Ps2InputTypeGunConHSync" xml:space="preserve">
-        <value>GunCon - Horizontal Sync</value>
+        <value>GunCon - Sincronización Horizontal</value>
     </data>
 
     <data name="Ps2InputTypeGunConVSync" xml:space="preserve">
-        <value>GunCon - Vertical Sync</value>
+        <value>GunCon - Sincronización Vertical</value>
     </data>
     <data name="Ps2InputTypeMouseX" xml:space="preserve">
-        <value>Mouse - X Axis</value>
+        <value>Mouse - Eje X</value>
     </data>
     <data name="Ps2InputTypeMouseY" xml:space="preserve">
-        <value>Mouse - Y Axis</value>
+        <value>Mouse - Eje Y</value>
     </data>
     <data name="Ps2InputTypeNegConTwist" xml:space="preserve">
-        <value>NegCon - Twist Axis</value>
+        <value>NegCon - Eje de Giro</value>
     </data>
 
     <data name="Ps2InputTypeNegConI" xml:space="preserve">
-        <value>NegCon - I Button Pressure</value>
+        <value>NegCon - Presión de Botón I</value>
     </data>
 
     <data name="Ps2InputTypeNegConIi" xml:space="preserve">
-        <value>NegCon - II Button Pressure</value>
+        <value>NegCon - Presión de Botón II</value>
     </data>
 
     <data name="Ps2InputTypeNegConL" xml:space="preserve">
-        <value>NegCon - L Button Pressure</value>
+        <value>NegCon - Presión de Botón L</value>
     </data>
     <data name="Ps2InputTypeJogConWheel" xml:space="preserve">
-        <value>JogCon - Wheel Axis</value>
+        <value>JogCon - Eje de Rueda</value>
     </data>
     <data name="Ps2InputTypeGuitarWhammy" xml:space="preserve">
-        <value>Guitar - Whammy Axis</value>
+        <value>Guitarra - Eje de Whammy</value>
     </data>
     <data name="Ps2InputTypeGuitarSlider" xml:space="preserve">
-        <value>Guitar - Slider Axis</value>
+        <value>Guitarra - Eje de Slider</value>
     </data>
 
     <data name="Ps2InputTypeLeftStickX" xml:space="preserve">
-        <value>Gamepad - Left Stick X</value>
+        <value>Gamepad - Stick Izquierdo X</value>
     </data>
 
     <data name="Ps2InputTypeLeftStickY" xml:space="preserve">
-        <value>Gamepad - Left Stick Y</value>
+        <value>Gamepad - Stick Izquierdo Y</value>
     </data>
 
     <data name="Ps2InputTypeRightStickX" xml:space="preserve">
-        <value>Gamepad - Right Stick X</value>
+        <value>Gamepad - Stick Derecho X</value>
     </data>
 
     <data name="Ps2InputTypeRightStickY" xml:space="preserve">
-        <value>Gamepad - Right Stick Y</value>
+        <value>Gamepad - Stick Derecho Y</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2L1" xml:space="preserve">
-        <value>DualShock 2 - L1 Pressure</value>
+        <value>DualShock 2 - Presión de L1</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2R1" xml:space="preserve">
-        <value>DualShock 2 - R1 Pressure</value>
+        <value>DualShock 2 - Presión de R1</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2RightButton" xml:space="preserve">
-        <value>DualShock 2 - D-Pad Right Pressure</value>
+        <value>DualShock 2 - Presión de D-Pad Derecho</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2LeftButton" xml:space="preserve">
-        <value>DualShock 2 - D-Pad Left Pressure</value>
+        <value>DualShock 2 - Presión de D-Pad Izquierdo</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2UpButton" xml:space="preserve">
-        <value>DualShock 2 - D-Pad Up Pressure</value>
+        <value>DualShock 2 - Presión de D-Pad Arriba</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2DownButton" xml:space="preserve">
-        <value>DualShock 2 - D-Pad Down Pressure</value>
+        <value>DualShock 2 - Presión de D-Pad Abajo</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2Triangle" xml:space="preserve">
-        <value>DualShock 2 - Triangle Pressure</value>
+        <value>DualShock 2 - Presión de Triángulo</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2Circle" xml:space="preserve">
-        <value>DualShock 2 - Circle Pressure</value>
+        <value>DualShock 2 - Presión de Círculo</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2Cross" xml:space="preserve">
-        <value>DualShock 2 - Cross Pressure</value>
+        <value>DualShock 2 - Presión de Cruz</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2Square" xml:space="preserve">
-        <value>DualShock 2 - Square Pressure</value>
+        <value>DualShock 2 - Presión de Cuadrado</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2L2" xml:space="preserve">
-        <value>DualShock 2 - L2 Pressure</value>
+        <value>DualShock 2 - Presión de L2</value>
     </data>
 
     <data name="Ps2InputTypeDualshock2R2" xml:space="preserve">
-        <value>DualShock 2 - R2 Pressure</value>
+        <value>DualShock 2 - Presión de R2</value>
     </data>
     <data name="Ps2InputTypeMouseLeft" xml:space="preserve">
-        <value>Mouse - Left Button</value>
+        <value>Mouse - Botón Izquierdo</value>
     </data>
     <data name="Ps2InputTypeMouseRight" xml:space="preserve">
-        <value>Mouse - Right Button</value>
+        <value>Mouse - Botón Derecho</value>
     </data>
     <data name="Ps2InputTypeNegConA" xml:space="preserve">
-        <value>NegCon - A Button</value>
+        <value>NegCon - Botón A</value>
     </data>
     <data name="Ps2InputTypeNegConB" xml:space="preserve">
-        <value>NegCon - B Button</value>
+        <value>NegCon - Botón B</value>
     </data>
     <data name="Ps2InputTypeNegConStart" xml:space="preserve">
-        <value>NegCon - Start Button</value>
+        <value>NegCon - Botón Start</value>
     </data>
     <data name="Ps2InputTypeNegConR" xml:space="preserve">
-        <value>NegCon - R Button</value>
+        <value>NegCon - Presión de Botón R</value>
     </data>
     <data name="Ps2InputTypeGuitarGreen" xml:space="preserve">
-        <value>Guitar - Green Fret</value>
+        <value>Guitarra - Traste Verde</value>
     </data>
     <data name="Ps2InputTypeGuitarRed" xml:space="preserve">
-        <value>Guitar - Red Fret</value>
+        <value>Guitarra - Traste Rojo</value>
     </data>
     <data name="Ps2InputTypeGuitarYellow" xml:space="preserve">
-        <value>Guitar - Yellow Fret</value>
+        <value>Guitarra - Traste Amarillo</value>
     </data>
     <data name="Ps2InputTypeGuitarBlue" xml:space="preserve">
-        <value>Guitar - Blue Fret</value>
+        <value>Guitarra - Traste Azul</value>
     </data>
     <data name="Ps2InputTypeGuitarOrange" xml:space="preserve">
-        <value>Guitar - Orange Fret</value>
+        <value>Guitarra - Traste Naranjo</value>
     </data>
     <data name="Ps2InputTypeGuitarStrumUp" xml:space="preserve">
-        <value>Guitar - Strum Up</value>
+        <value>Guitarra - Rasgueo Arriba</value>
     </data>
     <data name="Ps2InputTypeGuitarStrumDown" xml:space="preserve">
-        <value>Guitar - Strum Down</value>
+        <value>Guitarra - Rasgueo Abajo</value>
     </data>
     <data name="Ps2InputTypeGuitarSelect" xml:space="preserve">
-        <value>Guitar - Select Button</value>
+        <value>Guitarra - Botón Select</value>
     </data>
     <data name="Ps2InputTypeGuitarStart" xml:space="preserve">
-        <value>Guitar - Start Button</value>
+        <value>Guitarra - Botón Start</value>
     </data>
     <data name="Ps2InputTypeGuitarTilt" xml:space="preserve">
-        <value>Guitar - Tilt</value>
+        <value>Guitarra - Inclinación</value>
     </data>
     <data name="Ps2InputTypeSelect" xml:space="preserve">
-        <value>Gamepad - Select Button</value>
+        <value>Gamepad - Botón Select</value>
     </data>
     <data name="Ps2InputTypeL3" xml:space="preserve">
-        <value>Gamepad - L3 Button</value>
+        <value>Gamepad - Botón L3</value>
     </data>
     <data name="Ps2InputTypeR3" xml:space="preserve">
-        <value>Gamepad - R3 Button</value>
+        <value>Gamepad - Botón R3</value>
     </data>
     <data name="Ps2InputTypeStart" xml:space="preserve">
-        <value>Gamepad - Start Button</value>
+        <value>Gamepad - Botón Start</value>
     </data>
     <data name="Ps2InputTypeDpadUp" xml:space="preserve">
-        <value>Gamepad - D-Pad Up</value>
+        <value>Gamepad - D-Pad Arriba</value>
     </data>
     <data name="Ps2InputTypeDpadRight" xml:space="preserve">
-        <value>Gamepad - D-Pad Right</value>
+        <value>Gamepad - D-Pad Derecho</value>
     </data>
     <data name="Ps2InputTypeDpadDown" xml:space="preserve">
-        <value>Gamepad - D-Pad Down</value>
+        <value>Gamepad - D-Pad Abajo</value>
     </data>
     <data name="Ps2InputTypeDpadLeft" xml:space="preserve">
-        <value>Gamepad - D-Pad Left</value>
+        <value>Gamepad - D-Pad Izquierdo</value>
     </data>
     <data name="Ps2InputTypeL2" xml:space="preserve">
-        <value>Gamepad - L2 Button</value>
+        <value>Gamepad - Botón L2</value>
     </data>
     <data name="Ps2InputTypeR2" xml:space="preserve">
-        <value>Gamepad - R2 Button</value>
+        <value>Gamepad - Botón R2</value>
     </data>
     <data name="Ps2InputTypeL1" xml:space="preserve">
-        <value>Gamepad - L1 Button</value>
+        <value>Gamepad - Botón L1</value>
     </data>
     <data name="Ps2InputTypeR1" xml:space="preserve">
-        <value>Gamepad - R1 Button</value>
+        <value>Gamepad - Botón R1</value>
     </data>
     <data name="Ps2InputTypeTriangle" xml:space="preserve">
-        <value>Gamepad - Triangle Button</value>
+        <value>Gamepad - Botón Triángulo</value>
     </data>
 
     <data name="Ps2InputTypeCircle" xml:space="preserve">
-        <value>Gamepad - Circle Button</value>
+        <value>Gamepad - Botón Círculo</value>
     </data>
 
     <data name="Ps2InputTypeCross" xml:space="preserve">
-        <value>Gamepad - Cross Button</value>
+        <value>Gamepad - Botón Cruz</value>
     </data>
 
     <data name="Ps2InputTypeSquare" xml:space="preserve">
-        <value>Gamepad - Square Button</value>
+        <value>Gamepad - Botón Cuadrado</value>
     </data>
     <data name="Ps2InputTypeJoystickToDpad" xml:space="preserve">
-        <value>All - Map Joystick To Dpad</value>
+        <value>All - Mapear Joystick a Dpad</value>
     </data>
     <data name="Ps3AxisTypePressureDpadUp" xml:space="preserve">
-        <value>Dpad Up Pressure</value>
+        <value>Presión de Dpad Arriba</value>
     </data>
     <data name="Ps3AxisTypePressureDpadRight" xml:space="preserve">
-        <value>Dpad Right Pressure</value>
+        <value>Presión de Dpad Derecho</value>
     </data>
     <data name="Ps3AxisTypePressureDpadLeft" xml:space="preserve">
-        <value>Dpad Left Pressure</value>
+        <value>Presión de Dpad Izquierdo</value>
     </data>
     <data name="Ps3AxisTypePressureDpadDown" xml:space="preserve">
-        <value>Dpad Down Pressure</value>
+        <value>Presión de Dpad Abajo</value>
     </data>
     <data name="Ps3AxisTypePressureL1" xml:space="preserve">
-        <value>L1 Pressure</value>
+        <value>Presión de L1</value>
     </data>
     <data name="Ps3AxisTypePressureR1" xml:space="preserve">
-        <value>R1 Pressure</value>
+        <value>Presión de R1</value>
     </data>
     <data name="Ps3AxisTypePressureTriangle" xml:space="preserve">
-        <value>Triangle Pressure</value>
+        <value>Presión de Triángulo</value>
     </data>
     <data name="Ps3AxisTypePressureCircle" xml:space="preserve">
-        <value>Circle Pressure</value>
+        <value>Presión de Círculo</value>
     </data>
     <data name="Ps3AxisTypePressureCross" xml:space="preserve">
-        <value>Cross Pressure</value>
+        <value>Presión de Cruz</value>
     </data>
     <data name="Ps3AxisTypePressureSquare" xml:space="preserve">
-        <value>Square Pressure</value>
+        <value>Presión de Cuadrado</value>
     </data>
     <data name="RumbleMotorTypeLeft" xml:space="preserve">
-        <value>Left</value>
+        <value>Izquierdo</value>
     </data>
     <data name="RumbleMotorTypeRight" xml:space="preserve">
-        <value>Right</value>
+        <value>Derecho</value>
     </data>
     <data name="SimpleTypeWiiInputSimple" xml:space="preserve">
-        <value>Wii Extension Inputs</value>
+        <value>Entradas de Extensión de Wii</value>
     </data>
     <data name="SimpleTypePs2InputSimple" xml:space="preserve">
-        <value>PS2 Controller Inputs</value>
+        <value>Entardas de Control de PS2</value>
     </data>
     <data name="SimpleTypeWtNeckSimple" xml:space="preserve">
-        <value>Guitar Hero WT Slider Bar Inputs</value>
+        <value>Entradas de Barra Slider de Guitar Hero WT</value>
     </data>
     <data name="SimpleTypeWtNeckPeripheralSimple" xml:space="preserve">
-        <value>Guitar Hero WT Slider Bar Inputs (Peripheral)</value>
+        <value>Entradas de Barra Slider de Guitar Hero WT (Periférico)</value>
     </data>
     <data name="SimpleTypeGh5NeckSimple" xml:space="preserve">
-        <value>Guitar Hero 5 Neck Inputs</value>
+        <value>Entradas de Mástil de Guitar Hero 5</value>
     </data>
     <data name="SimpleTypeCloneNeckSimple" xml:space="preserve">
-        <value>Crazy Guitar Neck Inputs</value>
+        <value>Entradas de Mástil de Crazy Guitar</value>
     </data>
     <data name="SimpleTypeDjTurntableSimple" xml:space="preserve">
-        <value>DJ Hero Turntable Inputs</value>
+        <value>Entradas de Tornamesa de DJ Hero</value>
     </data>
     <data name="SimpleTypeUsbHost" xml:space="preserve">
-        <value>USB Host Inputs</value>
+        <value>Entradas de Host por USB</value>
     </data>
     <data name="SimpleTypeReset" xml:space="preserve">
-        <value>Controller Reset</value>
+        <value>Reinicio de Control</value>
     </data>
     <data name="SimpleTypePeripheral" xml:space="preserve">
-        <value>Peripheral</value>
+        <value>Periférico</value>
     </data>
     <data name="SimpleTypeBluetooth" xml:space="preserve">
-        <value>Bluetooth Inputs</value>
+        <value>Entradas de Bluetooth</value>
     </data>
     <data name="SimpleTypeLed" xml:space="preserve">
-        <value>LED Binding</value>
+        <value>Mapeo de LED</value>
     </data>
     <data name="SimpleTypeRumble" xml:space="preserve">
-        <value>Rumble Binding</value>
+        <value>Mapeo de Vibración</value>
     </data>
     <data name="SimpleTypeConsoleMode" xml:space="preserve">
-        <value>Console Mode Binding</value>
+        <value>Mapeo de Modo Consola</value>
     </data>
     <data name="AnalogToDigitalTypeJoyLow" xml:space="preserve">
-        <value>Joystick Negative</value>
+        <value>Joystick Negativo</value>
     </data>
     <data name="AnalogToDigitalTypeJoyHigh" xml:space="preserve">
-        <value>Joystick Positive</value>
+        <value>Joystick Positivo</value>
     </data>
     <data name="AnalogToDigitalTypeTrigger" xml:space="preserve">
-        <value>Trigger / Button</value>
+        <value>Gatillo / Botón</value>
     </data>
     <data name="AnalogToDigitalTypeRapidTrigger" xml:space="preserve">
-        <value>RapidTrigger</value>
+        <value>GatilloRápido</value>
     </data>
     <data name="Arduino32U4TypeProMicro" xml:space="preserve">
         <value>Sparkfun Pro Micro</value>
@@ -2537,349 +2537,349 @@
         <value>Arduino Mega</value>
     </data>
     <data name="DeviceInputTypeDirect" xml:space="preserve">
-        <value>Directly Wired</value>
+        <value>Directamente Cableado</value>
     </data>
     <data name="DeviceInputTypePeripheral" xml:space="preserve">
-        <value>Peripheral Device</value>
+        <value>Dispositivo Periférico</value>
     </data>
     <data name="DeviceInputTypeWii" xml:space="preserve">
-        <value>Wii Adapter</value>
+        <value>Adaptador de Wii</value>
     </data>
     <data name="DeviceInputTypePs2" xml:space="preserve">
-        <value>PS2 Adapter</value>
+        <value>Adaptador de PS2</value>
     </data>
     <data name="DeviceInputTypeUsb" xml:space="preserve">
-        <value>USB Adapter</value>
+        <value>Adaptador USB</value>
     </data>
     <data name="DeviceInputTypeBluetooth" xml:space="preserve">
-        <value>Bluetooth Receiver</value>
+        <value>Receptor Bluetooth</value>
     </data>
     <data name="LedCommandTypeKeyboardNumLock" xml:space="preserve">
-        <value>Num Lock LED</value>
+        <value>LED de Bloq. Num.</value>
     </data>
     <data name="LedCommandTypeKeyboardCapsLock" xml:space="preserve">
-        <value>Caps Lock LED</value>
+        <value>LED de Bloq. Mayús.</value>
     </data>
     <data name="LedCommandTypeKeyboardScrollLock" xml:space="preserve">
-        <value>Scroll Lock LED</value>
+        <value>LED de Bloq. Des.</value>
     </data>
 
     <data name="LedCommandTypeAuth" xml:space="preserve">
-        <value>Authenticated with console LED</value>
+        <value>LED de Autenticación con consola</value>
     </data>
     <data name="LedCommandTypePlayer" xml:space="preserve">
-        <value>Player LEDs</value>
+        <value>LEDs de Jugador</value>
     </data>
     <data name="LedCommandTypeCombo" xml:space="preserve">
-        <value>Combo LEDs</value>
+        <value>Combo de LEDs</value>
     </data>
     <data name="LedCommandTypeNoteMiss" xml:space="preserve">
-        <value>Note Miss LEDs</value>
+        <value>LEDs de Nota Fallada</value>
     </data>
     <data name="LedCommandTypeNoteHit" xml:space="preserve">
-        <value>Note Hit LEDs</value>
+        <value>LEDs de Nota Golpeada</value>
     </data>
 
     <data name="LedCommandTypeStarPowerInactive" xml:space="preserve">
-        <value>Star Power Percentage (When not active) LED</value>
+        <value>LED de Porcentaje de Star Power (Inactivo)</value>
     </data>
 
     <data name="LedCommandTypeStarPowerActive" xml:space="preserve">
-        <value>Star Power Percentage (When active) LED</value>
+        <value>LED de Porcentaje de Star Power (Activo)</value>
     </data>
     <data name="LedCommandTypeDjEuphoria" xml:space="preserve">
-        <value>DJ Hero Euphoria LED</value>
+        <value>LED de Euphoria de DJ Hero Euphoria</value>
     </data>
 
     <data name="LedCommandTypeStageKitLed" xml:space="preserve">
-        <value>Stage Kit</value>
+        <value>Kit de Escenario</value>
     </data>
 
     <data name="LedCommandTypeOpen" xml:space="preserve">
-        <value>Open Note</value>
+        <value>Nota Abierta</value>
     </data>
 
     <data name="LedCommandTypePs4LightBar" xml:space="preserve">
-        <value>PS4 Light Bar</value>
+        <value>Barra de Luz de PS4</value>
     </data>
     <data name="StageKitCommandFog" xml:space="preserve">
-        <value>Fog</value>
+        <value>Niebla</value>
     </data>
     <data name="StageKitCommandStrobe" xml:space="preserve">
-        <value>Strobe</value>
+        <value>Luz Estroboscópica</value>
     </data>
     <data name="StageKitCommandLedGreen" xml:space="preserve">
-        <value>Led Green</value>
+        <value>Led Verde</value>
     </data>
     <data name="StageKitCommandLedRed" xml:space="preserve">
-        <value>Led Red</value>
+        <value>Led Rojo</value>
     </data>
     <data name="StageKitCommandLedYellow" xml:space="preserve">
-        <value>Led Yellow</value>
+        <value>Led Amarillo</value>
     </data>
     <data name="StageKitCommandLedBlue" xml:space="preserve">
-        <value>Led Blue</value>
+        <value>Led Azul</value>
     </data>
     <data name="StageKitStrobeSpeedSlow" xml:space="preserve">
-        <value>Slow</value>
+        <value>Lento</value>
     </data>
     <data name="StageKitStrobeSpeedMedium" xml:space="preserve">
-        <value>Medium</value>
+        <value>Medio</value>
     </data>
     <data name="StageKitStrobeSpeedFast" xml:space="preserve">
-        <value>Fast</value>
+        <value>Rápido</value>
     </data>
     <data name="StageKitStrobeSpeedFastest" xml:space="preserve">
-        <value>Fastest</value>
+        <value>Más Rápido</value>
     </data>
     <data name="FiveFretGuitarOpen" xml:space="preserve">
-        <value>Open</value>
+        <value>Abierto</value>
     </data>
     <data name="FiveFretGuitarGreen" xml:space="preserve">
-        <value>Green</value>
+        <value>Verde</value>
     </data>
     <data name="FiveFretGuitarRed" xml:space="preserve">
-        <value>Red</value>
+        <value>Rojo</value>
     </data>
     <data name="FiveFretGuitarYellow" xml:space="preserve">
-        <value>Yellow</value>
+        <value>Amarillo</value>
     </data>
     <data name="FiveFretGuitarBlue" xml:space="preserve">
-        <value>Blue</value>
+        <value>Azul</value>
     </data>
     <data name="FiveFretGuitarOrange" xml:space="preserve">
-        <value>Orange</value>
+        <value>Naranja</value>
     </data>
     <data name="SixFretGuitarOpen" xml:space="preserve">
-        <value>Open</value>
+        <value>Abierto</value>
     </data>
     <data name="SixFretGuitarBlack1" xml:space="preserve">
-        <value>Black 1</value>
+        <value>Negro 1</value>
     </data>
     <data name="SixFretGuitarBlack2" xml:space="preserve">
-        <value>Black 2</value>
+        <value>Negro 2</value>
     </data>
     <data name="SixFretGuitarBlack3" xml:space="preserve">
-        <value>Black 3</value>
+        <value>Negro 3</value>
     </data>
     <data name="SixFretGuitarWhite1" xml:space="preserve">
-        <value>White 1</value>
+        <value>Blanco 1</value>
     </data>
     <data name="SixFretGuitarWhite2" xml:space="preserve">
-        <value>White 2</value>
+        <value>Blanco 2</value>
     </data>
     <data name="SixFretGuitarWhite3" xml:space="preserve">
-        <value>White 3</value>
+        <value>Blanco 3</value>
     </data>
     <data name="RockBandDrumKickPedal" xml:space="preserve">
-        <value>Kick Pedal</value>
+        <value>Pedal de Bombo</value>
     </data>
     <data name="RockBandDrumRedPad" xml:space="preserve">
-        <value>Red Pad</value>
+        <value>Pad Rojo</value>
     </data>
     <data name="RockBandDrumYellowPad" xml:space="preserve">
-        <value>Yellow Pad</value>
+        <value>Pad Amarillo</value>
     </data>
     <data name="RockBandDrumBluePad" xml:space="preserve">
-        <value>Blue Pad</value>
+        <value>Pad Azul</value>
     </data>
     <data name="RockBandDrumGreenPad" xml:space="preserve">
-        <value>Green Pad</value>
+        <value>Pad Verde</value>
     </data>
     <data name="RockBandDrumYellowCymbal" xml:space="preserve">
-        <value>Yellow Cymbal</value>
+        <value>Platillo Amarillo</value>
     </data>
     <data name="RockBandDrumBlueCymbal" xml:space="preserve">
-        <value>Blue Cymbal</value>
+        <value>Platillo Azul</value>
     </data>
     <data name="RockBandDrumGreenCymbal" xml:space="preserve">
-        <value>Green Cymbal</value>
+        <value>Platillo Verde</value>
     </data>
     <data name="GuitarHeroDrumKickPedal" xml:space="preserve">
-        <value>Kick Pedal</value>
+        <value>Pedal de Bombo</value>
     </data>
     <data name="GuitarHeroDrumRedPad" xml:space="preserve">
-        <value>Red Pad</value>
+        <value>Pad Rojo</value>
     </data>
     <data name="GuitarHeroDrumYellowCymbal" xml:space="preserve">
-        <value>Yellow Cymbal</value>
+        <value>Platillo Amarillo</value>
     </data>
     <data name="GuitarHeroDrumBluePad" xml:space="preserve">
-        <value>Blue Pad</value>
+        <value>Pad Azul</value>
     </data>
     <data name="GuitarHeroDrumOrangeCymbal" xml:space="preserve">
-        <value>Orange Cymbal</value>
+        <value>Platillo Naranjo</value>
     </data>
     <data name="GuitarHeroDrumGreenPad" xml:space="preserve">
-        <value>Green Pad</value>
+        <value>Pad Verde</value>
     </data>
     <data name="TurntableScratchLeft" xml:space="preserve">
-        <value>Turntable Left Velocity</value>
+        <value>Velocidad de Tornamesa Izquierda</value>
     </data>
     <data name="TurntableGreenNoteLeft" xml:space="preserve">
-        <value>Turntable Left Green</value>
+        <value>Verde de Tornamesa Izquierda</value>
     </data>
     <data name="TurntableRedNoteLeft" xml:space="preserve">
-        <value>Turntable Left Red</value>
+        <value>Rojo de Tornamesa Izquierda</value>
     </data>
     <data name="TurntableBlueNoteLeft" xml:space="preserve">
-        <value>Turntable Left Blue</value>
+        <value>Azul de Tornamesa Izquierda</value>
     </data>
     <data name="TurntableScratchRight" xml:space="preserve">
-        <value>Turntable Right Velocity</value>
+        <value>Velocidad de Tornamesa Derecha</value>
     </data>
     <data name="TurntableGreenNoteRight" xml:space="preserve">
-        <value>Turntable Right Green</value>
+        <value>Verde de Tornamesa Derecha</value>
     </data>
     <data name="TurntableRedNoteRight" xml:space="preserve">
-        <value>Turntable Right Red</value>
+        <value>Rojo de Tornamesa Izquierda</value>
     </data>
     <data name="TurntableBlueNoteRight" xml:space="preserve">
-        <value>Turntable Right Blue</value>
+        <value>Azul de Tornamesa Derecha</value>
     </data>
     <data name="ButtonLabelCross" xml:space="preserve">
-        <value>Cross Button</value>
+        <value>Botón Cruz</value>
     </data>
     <data name="ButtonLabelCircle" xml:space="preserve">
-        <value>Circle Button</value>
+        <value>Botón Círculo</value>
     </data>
     <data name="ButtonLabelSquare" xml:space="preserve">
-        <value>Square Button</value>
+        <value>Botón Cuadrado</value>
     </data>
     <data name="ButtonLabelTriangle" xml:space="preserve">
-        <value>Triangle Button</value>
+        <value>Botón Triángulo</value>
     </data>
     <data name="ButtonLabelPlayStation" xml:space="preserve">
-        <value>PlayStation Button</value>
+        <value>Botón PlayStation</value>
     </data>
     <data name="ButtonLabelGuide" xml:space="preserve">
-        <value>Guide Button</value>
+        <value>Botón Guía</value>
     </data>
     <data name="ButtonLabelBack" xml:space="preserve">
-        <value>Back Button</value>
+        <value>Botón Atrás</value>
     </data>
     <data name="ButtonLabelHeroPower" xml:space="preserve">
-        <value>/ Hero Power Button</value>
+        <value>/ Botón Hero Power</value>
     </data>
     <data name="ButtonLabelOverdrive" xml:space="preserve">
         <value>Overdrive</value>
     </data>
     <data name="ButtonLabelGHTV" xml:space="preserve">
-        <value>GHTV Button</value>
+        <value>Botón GHTV</value>
     </data>
     <data name="ButtonLabelPause" xml:space="preserve">
-        <value>/ Pause Button</value>
+        <value>/ Botón Pausa</value>
     </data>
     <data name="ButtonLabelEuphoria" xml:space="preserve">
-        <value>/ Euphoria Button</value>
+        <value>/ Botón Euphoria</value>
     </data>
     <data name="RawValueLabel" xml:space="preserve">
-        <value>Raw Value</value>
+        <value>Valor Puro</value>
     </data>
     <data name="ToolName" xml:space="preserve">
-        <value>Santroller Configurator</value>
+        <value>Configurador Santroller</value>
     </data>
     <data name="RawValue" xml:space="preserve">
-        <value>Raw Value</value>
+        <value>Valor Puro</value>
     </data>
     <data name="LeftTurntableFound" xml:space="preserve">
-        <value>Left Turntable Found</value>
+        <value>Tornamesa Izquierda Encontrada</value>
     </data>
     <data name="RightTurntableFound" xml:space="preserve">
-        <value>Right Turntable Found</value>
+        <value>Tornamesa Derecha Encontrada</value>
     </data>
     <data name="ContinueLabel" xml:space="preserve">
-        <value>Continue</value>
+        <value>Continuar</value>
     </data>
     <data name="AbortLabel" xml:space="preserve">
-        <value>Abort</value>
+        <value>Abortar</value>
     </data>
     <data name="EmulationModeLabel" xml:space="preserve">
-        <value>Emulation Mode</value>
+        <value>Modo de Emulación</value>
     </data>
     <data name="DevicesConnectedLabel" xml:space="preserve">
-        <value>Devices connected</value>
+        <value>Dispositivos conectados</value>
     </data>
     <data name="RevertArduinoLabel" xml:space="preserve">
-        <value>Revert Device to Arduino</value>
+        <value>Revertir Dispositivo a Arduino</value>
     </data>
     <data name="SaveConfigurationLabel" xml:space="preserve">
-        <value>Save Settings</value>
+        <value>Guardar Ajustes</value>
     </data>
     <data name="GoBackLabel" xml:space="preserve">
-        <value>Back to main menu</value>
+        <value>Regreso al menú principal</value>
     </data>
     <data name="StatusLabel" xml:space="preserve">
-        <value>Status: </value>
+        <value>Estado: </value>
     </data>
     <data name="RemoveLabel" xml:space="preserve">
-        <value>Remove</value>
+        <value>Remover</value>
     </data>
     <data name="OutputTypeLabel" xml:space="preserve">
-        <value>Output Type</value>
+        <value>Tipo de Salida</value>
     </data>
     <data name="KeyTypeLabel" xml:space="preserve">
-        <value>Keyboard Key</value>
+        <value>Tecla Teclado</value>
     </data>
     <data name="MouseButtonTypeLabel" xml:space="preserve">
-        <value>Mouse Button</value>
+        <value>Botón de Mouse</value>
     </data>
     <data name="MouseAxisTypeLabel" xml:space="preserve">
-        <value>Mouse Axis</value>
+        <value>Eje de Mouse</value>
     </data>
     <data name="InputTypeLabel" xml:space="preserve">
-        <value>Input Type</value>
+        <value>Tipo de Entrada</value>
     </data>
     <data name="InputLabel" xml:space="preserve">
-        <value>Input</value>
+        <value>Entrada</value>
     </data>
     <data name="CollapseAllLabel" xml:space="preserve">
-        <value>Collapse All</value>
+        <value>Colapsar Todo</value>
     </data>
     <data name="ExpandAllLabel" xml:space="preserve">
-        <value>Expand All</value>
+        <value>Expandir Todo</value>
     </data>
     <data name="SelectedLEDsApa102Label" xml:space="preserve">
-        <value>Selected LEDs on APA102</value>
+        <value>LEDs Seleccionados en APA102</value>
     </data>
     <data name="SelectedLEDsWS2812Label" xml:space="preserve">
-        <value>Selected LEDs on WS2812</value>
+        <value>LEDs Seleccionados en WS2812</value>
     </data>
     <data name="SelectedLEDsStpLabel" xml:space="preserve">
-        <value>Selected LEDs on STP16CPC26</value>
+        <value>LEDs Seleccionados en STP16CPC26</value>
     </data>
     <data name="SelectedLEDsPeripheralWS2812Label" xml:space="preserve">
-        <value>Selected LEDs on WS2812</value>
+        <value>LEDs Seleccionados en WS2812</value>
     </data>
     <data name="SelectedLEDsPeripheralApa102Label" xml:space="preserve">
-        <value>Selected LEDs on Peripheral APA102</value>
+        <value>LEDs Seleccionados en Periférico APA102</value>
     </data>
     <data name="SelectedLEDsPeripheralStpLabel" xml:space="preserve">
-        <value>Selected LEDs on Peripheral STP16CPC26</value>
+        <value>LEDs Seleccionados en Periférico STP16CPC26</value>
     </data>
     <data name="SelectedLEDsMpr121Label" xml:space="preserve">
-        <value>Selected LEDs on MPR121</value>
+        <value>LEDs Seleccionados en MPR121</value>
     </data>
     <data name="TestLEDLabel" xml:space="preserve">
-        <value>Test LEDs</value>
+        <value>Probar LEDs</value>
     </data>
     <data name="CopyOtherLedLabel" xml:space="preserve">
-        <value>Copy Colour From Other LED</value>
+        <value>Copiar Color De Otro LED</value>
     </data>
     <data name="OnLabel" xml:space="preserve">
-        <value>On</value>
+        <value>Encendido</value>
     </data>
     <data name="OffLabel" xml:space="preserve">
-        <value>Off</value>
+        <value>Apagado</value>
     </data>
     <data name="EnabledLabel" xml:space="preserve">
-        <value>Enabled</value>
+        <value>Habilitado</value>
     </data>
     <data name="PS4ModeLabel" xml:space="preserve">
-        <value>Emulation Mode for PS4/5</value>
+        <value>Modo de Emulación para PS4/5</value>
     </data>
     <data name="PS2KramerModeLabel" xml:space="preserve">
-        <value>Use slower poll rate (needed for some guitars)</value>
+        <value>Usa un 'poll rate' más lento (necesario para algunas guitarras)</value>
     </data>
     <data name="PS4Label" xml:space="preserve">
         <value>PS4</value>
@@ -2888,722 +2888,716 @@
         <value>PS3</value>
     </data>
     <data name="DisabledLabel" xml:space="preserve">
-        <value>Disabled</value>
+        <value>Deshabilitado</value>
     </data>
     <data name="HideLabel" xml:space="preserve">
-        <value>Hide</value>
+        <value>Esconder</value>
     </data>
     <data name="ShowLabel" xml:space="preserve">
-        <value>Show</value>
+        <value>Mostrar</value>
     </data>
     <data name="AttentionLabel" xml:space="preserve">
-        <value>Attention (Yellow) Pin</value>
+        <value>Atención al Pin (Amarillo)</value>
     </data>
     <data name="AckLabel" xml:space="preserve">
-        <value>Acknowledge (Green) Pin</value>
+        <value>Reconocer Pin (Verde)</value>
     </data>
     <data name="SckLabel" xml:space="preserve">
-        <value>Sck / Clock (Blue) Pin</value>
+        <value>Pin Sck / Clock (Azul)</value>
     </data>
     <data name="MisoLabel" xml:space="preserve">
-        <value>MISO / Data (Brown) Pin</value>
+        <value>Pin de Datos / MISO (Marrón)</value>
     </data>
     <data name="MosiLabel" xml:space="preserve">
-        <value>MOSI / Command (Orange) Pin</value>
-    </data>
-    <data name="SelectLanguage" xml:space="preserve">
-        <value>Select Language</value>
-    </data>
-    <data name="LanguageEn" xml:space="preserve">
-        <value>English</value>
-    </data>
-    <data name="LanguageEs" xml:space="preserve">
-        <value>Español</value>
+        <value>Pin de Comando / MOSI (Naranjo)</value>
     </data>
     <data name="SelectedDeviceLabel" xml:space="preserve">
-        <value>Selected Device</value>
+        <value>Dispositivo Seleccionado</value>
     </data>
     <data name="DetectedLabel" xml:space="preserve">
-        <value>Detected</value>
+        <value>Detectado</value>
     </data>
     <data name="ConnectedToTransmitterLabel" xml:space="preserve">
-        <value>Connected to Transmitter</value>
+        <value>Conectado a Transmisor</value>
     </data>
     <data name="LocalAddressLabel" xml:space="preserve">
-        <value>Local Address</value>
+        <value>Dirección Local</value>
     </data>
     <data name="CurrentControllerTypeLabel" xml:space="preserve">
-        <value>Current Controller Type: </value>
+        <value>Tipo de Control Actual: </value>
     </data>
     <data name="NoControllerFoundLabel" xml:space="preserve">
-        <value>No Controller Found</value>
+        <value>Control No Encontrado</value>
     </data>
     <data name="CurrentExtensionLabel" xml:space="preserve">
-        <value>Current Extension: </value>
+        <value>Extensión Actual: </value>
     </data>
     <data name="NoExtensionFoundLabel" xml:space="preserve">
-        <value>No Extension Found</value>
+        <value>Extensión No Encontrada</value>
     </data>
     <data name="ConnectedDevicesLabel" xml:space="preserve">
-        <value>Connected devices</value>
+        <value>Dispositivos conectados</value>
     </data>
     <data name="DPlusLabel" xml:space="preserve">
-        <value>D+ (Green) Pin</value>
+        <value>Pin D+ (Verde)</value>
     </data>
     <data name="DMinusLabel" xml:space="preserve">
-        <value>D- (White) Pin</value>
+        <value>Pin D- (Blanco)</value>
     </data>
     <data name="SliderBarSensitivityLabel" xml:space="preserve">
-        <value>Slider Bar Threshold</value>
+        <value>Límite de Barra Slider</value>
     </data>
     <data name="SliderAnalogInputPin" xml:space="preserve">
-        <value>Slider Input Pin</value>
+        <value>Pin de Entrada de Slider</value>
     </data>
     <data name="SliderS0Pin" xml:space="preserve">
-        <value>Slider S0 Pin</value>
+        <value>Pin de Slider S0</value>
     </data>
     <data name="SliderS1Pin" xml:space="preserve">
-        <value>Slider S1 Pin</value>
+        <value>Pin de Slider S1</value>
     </data>
     <data name="SliderS2Pin" xml:space="preserve">
-        <value>Slider S2 Pin</value>
+        <value>Pin de Slider S2</value>
     </data>
     <data name="SclGh5Label" xml:space="preserve">
-        <value>SCL (Labelled as CLK or C) Pin</value>
+        <value>Pin SCL (Marcado como CLK o C)</value>
     </data>
     <data name="SdaGh5Label" xml:space="preserve">
-        <value>SDA (Labelled as Data or D) Pin</value>
+        <value>Pin SDA (Marcado como Data o D)</value>
     </data>
     <data name="LEDTitle" xml:space="preserve">
         <value>LED</value>
     </data>
     <data name="StageKitCommandTitle" xml:space="preserve">
-        <value>Stage Kit Command</value>
+        <value>Comando de Kit de Escenario</value>
     </data>
     <data name="GuitarInputLabel" xml:space="preserve">
-        <value>Guitar Input</value>
+        <value>Entrada de Guitarra</value>
     </data>
     <data name="LiveGuitarInputLabel" xml:space="preserve">
-        <value>Live Guitar Input</value>
+        <value>Entrada de Guitarra de GH Live</value>
     </data>
     <data name="DrumInputLabel" xml:space="preserve">
-        <value>Drum Input</value>
+        <value>Entrada de Batería</value>
     </data>
     <data name="TurntableInputLabel" xml:space="preserve">
-        <value>Turntable Input</value>
+        <value>Entrada de Tornamesa</value>
     </data>
     <data name="StrobeSpeedLabel" xml:space="preserve">
-        <value>Strobe Speed</value>
+        <value>Velocidad de Luz Estroboscópica</value>
     </data>
     <data name="PlayerTitle" xml:space="preserve">
-        <value>Player</value>
+        <value>Jugador</value>
     </data>
     <data name="ComboTitle" xml:space="preserve">
         <value>Combo</value>
     </data>
     <data name="EnableDigitalOutputTitle" xml:space="preserve">
-        <value>Enable Digital Output</value>
+        <value>Habilitar Salida Digital</value>
     </data>
     <data name="EnableAnalogOutputTitle" xml:space="preserve">
-        <value>Enable Analog Output</value>
+        <value>Habilitar Salida Análoga</value>
     </data>
     <data name="PeripheralOutputLabel" xml:space="preserve">
-        <value>Output connected to Peripheral</value>
+        <value>Salida conectada a Periférico</value>
     </data>
     <data name="InvertLabel" xml:space="preserve">
-        <value>Invert</value>
+        <value>Invertir</value>
     </data>
     <data name="InvertOutputLabel" xml:space="preserve">
-        <value>Invert Output</value>
+        <value>Invertir Salida</value>
     </data>
     <data name="AnalogOutputPinLabel" xml:space="preserve">
-        <value>Analog Output Pin</value>
+        <value>Pin de Output Análogo</value>
     </data>
     <data name="TestLabel" xml:space="preserve">
-        <value>Test Analog Output</value>
+        <value>Probar Salida Análoga</value>
     </data>
     <data name="TestLabelDigital" xml:space="preserve">
-        <value>Test Digital Output</value>
+        <value>Probar Salida Digital</value>
     </data>
     <data name="DigitalOutputPinLabel" xml:space="preserve">
-        <value>Digital Output Pin</value>
+        <value>Pin de Salida Digital</value>
     </data>
     <data name="MotorLabel" xml:space="preserve">
         <value>Motor</value>
     </data>
     <data name="MotorDriverPinLabel" xml:space="preserve">
-        <value>Motor Driver Pin</value>
+        <value>Pin de 'Motor Driver'</value>
     </data>
     <data name="SclLabel" xml:space="preserve">
-        <value>SCL Pin</value>
+        <value>Pin SCL</value>
     </data>
     <data name="SdaLabel" xml:space="preserve">
-        <value>SDA Pin</value>
+        <value>Pin SDA</value>
     </data>
     <data name="TurntableSmoothingLabel" xml:space="preserve">
-        <value>Turntable Smoothing</value>
+        <value>Suavizado de Tornamesa</value>
     </data>
     <data name="DualTurntableSmoothingLabel" xml:space="preserve">
-        <value>Dual Turntable Smoothing</value>
+        <value>Suavizado de Tornamesa Dual</value>
     </data>
     <data name="TurntablePollRateLabel" xml:space="preserve">
-        <value>Turntable Poll Rate</value>
+        <value>Poll Rate de Tornamesa</value>
     </data>
     <data name="ThresholdLabel" xml:space="preserve">
-        <value>Threshold</value>
+        <value>Límite</value>
     </data>
     <data name="AnalogPinLabel" xml:space="preserve">
-        <value>Analog Pin</value>
+        <value>Pin Análogo</value>
     </data>
     <data name="ChannelLabel" xml:space="preserve">
-        <value>Channel</value>
+        <value>Canal</value>
     </data>
     <data name="MultiplexerTypeLabel" xml:space="preserve">
-        <value>Multiplexer Type</value>
+        <value>Tipo de Multiplexer</value>
     </data>
     <data name="S0Pin" xml:space="preserve">
-        <value>S0 Pin</value>
+        <value>Pin S0</value>
     </data>
     <data name="S1Pin" xml:space="preserve">
-        <value>S1 Pin</value>
+        <value>Pin S1</value>
     </data>
     <data name="S2Pin" xml:space="preserve">
-        <value>S2 Pin</value>
+        <value>Pin S2</value>
     </data>
     <data name="S3Pin" xml:space="preserve">
-        <value>S3 Pin</value>
+        <value>Pin S3</value>
     </data>
     <data name="PinModeText" xml:space="preserve">
-        <value>Pin Mode</value>
+        <value>Modo de Pin</value>
     </data>
     <data name="PinLabel" xml:space="preserve">
         <value>Pin</value>
     </data>
     <data name="CurrentValueLabel" xml:space="preserve">
-        <value>Current Value</value>
+        <value>Valor Actual</value>
     </data>
     <data name="CalibratedValueLabel" xml:space="preserve">
-        <value>Calibrated Value</value>
+        <value>Valor Calibrado</value>
     </data>
     <data name="OriginalValueLabel" xml:space="preserve">
-        <value>Original Value</value>
+        <value>Valor Original</value>
     </data>
     <data name="CalibrateLabel" xml:space="preserve">
-        <value>Calibrate</value>
+        <value>Calibrar</value>
     </data>
     <data name="MinLabel" xml:space="preserve">
-        <value>Minimum</value>
+        <value>Mínimo</value>
     </data>
     <data name="MaxLabel" xml:space="preserve">
-        <value>Maximum</value>
+        <value>Máximo</value>
     </data>
     <data name="DeadzoneLabel" xml:space="preserve">
-        <value>Deadzone</value>
+        <value>Zona Muerta</value>
     </data>
     <data name="CurrentFretsLabel" xml:space="preserve">
-        <value>Current Frets</value>
+        <value>Trastes Actuales</value>
     </data>
     <data name="DigitalThresholdLabel" xml:space="preserve">
-        <value>Digital Threshold</value>
+        <value>Límite Digital</value>
     </data>
     <data name="DebounceLabel" xml:space="preserve">
         <value>Debounce</value>
     </data>
     <data name="ValueLabel" xml:space="preserve">
-        <value>Value</value>
+        <value>Valor</value>
     </data>
     <data name="TypeLabel" xml:space="preserve">
-        <value>Type</value>
+        <value>Tipo</value>
     </data>
     <data name="Input1InputLabel" xml:space="preserve">
-        <value>Input 1 Input</value>
+        <value>Entrada 1 Entrada</value>
     </data>
     <data name="Input2InputLabel" xml:space="preserve">
-        <value>Input 2 Input</value>
+        <value>Entrada 2 Entrada</value>
     </data>
     <data name="PS2InputFilterLabel" xml:space="preserve">
-        <value>PS2 Controller Inputs to display below</value>
+        <value>Entradas de Control de PS2 para mostrar abajo</value>
     </data>
     <data name="WiiInputFilterLabel" xml:space="preserve">
-        <value>Wii Inputs to display below</value>
+        <value>Entradas de Wii para mostrar abajo</value>
     </data>
     <data name="InitialConfigDesc" xml:space="preserve">
-        <value>Programming initial configuration, please wait.</value>
+        <value>Programando configuración inicial, por favor espera.</value>
     </data>
     <data name="InitialConfigPeripheralDesc" xml:space="preserve">
-        <value>Flashing firmware, please wait.</value>
+        <value>Flasheando firmware, por favor espera.</value>
     </data>
     <data name="UnoBridgeDesc" xml:space="preserve">
-        <value>Please bridge the reset and ground pins shown below</value>
+        <value>Por favor haz puente con los pins de reinicio y tierra como se muestra abajo</value>
     </data>
     <data name="ConfigureButtonLabel" xml:space="preserve">
-        <value>Configure</value>
+        <value>Configurar</value>
     </data>
     <data name="WelcomeDesc" xml:space="preserve">
-        <value>Welcome to the Santroller Configuration Tool!</value>
+        <value>¡Bienvenido a la Herramienta de Configuración Santroller!</value>
     </data>
     <data name="UpdateDesc" xml:space="preserve">
-        <value>Update</value>
+        <value>Actualizar</value>
     </data>
     <data name="FirmwareTooOldDesc" xml:space="preserve">
-        <value>The firmware on this device is too old, it's configuration will be erased when upgrading.</value>
+        <value>El firmware en este dispositivo es muy viejo, su configuración se borrará al actualizar.</value>
     </data>
     <data name="UnknownBoardDesc" xml:space="preserve">
-        <value>Unknown board detected. Please pick the closest board to the type of Arduino you have plugged in.</value>
+        <value>Placa desconocida detectada. Por favor selecciona la placa más cercana al tipo de Arduino que conectaste.</value>
     </data>
     <data name="NoSupportedDeviceFoundLabel" xml:space="preserve">
-        <value>No supported device found</value>
+        <value>No se encontró un dispositivo soportado</value>
     </data>
     <data name="ArduinoUnoMegaType" xml:space="preserve">
-        <value>Arduino Uno / Mega Type</value>
+        <value>Tipo Arduino Uno / Mega</value>
     </data>
     <data name="Atmega32U4Type" xml:space="preserve">
-        <value>Atmega32U4 Based Board Type</value>
+        <value>Tipo de placa basada en Atmega32U4</value>
     </data>
     <data name="ArduinoType" xml:space="preserve">
-        <value>Arduino Type</value>
+        <value>Tipo Arduino</value>
     </data>
     <data name="RaiseIssueDesc1">
-        <value>Unfortunately an error has occurred while programming your microcontroller.</value>
+        <value>Desafortunadamente ocurrió un error mientras se programaba tu microcontrolador.</value>
     </data>
     <data name="RaiseIssueDesc2">
-        <value>Feel free to use the below button to raise this issue and we will try to fix this problem.</value>
+        <value>Siéntete libre de usar el botón de abajo para abrir un 'Issue' e intentaremos arreglar este problema.</value>
     </data>
     <data name="RaiseIssueDesc3">
-        <value>Included Information</value>
+        <value>Información Incluída</value>
     </data>
     <data name="RaiseIssueLabel" xml:space="preserve">
-        <value>Raise Issue on GitHub</value>
+        <value>Abrir 'Issue' en GitHub</value>
     </data>
     <data name="CloseLabel" xml:space="preserve">
-        <value>Close</value>
+        <value>Cerrar</value>
     </data>
     <data name="RestoringLabel" xml:space="preserve">
-        <value>Restoring</value>
+        <value>Restaurando</value>
     </data>
     <data name="ReturnButtonLabel" xml:space="preserve">
-        <value>Return to main menu</value>
+        <value>Regresar al menú principal</value>
     </data>
     <data name="UnpluggedDesc" xml:space="preserve">
-        <value>The device you are configuring was unplugged. Click to return to the main menu.</value>
+        <value>El dispositivo que estabas configurando se desconectó. Haz click para regresar al menú principal.</value>
     </data>
     <data name="EmulationTypeLabel" xml:space="preserve">
-        <value>Emulation Type</value>
+        <value>Tipo de Emulación</value>
     </data>
     <data name="ModeLabel" xml:space="preserve">
-        <value>Mode</value>
+        <value>Modo</value>
     </data>
     <data name="ConnectedToReceiverLabel" xml:space="preserve">
-        <value>Connected to Receiver</value>
+        <value>Conectado a Receptor</value>
     </data>
     <data name="MouseMovementTypeLabel" xml:space="preserve">
-        <value>Mouse Movement Type</value>
+        <value>Tipo de Movimiento de Mouse</value>
     </data>
     <data name="ControllerViewTypeLabel" xml:space="preserve">
-        <value>Display Buttons For</value>
+        <value>Mostrar Botones Para</value>
     </data>
     <data name="ControllerViewTypeShowLabel" xml:space="preserve">
-        <value>Show Display Buttons For</value>
+        <value>Mostrar Botones de Muestra Para</value>
     </data>
     <data name="ControllerViewTypeLabel2" xml:space="preserve">
-        <value>Changes how buttons are displayed</value>
+        <value>Cambia como se muestran los botones</value>
     </data>
     <data name="ControllerViewTypeLabel3" xml:space="preserve">
-        <value>Does not change the emulated console</value>
+        <value>No cambia la consola emulada</value>
     </data>
     <data name="LoadPresetButtonLabel" xml:space="preserve">
-        <value>Load Preset</value>
+        <value>Cargar Preestablecido</value>
     </data>
     <data name="ControllerTypeLabel" xml:space="preserve">
-        <value>Controller Type</value>
+        <value>Tipo de Control</value>
     </data>
     <data name="WindowsControllerModeLabel" xml:space="preserve">
-        <value>Windows Controller Mode</value>
+        <value>Modo de Control en Windows</value>
     </data>
     <data name="RPCS3CompatLabel" xml:space="preserve">
-        <value>Use USB Passthrough with RPCS3</value>
+        <value>Usar 'Passthrough' por USB con RPCS3</value>
     </data>
     <data name="HIDGameControllerLabel" xml:space="preserve">
-        <value>HID Game Controller</value>
+        <value>Control de Juego HID</value>
     </data>
     <data name="XInputLabel" xml:space="preserve">
         <value>XInput</value>
     </data>
     <data name="XboxAuthLabel" xml:space="preserve">
-        <value>Passthrough Auth for Stock Xbox 360</value>
+        <value>Autenticación por 'Passthrough' para Xbox 360 Estándar</value>
     </data>
     <data name="QueueBasedInputsLabel" xml:space="preserve">
-        <value>Queue Based Inputs</value>
+        <value>Entradas Basadas en Lista (Queue Based Inputs)</value>
     </data>
     <data name="DebounceExtraLabel" xml:space="preserve">
-        <value>Debounce (0 to disable)</value>
+        <value>Debounce (0 para deshabilitar)</value>
     </data>
     <data name="StrumDebounceLabel" xml:space="preserve">
-        <value>Strum Debounce (0 to disable)</value>
+        <value>Debounce de Rasgueo (0 para deshabilitar)</value>
     </data>
     <data name="CombinedStrumDebounceLabel" xml:space="preserve">
-        <value>Combined Strum Debounce</value>
+        <value>Debounce de Rasgueo Combinado</value>
     </data>
     <data name="StrumCombinedLabel" xml:space="preserve">
-        <value>Combined</value>
+        <value>Combinado</value>
     </data>
     <data name="StrumIndividualLabel" xml:space="preserve">
         <value>Individual</value>
     </data>
     <data name="LEDTypeLabel" xml:space="preserve">
-        <value>LED Type</value>
+        <value>Tipo de LED</value>
     </data>
     <data name="LEDTypeCountLabel" xml:space="preserve">
-        <value>LED Count</value>
+        <value>Conteo de LED</value>
     </data>
     <data name="APA102SCKLabel" xml:space="preserve">
-        <value>APA102 CI / SCK Pin</value>
+        <value>Pin CI / SCK de APA102</value>
     </data>
     <data name="APA102MOSILabel" xml:space="preserve">
-        <value>APA102 DI / MOSI Pin</value>
+        <value>Pin DI / MOSI de APA102</value>
     </data>
     <data name="WS2812MOSILabel" xml:space="preserve">
-        <value>WS2812 Data Pin</value>
+        <value>Pin de Datos WS2812</value>
     </data>
     <data name="STP16CPC26SCKLabel" xml:space="preserve">
-        <value>STP16CPC26 CLK / SCK Pin</value>
+        <value>Pin CLK / SCK de STP16CPC26</value>
     </data>
     <data name="STP16CPC26MOSILabel" xml:space="preserve">
-        <value>STP16CPC26 SDI / MOSI Pin</value>
+        <value>Pin SDI / MOSI de STP16CPC26</value>
     </data>
     <data name="STP16CPC26OELabel" xml:space="preserve">
-        <value>STP16CPC26 Output Enable / OE Pin</value>
+        <value>Pin de Habilitar Salida / OE de STP16CPC26</value>
     </data>
     <data name="STP16CPC26LELabel" xml:space="preserve">
-        <value>STP16CPC26 Latch Enable / LE Pin</value>
+        <value>Pin de Habilitar Latch / LE de STP16CPC26</value>
     </data>
     <data name="LEDTypePeripheralLabel" xml:space="preserve">
-        <value>Peripheral LED Type</value>
+        <value>Tipo de LED de Periférico</value>
     </data>
     <data name="HasMax1704xLabel" xml:space="preserve">
         <value>MAX1704x</value>
     </data>
     <data name="Max1704xStatusLabel" xml:space="preserve">
-        <value>Battery Percentage</value>
+        <value>Porcentaje de Batería</value>
     </data>
     <data name="HasMpr121Label" xml:space="preserve">
         <value>MPR121</value>
     </data>
     <data name="Mpr121ChannelLabel" xml:space="preserve">
-        <value>MPR121 Channel</value>
+        <value>Canal MPR121</value>
     </data>
     <data name="Mpr121GreenChannelLabel" xml:space="preserve">
-        <value>Green Channel</value>
+        <value>Canal Verde</value>
     </data>
     <data name="Mpr121RedChannelLabel" xml:space="preserve">
-        <value>Red Channel</value>
+        <value>Canal Rojo</value>
     </data>
     <data name="Mpr121YellowChannelLabel" xml:space="preserve">
-        <value>Yellow Channel</value>
+        <value>Canal Amarillo</value>
     </data>
     <data name="Mpr121BlueChannelLabel" xml:space="preserve">
-        <value>Blue Channel</value>
+        <value>Canal Azul</value>
     </data>
     <data name="Mpr121OrangeChannelLabel" xml:space="preserve">
-        <value>Orange Channel</value>
+        <value>Canal Naranjo</value>
     </data>
     <data name="HasPeripheralLabel" xml:space="preserve">
-        <value>Peripheral</value>
+        <value>Periférico</value>
     </data>
     <data name="LEDTypePeripheralCountLabel" xml:space="preserve">
-        <value>Peripheral LED Count</value>
+        <value>Conteo de LED de Periférico</value>
     </data>
     <data name="APA102SCKPeripheralLabel" xml:space="preserve">
-        <value>Peripheral APA102 CI / SCK Pin</value>
+        <value>Pin CI / SCK de Periférico APA102</value>
     </data>
     <data name="APA102MOSIPeripheralLabel" xml:space="preserve">
-        <value>Peripheral APA102 DI / MOSI Pin</value>
+        <value>Pin DI / MOSI de Periférico APA102</value>
     </data>
     <data name="STP16CPC26SCKPeripheralLabel" xml:space="preserve">
-        <value>Peripheral STP16CPC26 CLK / SCK Pin</value>
+        <value>Pin CLK / SCK de Periférico STP16CPC26</value>
     </data>
     <data name="STP16CPC26MOSIPeripheralLabel" xml:space="preserve">
-        <value>Peripheral STP16CPC26 SDI / MOSI Pin</value>
+        <value>Pin SDI / MOSI de Periférico STP16CPC26</value>
     </data>
     <data name="STP16CPC26OEPeripheralLabel" xml:space="preserve">
-        <value>Peripheral STP16CPC26 Output Enable / OE Pin</value>
+        <value>Pin de Habilitar Salida / OE de Periférico STP16CPC26</value>
     </data>
     <data name="STP16CPC26LEPeripheralLabel" xml:space="preserve">
-        <value>Peripheral STP16CPC26 Latch Enable / LE Pin</value>
+        <value>Pin de Habilitar Latch / LE de Periférico STP16CPC26</value>
     </data>
     <data name="SwapSwitchFaceButtonLabel" xml:space="preserve">
-        <value>Swap Switch Face Buttons</value>
+        <value>Cambiar Botonoes de Cara</value>
     </data>
     <data name="AddBindingLabel" xml:space="preserve">
-        <value>Add Setting</value>
+        <value>Añadir Ajuste</value>
     </data>
     <data name="ExportConfigLabel" xml:space="preserve">
-        <value>Export Current Settings to File</value>
+        <value>Exportar Ajustes Actuales a Archivo</value>
     </data>
     <data name="ImportConfigLabel" xml:space="preserve">
-        <value>Import Settings from File</value>
+        <value>Importar Ajustes de Archivo</value>
     </data>
     <data name="SavePresetLabel" xml:space="preserve">
-        <value>Create Preset</value>
+        <value>Crear Preestablecido</value>
     </data>
     <data name="SavePresetLabel2" xml:space="preserve">
-        <value>Save Current Settings as {0}</value>
+        <value>Guardar Ajustes Actuales como {0}</value>
     </data>
     <data name="SavePresetLabel3" xml:space="preserve">
-        <value>Save Current Settings as {0} and overwrite existing preset</value>
+        <value>Guardar Ajustes Actuales como {0} y sobreescribir preestablecido existente</value>
     </data>
     <data name="PresetLabel" xml:space="preserve">
-        <value>Presets</value>
+        <value>Preestablecidos</value>
     </data>
     <data name="LoadPresetSimple" xml:space="preserve">
-        <value>Load Preset</value>
+        <value>Cargar Preestablecido</value>
     </data>
     <data name="LoadPresetLabel" xml:space="preserve">
-        <value>Load Settings from Preset</value>
+        <value>Cargar Ajustes de Preestablecido</value>
     </data>
     <data name="DeletePresetLabel" xml:space="preserve">
-        <value>Delete Preset</value>
+        <value>Borrar Preestablecido</value>
     </data>
 
     <data name="LoadPresetLabel2" xml:space="preserve">
-        <value>Load Settings from {0}</value>
+        <value>Cargar Ajustes de {0}</value>
     </data>
     <data name="DeletePresetLabel2" xml:space="preserve">
-        <value>Delete {0}</value>
+        <value>Borrar {0}</value>
     </data>
     <data name="ConfigureAllInputsLabel" xml:space="preserve">
-        <value>Configure All Inputs</value>
+        <value>Configurar Todas las Entradas</value>
     </data>
     <data name="LoadDefaultsLabel" xml:space="preserve">
-        <value>Load Defaults</value>
+        <value>Cargar Predeterminados</value>
     </data>
     <data name="ResetSettingsLabel" xml:space="preserve">
-        <value>Reset Settings</value>
+        <value>Reiniciar Ajustes</value>
     </data>
     <data name="ClearAllLabel" xml:space="preserve">
-        <value>Clear All</value>
+        <value>Limpiar Todo</value>
     </data>
     <data name="SaveChangesWarning" xml:space="preserve">
-        <value>You have unsaved changes, click `Save Settings` to save them</value>
+        <value>Tienes cambios sin guardar, haz click en `Guardar Ajustes` para guardarlos</value>
     </data>
     <data name="PeripheralDeviceLabel" xml:space="preserve">
-        <value>Peripheral Device</value>
+        <value>Dispositivo Periférico</value>
     </data>
     <data name="LedPinConfigurationLabel" xml:space="preserve">
-        <value>Led Pin Configuration</value>
+        <value>Configuración de Pin Led</value>
     </data>
     <data name="WarningLabel" xml:space="preserve">
-        <value>The following action will clear your settings</value>
+        <value>La siguiente acción va a limpiar tus ajustes</value>
     </data>
     <data name="ClearTypeLabel" xml:space="preserve">
-        <value>Would you like to clear all settings, or load defaults?</value>
+        <value>¿Te gustaría limpiar todos los ajustes o cargar predeterminados?</value>
     </data>
     <data name="PeripheralSettingsLabel" xml:space="preserve">
-        <value>Peripheral Settings</value>
+        <value>Ajustes de Periférico</value>
     </data>
     <data name="Mpr121SettingsLabel" xml:space="preserve">
-        <value>MPR121 Settings</value>
+        <value>Ajustes de MPR121</value>
     </data>
     <data name="MAX1704xSettingsLabel" xml:space="preserve">
-        <value>MAX1704x Settings</value>
+        <value>Ajustes de MAX1704x</value>
     </data>
     <data name="Mpr121CapacativeCountLabel" xml:space="preserve">
-        <value>MPR121 Capacitive Touch Pad Count</value>
+        <value>Conteo de Pad Táctil Capacitivo de MPR121</value>
     </data>
     <data name="LEDSettingsLabel" xml:space="preserve">
-        <value>LED Settings</value>
+        <value>Ajustes de LED</value>
     </data>
     <data name="PollSettingsLabel" xml:space="preserve">
-        <value>Controller Poll Settings</value>
+        <value>Ajustes de 'Poll' de Control</value>
     </data>
     <data name="ControllerSettingsLabel" xml:space="preserve">
-        <value>Controller Settings</value>
+        <value>Ajustes de Control</value>
     </data>
     <data name="BluetoothTransmitterSettingsLabel" xml:space="preserve">
-        <value>Bluetooth Transmitter Settings</value>
+        <value>Ajustes de Transmisor Bluetooth</value>
     </data>
     <data name="ConflictLabel" xml:space="preserve">
-        <value>Conflict with {0}: {1}</value>
+        <value>Conflicto con {0}: {1}</value>
     </data>
     <data name="ConfigurationErrorLabel" xml:space="preserve">
-        <value>There are errors in your configuration</value>
+        <value>Hay errores en tu configuración</value>
     </data>
     <data name="NonCommercialUse" xml:space="preserve">
-        <value>This software may not be used commercially.</value>
+        <value>Este software no debe ser usado comercialmente.</value>
     </data>
     <data name="NonCommercialUse2" xml:space="preserve">
-        <value>By clicking the configure button, you are acknowledging that devices you program with this tool are for personal use.</value>
+        <value>Al hacer click en el botón de configuración, reconoces que los dispositivos programados con esta herramienta son para uso personal.</value>
     </data>
     <data name="NonCommercialUse3" xml:space="preserve">
-        <value>If you would like to sell devices using the Santroller platform, click the following button.</value>
+        <value>Si te gustaría vender dispositivos usando la plataforma Santroller, haz click en el siguiente botón.</value>
     </data>
     <data name="NonCommercialButton" xml:space="preserve">
-        <value>Selling devices using this tool</value>
+        <value>Vender dispositivos usando esta herramienta</value>
     </data>
     <data name="DiscordButton" xml:space="preserve">
-        <value>Click here to join the Discord</value>
+        <value>Haz click aquí para unirte al Discord</value>
     </data>
     <data name="NotShowing" xml:space="preserve">
-        <value>Controller not showing up? Try clicking the below button, it may fix the problem.</value>
+        <value>¿El control no aparece? Prueba a hacer click en el botón de abajo, puede arreglar el problema.</value>
     </data>
     <data name="IncorrectTool" xml:space="preserve">
-        <value>The device you have selected is not designed to be programed with this tool.</value>
+        <value>El dispositivo seleccionado no está diseñado para ser programado con esta herramienta.</value>
     </data>
     <data name="IncorrectTool2" xml:space="preserve">
-        <value>Please contact the seller of your device for the correct tool.</value>
+        <value>Por favor contacta al vendedor de tu dispositivo para obtener la herramienta correcta.</value>
     </data>
     <data name="UnoUnplugReplugMessage" xml:space="preserve">
-        <value>{0} - Please unplug your device, hold the reset button and plug it back in</value>
+        <value>{0} - Por favor desconecta tu dispositivo, mantén el botón de reinicio y reconéctalo</value>
     </data>
     <data name="BuildingMessage" xml:space="preserve">
-        <value>{0} - Building</value>
+        <value>{0} - Construyendo</value>
     </data>
     <data name="ReleaseButtonMessage" xml:space="preserve">
-        <value> - Release the button</value>
+        <value> - Suelta el botón</value>
     </data>
     <data name="DfuMessage" xml:space="preserve">
-        <value>{0} - Looking for device in DFU mode</value>
+        <value>{0} - Buscando dispositivo en modo DFU</value>
     </data>
     <data name="LookingForPortMessage" xml:space="preserve">
-        <value>{0} - Looking for port</value>
+        <value>{0} - Buscando puerto</value>
     </data>
     <data name="ReadingSettingsMessage" xml:space="preserve">
-        <value>{0} - Reading Settings</value>
+        <value>{0} - Leyendo Ajustes</value>
     </data>
     <data name="UploadingMessage" xml:space="preserve">
-        <value>{0} - Uploading</value>
+        <value>{0} - Subiendo</value>
     </data>
     <data name="VerifyingMessage" xml:space="preserve">
-        <value>{0} - Verifying</value>
+        <value>{0} - Verificando</value>
     </data>
     <data name="ErrorMessage" xml:space="preserve">
         <value>{0} - Error</value>
     </data>
     <data name="ErrorMessageUf2" xml:space="preserve">
-        <value>{0} - Error, Unable to find UF2 File!</value>
+        <value>{0} - Error, ¡no se pudo hallar el archivo UF2!</value>
     </data>
     <data name="WaitingMessage" xml:space="preserve">
-        <value>{0} - Waiting for Device</value>
+        <value>{0} - Esperando al Dispositivo</value>
     </data>
     <data name="WaitingMessageWindows" xml:space="preserve">
-        <value>{0} - Waiting for device (Stuck here? Try clicking refresh devices)</value>
+        <value>{0} - Esperando al dispositivo (¿Atrapado? Intenta hacer click en recargar dispositivos)</value>
     </data>
     <data name="WaitingMessageReplugWindows" xml:space="preserve">
-        <value>{0} - Waiting for device - Please Unplug and Replug Your Device (Stuck here? Try clicking refresh devices)</value>
+        <value>{0} - Esperando al Dispositivo - Por favor Desconecta y Reconecta Tu Dispositivo (¿Atrapado? Intenta hacer click en recargar dispositivos)</value>
     </data>
     <data name="WaitingMessageReplug" xml:space="preserve">
-        <value>{0} - Waiting for Device - Please Unplug and Replug Your Device</value>
+        <value>{0} - Esperando al Dispositivo - Por favor Desconecta y Reconecta Tu Dispositivo</value>
     </data>
     <data name="ErasingMessage" xml:space="preserve">
-        <value>Erasing device</value>
+        <value>Borrando dispositivo</value>
     </data>
     <data name="LookingForDeviceMessage" xml:space="preserve">
-        <value>{0} - Looking for device</value>
+        <value>{0} - Buscando dispositivo</value>
     </data>
     <data name="LookingForDeviceMessageLinux" xml:space="preserve">
-        <value>{0} - Looking for device (Make sure the Pi Pico is mounted)</value>
+        <value>{0} - Buscando dispositivo (Asegura que el Pi Pico está montado)</value>
     </data>
     <data name="SettingUpMessage" xml:space="preserve">
-        <value>Setting up</value>
+        <value>Ajustando</value>
     </data>
     <data name="CopyingFirmwareMessage" xml:space="preserve">
-        <value>Copying Firmware</value>
+        <value>Copiando Firmware</value>
     </data>
     <data name="ExtractingFirmwareMessage" xml:space="preserve">
-        <value>Extracting Firmware</value>
+        <value>Extrayendo Firmware</value>
     </data>
     <data name="ExtractingPlatformIoMessage" xml:space="preserve">
-        <value>Extracting Platform.IO</value>
+        <value>Extrayendo Platform.IO</value>
     </data>
     <data name="NoFreeSpaceMessage" xml:space="preserve">
-        <value>Not enough free space, you need 3GB of space free on your {0} drive to use this program</value>
+        <value>No hay suficiente espacio disponible, necesitas 3GB de espacio libre en tu disco {0} para usar este programa</value>
     </data>
     <data name="UnableToCheckForUpdates" xml:space="preserve">
-        <value>Unable to check for updates: </value>
+        <value>No es posible buscar actualizaciones: </value>
     </data>
     <data name="UpToDate" xml:space="preserve">
-        <value>Up to date</value>
+        <value>Actualizado</value>
     </data>
     <data name="NewVersion" xml:space="preserve">
-        <value>New Version: {0}</value>
+        <value>Nueva Versión: {0}</value>
     </data>
     <data name="NewPreRelease" xml:space="preserve">
-        <value>New Prerelease: {0}</value>
+        <value>Nuevo Prelanzamiento: {0}</value>
     </data>
     <data name="AddDeviceMessage" xml:space="preserve">
-        <value>Add called, current device: {0},  new device: {1}</value>
+        <value>Adición encontrada, dispositivo actual: {0},  dispositivo nuevo: {1}</value>
     </data>
     <data name="RolloverModeNkro" xml:space="preserve">
-        <value>NKRO (Best for PC)</value>
+        <value>NKRO (Recomendado para PC)</value>
     </data>
     <data name="RolloverModeSixKro" xml:space="preserve">
-        <value>6KRO (Works on PS4/5)</value>
+        <value>6KRO (Funciona en PS4/5)</value>
     </data>
     <data name="RolloverModeLabel" xml:space="preserve">
-        <value>Rollover Mode</value>
+        <value>Modo 'Rollover'</value>
     </data>
     <data name="VersionPrefixLabel" xml:space="preserve">
-        <value>Version 10.0.18</value>
+        <value>Versión 10.0.18</value>
     </data>
     <data name="TurntableNote1" xml:space="preserve">
-        <value>Note: Wii Turntables are designed to use a Poll Rate of 10</value>
+        <value>Nota: Las tornamesas de Wii están diseñadas para usar un 'Poll Rate' de 10</value>
     </data>
     <data name="TurntableNote2" xml:space="preserve">
-        <value>If you use any other poll rate, you will need to adjust the multiplier to compensate</value>
+        <value>Si usas cualquier otro 'poll rate', necesitarás ajustar el multiplicador para compensar</value>
     </data>
     <data name="Apa1022020Label" xml:space="preserve">
-        <value>Hide APA102 2020 warning</value>
+        <value>Ocultar advertencia de APA102 2020</value>
     </data>
     <data name="LedBrightnessOnLabel" xml:space="preserve">
-        <value>LED Brightness (Pressed)</value>
+        <value>Brillo de LED (Presionado)</value>
     </data>
     <data name="LedBrightnessOffLabel" xml:space="preserve">
-        <value>LED Brightness (Released)</value>
+        <value>Brillo de LED (Suelto)</value>
     </data>
     <data name="BrightnessNote1" xml:space="preserve">
-        <value>If you are using APA102-2020s or SK9822-2020s</value>
+        <value>Si usas APA102-2020s o SK9822-2020s</value>
     </data>
     <data name="BrightnessNote2" xml:space="preserve">
-        <value>Setting a brightness level over 9 may cause the lifespan of the LEDs to be shortened</value>
+        <value>Seleccionar un nivel de brillo sobre 9 puede reducir la vida útil de los LEDs</value>
     </data>
     <data name="BrightnessNote3" xml:space="preserve">
-        <value>Especially if you are using LEDs that are always on</value>
+        <value>Especialmente si usas LEDs que están siempre encendidos</value>
     </data>
     <data name="RescanLabel" xml:space="preserve">
-        <value>Refresh devices</value>
+        <value>Recargar dispositivos</value>
     </data>
     <data name="GenericGamepadLabel" xml:space="preserve">
-        <value>Generic {0}
+        <value>Genérico {0}
 </value>
     </data>
     <data name="DownloadingUpdate" xml:space="preserve">
-        <value>Downloading Update</value>
+        <value>Descargando Actualización</value>
     </data>
     <data name="UnplugReplugMessage" xml:space="preserve">
-        <value>Please unplug and replug your controller</value>
+        <value>Por favor desconecta y reconecta tu control</value>
     </data>
     <data name="DriversMissingMessage" xml:space="preserve">
-        <value>There are some drivers missing, would you like to install them?</value>
+        <value>Hay drivers que no están, ¿te gustaría instalarlos?</value>
     </data>
     <data name="RootRequiredMessage" xml:space="preserve">
-        <value>Root required to write proper udev rules for USB support: 68-santroller.rules to /usr/lib/udev/rules.d</value>
+        <value>Root requerido para escribir reglas udev apropiadas para soporte USB: 68-santroller.rules a /usr/lib/udev/rules.d</value>
     </data>
     <data name="DoneMessage" xml:space="preserve">
-        <value>Done</value>
+        <value>Terminado</value>
     </data>
     <data name="WritingMessage" xml:space="preserve">
-        <value>Writing</value>
+        <value>Escribiendo</value>
     </data>
     <data name="BuildingVariantMessage" xml:space="preserve">
-        <value>Building </value>
+        <value>Construyendo</value>
     </data>
     <data name="LibUsbMissingMessage" xml:space="preserve">
-        <value>You are missing libusb-1.0.so. On ubuntu or other debian based distributions, you will need to install 'libusb-1.0-0-dev'</value>
+        <value>Te falta libusb-1.0.so. En ubuntu u otras distribuciones basadas en debian, necesitas instalar 'libusb-1.0-0-dev'</value>
     </data>
     <data name="ConnectedMessage" xml:space="preserve">
-        <value>Connected</value>
+        <value>Conectado</value>
     </data>
     <data name="ButtonTestLabel" xml:space="preserve">
-        <value>Button Tester</value>
+        <value>Probador de Botones</value>
+    </data>
+    <data name="SelectLanguage" xml:space="preserve">
+        <value>Seleccionar Idioma</value>
     </data>
 </root>

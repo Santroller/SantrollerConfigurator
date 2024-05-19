@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -22,6 +23,7 @@ using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Devices;
+using GuitarConfigurator.NetCore.Utils;
 using Nefarius.Utilities.DeviceManagement.Drivers;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -48,6 +50,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private bool hasLibUsb = true;
     private UpdateManager? _mgr = null;
     private UpdateInfo? _updateInfo;
+
+    private readonly ToolConfig _toolConfig = AssetUtils.GetConfig();
     public string ToolName => Resources.ToolName + " - v" + GitVersionInformation.SemVer;
 
 
@@ -67,6 +71,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         ProgressBarPrimary = primary;
         ProgressBarWarning = warning;
         _picoOnly = picoOnly;
+        SelectedLanguage = _toolConfig.Language;
         
         Message = Resources.ConnectedMessage;
         GoBack = ReactiveCommand.CreateFromObservable(() =>
@@ -229,7 +234,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             : string.Format(Resources.NewVersion, _updateInfo.TargetFullRelease.Version);
         HasUpdate = _updateInfo != null;
     }
-
+    
     public bool Programming { get; private set; }
     public ReadOnlyObservableCollection<DeviceInputType> DeviceInputTypes { get; }
 
@@ -253,6 +258,41 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public SourceList<IConfigurableDevice> AvailableDevices { get; } = new();
 
     public ReadOnlyObservableCollection<IConfigurableDevice> Devices { get; }
+
+    private Language _language = Language.En;
+
+    public IEnumerable<Language> Languages => Enum.GetValues<Language>();
+    public Language SelectedLanguage
+    {
+        set
+        {
+            if (_language != value)
+            {
+                switch (value)
+                {
+                    case Language.En:
+                        Resources.Culture = new CultureInfo("en"); 
+                        break;
+                    case Language.Es:
+                        Resources.Culture = new CultureInfo("es-ES"); 
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                if (Router.NavigationStack.Any())
+                {
+                    Router.NavigateAndReset.Execute(Router.NavigationStack.First());
+                    _toolConfig.Language = value;
+                    AssetUtils.SaveConfig(_toolConfig);
+                }
+            }
+            this.RaiseAndSetIfChanged(ref _language, value);
+            
+            
+        }
+        get => _language;
+    }
 
     private static Func<DeviceInputType, bool> CreateFilter(IConfigurableDevice? s)
     {
