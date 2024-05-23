@@ -119,6 +119,9 @@
     <data name="UsbHostCombinedTitle" xml:space="preserve">
         <value>Usb Host Inputs</value>
     </data>
+    <data name="MidiInputsTitle" xml:space="preserve">
+        <value>MIDI Inputs</value>
+    </data>
     <data name="WiiCombinedTitle" xml:space="preserve">
         <value>Wii Extension Inputs</value>
     </data>
@@ -304,6 +307,9 @@
     </data>
     <data name="AssignKeyboard" xml:space="preserve">
         <value>Press any key to use that input</value>
+    </data>
+    <data name="AssignMidiNote" xml:space="preserve">
+        <value>Press a key on your MIDI device</value>
     </data>
     <data name="AssignMouseAxis" xml:space="preserve">
         <value>Move the mouse to use that input</value>
@@ -754,6 +760,15 @@
     </data>
     <data name="DeviceControllerTypeFortniteDrums" xml:space="preserve">
         <value>Drums</value>
+    </data>
+    <data name="DeviceControllerTypeProGuitarMustang" xml:space="preserve">
+        <value>Pro Guitar (Mustang)</value>
+    </data>
+    <data name="DeviceControllerTypeProGuitarSquire" xml:space="preserve">
+        <value>Pro Guitar (Squire)</value>
+    </data>
+    <data name="DeviceControllerTypeProKeys" xml:space="preserve">
+        <value>Pro Keys</value>
     </data>
     <data name="TwiPinTypeSda" xml:space="preserve">
         <value>SDA</value>
@@ -1905,6 +1920,9 @@
     <data name="InputTypeMultiplexerInput" xml:space="preserve">
         <value>Multiplexer Input</value>
     </data>
+    <data name="InputTypeMidiInput" xml:space="preserve">
+        <value>MIDI Input</value>
+    </data>
     <data name="InputTypeDigitalPinInput" xml:space="preserve">
         <value>Digital Pin Input</value>
     </data>
@@ -2081,6 +2099,12 @@
     </data>
     <data name="MidiTypePitchWheel" xml:space="preserve">
         <value>Pitch Wheel</value>
+    </data>
+    <data name="MidiTypeModWheel" xml:space="preserve">
+        <value>Modulation Wheel</value>
+    </data>
+    <data name="MidiTypeSustainPedal" xml:space="preserve">
+        <value>Sustain Pedal</value>
     </data>
     <data name="ModeTypeStandard" xml:space="preserve">
         <value>Standard</value>
@@ -2466,6 +2490,9 @@
     </data>
     <data name="SimpleTypePeripheral" xml:space="preserve">
         <value>Peripheral</value>
+    </data>
+    <data name="SimpleTypeMidi" xml:space="preserve">
+        <value>Midi Inputs</value>
     </data>
     <data name="SimpleTypeBluetooth" xml:space="preserve">
         <value>Bluetooth Inputs</value>
@@ -3605,5 +3632,98 @@
     </data>
     <data name="ButtonTestLabel" xml:space="preserve">
         <value>Button Tester</value>
+    </data>
+    <data name="MidiNoteLabel" xml:space="preserve">
+        <value>Note {0}</value>
+    </data>
+    <data name="MidiNote" xml:space="preserve">
+        <value>MIDI Note</value>
+    </data>
+    <data name="ProKeysInitialNoteLabel" xml:space="preserve">
+        <value>Starting Note</value>
+    </data>
+    <data name="ProKeyTypeKey1" xml:space="preserve">
+        <value>Key 1</value>
+    </data>
+    <data name="ProKeyTypeKey2" xml:space="preserve">
+        <value>Key 2</value>
+    </data>
+    <data name="ProKeyTypeKey3" xml:space="preserve">
+        <value>Key 3</value>
+    </data>
+    <data name="ProKeyTypeKey4" xml:space="preserve">
+        <value>Key 4</value>
+    </data>
+    <data name="ProKeyTypeKey5" xml:space="preserve">
+        <value>Key 5</value>
+    </data>
+    <data name="ProKeyTypeKey6" xml:space="preserve">
+        <value>Key 6</value>
+    </data>
+    <data name="ProKeyTypeKey7" xml:space="preserve">
+        <value>Key 7</value>
+    </data>
+    <data name="ProKeyTypeKey8" xml:space="preserve">
+        <value>Key 8</value>
+    </data>
+    <data name="ProKeyTypeKey9" xml:space="preserve">
+        <value>Key 9</value>
+    </data>
+    <data name="ProKeyTypeKey10" xml:space="preserve">
+        <value>Key 10</value>
+    </data>
+    <data name="ProKeyTypeKey11" xml:space="preserve">
+        <value>Key 11</value>
+    </data>
+    <data name="ProKeyTypeKey12" xml:space="preserve">
+        <value>Key 12</value>
+    </data>
+    <data name="ProKeyTypeKey13" xml:space="preserve">
+        <value>Key 13</value>
+    </data>
+    <data name="ProKeyTypeKey14" xml:space="preserve">
+        <value>Key 14</value>
+    </data>
+    <data name="ProKeyTypeKey15" xml:space="preserve">
+        <value>Key 15</value>
+    </data>
+    <data name="ProKeyTypeKey16" xml:space="preserve">
+        <value>Key 16</value>
+    </data>
+    <data name="ProKeyTypeKey17" xml:space="preserve">
+        <value>Key 17</value>
+    </data>
+    <data name="ProKeyTypeKey18" xml:space="preserve">
+        <value>Key 18</value>
+    </data>
+    <data name="ProKeyTypeKey19" xml:space="preserve">
+        <value>Key 19</value>
+    </data>
+    <data name="ProKeyTypeKey20" xml:space="preserve">
+        <value>Key 20</value>
+    </data>
+    <data name="ProKeyTypeKey21" xml:space="preserve">
+        <value>Key 21</value>
+    </data>
+    <data name="ProKeyTypeKey22" xml:space="preserve">
+        <value>Key 22</value>
+    </data>
+    <data name="ProKeyTypeKey23" xml:space="preserve">
+        <value>Key 23</value>
+    </data>
+    <data name="ProKeyTypeKey24" xml:space="preserve">
+        <value>Key 24</value>
+    </data>
+    <data name="ProKeyTypeKey25" xml:space="preserve">
+        <value>Key 25</value>
+    </data>
+    <data name="ProKeyTypeOverdrive" xml:space="preserve">
+        <value>Overdrive</value>
+    </data>
+    <data name="ProKeyTypePedal" xml:space="preserve">
+        <value>Pedal</value>
+    </data>
+    <data name="ProKeyTypeTouchPad" xml:space="preserve">
+        <value>Effects Touchpad</value>
     </data>
 </root>

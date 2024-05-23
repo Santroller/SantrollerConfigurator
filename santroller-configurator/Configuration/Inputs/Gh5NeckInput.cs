@@ -127,7 +127,8 @@ public class Gh5NeckInput : TwiInput
         ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
+        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
+        ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw)
     {
         if (gh5Raw.IsEmpty) return;
         switch (Input)

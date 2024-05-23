@@ -419,6 +419,13 @@ public abstract partial class OutputAxis : Output
             if (ShouldFlip(mode)) function = "UINT16_MAX -" + function;
         }
 
+        if (this is PianoKey)
+        {
+            singleByte = true;
+            function = "handle_calibration_ps3_360_trigger";
+            if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
+        }
+
         var min = Min;
         var max = Max;
         var inverted = Min > Max;

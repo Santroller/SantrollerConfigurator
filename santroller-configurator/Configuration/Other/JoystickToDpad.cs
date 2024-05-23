@@ -196,15 +196,16 @@ public class JoystickToDpad : Output
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
-        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
+        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
+        ReadOnlySpan<byte> midiRaw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
             ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-            digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw);
+            digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
         foreach (var output in _outputs)
             output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
                 ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-                digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw);
+                digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
 
         if (!Enabled) return;
         Up = _outputs.Where(s => s.Type is StandardButtonType.DpadUp)

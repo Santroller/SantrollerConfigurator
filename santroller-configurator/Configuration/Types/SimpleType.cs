@@ -14,5 +14,6 @@ public enum SimpleType
     Led,
     Rumble,
     ConsoleMode,
-    Reset
+    Reset,
+    Midi
 }

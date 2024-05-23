@@ -3600,4 +3600,130 @@
     <data name="SelectLanguage" xml:space="preserve">
         <value>Seleccionar Idioma</value>
     </data>
+    <data name="AssignMidiNote" xml:space="preserve">
+        <value>Presiona una tecla en tu dispositivo MIDI</value>
+    </data>
+    <data name="DeviceControllerTypeProGuitarMustang" xml:space="preserve">
+        <value>Guitarra Pro (Mustang)</value>
+    </data>
+    <data name="DeviceControllerTypeProGuitarSquire" xml:space="preserve">
+        <value>Guitarra Pro (Squier)</value>
+    </data>
+    <data name="DeviceControllerTypeProKeys" xml:space="preserve">
+        <value>Teclado Pro</value>
+    </data>
+    <data name="InputTypeMidiInput" xml:space="preserve">
+        <value>Entrada MIDI</value>
+    </data>
+    <data name="LanguageEn" xml:space="preserve">
+        <value>Inglés</value>
+    </data>
+    <data name="LanguageEs" xml:space="preserve">
+        <value>Español</value>
+    </data>
+    <data name="MidiInputsTitle" xml:space="preserve">
+        <value>Entradas MIDI</value>
+    </data>
+    <data name="MidiNote" xml:space="preserve">
+        <value>Nota MIDI</value>
+    </data>
+    <data name="MidiNoteLabel" xml:space="preserve">
+        <value>Nota {0}</value>
+    </data>
+    <data name="MidiTypeModWheel" xml:space="preserve">
+        <value>Rueda de Tono</value>
+    </data>
+    <data name="MidiTypeSustainPedal" xml:space="preserve">
+        <value>Pedal de Sustain</value>
+    </data>
+    <data name="ProKeysInitialNoteLabel" xml:space="preserve">
+        <value>Nota inicial</value>
+    </data>
+    <data name="ProKeyTypeKey1" xml:space="preserve">
+        <value>Tecla 1</value>
+    </data>
+    <data name="ProKeyTypeKey10" xml:space="preserve">
+        <value>Tecla 10</value>
+    </data>
+    <data name="ProKeyTypeKey11" xml:space="preserve">
+        <value>Tecla 11</value>
+    </data>
+    <data name="ProKeyTypeKey12" xml:space="preserve">
+        <value>Tecla 12</value>
+    </data>
+    <data name="ProKeyTypeKey13" xml:space="preserve">
+        <value>Tecla 13</value>
+    </data>
+    <data name="ProKeyTypeKey14" xml:space="preserve">
+        <value>Tecla 14</value>
+    </data>
+    <data name="ProKeyTypeKey15" xml:space="preserve">
+        <value>Tecla 15</value>
+    </data>
+    <data name="ProKeyTypeKey16" xml:space="preserve">
+        <value>Tecla 16</value>
+    </data>
+    <data name="ProKeyTypeKey17" xml:space="preserve">
+        <value>Tecla 17</value>
+    </data>
+    <data name="ProKeyTypeKey18" xml:space="preserve">
+        <value>Tecla 18</value>
+    </data>
+    <data name="ProKeyTypeKey19" xml:space="preserve">
+        <value>Tecla 19</value>
+    </data>
+    <data name="ProKeyTypeKey2" xml:space="preserve">
+        <value>Tecla 2</value>
+    </data>
+    <data name="ProKeyTypeKey20" xml:space="preserve">
+        <value>Tecla 20</value>
+    </data>
+    <data name="ProKeyTypeKey21" xml:space="preserve">
+        <value>Tecla 21</value>
+    </data>
+    <data name="ProKeyTypeKey22" xml:space="preserve">
+        <value>Tecla 22</value>
+    </data>
+    <data name="ProKeyTypeKey23" xml:space="preserve">
+        <value>Tecla 23</value>
+    </data>
+    <data name="ProKeyTypeKey24" xml:space="preserve">
+        <value>Tecla 24</value>
+    </data>
+    <data name="ProKeyTypeKey25" xml:space="preserve">
+        <value>Tecla 25</value>
+    </data>
+    <data name="ProKeyTypeKey3" xml:space="preserve">
+        <value>Tecla 3</value>
+    </data>
+    <data name="ProKeyTypeKey4" xml:space="preserve">
+        <value>Tecla 4</value>
+    </data>
+    <data name="ProKeyTypeKey5" xml:space="preserve">
+        <value>Tecla 5</value>
+    </data>
+    <data name="ProKeyTypeKey6" xml:space="preserve">
+        <value>Tecla 6</value>
+    </data>
+    <data name="ProKeyTypeKey7" xml:space="preserve">
+        <value>Tecla 7</value>
+    </data>
+    <data name="ProKeyTypeKey8" xml:space="preserve">
+        <value>Tecla 8</value>
+    </data>
+    <data name="ProKeyTypeKey9" xml:space="preserve">
+        <value>Tecla 9</value>
+    </data>
+    <data name="ProKeyTypeOverdrive" xml:space="preserve">
+        <value>Sobrecarga</value>
+    </data>
+    <data name="ProKeyTypePedal" xml:space="preserve">
+        <value>Pedal</value>
+    </data>
+    <data name="ProKeyTypeTouchPad" xml:space="preserve">
+        <value>Panel táctil de Efectos</value>
+    </data>
+    <data name="SimpleTypeMidi" xml:space="preserve">
+        <value>Entradas Midi</value>
+    </data>
 </root>

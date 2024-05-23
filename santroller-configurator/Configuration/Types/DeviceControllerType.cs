@@ -13,7 +13,10 @@ public enum DeviceControllerType
     StageKit,
     FortniteGuitar,
     FortniteGuitarStrum,
-    FortniteDrums
+    FortniteDrums,
+    ProGuitarMustang = 14,
+    ProGuitarSquire,
+    ProKeys
 }
 
 public static class DeviceControllerRhythmTypeExtensions {

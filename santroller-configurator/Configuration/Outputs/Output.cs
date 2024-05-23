@@ -98,6 +98,7 @@ public abstract partial class Output : ReactiveObject
         PeripheralOutput = peripheralOutput;
         ChildOfCombined = childOfCombined;
         ButtonText = Resources.Assign;
+        ButtonTextMidiNote = Resources.Assign;
         ButtonTextUsbHostKey = Resources.Assign;
         ButtonTextUsbHostMouseAxis = Resources.Assign;
         ButtonTextUsbHostMouseButton = Resources.Assign;
@@ -143,6 +144,14 @@ public abstract partial class Output : ReactiveObject
             .Select(x =>
                 x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.KeyboardInput})
             .ToPropertyEx(this, x => x.IsUsbHostKeyboard);
+        this.WhenAnyValue(x => x.Input)
+            .Select(x =>
+                x.InnermostInputs().First() is MidiInput)
+            .ToPropertyEx(this, x => x.IsMidi);
+        this.WhenAnyValue(x => x.Input)
+            .Select(x =>
+                x.InnermostInputs().First() is MidiInput {Input: MidiType.Note})
+            .ToPropertyEx(this, x => x.IsMidiNote);
         this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.MouseAxis})
@@ -331,6 +340,11 @@ public abstract partial class Output : ReactiveObject
     {
         var check = s.Item1 != 0 || s.Item3 || s.Item2.IsAnalog;
 
+        if (this is PianoKey)
+        {
+            check = s.Item1 != 0;
+        }
+        
         if (this is DrumAxis axis)
         {
             check = s.Item1 > axis.Min;
@@ -430,7 +444,7 @@ public abstract partial class Output : ReactiveObject
     public InputType? SelectedInputType
     {
         get => Input.InputType;
-        set => SetInput(value, null, null, null, null, null, null, null);
+        set => SetInput(value, null, null, null, null, null, null, null, null);
     }
 
     public Key UsbHostKey
@@ -438,6 +452,17 @@ public abstract partial class Output : ReactiveObject
         get => GetUsbHostKey() ?? Key.A;
         set => SetUsbHostKey(value);
     }
+    
+    public int MidiNote
+    {
+        get => GetMidiNote() ?? 1;
+        set => SetMidiNote(value);
+    }
+
+    public IEnumerable<int> MidiNotes => Enumerable.Range(0, 129);
+    
+    // Available notes to start pro keys at need to leave space for 25 keys
+    public IEnumerable<int> MidiNotesFirst => Enumerable.Range(0, 129 - 25);
 
     public MouseAxisType UsbHostKeyMouseAxisType
     {
@@ -454,13 +479,13 @@ public abstract partial class Output : ReactiveObject
     public WiiInputType WiiInputType
     {
         get => (Input.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
-        set => SetInput(SelectedInputType, value, null, null, null, null, null, null);
+        set => SetInput(SelectedInputType, value, null, null, null, null, null, null, null);
     }
 
     public Ps2InputType Ps2InputType
     {
         get => (Input.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
-        set => SetInput(SelectedInputType, null, value, null, null, null, null, null);
+        set => SetInput(SelectedInputType, null, value, null, null, null, null, null, null);
     }
 
     public object KeyOrMouse
@@ -472,34 +497,40 @@ public abstract partial class Output : ReactiveObject
     public DjInputType DjInputType
     {
         get => (Input.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
-        set => SetInput(SelectedInputType, null, null, null, null, value, null, null);
+        set => SetInput(SelectedInputType, null, null, null, null, value, null, null, null);
     }
 
     public UsbHostInputType UsbInputType
     {
         get => (Input.InnermostInputs().First() as UsbHostInput)?.Input ?? UsbHostInputType.A;
-        set => SetInput(SelectedInputType, null, null, null, null, null, value, null);
+        set => SetInput(SelectedInputType, null, null, null, null, null, value, null, null);
     }
 
     public Gh5NeckInputType Gh5NeckInputType
     {
         get => (Input.InnermostInputs().First() as Gh5NeckInput)?.Input ??
                (Input.InnermostInputs().First() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
-        set => SetInput(SelectedInputType, null, null, null, value, null, null, null);
+        set => SetInput(SelectedInputType, null, null, null, value, null, null, null, null);
     }
 
     public GhWtInputType GhWtInputType
     {
         get => (Input.InnermostInputs().First() as GhWtTapInput)?.Input ?? GhWtInputType.TapGreen;
-        set => SetInput(SelectedInputType, null, null, value, null, null, null, null);
+        set => SetInput(SelectedInputType, null, null, value, null, null, null, null, null);
     }
 
     public AdxlInputType AdxlInputType
     {
         get => (Input.InnermostInputs().First() as AdxlInput)?.Input ?? AdxlInputType.AccelX;
-        set => SetInput(SelectedInputType, null, null, null, null, null, null, value);
+        set => SetInput(SelectedInputType, null, null, null, null, null, null, value, null);
     }
 
+    public MidiType MidiType
+    {
+        get => (Input.InnermostInputs().First() as MidiInput)?.Input ?? MidiType.Note;
+        set => SetInput(SelectedInputType, null, null, null, null, null, null, null, value);
+    }
+    public IEnumerable<MidiType> MidiTypes => Enum.GetValues<MidiType>();
     public IEnumerable<GhWtInputType> GhWtInputTypes =>
         Enum.GetValues<GhWtInputType>().Where(s => s is not GhWtInputType.TapAll);
 
@@ -621,6 +652,10 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] public bool IsGh5OrClone { get; }
 
     [ObservableAsProperty] public bool IsUsbHostKeyboard { get; }
+
+    [ObservableAsProperty] public bool IsMidi { get; }
+
+    [ObservableAsProperty] public bool IsMidiNote { get; }
     [ObservableAsProperty] public bool IsUsbHostMouseAxis { get; }
     [ObservableAsProperty] public bool IsUsbHostMouseButton { get; }
     [ObservableAsProperty] public bool IsWt { get; }
@@ -673,6 +708,7 @@ public abstract partial class Output : ReactiveObject
     public bool IsEmpty => this is EmptyOutput;
 
     [Reactive] public string ButtonText { get; set; }
+    [Reactive] public string ButtonTextMidiNote { get; set; }
     [Reactive] public string ButtonTextUsbHostKey { get; set; }
     [Reactive] public string ButtonTextUsbHostMouseAxis { get; set; }
     [Reactive] public string ButtonTextUsbHostMouseButton { get; set; }
@@ -740,6 +776,32 @@ public abstract partial class Output : ReactiveObject
         };
     }
 
+    private void SetMidiNote(int value)
+    {
+        var current = GetMidiNote();
+        if (current == null) return;
+        if (current == value) return;
+        if (this is MidiCombinedOutput mco)
+        {
+            mco.FirstNote = value;
+            return;
+        }
+        if (Input is AnalogToDigital atd)
+        {
+            Input = new AnalogToDigital(new MidiInput(MidiType.Note, value, Model), atd.AnalogToDigitalType, atd.Threshold, Model);
+            return;
+        } 
+        Input = new MidiInput(MidiType.Note, value, Model);
+    }
+    private int? GetMidiNote()
+    {
+        if (this is MidiCombinedOutput mco)
+        {
+            return mco.FirstNote;
+        }
+        return (Input.InnermostInputs().First() as MidiInput)?.Key;
+    }
+
     private Key? GetUsbHostKey()
     {
         return (Input.InnermostInputs().First() as UsbHostInput)?.Key;
@@ -760,6 +822,11 @@ public abstract partial class Output : ReactiveObject
         var current = GetUsbHostKey();
         if (current == null) return;
         if (current == value) return;
+        if (Input is DigitalToAnalog dta)
+        {
+            Input = new DigitalToAnalog(new UsbHostInput(value, Model), dta.On, Model, dta.Type);
+            return;
+        } 
         Input = new UsbHostInput(value, Model);
     }
     
@@ -768,6 +835,11 @@ public abstract partial class Output : ReactiveObject
         var current = GetUsbHostMouseAxis();
         if (current == null) return;
         if (current == value) return;
+        if (Input is AnalogToDigital atd)
+        {
+            Input = new AnalogToDigital(new UsbHostInput(value, Model), atd.AnalogToDigitalType, atd.Threshold, Model);
+            return;
+        } 
         Input = new UsbHostInput(value, Model);
     }
     
@@ -776,6 +848,11 @@ public abstract partial class Output : ReactiveObject
         var current = GetUsbHostMouseButton();
         if (current == null) return;
         if (current == value) return;
+        if (Input is DigitalToAnalog dta)
+        {
+            Input = new DigitalToAnalog(new UsbHostInput(value, Model), dta.On, Model, dta.Type);
+            return;
+        } 
         Input = new UsbHostInput(value, Model);
     }
 
@@ -842,7 +919,34 @@ public abstract partial class Output : ReactiveObject
     {
         LedOn = LedOff;
     }
+    private byte[] _midiNotes = new byte[127];
+    [RelayCommand]
+    private async Task FindAndAssignMidiNoteAsync()
+    {
+        ButtonTextMidiNote = Resources.AssignMidiNote;
+        var current = _midiNotes.ToArray();
+        var found = false;
+        var noteCount = 128;
+        if (this is MidiCombinedOutput)
+        {
+            noteCount -= 25;
+        }
+        while (!found)
+        {
+            await Task.Delay(100);
+            for (var i = 0; i < noteCount; i++)
+            {
+                if (_midiNotes[i] == current[i]) continue;
+                MidiNote = i;
 
+                found = true;
+                break;
+            }
+        }
+
+        ButtonTextMidiNote = Resources.Assign;
+        this.RaisePropertyChanged(nameof(MidiNote));
+    }
     [RelayCommand]
     private async Task FindAndAssignUsbHostMouseAxisAsync()
     {
@@ -933,7 +1037,7 @@ public abstract partial class Output : ReactiveObject
 
     private void SetInput(InputType? inputType, WiiInputType? wiiInput, Ps2InputType? ps2InputType,
         GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
-        UsbHostInputType? usbInputType, AdxlInputType? adxlInputType)
+        UsbHostInputType? usbInputType, AdxlInputType? adxlInputType, MidiType? midiType)
     {
         Input input;
         switch (inputType)
@@ -948,6 +1052,14 @@ public abstract partial class Output : ReactiveObject
                 break;
             case InputType.ConstantInput:
                 input = Input.InnermostInputs().First();
+                break;
+            case InputType.MidiInput when Input.InnermostInputs().First() is not MidiInput:
+                midiType ??= MidiType.Note;
+                input = new MidiInput(midiType.Value, 0, Model);
+                break;
+            case InputType.MidiInput when Input.InnermostInputs().First() is MidiInput midiInput:
+                midiType ??= midiInput.Input;
+                input = new MidiInput(midiType.Value, midiInput.Key, Model);
                 break;
             case InputType.UsbHostInput when Input.InnermostInputs().First() is not UsbHostInput:
                 usbInputType ??= UsbHostInputType.A;
@@ -1122,6 +1234,7 @@ public abstract partial class Output : ReactiveObject
         this.RaisePropertyChanged(nameof(GhWtInputType));
         this.RaisePropertyChanged(nameof(Gh5NeckInputType));
         this.RaisePropertyChanged(nameof(DjInputType));
+        this.RaisePropertyChanged(nameof(MidiType));
         Model.UpdateErrors();
     }
 
@@ -1172,20 +1285,22 @@ public abstract partial class Output : ReactiveObject
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
-        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw)
+        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
+        ReadOnlySpan<byte> midiRaw)
     {
+        _midiNotes = midiRaw.ToArray();
         if (Enabled)
             Input.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                 ghWtRaw,
                 ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral,
-                cloneRaw, adxlRaw, mpr121Raw);
+                cloneRaw, adxlRaw, mpr121Raw, midiRaw);
 
         foreach (var output in AllOutputs)
             if (output != this)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                     ghWtRaw,
                     ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-                    digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw);
+                    digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
     }
 
     public void UpdateErrors()

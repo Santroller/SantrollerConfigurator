@@ -56,7 +56,7 @@ public class Reset : Output
             ? ""
             : $$"""
                 if ({{Input.Generate()}}) {
-                    set_console_type(UNIVERSAL);
+                    reset_usb();
                 }
                 """;
     }

@@ -166,6 +166,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 or DeviceControllerType.FortniteGuitarStrum)
             .ToPropertyEx(this, x => x.IsGuitar);
         this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(x => x is DeviceControllerType.ProKeys)
+            .ToPropertyEx(this, x => x.IsProKeys);
+        this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.GuitarHeroGuitar)
             .ToPropertyEx(this, x => x.IsGuitarHeroGuitar);
         this.WhenAnyValue(x => x.DeviceControllerType)
@@ -277,7 +280,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Bindings.Connect().Bind(out _outputs).Subscribe();
         }
 
-        _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>());
+        _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>().Where(s => s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire)));
         _deviceControllerTypes.Connect().Filter(
                 this.WhenAnyValue(s => s.EmulationType)
                     .Select(s =>
@@ -1124,6 +1127,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStandardMode { get; }
     [ObservableAsProperty] public bool IsAdvancedMode { get; }
     [ObservableAsProperty] public bool IsGuitar { get; }
+    [ObservableAsProperty] public bool IsProKeys { get; }
 
     [ObservableAsProperty] public bool SupportsPS4Instrument { get; }
 

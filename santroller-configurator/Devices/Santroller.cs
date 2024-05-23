@@ -70,6 +70,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandSetLedsMpr121,
         CommandReadMax1270X,
         CommandReadMax1270XValid,
+        CommandReadMidi,
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -255,6 +256,7 @@ public class Santroller : ConfigurableUsbDevice
             var mpr121Connected = false;
             var max1270XRaw = Array.Empty<byte>();
             var max1270XConnected = false;
+            var midiRaw = Array.Empty<byte>();
             if (_model.HasPeripheral)
             {
                 peripheralWtRaw = ReadData(0, (byte) Commands.CommandReadPeripheralWt, 5 * sizeof(int));
@@ -265,6 +267,7 @@ public class Santroller : ConfigurableUsbDevice
             {
                 usbHostRaw = ReadData(0, (byte) Commands.CommandReadUsbHost, 24);
                 usbHostInputsRaw = ReadData(0, (byte) Commands.CommandReadUsbHostInputs, 100);
+                midiRaw = ReadData(0, (byte) Commands.CommandReadMidi, 132);
             }
 
             if (_model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(s2 => s2 is AdxlInput)))
@@ -292,7 +295,7 @@ public class Santroller : ConfigurableUsbDevice
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                     djRightRaw, gh5Raw,
                     ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
-                    peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw);
+                    peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
         }
         catch (Exception ex)
         {

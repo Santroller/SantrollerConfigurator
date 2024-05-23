@@ -23,6 +23,7 @@
         </Style>
     </UserControl.Styles>
     <UserControl.Resources>
+        <netCore:MidiNoteConverter x:Key="MidiNoteConverter" />
         <netCore:EnumToStringConverter x:Key="EnumToStringConverter" />
         <netCore:PinToStringConverter x:Key="PinToStringConverter" />
         <netCore:ControllerEnumConverter x:Key="ControllerEnumConverter" />
@@ -127,6 +128,17 @@
         </DataTemplate>
         <DataTemplate x:Key="EnumToStringTemplate" DataType="system:Object">
             <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter }}" />
+        </DataTemplate>
+        <DataTemplate x:Key="MidiNoteTemplate" DataType="system:Object">
+            <TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource MidiNoteConverter }">
+                        <Binding />
+                        <Binding
+                            Path="$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).DeviceControllerType" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
         </DataTemplate>
         <DataTemplate x:Key="ImageWithTextTemplate" DataType="system:Object">
             <StackPanel Orientation="Horizontal" Width="355">
@@ -311,6 +323,20 @@
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
                                    Text="{Binding Value}" />
                     </Grid>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type output:PianoKey}">
+                <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding Trigger}">
+                                <ProgressBar Value="{Binding Value}"
+                                             IsIndeterminate="False" Minimum="0" Maximum="65536"
+                                             Height="30"
+                                             Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
                 </StackPanel>
             </DataTemplate>
             <DataTemplate DataType="{x:Type output:GuitarAxis}">
@@ -1679,6 +1705,29 @@
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type output:PianoKey}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.ValueLabel}" />
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ProgressBar Value="{Binding Value}"
+                                                     IsIndeterminate="False" Minimum="0" Maximum="65536"
+                                                     Height="30"
+                                                     Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                                    </StackPanel>
+                                    <Label VerticalAlignment="Center" HorizontalContentAlignment="Center"
+                                           Content="{Binding Value}" Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type output:ControllerAxis}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
@@ -2362,6 +2411,19 @@
                                   ItemsSource="{Binding Addresses}"
                                   Width="200" />
                     </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type combined:MidiCombinedOutput}">
+                <StackPanel Orientation="Horizontal" IsVisible="{Binding $parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).IsProKeys}">
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           Width="300" Content="{x:Static netCore:Resources.ProKeysInitialNoteLabel}" />
+                    <ComboBox VerticalAlignment="Center"
+                              SelectedItem="{Binding MidiNote}"
+                              ItemsSource="{Binding MidiNotesFirst}"
+                              ItemTemplate="{StaticResource MidiNoteTemplate}" />
+                    <Button Command="{Binding FindAndAssignMidiNoteCommand}"
+                            Content="{Binding ButtonTextMidiNote}" />
                 </StackPanel>
             </DataTemplate>
             <DataTemplate DataType="{x:Type combined:Ps2CombinedOutput}">
@@ -3647,10 +3709,27 @@
                                                       SelectedItem="{Binding GhWtInputType}"
                                                       ItemsSource="{Binding GhWtInputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
+                                            <ComboBox VerticalAlignment="Center"
+                                                      IsVisible="{Binding IsMidi}"
+                                                      SelectedItem="{Binding MidiType}"
+                                                      ItemsSource="{Binding MidiTypes}"
+                                                      ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                         </StackPanel>
                                         <ContentControl ContentTemplate="{StaticResource OutputTemplate}"
                                                         Content="{Binding}" />
 
+                                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsMidiNote}">
+                                            <Label VerticalAlignment="Center"
+                                                   VerticalContentAlignment="Center"
+                                                   Width="300" Content="{x:Static netCore:Resources.MidiNote}" />
+                                            <ComboBox VerticalAlignment="Center"
+                                                      SelectedItem="{Binding MidiNote}"
+                                                      ItemsSource="{Binding MidiNotes}"
+                                                      ItemTemplate="{StaticResource MidiNoteTemplate}" />
+                                            <Button Command="{Binding FindAndAssignMidiNoteCommand}"
+                                                    IsEnabled="{Binding ConfigurableInput}"
+                                                    Content="{Binding ButtonTextMidiNote}" />
+                                        </StackPanel>
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostKeyboard}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"

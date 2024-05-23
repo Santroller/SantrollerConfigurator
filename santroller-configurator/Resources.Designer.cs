@@ -237,6 +237,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string MidiInputsTitle {
+            get {
+                return ResourceManager.GetString("MidiInputsTitle", resourceCulture);
+            }
+        }
+        
         public static string WiiCombinedTitle {
             get {
                 return ResourceManager.GetString("WiiCombinedTitle", resourceCulture);
@@ -606,6 +612,12 @@ namespace GuitarConfigurator.NetCore {
         public static string AssignKeyboard {
             get {
                 return ResourceManager.GetString("AssignKeyboard", resourceCulture);
+            }
+        }
+        
+        public static string AssignMidiNote {
+            get {
+                return ResourceManager.GetString("AssignMidiNote", resourceCulture);
             }
         }
         
@@ -1506,6 +1518,24 @@ namespace GuitarConfigurator.NetCore {
         public static string DeviceControllerTypeFortniteDrums {
             get {
                 return ResourceManager.GetString("DeviceControllerTypeFortniteDrums", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeProGuitarMustang {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeProGuitarMustang", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeProGuitarSquire {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeProGuitarSquire", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeProKeys {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeProKeys", resourceCulture);
             }
         }
         
@@ -3633,6 +3663,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string InputTypeMidiInput {
+            get {
+                return ResourceManager.GetString("InputTypeMidiInput", resourceCulture);
+            }
+        }
+        
         public static string InputTypeDigitalPinInput {
             get {
                 return ResourceManager.GetString("InputTypeDigitalPinInput", resourceCulture);
@@ -3984,6 +4020,18 @@ namespace GuitarConfigurator.NetCore {
         public static string MidiTypePitchWheel {
             get {
                 return ResourceManager.GetString("MidiTypePitchWheel", resourceCulture);
+            }
+        }
+        
+        public static string MidiTypeModWheel {
+            get {
+                return ResourceManager.GetString("MidiTypeModWheel", resourceCulture);
+            }
+        }
+        
+        public static string MidiTypeSustainPedal {
+            get {
+                return ResourceManager.GetString("MidiTypeSustainPedal", resourceCulture);
             }
         }
         
@@ -4692,6 +4740,12 @@ namespace GuitarConfigurator.NetCore {
         public static string SimpleTypePeripheral {
             get {
                 return ResourceManager.GetString("SimpleTypePeripheral", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeMidi {
+            get {
+                return ResourceManager.GetString("SimpleTypeMidi", resourceCulture);
             }
         }
         
@@ -6954,6 +7008,192 @@ namespace GuitarConfigurator.NetCore {
         public static string ButtonTestLabel {
             get {
                 return ResourceManager.GetString("ButtonTestLabel", resourceCulture);
+            }
+        }
+        
+        public static string MidiNoteLabel {
+            get {
+                return ResourceManager.GetString("MidiNoteLabel", resourceCulture);
+            }
+        }
+        
+        public static string MidiNote {
+            get {
+                return ResourceManager.GetString("MidiNote", resourceCulture);
+            }
+        }
+        
+        public static string ProKeysInitialNoteLabel {
+            get {
+                return ResourceManager.GetString("ProKeysInitialNoteLabel", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey1 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey1", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey2 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey2", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey3 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey3", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey4 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey4", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey5 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey5", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey6 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey6", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey7 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey7", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey8 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey8", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey9 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey9", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey10 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey10", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey11 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey11", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey12 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey12", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey13 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey13", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey14 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey14", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey15 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey15", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey16 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey16", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey17 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey17", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey18 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey18", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey19 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey19", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey20 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey20", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey21 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey21", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey22 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey22", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey23 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey23", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey24 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey24", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeKey25 {
+            get {
+                return ResourceManager.GetString("ProKeyTypeKey25", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeOverdrive {
+            get {
+                return ResourceManager.GetString("ProKeyTypeOverdrive", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypePedal {
+            get {
+                return ResourceManager.GetString("ProKeyTypePedal", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypeTouchPad {
+            get {
+                return ResourceManager.GetString("ProKeyTypeTouchPad", resourceCulture);
             }
         }
     }

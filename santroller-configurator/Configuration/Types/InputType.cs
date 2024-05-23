@@ -19,4 +19,5 @@ public enum InputType
     DigitalPeripheralInput,
     AdxlInput,
     Mpr121Input,
+    MidiInput,
 }

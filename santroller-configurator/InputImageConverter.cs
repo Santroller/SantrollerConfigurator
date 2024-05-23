@@ -69,6 +69,7 @@ public class InputImageConverter : IMultiValueConverter
                 SimpleType.ConsoleMode => "Console",
                 SimpleType.Reset => "Reset",
                 SimpleType.Led => "Led",
+                SimpleType.Midi => "Keyboard",
                 _ => null
             },
             InputType.DigitalPinInput or InputType.DigitalPeripheralInput => "Combined/Digital",
@@ -80,6 +81,9 @@ public class InputImageConverter : IMultiValueConverter
             InputType.WtNeckInput => "Combined/GHWT",
             InputType.Gh5NeckInput => "Combined/GH5",
             InputType.UsbHostInput => "Combined/Usb",
+            InputType.MidiInput => "Combined/Keyboard",
+            MidiType => "Combined/Keyboard",
+            ProKeyType => "Combined/Keyboard",
             DpadType type => (type.ToString().StartsWith("Ps2") ? "PS2/DPad" : "Wii/ClassicDPad") +
                              type.ToString()[3..],
             UsbHostInputType type => $"Combined/Usb/{type}",

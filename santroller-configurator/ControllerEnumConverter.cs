@@ -18,6 +18,7 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.Back,
         StandardButtonType.Guide
     ];
+
     private static readonly List<StandardButtonType> SupportedButtonsFortnite = [StandardButtonType.Back];
 
     private static readonly List<StandardButtonType> SupportedButtonsNonGamepad =
@@ -190,6 +191,7 @@ public class ControllerEnumConverter : IMultiValueConverter
             case DeviceControllerType.DancePad:
             case DeviceControllerType.GuitarHeroDrums:
             case DeviceControllerType.RockBandDrums:
+            case DeviceControllerType.ProKeys:
                 return SupportedButtonsNonGamepad.Contains(button);
             case DeviceControllerType.LiveGuitar:
             case DeviceControllerType.GuitarHeroGuitar:
@@ -225,6 +227,7 @@ public class ControllerEnumConverter : IMultiValueConverter
                     .Cast<object>()
                     .Concat(InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>()),
             DeviceControllerType.DancePad => Array.Empty<object>(),
+            DeviceControllerType.ProKeys => Enum.GetValues<ProKeyType>().Cast<object>(),
             _ => Enum.GetValues<StandardAxisType>().Cast<object>()
         };
         return Enum.GetValues<SimpleType>().Cast<object>()
