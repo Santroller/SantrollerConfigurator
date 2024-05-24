@@ -240,6 +240,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             })
             .ToPropertyEx(this, x => x.IsIndexedLedPeripheral);
         Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is EmulationMode {Type: EmulationModeType.Fnf}))
+            .ToPropertyEx(this, x => x.IsFortniteFestivalPro);
+        Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is BluetoothOutput))
             .ToPropertyEx(this, x => x.IsBluetoothRx);
         Bindings.Connect()
@@ -1138,6 +1141,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [ObservableAsProperty] public bool IsRpcs3CompatibleController { get; }
     [ObservableAsProperty] public bool IsFortniteFestival { get; }
+    [ObservableAsProperty] public bool IsFortniteFestivalPro { get; }
     [ObservableAsProperty] public bool IsKeyboard { get; }
     [ObservableAsProperty] public bool IsApa102 { get; }
     [ObservableAsProperty] public bool IsWs2812 { get; }
@@ -1769,7 +1773,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         """;
 
             var keyboardTick = GenerateTick(ConfigField.Keyboard, writer);
-            if (IsKeyboard || IsFortniteFestival)
+            if (IsKeyboard || IsFortniteFestival || IsFortniteFestivalPro)
             {
                 if (keyboardTick.Length != 0)
                 {
@@ -3039,7 +3043,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             foreach (var output in outputByType)
             {
                 var generatedInput = output.Input.Generate();
-                if (output is not OutputButton and not DrumAxis and not EmulationMode) continue;
+                var pro = IsFortniteFestivalPro && output is GuitarAxis
+                {
+                    Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy
+                };
+                if (output is not OutputButton and not DrumAxis and not EmulationMode && !pro) continue;
 
                 if (output.Input is MacroInput)
                 {
@@ -3108,6 +3116,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             var output = s;
                             var generatedInput = input.Generate();
                             var index = 0;
+                            
+                            var pro = IsFortniteFestivalPro && output is GuitarAxis
+                            {
+                                Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy
+                            };
+                            if (pro)
+                            {
+                                index = debounces[generatedInput];
+                            }
                             if (output is OutputButton or DrumAxis or EmulationMode)
                             {
                                 index = debounces[generatedInput];

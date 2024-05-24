@@ -2849,6 +2849,7 @@
                                     <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                         <Binding Path="IsKeyboard" />
                                         <Binding Path="IsFortniteFestival" />
+                                        <Binding Path="IsFortniteFestivalPro" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
                                 <Label VerticalAlignment="Center"

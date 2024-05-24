@@ -104,7 +104,7 @@ public abstract class OutputButton : Output
             if (outputVar.Length == 0) return "";
             var keyCode = KeyboardButton.KeyCodes.IndexOf(outputVar);
             // Modifiers still go via the normal system, only standard keys go via 6kro mode.
-            if ((Model.IsKeyboard || Model.IsFortniteFestival) && Model.RolloverMode == RolloverMode.SixKro && keyCode != -1)
+            if ((Model.IsKeyboard || Model.IsFortniteFestival || Model.IsFortniteFestivalPro) && Model.RolloverMode == RolloverMode.SixKro && keyCode != -1 && mode == ConfigField.Keyboard)
             {
                 return  $$"""
                           if ({{ifStatement}}) {

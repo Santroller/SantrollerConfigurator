@@ -37,6 +37,17 @@ public class GuitarButton : OutputButton
         {InstrumentButtonType.StrumDown, Key.Down},
     };
 
+    private readonly Dictionary<InstrumentButtonType, object> _fortniteProKeys = new()
+    {
+        {InstrumentButtonType.Green, Key.D1},
+        {InstrumentButtonType.Red, Key.D2},
+        {InstrumentButtonType.Yellow, Key.D3},
+        {InstrumentButtonType.Blue, Key.D4},
+        {InstrumentButtonType.Orange, Key.D5},
+        {InstrumentButtonType.StrumUp, Key.RightShift},
+        {InstrumentButtonType.StrumDown, "enter"},
+    };
+
     public override string LedOnLabel => Resources.LedColourActiveButtonColour;
     public override string LedOffLabel => Resources.LedColourInactiveButtonColour;
 
@@ -49,6 +60,10 @@ public class GuitarButton : OutputButton
     {
         if (mode is ConfigField.Keyboard)
         {
+            if (Model.IsFortniteFestivalPro)
+            {
+                return _fortniteProKeys.TryGetValue(Type, out var forniteKeyPro) ? GetReportField(forniteKeyPro) : "";
+            }
             return _fortniteKeys.TryGetValue(Type, out var forniteKey) ? GetReportField(forniteKey) : "";
         }
         // PS3 and 360 just set the standard buttons, and rely on the solo flag
@@ -151,9 +166,6 @@ public class GuitarButton : OutputButton
                 or InstrumentButtonType.SoloYellow && mode is not (ConfigField.Shared or ConfigField.Universal))
             extra += "report->solo=true;";
         
-        Console.WriteLine(extra);
-
-
         return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
     }
 

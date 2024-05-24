@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using Avalonia.Input;
 using Avalonia.Media;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
@@ -137,7 +138,7 @@ public class GuitarAxis : OutputAxis
         {
             Console.WriteLine(val);
             return Math.Min(val / (ushort.MaxValue / 5) + 1, 5);
-        } 
+        }
 
         if (val < PickupSelectorNotch2)
         {
@@ -198,10 +199,11 @@ public class GuitarAxis : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedGuitarAxis(Input!.Serialise(), Type, PickupSelectorNotch2, PickupSelectorNotch3, PickupSelectorNotch4, PickupSelectorNotch5,LedOn, LedOff, LedIndices.ToArray(),
+        return new SerializedGuitarAxis(Input!.Serialise(), Type, PickupSelectorNotch2, PickupSelectorNotch3,
+            PickupSelectorNotch4, PickupSelectorNotch5, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Inverted, Min, Max,
             DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined,
-            LedIndicesMpr121.ToArray()); 
+            LedIndicesMpr121.ToArray());
     }
 
     public override string GenerateOutput(ConfigField mode)
@@ -219,9 +221,26 @@ public class GuitarAxis : OutputAxis
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        if (mode is ConfigField.Keyboard or ConfigField.Shared && Model.IsFortniteFestivalPro)
+        {
+            var input = Input;
+            input = input is DigitalToAnalog ? input.InnermostInputs().First() : new AnalogToDigital(input, AnalogToDigitalType.Trigger, short.MaxValue / 2, Model);
+            switch (Type)
+            {
+                case GuitarAxisType.Tilt:
+                    return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
+                        LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.PageDown,
+                        OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+                case GuitarAxisType.Whammy:
+                    return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
+                        LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.RightCtrl,
+                        OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+            }
+        }
         if (mode == ConfigField.Shared)
             return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
+
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
             or ConfigField.XboxOne
             or ConfigField.Universal or ConfigField.Xbox)) return "";
@@ -267,7 +286,8 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = {{analogOn}};
                          }
                          """;
-            case ConfigField.Xbox360 or ConfigField.Xbox when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
+            case ConfigField.Xbox360 or ConfigField.Xbox
+                when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 return $$"""
                          if (SLIDER_BAR) {
@@ -390,7 +410,8 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[GetPickupSelectorValue(analogOn)]}};
                          }
                          """;
-            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
+            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
+                or ConfigField.Universal
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is not DigitalToAnalog:
                 var gen2 = $"({Input.Generate()})";
@@ -398,7 +419,7 @@ public class GuitarAxis : OutputAxis
                 {
                     gen2 = $"({ushort.MaxValue} - {gen2})";
                 }
-                
+
                 return $$"""
                          if ({{gen2}}) {
                              if ({{gen2}} < {{PickupSelectorNotch2}}) {
@@ -431,7 +452,7 @@ public class GuitarAxis : OutputAxis
                 {
                     gen = $"({ushort.MaxValue} - {gen})";
                 }
-                
+
                 return $$"""
                          if ({{gen}}) {
                              if ({{gen}} < {{PickupSelectorNotch2}}) {
