@@ -76,6 +76,21 @@ public class ControllerButton : OutputButton
         {
             return GetReportField(StandardButtonType.DpadLeft);
         }
+
+        if (Model.IsFortniteFestivalPro && mode is ConfigField.Keyboard)
+        {
+            switch (Type)
+            {
+                case StandardButtonType.Back:
+                    return GetReportField(Key.PageDown);
+                case StandardButtonType.Start:
+                    return GetReportField(Key.Escape);
+                case StandardButtonType.DpadLeft:
+                    return GetReportField(Key.Left);
+                case StandardButtonType.DpadRight:
+                    return GetReportField(Key.Right);
+            }
+        }
         return mode is ConfigField.Ps3 or ConfigField.Xbox or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared or ConfigField.XboxOne
             or ConfigField.Xbox360 or ConfigField.Universal
             ? GetReportField(Type)
