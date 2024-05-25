@@ -128,7 +128,7 @@ public class SerializedConfiguration
     [ProtoMember(61)] public bool HideControllerView { get; private set; }
     [ProtoMember(62)] public bool Ps4Instruments { get; private set; }
 
-    [ProtoMember(63)] public double AdxlFilter { get; private set; } = 0.5;
+    [ProtoMember(63)] public double AdxlFilter { get; private set; } = 0.05;
     [ProtoMember(64)] public bool TiltDisabled { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
