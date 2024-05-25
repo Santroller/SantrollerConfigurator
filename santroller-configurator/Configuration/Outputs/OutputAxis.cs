@@ -165,15 +165,21 @@ public abstract partial class OutputAxis : Output
         return new Thickness(left, 0, right, 0);
     }
 
+    private int _tempMin = 0;
     private void ApplyCalibration(int rawValue)
     {
         switch (_calibrationState)
         {
             case OutputAxisCalibrationState.Min:
                 Min = rawValue;
+                _tempMin = rawValue;
                 break;
             case OutputAxisCalibrationState.Max:
                 Max = rawValue;
+                if (this is GuitarAxis {Type: GuitarAxisType.Tilt})
+                {
+                    Min = _tempMin - Max;
+                }
                 break;
             case OutputAxisCalibrationState.DeadZone:
                 var min = Math.Min(Min, Max);
