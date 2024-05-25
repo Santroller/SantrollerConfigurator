@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -1686,7 +1687,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {DjSmoothing.ToString().ToLower()}
                        #define KRAMER_STRIKER {Ps2KramerMode.ToString().ToLower()}
                        #define LED_BRIGHTNESS {LedBrightnessOn}
-                       #define LOW_PASS_ALPHA {AdxlFilter}
+                       #define LOW_PASS_ALPHA {AdxlFilter.ToString(CultureInfo.GetCultureInfo("en"))}
                        """;
             if (BtRxAddr.Length != 0 && BtRxAddr.Contains(':'))
             {
