@@ -329,6 +329,9 @@
     <data name="AxisCalibrationDeadzoneStatus" xml:space="preserve">
         <value>Paso 3/3</value>
     </data>
+    <data name="LowPassFilterLabel" xml:space="preserve">
+        <value>Filtro de Paso Bajo</value>
+    </data>
     <data name="AxisCalibrationButtonMin" xml:space="preserve">
         <value>Suelta el botón</value>
     </data>
