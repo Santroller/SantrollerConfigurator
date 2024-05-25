@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using Avalonia.Input;
 using Avalonia.Media;
 using GuitarConfigurator.NetCore.Configuration.Exceptions;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
@@ -82,6 +83,7 @@ public abstract class OutputButton : Output
                 debounce = Model.Debounce;
             }
         }
+
         if (!Model.Deque)
         {
             // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
@@ -106,6 +108,20 @@ public abstract class OutputButton : Output
             // Modifiers still go via the normal system, only standard keys go via 6kro mode.
             if ((Model.IsKeyboard || Model.IsFortniteFestival || Model.IsFortniteFestivalPro) && Model.RolloverMode == RolloverMode.SixKro && keyCode != -1 && mode == ConfigField.Keyboard)
             {
+                if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} or ControllerButton {Type: StandardButtonType.Back})
+                {
+                    return  $$"""
+                              if ({{ifStatement}} && ((millis() - lastTilt) > 10)) {
+                                  setKey({{debounceIndex}},{{keyCode}},report,true);
+                                  {{extra}}
+                              } else {
+                                 setKey({{debounceIndex}},{{keyCode}},report,false);
+                              }
+                              if ({{ifStatement}}) {
+                                  lastTilt = millis();
+                              }
+                              """;
+                }
                 return  $$"""
                           if ({{ifStatement}}) {
                               setKey({{debounceIndex}},{{keyCode}},report,true);
@@ -122,6 +138,18 @@ public abstract class OutputButton : Output
                           if ({{ifStatement}}) {
                               {{outputVar}} = 0xFF;
                               {{extra}}
+                          }
+                          """;
+            }
+            if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} or ControllerButton {Type: StandardButtonType.Back} && mode == ConfigField.Keyboard)
+            {
+                return  $$"""
+                          if ({{ifStatement}} && ((millis() - lastTilt) > 10)) {
+                              {{outputVar}} = true;
+                              {{extra}}
+                          }
+                          if ({{ifStatement}}) {
+                              lastTilt = millis();
                           }
                           """;
             }
