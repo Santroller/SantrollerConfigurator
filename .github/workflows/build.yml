@@ -4,6 +4,7 @@ name: Build
 on: [push]
 jobs:
   build-mac:
+    if: contains(github.ref, 'tags/v')
     name: Build (macOS)
     runs-on: [self-hosted, macos]
     steps:
@@ -51,6 +52,7 @@ jobs:
           mv out $RUN_ID/macos 
           rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
   build-linux:
+    if: contains(github.ref, 'tags/v')
     name: Build (Linux)
     runs-on: [self-hosted, linux]
     steps:
@@ -87,6 +89,7 @@ jobs:
           cp -rf santroller-configurator/Releases/* ~/artifacts/$RUN_ID/Releases
           cp -rf out ~/artifacts/$RUN_ID/linux 
   build-windows:
+    if: contains(github.ref, 'tags/v')
     name: Build (Windows)
     runs-on: [self-hosted, windows]
     steps:
@@ -124,6 +127,7 @@ jobs:
           cp -force -recurse santroller-configurator/Releases $Env:RUN_ID/Releases
           scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
   build-linux-builder:
+    if: contains(github.ref, 'tags/v')
     name: Build Builder (Linux)
     needs: [build-linux, build-mac, build-windows]
     runs-on: [self-hosted, linux]
@@ -157,6 +161,7 @@ jobs:
           mkdir -p ~/artifacts/$RUN_ID/BuilderReleases
           cp -rf Builder/Releases/* ~/artifacts/$RUN_ID/BuilderReleases
   build-windows-builder:
+    if: contains(github.ref, 'tags/v')
     name: Build Builder (Windows)
     needs: [build-linux, build-mac, build-windows]
     runs-on: [self-hosted, windows]
@@ -192,6 +197,7 @@ jobs:
           cp -force -recurse Builder/Releases $Env:RUN_ID/BuilderReleases
           scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts  
   build-mac-builder:
+    if: contains(github.ref, 'tags/v')
     name: Build Builder (macOS)
     needs: [ build-linux, build-mac, build-windows ]
     runs-on: [self-hosted, macos]
