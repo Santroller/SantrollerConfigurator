@@ -224,7 +224,22 @@ public class GuitarAxis : OutputAxis
         if (mode is ConfigField.Keyboard or ConfigField.Shared && Model.IsFortniteFestivalPro)
         {
             var input = Input;
-            input = input is DigitalToAnalog ? input.InnermostInputs().First() : new AnalogToDigital(input, AnalogToDigitalType.Drum, ushort.MaxValue / 2, Model);
+            input = input is DigitalToAnalog ? input.InnermostInputs().First() : input;
+            var debounce = Model.Debounce;
+            if (!Model.Deque)
+            {
+                // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
+                debounce /= 10;
+            }
+            debounce += 1;
+            if (Input is not DigitalToAnalog && mode is ConfigField.Shared)
+            {
+                return $$"""
+                         if ({{GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer)}} > {{byte.MaxValue / 2}}) {
+                            debounce[{{debounceIndex}}]={{debounce}};
+                         }
+                         """;
+            }
             switch (Type)
             {
                 case GuitarAxisType.Tilt:
