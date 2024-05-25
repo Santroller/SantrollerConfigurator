@@ -980,6 +980,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool Ps2KramerMode { get; set; }
 
     [Reactive] public bool SliderBar { get; set; }
+    [Reactive] public bool Tilt { get; set; }
 
 
     private bool _hasPeripheral;
@@ -1642,6 +1643,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define RPCS3_COMPAT {WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}
                        #define XINPUT_AUTH {WriteBlob(writer, XInputAuth && UsbHostEnabled)}
                        #define SLIDER_BAR {WriteBlob(writer, SliderBar)}
+                       #define TILT {WriteBlob(writer, Tilt)}
                        #define INPUT_QUEUE {WriteBlob(writer, Deque)}
                        #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
@@ -1676,6 +1678,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define RPCS3_COMPAT {(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}
                        #define XINPUT_AUTH {(XInputAuth && UsbHostEnabled).ToString().ToLower()}
                        #define SLIDER_BAR {SliderBar.ToString().ToLower()}
+                       #define TILT {Tilt.ToString().ToLower()}
                        #define INPUT_QUEUE {Deque.ToString().ToLower()}
                        #define POLL_RATE {PollRate}
                        #define WT_SENSITIVITY {WtSensitivity}

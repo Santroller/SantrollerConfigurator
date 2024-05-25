@@ -70,6 +70,7 @@ public class SerializedConfiguration
         Max1704XSda = model.Max1704XSda;
         Max1704XScl = model.Max1704XScl;
         SliderbarDisabled = !model.SliderBar;
+        TiltDisabled = !model.Tilt;
         HideControllerView = model.HideControllerView;
         Ps4Instruments = model.Ps4Instruments;
         AdxlFilter = model.AdxlFilter;
@@ -128,6 +129,7 @@ public class SerializedConfiguration
     [ProtoMember(62)] public bool Ps4Instruments { get; private set; }
 
     [ProtoMember(63)] public double AdxlFilter { get; private set; } = 0.5;
+    [ProtoMember(64)] public bool TiltDisabled { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -145,6 +147,7 @@ public class SerializedConfiguration
         model.Debounce = Debounce;
         model.StrumDebounce = StrumDebounce;
         model.SliderBar = !SliderbarDisabled;
+        model.Tilt = !TiltDisabled;
         model.Deque = QueueBasedInputs;
         model.DjPollRate = DjPollRate;
         model.DjSmoothing = DjSmooth;
@@ -230,6 +233,7 @@ public class SerializedConfiguration
         model.XInputOnWindows = XInputOnWindows;
         model.XInputAuth = XInputAuth;
         model.SliderBar = !SliderbarDisabled;
+        model.Tilt = !TiltDisabled;
         model.PollRate = PollRate;
         model.Debounce = Debounce;
         model.StrumDebounce = StrumDebounce;

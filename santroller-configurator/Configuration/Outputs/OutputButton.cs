@@ -111,14 +111,16 @@ public abstract class OutputButton : Output
                 if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} or ControllerButton {Type: StandardButtonType.Back})
                 {
                     return  $$"""
-                              if ({{ifStatement}} && ((millis() - lastTilt) > 10)) {
-                                  setKey({{debounceIndex}},{{keyCode}},report,true);
-                                  {{extra}}
-                              } else {
-                                 setKey({{debounceIndex}},{{keyCode}},report,false);
-                              }
-                              if ({{ifStatement}}) {
-                                  lastTilt = millis();
+                              if (TILT) {
+                                  if ({{ifStatement}} && ((millis() - lastTilt) > 10)) {
+                                      setKey({{debounceIndex}},{{keyCode}},report,true);
+                                      {{extra}}
+                                  } else {
+                                     setKey({{debounceIndex}},{{keyCode}},report,false);
+                                  }
+                                  if ({{ifStatement}}) {
+                                      lastTilt = millis();
+                                  }
                               }
                               """;
                 }
@@ -144,12 +146,14 @@ public abstract class OutputButton : Output
             if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} or ControllerButton {Type: StandardButtonType.Back} && mode == ConfigField.Keyboard)
             {
                 return  $$"""
-                          if ({{ifStatement}} && ((millis() - lastTilt) > 10)) {
-                              {{outputVar}} = true;
-                              {{extra}}
-                          }
-                          if ({{ifStatement}}) {
-                              lastTilt = millis();
+                          if (TILT) {
+                              if ({{ifStatement}} && ((millis() - lastTilt) > 10)) {
+                                  {{outputVar}} = true;
+                                  {{extra}}
+                              }
+                              if ({{ifStatement}}) {
+                                  lastTilt = millis();
+                              }
                           }
                           """;
             }

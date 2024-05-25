@@ -2914,6 +2914,16 @@
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsGuitar}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.GuitarAxisTypeTilt}" />
+                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                          HorizontalContentAlignment="Center"
+                                          IsChecked="{Binding Tilt}"
+                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                        </StackPanel>
                     </StackPanel>
                 </Expander>
                 <Expander HorizontalAlignment="Stretch" Header="{Binding}" IsExpanded="{Binding PollExpanded}">

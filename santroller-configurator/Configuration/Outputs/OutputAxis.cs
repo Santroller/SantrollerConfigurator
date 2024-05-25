@@ -165,7 +165,7 @@ public abstract partial class OutputAxis : Output
         return new Thickness(left, 0, right, 0);
     }
 
-    private int _tempMin = 0;
+    private int _tempMin;
     private void ApplyCalibration(int rawValue)
     {
         switch (_calibrationState)
