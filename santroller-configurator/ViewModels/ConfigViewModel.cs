@@ -3241,7 +3241,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             foreach (var output in outputByType)
             {
                 var generatedInput = output.Input.Generate();
-                if (output is not OutputButton and not DrumAxis and not EmulationMode) continue;
+                var pro = IsFortniteFestivalPro && output is GuitarAxis
+                {
+                    Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy
+                };
+                if (output is not OutputButton and not DrumAxis and not EmulationMode && !pro) continue;
 
 
                 debounces.TryAdd(generatedInput, debounces.Count);

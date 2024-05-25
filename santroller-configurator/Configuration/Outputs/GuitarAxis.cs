@@ -224,7 +224,7 @@ public class GuitarAxis : OutputAxis
         if (mode is ConfigField.Keyboard or ConfigField.Shared && Model.IsFortniteFestivalPro)
         {
             var input = Input;
-            input = input is DigitalToAnalog ? input.InnermostInputs().First() : new AnalogToDigital(input, AnalogToDigitalType.Trigger, ushort.MaxValue / 2, Model);
+            input = input is DigitalToAnalog ? input.InnermostInputs().First() : new AnalogToDigital(input, AnalogToDigitalType.Drum, ushort.MaxValue / 2, Model);
             switch (Type)
             {
                 case GuitarAxisType.Tilt:
