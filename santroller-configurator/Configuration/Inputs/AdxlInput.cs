@@ -4,7 +4,10 @@ using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
+using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using static GuitarConfigurator.NetCore.Configuration.Outputs.Combined.WiiCombinedOutput;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
@@ -23,6 +26,20 @@ public class AdxlInput : TwiInput
         Combined = combined;
         BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
         IsAnalog = true;
+        this.WhenAnyValue(x => x.Model.AdxlFilter).Subscribe(_ => this.RaisePropertyChanged(nameof(Filter)));
+    }
+
+    public double Filter
+    {
+        get => Model.AdxlFilter;
+        set
+        {
+            Model.AdxlFilter = value;
+            if (Model.Device is Santroller santroller)
+            {
+                santroller.SetAdxlFilter(value);
+            }
+        }
     }
 
     public AdxlInputType Input { get; }
@@ -72,7 +89,7 @@ public class AdxlInput : TwiInput
             _ => RawValue
         };
     }
-    
+
     public override string GenerateAll(List<Tuple<Input, string>> bindings,
         ConfigField mode)
     {
@@ -81,6 +98,6 @@ public class AdxlInput : TwiInput
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return base.RequiredDefines().Concat(new[] {"INPUT_ADXL"}).ToList();
+        return base.RequiredDefines().Concat(["INPUT_ADXL"]).ToList();
     }
 }

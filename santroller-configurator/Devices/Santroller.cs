@@ -71,6 +71,7 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadMax1270X,
         CommandReadMax1270XValid,
         CommandReadMidi,
+        CommandSetAdxlFilter
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -581,6 +582,11 @@ public class Santroller : ConfigurableUsbDevice
         }
 
         WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led}.Concat(bytes).ToArray());
+    }
+
+    public void SetAdxlFilter(double filter)
+    {
+        WriteData(0, (byte) Commands.CommandSetAdxlFilter, BitConverter.GetBytes(filter));
     }
 
     public void SetLedStp(byte led, bool state)

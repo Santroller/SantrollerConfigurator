@@ -3067,6 +3067,9 @@
     <data name="SdaLabel" xml:space="preserve">
         <value>SDA Pin</value>
     </data>
+    <data name="LowPassFilterLabel" xml:space="preserve">
+        <value>Low Pass Filter</value>
+    </data>
     <data name="TurntableSmoothingLabel" xml:space="preserve">
         <value>Turntable Smoothing</value>
     </data>

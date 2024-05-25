@@ -917,6 +917,13 @@
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.LowPassFilterLabel}" />
+                        <NumericUpDown Value="{Binding Filter}" Minimum="0"
+                                       Maximum="1" Width="200" Height="30" ShowButtonSpinner="False" AllowSpin="False" />
+                    </StackPanel>
                 </StackPanel>
             </DataTemplate>
             <DataTemplate DataType="{x:Type inputs:Mpr121Input}">

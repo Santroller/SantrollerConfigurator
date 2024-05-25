@@ -5883,6 +5883,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string LowPassFilterLabel {
+            get {
+                return ResourceManager.GetString("LowPassFilterLabel", resourceCulture);
+            }
+        }
+        
         public static string TurntableSmoothingLabel {
             get {
                 return ResourceManager.GetString("TurntableSmoothingLabel", resourceCulture);

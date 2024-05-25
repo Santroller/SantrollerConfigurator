@@ -72,6 +72,7 @@ public class SerializedConfiguration
         SliderbarDisabled = !model.SliderBar;
         HideControllerView = model.HideControllerView;
         Ps4Instruments = model.Ps4Instruments;
+        AdxlFilter = model.AdxlFilter;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -126,8 +127,11 @@ public class SerializedConfiguration
     [ProtoMember(61)] public bool HideControllerView { get; private set; }
     [ProtoMember(62)] public bool Ps4Instruments { get; private set; }
 
+    [ProtoMember(63)] public double AdxlFilter { get; private set; } = 0.5;
+
     public void LoadConfiguration(ConfigViewModel model)
     {
+        model.AdxlFilter = AdxlFilter;
         model.Ps4Instruments = Ps4Instruments;
         model.HideControllerView = HideControllerView;
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
@@ -222,6 +226,7 @@ public class SerializedConfiguration
 
     public void Merge(ConfigViewModel model)
     {
+        model.AdxlFilter = AdxlFilter;
         model.XInputOnWindows = XInputOnWindows;
         model.XInputAuth = XInputAuth;
         model.SliderBar = !SliderbarDisabled;

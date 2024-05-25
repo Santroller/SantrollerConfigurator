@@ -562,6 +562,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public int PollRate { get; set; }
     [Reactive] public int DjPollRate { get; set; }
+    [Reactive] public double AdxlFilter { get; set; }
     [Reactive] public bool DjSmoothing { get; set; }
 
     [Reactive] public string BtRxAddr { get; set; }
@@ -1356,6 +1357,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void SetDefaults()
     {
         ClearOutputs();
+        AdxlFilter = 0.5;
         Mpr121CapacitiveCount = 0;
         Deque = false;
         LedType = LedType.None;
@@ -1562,6 +1564,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         writer.Write(data);
         return $"config_blobs[{pos}]";
     }
+    
+    public static string WriteBlob(BinaryWriter writer, double data)
+    {
+        var pos = writer.BaseStream.Length;
+        writer.Write(data);
+        return $"config_blobs[{pos}]";
+    }
 
     public static string WriteBlob(BinaryWriter writer, bool data)
     {
@@ -1640,6 +1649,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
                        #define LED_BRIGHTNESS {WriteBlob(writer, LedBrightnessOn)}
                        #define KRAMER_STRIKER {WriteBlob(writer, Ps2KramerMode)}
+                       #define LOW_PASS_ALPHA {WriteBlob(writer, AdxlFilter)}
                        """;
 
             if (IsBluetoothRx)
@@ -1673,6 +1683,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {DjSmoothing.ToString().ToLower()}
                        #define KRAMER_STRIKER {Ps2KramerMode.ToString().ToLower()}
                        #define LED_BRIGHTNESS {LedBrightnessOn}
+                       #define LOW_PASS_ALPHA {AdxlFilter}
                        """;
             if (BtRxAddr.Length != 0 && BtRxAddr.Contains(':'))
             {
