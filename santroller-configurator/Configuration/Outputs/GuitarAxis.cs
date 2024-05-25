@@ -234,11 +234,22 @@ public class GuitarAxis : OutputAxis
             debounce += 1;
             if (Input is not DigitalToAnalog && mode is ConfigField.Shared)
             {
-                return $$"""
-                         if ({{GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer)}} > {{byte.MaxValue / 2}}) {
-                            debounce[{{debounceIndex}}]={{debounce}};
-                         }
-                         """;
+                switch (Type)
+                {
+                    case GuitarAxisType.Tilt:
+                        return $$"""
+                                 if ({{GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer)}} > 240) {
+                                    debounce[{{debounceIndex}}]={{debounce}};
+                                 }
+                                 """;
+                    case GuitarAxisType.Whammy:
+                        return $$"""
+                                 if ({{GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer)}} > {{byte.MaxValue / 2}}) {
+                                    debounce[{{debounceIndex}}]={{debounce}};
+                                 }
+                                 """;
+                }
+                
             }
             switch (Type)
             {
