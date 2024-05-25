@@ -275,7 +275,7 @@ jobs:
   cleanup:
     name: Remove temp files
     runs-on: [self-hosted, linux]
-    if: ${{ always() }}
+    if: ${{ always() && contains(github.ref, 'tags/v') }}
     needs: [release, release-mac, release-win]
     steps:
       - name: Remove artifacts
