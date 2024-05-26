@@ -112,14 +112,17 @@ public abstract class OutputButton : Output
                 {
                     return  $$"""
                               if (TILT) {
-                                  if ({{ifStatement}} && ((millis() - lastTilt) > 10)) {
-                                      setKey({{debounceIndex}},{{keyCode}},report,true);
-                                      {{extra}}
-                                  } else {
-                                     setKey({{debounceIndex}},{{keyCode}},report,false);
+                                  if ({{ifStatement}} && !lastTilt) {
+                                    lastTilt = millis();
                                   }
                                   if ({{ifStatement}}) {
-                                      lastTilt = millis();
+                                    tiltActive = true;
+                                  }
+                                  if ({{ifStatement}} && ((millis() - lastTilt) < 1000)) {
+                                     setKey({{debounceIndex}},{{keyCode}},report,true);
+                                     {{extra}}
+                                  } else {
+                                     setKey({{debounceIndex}},{{keyCode}},report,false);
                                   }
                               }
                               """;
@@ -147,12 +150,15 @@ public abstract class OutputButton : Output
             {
                 return  $$"""
                           if (TILT) {
-                              if ({{ifStatement}} && ((millis() - lastTilt) > 10)) {
-                                  {{outputVar}} = true;
-                                  {{extra}}
-                              }
                               if ({{ifStatement}}) {
-                                  lastTilt = millis();
+                                  if (!lastTilt ) {
+                                    lastTilt = millis();
+                                  }
+                                  if ((millis() - lastTilt) < 1000) {
+                                      {{outputVar}} = true;
+                                      {{extra}}
+                                  }
+                                  tiltActive = true;
                               }
                           }
                           """;

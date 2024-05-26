@@ -3114,8 +3114,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         var debouncesRelatedToLedMpr121 = new Dictionary<byte, List<(Output, int)>>();
         var analogRelatedToLedMpr121 = new Dictionary<byte, List<OutputAxis>>();
+        var ret = "";
+        if (mode == ConfigField.Keyboard && IsFortniteFestivalPro)
+        {
+            ret += """
+                   tiltActive = false;
+                   """;
+        }
         // Handle most mappings
-        var ret = outputsByType
+        ret += outputsByType
             .Aggregate("", (current, group) =>
             {
                 return current + group
@@ -3241,6 +3248,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         ret += ComputeLedsPin(mode, false, debouncesRelatedToLedPin, analogRelatedToLedPin, writer);
         ret += ComputeLedsPin(mode, true, debouncesRelatedToLedPeripheralPin, analogRelatedToLedPeripheralPin, writer);
         ret += ComputeLedsMpr121(mode, debouncesRelatedToLedMpr121, analogRelatedToLedMpr121);
+        if (mode == ConfigField.Keyboard && IsFortniteFestivalPro)
+        {
+            ret += """
+                   if (!tiltActive && (millis() - lastTilt) > 1000) {
+                      lastTilt = 0;
+                   }
+                   """;
+        }
         return FixNewlines(ret);
     }
 
