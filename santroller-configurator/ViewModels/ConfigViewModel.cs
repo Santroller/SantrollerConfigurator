@@ -1359,7 +1359,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void SetDefaults()
     {
         ClearOutputs();
-        AdxlFilter = 0.5;
+        AdxlFilter = 0.05;
         Mpr121CapacitiveCount = 0;
         Deque = false;
         LedType = LedType.None;
@@ -1368,6 +1368,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         LedCountPeripheral = 1;
         _deviceControllerType = DeviceControllerType.Gamepad;
         CombinedStrumDebounce = false;
+        Tilt = true;
+        SliderBar = true;
         WtSensitivity = 5;
         PollRate = 0;
         StrumDebounce = 0;
