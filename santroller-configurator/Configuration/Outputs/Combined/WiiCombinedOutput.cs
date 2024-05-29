@@ -301,10 +301,15 @@ public class WiiCombinedOutput : CombinedTwiOutput
         {
             if (UIntInputs.Contains(pair.Key))
             {
+                var threshold = ushort.MaxValue;
+                if (pair.Key is WiiInputType.ClassicLeftTrigger or WiiInputType.ClassicRightTrigger)
+                {
+                    threshold = 50000;
+                }
                 Outputs.Add(new ControllerAxis(Model, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue,
-                    8000, ushort.MaxValue,
+                    8000, threshold,
                     pair.Value, false, false, false, -1, true));
             }
             else

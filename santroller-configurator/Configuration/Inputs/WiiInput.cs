@@ -115,15 +115,15 @@ public class WiiInput : TwiInput
 
     private static readonly Dictionary<WiiInputType, string> Mappings = new()
     {
-        {WiiInputType.ClassicLeftStickX, "((wiiData[0] & 0x3f) - 32) << 9"},
-        {WiiInputType.ClassicLeftStickY, "((wiiData[1] & 0x3f) - 32) << 9"},
+        {WiiInputType.ClassicLeftStickX, "((wiiData[0] & 0x3f) - 32) << 10"},
+        {WiiInputType.ClassicLeftStickY, "((wiiData[1] & 0x3f) - 32) << 10"},
         {
             WiiInputType.ClassicRightStickX,
-            "((((wiiData[0] & 0xc0) >> 3) | ((wiiData[1] & 0xc0) >> 5) | (wiiData[2] >> 7)) -16) << 10"
+            "((((wiiData[0] & 0xc0) >> 3) | ((wiiData[1] & 0xc0) >> 5) | (wiiData[2] >> 7)) -16) << 11"
         },
-        {WiiInputType.ClassicRightStickY, "((wiiData[2] & 0x1f) - 16) << 10"},
-        {WiiInputType.ClassicLeftTrigger, "((wiiData[3] >> 5) | ((wiiData[2] & 0x60) >> 2))"},
-        {WiiInputType.ClassicRightTrigger, "(wiiData[3] & 0x1f) << 3"},
+        {WiiInputType.ClassicRightStickY, "((wiiData[2] & 0x1f) - 16) << 11"},
+        {WiiInputType.ClassicLeftTrigger, "(((wiiData[3] & 0xE0) >> 5 | (wiiData[2] & 0x60) >> 2)) << 11"},
+        {WiiInputType.ClassicRightTrigger, "(wiiData[3] & 0x1f) << 11"},
         {WiiInputType.DjCrossfadeSlider, "((wiiData[2] & 0x1E) >> 1) << 12"},
         {WiiInputType.DjEffectDial, "(((wiiData[3] & 0xE0) >> 5 | (wiiData[2] & 0x60) >> 2)) << 11"},
         {WiiInputType.DjStickX, "((wiiData[0] & 0x3F) - 0x20) << 10"},
@@ -134,9 +134,9 @@ public class WiiInput : TwiInput
             "(rtt_t.rtt << 10)"
         },
         {WiiInputType.DrawsomePenPressure, "(wiiButtonsLow | (wiiButtonsHigh & 0x0f) << 8)"},
-        {WiiInputType.DrawsomePenX, "wiiData[0] | wiiData[1] << 8"},
-        {WiiInputType.DrawsomePenY, "wiiData[2] | wiiData[3] << 8"},
-        {WiiInputType.UDrawPenPressure, "wiiData[3]"},
+        {WiiInputType.DrawsomePenX, "(wiiData[0] | wiiData[1] << 8)"},
+        {WiiInputType.DrawsomePenY, "(wiiData[2] | wiiData[3] << 8)"},
+        {WiiInputType.UDrawPenPressure, "(wiiData[3])"},
         {WiiInputType.UDrawPenX, "((wiiData[2] & 0x0f) << 8) | wiiData[0]"},
         {WiiInputType.UDrawPenY, "((wiiData[2] & 0xf0) << 4) | wiiData[1]"},
         {WiiInputType.DrumGreenPressure, "drumVelocity[DRUM_GREEN] << 8"},
@@ -279,7 +279,7 @@ public class WiiInput : TwiInput
 
     public override string Generate()
     {
-        return Mappings[Input];
+        return $"({Mappings[Input]})";
     }
 
     public override SerializedInput Serialise()
@@ -375,14 +375,15 @@ public class WiiInput : TwiInput
                 else
                     RawValue = Input switch
                     {
-                        WiiInputType.ClassicLeftStickX => ((wiiData[0] & 0x3f) - 32) << 9,
-                        WiiInputType.ClassicLeftStickY => ((wiiData[1] & 0x3f) - 32) << 9,
+                        
+                        WiiInputType.ClassicLeftStickX => ((wiiData[0] & 0x3F) - 0x20) << 10,
+                        WiiInputType.ClassicLeftStickY => ((wiiData[1] & 0x3F) - 0x20) << 10,
                         WiiInputType.ClassicRightStickX => ((((wiiData[0] & 0xc0) >> 3) |
                                                              ((wiiData[1] & 0xc0) >> 5) | (wiiData[2] >> 7)) -
-                                                            16) << 10,
-                        WiiInputType.ClassicRightStickY => ((wiiData[2] & 0x1f) - 16) << 10,
-                        WiiInputType.ClassicLeftTrigger => (wiiData[3] >> 5) | ((wiiData[2] & 0x60) >> 2),
-                        WiiInputType.ClassicRightTrigger => (wiiData[3] & 0x1f) << 3,
+                                                            16) << 11,
+                        WiiInputType.ClassicRightStickY => ((wiiData[2] & 0x1f) - 16) << 11,
+                        WiiInputType.ClassicRightTrigger => (wiiData[3] & 0x1f) << 11,
+                        WiiInputType.ClassicLeftTrigger => (((wiiData[3] & 0xE0) >> 5) | ((wiiData[2] & 0x60) >> 2)) << 11,
                         _ => RawValue
                     };
 

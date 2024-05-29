@@ -177,6 +177,9 @@ public class UsbHostCombinedOutput : CombinedOutput
             int max = input.IsUint ? ushort.MaxValue : short.MaxValue;
             Output? output = key switch
             {
+                StandardAxisType.RightTrigger or StandardAxisType.LeftTrigger => new ControllerAxis(Model,
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
+                    min, max, 0, 50000, (StandardAxisType)key, false, false ,false, -1, true),
                 StandardAxisType standardAxisType => new ControllerAxis(Model,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
                     min, max, 0, ushort.MaxValue, standardAxisType, false, false ,false, -1, true),

@@ -548,7 +548,7 @@ public abstract partial class OutputAxis : Output
             var extraTrigger = "";
             if (this is ControllerAxis axis)
             {
-                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 &&
+                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal &&
                     axis.Type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger)
                 {
                     var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
