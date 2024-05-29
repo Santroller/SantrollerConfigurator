@@ -1005,6 +1005,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string KeyOem4 {
+            get {
+                return ResourceManager.GetString("KeyOem4", resourceCulture);
+            }
+        }
+        
         public static string KeyOemOpenBrackets {
             get {
                 return ResourceManager.GetString("KeyOemOpenBrackets", resourceCulture);

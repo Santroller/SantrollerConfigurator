@@ -503,6 +503,9 @@
     <data name="KeyOemPlus" xml:space="preserve">
         <value>= and + Keys</value>
     </data>
+    <data name="KeyOem4" xml:space="preserve">
+        <value>{ and [ Keys</value>
+    </data>
     <data name="KeyOemOpenBrackets" xml:space="preserve">
         <value>{ and [ Keys</value>
     </data>

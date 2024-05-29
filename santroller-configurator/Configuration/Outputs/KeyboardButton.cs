@@ -314,6 +314,7 @@ public class KeyboardButton : OutputButton
             Key.Next => GetReportField("PageDown"),
             Key.Prior => GetReportField("PageUp"),
             Key.Oem2 => GetReportField("OemQuestion"),
+            Key.Oem4 => GetReportField("OemOpenBrackets"),
             Key.Delete => GetReportField("Del"),
             _ => GetReportField(Key)
         };

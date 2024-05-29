@@ -500,6 +500,9 @@
     <data name="KeyOemPlus" xml:space="preserve">
         <value>Teclas = y +</value>
     </data>
+    <data name="KeyOem4" xml:space="preserve">
+        <value>Teclas { y [</value>
+    </data>
     <data name="KeyOemOpenBrackets" xml:space="preserve">
         <value>Teclas { y [</value>
     </data>
