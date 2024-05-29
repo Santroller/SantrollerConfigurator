@@ -1257,18 +1257,6 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string KeyPrior {
-            get {
-                return ResourceManager.GetString("KeyPrior", resourceCulture);
-            }
-        }
-        
-        public static string KeyNext {
-            get {
-                return ResourceManager.GetString("KeyNext", resourceCulture);
-            }
-        }
-        
         public static string KeyPageDown {
             get {
                 return ResourceManager.GetString("KeyPageDown", resourceCulture);

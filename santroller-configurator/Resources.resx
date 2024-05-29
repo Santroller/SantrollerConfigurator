@@ -629,12 +629,6 @@
     <data name="KeyPageUp" xml:space="preserve">
         <value>Page Up Key</value>
     </data>
-    <data name="KeyPrior" xml:space="preserve">
-        <value>Page Up Key</value>
-    </data>
-    <data name="KeyNext" xml:space="preserve">
-        <value>Page Down Key</value>
-    </data>
     <data name="KeyPageDown" xml:space="preserve">
         <value>Page Down Key</value>
     </data>

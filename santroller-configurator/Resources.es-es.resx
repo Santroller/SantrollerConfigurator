@@ -500,9 +500,6 @@
     <data name="KeyOemPlus" xml:space="preserve">
         <value>Teclas = y +</value>
     </data>
-    <data name="KeyOem4" xml:space="preserve">
-        <value>Teclas { y [</value>
-    </data>
     <data name="KeyOemOpenBrackets" xml:space="preserve">
         <value>Teclas { y [</value>
     </data>
@@ -526,9 +523,6 @@
     </data>
     <data name="KeyOemPeriod" xml:space="preserve">
         <value>Teclas . y &gt;</value>
-    </data>
-    <data name="KeyOem2" xml:space="preserve">
-        <value>Teclas / y ?</value>
     </data>
     <data name="KeyOemQuestion" xml:space="preserve">
         <value>Teclas / y ?</value>
@@ -625,12 +619,6 @@
     </data>
     <data name="KeyPageUp" xml:space="preserve">
         <value>Tecla Re. Pág.</value>
-    </data>
-    <data name="KeyPrior" xml:space="preserve">
-        <value>Tecla Re. Pág.</value>
-    </data>
-    <data name="KeyNext" xml:space="preserve">
-        <value>Tecla Av. Pág.</value>
     </data>
     <data name="KeyPageDown" xml:space="preserve">
         <value>Tecla Av. Pág.</value>
