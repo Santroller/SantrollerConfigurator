@@ -2681,9 +2681,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 foreach (var analogLedOutput in analogLedOutputs)
                 {
                     var ledRead =
-                        analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
+                        analogLedOutput.GenerateAssignment(analogLedOutput.Trigger ? "0" : "128", ConfigField.Ps3, false, false, false, false, writer);
 
                     var ledReadCheck = "led_tmp";
+                    if (!analogLedOutput.Trigger)
+                    {
+                        ledReadCheck = "(led_tmp != 128)";
+                    }
                     // Turntable velocities are different to most axis, as they don't use standard calibration.
                     if (analogLedOutput is DjAxis
                         {
@@ -2773,8 +2777,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                      """;
             foreach (var analogLedOutput in analogLedOutputs)
             {
+                
                 var ledRead =
-                    analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
+                    analogLedOutput.GenerateAssignment(analogLedOutput.Trigger ? "0" : "128", ConfigField.Ps3, false, false, false, false, writer);
                 // Turntable velocities are different to most axis, as they don't use standard calibration.
                 if (analogLedOutput is DjAxis
                     {
