@@ -1578,7 +1578,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public static string WriteBlob(BinaryWriter writer, bool data)
     {
-        return WriteBlob(writer, data ? 1 : 0);
+        return WriteBlob(writer, data ? (byte)1 : (byte)0);
     }
 
     public static string WriteBlob(BinaryWriter writer, int data)
