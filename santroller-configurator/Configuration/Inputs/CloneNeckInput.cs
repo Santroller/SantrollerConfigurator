@@ -86,7 +86,7 @@ public class CloneNeckInput : TwiInput
     }
     public override string Generate()
     {
-        return Input <= Gh5NeckInputType.TapOrange ? GetMapping(Input) : string.Join(" | ", Taps.Select((type, i) => $"(({GetMapping(type)}) != 0) << {i}"));
+        return Input <= Gh5NeckInputType.TapOrange ? GetMapping(Input) : $"gh5_mappings[{string.Join(" | ", Taps.Select((type, i) => $"(({GetMapping(type)}) != 0) << {i}"))}]";
     }
 
     public override SerializedInput Serialise()
