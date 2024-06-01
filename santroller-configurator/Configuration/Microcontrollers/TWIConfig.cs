@@ -9,13 +9,15 @@ public abstract class TwiConfig : PinConfig
     private readonly int _clock;
     private int _scl;
     private int _sda;
+    private bool _output;
 
-    protected TwiConfig(ConfigViewModel model, string type,bool peripheral,  int sda, int scl, int clock) : base(model, peripheral)
+    protected TwiConfig(ConfigViewModel model, string type,bool peripheral,  int sda, int scl, int clock, bool output) : base(model, peripheral)
     {
         Type = type;
         _sda = sda;
         _scl = scl;
         _clock = clock;
+        _output = output;
     }
 
 
@@ -47,11 +49,12 @@ public abstract class TwiConfig : PinConfig
 
     public override string Generate()
     {
+        var output = _output ? $"#define {Definition}_OUTPUT" : $"#define {Definition}_CLOCK {_clock}";
         return $"""
                 
                 #define {Definition}_SDA {_sda}
                 #define {Definition}_SCL {_scl}
-                #define {Definition}_CLOCK {_clock}
+                {output}
                 """;
     }
 }

@@ -35,6 +35,41 @@ public class GuitarAxis : OutputAxis
         {5, 0x40},
     };
 
+    public static readonly Dictionary<int, int> WiiGh5Mappings = new()
+    {
+        {0x15, 0x04},
+        {0x30, 0x07},
+        {0x4D, 0x0a},
+        {0x65, 0x0c},
+        {0x66, 0x0c},
+        {0x80, 0x0f},
+        {0x99, 0x12},
+        {0x9A, 0x12},
+        {0xAC, 0x14},
+        {0xAD, 0x14},
+        {0xAE, 0x14},
+        {0xAF, 0x14},
+        {0xC6, 0x17},
+        {0xC7, 0x17},
+        {0xC8, 0x17},
+        {0xC9, 0x17},
+        {0xDF, 0x1A},
+        {0xE0, 0x1A},
+        {0xE1, 0x1A},
+        {0xE2, 0x1A},
+        {0xE3, 0x1A},
+        {0xE4, 0x1A},
+        {0xE5, 0x1A},
+        {0xE6, 0x1A},
+        {0xF8, 0x1F},
+        {0xF9, 0x1F},
+        {0xFA, 0x1F},
+        {0xFB, 0x1F},
+        {0xFC, 0x1F},
+        {0xFD, 0x1F},
+        {0xFE, 0x1F},
+        {0xFF, 0x1F},
+    };
     public int PickupSelectorNotch2 { get; set; }
     public int PickupSelectorNotch3 { get; set; }
     public int PickupSelectorNotch4 { get; set; }
@@ -273,7 +308,7 @@ public class GuitarAxis : OutputAxis
 
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
             or ConfigField.XboxOne
-            or ConfigField.Universal or ConfigField.Xbox)) return "";
+            or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
         // The below is a mess... but essentially we have to handle converting the input to its respective output depending on console
         // We have to do some hyper specific stuff for digital to analog here too so its easiest to capture its value once
         var analogOn = 0;
@@ -293,6 +328,31 @@ public class GuitarAxis : OutputAxis
         {
             case ConfigField.XboxOne when Model.DeviceControllerType is DeviceControllerType.LiveGuitar:
                 return "";
+            case ConfigField.Wii
+                when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
+                // Wii tilt doesn't exist so instead map to select
+                return $$"""
+                         if (TILT && {{Input.Generate()}}) {
+                             report->back = true;
+                         }
+                         """;
+            case ConfigField.Wii when Type is GuitarAxisType.Tilt:
+                // Wii tilt doesn't exist so instead map to select
+                return
+                    $$"""
+                      if (TILT) {
+                          uint8_t tilt_test = {{GenerateAssignment("0", mode, false, false, false, false, writer)}};
+                          if (tilt_test > 0xF0) {
+                              report->back = true;
+                          }
+                      }
+                      """;
+            
+            case ConfigField.Wii when Type is GuitarAxisType.Whammy && Input is DigitalToAnalog:
+                return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+                    macros, writer);
+            case ConfigField.Wii when Type is GuitarAxisType.Whammy:
+                return $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, Type is GuitarAxisType.Whammy, false, writer)} >> 3;";
             case ConfigField.XboxOne or ConfigField.Universal
                 when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
                 // XB1 tilt is uint8_t
@@ -325,6 +385,12 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = -((int8_t)(({{Input.Generate()}}) ^ 0x80) * -257);
                          }
                          """;
+            // Xb1 is RB only, so no slider
+            case ConfigField.XboxOne or ConfigField.Ps4 when Type == GuitarAxisType.Slider:
+                return "";
+            // Wii is GH only, so no pickup
+            case ConfigField.Wii when Type == GuitarAxisType.Pickup:
+                return "";
             case ConfigField.Universal or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
                 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 return $$"""
@@ -332,14 +398,47 @@ public class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = {{analogOn & 0xFF}};
                          }
                          """;
-            // Xb1 is RB only, so no slider
-            case ConfigField.XboxOne or ConfigField.Ps4 when Type == GuitarAxisType.Slider:
-                return "";
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 return $$"""
                          if (SLIDER_BAR && ({{Input.Generate()}} != PS3_STICK_CENTER)) {
                             {{GenerateOutput(mode)}} = {{Input.Generate()}};
+                         }
+                         """;
+            
+            case ConfigField.Wii
+                when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
+                // Convert gh5 mappings back to wt
+                return $$"""
+                         if (SLIDER_BAR && {{Input.Generate()}}) {
+                             {{GenerateOutput(mode)}} = {{WiiGh5Mappings[analogOn & 0xFF]}};
+                         }
+                         """;
+            case ConfigField.Wii
+                when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
+                // Convert gh5 mappings back to wt
+                return $$"""
+                         if (SLIDER_BAR && ({{Input.Generate()}} != PS3_STICK_CENTER)) {
+                            uint8_t slider_tmp = {{Input.Generate()}};
+                            if (slider_tmp <= 0x15) {
+                               {{GenerateOutput(mode)}} = 0x04;
+                            } else if (slider_tmp <= 0x30) {
+                               {{GenerateOutput(mode)}} = 0x07;
+                            } else if (slider_tmp <= 0x4D) {
+                               {{GenerateOutput(mode)}} = 0x0a;
+                            } else if (slider_tmp <= 0x66) {
+                               {{GenerateOutput(mode)}} = 0x0c;
+                            } else if (slider_tmp <= 0x9A) {
+                               {{GenerateOutput(mode)}} = 0x12;
+                            } else if (slider_tmp <= 0xAF) {
+                               {{GenerateOutput(mode)}} = 0x14;
+                            } else if (slider_tmp <= 0xC9) {
+                               {{GenerateOutput(mode)}} = 0x17;
+                            } else if (slider_tmp <= 0xE6) {
+                               {{GenerateOutput(mode)}} = 0x1A;
+                            } else {
+                               {{GenerateOutput(mode)}} = 0x1F;
+                            }
                          }
                          """;
 
@@ -500,7 +599,6 @@ public class GuitarAxis : OutputAxis
                             {{GenerateOutput(mode)}} = {{GenerateAssignment(GenerateOutput(mode), mode, false, false, false, false, writer)}};
                         }
                         """;
-
             default:
                 if (Input is DigitalToAnalog)
                     return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce,

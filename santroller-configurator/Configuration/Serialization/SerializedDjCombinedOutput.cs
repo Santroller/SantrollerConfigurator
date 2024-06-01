@@ -34,7 +34,7 @@ public class SerializedDjCombinedOutput : SerializedOutput
         var combined = new DjCombinedOutput(model, Peripheral, Sda, Scl);
         model.Bindings.Add(combined);
         // Since we filter out sda and scl from inputs for size, we need to make sure its assigned before we construct the inputs.
-        model.Microcontroller.AssignTwiPins(model, DjInput.DjTwiType, Peripheral, Sda, Scl, DjInput.DjTwiFreq);
+        model.Microcontroller.AssignTwiPins(model, DjInput.DjTwiType, Peripheral, Sda, Scl, DjInput.DjTwiFreq, false);
         var array = new BitArray(Enabled);
         var outputs = Outputs.Select(s => s.Generate(model)).ToList();
         for (var i = 0; i < outputs.Count; i++) outputs[i].Enabled = array[i];

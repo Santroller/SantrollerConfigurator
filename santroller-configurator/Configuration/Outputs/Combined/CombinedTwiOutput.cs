@@ -22,7 +22,7 @@ public abstract class CombinedTwiOutput : CombinedOutput, ITwi
         BindableTwi = Model.Microcontroller.TwiAssignable && !model.Branded;
         _twiType = twiType;
         var config = Model.GetTwiForType(_twiType, peripheral);
-        _twiConfig = config ?? Model.Microcontroller.AssignTwiPins(model, _twiType, peripheral, sda, scl, twiFreq);
+        _twiConfig = config ?? Model.Microcontroller.AssignTwiPins(model, _twiType, peripheral, sda, scl, twiFreq, false);
 
 
         this.WhenAnyValue(x => x._twiConfig.Scl).Subscribe(_ => this.RaisePropertyChanged(nameof(Scl)));

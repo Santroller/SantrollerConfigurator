@@ -6,8 +6,8 @@ namespace GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 public class PicoSpiConfig : SpiConfig
 {
     public PicoSpiConfig(ConfigViewModel model, string type,bool peripheral,  bool includesSck,  bool includesMiso, int mosi, int miso, int sck, bool cpol, bool cpha,
-        bool msbfirst, uint clock) :
-        base(model, type, peripheral, includesSck, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst, clock)
+        bool msbfirst, uint clock, bool output) :
+        base(model, type, peripheral, includesSck, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst, clock, output)
     {
     }
 

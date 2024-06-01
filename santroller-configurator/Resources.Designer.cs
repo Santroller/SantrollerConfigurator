@@ -4677,6 +4677,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SimpleTypeWiiOutputs {
+            get {
+                return ResourceManager.GetString("SimpleTypeWiiOutputs", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypePeripheral {
+            get {
+                return ResourceManager.GetString("SimpleTypePeripheral", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeMpr121 {
+            get {
+                return ResourceManager.GetString("SimpleTypeMpr121", resourceCulture);
+            }
+        }
+        
         public static string SimpleTypeWiiInputSimple {
             get {
                 return ResourceManager.GetString("SimpleTypeWiiInputSimple", resourceCulture);
@@ -4731,15 +4749,15 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string SimpleTypePeripheral {
-            get {
-                return ResourceManager.GetString("SimpleTypePeripheral", resourceCulture);
-            }
-        }
-        
         public static string SimpleTypeMidi {
             get {
                 return ResourceManager.GetString("SimpleTypeMidi", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeMax1704X {
+            get {
+                return ResourceManager.GetString("SimpleTypeMax1704X", resourceCulture);
             }
         }
         
@@ -6423,6 +6441,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string HasWiiOutputSettingsLabel {
+            get {
+                return ResourceManager.GetString("HasWiiOutputSettingsLabel", resourceCulture);
+            }
+        }
+        
         public static string LEDTypePeripheralCountLabel {
             get {
                 return ResourceManager.GetString("LEDTypePeripheralCountLabel", resourceCulture);
@@ -6594,6 +6618,12 @@ namespace GuitarConfigurator.NetCore {
         public static string ClearTypeLabel {
             get {
                 return ResourceManager.GetString("ClearTypeLabel", resourceCulture);
+            }
+        }
+        
+        public static string WiiOutputSettingsLabel {
+            get {
+                return ResourceManager.GetString("WiiOutputSettingsLabel", resourceCulture);
             }
         }
         

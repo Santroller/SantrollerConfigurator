@@ -4,8 +4,8 @@ namespace GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 
 public class AvrTwiConfig : TwiConfig
 {
-    public AvrTwiConfig(ConfigViewModel model, string type, bool peripheral, int sda, int scl, int clock) : base(model, type, peripheral, sda, scl,
-        clock)
+    public AvrTwiConfig(ConfigViewModel model, string type, bool peripheral, int sda, int scl, int clock, bool output) : base(model, type, peripheral, sda, scl,
+        clock, output)
     {
     }
 

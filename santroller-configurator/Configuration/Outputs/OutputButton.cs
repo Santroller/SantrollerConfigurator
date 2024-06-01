@@ -146,6 +146,7 @@ public abstract class OutputButton : Output
                           }
                           """;
             }
+            
             if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} or ControllerButton {Type: StandardButtonType.Back} && mode == ConfigField.Keyboard)
             {
                 return  $$"""

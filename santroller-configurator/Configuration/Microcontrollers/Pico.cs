@@ -174,15 +174,15 @@ public class Pico : Microcontroller
         int sck, bool cpol,
         bool cpha,
         bool msbfirst,
-        uint clock)
+        uint clock, bool output)
     {
-        return new PicoSpiConfig(model, type, peripheral, includesSck, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst, clock);
+        return new PicoSpiConfig(model, type, peripheral, includesSck, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst, clock, output);
     }
 
     public override TwiConfig AssignTwiPins(ConfigViewModel model, string type, bool peripheral, int sda, int scl,
-        int clock)
+        int clock, bool output)
     {
-        return new PicoTwiConfig(model, type, peripheral, sda, scl, clock);
+        return new PicoTwiConfig(model, type, peripheral, sda, scl, clock, output);
     }
 
     public override IEnumerable<string> GenerateAckDefines(int ack)

@@ -92,7 +92,7 @@ public class ControllerButton : OutputButton
             }
         }
         return mode is ConfigField.Ps3 or ConfigField.Xbox or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared or ConfigField.XboxOne
-            or ConfigField.Xbox360 or ConfigField.Universal
+            or ConfigField.Xbox360 or ConfigField.Universal or ConfigField.Wii
             ? GetReportField(Type)
             : "";
     }

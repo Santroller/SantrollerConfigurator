@@ -193,7 +193,7 @@ public partial class DrumAxis : OutputAxis
 
         if (Model.EmulationType is not EmulationType.FortniteFestival && (mode is not (ConfigField.Ps3
                 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
-                or ConfigField.Universal or ConfigField.Xbox)) ||
+                or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) ||
             (Model.EmulationType is EmulationType.FortniteFestival && mode is not ConfigField.Keyboard)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;

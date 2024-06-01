@@ -2458,6 +2458,15 @@
     <data name="RumbleMotorTypeRight" xml:space="preserve">
         <value>Right</value>
     </data>
+    <data name="SimpleTypeWiiOutputs" xml:space="preserve">
+        <value>Wii Extension Emulation</value>
+    </data>
+    <data name="SimpleTypePeripheral" xml:space="preserve">
+        <value>Peripheral</value>
+    </data>
+    <data name="SimpleTypeMpr121" xml:space="preserve">
+        <value>MPR121</value>
+    </data>
     <data name="SimpleTypeWiiInputSimple" xml:space="preserve">
         <value>Wii Extension Inputs</value>
     </data>
@@ -2485,11 +2494,11 @@
     <data name="SimpleTypeReset" xml:space="preserve">
         <value>Controller Reset</value>
     </data>
-    <data name="SimpleTypePeripheral" xml:space="preserve">
-        <value>Peripheral</value>
-    </data>
     <data name="SimpleTypeMidi" xml:space="preserve">
         <value>Midi Inputs</value>
+    </data>
+    <data name="SimpleTypeMax1704X" xml:space="preserve">
+        <value>MAX1704x</value>
     </data>
     <data name="SimpleTypeBluetooth" xml:space="preserve">
         <value>Bluetooth Inputs</value>
@@ -3337,6 +3346,9 @@
     <data name="HasPeripheralLabel" xml:space="preserve">
         <value>Peripheral</value>
     </data>
+    <data name="HasWiiOutputSettingsLabel" xml:space="preserve">
+        <value>Wii Extension Emulation</value>
+    </data>
     <data name="LEDTypePeripheralCountLabel" xml:space="preserve">
         <value>Peripheral LED Count</value>
     </data>
@@ -3424,6 +3436,9 @@
     </data>
     <data name="ClearTypeLabel" xml:space="preserve">
         <value>Would you like to clear all settings, or load defaults?</value>
+    </data>
+    <data name="WiiOutputSettingsLabel" xml:space="preserve">
+        <value>Wii Extension Emulation Settings</value>
     </data>
     <data name="PeripheralSettingsLabel" xml:space="preserve">
         <value>Peripheral Settings</value>

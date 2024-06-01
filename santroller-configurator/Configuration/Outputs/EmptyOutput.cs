@@ -50,9 +50,10 @@ public class EmptyOutput : Output
             .Select(type => ControllerEnumConverter.GetTypes(type.Item1.Item1).Where(s2 =>
                 ((!type.First.Item1.IsFortnite()) || s2 is not SimpleType.Led) &&
                 (model.IsPico ||
-                 s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.UsbHost)) &&
+                 s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.UsbHost or SimpleType.Peripheral)) &&
                 (type.Item1.Item2 || s2 is not SimpleType.WtNeckPeripheralSimple) &&
-                (!type.Item1.Item3 || s2 is not SimpleType.Bluetooth) &&
+                (!type.Item1.Item3 || s2 is not SimpleType.Bluetooth ) &&
+                (type.Item1.Item3 || s2 is not SimpleType.Max1704X ) &&
                 (!type.Item1.Item4 || s2 is not SimpleType.WiiInputSimple) &&
                 (!type.Item1.Item5 || s2 is not SimpleType.Ps2InputSimple) &&
                 (!type.Item1.Item6 || s2 is not SimpleType.WtNeckSimple) &&
@@ -122,6 +123,30 @@ public class EmptyOutput : Output
 
     private void Generate(object? value)
     {
+        switch (value)
+        {
+            case SimpleType.WiiOutputs:
+                Model.HasWiiOutput = true;
+                Model.Bindings.Remove(this);
+                Model.UpdateErrors();
+                return;
+            case SimpleType.Peripheral:
+                Model.HasPeripheral = true;
+                Model.Bindings.Remove(this);
+                Model.UpdateErrors();
+                return;
+            case SimpleType.Max1704X:
+                Model.HasMax1704X = true;
+                Model.Bindings.Remove(this);
+                Model.UpdateErrors();
+                return;
+            case SimpleType.Mpr121:
+                Model.HasMpr121 = true;
+                Model.Bindings.Remove(this);
+                Model.UpdateErrors();
+                return;
+        }
+
         Output? output = Model.GetSimpleEmulationType() switch
         {
             EmulationType.Controller => value switch

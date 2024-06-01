@@ -3363,6 +3363,7 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="IsPico" />
                             <Binding Path="!Branded" />
+                            <Binding Path="HasPeripheral" />
                         </MultiBinding>
                     </Expander.IsVisible>
                     <Expander.HeaderTemplate>
@@ -3389,19 +3390,16 @@
                                        HorizontalContentAlignment="Center"
                                        VerticalContentAlignment="Center"
                                        IsVisible="{Binding PeripheralErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                            IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                    <Button
+                                        Command="{Binding RemovePeripheralCommand}"
+                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                </StackPanel>
                             </Panel>
                         </DataTemplate>
                     </Expander.HeaderTemplate>
                     <StackPanel>
-                        <StackPanel IsVisible="{Binding IsPico}" Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.HasPeripheralLabel}" />
-                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
-                                          HorizontalContentAlignment="Center" IsChecked="{Binding HasPeripheral}"
-                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
-
                         <StackPanel IsVisible="{Binding HasPeripheral}">
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
@@ -3429,7 +3427,76 @@
                     </StackPanel>
                 </Expander>
                 <Expander HorizontalAlignment="Stretch" Header="{Binding}"
-                          IsExpanded="{Binding Mpr121Expanded}" IsVisible="{Binding !Branded}">
+                          IsExpanded="{Binding WiiOutputExpanded}">
+                    <Expander.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!Branded" />
+                            <Binding Path="HasWiiOutput" />
+                        </MultiBinding>
+                    </Expander.IsVisible>
+                    <Expander.HeaderTemplate>
+                        <DataTemplate DataType="viewModels:ConfigViewModel">
+                            <Panel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="75"
+                                           Source="avares://SantrollerConfigurator/Assets/Icons/Combined/Wii.png">
+                                    </Image>
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.WiiOutputSettingsLabel}" />
+                                </StackPanel>
+                                <Label Foreground="Red" Margin="45 0 0 0"
+                                       Content="{Binding WiiOutputErrorText}"
+                                       VerticalAlignment="Bottom"
+                                       HorizontalAlignment="Center"
+                                       HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       IsVisible="{Binding WiiOutputErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                            IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                    <Button
+                                        Command="{Binding RemoveWiiOutputCommand}"
+                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                </StackPanel>
+                            </Panel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <StackPanel>
+                        <StackPanel IsVisible="{Binding HasWiiOutput}">
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding WiiOutputScl}"
+                                          ItemsSource="{Binding AvailableSclPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding WiiOutputSda}"
+                                          ItemsSource="{Binding AvailableSdaPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}"
+                          IsExpanded="{Binding Mpr121Expanded}">
+                    
+                    <Expander.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!Branded" />
+                            <Binding Path="HasMpr121" />
+                        </MultiBinding>
+                    </Expander.IsVisible>
                     <Expander.HeaderTemplate>
                         <DataTemplate DataType="viewModels:ConfigViewModel">
                             <Panel>
@@ -3454,19 +3521,16 @@
                                        HorizontalContentAlignment="Center"
                                        VerticalContentAlignment="Center"
                                        IsVisible="{Binding Mpr121ErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                            IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                    <Button
+                                        Command="{Binding RemoveMpr121Command}"
+                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                </StackPanel>
                             </Panel>
                         </DataTemplate>
                     </Expander.HeaderTemplate>
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.HasMpr121Label}" />
-                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
-                                          HorizontalContentAlignment="Center" IsChecked="{Binding HasMpr121}"
-                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
-
                         <StackPanel IsVisible="{Binding HasMpr121}">
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
@@ -3509,6 +3573,7 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="IsBluetoothTx" />
                             <Binding Path="!Branded" />
+                            <Binding Path="HasMax1704X" />
                         </MultiBinding>
                     </Expander.IsVisible>
                     <Expander.HeaderTemplate>
@@ -3541,19 +3606,16 @@
                                        HorizontalContentAlignment="Center"
                                        VerticalContentAlignment="Center"
                                        IsVisible="{Binding Max170XErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                            IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                    <Button
+                                        Command="{Binding RemoveMax1704XCommand}"
+                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                </StackPanel>
                             </Panel>
                         </DataTemplate>
                     </Expander.HeaderTemplate>
                     <StackPanel>
-                        <StackPanel IsVisible="{Binding IsPico}" Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.HasMax1704xLabel}" />
-                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
-                                          HorizontalContentAlignment="Center" IsChecked="{Binding HasMax1704X}"
-                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
-
                         <StackPanel IsVisible="{Binding HasMax1704X}">
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"

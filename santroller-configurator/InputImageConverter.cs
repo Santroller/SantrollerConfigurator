@@ -57,7 +57,7 @@ public class InputImageConverter : IMultiValueConverter
             EmptyType.Empty => "Generic",
             SimpleType type => "Combined/" + type switch
             {
-                SimpleType.WiiInputSimple => "Wii",
+                SimpleType.WiiInputSimple or SimpleType.WiiOutputs => "Wii",
                 SimpleType.Ps2InputSimple => "PS2",
                 SimpleType.WtNeckSimple => "GHWT",
                 SimpleType.Gh5NeckSimple => "GH5",
@@ -70,6 +70,8 @@ public class InputImageConverter : IMultiValueConverter
                 SimpleType.Reset => "Reset",
                 SimpleType.Led => "Led",
                 SimpleType.Midi => "Keyboard",
+                SimpleType.Peripheral => "Peripheral",
+                SimpleType.Mpr121 => "Peripheral",
                 _ => null
             },
             InputType.DigitalPinInput or InputType.DigitalPeripheralInput => "Combined/Digital",

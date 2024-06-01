@@ -15,5 +15,9 @@ public enum SimpleType
     Rumble,
     ConsoleMode,
     Reset,
-    Midi
+    Midi,
+    WiiOutputs,
+    Peripheral,
+    Mpr121,
+    Max1704X
 }

@@ -129,7 +129,7 @@ public class GuitarButton : OutputButton
         if (mode is not (ConfigField.Shared or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
             or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Keyboard
-            or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox)) return "";
+            or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii)) return "";
         // If combined debounce is on, then additionally generate extra logic to ignore this input if the opposite debounce flag is active
         if (combinedDebounce && Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
             combinedExtra = string.Join(" && ",
@@ -155,7 +155,7 @@ public class GuitarButton : OutputButton
         if (mode is ConfigField.XboxOne or ConfigField.Ps4 && Type is not (InstrumentButtonType.StrumUp or InstrumentButtonType.StrumDown))
             extra = $"{GenerateOutput(ConfigField.Ps3)}=true;";
         
-        if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar})
+        if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar} || mode is ConfigField.Wii)
             return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
 

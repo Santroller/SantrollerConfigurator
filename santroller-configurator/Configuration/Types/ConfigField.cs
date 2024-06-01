@@ -23,5 +23,6 @@ public enum ConfigField
     LightBarLed,
     InitLed,
     Detection,
-    Xbox
+    Xbox,
+    Wii
 }

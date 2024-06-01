@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DynamicData;
@@ -74,6 +75,9 @@ public class SerializedConfiguration
         HideControllerView = model.HideControllerView;
         Ps4Instruments = model.Ps4Instruments;
         AdxlFilter = model.AdxlFilter;
+        HasWiiOutput = model.HasWiiOutput;
+        WiiOutputScl = model.WiiOutputScl;
+        WiiOutputSda = model.WiiOutputSda;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -130,6 +134,9 @@ public class SerializedConfiguration
 
     [ProtoMember(63)] public double AdxlFilter { get; private set; } = 0.05;
     [ProtoMember(64)] public bool TiltDisabled { get; private set; }
+    [ProtoMember(65)] public bool HasWiiOutput { get; private set; }
+    [ProtoMember(66)] public int WiiOutputSda { get; private set; }
+    [ProtoMember(67)] public int WiiOutputScl { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -155,6 +162,7 @@ public class SerializedConfiguration
         model.Variant = Variant;
         model.BtRxAddr = BtRxMacAddress;
         model.HasPeripheral = HasPeripheral;
+        model.HasWiiOutput = HasWiiOutput;
         model.HasMpr121 = HasMpr121;
         model.HasMax1704X = HasMax1704X;
         model.RolloverMode = RolloverMode;
@@ -166,6 +174,12 @@ public class SerializedConfiguration
         {
             model.PeripheralScl = PeripheralScl;
             model.PeripheralSda = PeripheralSda;
+        }
+
+        if (HasWiiOutput)
+        {
+            model.WiiOutputScl = WiiOutputScl;
+            model.WiiOutputSda = WiiOutputSda;
         }
         if (HasMpr121)
         {

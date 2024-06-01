@@ -62,10 +62,10 @@ public abstract class Microcontroller
         int sck, bool cpol,
         bool cpha,
         bool msbfirst,
-        uint clock);
+        uint clock, bool output);
 
     public abstract TwiConfig AssignTwiPins(ConfigViewModel model, string type, bool peripheral, int sda, int scl,
-        int clock);
+        int clock, bool output);
 
     public abstract string GetPinForMicrocontroller(int pin, bool twi, bool spi);
 

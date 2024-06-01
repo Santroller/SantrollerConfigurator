@@ -17,8 +17,10 @@ public abstract class SpiConfig : PinConfig
 
     private int _sck;
 
+    private bool _output;
+
     protected SpiConfig(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso, int mosi, int miso, int sck, bool cpol, bool cpha,
-        bool msbfirst, uint clock) : base(model, peripheral)
+        bool msbfirst, uint clock, bool output) : base(model, peripheral)
     {
         IncludesMiso = includesMiso;
         IncludesSck = includesSck;
@@ -30,6 +32,7 @@ public abstract class SpiConfig : PinConfig
         _cpha = cpha;
         _msbfirst = msbfirst;
         _clock = clock;
+        _output = output;
     }
 
     public override string Type { get; }

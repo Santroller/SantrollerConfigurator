@@ -53,9 +53,9 @@ public abstract class AvrController : Microcontroller
     public override SpiConfig AssignSpiPins(ConfigViewModel model, string type,bool peripheral, bool includesSck, bool includesMiso, int mosi, int miso, int sck, bool cpol,
         bool cpha,
         bool msbfirst,
-        uint clock)
+        uint clock, bool output)
     {
-        return new AvrSpiConfig(model, type, peripheral, includesSck, includesMiso, SpiMosi, SpiMiso, SpiSck, SpiCSn, cpol, cpha, msbfirst, clock);
+        return new AvrSpiConfig(model, type, peripheral, includesSck, includesMiso, SpiMosi, SpiMiso, SpiSck, SpiCSn, cpol, cpha, msbfirst, clock, output);
     }
 
     public override string GenerateAnalogWrite(int pin, string val, bool peripheral)
@@ -63,9 +63,9 @@ public abstract class AvrController : Microcontroller
         return $"analogWrite({pin}, {val})";
     }
 
-    public override TwiConfig AssignTwiPins(ConfigViewModel model, string type,bool peripheral,  int sda, int scl, int clock)
+    public override TwiConfig AssignTwiPins(ConfigViewModel model, string type,bool peripheral,  int sda, int scl, int clock, bool output)
     {
-        return new AvrTwiConfig(model, type, peripheral, I2CSda, I2CScl, clock);
+        return new AvrTwiConfig(model, type, peripheral, I2CSda, I2CScl, clock, output);
     }
 
     public override List<KeyValuePair<int, SpiPinType>> SpiPins()

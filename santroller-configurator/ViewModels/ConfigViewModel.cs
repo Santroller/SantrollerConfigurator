@@ -70,6 +70,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private TwiConfig? _peripheralTwiConfig;
     private TwiConfig? _mpr121TwiConfig;
     private TwiConfig? _max170xTwiConfig;
+    private TwiConfig? _wiiOutputTwiConfig;
     private DirectPinConfig? _stp16Oe;
     private DirectPinConfig? _stp16Le;
     private DirectPinConfig? _stp16OePeripheral;
@@ -284,7 +285,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Bindings.Connect().Bind(out _outputs).Subscribe();
         }
 
-        _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>().Where(s => s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire)));
+        _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>().Where(s =>
+            s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire)));
         _deviceControllerTypes.Connect().Filter(
                 this.WhenAnyValue(s => s.EmulationType)
                     .Select(s =>
@@ -372,6 +374,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public IEnumerable<RolloverMode> RolloverModes => Enum.GetValues<RolloverMode>();
 
     [Reactive] public string? PeripheralErrorText { get; set; }
+
+    [Reactive] public string? WiiOutputErrorText { get; set; }
 
     [Reactive] public string? Mpr121ErrorText { get; set; }
 
@@ -514,6 +518,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool HideControllerView { get; set; }
     [Reactive] public bool LedConfigExpanded { get; set; }
     [Reactive] public bool PeripheralExpanded { get; set; }
+    [Reactive] public bool WiiOutputExpanded { get; set; }
     [Reactive] public bool Mpr121Expanded { get; set; }
 
     [Reactive] public bool Max170XExpanded { get; set; }
@@ -705,6 +710,28 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
+    public int WiiOutputSda
+    {
+        get => _wiiOutputTwiConfig?.Sda ?? 0;
+        set
+        {
+            if (_wiiOutputTwiConfig == null) return;
+            _wiiOutputTwiConfig.Sda = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int WiiOutputScl
+    {
+        get => _wiiOutputTwiConfig?.Scl ?? 0;
+        set
+        {
+            if (_wiiOutputTwiConfig == null) return;
+            _wiiOutputTwiConfig.Scl = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
     public int PeripheralSda
     {
         get => _peripheralTwiConfig?.Sda ?? 0;
@@ -855,7 +882,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, false,
                             false,
                             true,
-                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
+                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000), false);
                         _stp16Le = new DirectPinConfig(this, Stp16LeType, -1, false, DevicePinMode.Output);
                         _stp16Oe = new DirectPinConfig(this, Stp16OeType, -1, false, DevicePinMode.Output);
                         this.RaisePropertyChanged(nameof(Stp16Le));
@@ -869,7 +896,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, true,
                             true,
                             true,
-                            3200000);
+                            3200000, false);
                         this.RaisePropertyChanged(nameof(LedMosi));
                         this.RaisePropertyChanged(nameof(LedSck));
 
@@ -883,7 +910,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, true,
                             true,
                             true,
-                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
+                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000), false);
                         this.RaisePropertyChanged(nameof(LedMosi));
                         this.RaisePropertyChanged(nameof(LedSck));
 
@@ -921,7 +948,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, false,
                             false,
                             true,
-                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
+                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000), false);
                         _stp16LePeripheral =
                             new DirectPinConfig(this, Stp16LePeripheralType, -1, false, DevicePinMode.Output);
                         _stp16OePeripheral =
@@ -939,7 +966,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
                             true,
                             true,
-                            3200000);
+                            3200000, false);
                         this.RaisePropertyChanged(nameof(LedMosiPeripheral));
                         this.RaisePropertyChanged(nameof(LedSckPeripheral));
 
@@ -955,7 +982,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
                             true,
                             true,
-                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000));
+                            Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000), false);
                         this.RaisePropertyChanged(nameof(LedMosiPeripheral));
                         this.RaisePropertyChanged(nameof(LedSckPeripheral));
 
@@ -985,6 +1012,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
 
     private bool _hasPeripheral;
+    private bool _hasWiiOutput;
 
     private bool _hasMpr121;
 
@@ -1004,7 +1032,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             _mpr121TwiConfig =
                 value
-                    ? Microcontroller.AssignTwiPins(this, Mpr121TwiType, false, -1, -1, Mpr121TwiFreq)
+                    ? Microcontroller.AssignTwiPins(this, Mpr121TwiType, false, -1, -1, Mpr121TwiFreq, false)
                     : null;
             this.RaisePropertyChanged(nameof(Mpr121Sda));
             this.RaisePropertyChanged(nameof(Mpr121Scl));
@@ -1029,7 +1057,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             _max170xTwiConfig =
                 value
-                    ? Microcontroller.AssignTwiPins(this, Max170XTwiType, false, -1, -1, Max170XTwiFreq)
+                    ? Microcontroller.AssignTwiPins(this, Max170XTwiType, false, -1, -1, Max170XTwiFreq, false)
                     : null;
             this.RaisePropertyChanged(nameof(Max1704XSda));
             this.RaisePropertyChanged(nameof(Max1704XScl));
@@ -1055,11 +1083,34 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             _peripheralTwiConfig =
                 value
-                    ? Microcontroller.AssignTwiPins(this, PeripheralTwiType, false, -1, -1, PeripheralTwiClock)
+                    ? Microcontroller.AssignTwiPins(this, PeripheralTwiType, false, -1, -1, PeripheralTwiClock, false)
                     : null;
             this.RaisePropertyChanged(nameof(PeripheralSda));
             this.RaisePropertyChanged(nameof(PeripheralScl));
             this.RaiseAndSetIfChanged(ref _hasPeripheral, value);
+            UpdateErrors();
+        }
+    }
+
+    public bool HasWiiOutput
+    {
+        get => _hasWiiOutput;
+        set
+        {
+            if (!value)
+            {
+                _wiiOutputTwiConfig = null;
+                this.RaiseAndSetIfChanged(ref _hasWiiOutput, value);
+                UpdateErrors();
+            }
+
+            _wiiOutputTwiConfig =
+                value
+                    ? Microcontroller.AssignTwiPins(this, PeripheralTwiType, false, -1, -1, PeripheralTwiClock, true)
+                    : null;
+            this.RaisePropertyChanged(nameof(WiiOutputSda));
+            this.RaisePropertyChanged(nameof(WiiOutputScl));
+            this.RaiseAndSetIfChanged(ref _hasWiiOutput, value);
             UpdateErrors();
         }
     }
@@ -1200,7 +1251,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 _ledSpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
                 _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
-                _max170xTwiConfig
+                _max170xTwiConfig, _wiiOutputTwiConfig
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -1359,6 +1410,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void SetDefaults()
     {
         ClearOutputs();
+        HasWiiOutput = false;
         AdxlFilter = 0.05;
         Mpr121CapacitiveCount = 0;
         Deque = false;
@@ -1568,7 +1620,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         writer.Write(data);
         return $"config_blobs[{pos}]";
     }
-    
+
     public static string WriteBlob(BinaryWriter writer, double data)
     {
         var pos = writer.BaseStream.Length;
@@ -1578,7 +1630,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public static string WriteBlob(BinaryWriter writer, bool data)
     {
-        return WriteBlob(writer, data ? (byte)1 : (byte)0);
+        return WriteBlob(writer, data ? (byte) 1 : (byte) 0);
     }
 
     public static string WriteBlob(BinaryWriter writer, int data)
@@ -1788,6 +1840,22 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define LED_INIT \
                             {{ledInit}}
                         """;
+            if (HasWiiOutput)
+            {
+                config += $"""     
+                                           
+                           #define TICK_WII \
+                             {GenerateTick(ConfigField.Wii, writer)}
+                           """;
+            }
+            
+            if (_wiiOutputTwiConfig != null)
+            {
+                config += $"""
+
+                           #define WII_OUTPUT_TWI_PORT {_wiiOutputTwiConfig.Definition}
+                           """;
+            }
 
             var keyboardTick = GenerateTick(ConfigField.Keyboard, writer);
             if (IsKeyboard || IsFortniteFestival || IsFortniteFestivalPro)
@@ -2095,6 +2163,28 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [RelayCommand]
+    public void RemoveMax1704X()
+    {
+        HasMax1704X = false;
+    }
+
+    [RelayCommand]
+    public void RemoveMpr121()
+    {
+        HasMpr121 = false;
+    }
+    [RelayCommand]
+    public void RemovePeripheral()
+    {
+        HasPeripheral = false;
+    }
+    [RelayCommand]
+    public void RemoveWiiOutput()
+    {
+        HasWiiOutput = false;
+    }
+
+    [RelayCommand]
     public void LoadPreset()
     {
         CurrentPreset!.Item2.LoadConfiguration(this);
@@ -2178,6 +2268,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 LedCount = 1;
                 LedCountPeripheral = 1;
                 CombinedStrumDebounce = false;
+                HasWiiOutput = false;
+                AdxlFilter = 0.05;
+                Mpr121CapacitiveCount = 0;
                 WtSensitivity = 5;
                 PollRate = 0;
                 StrumDebounce = 0;
@@ -2681,13 +2774,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 foreach (var analogLedOutput in analogLedOutputs)
                 {
                     var ledRead =
-                        analogLedOutput.GenerateAssignment(analogLedOutput.Trigger ? "0" : "128", ConfigField.Ps3, false, false, false, false, writer);
+                        analogLedOutput.GenerateAssignment(analogLedOutput.Trigger ? "0" : "128", ConfigField.Ps3,
+                            false, false, false, false, writer);
 
                     var ledReadCheck = "led_tmp";
                     if (!analogLedOutput.Trigger)
                     {
                         ledReadCheck = "(led_tmp != 128)";
                     }
+
                     // Turntable velocities are different to most axis, as they don't use standard calibration.
                     if (analogLedOutput is DjAxis
                         {
@@ -2777,9 +2872,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                      """;
             foreach (var analogLedOutput in analogLedOutputs)
             {
-                
                 var ledRead =
-                    analogLedOutput.GenerateAssignment(analogLedOutput.Trigger ? "0" : "128", ConfigField.Ps3, false, false, false, false, writer);
+                    analogLedOutput.GenerateAssignment(analogLedOutput.Trigger ? "0" : "128", ConfigField.Ps3, false,
+                        false, false, false, writer);
                 // Turntable velocities are different to most axis, as they don't use standard calibration.
                 if (analogLedOutput is DjAxis
                     {
@@ -3128,6 +3223,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                    tiltActive = false;
                    """;
         }
+
         // Handle most mappings
         ret += outputsByType
             .Aggregate("", (current, group) =>
@@ -3145,7 +3241,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             var output = s;
                             var generatedInput = input.Generate();
                             var index = 0;
-                            
+
                             var pro = IsFortniteFestivalPro && output is GuitarAxis
                             {
                                 Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy
@@ -3154,6 +3250,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             {
                                 index = debounces[generatedInput];
                             }
+
                             if (output is OutputButton or DrumAxis or EmulationMode)
                             {
                                 index = debounces[generatedInput];
@@ -3263,6 +3360,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                    }
                    """;
         }
+
         return FixNewlines(ret);
     }
 
@@ -3452,6 +3550,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         else
         {
             PeripheralErrorText = null;
+        }
+
+
+        if (HasWiiOutput && _wiiOutputTwiConfig?.ErrorText != null)
+        {
+            foundError = true;
+            WiiOutputErrorText = _wiiOutputTwiConfig.ErrorText;
+        }
+        else
+        {
+            WiiOutputErrorText = null;
         }
 
         if (HasMpr121 && _mpr121TwiConfig?.ErrorText != null)

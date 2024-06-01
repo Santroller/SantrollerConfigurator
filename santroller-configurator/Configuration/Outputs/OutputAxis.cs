@@ -353,7 +353,7 @@ public abstract partial class OutputAxis : Output
         {
             // Don't use ps3 whammy hacks on PC, use a more normal whammy instead.
             // XB1 also uses a uint8 for whammy, so we can handle that here too
-            case ConfigField.Shared or ConfigField.Universal or ConfigField.XboxOne when whammy:
+            case ConfigField.Shared or ConfigField.Universal or ConfigField.XboxOne or ConfigField.Wii when whammy:
                 singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
@@ -397,19 +397,19 @@ public abstract partial class OutputAxis : Output
                 function = "handle_calibration_ps3_accel";
                 if (ShouldFlip(mode)) function = "-" + function;
                 break;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture when whammy:
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Wii when whammy:
                 function = "handle_calibration_ps3_whammy";
                 singleByte = true;
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
-                or ConfigField.Universal when trigger:
+                or ConfigField.Universal or ConfigField.Wii when trigger:
                 singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
-                or ConfigField.Universal:
+                or ConfigField.Universal or ConfigField.Wii:
                 singleByte = true;
                 intBased = true;
                 function = "handle_calibration_ps3";
@@ -548,7 +548,7 @@ public abstract partial class OutputAxis : Output
             var extraTrigger = "";
             if (this is ControllerAxis axis)
             {
-                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal &&
+                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii &&
                     axis.Type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger)
                 {
                     var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
@@ -578,12 +578,12 @@ public abstract partial class OutputAxis : Output
             case ConfigField.XboxOne:
                 break;
             // 360 triggers, and ps3 and ps4 triggers are uint8_t
-            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
+            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii
                 when Trigger:
                 val >>= 8;
                 break;
             // ps3 and ps4 axis are uint8_t, so we both need to shift and add 128
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal when !Trigger:
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii when !Trigger:
                 val = (val >> 8) + 128;
                 break;
             // Mouse is always not a trigger, and is int8_t
@@ -595,7 +595,7 @@ public abstract partial class OutputAxis : Output
         }
 
         // On the PS3, we need to convert triggers from analog to digital
-        if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal && this is ControllerAxis
+        if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii && this is ControllerAxis
             {
                 Type: StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger
             })
