@@ -1573,7 +1573,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         var pos = writer.BaseStream.Length;
         writer.Write(data);
-        return $"config_blobs[{pos}]";
+        return $"read_double({pos})";
     }
 
     public static string WriteBlob(BinaryWriter writer, bool data)

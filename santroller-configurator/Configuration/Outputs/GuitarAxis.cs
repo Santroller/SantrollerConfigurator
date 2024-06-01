@@ -310,10 +310,7 @@ public class GuitarAxis : OutputAxis
                       """;
             case ConfigField.Xbox360 or ConfigField.Xbox when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
-                if (analogOn > 0x80)
-                    analogOn |= (analogOn - 1) << 8;
-                else
-                    analogOn |= analogOn << 8;
+                analogOn = -((sbyte) (analogOn ^ 0x80) * -257);
 
                 return $$"""
                          if (SLIDER_BAR && {{Input.Generate()}}) {
@@ -324,23 +321,11 @@ public class GuitarAxis : OutputAxis
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 return $$"""
-                         if (SLIDER_BAR) {
-                             {{GenerateOutput(mode)}} = {{Input.Generate()}};
-                             if ({{GenerateOutput(mode)}} > 0x80) {
-                                 {{GenerateOutput(mode)}} |= ({{GenerateOutput(mode)}}-1) << 8;
-                             } else {
-                                 {{GenerateOutput(mode)}} |= ({{GenerateOutput(mode)}}) << 8;
-                             }
+                         if (SLIDER_BAR && ({{Input.Generate()}} != PS3_STICK_CENTER)) {
+                             {{GenerateOutput(mode)}} = -((int8_t)(({{Input.Generate()}}) ^ 0x80) * -257);
                          }
                          """;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
-                when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
-                return $$"""
-                         if (SLIDER_BAR && {{Input.Generate()}}) {
-                             {{GenerateOutput(mode)}} = {{(analogOn + 0x80) & 0xFF}};
-                         }
-                         """;
-            case ConfigField.Universal
+            case ConfigField.Universal or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
                 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 return $$"""
                          if (SLIDER_BAR && {{Input.Generate()}}) {
@@ -350,12 +335,13 @@ public class GuitarAxis : OutputAxis
             // Xb1 is RB only, so no slider
             case ConfigField.XboxOne or ConfigField.Ps4 when Type == GuitarAxisType.Slider:
                 return "";
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
-                return $"if (SLIDER_BAR) {{{GenerateOutput(mode)} = (({Input.Generate()}) + 0x80);}}";
-            case ConfigField.Universal
-                when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
-                return $"if (SLIDER_BAR) {{{GenerateOutput(mode)} = {Input.Generate()};}}";
+                return $$"""
+                         if (SLIDER_BAR && ({{Input.Generate()}} != PS3_STICK_CENTER)) {
+                            {{GenerateOutput(mode)}} = {{Input.Generate()}};
+                         }
+                         """;
 
             // PS3 GH expects tilt on the tilt axis
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture

@@ -161,11 +161,11 @@ public class Ps2Input : SpiInput
         {Ps2InputType.Circle, "(~ps2Data[4]) & (1 << 5)"},
         {Ps2InputType.Cross, "(~ps2Data[4]) & (1 << 6)"},
         {Ps2InputType.Square, "(~ps2Data[4]) & (1 << 7)"},
-        {Ps2InputType.GuitarTapGreen, GetMappingForTapBar(0x95, 0xB0)},
-        {Ps2InputType.GuitarTapRed, GetMappingForTapBar(0xB0, 0xCD, 0xE6)},
-        {Ps2InputType.GuitarTapYellow, GetMappingForTapBar(0xE6, 0x1A, 0x2F)},
-        {Ps2InputType.GuitarTapBlue, GetMappingForTapBar(0x2F, 0x49, 0x66)},
-        {Ps2InputType.GuitarTapOrange, GetMappingForTapBar(0x66, 0x7F)}
+        {Ps2InputType.GuitarTapGreen, GetMappingForTapBar(BarButton.Green, BarButton.Green | BarButton.Red)},
+        {Ps2InputType.GuitarTapRed, GetMappingForTapBar(BarButton.Green | BarButton.Red, BarButton.Red, BarButton.Red | BarButton.Yellow)},
+        {Ps2InputType.GuitarTapYellow, GetMappingForTapBar(BarButton.Red | BarButton.Yellow, BarButton.Yellow, BarButton.Yellow | BarButton.Blue)},
+        {Ps2InputType.GuitarTapBlue, GetMappingForTapBar(BarButton.Yellow | BarButton.Blue, BarButton.Blue, BarButton.Blue | BarButton.Orange)},
+        {Ps2InputType.GuitarTapOrange, GetMappingForTapBar(BarButton.Blue | BarButton.Orange, BarButton.Orange)}
     };
 
     private static readonly Dictionary<Ps2InputType, Ps2ControllerType> AxisToType =
@@ -286,9 +286,9 @@ public class Ps2Input : SpiInput
         return new SerializedPs2Input(Peripheral, Miso, Mosi, Sck, Att, Ack, Input);
     }
 
-    private static string GetMappingForTapBar(params int[] mappings)
+    private static string GetMappingForTapBar(params BarButton[] mappings)
     {
-        return string.Join(" || ", mappings.Select(s2 => $"(lastTapPS2GH5 == {s2})"));
+        return string.Join(" || ", mappings.Select(s2 => $"(lastTapPS2GH5 == {Gh5NeckInput.Gh5MappingsReversed[s2]})"));
     }
 
     public override void Update(Dictionary<int, int> analogRaw,

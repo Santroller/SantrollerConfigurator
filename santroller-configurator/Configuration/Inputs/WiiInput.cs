@@ -209,11 +209,11 @@ public class WiiInput : TwiInput
         {WiiInputType.UDrawPenButton1, "((wiiButtonsHigh) & (1 << 0))"},
         {WiiInputType.UDrawPenButton2, "((wiiButtonsHigh) & (1 << 1))"},
         {WiiInputType.UDrawPenClick, "((~wiiButtonsHigh) & (1 << 2))"},
-        {WiiInputType.GuitarTapGreen, GetMappingForTapBar(0x95, 0xB0)},
-        {WiiInputType.GuitarTapRed, GetMappingForTapBar(0xB0, 0xCD, 0xE6)},
-        {WiiInputType.GuitarTapYellow, GetMappingForTapBar(0xE6, 0x1A, 0x2F)},
-        {WiiInputType.GuitarTapBlue, GetMappingForTapBar(0x2F, 0x49, 0x66)},
-        {WiiInputType.GuitarTapOrange, GetMappingForTapBar(0x66, 0x7F)}
+        {WiiInputType.GuitarTapGreen, GetMappingForTapBar(BarButton.Green, BarButton.Green | BarButton.Red)},
+        {WiiInputType.GuitarTapRed, GetMappingForTapBar(BarButton.Green | BarButton.Red, BarButton.Red, BarButton.Red | BarButton.Yellow)},
+        {WiiInputType.GuitarTapYellow, GetMappingForTapBar(BarButton.Red | BarButton.Yellow, BarButton.Yellow, BarButton.Yellow | BarButton.Blue)},
+        {WiiInputType.GuitarTapBlue, GetMappingForTapBar(BarButton.Yellow | BarButton.Blue, BarButton.Blue, BarButton.Blue | BarButton.Orange)},
+        {WiiInputType.GuitarTapOrange, GetMappingForTapBar(BarButton.Blue | BarButton.Orange, BarButton.Orange)}
     };
 
     private static readonly List<string> HiResMapOrder =
@@ -289,9 +289,9 @@ public class WiiInput : TwiInput
         return new SerializedWiiInput(Sda, Scl, Input, Peripheral);
     }
 
-    private static string GetMappingForTapBar(params int[] mappings)
+    private static string GetMappingForTapBar(params BarButton[] mappings)
     {
-        return string.Join(" || ", mappings.Select(s2 => $"(lastTapWiiGh5 == {s2})"));
+        return string.Join(" || ", mappings.Select(s2 => $"(lastTapWiiGh5 == {Gh5NeckInput.Gh5MappingsReversed[s2]})"));
     }
 
     public override void Update(Dictionary<int, int> analogRaw,

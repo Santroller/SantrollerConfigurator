@@ -137,6 +137,7 @@ public class Mpr121SliderInput : Input
         var mapping = string.Join(" | ", inputs.Select((t, i) => t > i
             ? $"((mpr121_raw & {1 << t}) >> {t - i})"
             : $"((mpr121_raw & {1 << t}) << {i - t})"));
+        
         return $"gh5_mapping[{mapping}]";
     }
 

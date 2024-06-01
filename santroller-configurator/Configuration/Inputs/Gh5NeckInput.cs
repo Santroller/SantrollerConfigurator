@@ -16,40 +16,42 @@ public class Gh5NeckInput : TwiInput
 
     public static readonly Dictionary<int, BarButton> Gh5Mappings = new()
     {
-        {0x19, BarButton.Green | BarButton.Yellow},
-        {0x1A, BarButton.Yellow},
-        {0x2C, BarButton.Green | BarButton.Red | BarButton.Yellow | BarButton.Blue},
-        {0x2D, BarButton.Green | BarButton.Yellow | BarButton.Blue},
-        {0x2E, BarButton.Red | BarButton.Yellow | BarButton.Blue},
-        {0x2F, BarButton.Yellow | BarButton.Blue},
-        {0x46, BarButton.Green | BarButton.Red | BarButton.Blue},
-        {0x47, BarButton.Green | BarButton.Blue},
-        {0x48, BarButton.Red | BarButton.Blue},
-        {0x49, BarButton.Blue},
-        {0x5F, BarButton.Green | BarButton.Red | BarButton.Yellow | BarButton.Blue | BarButton.Orange},
-        {0x60, BarButton.Green | BarButton.Red | BarButton.Blue | BarButton.Orange},
-        {0x61, BarButton.Green | BarButton.Yellow | BarButton.Blue | BarButton.Orange},
-        {0x62, BarButton.Green | BarButton.Blue | BarButton.Orange},
-        {0x63, BarButton.Red | BarButton.Yellow | BarButton.Blue | BarButton.Orange},
-        {0x64, BarButton.Red | BarButton.Blue | BarButton.Orange},
-        {0x65, BarButton.Yellow | BarButton.Blue | BarButton.Orange},
-        {0x66, BarButton.Blue | BarButton.Orange},
-        {0x78, BarButton.Green | BarButton.Red | BarButton.Yellow | BarButton.Orange},
-        {0x79, BarButton.Green | BarButton.Red | BarButton.Orange},
-        {0x7A, BarButton.Green | BarButton.Yellow | BarButton.Orange},
-        {0x7B, BarButton.Green | BarButton.Orange},
-        {0x7C, BarButton.Red | BarButton.Yellow | BarButton.Orange},
-        {0x7D, BarButton.Red | BarButton.Orange},
-        {0x7E, BarButton.Yellow | BarButton.Orange},
-        {0x7F, BarButton.Orange},
-        {0x95, BarButton.Green},
-        {0xB0, BarButton.Green | BarButton.Red},
-        {0xCD, BarButton.Red},
-        {0xE5, BarButton.Green | BarButton.Red | BarButton.Yellow},
-        {0xE6, BarButton.Red | BarButton.Yellow}
+        {0x15, BarButton.Green},
+        {0x30, BarButton.Green | BarButton.Red},
+        {0x4D, BarButton.Red},
+        {0x65, BarButton.Green | BarButton.Red | BarButton.Yellow},
+        {0x66, BarButton.Red | BarButton.Yellow},
+        {0x80, 0x00},
+        {0x99, BarButton.Green | BarButton.Yellow},
+        {0x9A, BarButton.Yellow},
+        {0xAC, BarButton.Green | BarButton.Red | BarButton.Yellow | BarButton.Blue},
+        {0xAD, BarButton.Green | BarButton.Yellow | BarButton.Blue},
+        {0xAE, BarButton.Red | BarButton.Yellow | BarButton.Blue},
+        {0xAF, BarButton.Yellow | BarButton.Blue},
+        {0xC6, BarButton.Green | BarButton.Red | BarButton.Blue},
+        {0xC7, BarButton.Green | BarButton.Blue},
+        {0xC8, BarButton.Red | BarButton.Blue},
+        {0xC9, BarButton.Blue},
+        {0xDF, BarButton.Green | BarButton.Red | BarButton.Yellow | BarButton.Blue | BarButton.Orange},
+        {0xE0, BarButton.Green | BarButton.Red | BarButton.Blue | BarButton.Orange},
+        {0xE1, BarButton.Green | BarButton.Yellow | BarButton.Blue | BarButton.Orange},
+        {0xE2, BarButton.Green | BarButton.Blue | BarButton.Orange},
+        {0xE3, BarButton.Red | BarButton.Yellow | BarButton.Blue | BarButton.Orange},
+        {0xE4, BarButton.Red | BarButton.Blue | BarButton.Orange},
+        {0xE5, BarButton.Yellow | BarButton.Blue | BarButton.Orange},
+        {0xE6, BarButton.Blue | BarButton.Orange},
+        {0xF8, BarButton.Green | BarButton.Red | BarButton.Yellow | BarButton.Orange},
+        {0xF9, BarButton.Green | BarButton.Red | BarButton.Orange},
+        {0xFA, BarButton.Green | BarButton.Yellow | BarButton.Orange},
+        {0xFB, BarButton.Green | BarButton.Orange},
+        {0xFC, BarButton.Red | BarButton.Yellow | BarButton.Orange},
+        {0xFD, BarButton.Red | BarButton.Orange},
+        {0xFE, BarButton.Yellow | BarButton.Orange},
+        {0xFF, BarButton.Orange},
     };
-    
-    public static readonly Dictionary<BarButton, int> Gh5MappingsReversed = Gh5Mappings.ToDictionary(x => x.Value, x => x.Key);
+
+    public static readonly Dictionary<BarButton, int> Gh5MappingsReversed =
+        Gh5Mappings.ToDictionary(x => x.Value, x => x.Key);
 
     private static readonly Dictionary<Gh5NeckInputType, int> Fret = new()
     {
@@ -59,6 +61,7 @@ public class Gh5NeckInput : TwiInput
         {Gh5NeckInputType.Blue, 6},
         {Gh5NeckInputType.Orange, 0},
     };
+
     private static readonly List<Gh5NeckInputType> Tap =
     [
         Gh5NeckInputType.TapGreen,
@@ -94,7 +97,7 @@ public class Gh5NeckInput : TwiInput
 
     public override string Title => EnumToStringConverter.Convert(Input);
     public bool Combined { get; }
-    public bool ShouldShowPins => !Combined && !Model.Branded; 
+    public bool ShouldShowPins => !Combined && !Model.Branded;
     public bool BindableTwi { get; }
 
     public override InputType? InputType => Types.InputType.Gh5NeckInput;
@@ -108,7 +111,7 @@ public class Gh5NeckInput : TwiInput
         if (Input <= Gh5NeckInputType.Orange)
             return $"(fivetar_buttons[0] & {1 << Fret[Input]})";
 
-        if (Input is Gh5NeckInputType.TapBar or Gh5NeckInputType.TapAll) return "fivetar_buttons[1]";
+        if (Input is Gh5NeckInputType.TapBar or Gh5NeckInputType.TapAll) return "(fivetar_buttons[1] ^ 0x80)";
 
         var mappings = MappingByInput[Input];
         return "(gh5Valid && (" +
@@ -137,15 +140,15 @@ public class Gh5NeckInput : TwiInput
                 RawValue = (gh5Raw[0] & (1 << Fret[Input])) != 0 ? 1 : 0;
                 break;
             case Gh5NeckInputType.TapBar:
-                RawValue = gh5Raw[1];
+                RawValue = (gh5Raw[1] + 0x80) & 0xFF;
                 break;
             case Gh5NeckInputType.TapAll:
-                RawValue = gh5Raw[1];
+                RawValue = (gh5Raw[1] + 0x80) & 0xFF;
                 break;
             default:
             {
                 var mappings = MappingByInput[Input];
-                RawValue = mappings.Contains(gh5Raw[1]) ? 1 : 0;
+                RawValue = mappings.Contains(gh5Raw[1] ^ 0x80) ? 1 : 0;
                 break;
             }
         }
@@ -160,6 +163,6 @@ public class Gh5NeckInput : TwiInput
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-       return base.RequiredDefines().Concat(new[] {"INPUT_GH5_NECK"}).ToList();
+        return base.RequiredDefines().Concat(new[] {"INPUT_GH5_NECK"}).ToList();
     }
 }
