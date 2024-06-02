@@ -1624,6 +1624,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static string WriteBlob(BinaryWriter writer, double data)
     {
         var pos = writer.BaseStream.Length;
+        if ((pos & 3) != 0)
+        {
+            var align = 4 - (pos & 3);
+            for (var i = 0; i < align; i++)
+            {
+                writer.Write((byte) 0);
+                pos += 1;
+            }
+        }
+
         writer.Write(data);
         return $"read_double({pos})";
     }
@@ -1842,13 +1852,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         """;
             if (HasWiiOutput)
             {
-                config += $"""     
+                config += $"""
                                            
                            #define TICK_WII \
                              {GenerateTick(ConfigField.Wii, writer)}
                            """;
             }
-            
+
             if (_wiiOutputTwiConfig != null)
             {
                 config += $"""
@@ -2173,11 +2183,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         HasMpr121 = false;
     }
+
     [RelayCommand]
     public void RemovePeripheral()
     {
         HasPeripheral = false;
     }
+
     [RelayCommand]
     public void RemoveWiiOutput()
     {
