@@ -3317,7 +3317,16 @@
         <value>Pin de Habilitar Latch / LE de Periférico STP16CPC26</value>
     </data>
     <data name="SwapSwitchFaceButtonLabel" xml:space="preserve">
-        <value>Cambiar Botonoes de Cara</value>
+        <value>Cambiar Botones de Cara</value>
+    </data>
+    <data name="SimpleTypeWiiOutputs" xml:space="preserve">
+        <value>Emulación de Extensión de Wii</value>
+    </data>
+    <data name="HasWiiOutputSettingsLabel" xml:space="preserve">
+        <value>Emulación de Extensión de Wii</value>
+    </data>
+    <data name="WiiOutputSettingsLabel" xml:space="preserve">
+        <value>Ajustes de Emulación de Extensión de Wii</value>
     </data>
     <data name="AddBindingLabel" xml:space="preserve">
         <value>Añadir Ajuste</value>
