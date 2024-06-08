@@ -24,6 +24,7 @@ public class PinToStringConverter : IMultiValueConverter
         var microcontroller = model.Microcontroller;
         var twi = values[3] is ITwi || values.Count >= 7 && (bool?)values[6] == false;
         var spi = values[3] is ISpi || values.Count >= 7 && (bool?)values[6] == true;
+        var outputMode = values.Count >= 8 && (bool?)values[7] == true;
         var configs = values[3] switch
         {
             Input input => input.PinConfigs,
@@ -40,6 +41,6 @@ public class PinToStringConverter : IMultiValueConverter
         };
         
         return microcontroller.GetPin(pin, peripheral, selectedPin, model.Bindings.Items, twi, spi, configs, model,
-            values[4] is ComboBoxItem);
+            values[4] is ComboBoxItem, outputMode);
     }
 }

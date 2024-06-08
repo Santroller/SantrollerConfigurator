@@ -68,7 +68,7 @@ public abstract class AvrController : Microcontroller
         return new AvrTwiConfig(model, type, peripheral, I2CSda, I2CScl, clock, output);
     }
 
-    public override List<KeyValuePair<int, SpiPinType>> SpiPins()
+    public override List<KeyValuePair<int, SpiPinType>> SpiPins(bool output)
     {
         return
         [
@@ -79,7 +79,7 @@ public abstract class AvrController : Microcontroller
         ];
     }
 
-    public override List<KeyValuePair<int, TwiPinType>> TwiPins()
+    public override List<KeyValuePair<int, TwiPinType>> TwiPins(bool output)
     {
         return
         [
@@ -271,7 +271,7 @@ public abstract class AvrController : Microcontroller
         return pin < PinA0 ? null : $" / A{pin - PinA0}";
     }
 
-    public override string GetPinForMicrocontroller(int pin, bool spi, bool twi)
+    public override string GetPinForMicrocontroller(int pin, bool spi, bool twi, bool outputMode)
     {
         var ret = $"D{pin}";
         var analogName = AnalogName(pin);
@@ -292,10 +292,10 @@ public abstract class AvrController : Microcontroller
         return ret;
     }
 
-    public override IEnumerable<string> GenerateAckDefines(int ack)
+    public override IEnumerable<string> GeneratePs2Defines(int ack, string prefix)
     {
         var interrupt = GetInterruptForPin(ack);
-        return new List<string> {$"INTERRUPT_PS2_ACK INT{interrupt}", $"INTERRUPT_PS2_ACK_VECT INT{interrupt}_vect", $"INTERRUPT_PS2_ACK_EICRA _BV(ISC{interrupt}0) | _BV(ISC{interrupt}1)"};
+        return new List<string> {$"{prefix} INT{interrupt}", $"{prefix}_VECT INT{interrupt}_vect", $"{prefix}_EICRA _BV(ISC{interrupt}0) | _BV(ISC{interrupt}1)"};
     }
 
     protected abstract int GetInterruptForPin(int ack);

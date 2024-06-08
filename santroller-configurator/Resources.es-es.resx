@@ -3322,8 +3322,11 @@
     <data name="SimpleTypeWiiOutputs" xml:space="preserve">
         <value>Emulación de Extensión de Wii</value>
     </data>
-    <data name="HasWiiOutputSettingsLabel" xml:space="preserve">
-        <value>Emulación de Extensión de Wii</value>
+    <data name="SimpleTypePs2Outputs" xml:space="preserve">
+        <value>Emulación de Control de PS2</value>
+    </data>
+    <data name="Ps2OutputSettingsLabel" xml:space="preserve">
+        <value>Ajustes de Emulación de Control de PS2</value>
     </data>
     <data name="WiiOutputSettingsLabel" xml:space="preserve">
         <value>Ajustes de Emulación de Extensión de Wii</value>

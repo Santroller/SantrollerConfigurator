@@ -4683,6 +4683,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SimpleTypePs2Outputs {
+            get {
+                return ResourceManager.GetString("SimpleTypePs2Outputs", resourceCulture);
+            }
+        }
+        
         public static string SimpleTypePeripheral {
             get {
                 return ResourceManager.GetString("SimpleTypePeripheral", resourceCulture);
@@ -6441,12 +6447,6 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string HasWiiOutputSettingsLabel {
-            get {
-                return ResourceManager.GetString("HasWiiOutputSettingsLabel", resourceCulture);
-            }
-        }
-        
         public static string LEDTypePeripheralCountLabel {
             get {
                 return ResourceManager.GetString("LEDTypePeripheralCountLabel", resourceCulture);
@@ -6624,6 +6624,12 @@ namespace GuitarConfigurator.NetCore {
         public static string WiiOutputSettingsLabel {
             get {
                 return ResourceManager.GetString("WiiOutputSettingsLabel", resourceCulture);
+            }
+        }
+        
+        public static string Ps2OutputSettingsLabel {
+            get {
+                return ResourceManager.GetString("Ps2OutputSettingsLabel", resourceCulture);
             }
         }
         

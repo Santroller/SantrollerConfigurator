@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
@@ -17,7 +18,7 @@ public abstract class SpiConfig : PinConfig
 
     private int _sck;
 
-    private bool _output;
+    public bool Output { get; }
 
     protected SpiConfig(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso, int mosi, int miso, int sck, bool cpol, bool cpha,
         bool msbfirst, uint clock, bool output) : base(model, peripheral)
@@ -32,7 +33,7 @@ public abstract class SpiConfig : PinConfig
         _cpha = cpha;
         _msbfirst = msbfirst;
         _clock = clock;
-        _output = output;
+        Output = output;
     }
 
     public override string Type { get; }
@@ -98,10 +99,12 @@ public abstract class SpiConfig : PinConfig
         var miso = IncludesMiso ? $"#define {Definition}_MISO {_miso}" : "";
         // On ws2812, sck isn't used.
         var sck = IncludesSck ? $"#define {Definition}_SCK {_sck}" : "";
+        var output = Output ? $"#define {Definition}_OUTPUT" : "";
         return $"""
 
                 {miso}
                 {sck}
+                {output}
                 #define {Definition}_MOSI {_mosi}
                 #define {Definition}_CPOL {(_cpol ? 1 : 0)}
                 #define {Definition}_CPHA {(_cpha ? 1 : 0)}

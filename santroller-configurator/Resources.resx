@@ -2461,6 +2461,9 @@
     <data name="SimpleTypeWiiOutputs" xml:space="preserve">
         <value>Wii Extension Emulation</value>
     </data>
+    <data name="SimpleTypePs2Outputs" xml:space="preserve">
+        <value>PS2 Controller Emulation</value>
+    </data>
     <data name="SimpleTypePeripheral" xml:space="preserve">
         <value>Peripheral</value>
     </data>
@@ -3346,9 +3349,6 @@
     <data name="HasPeripheralLabel" xml:space="preserve">
         <value>Peripheral</value>
     </data>
-    <data name="HasWiiOutputSettingsLabel" xml:space="preserve">
-        <value>Wii Extension Emulation</value>
-    </data>
     <data name="LEDTypePeripheralCountLabel" xml:space="preserve">
         <value>Peripheral LED Count</value>
     </data>
@@ -3439,6 +3439,9 @@
     </data>
     <data name="WiiOutputSettingsLabel" xml:space="preserve">
         <value>Wii Extension Emulation Settings</value>
+    </data>
+    <data name="Ps2OutputSettingsLabel" xml:space="preserve">
+        <value>PS2 Controller Emulation Settings</value>
     </data>
     <data name="PeripheralSettingsLabel" xml:space="preserve">
         <value>Peripheral Settings</value>

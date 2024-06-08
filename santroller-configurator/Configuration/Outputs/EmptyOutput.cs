@@ -130,6 +130,11 @@ public class EmptyOutput : Output
                 Model.Bindings.Remove(this);
                 Model.UpdateErrors();
                 return;
+            case SimpleType.Ps2Outputs:
+                Model.HasPs2Output = true;
+                Model.Bindings.Remove(this);
+                Model.UpdateErrors();
+                return;
             case SimpleType.Peripheral:
                 Model.HasPeripheral = true;
                 Model.Bindings.Remove(this);

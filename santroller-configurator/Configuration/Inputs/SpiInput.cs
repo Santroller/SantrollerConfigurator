@@ -66,21 +66,21 @@ public abstract class SpiInput : Input, ISpi
 
     private List<int> GetMosiPins()
     {
-        return Model.Microcontroller.SpiPins()
+        return Model.Microcontroller.SpiPins(false)
             .Where(s => s.Value is SpiPinType.Mosi)
             .Select(s => s.Key).ToList();
     }
 
     private List<int> GetMisoPins()
     {
-        return Model.Microcontroller.SpiPins()
+        return Model.Microcontroller.SpiPins(false)
             .Where(s => s.Value is SpiPinType.Miso)
             .Select(s => s.Key).ToList();
     }
 
     private List<int> GetSckPins()
     {
-        return Model.Microcontroller.SpiPins()
+        return Model.Microcontroller.SpiPins(false)
             .Where(s => s.Value is SpiPinType.Sck)
             .Select(s => s.Key).ToList();
     }

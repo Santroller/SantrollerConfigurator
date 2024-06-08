@@ -11,7 +11,7 @@ public class PinToStringConverterPico : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not int pin) return null;
-        return Pico.GetPinForPico(pin, true, false);
+        return Pico.GetPinForPico(pin, true, false, false);
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

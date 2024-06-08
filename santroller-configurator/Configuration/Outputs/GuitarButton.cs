@@ -66,10 +66,14 @@ public class GuitarButton : OutputButton
             }
             return _fortniteKeys.TryGetValue(Type, out var forniteKey) ? GetReportField(forniteKey) : "";
         }
+        // no mapping for white3 on ps2
+        if (mode is ConfigField.Ps2 && Type is InstrumentButtonType.White3)
+        {
+            return "";
+        }
         // PS3 and 360 just set the standard buttons, and rely on the solo flag
         // XB1 however has things broken out
         // For the universal report, we only put standard frets on nav, not solo
-
         var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal or ConfigField.Ps4);
         return Type switch
         {
@@ -129,7 +133,7 @@ public class GuitarButton : OutputButton
         if (mode is not (ConfigField.Shared or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
             or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Keyboard
-            or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii)) return "";
+            or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii or ConfigField.Ps2)) return "";
         // If combined debounce is on, then additionally generate extra logic to ignore this input if the opposite debounce flag is active
         if (combinedDebounce && Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
             combinedExtra = string.Join(" && ",
@@ -155,7 +159,7 @@ public class GuitarButton : OutputButton
         if (mode is ConfigField.XboxOne or ConfigField.Ps4 && Type is not (InstrumentButtonType.StrumUp or InstrumentButtonType.StrumDown))
             extra = $"{GenerateOutput(ConfigField.Ps3)}=true;";
         
-        if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar} || mode is ConfigField.Wii)
+        if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar} || mode is ConfigField.Wii or ConfigField.Ps2)
             return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
 
@@ -163,7 +167,7 @@ public class GuitarButton : OutputButton
         // Set solo flag (not relevant for universal)
         if (Type is InstrumentButtonType.SoloBlue or InstrumentButtonType.SoloGreen
                 or InstrumentButtonType.SoloOrange or InstrumentButtonType.SoloRed
-                or InstrumentButtonType.SoloYellow && mode is not (ConfigField.Shared or ConfigField.Universal))
+                or InstrumentButtonType.SoloYellow && mode is not (ConfigField.Shared or ConfigField.Universal or ConfigField.Ps2))
             extra += "report->solo=true;";
         
         return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);

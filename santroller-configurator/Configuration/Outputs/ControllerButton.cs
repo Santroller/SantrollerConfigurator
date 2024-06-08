@@ -61,8 +61,14 @@ public class ControllerButton : OutputButton
         {
             return GetReportField(fortniteKey);
         }
-        // No guide button on og xbox
-        if (mode is ConfigField.Xbox && Type is StandardButtonType.Guide)
+        // No guide button on og xbox or PS2
+        if (mode is ConfigField.Xbox or ConfigField.Ps2 && Type is StandardButtonType.Guide)
+        {
+            return "";
+        }
+        // No dpad left or right on ps2 guitars
+        if (mode is ConfigField.Ps2 && Type is StandardButtonType.DpadLeft or StandardButtonType.DpadRight &&
+            Model.DeviceControllerType.IsGuitar())
         {
             return "";
         }
@@ -92,7 +98,7 @@ public class ControllerButton : OutputButton
             }
         }
         return mode is ConfigField.Ps3 or ConfigField.Xbox or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared or ConfigField.XboxOne
-            or ConfigField.Xbox360 or ConfigField.Universal or ConfigField.Wii
+            or ConfigField.Xbox360 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2
             ? GetReportField(Type)
             : "";
     }

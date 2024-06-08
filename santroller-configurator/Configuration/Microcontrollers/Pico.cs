@@ -185,7 +185,7 @@ public class Pico : Microcontroller
         return new PicoTwiConfig(model, type, peripheral, sda, scl, clock, output);
     }
 
-    public override IEnumerable<string> GenerateAckDefines(int ack)
+    public override IEnumerable<string> GeneratePs2Defines(int ack, string prefix)
     {
         return Array.Empty<string>();
     }
@@ -195,12 +195,22 @@ public class Pico : Microcontroller
         return Enumerable.Range(0, GpioCount).ToList();
     }
 
-    public override List<KeyValuePair<int, SpiPinType>> SpiPins()
+    public override List<KeyValuePair<int, SpiPinType>> SpiPins(bool output)
     {
+        if (output)
+        {
+            // Pico SPI flips Mosi and Miso in output mode
+            return SpiTypesByPin.Select(s => new KeyValuePair<int, SpiPinType>(s.Key, s.Value switch
+            {
+                SpiPinType.Mosi => SpiPinType.Miso,
+                SpiPinType.Miso => SpiPinType.Mosi,
+                _ => s.Value
+            })).ToList();
+        }
         return SpiTypesByPin.ToList();
     }
 
-    public override List<KeyValuePair<int, TwiPinType>> TwiPins()
+    public override List<KeyValuePair<int, TwiPinType>> TwiPins(bool output)
     {
         return TwiTypeByPin.ToList();
     }
@@ -268,23 +278,33 @@ public class Pico : Microcontroller
         return chan;
     }
 
-    public static string GetPinForPico(int pin, bool twi, bool spi)
+    public static string GetPinForPico(int pin, bool twi, bool spi, bool outputMode)
     {
         var ret = $"GP{pin}";
         if (twi && TwiIndexByPin.TryGetValue(pin, out var value))
             ret += $" / TWI{value} {TwiTypeByPin[pin].ToString().ToUpper()}";
 
         if (spi && SpiIndexByPin.TryGetValue(pin, out var value1))
-            ret += $" / SPI{value1} {SpiTypesByPin[pin].ToString().ToUpper()}";
+        {
+            // MOSI and MISO are swapped for output mode
+            var type = SpiTypesByPin[pin];
+            type = type switch
+            {
+                SpiPinType.Mosi when outputMode => SpiPinType.Miso,
+                SpiPinType.Miso when outputMode => SpiPinType.Mosi,
+                _ => type
+            };
+            ret += $" / SPI{value1} {type.ToString().ToUpper()}";
+        }
 
         if (pin >= 26) ret += $" / ADC{pin - 26}";
 
         return ret;
     }
 
-    public override string GetPinForMicrocontroller(int pin, bool twi, bool spi)
+    public override string GetPinForMicrocontroller(int pin, bool twi, bool spi, bool outputMode)
     {
-        return GetPinForPico(pin, twi, spi);
+        return GetPinForPico(pin, twi, spi, outputMode);
     }
 
     public override List<int> GetAllPins()

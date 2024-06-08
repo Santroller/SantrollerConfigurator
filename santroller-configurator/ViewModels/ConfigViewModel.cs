@@ -42,6 +42,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly string Apa102SpiType = "APA102";
     public static readonly string Stp16SpiType = "STP16CPC26";
     public static readonly string WS2812SpiType = "WS2812";
+    public static readonly string WiiOutputTwiType = "WiiOutput";
+    public static readonly string Ps2OutputTwiType = "Ps2Output";
+    public static readonly string Ps2OutputAckType = "Ps2OutputAck";
+    public static readonly string Ps2OutputAttType = "Ps2OutputAtt";
     public static readonly string Stp16PeripheralSpiType = "Peripheral STP16CPC26";
     public static readonly string Apa102PeripheralSpiType = "Peripheral APA102";
     public static readonly string WS2812PeripheralSpiType = "Peripheral WS2812";
@@ -67,10 +71,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private SpiConfig? _ledSpiConfig;
     private SpiConfig? _ledSpiConfigPeripheral;
+    private SpiConfig? _ps2OutputSpiConfig;
     private TwiConfig? _peripheralTwiConfig;
     private TwiConfig? _mpr121TwiConfig;
-    private TwiConfig? _max170xTwiConfig;
+    private TwiConfig? _max170XTwiConfig;
     private TwiConfig? _wiiOutputTwiConfig;
+    private DirectPinConfig? _ps2OutputAtt;
+    private DirectPinConfig? _ps2OutputAck;
     private DirectPinConfig? _stp16Oe;
     private DirectPinConfig? _stp16Le;
     private DirectPinConfig? _stp16OePeripheral;
@@ -377,6 +384,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public string? WiiOutputErrorText { get; set; }
 
+    [Reactive] public string? Ps2OutputErrorText { get; set; }
+    
     [Reactive] public string? Mpr121ErrorText { get; set; }
 
     [Reactive] public string? Max170XErrorText { get; set; }
@@ -449,19 +458,21 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             BindAllWindowViewModel>
         ShowBindAllDialog { get; } = new();
 
-    public List<int> AvailableSdaPins => GetSdaPins();
-    public List<int> AvailableSclPins => GetSclPins();
+    public List<int> AvailableSdaPinsInput => GetSdaPins(false);
+    public List<int> AvailableSclPinsInput => GetSclPins(false);
+    public List<int> AvailableSdaPinsOutput => GetSdaPins(true);
+    public List<int> AvailableSclPinsOutput => GetSclPins(true);
 
-    private List<int> GetSdaPins()
+    private List<int> GetSdaPins(bool output)
     {
-        return Microcontroller.TwiPins()
+        return Microcontroller.TwiPins(output)
             .Where(s => s.Value is TwiPinType.Sda)
             .Select(s => s.Key).ToList();
     }
 
-    private List<int> GetSclPins()
+    private List<int> GetSclPins(bool output)
     {
-        return Microcontroller.TwiPins()
+        return Microcontroller.TwiPins(output)
             .Where(s => s.Value is TwiPinType.Scl)
             .Select(s => s.Key).ToList();
     }
@@ -497,14 +508,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public string LocalAddress { get; set; } = "Write config to retrieve address";
 
-    public List<int> AvailableApaMosiPins => Microcontroller.SpiPins()
-        .Where(s => s.Value is SpiPinType.Mosi)
-        .Select(s => s.Key).ToList();
-
-    public List<int> AvailableApaSckPins => Microcontroller.SpiPins()
-        .Where(s => s.Value is SpiPinType.Sck)
-        .Select(s => s.Key).ToList();
-
     public IEnumerable<LedType> LedTypes => Enum.GetValues<LedType>();
 
     public bool BindableTwi { get; }
@@ -519,6 +522,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool LedConfigExpanded { get; set; }
     [Reactive] public bool PeripheralExpanded { get; set; }
     [Reactive] public bool WiiOutputExpanded { get; set; }
+    [Reactive] public bool Ps2OutputExpanded { get; set; }
     [Reactive] public bool Mpr121Expanded { get; set; }
 
     [Reactive] public bool Max170XExpanded { get; set; }
@@ -668,22 +672,22 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public int Max1704XSda
     {
-        get => _max170xTwiConfig?.Sda ?? 0;
+        get => _max170XTwiConfig?.Sda ?? 0;
         set
         {
-            if (_max170xTwiConfig == null) return;
-            _max170xTwiConfig.Sda = value;
+            if (_max170XTwiConfig == null) return;
+            _max170XTwiConfig.Sda = value;
             this.RaisePropertyChanged();
         }
     }
 
     public int Max1704XScl
     {
-        get => _max170xTwiConfig?.Scl ?? 0;
+        get => _max170XTwiConfig?.Scl ?? 0;
         set
         {
-            if (_max170xTwiConfig == null) return;
-            _max170xTwiConfig.Scl = value;
+            if (_max170XTwiConfig == null) return;
+            _max170XTwiConfig.Scl = value;
             this.RaisePropertyChanged();
         }
     }
@@ -706,6 +710,61 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (_mpr121TwiConfig == null) return;
             _mpr121TwiConfig.Scl = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int Ps2OutputAck
+    {
+        get => _ps2OutputAck?.Pin ?? 0;
+        set
+        {
+            if (_ps2OutputAck == null) return;
+            _ps2OutputAck.Pin = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int Ps2OutputAtt
+    {
+        get => _ps2OutputAtt?.Pin ?? 0;
+        set
+        {
+            if (_ps2OutputAtt == null) return;
+            _ps2OutputAtt.Pin = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int Ps2OutputMosi
+    {
+        get => _ps2OutputSpiConfig?.Mosi ?? 0;
+        set
+        {
+            if (_ps2OutputSpiConfig == null) return;
+            _ps2OutputSpiConfig.Mosi = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int Ps2OutputMiso
+    {
+        get => _ps2OutputSpiConfig?.Miso ?? 0;
+        set
+        {
+            if (_ps2OutputSpiConfig == null) return;
+            _ps2OutputSpiConfig.Miso = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int Ps2OutputSck
+    {
+        get => _ps2OutputSpiConfig?.Sck ?? 0;
+        set
+        {
+            if (_ps2OutputSpiConfig == null) return;
+            _ps2OutputSpiConfig.Sck = value;
             this.RaisePropertyChanged();
         }
     }
@@ -1013,6 +1072,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private bool _hasPeripheral;
     private bool _hasWiiOutput;
+    private bool _hasPs2Output;
 
     private bool _hasMpr121;
 
@@ -1021,19 +1081,18 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _hasMpr121;
         set
         {
-            if (!value)
+            if (value)
+            {
+                _mpr121TwiConfig =
+                    Microcontroller.AssignTwiPins(this, Mpr121TwiType, false, -1, -1, Mpr121TwiFreq, false);
+            }
+            else
             {
                 _mpr121TwiConfig = null;
                 Bindings.RemoveMany(Bindings.Items.Where(s =>
                     s.Input.InnermostInputs().Any(s2 => s2 is Mpr121Input or Mpr121SliderInput)));
-                this.RaiseAndSetIfChanged(ref _hasMpr121, value);
-                UpdateErrors();
             }
 
-            _mpr121TwiConfig =
-                value
-                    ? Microcontroller.AssignTwiPins(this, Mpr121TwiType, false, -1, -1, Mpr121TwiFreq, false)
-                    : null;
             this.RaisePropertyChanged(nameof(Mpr121Sda));
             this.RaisePropertyChanged(nameof(Mpr121Scl));
             this.RaiseAndSetIfChanged(ref _hasMpr121, value);
@@ -1048,17 +1107,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _hasMax1704X;
         set
         {
-            if (!value)
-            {
-                _max170xTwiConfig = null;
-                this.RaiseAndSetIfChanged(ref _hasMax1704X, value);
-                UpdateErrors();
-            }
-
-            _max170xTwiConfig =
+            _max170XTwiConfig =
                 value
                     ? Microcontroller.AssignTwiPins(this, Max170XTwiType, false, -1, -1, Max170XTwiFreq, false)
                     : null;
+
             this.RaisePropertyChanged(nameof(Max1704XSda));
             this.RaisePropertyChanged(nameof(Max1704XScl));
             this.RaiseAndSetIfChanged(ref _hasMax1704X, value);
@@ -1071,7 +1124,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _hasPeripheral;
         set
         {
-            if (!value)
+            if (value)
+            {
+                _peripheralTwiConfig =
+                    Microcontroller.AssignTwiPins(this, PeripheralTwiType, false, -1, -1, PeripheralTwiClock, false);
+            }
+            else
             {
                 Bindings.RemoveMany(Bindings.Items.Where(s =>
                     s.Input.Peripheral || s is GhwtCombinedOutput {Peripheral: true}));
@@ -1081,10 +1139,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 LedTypePeripheral = LedType.None;
             }
 
-            _peripheralTwiConfig =
-                value
-                    ? Microcontroller.AssignTwiPins(this, PeripheralTwiType, false, -1, -1, PeripheralTwiClock, false)
-                    : null;
             this.RaisePropertyChanged(nameof(PeripheralSda));
             this.RaisePropertyChanged(nameof(PeripheralScl));
             this.RaiseAndSetIfChanged(ref _hasPeripheral, value);
@@ -1097,20 +1151,44 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _hasWiiOutput;
         set
         {
-            if (!value)
-            {
-                _wiiOutputTwiConfig = null;
-                this.RaiseAndSetIfChanged(ref _hasWiiOutput, value);
-                UpdateErrors();
-            }
-
             _wiiOutputTwiConfig =
                 value
-                    ? Microcontroller.AssignTwiPins(this, PeripheralTwiType, false, -1, -1, PeripheralTwiClock, true)
+                    ? Microcontroller.AssignTwiPins(this, WiiOutputTwiType, false, -1, -1, WiiInput.WiiTwiFreq, true)
                     : null;
+
             this.RaisePropertyChanged(nameof(WiiOutputSda));
             this.RaisePropertyChanged(nameof(WiiOutputScl));
             this.RaiseAndSetIfChanged(ref _hasWiiOutput, value);
+            UpdateErrors();
+        }
+    }
+
+    public bool HasPs2Output
+    {
+        get => _hasPs2Output;
+        set
+        {
+            if (value)
+            {
+                _ps2OutputSpiConfig = Microcontroller.AssignSpiPins(this, Ps2OutputTwiType, false, true, true, -1, -1,
+                    -1, Ps2Input.Ps2SpiCpol, Ps2Input.Ps2SpiCpha,
+                    Ps2Input.Ps2SpiMsbFirst, Ps2Input.Ps2SpiFreq, true);
+                _ps2OutputAck = GetPinForType(Ps2OutputAckType, false, -1, DevicePinMode.Output);
+                _ps2OutputAtt = GetPinForType(Ps2OutputAttType, false, -1, DevicePinMode.PullUp);
+            }
+            else
+            {
+                _ps2OutputSpiConfig = null;
+                _ps2OutputAck = null;
+                _ps2OutputAtt = null;
+            }
+
+            this.RaisePropertyChanged(nameof(Ps2OutputAck));
+            this.RaisePropertyChanged(nameof(Ps2OutputAtt));
+            this.RaisePropertyChanged(nameof(Ps2OutputMiso));
+            this.RaisePropertyChanged(nameof(Ps2OutputMosi));
+            this.RaisePropertyChanged(nameof(Ps2OutputSck));
+            this.RaiseAndSetIfChanged(ref _hasPs2Output, value);
             UpdateErrors();
         }
     }
@@ -1245,13 +1323,40 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     // Since DM and DP need to be next to eachother, you cannot use pins at the far ends
     public List<int> AvailablePinsDm => AvailablePinsDigital.Skip(1).ToList();
     public List<int> AvailablePinsDp => AvailablePinsDigital.SkipLast(1).ToList();
+    
+    public bool BindableAtt => Microcontroller is not (Uno or Mega);
+    public List<int> AvailableMosiPinsInput => GetMosiPins(false);
+    public List<int> AvailableMisoPinsInput => GetMisoPins(false);
+    public List<int> AvailableMosiPinsOutput => GetMosiPins(true);
+    public List<int> AvailableMisoPinsOutput => GetMisoPins(true);
+    public List<int> AvailableSckPins => GetSckPins();
+    private List<int> GetMosiPins(bool output)
+    {
+        return Microcontroller.SpiPins(output)
+            .Where(s => s.Value is SpiPinType.Mosi)
+            .Select(s => s.Key).ToList();
+    }
+
+    private List<int> GetMisoPins(bool output)
+    {
+        return Microcontroller.SpiPins(output)
+            .Where(s => s.Value is SpiPinType.Miso)
+            .Select(s => s.Key).ToList();
+    }
+
+    private List<int> GetSckPins()
+    {
+        return Microcontroller.SpiPins(false)
+            .Where(s => s.Value is SpiPinType.Sck)
+            .Select(s => s.Key).ToList();
+    }
 
     public IEnumerable<PinConfig> PinConfigs =>
         new PinConfig?[]
             {
                 _ledSpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
                 _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
-                _max170xTwiConfig, _wiiOutputTwiConfig
+                _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -1859,6 +1964,21 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            """;
             }
 
+            if (HasPs2Output)
+            {
+                config += $"""
+                                            
+                            #define TICK_PS2 \
+                              {GenerateTick(ConfigField.Ps2, writer)}
+                            
+                            #define PS2_ATT {Ps2OutputAtt}
+                            #define PS2_OUTPUT_ACK_SET() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, true, false)}
+                            #define PS2_OUTPUT_ACK_CLEAR() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, false, false)}
+                            #define PS2_OUTPUT_ATT_READ() {Microcontroller.GenerateDigitalRead(Ps2OutputAtt, false, false)}
+                            #define PS2_OUTPUT_SPI_PORT {_ps2OutputSpiConfig!.Definition}
+                            """;
+            }
+
             if (_wiiOutputTwiConfig != null)
             {
                 config += $"""
@@ -2026,9 +2146,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 config += $"\n#define SLAVE_TWI_PORT {_peripheralTwiConfig.Definition}";
             }
 
-            if (_max170xTwiConfig != null)
+            if (_max170XTwiConfig != null)
             {
-                config += $"\n#define MAX1704X_TWI_PORT {_max170xTwiConfig.Definition}";
+                config += $"\n#define MAX1704X_TWI_PORT {_max170XTwiConfig.Definition}";
             }
 
             if (_mpr121TwiConfig != null)
@@ -2194,6 +2314,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void RemoveWiiOutput()
     {
         HasWiiOutput = false;
+    }
+
+    [RelayCommand]
+    public void RemovePs2Output()
+    {
+        HasPs2Output = false;
     }
 
     [RelayCommand]
@@ -3500,9 +3626,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             pins[PeripheralTwiType] = _peripheralTwiConfig.Pins.ToList();
         }
 
-        if (_max170xTwiConfig != null && type != Max170XTwiType && !twi && !peripheral)
+        if (_max170XTwiConfig != null && type != Max170XTwiType && !twi && !peripheral)
         {
-            pins[Max170XTwiType] = _max170xTwiConfig.Pins.ToList();
+            pins[Max170XTwiType] = _max170XTwiConfig.Pins.ToList();
         }
 
         if (_mpr121TwiConfig != null && type != Mpr121TwiType && !twi && !peripheral)
@@ -3575,6 +3701,25 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             WiiOutputErrorText = null;
         }
 
+        switch (HasPs2Output)
+        {
+            case true when _ps2OutputSpiConfig?.ErrorText != null:
+                foundError = true;
+                Ps2OutputErrorText = _ps2OutputSpiConfig.ErrorText;
+                break;
+            case true when _ps2OutputAtt?.ErrorText != null:
+                foundError = true;
+                Ps2OutputErrorText = _ps2OutputAtt.ErrorText;
+                break;
+            case true when _ps2OutputAck?.ErrorText != null:
+                foundError = true;
+                Ps2OutputErrorText = _ps2OutputAck.ErrorText;
+                break;
+            default:
+                Ps2OutputErrorText = null;
+                break;
+        }
+
         if (HasMpr121 && _mpr121TwiConfig?.ErrorText != null)
         {
             foundError = true;
@@ -3585,10 +3730,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Mpr121ErrorText = null;
         }
 
-        if (HasMax1704X && _max170xTwiConfig?.ErrorText != null)
+        if (HasMax1704X && _max170XTwiConfig?.ErrorText != null)
         {
             foundError = true;
-            Max170XErrorText = _max170xTwiConfig.ErrorText;
+            Max170XErrorText = _max170XTwiConfig.ErrorText;
         }
         else
         {

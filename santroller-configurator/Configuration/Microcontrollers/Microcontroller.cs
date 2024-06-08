@@ -29,7 +29,7 @@ public abstract class Microcontroller
 
     public string GetPin(int possiblePin, bool peripheral, int selectedPin, IEnumerable<Output> outputs, bool twi,
         bool spi,
-        IEnumerable<PinConfig> pinConfigs, ConfigViewModel model, bool addText)
+        IEnumerable<PinConfig> pinConfigs, ConfigViewModel model, bool addText, bool outputMode)
     {
         var selectedConfig = pinConfigs.Where(s => s.Peripheral == peripheral && s.Pins.Contains(selectedPin));
         var apa102 = model.PinConfigs
@@ -51,7 +51,7 @@ public abstract class Microcontroller
                         .Any(s => s.Peripheral == peripheral && s.Pins.Contains(possiblePin)))
                 .Select(s => s.GetName(model.DeviceControllerType, model.LegendType, model.SwapSwitchFaceButtons))
                 .Concat(apa102).Concat(unoMega));
-        var ret = GetPinForMicrocontroller(possiblePin, twi, spi);
+        var ret = GetPinForMicrocontroller(possiblePin, twi, spi, outputMode);
         if (!string.IsNullOrEmpty(output) && addText) return "* " + ret + " - " + output;
 
         return ret;
@@ -67,14 +67,14 @@ public abstract class Microcontroller
     public abstract TwiConfig AssignTwiPins(ConfigViewModel model, string type, bool peripheral, int sda, int scl,
         int clock, bool output);
 
-    public abstract string GetPinForMicrocontroller(int pin, bool twi, bool spi);
+    public abstract string GetPinForMicrocontroller(int pin, bool twi, bool spi, bool outputMode);
 
-    public abstract IEnumerable<string> GenerateAckDefines(int ack);
+    public abstract IEnumerable<string> GeneratePs2Defines(int ack, string prefix);
 
     public abstract List<int> SupportedAckPins();
 
-    public abstract List<KeyValuePair<int, SpiPinType>> SpiPins();
-    public abstract List<KeyValuePair<int, TwiPinType>> TwiPins();
+    public abstract List<KeyValuePair<int, SpiPinType>> SpiPins(bool output);
+    public abstract List<KeyValuePair<int, TwiPinType>> TwiPins(bool output);
 
     public abstract string GenerateAnalogRead(int pin, ConfigViewModel model, bool peripheral);
 

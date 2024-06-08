@@ -78,6 +78,12 @@ public class SerializedConfiguration
         HasWiiOutput = model.HasWiiOutput;
         WiiOutputScl = model.WiiOutputScl;
         WiiOutputSda = model.WiiOutputSda;
+        HasPs2Output = model.HasPs2Output;
+        Ps2OutputMiso = model.Ps2OutputMiso;
+        Ps2OutputMosi = model.Ps2OutputMosi;
+        Ps2OutputSck = model.Ps2OutputSck;
+        Ps2OutputAck = model.Ps2OutputAck;
+        Ps2OutputAtt = model.Ps2OutputAtt;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -137,6 +143,12 @@ public class SerializedConfiguration
     [ProtoMember(65)] public bool HasWiiOutput { get; private set; }
     [ProtoMember(66)] public int WiiOutputSda { get; private set; }
     [ProtoMember(67)] public int WiiOutputScl { get; private set; }
+    [ProtoMember(68)] public bool HasPs2Output { get; private set; }
+    [ProtoMember(69)] public int Ps2OutputMosi { get; private set; }
+    [ProtoMember(70)] public int Ps2OutputMiso { get; private set; }
+    [ProtoMember(71)] public int Ps2OutputSck { get; private set; }
+    [ProtoMember(72)] public int Ps2OutputAtt { get; private set; }
+    [ProtoMember(73)] public int Ps2OutputAck { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -163,6 +175,7 @@ public class SerializedConfiguration
         model.BtRxAddr = BtRxMacAddress;
         model.HasPeripheral = HasPeripheral;
         model.HasWiiOutput = HasWiiOutput;
+        model.HasPs2Output = HasPs2Output;
         model.HasMpr121 = HasMpr121;
         model.HasMax1704X = HasMax1704X;
         model.RolloverMode = RolloverMode;
@@ -174,6 +187,15 @@ public class SerializedConfiguration
         {
             model.PeripheralScl = PeripheralScl;
             model.PeripheralSda = PeripheralSda;
+        }
+
+        if (HasPs2Output)
+        {
+            model.Ps2OutputMiso = Ps2OutputMiso;
+            model.Ps2OutputMosi = Ps2OutputMosi;
+            model.Ps2OutputSck = Ps2OutputSck;
+            model.Ps2OutputAck = Ps2OutputAck;
+            model.Ps2OutputAtt = Ps2OutputAtt;
         }
 
         if (HasWiiOutput)

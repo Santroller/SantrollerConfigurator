@@ -397,19 +397,24 @@ public abstract partial class OutputAxis : Output
                 function = "handle_calibration_ps3_accel";
                 if (ShouldFlip(mode)) function = "-" + function;
                 break;
+            case ConfigField.Ps2 when whammy:
+                function = "-handle_calibration_ps3_whammy";
+                singleByte = true;
+                if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
+                break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Wii when whammy:
                 function = "handle_calibration_ps3_whammy";
                 singleByte = true;
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
-                or ConfigField.Universal or ConfigField.Wii when trigger:
+                or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2 when trigger:
                 singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
                 if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
-                or ConfigField.Universal or ConfigField.Wii:
+                or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2:
                 singleByte = true;
                 intBased = true;
                 function = "handle_calibration_ps3";
@@ -548,7 +553,7 @@ public abstract partial class OutputAxis : Output
             var extraTrigger = "";
             if (this is ControllerAxis axis)
             {
-                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii &&
+                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Ps2 or ConfigField.Universal or ConfigField.Wii &&
                     axis.Type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger)
                 {
                     var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
@@ -578,12 +583,12 @@ public abstract partial class OutputAxis : Output
             case ConfigField.XboxOne:
                 break;
             // 360 triggers, and ps3 and ps4 triggers are uint8_t
-            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii
+            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii  or ConfigField.Ps2
                 when Trigger:
                 val >>= 8;
                 break;
             // ps3 and ps4 axis are uint8_t, so we both need to shift and add 128
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii when !Trigger:
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2 when !Trigger:
                 val = (val >> 8) + 128;
                 break;
             // Mouse is always not a trigger, and is int8_t

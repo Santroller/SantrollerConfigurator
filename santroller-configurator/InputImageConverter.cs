@@ -58,7 +58,7 @@ public class InputImageConverter : IMultiValueConverter
             SimpleType type => "Combined/" + type switch
             {
                 SimpleType.WiiInputSimple or SimpleType.WiiOutputs => "Wii",
-                SimpleType.Ps2InputSimple => "PS2",
+                SimpleType.Ps2InputSimple or SimpleType.Ps2Outputs => "PS2",
                 SimpleType.WtNeckSimple => "GHWT",
                 SimpleType.Gh5NeckSimple => "GH5",
                 SimpleType.CloneNeckSimple => "Clone",

@@ -134,21 +134,21 @@ public class Ps2Input : SpiInput
         {Ps2InputType.Dualshock2R1, "ps2Data[18]"},
         {Ps2InputType.Dualshock2L2, "ps2Data[19] << 8"},
         {Ps2InputType.Dualshock2R2, "ps2Data[20] << 8"},
-        {Ps2InputType.GuitarGreen, "(~ps2Data[4]) & (1 << 1)"},
-        {Ps2InputType.GuitarRed, "(~ps2Data[4]) & (1 << 5)"},
-        {Ps2InputType.GuitarYellow, "(~ps2Data[4]) & (1 << 4)"},
-        {Ps2InputType.GuitarBlue, "(~ps2Data[4]) & (1 << 6)"},
-        {Ps2InputType.GuitarOrange, "(~ps2Data[4]) & (1 << 7)"},
-        {Ps2InputType.GuitarTilt, "(~ps2Data[4]) & (1 << 0)"},
         {Ps2InputType.GuitarSelect, "(~ps2Data[3]) & (1 << 0)"},
         {Ps2InputType.GuitarStart, "(~ps2Data[3]) & (1 << 3)"},
+        {Ps2InputType.GuitarStrumUp, "(~ps2Data[3]) & (1 << 4)"},
+        {Ps2InputType.GuitarStrumDown, "(~ps2Data[3]) & (1 << 6)"},
+        {Ps2InputType.GuitarTilt, "(~ps2Data[4]) & (1 << 0)"},
+        {Ps2InputType.GuitarGreen, "(~ps2Data[4]) & (1 << 1)"},
+        {Ps2InputType.GuitarYellow, "(~ps2Data[4]) & (1 << 4)"},
+        {Ps2InputType.GuitarRed, "(~ps2Data[4]) & (1 << 5)"},
+        {Ps2InputType.GuitarBlue, "(~ps2Data[4]) & (1 << 6)"},
+        {Ps2InputType.GuitarOrange, "(~ps2Data[4]) & (1 << 7)"},
         {Ps2InputType.NegConStart, "(~ps2Data[3]) & (1 << 3)"},
+        {Ps2InputType.Select, "(~ps2Data[3]) & (1 << 0)"},
         {Ps2InputType.L3, "(~ps2Data[3]) & (1 << 1)"},
         {Ps2InputType.R3, "(~ps2Data[3]) & (1 << 2)"},
         {Ps2InputType.Start, "(~ps2Data[3]) & (1 << 3)"},
-        {Ps2InputType.GuitarStrumUp, "(~ps2Data[3]) & (1 << 4)"},
-        {Ps2InputType.GuitarStrumDown, "(~ps2Data[3]) & (1 << 6)"},
-        {Ps2InputType.Select, "(~ps2Data[3]) & (1 << 0)"},
         {Ps2InputType.DpadUp, "(~ps2Data[3]) & (1 << 4)"},
         {Ps2InputType.DpadRight, "(~ps2Data[3]) & (1 << 5)"},
         {Ps2InputType.DpadDown, "(~ps2Data[3]) & (1 << 6)"},
@@ -558,7 +558,7 @@ public class Ps2Input : SpiInput
         defines.Add($"PS2_ACK {Ack}");
         defines.Add($"INPUT_PS2_ATT_SET() {Model.Microcontroller.GenerateDigitalWrite(Att, true, Peripheral)}");
         defines.Add($"INPUT_PS2_ATT_CLEAR() {Model.Microcontroller.GenerateDigitalWrite(Att, false, Peripheral)}");
-        defines.AddRange(Model.Microcontroller.GenerateAckDefines(Ack));
+        defines.AddRange(Model.Microcontroller.GeneratePs2Defines(Ack, "INTERRUPT_PS2_ACK"));
 
         return defines;
     }

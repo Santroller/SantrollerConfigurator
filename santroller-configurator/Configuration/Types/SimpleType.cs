@@ -19,5 +19,6 @@ public enum SimpleType
     WiiOutputs,
     Peripheral,
     Mpr121,
-    Max1704X
+    Max1704X,
+    Ps2Outputs
 }

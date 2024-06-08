@@ -56,14 +56,14 @@ public abstract class CombinedTwiOutput : CombinedOutput, ITwi
 
     private List<int> GetSdaPins()
     {
-        return Model.Microcontroller.TwiPins()
+        return Model.Microcontroller.TwiPins(false)
             .Where(s => s.Value is TwiPinType.Sda)
             .Select(s => s.Key).ToList();
     }
 
     private List<int> GetSclPins()
     {
-        return Model.Microcontroller.TwiPins()
+        return Model.Microcontroller.TwiPins(false)
             .Where(s => s.Value is TwiPinType.Scl)
             .Select(s => s.Key).ToList();
     }

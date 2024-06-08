@@ -306,7 +306,7 @@ public class GuitarAxis : OutputAxis
             return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
 
-        if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
+        if (mode is not (ConfigField.Ps3 or ConfigField.Ps2 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
             or ConfigField.XboxOne
             or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
         // The below is a mess... but essentially we have to handle converting the input to its respective output depending on console
@@ -344,6 +344,25 @@ public class GuitarAxis : OutputAxis
                           uint8_t tilt_test = {{GenerateAssignment("0", mode, false, false, false, false, writer)}};
                           if (tilt_test > 0xF0) {
                               report->back = true;
+                          }
+                      }
+                      """;
+            case ConfigField.Ps2
+                when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
+                // PS2 tilt is digital
+                return $$"""
+                         if (TILT && {{Input.Generate()}}) {
+                             report->tilt = true;
+                         }
+                         """;
+            case ConfigField.Ps2 when Type is GuitarAxisType.Tilt:
+                // PS2 tilt is digital
+                return
+                    $$"""
+                      if (TILT) {
+                          uint8_t tilt_test = {{GenerateAssignment("0", mode, false, false, false, false, writer)}};
+                          if (tilt_test > 0xF0) {
+                              report->tilt = true;
                           }
                       }
                       """;
@@ -388,17 +407,17 @@ public class GuitarAxis : OutputAxis
             // Xb1 is RB only, so no slider
             case ConfigField.XboxOne or ConfigField.Ps4 when Type == GuitarAxisType.Slider:
                 return "";
-            // Wii is GH only, so no pickup
-            case ConfigField.Wii when Type == GuitarAxisType.Pickup:
+            // Wii and ps2 are GH only, so no pickup
+            case ConfigField.Wii or ConfigField.Ps2 when Type == GuitarAxisType.Pickup:
                 return "";
-            case ConfigField.Universal or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
+            case ConfigField.Universal or ConfigField.Ps2 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
                 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 return $$"""
                          if (SLIDER_BAR && {{Input.Generate()}}) {
                              {{GenerateOutput(mode)}} = {{analogOn & 0xFF}};
                          }
                          """;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
+            case ConfigField.Ps3 or ConfigField.Ps2 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 return $$"""
                          if (SLIDER_BAR && ({{Input.Generate()}} != PS3_STICK_CENTER)) {

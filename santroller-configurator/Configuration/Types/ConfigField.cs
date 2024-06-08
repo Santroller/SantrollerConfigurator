@@ -24,5 +24,6 @@ public enum ConfigField
     InitLed,
     Detection,
     Xbox,
-    Wii
+    Wii,
+    Ps2
 }

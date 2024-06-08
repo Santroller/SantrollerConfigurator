@@ -38,12 +38,18 @@ public abstract class PinConfig : ReactiveObject
         {
             return Resources.ErrorPinConfigurationMissing;
         }
-        var configs = Model.GetPins(Type, this is TwiConfig, this is SpiConfig, Peripheral);
 
+        var configs = Model.GetPins(Type, this is TwiConfig, this is SpiConfig, Peripheral);
+        var twi = this is TwiConfig;
+        var spi = this is SpiConfig;
+        var output = this is TwiConfig {Output: true} || this is SpiConfig {Output: true};
         var ret = configs.Select(pinConfig => new {pinConfig, conflicting = pinConfig.Value.Intersect(Pins).ToList()})
             .Where(t => t.conflicting.Count != 0)
             .Select(t =>
-                string.Format(Resources.ConflictLabel, t.pinConfig.Key, string.Join(", ", t.conflicting.Select(s => Model.Microcontroller.GetPinForMicrocontroller(s, this is TwiConfig, this is SpiConfig)))))
+                string.Format(Resources.ConflictLabel, t.pinConfig.Key,
+                    string.Join(", ",
+                        t.conflicting.Select(s =>
+                            Model.Microcontroller.GetPinForMicrocontroller(s, twi, spi, output)))))
             .ToList();
 
         return ret.Count != 0 ? string.Join(", ", ret) : null;
