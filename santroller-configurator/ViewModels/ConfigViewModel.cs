@@ -1516,6 +1516,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         ClearOutputs();
         HasWiiOutput = false;
+        HasPs2Output = false;
         AdxlFilter = 0.05;
         Mpr121CapacitiveCount = 0;
         Deque = false;
@@ -2407,6 +2408,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 LedCountPeripheral = 1;
                 CombinedStrumDebounce = false;
                 HasWiiOutput = false;
+                HasPs2Output = false;
                 AdxlFilter = 0.05;
                 Mpr121CapacitiveCount = 0;
                 WtSensitivity = 5;

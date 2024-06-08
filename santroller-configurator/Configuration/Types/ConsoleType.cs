@@ -22,5 +22,6 @@ public enum ConsoleType
     Xbox360BigButton = 19,
     Ps5 = 20,
     StreamDeck = 21,
+    Generic = 22,
     Unknown = 0xFF
 }

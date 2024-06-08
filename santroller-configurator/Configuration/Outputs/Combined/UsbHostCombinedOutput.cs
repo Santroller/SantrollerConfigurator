@@ -331,7 +331,7 @@ public class UsbHostCombinedOutput : CombinedOutput
 
             buffer += consoleType switch
             {
-                ConsoleType.Universal => string.Format(Resources.GenericGamepadLabel, subType),
+                ConsoleType.Generic => string.Format(Resources.GenericGamepadLabel, subType),
                 ConsoleType.Keyboard or ConsoleType.Mouse or ConsoleType.Xbox360BigButton => $"{EnumToStringConverter.Convert(consoleType)}\n",
                 _ => $"{EnumToStringConverter.Convert(consoleType)} {subType}\n"
             };
