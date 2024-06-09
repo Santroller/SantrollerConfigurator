@@ -30,7 +30,7 @@ public class MidiCombinedOutput : CombinedOutput
             .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var digitalOutputs)
             .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton)
+        Outputs.Connect().Filter(x => x is OutputButton or {Input.IsAnalog:false})
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var allDigitalOutputs)

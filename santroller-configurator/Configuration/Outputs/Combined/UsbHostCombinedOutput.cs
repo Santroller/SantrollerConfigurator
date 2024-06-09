@@ -33,7 +33,7 @@ public class UsbHostCombinedOutput : CombinedOutput
             .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var digitalOutputs)
             .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad)
+        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or {Input.IsAnalog:false})
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var allDigitalOutputs)
