@@ -463,6 +463,8 @@ public class Ps2Input : SpiInput
     {
         Dictionary<Ps2InputType, List<string>> ds2Axis = new();
         Dictionary<Ps2ControllerType, List<string>> mappedBindings = new();
+        HashSet<string> digitalBindings = new();
+        
         foreach (var binding in bindings)
             if (binding.Item1.InnermostInputs().First() is Ps2Input input)
             {
@@ -508,7 +510,16 @@ public class Ps2Input : SpiInput
                     {
                         mapping = mapping.Replace(Mappings[input.Input], MappingsDpadGuitar[input.Input]);
                     }
-                    mappedBindings[type].Add(mapping);
+                    
+                    var mappingsDigital =  mapping.Contains("debounce[");
+                    if (mappingsDigital && mode is not ConfigField.Shared)
+                    {
+                        digitalBindings.Add(mapping);
+                    }
+                    else
+                    {
+                        mappedBindings[type].Add(mapping);
+                    }
                 }
             }
 
@@ -546,6 +557,7 @@ public class Ps2Input : SpiInput
                    switch (ps2ControllerType) {
                        {{ret}}
                    }
+                   {{string.Join("\n          ", digitalBindings)}}
                 }
                 """;
     }
