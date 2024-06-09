@@ -136,7 +136,7 @@ public abstract class OutputButton : Output
                           """;
             }
 
-            if (mode == ConfigField.Xbox && !outputVar.Contains("dpad") && !outputVar.Contains("start") && !outputVar.Contains("back"))
+            if (mode == ConfigField.Xbox && !outputVar.Contains("dpad") && !outputVar.Contains("start") && !outputVar.Contains("back") && !outputVar.Contains("Thumb"))
             {
                 return  $$"""
                           if ({{ifStatement}}) {
