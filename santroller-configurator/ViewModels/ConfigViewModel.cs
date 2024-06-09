@@ -2201,6 +2201,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                       #define TICK_XBOX_ONE
                       #define TICK_OG_XBOX
                       #define DIGITAL_COUNT 0
+                      #define LED_DEBOUNCE_COUNT 0
                       #define LED_COUNT 0
                       #define LED_COUNT_MPR121 0
                       #define LED_COUNT_PERIPHERAL 0
