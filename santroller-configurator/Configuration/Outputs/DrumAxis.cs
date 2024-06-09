@@ -168,7 +168,7 @@ public partial class DrumAxis : OutputAxis
     }
 
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
@@ -187,7 +187,7 @@ public partial class DrumAxis : OutputAxis
             return new ControllerButton(Model, i, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
                     (byte) Debounce, StandardButtonType.A,
                     false, false, false, -1, false)
-                .Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+                .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
         }
 
 
@@ -209,9 +209,17 @@ public partial class DrumAxis : OutputAxis
         var ifStatement = $"debounce[{debounceIndex}]";
         var input = Input;
         var reset = $"debounce[{debounceIndex}]={debounce};";
+        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None)
+        {
+            reset += $"ledDebounce[{ledIndex}]={debounce};";
+        }
         if (writer != null)
         {
             reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
+            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None)
+            {
+                reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
+            }
         }
 
         if (Input is WiiInput

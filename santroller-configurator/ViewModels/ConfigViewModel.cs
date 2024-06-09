@@ -1905,10 +1905,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ledInit = GenerateLedInit() + "\\\n\t" + GenerateTick(ConfigField.InitLed, writer) + "\\\n\t" +
                       FixNewlines(ledInit);
             config += "\n";
+            var debounces = CalculateDebounceTicks();
             config += $$"""
                         #define USB_HOST_STACK {{UsbHostEnabled.ToString().ToLower()}}
                         #define USB_HOST_DP_PIN {{UsbHostDp}}
-                        #define DIGITAL_COUNT {{CalculateDebounceTicks()}}
+                        #define DIGITAL_COUNT {{debounces.Item1}}
+                        #define LED_DEBOUNCE_COUNT {{debounces.Item2}}
                         #define LED_COUNT {{(LedType is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812) ? LedCount : 0)}}
                         #define LED_COUNT_PERIPHERAL {{(LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812) ? LedCountPeripheral : 0)}}
                         #define LED_COUNT_STP {{(LedType is LedType.Stp16Cpc26 ? LedCount : 0)}}
@@ -2697,7 +2699,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                      """;
             ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
             {
-                var ifStatement = $"debounce[{tuple.Item2}]";
+                var ifStatement = $"ledDebounce[{tuple.Item2}]";
                 return $$"""
                          
                              if ({{ifStatement}}) {
@@ -2816,7 +2818,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                      """;
             ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
             {
-                var ifStatement = $"debounce[{tuple.Item2}]";
+                var ifStatement = $"ledDebounce[{tuple.Item2}]";
                 return $$"""
                          
                              if ({{ifStatement}}) {
@@ -2987,7 +2989,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                      """;
             ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
             {
-                var ifStatement = $"debounce[{tuple.Item2}]";
+                var ifStatement = $"ledDebounce[{tuple.Item2}]";
                 return $$"""
                          
                              if ({{ifStatement}}) {
@@ -3132,7 +3134,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
                 {
-                    var ifStatement = $"debounce[{tuple.Item2}]";
+                    var ifStatement = $"ledDebounce[{tuple.Item2}]";
                     return $$"""
 
                              if ({{ifStatement}}) {
@@ -3151,7 +3153,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 // Otherwise just do digital writes
                 ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
                 {
-                    var ifStatement = $"debounce[{tuple.Item2}]";
+                    var ifStatement = $"ledDebounce[{tuple.Item2}]";
                     return $$"""
 
                              if ({{ifStatement}}) {
@@ -3247,7 +3249,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                      """;
             ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
             {
-                var ifStatement = $"debounce[{tuple.Item2}]";
+                var ifStatement = $"ledDebounce[{tuple.Item2}]";
                 return $$"""
                          
                              if ({{ifStatement}}) {
@@ -3290,16 +3292,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .GroupBy(s => s.Input.InnermostInputs().First().GetType()).ToList();
         var combined = DeviceControllerType.IsGuitar() && CombinedStrumDebounce;
         Dictionary<string, int> debounces = new();
+        Dictionary<string, int> ledDebounces = new();
         var strumIndices = new List<int>();
 
         // Pass 1: work out debounces and map inputs to debounces
-        var inputs = new Dictionary<string, List<int>>();
         var macros = new Dictionary<string, List<(int, Input)>>();
         foreach (var outputByType in outputsByType)
         {
             foreach (var output in outputByType)
             {
                 var generatedInput = output.Input.Generate();
+                var generatedOutput = output.GenerateOutput(ConfigField.Shared);
                 var pro = IsFortniteFestivalPro && output is GuitarAxis
                 {
                     Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy
@@ -3316,16 +3319,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     }
                 }
 
-                debounces.TryAdd(generatedInput, debounces.Count);
+                debounces.TryAdd(generatedOutput, debounces.Count);
+                ledDebounces.TryAdd(generatedInput, ledDebounces.Count);
                 if (output is GuitarButton
                     {
                         IsStrum: true
                     })
-                    strumIndices.Add(debounces[generatedInput]);
-
-                if (!inputs.ContainsKey(generatedInput)) inputs[generatedInput] = [];
-
-                inputs[generatedInput].Add(debounces[generatedInput]);
+                    strumIndices.Add(debounces[generatedOutput]);
             }
         }
 
@@ -3380,7 +3380,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             var input = s.Input;
                             var output = s;
                             var generatedInput = input.Generate();
+                            var generatedOutput = output.GenerateOutput(ConfigField.Shared);
                             var index = 0;
+                            var ledIndex = 0;
 
                             var pro = IsFortniteFestivalPro && output is GuitarAxis
                             {
@@ -3388,12 +3390,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             };
                             if (pro)
                             {
-                                index = debounces[generatedInput];
+                                index = debounces[generatedOutput];
+                                ledIndex = ledDebounces[generatedInput];
                             }
 
                             if (output is OutputButton or DrumAxis or EmulationMode)
                             {
-                                index = debounces[generatedInput];
+                                index = debounces[generatedOutput];
+                                ledIndex = ledDebounces[generatedInput];
                                 if (output.OutputPinConfig != null)
                                 {
                                     if (output.OutputPinConfig.Peripheral)
@@ -3401,13 +3405,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                         if (!debouncesRelatedToLedPeripheralPin.ContainsKey(output.OutputPin))
                                             debouncesRelatedToLedPeripheralPin[output.OutputPin] =
                                                 [];
-                                        debouncesRelatedToLedPeripheralPin[output.OutputPin].Add((output, index));
+                                        debouncesRelatedToLedPeripheralPin[output.OutputPin].Add((output, ledIndex));
                                     }
                                     else
                                     {
                                         if (!debouncesRelatedToLedPin.ContainsKey(output.OutputPin))
                                             debouncesRelatedToLedPin[output.OutputPin] = [];
-                                        debouncesRelatedToLedPin[output.OutputPin].Add((output, index));
+                                        debouncesRelatedToLedPin[output.OutputPin].Add((output, ledIndex));
                                     }
                                 }
 
@@ -3416,7 +3420,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                     if (!debouncesRelatedToLed.ContainsKey(led))
                                         debouncesRelatedToLed[led] = [];
 
-                                    debouncesRelatedToLed[led].Add((output, index));
+                                    debouncesRelatedToLed[led].Add((output, ledIndex));
                                 }
 
                                 foreach (var led in output.LedIndicesMpr121)
@@ -3424,7 +3428,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                     if (!debouncesRelatedToLedMpr121.ContainsKey(led))
                                         debouncesRelatedToLedMpr121[led] = [];
 
-                                    debouncesRelatedToLedMpr121[led].Add((output, index));
+                                    debouncesRelatedToLedMpr121[led].Add((output, ledIndex));
                                 }
 
                                 foreach (var led in output.LedIndicesPeripheral)
@@ -3432,7 +3436,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                     if (!debouncesRelatedToLedPeripheral.ContainsKey(led))
                                         debouncesRelatedToLedPeripheral[led] = [];
 
-                                    debouncesRelatedToLedPeripheral[led].Add((output, index));
+                                    debouncesRelatedToLedPeripheral[led].Add((output, ledIndex));
                                 }
                             }
 
@@ -3479,7 +3483,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 }
                             }
 
-                            var generated = output.Generate(mode, index, "", "", strumIndices, combined, macros,
+                            var generated = output.Generate(mode, index, ledIndex, "", "", strumIndices, combined, macros,
                                 writer);
 
                             return new Tuple<Input, string>(input, generated);
@@ -3504,18 +3508,20 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         return FixNewlines(ret);
     }
 
-    private int CalculateDebounceTicks()
+    private (int,int) CalculateDebounceTicks()
     {
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
         var outputsByType = outputs
             .GroupBy(s => s.Input.InnermostInputs().First().GetType()).ToList();
         Dictionary<string, int> debounces = new();
+        Dictionary<string, int> ledDebounces = new();
 
         foreach (var outputByType in outputsByType)
         {
             foreach (var output in outputByType)
             {
                 var generatedInput = output.Input.Generate();
+                var generatedOutput = output.GenerateOutput(ConfigField.Shared);
                 var pro = IsFortniteFestivalPro && output is GuitarAxis
                 {
                     Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy
@@ -3523,11 +3529,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 if (output is not OutputButton and not DrumAxis and not EmulationMode && !pro) continue;
 
 
-                debounces.TryAdd(generatedInput, debounces.Count);
+                debounces.TryAdd(generatedOutput, debounces.Count);
+                ledDebounces.TryAdd(generatedInput, ledDebounces.Count);
             }
         }
 
-        return debounces.Count;
+        return (debounces.Count, ledDebounces.Count);
     }
 
     public List<PinConfig> GetPinConfigs()

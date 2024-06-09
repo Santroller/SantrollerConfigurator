@@ -103,7 +103,7 @@ public class StartSelectHome : Output
         return StandardButtonType.Guide;
     }
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
@@ -136,5 +136,9 @@ public class StartSelectHome : Output
         if (!Enabled) return;
         Input.RawValue = _outputs.Any(x => x.ValueRaw != 0) ? 1 : 0;
         UpdateDetails();
+    }
+    public override string GenerateOutput(ConfigField mode)
+    {
+        return "";
     }
 }

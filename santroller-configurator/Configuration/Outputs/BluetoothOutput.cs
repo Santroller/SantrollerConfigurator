@@ -196,7 +196,7 @@ public partial class BluetoothOutput : CombinedOutput
     {
     }
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)

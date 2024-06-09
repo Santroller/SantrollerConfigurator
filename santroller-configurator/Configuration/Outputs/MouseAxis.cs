@@ -119,14 +119,14 @@ public class MouseAxis : OutputAxis
         return Type;
     }
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         return mode is not (ConfigField.Mouse or ConfigField.Shared)
             ? ""
-            : base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+            : base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
     }
 
     protected override bool SupportsCalibration()

@@ -315,11 +315,16 @@ public class EmptyOutput : Output
     }
 
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         throw new IncompleteConfigurationException(ErrorText);
+    }
+
+    public override string GenerateOutput(ConfigField mode)
+    {
+        return "";
     }
 }

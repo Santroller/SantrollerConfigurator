@@ -133,7 +133,7 @@ public class WiiInput : TwiInput
             WiiInputType.DjTurntableRight,
             "(rtt_t.rtt << 10)"
         },
-        {WiiInputType.DrawsomePenPressure, "(wiiButtonsLow | (wiiButtonsHigh & 0x0f) << 8)"},
+        {WiiInputType.DrawsomePenPressure, "(wiiData[4] | (wiiData[5] & 0x0f) << 8)"},
         {WiiInputType.DrawsomePenX, "(wiiData[0] | wiiData[1] << 8)"},
         {WiiInputType.DrawsomePenY, "(wiiData[2] | wiiData[3] << 8)"},
         {WiiInputType.UDrawPenPressure, "(wiiData[3])"},
@@ -555,14 +555,24 @@ public class WiiInput : TwiInput
         ConfigField mode)
     {
         Dictionary<WiiControllerType, List<string>> mappedBindings = new();
+        HashSet<string> digitalBindings = new();
         foreach (var binding in bindings)
         {
             if (binding.Item1.InnermostInputs().First() is not WiiInput input) continue;
 
             if (!mappedBindings.ContainsKey(input.WiiControllerType))
                 mappedBindings.Add(input.WiiControllerType, []);
-
-            mappedBindings[input.WiiControllerType].Add(binding.Item2);
+            var m = binding.Item2;
+            var mappingsDigital =  (m.Contains("wiiButtons") || m.Contains("debounce")) && !m.Contains("wiiData[0]") &&
+                !m.Contains("wiiData[1]");
+            if (mappingsDigital && mode is not ConfigField.Shared)
+            {
+                digitalBindings.Add(binding.Item2);
+            }
+            else
+            {
+                mappedBindings[input.WiiControllerType].Add(binding.Item2);
+            }
         }
 
         var ret = "";
@@ -593,8 +603,8 @@ public class WiiInput : TwiInput
                     
                            case WII_CLASSIC_CONTROLLER:
                            case WII_CLASSIC_CONTROLLER_PRO:
-                              {string.Join("\n          ", mappingsDigital)}
                               {analogMappings.Trim()}
+                              {string.Join("\n             ", mappingsDigital)}
                            break;
                     """;
         }
@@ -616,6 +626,7 @@ public class WiiInput : TwiInput
                    switch(wiiControllerType) {
                        {{ret}}
                    }
+                   {{string.Join("\n", digitalBindings)}}
                 }
                 """
             : "";

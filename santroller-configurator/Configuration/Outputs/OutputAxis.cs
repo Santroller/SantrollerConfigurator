@@ -295,8 +295,6 @@ public abstract partial class OutputAxis : Output
         return (int) val;
     }
 
-    public abstract string GenerateOutput(ConfigField mode);
-
     public abstract bool ShouldFlip(ConfigField mode);
 
     protected abstract string MinCalibrationText();
@@ -535,7 +533,7 @@ public abstract partial class OutputAxis : Output
     }
 
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)

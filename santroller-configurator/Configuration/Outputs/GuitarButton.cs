@@ -125,7 +125,7 @@ public class GuitarButton : OutputButton
         return Type;
     }
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
@@ -151,7 +151,7 @@ public class GuitarButton : OutputButton
         if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar &&
             Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp &&
             mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360 or ConfigField.Xbox)
-            return base.Generate(mode, debounceIndex,
+            return base.Generate(mode, debounceIndex, ledIndex,
                 $"report->strumBar={(Type is InstrumentButtonType.StrumDown ? "0xFF" : "0x00")};", combinedExtra,
                 strumIndexes, combinedDebounce, macros, writer);
 
@@ -160,7 +160,7 @@ public class GuitarButton : OutputButton
             extra = $"{GenerateOutput(ConfigField.Ps3)}=true;";
         
         if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar} || mode is ConfigField.Wii or ConfigField.Ps2)
-            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
+            return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
 
         //This stuff is only relevant for rock band guitars
@@ -170,7 +170,7 @@ public class GuitarButton : OutputButton
                 or InstrumentButtonType.SoloYellow && mode is not (ConfigField.Shared or ConfigField.Universal or ConfigField.Ps2))
             extra += "report->solo=true;";
         
-        return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+        return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
     }
 
     public override SerializedOutput Serialize()

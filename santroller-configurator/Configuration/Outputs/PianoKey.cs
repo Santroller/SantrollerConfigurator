@@ -75,7 +75,8 @@ public class PianoKey : OutputAxis
         return Key;
     }
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra, string combinedExtra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
+        string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {

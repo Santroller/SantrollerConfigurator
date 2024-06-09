@@ -251,7 +251,7 @@ public class GuitarAxis : OutputAxis
         return Type;
     }
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
@@ -270,18 +270,25 @@ public class GuitarAxis : OutputAxis
             debounce += 1;
             if (Input is not DigitalToAnalog && mode is ConfigField.Shared)
             {
+                var ledDebounce = "";
+                if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None)
+                {
+                    ledDebounce = $"ledDebounce[{ledIndex}]={debounce};";
+                }
                 switch (Type)
                 {
                     case GuitarAxisType.Tilt:
                         return $$"""
                                  if ({{GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer)}} > 240) {
                                     debounce[{{debounceIndex}}]={{debounce}};
+                                    {{ledDebounce}}
                                  }
                                  """;
                     case GuitarAxisType.Whammy:
                         return $$"""
                                  if ({{GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer)}} > {{byte.MaxValue / 2}}) {
                                     debounce[{{debounceIndex}}]={{debounce}};
+                                    {{ledDebounce}}
                                  }
                                  """;
                 }
@@ -292,18 +299,18 @@ public class GuitarAxis : OutputAxis
                 case GuitarAxisType.Tilt:
                     return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
                         LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.PageDown,
-                        OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, extra,
+                        OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, ledIndex, extra,
                         combinedExtra, strumIndexes, combinedDebounce, macros, writer);
                 case GuitarAxisType.Whammy:
                     return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
                         LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.RightCtrl,
-                        OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, extra,
+                        OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, ledIndex, extra,
                         combinedExtra, strumIndexes, combinedDebounce, macros, writer);
             }
         }
 
         if (mode == ConfigField.Shared)
-            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
+            return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
 
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps2 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
@@ -368,7 +375,7 @@ public class GuitarAxis : OutputAxis
                       """;
             
             case ConfigField.Wii when Type is GuitarAxisType.Whammy && Input is DigitalToAnalog:
-                return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+                return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
                     macros, writer);
             case ConfigField.Wii when Type is GuitarAxisType.Whammy:
                 return $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, Type is GuitarAxisType.Whammy, false, writer)} >> 3;";
@@ -610,7 +617,7 @@ public class GuitarAxis : OutputAxis
                 return Input is DigitalToAnalog
                     ? $$"""
                         if (TILT) {
-                            {{base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer)}};
+                            {{base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer)}};
                         }
                         """
                     : $$"""
@@ -620,7 +627,7 @@ public class GuitarAxis : OutputAxis
                         """;
             default:
                 if (Input is DigitalToAnalog)
-                    return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+                    return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
                         macros, writer);
                 return
                     $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, Type is GuitarAxisType.Whammy, false, writer)};";

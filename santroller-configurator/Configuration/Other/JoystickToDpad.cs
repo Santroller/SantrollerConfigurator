@@ -177,7 +177,7 @@ public class JoystickToDpad : Output
         return Enum.Parse<DpadType>(buttons);
     }
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
@@ -217,5 +217,9 @@ public class JoystickToDpad : Output
         Right = _outputs.Where(s => s.Type is StandardButtonType.DpadRight)
             .Any(x => x.ValueRaw != 0);
         UpdateDetails();
+    }
+    public override string GenerateOutput(ConfigField mode)
+    {
+        return "";
     }
 }

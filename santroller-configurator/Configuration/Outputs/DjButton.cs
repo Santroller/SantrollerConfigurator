@@ -36,7 +36,7 @@ public class DjButton : OutputButton
         return GetReportField(Type);
     }
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
@@ -46,7 +46,7 @@ public class DjButton : OutputButton
             return "";
 
         if (mode is ConfigField.Shared)
-            return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
+            return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
         // Turntables also hit the standard buttons when you push each button
         switch (Type)
@@ -67,7 +67,7 @@ public class DjButton : OutputButton
                 return "";
         }
 
-        return base.Generate(mode, debounceIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+        return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,

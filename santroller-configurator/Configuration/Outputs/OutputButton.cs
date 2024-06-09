@@ -46,14 +46,13 @@ public abstract class OutputButton : Output
     public override string LedOnLabel => Resources.LedColourActiveButtonColour;
     public override string LedOffLabel => Resources.LedColourInactiveButtonColour;
 
-    public abstract string GenerateOutput(ConfigField mode);
-
 
     /// <summary>
     ///     Generate bindings
     /// </summary>
     /// <param name="mode"></param>
     /// <param name="debounceIndex"></param>
+    /// <param name="ledIndex"></param>
     /// <param name="extra">Used to provide extra statements that are called if the button is pressed</param>
     /// <param name="combinedExtra"></param>
     /// <param name="strumIndexes"></param>
@@ -62,7 +61,7 @@ public abstract class OutputButton : Output
     /// <param name="writer"></param>
     /// <returns></returns>
     /// <exception cref="IncompleteConfigurationException"></exception>
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
@@ -175,9 +174,17 @@ public abstract class OutputButton : Output
         
         var gen = Input.Generate();
         var reset = $"debounce[{debounceIndex}]={debounce};";
+        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None)
+        {
+            reset += $"ledDebounce[{ledIndex}]={debounce};";
+        }
         if (writer != null)
         {
             reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
+            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None)
+            {
+                reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
+            }
         }
 
         if (Input is MacroInput)
@@ -186,18 +193,7 @@ public abstract class OutputButton : Output
             {
                 var gen2 = input.Generate();
                 if (!macros.TryGetValue(gen2, out var inputs2)) continue;
-                if (Input.InnermostInputs().First() is WiiInput wiiInput)
-                {
-                    extra += string.Join("\n    ",
-                        inputs2.Where((s) =>
-                                s.Item2 is WiiInput wiiInput2 &&
-                                wiiInput2.WiiControllerType == wiiInput.WiiControllerType)
-                            .Select(s => $"debounce[{s.Item1}]=0;"));
-                }
-                else
-                {
-                    extra += string.Join("\n    ", inputs2.Select(s => $"debounce[{s.Item1}]=0;"));
-                }
+                extra += string.Join("\n    ", inputs2.Select(s => $"debounce[{s.Item1}]=0;"));
             }
         }
         var ret = $$"""

@@ -88,7 +88,7 @@ public class EmulationMode : Output
         return Type;
     }
 
-    public override string Generate(ConfigField mode, int debounceIndex, string extra,
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
@@ -104,5 +104,9 @@ public class EmulationMode : Output
 
     public override void UpdateBindings()
     {
+    }
+    public override string GenerateOutput(ConfigField mode)
+    {
+        return "";
     }
 }

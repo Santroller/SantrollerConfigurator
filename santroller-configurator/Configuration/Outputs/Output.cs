@@ -1241,11 +1241,12 @@ public abstract partial class Output : ReactiveObject
 
     public abstract SerializedOutput Serialize();
 
-    public abstract string Generate(ConfigField mode, int debounceIndex, string extra,
+    public abstract string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer);
 
+    public abstract string GenerateOutput(ConfigField mode);
     public virtual IEnumerable<Output> ValidOutputs()
     {
         var (extra, _) = ControllerEnumConverter.FilterValidOutputs(Model.DeviceControllerType, Outputs.Items);
