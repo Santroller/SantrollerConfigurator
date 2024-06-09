@@ -5577,12 +5577,6 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string PS2KramerModeLabel {
-            get {
-                return ResourceManager.GetString("PS2KramerModeLabel", resourceCulture);
-            }
-        }
-        
         public static string PS4Label {
             get {
                 return ResourceManager.GetString("PS4Label", resourceCulture);

@@ -1064,7 +1064,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool XInputAuth { get; set; }
 
     [Reactive] public bool Ps4Instruments { get; set; }
-    [Reactive] public bool Ps2KramerMode { get; set; }
 
     [Reactive] public bool SliderBar { get; set; }
     [Reactive] public bool Tilt { get; set; }
@@ -1821,7 +1820,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
                        #define LED_BRIGHTNESS {WriteBlob(writer, LedBrightnessOn)}
-                       #define KRAMER_STRIKER {WriteBlob(writer, Ps2KramerMode)}
                        #define LOW_PASS_ALPHA {WriteBlob(writer, AdxlFilter)}
                        """;
 
@@ -1855,7 +1853,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WT_SENSITIVITY {WtSensitivity}
                        #define INPUT_DJ_TURNTABLE_POLL_RATE {DjPollRate * 1000}
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {DjSmoothing.ToString().ToLower()}
-                       #define KRAMER_STRIKER {Ps2KramerMode.ToString().ToLower()}
                        #define LED_BRIGHTNESS {LedBrightnessOn}
                        #define LOW_PASS_ALPHA {AdxlFilter.ToString(CultureInfo.GetCultureInfo("en"))}
                        """;
