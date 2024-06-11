@@ -134,7 +134,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                 .Select(CreateFilter))
             .Bind(out var digitalOutputs)
             .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome or {Input.IsAnalog:false})
+        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome or {Input.IsAnalog: false})
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Length != 0)
             .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)
@@ -482,76 +482,65 @@ public class Ps2CombinedOutput : CombinedSpiOutput
         }
 
         InstrumentButtonTypeExtensions.ConvertBindings(Outputs, Model, true);
-
-        switch (Model.DeviceControllerType)
+        if (Model.DeviceControllerType.Is5FretGuitar())
         {
-            case DeviceControllerType.GuitarHeroGuitar:
-            case DeviceControllerType.RockBandGuitar:
+            foreach (var output in Outputs.Items)
             {
-                foreach (var output in Outputs.Items)
+                if (output is GuitarButton guitarButton)
                 {
-                    if (output is GuitarButton guitarButton)
-                    {
-                        if (!InstrumentButtonTypeExtensions.LiveToGuitar.ContainsKey(guitarButton.Type)) continue;
-                        Outputs.Remove(output);
-                        Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
-                            output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),
-                            output.LedIndicesMpr121.ToArray(), guitarButton.Debounce,
-                            InstrumentButtonTypeExtensions.LiveToGuitar[guitarButton.Type], false, false, false, -1,
-                            true));
-                    }
-
-                    if (output is not ControllerButton button) continue;
-                    if (!InstrumentButtonTypeExtensions.GuitarMappings.ContainsKey(button.Type)) continue;
+                    if (!InstrumentButtonTypeExtensions.LiveToGuitar.ContainsKey(guitarButton.Type)) continue;
                     Outputs.Remove(output);
                     Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
-                        output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),
-                        output.LedIndicesMpr121.ToArray(), button.Debounce,
-                        InstrumentButtonTypeExtensions.GuitarMappings[button.Type], false, false, false, -1, true));
-                }
-
-                break;
-            }
-            case DeviceControllerType.LiveGuitar:
-            {
-                foreach (var output in Outputs.Items)
-                {
-                    if (output is GuitarButton guitarButton)
-                    {
-                        if (!InstrumentButtonTypeExtensions.GuitarToLive.ContainsKey(guitarButton.Type)) continue;
-                        Outputs.Remove(output);
-                        Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
-                            output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),
-                            output.LedIndicesMpr121.ToArray(), guitarButton.Debounce,
-                            InstrumentButtonTypeExtensions.GuitarToLive[guitarButton.Type], false, false, false, -1,
-                            true));
-                    }
-
-                    if (output is not ControllerButton button) continue;
-                    if (!InstrumentButtonTypeExtensions.LiveGuitarMappings.ContainsKey(button.Type)) continue;
-                    Outputs.Remove(output);
-                    Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
-                        output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),
-                        output.LedIndicesMpr121.ToArray(), button.Debounce,
-                        InstrumentButtonTypeExtensions.LiveGuitarMappings[button.Type], false, false, false, -1, true));
-                }
-
-                break;
-            }
-            default:
-            {
-                foreach (var output in Outputs.Items)
-                {
-                    if (output is not GuitarButton guitarButton) continue;
-                    Outputs.Remove(output);
-                    Outputs.Add(new ControllerButton(Model, output.Input, output.LedOn, output.LedOff,
                         output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),
                         output.LedIndicesMpr121.ToArray(), guitarButton.Debounce,
-                        InstrumentButtonTypeExtensions.GuitarToStandard[guitarButton.Type], false, false, false, -1,
+                        InstrumentButtonTypeExtensions.LiveToGuitar[guitarButton.Type], false, false, false, -1,
                         true));
                 }
 
-                break;
+                if (output is not ControllerButton button) continue;
+                if (!InstrumentButtonTypeExtensions.GuitarMappings.ContainsKey(button.Type)) continue;
+                Outputs.Remove(output);
+                Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
+                    output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),
+                    output.LedIndicesMpr121.ToArray(), button.Debounce,
+                    InstrumentButtonTypeExtensions.GuitarMappings[button.Type], false, false, false, -1, true));
+            }
+        }
+        else if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar)
+        {
+            foreach (var output in Outputs.Items)
+            {
+                if (output is GuitarButton guitarButton)
+                {
+                    if (!InstrumentButtonTypeExtensions.GuitarToLive.ContainsKey(guitarButton.Type)) continue;
+                    Outputs.Remove(output);
+                    Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
+                        output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),
+                        output.LedIndicesMpr121.ToArray(), guitarButton.Debounce,
+                        InstrumentButtonTypeExtensions.GuitarToLive[guitarButton.Type], false, false, false, -1,
+                        true));
+                }
+
+                if (output is not ControllerButton button) continue;
+                if (!InstrumentButtonTypeExtensions.LiveGuitarMappings.ContainsKey(button.Type)) continue;
+                Outputs.Remove(output);
+                Outputs.Add(new GuitarButton(Model, output.Input, output.LedOn, output.LedOff,
+                    output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),
+                    output.LedIndicesMpr121.ToArray(), button.Debounce,
+                    InstrumentButtonTypeExtensions.LiveGuitarMappings[button.Type], false, false, false, -1, true));
+            }
+        }
+        else
+        {
+            foreach (var output in Outputs.Items)
+            {
+                if (output is not GuitarButton guitarButton) continue;
+                Outputs.Remove(output);
+                Outputs.Add(new ControllerButton(Model, output.Input, output.LedOn, output.LedOff,
+                    output.LedIndices.ToArray(), output.LedIndicesPeripheral.ToArray(),
+                    output.LedIndicesMpr121.ToArray(), guitarButton.Debounce,
+                    InstrumentButtonTypeExtensions.GuitarToStandard[guitarButton.Type], false, false, false, -1,
+                    true));
             }
         }
 
