@@ -3087,6 +3087,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ConsoleTypeStepManiaX {
+            get {
+                return ResourceManager.GetString("ConsoleTypeStepManiaX", resourceCulture);
+            }
+        }
+        
+        public static string ConsoleTypeLTek {
+            get {
+                return ResourceManager.GetString("ConsoleTypeLTek", resourceCulture);
+            }
+        }
+        
         public static string StreamDeckTypeUnknown {
             get {
                 return ResourceManager.GetString("StreamDeckTypeUnknown", resourceCulture);

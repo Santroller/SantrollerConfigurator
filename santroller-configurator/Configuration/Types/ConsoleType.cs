@@ -23,5 +23,7 @@ public enum ConsoleType
     Ps5 = 20,
     StreamDeck = 21,
     Generic = 22,
+    LTek = 23,
+    StepManiaX = 24,
     Unknown = 0xFF
 }

@@ -1625,6 +1625,12 @@
     <data name="ConsoleTypeStreamDeck" xml:space="preserve">
         <value>Stream Deck</value>
     </data>
+    <data name="ConsoleTypeStepManiaX" xml:space="preserve">
+        <value>StepManiaX</value>
+    </data>
+    <data name="ConsoleTypeLTek" xml:space="preserve">
+        <value>L-TEK</value>
+    </data>
     <data name="StreamDeckTypeUnknown" xml:space="preserve">
         <value>Unknown</value>
     </data>
