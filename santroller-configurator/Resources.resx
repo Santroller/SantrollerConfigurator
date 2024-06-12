@@ -3355,6 +3355,9 @@
     <data name="LEDTypePeripheralCountLabel" xml:space="preserve">
         <value>Peripheral LED Count</value>
     </data>
+    <data name="WS2812MOSIPeripheralLabel" xml:space="preserve">
+        <value>Peripheral WS2812 Data Pin</value>
+    </data>
     <data name="APA102SCKPeripheralLabel" xml:space="preserve">
         <value>Peripheral APA102 CI / SCK Pin</value>
     </data>

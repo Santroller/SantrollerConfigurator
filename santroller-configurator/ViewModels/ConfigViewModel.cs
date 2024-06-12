@@ -245,7 +245,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Select(x => x is
             {
                 Item2: true, Item1: LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
-                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26
+                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26 or LedType.Ws2812
             })
             .ToPropertyEx(this, x => x.IsIndexedLedPeripheral);
         Bindings.Connect()

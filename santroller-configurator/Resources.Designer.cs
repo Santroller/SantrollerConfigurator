@@ -6459,6 +6459,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string WS2812MOSIPeripheralLabel {
+            get {
+                return ResourceManager.GetString("WS2812MOSIPeripheralLabel", resourceCulture);
+            }
+        }
+        
         public static string APA102SCKPeripheralLabel {
             get {
                 return ResourceManager.GetString("APA102SCKPeripheralLabel", resourceCulture);

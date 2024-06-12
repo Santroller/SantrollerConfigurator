@@ -3347,6 +3347,7 @@
                                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                                         <Binding Path="BindableSpi" />
                                         <Binding Path="IsIndexedLedPeripheral" />
+                                        <Binding Path="!IsWs2812Peripheral" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
                                 <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
@@ -3366,6 +3367,8 @@
                                         <Binding Path="IsIndexedLedPeripheral" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
+                                <Label IsVisible="{Binding IsWs2812Peripheral}" VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.WS2812MOSIPeripheralLabel}" />
                                 <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
                                        Content="{x:Static netCore:Resources.APA102MOSIPeripheralLabel}" />
                                 <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"

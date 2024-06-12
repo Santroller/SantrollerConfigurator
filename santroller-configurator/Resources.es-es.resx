@@ -1607,6 +1607,12 @@
     <data name="ConsoleTypeStreamDeck" xml:space="preserve">
         <value>Stream Deck</value>
     </data>
+    <data name="ConsoleTypeStepManiaX" xml:space="preserve">
+        <value>StepManiaX</value>
+    </data>
+    <data name="ConsoleTypeLTek" xml:space="preserve">
+        <value>L-TEK</value>
+    </data>
     <data name="StreamDeckTypeUnknown" xml:space="preserve">
         <value>Desconocido</value>
     </data>
@@ -3312,6 +3318,9 @@
     </data>
     <data name="STP16CPC26LEPeripheralLabel" xml:space="preserve">
         <value>Pin de Habilitar Latch / LE de Periférico STP16CPC26</value>
+    </data>
+    <data name="WS2812MOSIPeripheralLabel" xml:space="preserve">
+        <value>Pin de Datos de Periférico WS2812</value>
     </data>
     <data name="SwapSwitchFaceButtonLabel" xml:space="preserve">
         <value>Cambiar Botones de Cara</value>
