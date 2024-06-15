@@ -1613,6 +1613,9 @@
     <data name="ConsoleTypeLTek" xml:space="preserve">
         <value>L-TEK</value>
     </data>
+    <data name="ConsoleTypeLTekId" xml:space="preserve">
+        <value>L-TEK</value>
+    </data>
     <data name="StreamDeckTypeUnknown" xml:space="preserve">
         <value>Desconocido</value>
     </data>

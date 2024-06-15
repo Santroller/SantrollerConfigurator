@@ -3099,6 +3099,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ConsoleTypeLTekId {
+            get {
+                return ResourceManager.GetString("ConsoleTypeLTekId", resourceCulture);
+            }
+        }
+        
         public static string StreamDeckTypeUnknown {
             get {
                 return ResourceManager.GetString("StreamDeckTypeUnknown", resourceCulture);

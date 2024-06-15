@@ -25,5 +25,6 @@ public enum ConsoleType
     Generic = 22,
     LTek = 23,
     StepManiaX = 24,
+    LTekId = 25,
     Unknown = 0xFF
 }
