@@ -3551,8 +3551,15 @@
     <data name="VersionPrefixLabel" xml:space="preserve">
         <value>Versión 10.0.18</value>
     </data>
+
+    <data name="TurntableNavButtons" xml:space="preserve">
+        <value>Botones de Navegación de Tornamesa HID</value>
+    </data>
+    <data name="TurntableRange" xml:space="preserve">
+        <value>Rango Completo de Tornamesa XInput en Windows</value>
+    </data>
     <data name="TurntableNote1" xml:space="preserve">
-        <value>Nota: Las tornamesas de Wii están diseñadas para usar un 'Poll Rate' de 10</value>
+        <value>Nota: Las tornamesas de Wii están diseñadas para usar un 'Poll Rate' de 5</value>
     </data>
     <data name="TurntableNote2" xml:space="preserve">
         <value>Si usas cualquier otro 'poll rate', necesitarás ajustar el multiplicador para compensar</value>

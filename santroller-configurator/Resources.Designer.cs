@@ -6945,6 +6945,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string TurntableNavButtons {
+            get {
+                return ResourceManager.GetString("TurntableNavButtons", resourceCulture);
+            }
+        }
+        
+        public static string TurntableRange {
+            get {
+                return ResourceManager.GetString("TurntableRange", resourceCulture);
+            }
+        }
+        
         public static string TurntableNote1 {
             get {
                 return ResourceManager.GetString("TurntableNote1", resourceCulture);

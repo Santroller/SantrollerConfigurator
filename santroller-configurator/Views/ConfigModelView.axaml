@@ -3020,7 +3020,30 @@
                         </StackPanel>
 
 
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsRpcs3CompatibleController}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsTurntable}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.TurntableNavButtons}" />
+                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                          HorizontalContentAlignment="Center"
+                                          IsChecked="{Binding DjNavButtons}"
+                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                        </StackPanel>
+                        
+                        
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsTurntable}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.TurntableRange}" />
+                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                          HorizontalContentAlignment="Center"
+                                          IsChecked="{Binding DjFullRange}"
+                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.RPCS3CompatLabel}" />

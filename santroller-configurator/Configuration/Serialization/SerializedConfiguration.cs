@@ -84,6 +84,8 @@ public class SerializedConfiguration
         Ps2OutputSck = model.Ps2OutputSck;
         Ps2OutputAck = model.Ps2OutputAck;
         Ps2OutputAtt = model.Ps2OutputAtt;
+        DjFullRange = model.DjFullRange;
+        DjNavButtons = model.DjNavButtons;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -149,9 +151,13 @@ public class SerializedConfiguration
     [ProtoMember(71)] public int Ps2OutputSck { get; private set; }
     [ProtoMember(72)] public int Ps2OutputAtt { get; private set; }
     [ProtoMember(73)] public int Ps2OutputAck { get; private set; }
+    [ProtoMember(74)] public bool DjNavButtons { get; private set; } = false;
+    [ProtoMember(75)] public bool DjFullRange { get; private set; } = true;
 
     public void LoadConfiguration(ConfigViewModel model)
     {
+        model.DjNavButtons = DjNavButtons;
+        model.DjFullRange = DjFullRange;
         model.AdxlFilter = AdxlFilter;
         model.Ps4Instruments = Ps4Instruments;
         model.HideControllerView = HideControllerView;

@@ -48,23 +48,26 @@ public class DjButton : OutputButton
         if (mode is ConfigField.Shared)
             return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
-        // Turntables also hit the standard buttons when you push each button
-        switch (Type)
+        if (mode is not ConfigField.Universal || Model.DjNavButtons)
         {
-            case DjInputType.LeftGreen:
-            case DjInputType.RightGreen:
-                extra = mode == ConfigField.Xbox ? "report->a = 0xFF;" : "report->a = true;";
-                break;
-            case DjInputType.LeftRed:
-            case DjInputType.RightRed:
-                extra = mode == ConfigField.Xbox ? "report->b = 0xFF;" : "report->b = true;";
-                break;
-            case DjInputType.LeftBlue:
-            case DjInputType.RightBlue:
-                extra = mode == ConfigField.Xbox ? "report->x = 0xFF;" : "report->x = true;";
-                break;
-            default:
-                return "";
+            // Turntables also hit the standard buttons when you push each button
+            switch (Type)
+            {
+                case DjInputType.LeftGreen:
+                case DjInputType.RightGreen:
+                    extra = mode == ConfigField.Xbox ? "report->a = 0xFF;" : "report->a = true;";
+                    break;
+                case DjInputType.LeftRed:
+                case DjInputType.RightRed:
+                    extra = mode == ConfigField.Xbox ? "report->b = 0xFF;" : "report->b = true;";
+                    break;
+                case DjInputType.LeftBlue:
+                case DjInputType.RightBlue:
+                    extra = mode == ConfigField.Xbox ? "report->x = 0xFF;" : "report->x = true;";
+                    break;
+                default:
+                    return "";
+            }
         }
 
         return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);

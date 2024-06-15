@@ -181,6 +181,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Select(x => x is DeviceControllerType.GuitarHeroGuitar)
             .ToPropertyEx(this, x => x.IsGuitarHeroGuitar);
         this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(x => x is DeviceControllerType.Turntable)
+            .ToPropertyEx(this, x => x.IsTurntable);
+        this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.StageKit)
             .ToPropertyEx(this, x => x.IsStageKit);
         this.WhenAnyValue(x => x.EmulationType)
@@ -572,6 +575,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public int PollRate { get; set; }
     [Reactive] public int DjPollRate { get; set; }
+    
+    [Reactive] public bool DjFullRange { get; set; }
+    
+    [Reactive] public bool DjNavButtons { get; set; }
     [Reactive] public double AdxlFilter { get; set; }
     [Reactive] public bool DjSmoothing { get; set; }
 
@@ -1261,6 +1268,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStandardMode { get; }
     [ObservableAsProperty] public bool IsAdvancedMode { get; }
     [ObservableAsProperty] public bool IsGuitar { get; }
+    [ObservableAsProperty] public bool IsTurntable { get; }
     [ObservableAsProperty] public bool IsProKeys { get; }
 
     [ObservableAsProperty] public bool SupportsPS4Instrument { get; }
@@ -1387,7 +1395,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var (extra, types) =
             ControllerEnumConverter.FilterValidOutputs(_deviceControllerType, Bindings.Items);
         Bindings.RemoveMany(extra);
-
+        if (Bindings.Items.Any(s => s is WiiCombinedOutput))
+        {
+            PollRate = 5;
+        }
         // If the user has a ps2 or wii combined output mapped, they don't need the default bindings
         if (Bindings.Items.Any(s =>
                 s is WiiCombinedOutput or Ps2CombinedOutput or UsbHostCombinedOutput or BluetoothOutput)) return;
@@ -1531,7 +1542,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         PollRate = 0;
         StrumDebounce = 0;
         Debounce = 10;
-        DjPollRate = 10;
+        DjPollRate = 5;
+        DjNavButtons = false;
+        DjFullRange = true;
         LedBrightnessOn = 31;
         Apa102IsFullSize = false;
         DjSmoothing = false;
@@ -1810,6 +1823,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define CONFIGURATION_LEN {WriteBlob(writer, configLength)}
                        #define SWAP_SWITCH_FACE_BUTTONS {WriteBlob(writer, SwapSwitchFaceButtons)}
                        #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsStandardController)}
+                       #define WINDOWS_TURNTABLE_FULLRANGE {WriteBlob(writer, XInputOnWindows && DjFullRange)}
                        #define RPCS3_COMPAT {WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}
                        #define XINPUT_AUTH {WriteBlob(writer, XInputAuth && UsbHostEnabled)}
                        #define SLIDER_BAR {WriteBlob(writer, SliderBar)}
@@ -1844,6 +1858,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define CONFIGURATION_LEN {configLength}
                        #define SWAP_SWITCH_FACE_BUTTONS {(!SwapSwitchFaceButtons).ToString().ToLower()}
                        #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsStandardController).ToString().ToLower()}
+                       #define WINDOWS_TURNTABLE_FULLRANGE {(XInputOnWindows && DjFullRange).ToString().ToLower()}
                        #define RPCS3_COMPAT {(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}
                        #define XINPUT_AUTH {(XInputAuth && UsbHostEnabled).ToString().ToLower()}
                        #define SLIDER_BAR {SliderBar.ToString().ToLower()}
