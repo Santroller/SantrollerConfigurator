@@ -79,6 +79,7 @@ public class EmulationMode : Output
             EmulationModeType.Ps4Or5 => "PS4",
             EmulationModeType.Switch => "SWITCH",
             EmulationModeType.Fnf => "KEYBOARD_MOUSE",
+            EmulationModeType.FnfHid => "FNF",
             _ => throw new ArgumentOutOfRangeException()
         };
     }

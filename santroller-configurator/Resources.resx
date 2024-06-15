@@ -1791,7 +1791,10 @@
         <value>Empty</value>
     </data>
     <data name="EmulationModeTypeFnf" xml:space="preserve">
-        <value>Fortnite Festival (Instrument Mode)</value>
+        <value>Fortnite Festival (Instrument Mode - Keyboard)</value>
+    </data>
+    <data name="EmulationModeTypeFnfHid" xml:space="preserve">
+        <value>Fortnite Festival (Instrument Mode - PC gamepad)</value>
     </data>
     <data name="EmulationModeTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>

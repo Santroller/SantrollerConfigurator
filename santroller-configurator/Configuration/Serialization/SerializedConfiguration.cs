@@ -86,7 +86,6 @@ public class SerializedConfiguration
         Ps2OutputAtt = model.Ps2OutputAtt;
         DjFullRange = model.DjFullRange;
         DjNavButtons = model.DjNavButtons;
-        RiffmasterOnWindows = model.RiffmasterOnWindows;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -154,11 +153,9 @@ public class SerializedConfiguration
     [ProtoMember(73)] public int Ps2OutputAck { get; private set; }
     [ProtoMember(74)] public bool DjNavButtons { get; private set; } = false;
     [ProtoMember(75)] public bool DjFullRange { get; private set; } = true;
-    [ProtoMember(76)] public bool RiffmasterOnWindows { get; private set; } = false;
 
     public void LoadConfiguration(ConfigViewModel model)
     {
-        model.RiffmasterOnWindows = RiffmasterOnWindows;
         model.DjNavButtons = DjNavButtons;
         model.DjFullRange = DjFullRange;
         model.AdxlFilter = AdxlFilter;
@@ -291,7 +288,6 @@ public class SerializedConfiguration
         model.BtRxAddr = BtRxMacAddress;
         model.LedBrightnessOn = (byte) LedBrightnessOn;
         model.LedBrightnessOff = (byte) LedBrightnessOff;
-        model.RiffmasterOnWindows = RiffmasterOnWindows;
         model.DjFullRange = DjFullRange;
         model.DjNavButtons = DjNavButtons;
         var clone = new List<Output>(model.Bindings.Items);

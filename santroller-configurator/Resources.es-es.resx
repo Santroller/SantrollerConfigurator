@@ -1773,7 +1773,10 @@
         <value>Vacío</value>
     </data>
     <data name="EmulationModeTypeFnf" xml:space="preserve">
-        <value>Fortnite Festival (Modo Instrumento)</value>
+        <value>Fortnite Festival (Modo Instrumento - Teclado)</value>
+    </data>
+    <data name="EmulationModeTypeFnfHid" xml:space="preserve">
+        <value>Fortnite Festival (Modo Instrumento - Mando en PC)</value>
     </data>
     <data name="EmulationModeTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>

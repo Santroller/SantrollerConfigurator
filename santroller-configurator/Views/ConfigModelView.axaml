@@ -2994,16 +2994,6 @@
                                           ItemTemplate="{StaticResource EnumToStringTemplate}"
                                           ItemsSource="{Binding RolloverModes}" />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsFortniteFestivalPro}">
-                                <Label VerticalAlignment="Center"
-                                       VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.FortniteFestivalInstrumentMode}" />
-                                <ToggleSwitch HorizontalAlignment="Center" Width="200"
-                                              HorizontalContentAlignment="Center"
-                                              IsChecked="{Binding RiffmasterOnWindows}"
-                                              OffContent="{x:Static netCore:Resources.FortniteFestivalInstrumentModeKeyboard}"
-                                              OnContent="{x:Static netCore:Resources.FortniteFestivalInstrumentModeRiffmaster}" />
-                            </StackPanel>
 
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStandardController}">
@@ -3053,7 +3043,7 @@
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsRpcs3CompatibleController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.RPCS3CompatLabel}" />

@@ -213,7 +213,7 @@ public partial class DjAxis : OutputAxis
         };
         return Type switch
         {
-            DjAxisType.Crossfader or DjAxisType.EffectsKnob => $"{GenerateOutput(mode)} = {gen};",
+            DjAxisType.Crossfader => $"{GenerateOutput(mode)} = {gen};",
             _ => $"if ({Input.Generate()}){{{GenerateOutput(mode)} = {gen};}}"
         };
     }
