@@ -40,6 +40,17 @@ public class EmulationMode : Output
         {
             this.RaiseAndSetIfChanged(ref _emulationModeType, value);
             UpdateDetails();
+            
+            // Set 6KRO for compatibility
+            if (Type is EmulationModeType.Fnf)
+            {
+                Model.RolloverMode = RolloverMode.SixKro;
+            }
+
+            var idx = Model.Bindings.Items.IndexOf(this);
+            if (idx == -1) return;
+            Model.Bindings.Remove(this);
+            Model.Bindings.Insert(idx, this);
         }
     }
 

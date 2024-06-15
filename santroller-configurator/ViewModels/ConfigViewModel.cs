@@ -578,6 +578,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     
     [Reactive] public bool DjFullRange { get; set; }
     
+    [Reactive] public bool RiffmasterOnWindows { get; set; }
+    
     [Reactive] public bool DjNavButtons { get; set; }
     [Reactive] public double AdxlFilter { get; set; }
     [Reactive] public bool DjSmoothing { get; set; }
@@ -1545,6 +1547,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         DjPollRate = 5;
         DjNavButtons = false;
         DjFullRange = true;
+        RiffmasterOnWindows = false;
         LedBrightnessOn = 31;
         Apa102IsFullSize = false;
         DjSmoothing = false;
@@ -1824,6 +1827,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define SWAP_SWITCH_FACE_BUTTONS {WriteBlob(writer, SwapSwitchFaceButtons)}
                        #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsStandardController)}
                        #define WINDOWS_TURNTABLE_FULLRANGE {WriteBlob(writer, XInputOnWindows && DjFullRange)}
+                       #define RIFFMASTER_ON_WINDOWS {WriteBlob(writer, IsFortniteFestivalPro && RiffmasterOnWindows)}
                        #define RPCS3_COMPAT {WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}
                        #define XINPUT_AUTH {WriteBlob(writer, XInputAuth && UsbHostEnabled)}
                        #define SLIDER_BAR {WriteBlob(writer, SliderBar)}
@@ -1859,6 +1863,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define SWAP_SWITCH_FACE_BUTTONS {(!SwapSwitchFaceButtons).ToString().ToLower()}
                        #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsStandardController).ToString().ToLower()}
                        #define WINDOWS_TURNTABLE_FULLRANGE {(XInputOnWindows && DjFullRange).ToString().ToLower()}
+                       #define RIFFMASTER_ON_WINDOWS {(IsFortniteFestivalPro && RiffmasterOnWindows).ToString().ToLower()}
                        #define RPCS3_COMPAT {(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}
                        #define XINPUT_AUTH {(XInputAuth && UsbHostEnabled).ToString().ToLower()}
                        #define SLIDER_BAR {SliderBar.ToString().ToLower()}

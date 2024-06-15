@@ -3599,6 +3599,15 @@
     <data name="VersionPrefixLabel" xml:space="preserve">
         <value>Version 10.0.18</value>
     </data>
+    <data name="FortniteFestivalInstrumentMode" xml:space="preserve">
+        <value>Windows Fortnite Festival Instrument Mode</value>
+    </data>
+    <data name="FortniteFestivalInstrumentModeKeyboard" xml:space="preserve">
+        <value>Keyboard</value>
+    </data>
+    <data name="FortniteFestivalInstrumentModeRiffmaster" xml:space="preserve">
+        <value>Riffmaster</value>
+    </data>
     <data name="TurntableNavButtons" xml:space="preserve">
         <value>HID Turntable Navigation Buttons</value>
     </data>

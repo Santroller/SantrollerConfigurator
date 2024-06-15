@@ -3551,6 +3551,15 @@
     <data name="VersionPrefixLabel" xml:space="preserve">
         <value>Versión 10.0.18</value>
     </data>
+    <data name="FortniteFestivalInstrumentMode" xml:space="preserve">
+        <value>Modo de Instrumento de Fortnite Festival en Windows</value>
+    </data>
+    <data name="FortniteFestivalInstrumentModeKeyboard" xml:space="preserve">
+        <value>Teclado</value>
+    </data>
+    <data name="FortniteFestivalInstrumentModeRiffmaster" xml:space="preserve">
+        <value>Riffmaster</value>
+    </data>
 
     <data name="TurntableNavButtons" xml:space="preserve">
         <value>Botones de Navegación de Tornamesa HID</value>

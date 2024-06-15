@@ -279,8 +279,8 @@ public class EmptyOutput : Output
             {
                 Model.ResetBluetoothRelated();
             }
-
             Model.Bindings.Add(output);
+
             if (output is CombinedOutput combinedOutput)
             {
                 combinedOutput.SetOutputsOrDefaults(Array.Empty<Output>());

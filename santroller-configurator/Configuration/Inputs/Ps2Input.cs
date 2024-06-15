@@ -512,7 +512,7 @@ public class Ps2Input : SpiInput
                     }
                     
                     var mappingsDigital =  mapping.Contains("debounce[");
-                    if (mappingsDigital && mode is not ConfigField.Shared)
+                    if (mappingsDigital && mode is not (ConfigField.Shared or ConfigField.Detection))
                     {
                         digitalBindings.Add(mapping);
                     }

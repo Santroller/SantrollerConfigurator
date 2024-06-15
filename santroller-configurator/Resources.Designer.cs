@@ -6945,6 +6945,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string FortniteFestivalInstrumentMode {
+            get {
+                return ResourceManager.GetString("FortniteFestivalInstrumentMode", resourceCulture);
+            }
+        }
+        
+        public static string FortniteFestivalInstrumentModeKeyboard {
+            get {
+                return ResourceManager.GetString("FortniteFestivalInstrumentModeKeyboard", resourceCulture);
+            }
+        }
+        
+        public static string FortniteFestivalInstrumentModeRiffmaster {
+            get {
+                return ResourceManager.GetString("FortniteFestivalInstrumentModeRiffmaster", resourceCulture);
+            }
+        }
+        
         public static string TurntableNavButtons {
             get {
                 return ResourceManager.GetString("TurntableNavButtons", resourceCulture);
