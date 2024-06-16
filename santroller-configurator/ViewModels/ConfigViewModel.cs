@@ -1923,7 +1923,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define USB_HOST_DP_PIN {{UsbHostDp}}
                         #define DIGITAL_COUNT {{debounces.Item1}}
                         #define LED_DEBOUNCE_COUNT {{debounces.Item2}}
-                        #define HAS_LED_OUTPUT {{Bindings.Items.Any(s => s.OutputEnabled).ToString().ToLower()}}
+                        #define HAS_LED_OUTPUT {{Bindings.Items.SelectMany(s => s.Outputs.Items).Any(s => s.OutputEnabled).ToString().ToLower()}}
                         #define LED_COUNT {{(LedType is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812) ? LedCount : 0)}}
                         #define LED_COUNT_PERIPHERAL {{(LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812) ? LedCountPeripheral : 0)}}
                         #define LED_COUNT_STP {{(LedType is LedType.Stp16Cpc26 ? LedCount : 0)}}
