@@ -209,14 +209,14 @@ public partial class DrumAxis : OutputAxis
         var ifStatement = $"debounce[{debounceIndex}]";
         var input = Input;
         var reset = $"debounce[{debounceIndex}]={debounce};";
-        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None)
+        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled)
         {
             reset += $"ledDebounce[{ledIndex}]={debounce};";
         }
         if (writer != null)
         {
             reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
-            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None)
+            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled)
             {
                 reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
             }
