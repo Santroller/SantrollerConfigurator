@@ -2805,6 +2805,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         ledRead = $"(({generated} >> 8))";
                     }
 
+                    if (analogLedOutput.Input is DigitalToAnalog dta)
+                    {
+                        var on = dta.On >> 8;
+                        if (dta.Type != DigitalToAnalogType.Trigger)
+                        {
+                            on += sbyte.MaxValue;
+                        }
+                        ledRead = $"(({ledRead}) ? {on} : 0)";
+                    }
+
                     // Now we have the value, calibrated as a uint8_t
                     // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
                     analog +=
@@ -2891,6 +2901,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     ledRead = $"(({generated} >> 8))";
                 }
 
+                if (analogLedOutput.Input is DigitalToAnalog dta)
+                {
+                    var on = dta.On >> 8;
+                    if (dta.Type != DigitalToAnalogType.Trigger)
+                    {
+                        on += sbyte.MaxValue;
+                    }
+                    ledRead = $"(({ledRead}) ? {on} : 0)";
+                }
+
                 // Now we have the value, calibrated as a uint8_t
                 ret +=
                     $"led_tmp = {ledRead};{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}";
@@ -2974,6 +2994,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         }
 
                         ledRead = $"(({generated} >> 8))";
+                    }
+
+                    if (analogLedOutput.Input is DigitalToAnalog dta)
+                    {
+                        var on = dta.On >> 8;
+                        if (dta.Type != DigitalToAnalogType.Trigger)
+                        {
+                            on += sbyte.MaxValue;
+                        }
+                        ledRead = $"(({ledRead}) ? {on} : 0)";
                     }
 
                     // Now we have the value, calibrated as a uint8_t
@@ -3063,6 +3093,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     ledRead = $"(({generated} >> 8))";
                 }
 
+                if (analogLedOutput.Input is DigitalToAnalog dta)
+                {
+                    var on = dta.On >> 8;
+                    if (dta.Type != DigitalToAnalogType.Trigger)
+                    {
+                        on += sbyte.MaxValue;
+                    }
+                    ledRead = $"(({ledRead}) ? {on} : 0)";
+                }
+
                 // Now we have the value, calibrated as a uint8_t
                 ret +=
                     $"led_tmp = {ledRead};{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}";
@@ -3128,6 +3168,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         }
 
                         ledRead = $"(({generated} >> 8))";
+                    }
+
+                    if (analogLedOutput.Input is DigitalToAnalog dta)
+                    {
+                        var on = dta.On >> 8;
+                        if (dta.Type != DigitalToAnalogType.Trigger)
+                        {
+                            on += sbyte.MaxValue;
+                        }
+                        ledRead = $"(({ledRead}) ? {on} : 0)";
                     }
 
                     // Now we have the value, calibrated as a uint8_t
@@ -3222,6 +3272,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     ledRead = $"(({generated} >> 8))";
                 }
 
+
+                if (analogLedOutput.Input is DigitalToAnalog dta)
+                {
+                    var on = dta.On >> 8;
+                    if (dta.Type != DigitalToAnalogType.Trigger)
+                    {
+                        on += sbyte.MaxValue;
+                    }
+                    ledRead = $"(({ledRead}) ? {on} : 0)";
+                }
                 // Now we have the value, calibrated as a uint8_t
                 ret +=
                     $"led_tmp = {ledRead};{Microcontroller.GenerateAnalogWrite(pin, $"{(analogLedOutput.OutputInverted ? "(255-" : "(")}led_tmp)", peripheral)};";
