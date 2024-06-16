@@ -3369,6 +3369,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         Dictionary<string, int> ledDebounces = new();
         var strumIndices = new List<int>();
 
+        var generatedMode = GetSimpleEmulationType() is EmulationType.KeyboardMouse
+            ? ConfigField.Keyboard
+            : ConfigField.Shared;
+
         // Pass 1: work out debounces and map inputs to debounces
         var macros = new Dictionary<string, List<(int, Input)>>();
         foreach (var outputByType in outputsByType)
@@ -3376,7 +3380,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             foreach (var output in outputByType)
             {
                 var generatedInput = output.Input.Generate();
-                var generatedOutput = output.GenerateOutput(ConfigField.Shared);
+                var generatedOutput = output.GenerateOutput(generatedMode);
                 var pro = IsFortniteFestivalPro && output is GuitarAxis
                 {
                     Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy
@@ -3454,7 +3458,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             var input = s.Input;
                             var output = s;
                             var generatedInput = input.Generate();
-                            var generatedOutput = output.GenerateOutput(ConfigField.Shared);
+                            var generatedOutput = output.GenerateOutput(generatedMode);
                             var index = 0;
                             var ledIndex = 0;
 
@@ -3584,6 +3588,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private (int,int) CalculateDebounceTicks()
     {
+
+        var generatedMode = GetSimpleEmulationType() is EmulationType.KeyboardMouse
+            ? ConfigField.Keyboard
+            : ConfigField.Shared;
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
         var outputsByType = outputs
             .GroupBy(s => s.Input.InnermostInputs().First().GetType()).ToList();
@@ -3595,7 +3603,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             foreach (var output in outputByType)
             {
                 var generatedInput = output.Input.Generate();
-                var generatedOutput = output.GenerateOutput(ConfigField.Shared);
+                var generatedOutput = output.GenerateOutput(generatedMode);
                 var pro = IsFortniteFestivalPro && output is GuitarAxis
                 {
                     Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy
