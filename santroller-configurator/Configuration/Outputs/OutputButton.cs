@@ -107,7 +107,7 @@ public abstract class OutputButton : Output
             // Modifiers still go via the normal system, only standard keys go via 6kro mode.
             if ((Model.IsKeyboard || Model.IsFortniteFestival || Model.IsFortniteFestivalPro) && Model.RolloverMode == RolloverMode.SixKro && keyCode != -1 && mode == ConfigField.Keyboard)
             {
-                if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} or ControllerButton {Type: StandardButtonType.Back})
+                if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown})
                 {
                     return  $$"""
                               if (TILT) {
@@ -146,7 +146,7 @@ public abstract class OutputButton : Output
                           """;
             }
             
-            if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} or ControllerButton {Type: StandardButtonType.Back} && mode == ConfigField.Keyboard)
+            if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} && mode == ConfigField.Keyboard)
             {
                 return  $$"""
                           if (TILT) {
