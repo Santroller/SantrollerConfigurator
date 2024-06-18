@@ -12,13 +12,11 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class ControllerButton : OutputButton
 {
-
     public ControllerButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
-        byte[] ledIndicesPeripheral,
-        byte[] ledIndicesMpr121,
-        int debounce, StandardButtonType type, bool outputEnabled, bool outputPeripheral, bool outputInverted,
-        int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
-        debounce, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int debounce, StandardButtonType type, bool outputEnabled,
+        bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined) : base(model, input, ledOn,
+        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, debounce, outputEnabled, outputInverted,
+        outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
         UpdateDetails();
@@ -40,6 +38,7 @@ public class ControllerButton : OutputButton
         {StandardButtonType.DpadUp, Key.Up},
         {StandardButtonType.DpadDown, Key.Down},
     };
+
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
@@ -47,6 +46,7 @@ public class ControllerButton : OutputButton
         {
             return "";
         }
+
         return ControllerEnumConverter.Convert(Type, deviceControllerType, legendType, swapSwitchFaceButtons);
     }
 
@@ -57,26 +57,31 @@ public class ControllerButton : OutputButton
 
     public override string GenerateOutput(ConfigField mode)
     {
-        if (Model.EmulationType is EmulationType.FortniteFestival && mode is ConfigField.Keyboard && _fortniteKeys.TryGetValue(Type, out var fortniteKey))
+        if (Model.EmulationType is EmulationType.FortniteFestival && mode is ConfigField.Keyboard &&
+            _fortniteKeys.TryGetValue(Type, out var fortniteKey))
         {
             return GetReportField(fortniteKey);
         }
+
         // No guide button on og xbox or PS2
         if (mode is ConfigField.Xbox or ConfigField.Ps2 && Type is StandardButtonType.Guide)
         {
             return "";
         }
+
         // No dpad left or right on ps2 guitars
         if (mode is ConfigField.Ps2 && Type is StandardButtonType.DpadLeft or StandardButtonType.DpadRight &&
             Model.DeviceControllerType.IsGuitar())
         {
             return "";
         }
+
         // capture button only exists on switch (which uses ps3 mappings)
         if (mode is not ConfigField.Ps3 && Type is StandardButtonType.Capture)
         {
             return "";
         }
+
         // RB on PS4 uses dpad left for star power activation
         if (mode is ConfigField.Ps4 && Type is StandardButtonType.Back && Model.DeviceControllerType.Is5FretGuitar())
         {
@@ -97,7 +102,23 @@ public class ControllerButton : OutputButton
                     return GetReportField(Key.Right);
             }
         }
-        return mode is ConfigField.Ps3 or ConfigField.Xbox or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared or ConfigField.XboxOne
+
+        if (mode is ConfigField.Wii && Model.DeviceControllerType is DeviceControllerType.Turntable)
+        {
+            // wii doesn't have nav buttons, so map nav to left platter (y is euphoria so that is on the turntable.)
+            switch (Type)
+            {
+                case StandardButtonType.A:
+                    return GetReportField(DjInputType.LeftGreen);
+                case StandardButtonType.B:
+                    return GetReportField(DjInputType.LeftRed);
+                case StandardButtonType.X:
+                    return GetReportField(DjInputType.LeftBlue);
+            }
+        }
+
+        return mode is ConfigField.Ps3 or ConfigField.Xbox or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
+            or ConfigField.Shared or ConfigField.XboxOne
             or ConfigField.Xbox360 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2
             ? GetReportField(Type)
             : "";
@@ -105,7 +126,8 @@ public class ControllerButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedControllerButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
+        return new SerializedControllerButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(),
+            LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
             ChildOfCombined, LedIndicesMpr121.ToArray());
     }
 }
