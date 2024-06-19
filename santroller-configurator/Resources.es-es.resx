@@ -26,6 +26,9 @@
     <data name="ConsoleModeBindingTitle" xml:space="preserve">
         <value>Mapeo de Modo Consola</value>
     </data>
+    <data name="ModeBindingTitle" xml:space="preserve">
+        <value>Mapeo de Modo</value>
+    </data>
     <data name="DetectAxis" xml:space="preserve">
         <value>Mueve el eje para detectar</value>
     </data>
@@ -741,13 +744,19 @@
         <value>Kit de Escenario de Rock Band</value>
     </data>
     <data name="DeviceControllerTypeFortniteGuitar" xml:space="preserve">
-        <value>Guitarra</value>
-    </data>
-    <data name="DeviceControllerTypeFortniteGuitarStrum" xml:space="preserve">
-        <value>Guitarra (con rasgueo)</value>
+        <value>Guitarra normal</value>
     </data>
     <data name="DeviceControllerTypeFortniteDrums" xml:space="preserve">
-        <value>Batería</value>
+        <value>Batería normal</value>
+    </data>
+    <data name="DeviceControllerTypeFortniteGuitarStrum" xml:space="preserve">
+        <value>Guitarra normal (con rasgueo)</value>
+    </data>
+    <data name="DeviceControllerTypeFortniteProGuitar" xml:space="preserve">
+        <value>Guitarra Pro</value>
+    </data>
+    <data name="DeviceControllerTypeFortniteProDrums" xml:space="preserve">
+        <value>Batería Pro</value>
     </data>
     <data name="TwiPinTypeSda" xml:space="preserve">
         <value>SDA</value>
@@ -1772,11 +1781,14 @@
     <data name="EmptyTypeEmpty" xml:space="preserve">
         <value>Vacío</value>
     </data>
+    <data name="SelectDpadLeftXb1" xml:space="preserve">
+        <value>Mapear Select al D-Pad Izquierdo en Xbox One/Series</value>
+    </data>
     <data name="EmulationModeTypeFnf" xml:space="preserve">
-        <value>Fortnite Festival (Modo Instrumento - Teclado)</value>
+        <value>Fortnite Festival (Modo Pro - Teclado)</value>
     </data>
     <data name="EmulationModeTypeFnfHid" xml:space="preserve">
-        <value>Fortnite Festival (Modo Instrumento - Mando en PC)</value>
+        <value>Fortnite Festival (Modo Pro - Mando en PC)</value>
     </data>
     <data name="EmulationModeTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>

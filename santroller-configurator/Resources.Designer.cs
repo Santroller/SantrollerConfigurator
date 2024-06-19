@@ -51,6 +51,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ModeBindingTitle {
+            get {
+                return ResourceManager.GetString("ModeBindingTitle", resourceCulture);
+            }
+        }
+        
         public static string DetectAxis {
             get {
                 return ResourceManager.GetString("DetectAxis", resourceCulture);
@@ -1503,15 +1509,27 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string DeviceControllerTypeFortniteGuitarStrum {
-            get {
-                return ResourceManager.GetString("DeviceControllerTypeFortniteGuitarStrum", resourceCulture);
-            }
-        }
-        
         public static string DeviceControllerTypeFortniteDrums {
             get {
                 return ResourceManager.GetString("DeviceControllerTypeFortniteDrums", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeFortniteProGuitar {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeFortniteProGuitar", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeFortniteProDrums {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeFortniteProDrums", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeFortniteGuitarStrum {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeFortniteGuitarStrum", resourceCulture);
             }
         }
         
@@ -2460,6 +2478,12 @@ namespace GuitarConfigurator.NetCore {
         public static string GuitarTapBarEnabled {
             get {
                 return ResourceManager.GetString("GuitarTapBarEnabled", resourceCulture);
+            }
+        }
+        
+        public static string SelectDpadLeftXb1 {
+            get {
+                return ResourceManager.GetString("SelectDpadLeftXb1", resourceCulture);
             }
         }
         
@@ -6948,24 +6972,6 @@ namespace GuitarConfigurator.NetCore {
         public static string VersionPrefixLabel {
             get {
                 return ResourceManager.GetString("VersionPrefixLabel", resourceCulture);
-            }
-        }
-        
-        public static string FortniteFestivalInstrumentMode {
-            get {
-                return ResourceManager.GetString("FortniteFestivalInstrumentMode", resourceCulture);
-            }
-        }
-        
-        public static string FortniteFestivalInstrumentModeKeyboard {
-            get {
-                return ResourceManager.GetString("FortniteFestivalInstrumentModeKeyboard", resourceCulture);
-            }
-        }
-        
-        public static string FortniteFestivalInstrumentModeRiffmaster {
-            get {
-                return ResourceManager.GetString("FortniteFestivalInstrumentModeRiffmaster", resourceCulture);
             }
         }
         

@@ -546,6 +546,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [Reactive] public int Debounce { get; set; }
+    
+    [Reactive] public bool SelectDpadLeftXb1 { get; set; }
 
     private ModeType _mode;
     private bool _deque;
@@ -1385,6 +1387,23 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (!IsGuitar || EmulationType is EmulationType.FortniteFestival)
         {
             Deque = false;
+        }
+
+        if (DeviceControllerType is DeviceControllerType.FortniteProGuitar or DeviceControllerType.FortniteProDrums)
+        {
+            if (!Bindings.Items.Any(s => s is EmulationMode {Type: EmulationModeType.Fnf}))
+            {
+                Bindings.Add(new EmulationMode(this,new DirectInput(-1, false, false, DevicePinMode.PullUp, this), EmulationModeType.Fnf));
+            }
+
+            var newType = DeviceControllerType == DeviceControllerType.FortniteProGuitar
+                ? DeviceControllerType.RockBandGuitar
+                : DeviceControllerType.RockBandDrums;
+            DeviceControllerType = newType;
+            _emulationType = EmulationType.Controller;
+            this.RaisePropertyChanged(nameof(EmulationType));
+            DeviceControllerType = newType;
+            return;
         }
 
         if (EmulationType is EmulationType.FortniteFestival)

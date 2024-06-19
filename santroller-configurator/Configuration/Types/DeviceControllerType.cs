@@ -16,7 +16,9 @@ public enum DeviceControllerType
     FortniteDrums,
     ProGuitarMustang = 14,
     ProGuitarSquire,
-    ProKeys
+    ProKeys,
+    FortniteProGuitar,
+    FortniteProDrums
 }
 
 public static class DeviceControllerRhythmTypeExtensions {
@@ -34,7 +36,7 @@ public static class DeviceControllerRhythmTypeExtensions {
     }
     public static bool IsFortnite(this DeviceControllerType type)
     {
-        return type is DeviceControllerType.FortniteDrums or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum;
+        return type is DeviceControllerType.FortniteDrums or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum or DeviceControllerType.FortniteProGuitar or DeviceControllerType.FortniteProDrums;
     }
     public static bool IsGh(this DeviceControllerType type)
     {

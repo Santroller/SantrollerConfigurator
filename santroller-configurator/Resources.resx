@@ -26,6 +26,9 @@
     <data name="ConsoleModeBindingTitle" xml:space="preserve">
         <value>Console Mode Binding</value>
     </data>
+    <data name="ModeBindingTitle" xml:space="preserve">
+        <value>Mode Binding</value>
+    </data>
     <data name="DetectAxis" xml:space="preserve">
         <value>Move the axis to detect</value>
     </data>
@@ -750,13 +753,19 @@
         <value>Rock Band Stage Kit</value>
     </data>
     <data name="DeviceControllerTypeFortniteGuitar" xml:space="preserve">
-        <value>Guitar</value>
-    </data>
-    <data name="DeviceControllerTypeFortniteGuitarStrum" xml:space="preserve">
-        <value>Guitar (with strum)</value>
+        <value>Normal Guitar</value>
     </data>
     <data name="DeviceControllerTypeFortniteDrums" xml:space="preserve">
-        <value>Drums</value>
+        <value>Normal Drums</value>
+    </data>
+    <data name="DeviceControllerTypeFortniteProGuitar" xml:space="preserve">
+        <value>Pro Guitar</value>
+    </data>
+    <data name="DeviceControllerTypeFortniteProDrums" xml:space="preserve">
+        <value>Pro Drums</value>
+    </data>
+    <data name="DeviceControllerTypeFortniteGuitarStrum" xml:space="preserve">
+        <value>Normal Guitar (with strum)</value>
     </data>
     <data name="DeviceControllerTypeProGuitarMustang" xml:space="preserve">
         <value>Pro Guitar (Mustang)</value>
@@ -1256,6 +1265,9 @@
     </data>
     <data name="GuitarTapBarEnabled" xml:space="preserve">
         <value>Slider Bar</value>
+    </data>
+    <data name="SelectDpadLeftXb1" xml:space="preserve">
+        <value>Map Select to D-Pad Left on Xbox One/Series</value>
     </data>
     <data name="WiiInputTypeGuitarTapBar" xml:space="preserve">
         <value>Guitar - Slider Axis</value>
@@ -1791,10 +1803,10 @@
         <value>Empty</value>
     </data>
     <data name="EmulationModeTypeFnf" xml:space="preserve">
-        <value>Fortnite Festival (Instrument Mode - Keyboard)</value>
+        <value>Fortnite Festival (Pro Mode - Keyboard)</value>
     </data>
     <data name="EmulationModeTypeFnfHid" xml:space="preserve">
-        <value>Fortnite Festival (Instrument Mode - PC gamepad)</value>
+        <value>Fortnite Festival (Pro Mode - PC gamepad)</value>
     </data>
     <data name="EmulationModeTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>
@@ -1822,7 +1834,7 @@
         <value>Controller</value>
     </data>
     <data name="EmulationTypeFortniteFestival" xml:space="preserve">
-        <value>Fortnite Festival (Pad mode)</value>
+        <value>Fortnite Festival</value>
     </data>
     <data name="EmulationTypeKeyboardMouse" xml:space="preserve">
         <value>Keyboard + Mouse</value>
@@ -3601,15 +3613,6 @@
     </data>
     <data name="VersionPrefixLabel" xml:space="preserve">
         <value>Version 10.0.18</value>
-    </data>
-    <data name="FortniteFestivalInstrumentMode" xml:space="preserve">
-        <value>Windows Fortnite Festival Instrument Mode</value>
-    </data>
-    <data name="FortniteFestivalInstrumentModeKeyboard" xml:space="preserve">
-        <value>Keyboard</value>
-    </data>
-    <data name="FortniteFestivalInstrumentModeRiffmaster" xml:space="preserve">
-        <value>Riffmaster</value>
     </data>
     <data name="TurntableNavButtons" xml:space="preserve">
         <value>HID Turntable Navigation Buttons</value>

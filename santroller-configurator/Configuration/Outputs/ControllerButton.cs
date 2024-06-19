@@ -82,8 +82,14 @@ public class ControllerButton : OutputButton
             return "";
         }
 
-        // RB on PS4 uses dpad left for star power activation
+        // RB / Festival on PS4 uses dpad left for star power activation
         if (mode is ConfigField.Ps4 && Type is StandardButtonType.Back && Model.DeviceControllerType.Is5FretGuitar())
+        {
+            return GetReportField(StandardButtonType.DpadLeft);
+        }
+        
+        // RB / Festival can use dpad left for star power activation, which works better in some cases
+        if (Model.SelectDpadLeftXb1 && mode is ConfigField.XboxOne && Type is StandardButtonType.Back && Model.DeviceControllerType.Is5FretGuitar())
         {
             return GetReportField(StandardButtonType.DpadLeft);
         }

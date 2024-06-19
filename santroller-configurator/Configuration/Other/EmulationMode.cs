@@ -92,7 +92,7 @@ public class EmulationMode : Output
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
-        return $"{EnumToStringConverter.Convert(Type)} {Resources.ConsoleModeBindingTitle}";
+        return Type is EmulationModeType.Fnf or EmulationModeType.FnfHid ? $"{EnumToStringConverter.Convert(Type)} {Resources.ModeBindingTitle}" : $"{EnumToStringConverter.Convert(Type)} {Resources.ConsoleModeBindingTitle}";
     }
 
     public override Enum GetOutputType()
