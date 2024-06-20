@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.ComponentModel;
 using DynamicData;
 using GuitarConfigurator.NetCore.ViewModels;
 using LibUsbDotNet;
@@ -157,16 +158,20 @@ public class ConfigurableUsbDeviceManager
     }
 
     public async Task RescanAsync()
-    {
-        var info2 = new ProcessStartInfo("powershell.exe");
-        info2.ArgumentList.AddRange(new[] {"-Command", "pnputil /enum-devices /connected | findstr 1209 | ForEach-Object { pnputil /remove-device $_.Split(\":\")[1].Trim() }; pnputil /scan-devices /async"});
-        info2.UseShellExecute = true;
-        info2.CreateNoWindow = true;
-        info2.WindowStyle = ProcessWindowStyle.Hidden;
-        info2.Verb = "runas";
-        var process2 = Process.Start(info2);
-        if (process2 == null) return;
-        await process2.WaitForExitAsync();
+    {   
+        try 
+        {
+            var info2 = new ProcessStartInfo("powershell.exe");
+            info2.ArgumentList.AddRange(new[] {"-Command", "pnputil /enum-devices /connected | findstr 1209 | ForEach-Object { pnputil /remove-device $_.Split(\":\")[1].Trim() }; pnputil /scan-devices /async"});
+            info2.UseShellExecute = true;
+            info2.CreateNoWindow = true;
+            info2.WindowStyle = ProcessWindowStyle.Hidden;
+            info2.Verb = "runas";
+            var process2 = Process.Start(info2);
+            if (process2 == null) return;
+            await process2.WaitForExitAsync();
+        } catch (Win32Exception) {
+        }
     }
 }
 #endif
