@@ -135,9 +135,9 @@ public class GuitarButton : OutputButton
             or ConfigField.Universal or ConfigField.Keyboard
             or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii or ConfigField.Ps2)) return "";
         // If combined debounce is on, then additionally generate extra logic to ignore this input if the opposite debounce flag is active
-        if (combinedDebounce && Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
-            combinedExtra = string.Join(" && ",
-                strumIndexes.Distinct().Where(s => s != debounceIndex).Select(x => $"!debounce[{x}]"));
+        if (Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
+            combinedExtra = "((!COMBINED_DEBOUNCE) || ("+string.Join(" && ",
+                strumIndexes.Distinct().Where(s => s != debounceIndex).Select(x => $"!debounce[{x}]"))+"))";
         if (mode is ConfigField.Shared && Model.DeviceControllerType is DeviceControllerType.FortniteGuitarStrum)
         {
             if (Type is InstrumentButtonType.Green or InstrumentButtonType.Red or InstrumentButtonType.Yellow

@@ -1854,6 +1854,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
                        #define LED_BRIGHTNESS {WriteBlob(writer, LedBrightnessOn)}
                        #define LOW_PASS_ALPHA {WriteBlob(writer, AdxlFilter)}
+                       #define DJ_NAV_BUTTONS {WriteBlob(writer, DjNavButtons)}
+                       #define COMBINED_DEBOUNCE {WriteBlob(writer, CombinedStrumDebounce)}
                        """;
 
             if (IsBluetoothRx)
@@ -1889,6 +1891,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                        #define INPUT_DJ_TURNTABLE_SMOOTHING {DjSmoothing.ToString().ToLower()}
                        #define LED_BRIGHTNESS {LedBrightnessOn}
                        #define LOW_PASS_ALPHA {AdxlFilter.ToString(CultureInfo.GetCultureInfo("en"))}
+                       #define DJ_NAV_BUTTONS {DjNavButtons.ToString().ToLower()}
+                       #define COMBINED_DEBOUNCE {CombinedStrumDebounce.ToString().ToLower()}
                        """;
             if (BtRxAddr.Length != 0 && BtRxAddr.Contains(':'))
             {

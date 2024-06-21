@@ -48,7 +48,27 @@ public class DjButton : OutputButton
         if (mode is ConfigField.Shared)
             return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
-        if ((mode is not ConfigField.Universal || Model.DjNavButtons) && mode is not ConfigField.Wii)
+        if (mode == ConfigField.Universal)
+        {
+            switch (Type)
+            {
+                case DjInputType.LeftGreen:
+                case DjInputType.RightGreen:
+                    extra = "if (DJ_NAV_BUTTONS) {report->a = true;}";
+                    break;
+                case DjInputType.LeftRed:
+                case DjInputType.RightRed:
+                    extra = "if (DJ_NAV_BUTTONS) {report->b = true;}";
+                    break;
+                case DjInputType.LeftBlue:
+                case DjInputType.RightBlue:
+                    extra = "if (DJ_NAV_BUTTONS) {report->x = true;}";
+                    break;
+                default:
+                    return "";
+            }
+        }
+        else if (mode is not ConfigField.Wii)
         {
             // Turntables also hit the standard buttons when you push each button
             switch (Type)
