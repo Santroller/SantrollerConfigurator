@@ -2487,6 +2487,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string AdafruitUsbHost {
+            get {
+                return ResourceManager.GetString("AdafruitUsbHost", resourceCulture);
+            }
+        }
+        
         public static string WiiInputTypeGuitarTapBar {
             get {
                 return ResourceManager.GetString("WiiInputTypeGuitarTapBar", resourceCulture);

@@ -2200,6 +2200,7 @@
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.ThresholdLabel}" />
 
+                        <StackPanel Orientation="Vertical">
                         <Grid>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUint}">
                                 <ProgressBar Opacity="0.5" Value="{Binding RawAnalogValue}"
@@ -2229,9 +2230,17 @@
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
                                     Minimum="{Binding Min, Mode=OneTime}"
-                                    Maximum="{Binding Max, Mode=OneTime}" Value="{Binding DisplayThreshold}"
-                                    IsVisible="{Binding IsUint}" />
+                                    Maximum="{Binding Max, Mode=OneTime}" Value="{Binding DisplayThreshold}" />
                         </Grid>
+                            
+                        <NumericUpDown FormatString="{}{0:#,0}"
+                                       Minimum="{Binding Min, Mode=OneTime}"
+                                       Maximum="{Binding Max, Mode=OneTime}"
+                                       Value="{Binding DisplayThreshold}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"
+                                       Width="200" />
+                    </StackPanel>
                     </StackPanel>
                     <ContentControl Content="{Binding Child}"
                                     ContentTemplate="{StaticResource OutputTemplates}" />
@@ -3082,6 +3091,16 @@
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding Tilt}"
+                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding UsbHostEnabled}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.AdafruitUsbHost}" />
+                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                          HorizontalContentAlignment="Center"
+                                          IsChecked="{Binding AdafruitHost}"
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>

@@ -44,13 +44,18 @@ public abstract class Microcontroller
                 (s.Type == ConfigViewModel.UnoPinTypeRx || s.Type == ConfigViewModel.UnoPinTypeTx) &&
                 s.Pins.Contains(possiblePin))
             .Select(s => s.Type);
+        var featherPin = model.PinConfigs.Where(s =>
+                s.Peripheral == peripheral &&
+                (s.Type == ConfigViewModel.AdafruitHostType) &&
+                s.Pins.Contains(possiblePin))
+            .Select(s => s.Type);
 
         var output = string.Join(" - ",
             outputs.Where(o =>
                     o.GetPinConfigs().Except(selectedConfig)
                         .Any(s => s.Peripheral == peripheral && s.Pins.Contains(possiblePin)))
                 .Select(s => s.GetName(model.DeviceControllerType, model.LegendType, model.SwapSwitchFaceButtons))
-                .Concat(apa102).Concat(unoMega));
+                .Concat(apa102).Concat(unoMega).Concat(featherPin));
         var ret = GetPinForMicrocontroller(possiblePin, twi, spi, outputMode);
         if (!string.IsNullOrEmpty(output) && addText) return "* " + ret + " - " + output;
 

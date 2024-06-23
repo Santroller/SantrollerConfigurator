@@ -40,12 +40,13 @@ namespace GuitarConfigurator.NetCore.ViewModels;
 public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 {
     public static readonly string Apa102SpiType = "APA102";
+    public static readonly string AdafruitHostType = "Adafruit Feather RP2040 USB Host Enable";
     public static readonly string Stp16SpiType = "STP16CPC26";
     public static readonly string WS2812SpiType = "WS2812";
-    public static readonly string WiiOutputTwiType = "WiiOutput";
-    public static readonly string Ps2OutputTwiType = "Ps2Output";
-    public static readonly string Ps2OutputAckType = "Ps2OutputAck";
-    public static readonly string Ps2OutputAttType = "Ps2OutputAtt";
+    public static readonly string WiiOutputTwiType = "Wii Output";
+    public static readonly string Ps2OutputTwiType = "Ps2 Output";
+    public static readonly string Ps2OutputAckType = "Ps2 Output Acknowledge";
+    public static readonly string Ps2OutputAttType = "Ps2 Output Attention";
     public static readonly string Stp16PeripheralSpiType = "Peripheral STP16CPC26";
     public static readonly string Apa102PeripheralSpiType = "Peripheral APA102";
     public static readonly string WS2812PeripheralSpiType = "Peripheral WS2812";
@@ -55,12 +56,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly string Stp16OePeripheralType = "Peripheral STP16CPC26 Output Enable";
     public static readonly string PeripheralTwiType = "Peripheral";
     public static readonly int PeripheralTwiClock = 500000;
-    public static readonly string Mpr121TwiType = "mpr121";
+    public static readonly string Mpr121TwiType = "MPR121";
     public static readonly int Mpr121TwiFreq = 400000;
-    public static readonly string Max170XTwiType = "max170x";
+    public static readonly string Max170XTwiType = "MAX170x";
     public static readonly int Max170XTwiFreq = 400000;
-    public static readonly string UsbHostPinTypeDm = "DM";
-    public static readonly string UsbHostPinTypeDp = "DP";
+    public static readonly string UsbHostPinTypeDm = "USB D-";
+    public static readonly string UsbHostPinTypeDp = "USB D+";
     public static readonly string UnoPinTypeTx = "Uno Serial Tx Pin";
     public static readonly string UnoPinTypeRx = "Uno Serial Rx Pin";
     public static readonly int UnoPinTypeRxPin = 0;
@@ -82,6 +83,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private DirectPinConfig? _stp16Le;
     private DirectPinConfig? _stp16OePeripheral;
     private DirectPinConfig? _stp16LePeripheral;
+    private DirectPinConfig? _adaFruitHostPin;
 
     private EmulationType _emulationType;
 
@@ -1274,6 +1276,25 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsProKeys { get; }
 
     [ObservableAsProperty] public bool SupportsPS4Instrument { get; }
+    
+    public bool AdafruitHost
+    {
+        get=>_adaFruitHostPin != null;
+        set
+        {
+            if (value)
+            {
+                _adaFruitHostPin = new DirectPinConfig(this, AdafruitHostType, 18, false, DevicePinMode.Output);
+                UsbHostDm = 17;
+            }
+            else
+            {
+                _adaFruitHostPin = null;
+            }
+            this.RaisePropertyChanged();
+            UpdateErrors();
+        }
+    }
 
     [ObservableAsProperty] public bool IsGuitarHeroGuitar { get; }
     [ObservableAsProperty] public bool IsStageKit { get; }
@@ -1365,7 +1386,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 _ledSpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
                 _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
-                _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt
+                _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt, _adaFruitHostPin
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -2268,7 +2289,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private string GenerateInit()
     {
-        return FixNewlines(Microcontroller.GenerateInit(this));
+        var ret = "";
+        if (_adaFruitHostPin != null)
+        {
+            ret += $"""
+                    
+                    {Microcontroller.GenerateDigitalWrite(_adaFruitHostPin.Pin, true, false)};
+                    """;
+        }
+        return FixNewlines(Microcontroller.GenerateInit(this)+ret);
     }
 
     private string GenerateInitPeripheral()
@@ -3734,6 +3763,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         if (UsbHostEnabled && type != UsbHostPinTypeDm && type != UsbHostPinTypeDp && !peripheral)
             pins["USB Host"] = [UsbHostDm, UsbHostDp];
+        
+        if (_adaFruitHostPin != null && type != AdafruitHostType && !peripheral)
+            pins["Adafruit USB Host Enable"] = [_adaFruitHostPin.Pin];
 
         if (_peripheralTwiConfig != null && type != PeripheralTwiType && !twi && !peripheral)
         {
@@ -3780,7 +3812,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             foundError = true;
             LedErrorText = _stp16Oe.ErrorText;
         }
-
         if (HasPeripheral && _ledSpiConfigPeripheral?.ErrorText != null)
         {
             foundError = true;
