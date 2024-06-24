@@ -212,11 +212,13 @@ public class SerializedConfiguration
             model.WiiOutputScl = WiiOutputScl;
             model.WiiOutputSda = WiiOutputSda;
         }
+
         if (HasMpr121)
         {
             model.Mpr121Scl = Mpr121Scl;
             model.Mpr121Sda = Mpr121Sda;
         }
+
         if (HasMax1704X)
         {
             model.Max1704XScl = Max1704XScl;
@@ -274,7 +276,6 @@ public class SerializedConfiguration
 
     public void Merge(ConfigViewModel model)
     {
-        model.AdxlFilter = AdxlFilter;
         model.XInputOnWindows = XInputOnWindows;
         model.XInputAuth = XInputAuth;
         model.SliderBar = !SliderbarDisabled;
@@ -294,47 +295,46 @@ public class SerializedConfiguration
         model.DjFullRange = DjFullRange;
         model.DjNavButtons = DjNavButtons;
         model.SelectDpadLeftXb1 = SelectDpadLeftXb1;
+        model.AdxlFilter = AdxlFilter;
         var clone = new List<Output>(model.Bindings.Items);
         var generated = Bindings.Select(s => s.Generate(model)).SelectMany(s => s.Outputs.Items)
             .GroupBy(s => s.GetOutputType()).ToDictionary(s => s.Key, s => s);
         model.Bindings.Clear();
         model.Bindings.AddRange(clone);
         if (generated.Count == 0) return;
+        var current = model.Bindings.Items.SelectMany(s => s.Outputs.Items).GroupBy(s => s.GetOutputType())
+            .ToDictionary(s => s.Key, s => s);
+        foreach (var (key, currentOutputs) in current)
         {
-            var current = model.Bindings.Items.SelectMany(s => s.Outputs.Items).GroupBy(s => s.GetOutputType())
-                .ToDictionary(s => s.Key, s => s);
-            foreach (var (key, currentOutputs) in current)
+            if (!generated.TryGetValue(key, out var outputs)) continue;
+            // Group up outputs by type, and then copy them across in order. This does mean that if someone uses multiple of the same output type, and changes the order around, calibration and LEDs may swap places, but that is fine.
+            foreach (var (output, outputToMerge) in currentOutputs.Zip(outputs))
             {
-                if (!generated.TryGetValue(key, out var outputs)) continue;
-                // Group up outputs by type, and then copy them across in order. This does mean that if someone uses multiple of the same output type, and changes the order around, calibration and LEDs may swap places, but that is fine.
-                foreach (var (output, outputToMerge) in currentOutputs.Zip(outputs))
+                output.LedOn = outputToMerge.LedOn;
+                output.LedOff = outputToMerge.LedOff;
+                output.LedIndices = outputToMerge.LedIndices;
+                output.LedIndicesPeripheral = outputToMerge.LedIndicesPeripheral;
+                if (outputToMerge is DjAxis djToMerge && output is DjAxis outputDj)
                 {
-                    output.LedOn = outputToMerge.LedOn;
-                    output.LedOff = outputToMerge.LedOff;
-                    output.LedIndices = outputToMerge.LedIndices;
-                    output.LedIndicesPeripheral = outputToMerge.LedIndicesPeripheral;
-                    if (outputToMerge is DjAxis djToMerge && output is DjAxis outputDj)
-                    {
-                        outputDj.Multiplier = djToMerge.Multiplier;
-                        outputDj.Invert = djToMerge.Invert;
-                    }
+                    outputDj.Multiplier = djToMerge.Multiplier;
+                    outputDj.Invert = djToMerge.Invert;
+                }
 
-                    if (outputToMerge is DrumAxis drumToMerge && output is DrumAxis outputDrum)
-                    {
-                        outputDrum.Debounce = drumToMerge.Debounce;
-                    }
+                if (outputToMerge is DrumAxis drumToMerge && output is DrumAxis outputDrum)
+                {
+                    outputDrum.Debounce = drumToMerge.Debounce;
+                }
 
-                    switch (outputToMerge)
-                    {
-                        case OutputAxis axisToMerge when output is OutputAxis outputAxis:
-                            outputAxis.Min = axisToMerge.Min;
-                            outputAxis.Max = axisToMerge.Max;
-                            outputAxis.DeadZone = axisToMerge.DeadZone;
-                            break;
-                        case OutputButton buttonToMerge when output is OutputButton outputButton:
-                            outputButton.Debounce = buttonToMerge.Debounce;
-                            break;
-                    }
+                switch (outputToMerge)
+                {
+                    case OutputAxis axisToMerge when output is OutputAxis outputAxis:
+                        outputAxis.Min = axisToMerge.Min;
+                        outputAxis.Max = axisToMerge.Max;
+                        outputAxis.DeadZone = axisToMerge.DeadZone;
+                        break;
+                    case OutputButton buttonToMerge when output is OutputButton outputButton:
+                        outputButton.Debounce = buttonToMerge.Debounce;
+                        break;
                 }
             }
         }

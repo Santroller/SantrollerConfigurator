@@ -583,7 +583,21 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool DjFullRange { get; set; }
     
     [Reactive] public bool DjNavButtons { get; set; }
-    [Reactive] public double AdxlFilter { get; set; }
+
+    private double _adxlFilter;
+    public double AdxlFilter
+    {
+        get=>_adxlFilter;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _adxlFilter, value);
+            if (Device is Santroller santroller)
+            {
+                santroller.SetAdxlFilter(value);
+            }
+        }
+    }
+
     [Reactive] public bool DjSmoothing { get; set; }
 
     [Reactive] public string BtRxAddr { get; set; }

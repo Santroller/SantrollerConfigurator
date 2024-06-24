@@ -26,20 +26,6 @@ public class AdxlInput : TwiInput
         Combined = combined;
         BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
         IsAnalog = true;
-        this.WhenAnyValue(x => x.Model.AdxlFilter).Subscribe(_ => this.RaisePropertyChanged(nameof(Filter)));
-    }
-
-    public double Filter
-    {
-        get => Model.AdxlFilter;
-        set
-        {
-            Model.AdxlFilter = value;
-            if (Model.Device is Santroller santroller)
-            {
-                santroller.SetAdxlFilter(value);
-            }
-        }
     }
 
     public AdxlInputType Input { get; }
