@@ -921,7 +921,7 @@
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.LowPassFilterLabel}" />
-                        <NumericUpDown Value="{Binding Model.AdxlFilter}" Minimum="0"
+                        <NumericUpDown Value="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).AdxlFilter}" Minimum="0"
                                        Maximum="1" Width="200" Height="30" ShowButtonSpinner="False" AllowSpin="False" />
                     </StackPanel>
                 </StackPanel>
