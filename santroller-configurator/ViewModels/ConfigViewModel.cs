@@ -2298,7 +2298,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private string GenerateLedInit()
     {
-        return FixNewlines(Microcontroller.GenerateLedInit(this));
+        var ret = "";
+        if (_adaFruitHostPin != null)
+        {
+            ret += $"""
+
+                    {Microcontroller.GenerateDigitalWrite(_adaFruitHostPin.Pin, true, false)};
+                    """;
+        }
+        return FixNewlines(Microcontroller.GenerateLedInit(this)+ret);
     }
 
     private string GenerateInit()
