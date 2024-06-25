@@ -3094,7 +3094,13 @@
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding UsbHostEnabled}">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="UsbHostEnabled" />
+                                    <Binding Path="!Branded" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.AdafruitUsbHost}" />
