@@ -115,7 +115,7 @@ public class Gh5NeckInput : TwiInput
 
         var mappings = MappingByInput[Input];
         return "(gh5Valid && (" +
-               string.Join(" || ", mappings.Select(mapping => $"(fivetar_buttons[1] == {mapping})")) + "))";
+               string.Join(" || ", mappings.Select(mapping => $"(fivetar_buttons[1] == {mapping ^ 0x80})")) + "))";
     }
 
     public override SerializedInput Serialise()
