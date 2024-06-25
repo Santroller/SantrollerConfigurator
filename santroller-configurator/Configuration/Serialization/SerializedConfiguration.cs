@@ -87,6 +87,7 @@ public class SerializedConfiguration
         DjFullRange = model.DjFullRange;
         DjNavButtons = model.DjNavButtons;
         SelectDpadLeftXb1 = model.SelectDpadLeftXb1;
+        AdafruitHost = model.AdafruitHost;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -155,6 +156,7 @@ public class SerializedConfiguration
     [ProtoMember(74)] public bool DjNavButtons { get; private set; } = false;
     [ProtoMember(75)] public bool DjFullRange { get; private set; } = true;
     [ProtoMember(76)] public bool SelectDpadLeftXb1 { get; private set; } = false;
+    [ProtoMember(77)] public bool AdafruitHost { get; private set; } = false;
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -192,6 +194,7 @@ public class SerializedConfiguration
         model.LedBrightnessOff = (byte) (LedBrightnessOff == 0 ? 32 : LedBrightnessOff);
         model.Apa102IsFullSize = Apa102IsFullSize;
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
+        model.AdafruitHost = AdafruitHost;
         if (HasPeripheral)
         {
             model.PeripheralScl = PeripheralScl;
