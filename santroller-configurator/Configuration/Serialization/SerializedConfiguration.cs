@@ -88,6 +88,7 @@ public class SerializedConfiguration
         DjNavButtons = model.DjNavButtons;
         SelectDpadLeftXb1 = model.SelectDpadLeftXb1;
         AdafruitHost = model.AdafruitHost;
+        MidiDrumAutoOff = model.MidiDrumAutoOff;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -157,6 +158,7 @@ public class SerializedConfiguration
     [ProtoMember(75)] public bool DjFullRange { get; private set; } = true;
     [ProtoMember(76)] public bool SelectDpadLeftXb1 { get; private set; } = false;
     [ProtoMember(77)] public bool AdafruitHost { get; private set; } = false;
+    [ProtoMember(78)] public bool MidiDrumAutoOff { get; private set; } = false;
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -195,6 +197,7 @@ public class SerializedConfiguration
         model.Apa102IsFullSize = Apa102IsFullSize;
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
         model.AdafruitHost = AdafruitHost;
+        model.MidiDrumAutoOff = MidiDrumAutoOff;
         if (HasPeripheral)
         {
             model.PeripheralScl = PeripheralScl;
@@ -299,6 +302,7 @@ public class SerializedConfiguration
         model.DjNavButtons = DjNavButtons;
         model.SelectDpadLeftXb1 = SelectDpadLeftXb1;
         model.AdxlFilter = AdxlFilter;
+        model.MidiDrumAutoOff = MidiDrumAutoOff;
         var clone = new List<Output>(model.Bindings.Items);
         var generated = Bindings.Select(s => s.Generate(model)).SelectMany(s => s.Outputs.Items)
             .GroupBy(s => s.GetOutputType()).ToDictionary(s => s.Key, s => s);

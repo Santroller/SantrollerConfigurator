@@ -2487,6 +2487,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string MidiNoteOffFixLabel {
+            get {
+                return ResourceManager.GetString("MidiNoteOffFixLabel", resourceCulture);
+            }
+        }
+        
         public static string AdafruitUsbHost {
             get {
                 return ResourceManager.GetString("AdafruitUsbHost", resourceCulture);

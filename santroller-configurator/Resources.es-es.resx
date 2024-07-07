@@ -1784,6 +1784,9 @@
     <data name="SelectDpadLeftXb1" xml:space="preserve">
         <value>Mapear Select al D-Pad Izquierdo en Xbox One/Series</value>
     </data>
+    <data name="MidiNoteOffFixLabel" xml:space="preserve">
+        <value>Arreglo de nota apagada de Batería MIDI</value>
+    </data>
     <data name="AdafruitUsbHost" xml:space="preserve">
         <value>Host por USB de Adafruit Feather RP2040</value>
     </data>

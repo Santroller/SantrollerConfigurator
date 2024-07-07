@@ -1269,6 +1269,9 @@
     <data name="SelectDpadLeftXb1" xml:space="preserve">
         <value>Map Select to D-Pad Left on Xbox One/Series</value>
     </data>
+    <data name="MidiNoteOffFixLabel" xml:space="preserve">
+        <value>MIDI drum note off fix</value>
+    </data>
     <data name="AdafruitUsbHost" xml:space="preserve">
         <value>Adafruit Feather RP2040 USB Host</value>
     </data>

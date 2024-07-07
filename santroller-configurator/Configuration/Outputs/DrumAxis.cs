@@ -190,6 +190,11 @@ public partial class DrumAxis : OutputAxis
                 .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
         }
 
+        // Some drums never send a note off, so we fabricate one here.
+        if (Model.MidiDrumAutoOff && mode is ConfigField.Reset && Input is MidiInput midiInput)
+        {
+            return $"midiData.midiVelocities[{midiInput.Key}] = 0;";
+        }
 
         if (Model.EmulationType is not EmulationType.FortniteFestival && (mode is not (ConfigField.Ps3
                 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360

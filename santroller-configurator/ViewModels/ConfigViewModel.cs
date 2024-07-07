@@ -172,10 +172,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 or DeviceControllerType.RockBandDrums && !x.Item2)
             .ToPropertyEx(this, x => x.SupportsPS4Instrument);
         this.WhenAnyValue(x => x.DeviceControllerType)
-            .Select(x => x is DeviceControllerType.LiveGuitar or DeviceControllerType.GuitarHeroGuitar
-                or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar
-                or DeviceControllerType.FortniteGuitarStrum)
+            .Select(x => x.IsGuitar())
             .ToPropertyEx(this, x => x.IsGuitar);
+        this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(x => x.IsDrum())
+            .ToPropertyEx(this, x => x.IsDrum);
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.ProKeys)
             .ToPropertyEx(this, x => x.IsProKeys);
@@ -286,6 +287,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.IsBluetooth, x => x.WasBluetooth)
             .Select(x => x.Item1 || x.Item2)
             .ToPropertyEx(this, x => x.IsOrWasBluetooth);
+        Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is UsbHostCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput))
+            .ToPropertyEx(this, x => x.UsbHostEnabled);
+        Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is MidiCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
+            .ToPropertyEx(this, x => x.HasMidi);
         Bindings.Connect().TransformMany(s => s.AllDigitalOutputs).Bind(out _digitalOutputs).Subscribe();
         if (Branded)
         {
@@ -550,6 +557,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public int Debounce { get; set; }
     
     [Reactive] public bool SelectDpadLeftXb1 { get; set; }
+    
+    [Reactive] public bool MidiDrumAutoOff { get; set; }
 
     private ModeType _mode;
     private bool _deque;
@@ -1286,6 +1295,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStandardMode { get; }
     [ObservableAsProperty] public bool IsAdvancedMode { get; }
     [ObservableAsProperty] public bool IsGuitar { get; }
+    
+    [ObservableAsProperty] public bool IsDrum { get; }
     [ObservableAsProperty] public bool IsTurntable { get; }
     [ObservableAsProperty] public bool IsProKeys { get; }
 
@@ -1342,9 +1353,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool HasGh5CombinedOutput { get; }
     [ObservableAsProperty] public bool HasUsbHostCombinedOutput { get; }
 
-    public bool UsbHostEnabled => Bindings.Items.Any(x =>
-        x is UsbHostCombinedOutput ||
-        x.Outputs.Items.Any(x2 => x2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput));
+    [ObservableAsProperty] public bool UsbHostEnabled { get; }
+    [ObservableAsProperty] public bool HasMidi { get; }
 
     // ReSharper enable UnassignedGetOnlyAutoProperty
 
