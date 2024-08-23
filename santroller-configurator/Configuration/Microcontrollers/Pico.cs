@@ -303,7 +303,7 @@ public class Pico : Microcontroller
                 ret += $" / ADC{pin - 26}";
                 break;
             case 23:
-                ret += " Pico Power Supply PS";
+                ret += " Pico Power Supply Power Select";
                 break;
             case 24:
                 ret += " VBUS sense";
