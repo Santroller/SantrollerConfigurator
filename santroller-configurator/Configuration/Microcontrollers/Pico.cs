@@ -130,7 +130,7 @@ public class Pico : Microcontroller
 
     // All pins support pwm
     public override List<int> PwmPins { get; } =
-        Enumerable.Range(0, GpioCount).Where(i => i is not (23 or 24)).ToList();
+        Enumerable.Range(0, GpioCount).ToList();
 
     public override int GetFirstAnalogPin()
     {
@@ -297,7 +297,21 @@ public class Pico : Microcontroller
             ret += $" / SPI{value1} {type.ToString().ToUpper()}";
         }
 
-        if (pin >= 26) ret += $" / ADC{pin - 26}";
+        switch (pin)
+        {
+            case >= 26:
+                ret += $" / ADC{pin - 26}";
+                break;
+            case 23:
+                ret += " Pico Power Supply PS";
+                break;
+            case 24:
+                ret += " VBUS sense";
+                break;
+            case 25:
+                ret += " Pico Onboard LED / Pico W Wireless module chip-select";
+                break;
+        }
 
         return ret;
     }
