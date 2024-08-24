@@ -75,6 +75,11 @@ public class ControllerButton : OutputButton
         {
             return "";
         }
+        // No thumb click on wii
+        if (mode is ConfigField.Wii && Type is StandardButtonType.LeftThumbClick or StandardButtonType.RightThumbClick)
+        {
+            return "";
+        }
 
         // capture button only exists on switch (which uses ps3 mappings)
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps4) && Type is StandardButtonType.Capture)
