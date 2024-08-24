@@ -640,6 +640,74 @@ public class Led : Output
                         """;
             }
         }
+        
+        if (Model.IsApa102 || Model.IsWs2812)
+        {
+            foreach (var index in LedIndices)
+            {
+                on += $"""
+
+                       ledState[{index - 1}].select = 1;
+                       {Model.LedType.GetLedAssignment(false, LedOn, index, Model.LedBrightnessOn, writer)}
+                       """;
+                off += $"""
+
+                        ledState[{index - 1}].select = 0;
+                        {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
+                        """;
+                between +=
+                    $"""
+
+                     ledState[{index - 1}].select = 1;
+                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "rumble_left", writer)}
+                     """;
+                starPowerBetween +=
+                    $"""
+
+                     ledState[{index - 1}].select = 1;
+                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "last_star_power", writer)}
+                     """;
+
+                ps4 += $"""
+                        ledState[{index - 1}].select = 1;
+                        {Model.LedType.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        """;
+            }
+        }
+
+        if (Model.IsApa102Peripheral || Model.IsWs2812Peripheral)
+        {
+            foreach (var index in LedIndicesPeripheral)
+            {
+                on += $"""
+
+                       ledStatePeripheral[{index - 1}].select = 1;
+                       {Model.LedTypePeripheral.GetLedAssignment(true, LedOn, index, Model.LedBrightnessOn, writer)}
+                       """;
+                off += $"""
+
+                        ledStatePeripheral[{index - 1}].select = 0;
+                        {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
+                        """;
+                between +=
+                    $"""
+
+                     ledStatePeripheral[{index - 1}].select = 1;
+                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "rumble_left", writer)}
+                     """;
+                starPowerBetween +=
+                    $"""
+
+                     ledStatePeripheral[{index - 1}].select = 1;
+                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "last_star_power", writer)}
+                     """;
+
+                ps4 += $"""
+                        ledStatePeripheral[{index - 1}].select = 1;
+                        {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        """;
+            }
+        }
 
 
         if (Model.HasMpr121)
