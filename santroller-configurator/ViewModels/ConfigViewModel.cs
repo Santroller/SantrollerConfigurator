@@ -1101,6 +1101,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public bool SliderBar { get; set; }
     [Reactive] public bool Tilt { get; set; }
+    
+    [Reactive] public bool JoystickToDpad { get; set; }
 
 
     private bool _hasPeripheral;
@@ -1882,26 +1884,27 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (blobStream != null)
         {
             writer = new BinaryWriter(blobStream);
-            config += $"""
-                       #define CONFIGURABLE_BLOBS
-                       #define CONFIGURATION_LEN {WriteBlob(writer, configLength)}
-                       #define SWAP_SWITCH_FACE_BUTTONS {WriteBlob(writer, SwapSwitchFaceButtons)}
-                       #define WINDOWS_USES_XINPUT {WriteBlob(writer, XInputOnWindows && IsStandardController)}
-                       #define WINDOWS_TURNTABLE_FULLRANGE {WriteBlob(writer, XInputOnWindows && DjFullRange)}
-                       #define RPCS3_COMPAT {WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}
-                       #define XINPUT_AUTH {WriteBlob(writer, XInputAuth && UsbHostEnabled)}
-                       #define SLIDER_BAR {WriteBlob(writer, SliderBar)}
-                       #define TILT {WriteBlob(writer, Tilt)}
-                       #define INPUT_QUEUE {WriteBlob(writer, Deque)}
-                       #define POLL_RATE {WriteBlob(writer, (byte) PollRate)}
-                       #define INPUT_DJ_TURNTABLE_POLL_RATE {WriteBlob(writer, (byte) DjPollRate)}
-                       #define INPUT_DJ_TURNTABLE_SMOOTHING {WriteBlob(writer, DjSmoothing)}
-                       #define WT_SENSITIVITY {WriteBlob(writer, WtSensitivity)}
-                       #define LED_BRIGHTNESS {WriteBlob(writer, LedBrightnessOn)}
-                       #define LOW_PASS_ALPHA {WriteBlob(writer, AdxlFilter)}
-                       #define DJ_NAV_BUTTONS {WriteBlob(writer, DjNavButtons)}
-                       #define COMBINED_DEBOUNCE {WriteBlob(writer, CombinedStrumDebounce)}
-                       """;
+            config += $$"""
+                        #define CONFIGURABLE_BLOBS
+                        #define CONFIGURATION_LEN {{WriteBlob(writer, configLength)}}
+                        #define SWAP_SWITCH_FACE_BUTTONS {{WriteBlob(writer, SwapSwitchFaceButtons)}}
+                        #define WINDOWS_USES_XINPUT {{WriteBlob(writer, XInputOnWindows && IsStandardController)}}
+                        #define WINDOWS_TURNTABLE_FULLRANGE {{WriteBlob(writer, XInputOnWindows && DjFullRange)}}
+                        #define RPCS3_COMPAT {{WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}}
+                        #define XINPUT_AUTH {{WriteBlob(writer, XInputAuth && UsbHostEnabled)}}
+                        #define SLIDER_BAR {{WriteBlob(writer, SliderBar)}}
+                        #define TILT {{WriteBlob(writer, Tilt)}}
+                        #define JOYSTICK_TO_DPAD {{WriteBlob(writer, JoystickToDpad)}}
+                        #define INPUT_QUEUE {{WriteBlob(writer, Deque)}}
+                        #define POLL_RATE {{WriteBlob(writer, (byte) PollRate)}}
+                        #define INPUT_DJ_TURNTABLE_POLL_RATE {{WriteBlob(writer, (byte) DjPollRate)}}
+                        #define INPUT_DJ_TURNTABLE_SMOOTHING {{WriteBlob(writer, DjSmoothing)}}
+                        #define WT_SENSITIVITY {{WriteBlob(writer, WtSensitivity)}}
+                        #define LED_BRIGHTNESS {{WriteBlob(writer, LedBrightnessOn)}}
+                        #define LOW_PASS_ALPHA {{WriteBlob(writer, AdxlFilter)}}
+                        #define DJ_NAV_BUTTONS {{WriteBlob(writer, DjNavButtons)}}
+                        #define COMBINED_DEBOUNCE {{WriteBlob(writer, CombinedStrumDebounce)}}
+                        """;
 
             if (IsBluetoothRx)
             {
@@ -1920,25 +1923,26 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
         else
         {
-            config += $"""
-                       #define CONFIGURATION_LEN {configLength}
-                       #define SWAP_SWITCH_FACE_BUTTONS {(!SwapSwitchFaceButtons).ToString().ToLower()}
-                       #define WINDOWS_USES_XINPUT {(XInputOnWindows && IsStandardController).ToString().ToLower()}
-                       #define WINDOWS_TURNTABLE_FULLRANGE {(XInputOnWindows && DjFullRange).ToString().ToLower()}
-                       #define RPCS3_COMPAT {(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}
-                       #define XINPUT_AUTH {(XInputAuth && UsbHostEnabled).ToString().ToLower()}
-                       #define SLIDER_BAR {SliderBar.ToString().ToLower()}
-                       #define TILT {Tilt.ToString().ToLower()}
-                       #define INPUT_QUEUE {Deque.ToString().ToLower()}
-                       #define POLL_RATE {PollRate}
-                       #define WT_SENSITIVITY {WtSensitivity}
-                       #define INPUT_DJ_TURNTABLE_POLL_RATE {DjPollRate * 1000}
-                       #define INPUT_DJ_TURNTABLE_SMOOTHING {DjSmoothing.ToString().ToLower()}
-                       #define LED_BRIGHTNESS {LedBrightnessOn}
-                       #define LOW_PASS_ALPHA {AdxlFilter.ToString(CultureInfo.GetCultureInfo("en"))}
-                       #define DJ_NAV_BUTTONS {DjNavButtons.ToString().ToLower()}
-                       #define COMBINED_DEBOUNCE {CombinedStrumDebounce.ToString().ToLower()}
-                       """;
+            config += $$"""
+                        #define CONFIGURATION_LEN {{configLength}}
+                        #define SWAP_SWITCH_FACE_BUTTONS {{(!SwapSwitchFaceButtons).ToString().ToLower()}}
+                        #define WINDOWS_USES_XINPUT {{(XInputOnWindows && IsStandardController).ToString().ToLower()}}
+                        #define WINDOWS_TURNTABLE_FULLRANGE {{(XInputOnWindows && DjFullRange).ToString().ToLower()}}
+                        #define RPCS3_COMPAT {{(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}}
+                        #define XINPUT_AUTH {{(XInputAuth && UsbHostEnabled).ToString().ToLower()}}
+                        #define SLIDER_BAR {{SliderBar.ToString().ToLower()}}
+                        #define TILT {{Tilt.ToString().ToLower()}}
+                        #define JOYSTICK_TO_DPAD {{JoystickToDpad.ToString().ToLower()}}
+                        #define INPUT_QUEUE {{Deque.ToString().ToLower()}}
+                        #define POLL_RATE {{PollRate}}
+                        #define WT_SENSITIVITY {{WtSensitivity}}
+                        #define INPUT_DJ_TURNTABLE_POLL_RATE {{DjPollRate * 1000}}
+                        #define INPUT_DJ_TURNTABLE_SMOOTHING {{DjSmoothing.ToString().ToLower()}}
+                        #define LED_BRIGHTNESS {{LedBrightnessOn}}
+                        #define LOW_PASS_ALPHA {{AdxlFilter.ToString(CultureInfo.GetCultureInfo("en"))}}
+                        #define DJ_NAV_BUTTONS {{DjNavButtons.ToString().ToLower()}}
+                        #define COMBINED_DEBOUNCE {{CombinedStrumDebounce.ToString().ToLower()}}
+                        """;
             if (BtRxAddr.Length != 0 && BtRxAddr.Contains(':'))
             {
                 config += $"""

@@ -3693,6 +3693,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string JoystickToDpad {
+            get {
+                return ResourceManager.GetString("JoystickToDpad", resourceCulture);
+            }
+        }
+        
         public static string InputTypeAnalogPinInput {
             get {
                 return ResourceManager.GetString("InputTypeAnalogPinInput", resourceCulture);

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using Avalonia.Input;
 using Avalonia.Media;
+using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Exceptions;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
@@ -195,6 +196,12 @@ public abstract class OutputButton : Output
                 if (!macros.TryGetValue(gen2, out var inputs2)) continue;
                 extra += string.Join("\n    ", inputs2.Select(s => $"debounce[{s.Item1}]=0;"));
             }
+        }
+        
+            
+        if (GenerateOutput(ConfigField.Ps3).Contains("dpad") && Input is AnalogToDigital)
+        {
+            extraStatement += "&& JOYSTICK_TO_DPAD";
         }
         var ret = $$"""
                  if (({{gen}} {{extraStatement}})) {

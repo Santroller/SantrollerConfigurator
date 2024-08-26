@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DynamicData;
+using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
@@ -72,6 +73,7 @@ public class SerializedConfiguration
         Max1704XScl = model.Max1704XScl;
         SliderbarDisabled = !model.SliderBar;
         TiltDisabled = !model.Tilt;
+        JoystickToDpadDisabled = !model.JoystickToDpad;
         HideControllerView = model.HideControllerView;
         Ps4Instruments = model.Ps4Instruments;
         AdxlFilter = model.AdxlFilter;
@@ -159,6 +161,7 @@ public class SerializedConfiguration
     [ProtoMember(76)] public bool SelectDpadLeftXb1 { get; private set; } = false;
     [ProtoMember(77)] public bool AdafruitHost { get; private set; } = false;
     [ProtoMember(78)] public bool MidiDrumAutoOff { get; private set; } = false;
+    [ProtoMember(79)] public bool JoystickToDpadDisabled { get; private set; } = false;
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -180,6 +183,7 @@ public class SerializedConfiguration
         model.StrumDebounce = StrumDebounce;
         model.SliderBar = !SliderbarDisabled;
         model.Tilt = !TiltDisabled;
+        model.JoystickToDpad = !JoystickToDpadDisabled;
         model.Deque = QueueBasedInputs;
         model.DjPollRate = DjPollRate;
         model.DjSmoothing = DjSmooth;
@@ -286,6 +290,7 @@ public class SerializedConfiguration
         model.XInputAuth = XInputAuth;
         model.SliderBar = !SliderbarDisabled;
         model.Tilt = !TiltDisabled;
+        model.JoystickToDpad = !JoystickToDpadDisabled;
         model.PollRate = PollRate;
         model.Debounce = Debounce;
         model.StrumDebounce = StrumDebounce;

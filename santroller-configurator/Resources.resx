@@ -1935,6 +1935,9 @@
     <data name="GuitarAxisTypeTilt" xml:space="preserve">
         <value>Tilt</value>
     </data>
+    <data name="JoystickToDpad" xml:space="preserve">
+        <value>Map Joystick To Dpad</value>
+    </data>
     <data name="InputTypeAnalogPinInput" xml:space="preserve">
         <value>Analog Pin Input</value>
     </data>
