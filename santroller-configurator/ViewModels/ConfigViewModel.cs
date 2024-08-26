@@ -2207,15 +2207,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
 
             var actualPinConfigs = GetPinConfigs();
-            if (_peripheralTwiConfig != null)
+            var twiConfigs = actualPinConfigs.OfType<TwiConfig>().GroupBy(s => s.Definition);
+            foreach (var pinConfigse in twiConfigs)
             {
-                // If the peripheral is on the same pins as something else, then use the config from the other device.
-                if (actualPinConfigs.Any(s =>
-                        s is TwiConfig && s != _peripheralTwiConfig &&
-                        s.Pins.Intersect(_peripheralTwiConfig.Pins).Any()))
-                {
-                    actualPinConfigs.Remove(_peripheralTwiConfig);
-                }
+                var min = pinConfigse.MinBy(s => s.Clock);
+                actualPinConfigs.RemoveMany(pinConfigse);
+                actualPinConfigs.Add(min!);
             }
 
             var test = string.Join("\n", inputs.SelectMany(s => s.RequiredDefines()).Distinct()
@@ -3744,7 +3741,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     break;
                 }
 
-                if (!twi || type != PeripheralTwiType)
+                if (!twi)
                 {
                     pins2.AddRange(pinConfig.Pins);
                 }

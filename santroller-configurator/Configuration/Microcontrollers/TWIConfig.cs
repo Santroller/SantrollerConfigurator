@@ -23,6 +23,7 @@ public abstract class TwiConfig : PinConfig
 
     public override string Type { get; }
 
+    public int Clock => _clock;
     public int Sda
     {
         get => _sda;
