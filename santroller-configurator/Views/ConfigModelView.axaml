@@ -2833,9 +2833,11 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="!IsCombined" />
                             <Binding Path="!UsesPwm" />
+                            <Binding Path="LedsHaveColours" />
+                            <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded"></Binding>
                         </MultiBinding>
                     </StackPanel.IsVisible>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
+                    <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.EnableDigitalOutputTitle}" />
@@ -2844,8 +2846,15 @@
                                       OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel IsVisible="{Binding UsesPwm}">
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding LedsHaveColours}">
+                <StackPanel>
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="UsesPwm" />
+                            <Binding Path="LedsHaveColours" />
+                            <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded"></Binding>
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
+                    <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.EnableAnalogOutputTitle}" />
@@ -2894,8 +2903,22 @@
                         <ToggleSwitch IsChecked="{Binding TestDigital}" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel IsVisible="{Binding UsesPwm}">
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
+                <StackPanel>
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="UsesPwm" />
+                            <Binding Path="OutputEnabled" />
+                            <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded"></Binding>
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.IsVisible>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="!UsesPwm" />
+                                <Binding Path="OutputEnabled" />
+                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded"></Binding>
+                            </MultiBinding>
+                        </StackPanel.IsVisible>
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.AnalogOutputPinLabel}" />

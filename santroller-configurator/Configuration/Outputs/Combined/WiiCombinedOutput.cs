@@ -203,7 +203,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
             .ToPropertyEx(this, x => x.IsGuitar);
         this.WhenAnyValue(x => x.DetectedType).Select(s => s is WiiControllerType.Dj)
             .ToPropertyEx(this, x => x.IsTurntable);
-        Outputs.Connect().Filter(x => x is OutputAxis)
+        Outputs.Connect().Filter(x => x is OutputAxis or JoystickToDpad)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Length != 0)
@@ -211,7 +211,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
                 .Select(CreateFilter))
             .Bind(out var analogOutputs)
             .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome)
+        Outputs.Connect().Filter(x => x is OutputButton or StartSelectHome)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Length != 0)
@@ -219,7 +219,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
                 .Select(CreateFilter))
             .Bind(out var digitalOutputs)
             .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or StartSelectHome or {Input.IsAnalog:false})
+        Outputs.Connect().Filter(x => x is OutputButton or StartSelectHome or {Input.IsAnalog:false})
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Length != 0)
             .Filter(this.WhenAnyValue(x => x.ControllerFound, x => x.DetectedType, x => x.SelectedType)

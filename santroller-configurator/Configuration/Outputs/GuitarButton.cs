@@ -25,7 +25,7 @@ public class GuitarButton : OutputButton
         Type = type;
         UpdateDetails();
     }
-
+    
     private readonly Dictionary<InstrumentButtonType, Key> _fortniteKeys = new()
     {
         {InstrumentButtonType.Green, Key.D},

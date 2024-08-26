@@ -232,7 +232,7 @@ public abstract partial class Output : ReactiveObject
         AllOutputs = allOutputs;
         _configured = true;
         IsVisible = !Model.Branded || LedIndices.Any() || this is Led || this is BluetoothOutput ||
-                    this is CombinedOutput || this is OutputAxis {Input: not DigitalToAnalog};
+                    this is CombinedOutput || this is OutputAxis {Input: not DigitalToAnalog} || this is {Input: AnalogToDigital} || this is JoystickToDpad;
     }
 
     private bool _outputPeripheral;
