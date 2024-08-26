@@ -12,6 +12,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
+using DynamicData.Binding;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -172,6 +173,10 @@ public abstract partial class Output : ReactiveObject
             .ToPropertyEx(this, x => x.Title);
         this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not LedType.None)
             .ToPropertyEx(this, x => x.AreLedsEnabled);
+        LedIndices.ToObservableChangeSet(x => x).ToCollection().Select(s => s.Count != 0)
+            .ToPropertyEx(this, x => x.AreLedsSet);
+        LedIndicesPeripheral.ToObservableChangeSet(x => x).ToCollection().Select(s => s.Count != 0)
+            .ToPropertyEx(this, x => x.AreLedsSetPeripheral);
         this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not LedType.None)
             .ToPropertyEx(this, x => x.AreLedsEnabledPeripheral);
         this.WhenAnyValue(x => x.Model.LedType)
@@ -660,6 +665,8 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] public bool IsUsbHostMouseButton { get; }
     [ObservableAsProperty] public bool IsWt { get; }
     [ObservableAsProperty] public bool AreLedsEnabled { get; }
+    [ObservableAsProperty] public bool AreLedsSet { get; }
+    [ObservableAsProperty] public bool AreLedsSetPeripheral { get; }
     [ObservableAsProperty] public bool AreLedsEnabledPeripheral { get; }
     [ObservableAsProperty] public bool IsApa102 { get; }
     [ObservableAsProperty] public bool IsApa102Peripheral { get; }

@@ -100,6 +100,10 @@ public abstract class SpiConfig : PinConfig
         // On ws2812, sck isn't used.
         var sck = IncludesSck ? $"#define {Definition}_SCK {_sck}" : "";
         var output = Output ? $"#define {Definition}_OUTPUT" : "";
+        if (Type == ConfigViewModel.Ps2OutputTwiType)
+        {
+            output += $"\n#define PS2_SPI_MOSI {_mosi}";
+        }
         return $"""
 
                 {miso}

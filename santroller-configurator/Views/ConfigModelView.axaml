@@ -229,7 +229,7 @@
                     <ComboBox HorizontalAlignment="Stretch" Margin="20 20 20 0"
                               SelectedItem="{Binding AnalogToDigitalType}"
                               ItemTemplate="{StaticResource EnumToStringTemplate}"
-                              ItemsSource="{Binding AnalogToDigitalTypes}" />
+                              ItemsSource="{Binding AnalogToDigitalTypes}"/>
                     <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Threshold}" VerticalAlignment="Center" />
                     <ContentControl Content="{Binding Child}"
                                     ContentTemplate="{StaticResource OutputHeaderTemplates}" />
@@ -2187,7 +2187,7 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type conversions:AnalogToDigital}">
                 <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.TypeLabel}" />
@@ -2683,6 +2683,11 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="AreLedsEnabled" />
                             <Binding Path="!IsCombined" />
+                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}" />
+                                <Binding Path="AreLedsSet" />
+                                <Binding Path="AreLedsSetPeripheral" />
+                            </MultiBinding>
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
@@ -2769,6 +2774,11 @@
                                 <Binding Path="!IsApa102" />
                                 <Binding Path="!IsApa102Peripheral" />
                             </MultiBinding>
+                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}" />
+                                <Binding Path="AreLedsSet" />
+                                <Binding Path="AreLedsSetPeripheral" />
+                            </MultiBinding>
                             <Binding Path="!IsCombined" />
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                 <Binding Path="AreLedsEnabled" />
@@ -2790,6 +2800,11 @@
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                 <Binding Path="LedsUseColours" />
                                 <Binding Path="LedsUseColoursPeripheral" />
+                            </MultiBinding>
+                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}" />
+                                <Binding Path="AreLedsSet" />
+                                <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
                             <Binding Path="!IsCombined" />
                             <Binding Path="LedsHaveColours" />
@@ -2814,6 +2829,11 @@
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                 <Binding Path="LedsUseColours" />
                                 <Binding Path="LedsUseColoursPeripheral" />
+                            </MultiBinding>
+                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}" />
+                                <Binding Path="AreLedsSet" />
+                                <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
                             <Binding Path="!IsCombined" />
                             <Binding Path="LedsHaveColours" />
