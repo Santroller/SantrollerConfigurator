@@ -2210,6 +2210,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             var twiConfigs = actualPinConfigs.OfType<TwiConfig>().GroupBy(s => s.Definition);
             foreach (var pinConfigse in twiConfigs)
             {
+                if (pinConfigse.Any() && pinConfigse.Any(s => s.Type == WiiInput.WiiTwiType))
+                {
+                    config += """
+
+                              #define WII_SHARED
+                              """;
+                }
                 var min = pinConfigse.MinBy(s => s.Clock);
                 actualPinConfigs.RemoveMany(pinConfigse);
                 actualPinConfigs.Add(min!);
