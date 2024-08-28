@@ -206,7 +206,7 @@ public class EmptyOutput : Output
                 DrumAxisType drumAxisType => new DrumAxis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
-                    ushort.MinValue, ushort.MaxValue, 0, 10, drumAxisType, false, false, false, -1, false),
+                    ushort.MaxValue / 2, ushort.MaxValue, 0, 10, drumAxisType, false, false, false, -1, false),
                 Ps3AxisType ps3AxisType => new Ps3Axis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),

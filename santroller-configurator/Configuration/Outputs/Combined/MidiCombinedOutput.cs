@@ -138,7 +138,7 @@ public class MidiCombinedOutput : CombinedOutput
                 foreach (var (key, drumAxisType) in MappingsDrumGh)
                 {
                     Outputs.Add(new DrumAxis(Model, new MidiInput(MidiType.Note, key, Model), Colors.Black,
-                        Colors.Black, [], [], [], 0, ushort.MaxValue, 0, 0,
+                        Colors.Black, [], [], [], ushort.MaxValue / 2, ushort.MaxValue, 0, 0,
                         drumAxisType, false, false, false, -1, true));
                 }
 
@@ -147,7 +147,7 @@ public class MidiCombinedOutput : CombinedOutput
                 foreach (var (key, drumAxisType) in MappingsDrumRb)
                 {
                     Outputs.Add(new DrumAxis(Model, new MidiInput(MidiType.Note, key, Model), Colors.Black,
-                        Colors.Black, [], [], [], 0, ushort.MaxValue, 0, 0,
+                        Colors.Black, [], [], [], ushort.MaxValue / 2, ushort.MaxValue, 0, 0,
                         drumAxisType, false, false, false, -1, true));
                 }
 
