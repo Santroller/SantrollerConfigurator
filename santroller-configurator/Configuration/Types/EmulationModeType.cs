@@ -10,5 +10,6 @@ public enum EmulationModeType
     Switch,
     Xbox,
     Fnf,
-    FnfHid
+    FnfHid,
+    FnfLayer
 }

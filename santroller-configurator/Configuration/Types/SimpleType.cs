@@ -22,5 +22,6 @@ public enum SimpleType
     Max1704X,
     Ps2Outputs,
     FestivalKeyboard,
-    FestivalGamepad
+    FestivalGamepad,
+    FestivalLayer
 }

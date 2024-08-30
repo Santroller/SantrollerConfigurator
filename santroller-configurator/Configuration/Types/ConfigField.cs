@@ -26,5 +26,7 @@ public enum ConfigField
     Xbox,
     Wii,
     Ps2,
-    Festival
+    Festival,
+    BluetoothLed,
+    DetectionFestival
 }

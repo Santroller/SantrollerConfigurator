@@ -565,7 +565,7 @@ public class WiiInput : TwiInput
             var m = binding.Item2;
             var mappingsDigital =  (m.Contains("wiiButtons") || m.Contains("debounce")) && !m.Contains("wiiData[0]") &&
                 !m.Contains("wiiData[1]");
-            if (mappingsDigital && mode is not (ConfigField.Shared or ConfigField.Detection))
+            if (mappingsDigital && mode is not (ConfigField.Shared or ConfigField.Detection or ConfigField.DetectionFestival))
             {
                 digitalBindings.Add(binding.Item2);
             }

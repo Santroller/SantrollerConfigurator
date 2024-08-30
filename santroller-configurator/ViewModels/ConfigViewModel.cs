@@ -251,7 +251,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             })
             .ToPropertyEx(this, x => x.IsIndexedLedPeripheral);
         Bindings.Connect()
-            .QueryWhenChanged(s => s.Any(s2 => s2 is EmulationMode {Type: EmulationModeType.Fnf}))
+            .QueryWhenChanged(s => s.Any(s2 => s2 is EmulationMode {Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfLayer}))
             .ToPropertyEx(this, x => x.IsFortniteFestivalPro);
         Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is BluetoothOutput))
@@ -2188,6 +2188,34 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            """;
             }
 
+            var festivalTick = GenerateTick(ConfigField.Festival, writer);
+            if (festivalTick.Length != 0)
+            {
+                config += $"""
+
+                           #define TICK_FESTIVAL \
+                               {festivalTick}
+                           """;
+            }
+
+            var ledTickBt = GenerateTick(ConfigField.BluetoothLed, writer);
+            if (ledTickBt.Length != 0)
+            {
+                config += $"""
+
+                           #define TICK_LED_BLUETOOTH \
+                               {ledTickBt}
+                           """;
+            }
+            var fnfDetTick = GenerateTick(ConfigField.DetectionFestival, writer);
+            if (fnfDetTick.Length != 0)
+            {
+                config += $"""
+
+                           #define TICK_DETECTION_FESTIVAL \
+                               {fnfDetTick}
+                           """;
+            }
 
             var offLed = GenerateTick(ConfigField.OffLed, writer);
             if (offLed.Length != 0)

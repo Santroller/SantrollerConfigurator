@@ -171,7 +171,6 @@ public class GuitarAxis : OutputAxis
     {
         if (Input is DigitalToAnalog or FixedInput)
         {
-            Console.WriteLine(val);
             return Math.Min(val / (ushort.MaxValue / 5) + 1, 5);
         }
 
@@ -256,7 +255,7 @@ public class GuitarAxis : OutputAxis
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
-        if ((mode is ConfigField.Keyboard or ConfigField.Shared && Model.IsFortniteFestivalPro) || mode is ConfigField.Festival)
+        if (mode is ConfigField.Keyboard or ConfigField.Shared or ConfigField.Festival && Model.IsFortniteFestivalPro)
         {
             var input = Input;
             input = input is DigitalToAnalog ? input.InnermostInputs().First() : input;
@@ -294,19 +293,42 @@ public class GuitarAxis : OutputAxis
                 }
             }
 
-            switch (Type)
+            if (mode is ConfigField.Festival)
             {
-                case GuitarAxisType.Tilt:
-                    return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
-                        LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.PageDown,
-                        OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, ledIndex, extra,
-                        combinedExtra, strumIndexes, combinedDebounce, macros, writer);
-                case GuitarAxisType.Whammy:
-                    return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
-                        LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.RightCtrl,
-                        OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, ledIndex, extra,
-                        combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+                var ifStatement = $"debounce[{debounceIndex}]";
+                switch (Type)
+                {
+                    case GuitarAxisType.Tilt:
+                        return $$"""
+                                 if ({{ifStatement}}) {
+                                     report->tilt = true;
+                                 }
+                                 """;
+                    case GuitarAxisType.Whammy:
+                        return $$"""
+                                 if ({{ifStatement}}) {
+                                     report->whammy = true;
+                                 }
+                                 """;
+                }
             }
+            else
+            {
+                switch (Type)
+                {
+                    case GuitarAxisType.Tilt:
+                        return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
+                            LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.PageDown,
+                            OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, ledIndex, extra,
+                            combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+                    case GuitarAxisType.Whammy:
+                        return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
+                            LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.RightCtrl,
+                            OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, ledIndex, extra,
+                            combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+                }
+            }
+            
         }
 
         if (mode == ConfigField.Shared)
@@ -315,7 +337,7 @@ public class GuitarAxis : OutputAxis
 
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps2 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
             or ConfigField.XboxOne
-            or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
+            or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii or ConfigField.Festival)) return "";
         // The below is a mess... but essentially we have to handle converting the input to its respective output depending on console
         // We have to do some hyper specific stuff for digital to analog here too so its easiest to capture its value once
         var analogOn = 0;
@@ -327,6 +349,10 @@ public class GuitarAxis : OutputAxis
         }
 
         if (Type == GuitarAxisType.Slider && Model.DeviceControllerType == DeviceControllerType.LiveGuitar)
+        {
+            return "";
+        }
+        if (Type == GuitarAxisType.Slider && mode is ConfigField.Festival)
         {
             return "";
         }

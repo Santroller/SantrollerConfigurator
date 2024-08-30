@@ -105,7 +105,8 @@ public enum LedCommandType
     StarPowerActive,
     DjEuphoria,
     StageKitLed,
-    Ps4LightBar
+    Ps4LightBar,
+    BluetoothConnected
 }
 
 public enum RumbleCommand
@@ -208,7 +209,7 @@ public class Led : Output
         _rumbleCommands.AddRange(Enum.GetValues<LedCommandType>());
         _rumbleCommands.Connect()
             .Filter(this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.Model.EmulationType,
-                x => x.Model.IsApa102).Select(FilterLeds))
+                x => x.Model.IsApa102, x=>x.Model.IsBluetooth).Select(FilterLeds))
             .Bind(out var rumbleCommands)
             .Subscribe();
         RumbleCommands = rumbleCommands;
@@ -457,10 +458,14 @@ public class Led : Output
     }
 
     public static Func<LedCommandType, bool> FilterLeds(
-        (DeviceControllerType controllerType, EmulationType emulationType, bool isApa102) type)
+        (DeviceControllerType controllerType, EmulationType emulationType, bool isApa102, bool isBluetooth) type)
     {
         return command =>
         {
+            if (command is LedCommandType.BluetoothConnected && type.isBluetooth)
+            {
+                return true;
+            }
             return type.emulationType switch
             {
                 EmulationType.KeyboardMouse or EmulationType.BluetoothKeyboardMouse => command is
@@ -555,7 +560,7 @@ public class Led : Output
         if (mode is not (ConfigField.StrobeLed or ConfigField.AuthLed or ConfigField.PlayerLed or ConfigField.RumbleLed
             or ConfigField.RumbleLedExpanded
             or ConfigField.KeyboardLed or ConfigField.LightBarLed or ConfigField.OffLed
-            or ConfigField.InitLed)) return "";
+            or ConfigField.InitLed or ConfigField.BluetoothLed)) return "";
         var on = "";
         var off = "";
         var between = "";
@@ -829,6 +834,14 @@ public class Led : Output
             // Auth commands are a set and forget type thing, they are never switched off after being turned on
             case LedCommandType.Auth when mode is ConfigField.AuthLed:
                 return on;
+            case LedCommandType.BluetoothConnected when mode is ConfigField.BluetoothLed:
+                return $$"""
+                         if (check_bluetooth_ready()) {
+                             {{on}}
+                         } else {
+                             {{off}}
+                         }
+                         """;
         }
 
         switch (mode)

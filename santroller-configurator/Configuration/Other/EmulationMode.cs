@@ -20,7 +20,8 @@ public class EmulationMode : Output
     private EmulationModeType _emulationModeType;
 
     public EmulationMode(ConfigViewModel model, Input input, EmulationModeType type) : base(
-        model, input, Colors.Black, Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), Array.Empty<byte>(), false, false, false, -1, false)
+        model, input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), false,
+        false, false, -1, false)
     {
         Type = type;
         _emulationModes.AddRange(Enum.GetValues<EmulationModeType>());
@@ -40,7 +41,7 @@ public class EmulationMode : Output
         {
             this.RaiseAndSetIfChanged(ref _emulationModeType, value);
             UpdateDetails();
-            
+
             // Set 6KRO for compatibility
             if (Type is EmulationModeType.Fnf)
             {
@@ -62,7 +63,8 @@ public class EmulationMode : Output
     public override string LedOnLabel => "";
     public override string LedOffLabel => "";
 
-    private static Func<EmulationModeType, bool> CreateFilter((DeviceControllerType deviceControllerType, bool isPico) data)
+    private static Func<EmulationModeType, bool> CreateFilter(
+        (DeviceControllerType deviceControllerType, bool isPico) data)
     {
         return mode => (mode != EmulationModeType.Wii || data.deviceControllerType is DeviceControllerType.RockBandDrums
             or DeviceControllerType.RockBandGuitar) && (mode != EmulationModeType.XboxOne || data.isPico);
@@ -80,6 +82,7 @@ public class EmulationMode : Output
             EmulationModeType.Switch => "SWITCH",
             EmulationModeType.Fnf => "KEYBOARD_MOUSE",
             EmulationModeType.FnfHid => "FNF",
+            EmulationModeType.FnfLayer => "",
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -97,6 +100,7 @@ public class EmulationMode : Output
         {
             title = Resources.ModeBindingTitle;
         }
+
         return string.Format(title, EnumToStringConverter.Convert(Type));
     }
 
@@ -110,18 +114,31 @@ public class EmulationMode : Output
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
-        return mode != ConfigField.Detection
-            ? ""
-            : $$"""
+        if (Type is EmulationModeType.FnfLayer)
+        {
+            return mode == ConfigField.DetectionFestival
+                ? $$"""
+                    if ((last_festival_toggle - millis()) > 1000 && {{Input.Generate()}}) {
+                        last_festival_toggle = millis();
+                        festival_gameplay_mode = !festival_gameplay_mode;
+                    }
+                    """
+                : "";
+        }
+
+        return mode == ConfigField.Detection
+            ? $$"""
                 if ({{Input.Generate()}}) {
                     set_console_type({{GetDefinition()}});
                 }
-                """;
+                """
+            : "";
     }
 
     public override void UpdateBindings()
     {
     }
+
     public override string GenerateOutput(ConfigField mode)
     {
         return "";

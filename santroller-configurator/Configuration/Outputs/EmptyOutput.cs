@@ -160,6 +160,11 @@ public class EmptyOutput : Output
                 Model.Bindings.Add(new EmulationMode(Model, new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), EmulationModeType.FnfHid));
                 Model.UpdateErrors();
                 return;
+            case SimpleType.FestivalLayer:
+                Model.Bindings.Remove(this);
+                Model.Bindings.Add(new EmulationMode(Model, new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), EmulationModeType.FnfLayer));
+                Model.UpdateErrors();
+                return;
         }
 
         Output? output = Model.GetSimpleEmulationType() switch
@@ -180,7 +185,7 @@ public class EmptyOutput : Output
                         Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                         Enum.GetValues<LedCommandType>().Where(Led.FilterLeds((Model.DeviceControllerType,
                             Model.EmulationType,
-                            Model.IsApa102))).First(), 0, 0),
+                            Model.IsApa102, Model.IsBluetooth))).First(), 0, 0),
                     SimpleType.Rumble => new Rumble(Model, -1,
                         false, RumbleMotorType.Left),
                     SimpleType.ConsoleMode => new EmulationMode(Model,

@@ -1808,6 +1808,12 @@
     <data name="EmptyTypeEmpty" xml:space="preserve">
         <value>Empty</value>
     </data>
+    <data name="SimpleTypeFestivalLayer" xml:space="preserve">
+        <value>Fortnite Festival (Menu / Gameplay toggle)</value>
+    </data>
+    <data name="EmulationModeTypeFnfLayer" xml:space="preserve">
+        <value>Fortnite Festival (Menu / Gameplay toggle)</value>
+    </data>
     <data name="EmulationModeTypeFnf" xml:space="preserve">
         <value>Fortnite Festival (Pro Mode - Keyboard)</value>
     </data>
@@ -2676,6 +2682,9 @@
 
     <data name="LedCommandTypePs4LightBar" xml:space="preserve">
         <value>PS4 Light Bar</value>
+    </data>
+    <data name="LedCommandTypeBluetoothConnected" xml:space="preserve">
+        <value>Bluetooth Connected</value>
     </data>
     <data name="StageKitCommandFog" xml:space="preserve">
         <value>Fog</value>

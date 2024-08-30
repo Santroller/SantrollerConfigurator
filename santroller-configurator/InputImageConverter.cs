@@ -72,7 +72,7 @@ public class InputImageConverter : IMultiValueConverter
                 SimpleType.Midi => "Keyboard",
                 SimpleType.Peripheral => "Peripheral",
                 SimpleType.Mpr121 => "Peripheral",
-                SimpleType.FestivalKeyboard or SimpleType.FestivalGamepad => "FNF",
+                SimpleType.FestivalKeyboard or SimpleType.FestivalGamepad or SimpleType.FestivalLayer => "FNF",
                 _ => null
             },
             InputType.DigitalPinInput or InputType.DigitalPeripheralInput => "Combined/Digital",
@@ -112,7 +112,7 @@ public class InputImageConverter : IMultiValueConverter
                 EmulationModeType.Ps4Or5 => "Combined/PS4",
                 EmulationModeType.Switch => "Combined/Switch",
                 EmulationModeType.Xbox => "Combined/Xbox",
-                EmulationModeType.Fnf or EmulationModeType.FnfHid => "Combined/FNF",
+                EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfLayer => "Combined/FNF",
                 _ => throw new ArgumentOutOfRangeException()
             },
             StandardButtonType type => (deviceControllerType.IsDrum() || deviceControllerType.IsGuitar()) && type is StandardButtonType.Back or StandardButtonType.Start or StandardButtonType.LeftThumbClick ? deviceControllerType + "/" + type : GetPath(type, legendType, swapSwitchFaceButtons),

@@ -3441,6 +3441,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SimpleTypeFestivalLayer {
+            get {
+                return ResourceManager.GetString("SimpleTypeFestivalLayer", resourceCulture);
+            }
+        }
+        
+        public static string EmulationModeTypeFnfLayer {
+            get {
+                return ResourceManager.GetString("EmulationModeTypeFnfLayer", resourceCulture);
+            }
+        }
+        
         public static string EmulationModeTypeFnf {
             get {
                 return ResourceManager.GetString("EmulationModeTypeFnf", resourceCulture);
@@ -5100,6 +5112,12 @@ namespace GuitarConfigurator.NetCore {
         public static string LedCommandTypePs4LightBar {
             get {
                 return ResourceManager.GetString("LedCommandTypePs4LightBar", resourceCulture);
+            }
+        }
+        
+        public static string LedCommandTypeBluetoothConnected {
+            get {
+                return ResourceManager.GetString("LedCommandTypeBluetoothConnected", resourceCulture);
             }
         }
         

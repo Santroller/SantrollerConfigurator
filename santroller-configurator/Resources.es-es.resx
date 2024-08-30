@@ -1802,6 +1802,15 @@
     <data name="SimpleTypeFestivalGamepad" xml:space="preserve">
         <value>Fortnite Festival (Modo Pro - Mando en PC)</value>
     </data>
+    <data name="SimpleTypeFestivalLayer" xml:space="preserve">
+        <value>Fortnite Festival (Alternar entre Menú / Gameplay)</value>
+    </data>
+    <data name="EmulationModeTypeFnfLayer" xml:space="preserve">
+        <value>Fortnite Festival (Alternar entre Menú / Gameplay)</value>
+    </data>
+    <data name="LedCommandTypeBluetoothConnected" xml:space="preserve">
+        <value>Bluetooth Connected</value>
+    </data>
     <data name="EmulationModeTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>
     </data>
