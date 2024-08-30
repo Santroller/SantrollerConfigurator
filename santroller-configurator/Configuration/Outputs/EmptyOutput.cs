@@ -150,6 +150,16 @@ public class EmptyOutput : Output
                 Model.Bindings.Remove(this);
                 Model.UpdateErrors();
                 return;
+            case SimpleType.FestivalKeyboard:
+                Model.Bindings.Remove(this);
+                Model.Bindings.Add(new EmulationMode(Model, new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), EmulationModeType.Fnf));
+                Model.UpdateErrors();
+                return;
+            case SimpleType.FestivalGamepad:
+                Model.Bindings.Remove(this);
+                Model.Bindings.Add(new EmulationMode(Model, new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), EmulationModeType.FnfHid));
+                Model.UpdateErrors();
+                return;
         }
 
         Output? output = Model.GetSimpleEmulationType() switch

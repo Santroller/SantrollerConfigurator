@@ -25,5 +25,6 @@ public enum ConfigField
     Detection,
     Xbox,
     Wii,
-    Ps2
+    Ps2,
+    Festival
 }

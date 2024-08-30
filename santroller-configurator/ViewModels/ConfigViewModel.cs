@@ -189,9 +189,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.StageKit)
             .ToPropertyEx(this, x => x.IsStageKit);
-        this.WhenAnyValue(x => x.EmulationType)
-            .Select(x => x is EmulationType.FortniteFestival)
-            .ToPropertyEx(this, x => x.IsFortniteFestival);
         _strumDebounceDisplay = this.WhenAnyValue(x => x.StrumDebounce)
             .Select(x => x / 10.0f)
             .ToProperty(this, x => x.StrumDebounceDisplay);
@@ -203,8 +200,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .ToPropertyEx(this, x => x.IsController);
         this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
             .Select(x =>
-                GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller &&
-                x.Item1 is not EmulationType.FortniteFestival)
+                GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller)
             .ToPropertyEx(this, x => x.IsStandardController);
         this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
             .Select(x =>
@@ -305,12 +301,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
 
         _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>().Where(s =>
-            s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire)));
-        _deviceControllerTypes.Connect().Filter(
-                this.WhenAnyValue(s => s.EmulationType)
-                    .Select(s =>
-                        new Func<DeviceControllerType, bool>(type =>
-                            s is EmulationType.FortniteFestival == type.IsFortnite())))
+            s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire) && !s.IsFortnite()));
+        _deviceControllerTypes.Connect()
             .Bind(out var controllerTypes)
             .Subscribe();
         DeviceControllerRhythmTypes = controllerTypes;
@@ -500,10 +492,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public IEnumerable<ModeType> ModeTypes => Enum.GetValues<ModeType>();
 
     // Only Pico supports bluetooth
+    // Festival is no longer a supported type, we use console mode bindings for it now
     public IEnumerable<EmulationType> EmulationTypes => Enum.GetValues<EmulationType>()
         .Where(type =>
-            Device.IsPico() ||
-            type is not (EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse));
+            type is not EmulationType.FortniteFestival &&
+            (Device.IsPico() ||
+            type is not (EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)));
 
 
     public IEnumerable<MouseMovementType> MouseMovementTypes => Enum.GetValues<MouseMovementType>();
@@ -1329,7 +1323,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStandardController { get; }
 
     [ObservableAsProperty] public bool IsRpcs3CompatibleController { get; }
-    [ObservableAsProperty] public bool IsFortniteFestival { get; }
     [ObservableAsProperty] public bool IsFortniteFestivalPro { get; }
     [ObservableAsProperty] public bool IsKeyboard { get; }
     [ObservableAsProperty] public bool IsApa102 { get; }
@@ -1423,6 +1416,20 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public void SetDeviceTypeAndRhythmTypeWithoutUpdating(DeviceControllerType type, EmulationType emulationType)
     {
+        // Remove legacy fortnite confiurations
+        if (type.IsFortnite() && type.IsGuitar())
+        {
+            type = DeviceControllerType.RockBandGuitar;
+        }
+        if (type.IsFortnite() && type.IsDrum())
+        {
+            type = DeviceControllerType.RockBandDrums;
+        }
+
+        if (emulationType is EmulationType.FortniteFestival)
+        {
+            type = DeviceControllerType.Gamepad;
+        }
         this.RaiseAndSetIfChanged(ref _deviceControllerType, type, nameof(DeviceControllerType));
         this.RaiseAndSetIfChanged(ref _emulationType, emulationType, nameof(EmulationType));
     }
@@ -1431,7 +1438,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         foreach (var binding in Bindings.Items) binding.UpdateBindings();
         InstrumentButtonTypeExtensions.ConvertBindings(Bindings, this, false);
-        if (!IsGuitar || EmulationType is EmulationType.FortniteFestival)
+        if (!IsGuitar)
         {
             Deque = false;
         }
@@ -1451,11 +1458,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.RaisePropertyChanged(nameof(EmulationType));
             DeviceControllerType = newType;
             return;
-        }
-
-        if (EmulationType is EmulationType.FortniteFestival)
-        {
-            Bindings.RemoveMany(Bindings.Items.Where(s => s is Led));
         }
 
         var (extra, types) =
@@ -1686,22 +1688,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             // Reset max1704x state when we disable bluetooth.
             HasMax1704X = false;
-        }
-
-        if (DeviceControllerType.IsDrum() && emulationType == EmulationType.FortniteFestival)
-        {
-            _emulationType = emulationType;
-            this.RaisePropertyChanged(nameof(EmulationType));
-            DeviceControllerType = DeviceControllerType.FortniteDrums;
-            return;
-        }
-
-        if (emulationType == EmulationType.FortniteFestival)
-        {
-            _emulationType = emulationType;
-            this.RaisePropertyChanged(nameof(EmulationType));
-            DeviceControllerType = DeviceControllerType.FortniteGuitar;
-            return;
         }
 
         if (DeviceControllerType.IsGuitar() && emulationType == EmulationType.Controller)
@@ -2043,6 +2029,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define LED_INIT \
                             {{ledInit}}
                         """;
+            if (IsFortniteFestivalPro)
+            {
+                config += $"""
+
+                             #define TICK_FESTIVAL \
+                                 {GenerateTick(ConfigField.Festival, writer)}
+                             """;
+            }
             if (HasWiiOutput)
             {
                 config += $"""
@@ -2076,7 +2070,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
 
             var keyboardTick = GenerateTick(ConfigField.Keyboard, writer);
-            if (IsKeyboard || IsFortniteFestival || IsFortniteFestivalPro)
+            if (IsKeyboard || IsFortniteFestivalPro)
             {
                 if (keyboardTick.Length != 0)
                 {
@@ -2363,7 +2357,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             case EmulationType.Bluetooth:
             case EmulationType.Controller:
-            case EmulationType.FortniteFestival:
                 return EmulationType.Controller;
             case EmulationType.KeyboardMouse:
             case EmulationType.BluetoothKeyboardMouse:

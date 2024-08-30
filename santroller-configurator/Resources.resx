@@ -1814,6 +1814,12 @@
     <data name="EmulationModeTypeFnfHid" xml:space="preserve">
         <value>Fortnite Festival (Pro Mode - PC gamepad)</value>
     </data>
+    <data name="SimpleTypeFestivalKeyboard" xml:space="preserve">
+        <value>Fortnite Festival (Pro Mode - Keyboard)</value>
+    </data>
+    <data name="SimpleTypeFestivalGamepad" xml:space="preserve">
+        <value>Fortnite Festival (Pro Mode - PC gamepad)</value>
+    </data>
     <data name="EmulationModeTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>
     </data>

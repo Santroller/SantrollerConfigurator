@@ -154,6 +154,10 @@ public partial class DrumAxis : OutputAxis
 
     public override string GenerateOutput(ConfigField mode)
     {
+        if (mode is ConfigField.Shared && Type is DrumAxisType.Kick2)
+        {
+            return "kick2";
+        }
         return mode switch
         {
             ConfigField.Universal or ConfigField.Shared => UniversalAxisMappings.GetValueOrDefault(Type, ""),
@@ -177,7 +181,7 @@ public partial class DrumAxis : OutputAxis
         {
             if (Input is not WiiInput &&
                 (!Model.DeviceControllerType.IsRb() || Type is not (DrumAxisType.Kick or DrumAxisType.Kick2)) &&
-                Model is {IsKeyboard: false, IsFortniteFestival: false}) return "";
+                Model is {IsKeyboard: false}) return "";
             var i = Input;
             if (i.IsAnalog)
             {
@@ -196,10 +200,9 @@ public partial class DrumAxis : OutputAxis
             return $"midiData.midiVelocities[{midiInput.Key}] = 0;";
         }
 
-        if (Model.EmulationType is not EmulationType.FortniteFestival && (mode is not (ConfigField.Ps3
+        if (mode is not (ConfigField.Ps3
                 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
-                or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) ||
-            (Model.EmulationType is EmulationType.FortniteFestival && mode is not ConfigField.Keyboard)) return "";
+                or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;
         if (!Model.IsAdvancedMode) debounce = Model.Debounce;
@@ -341,6 +344,7 @@ public partial class DrumAxis : OutputAxis
 
         // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
         var dtaVal = 0;
+        var resetVal = 0;
         if (input is DigitalToAnalog dta) dtaVal = dta.On;
 
         var assignedVal = $"(lastDrum[{debounceIndex}])";
@@ -376,12 +380,14 @@ public partial class DrumAxis : OutputAxis
                         case DrumAxisType.YellowCymbal:
                             assignedVal = $"-(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
                             dtaVal = -(0x7fff - (dtaVal >> 1));
+                            resetVal = -(0x7fff);
                             break;
                         case DrumAxisType.Red:
                         case DrumAxisType.Blue:
                         case DrumAxisType.BlueCymbal:
                             assignedVal = $"(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
                             dtaVal = 0x7fff - (dtaVal >> 1);
+                            resetVal = 0x7fff;
                             break;
                     }
                 }
@@ -419,6 +425,15 @@ public partial class DrumAxis : OutputAxis
             check = $"({Input.Generate()} - {Min}) < {DeadZone}";
         }
 
+        var analogReset = "";
+        if (mode is ConfigField.Xbox360 or ConfigField.Xbox)
+        {
+            analogReset = $$"""
+                    else {
+                      {{GenerateOutput(mode)}} = {{resetVal}};
+                    }
+                    """;
+        }
         return $$"""
                  if ({{check}}) {
                      if (!{{ifStatement}}) {
@@ -428,8 +443,9 @@ public partial class DrumAxis : OutputAxis
                  }
                  if ({{ifStatement}}) {
                      {{outputButtons}}
-                     {{GenerateOutput(mode)}} = {{assignedVal}};;
-                 }
+                     {{GenerateOutput(mode)}} = {{assignedVal}};
+                 } 
+                 {{analogReset}}
                  """;
     }
 

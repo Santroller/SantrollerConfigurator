@@ -72,6 +72,7 @@ public class InputImageConverter : IMultiValueConverter
                 SimpleType.Midi => "Keyboard",
                 SimpleType.Peripheral => "Peripheral",
                 SimpleType.Mpr121 => "Peripheral",
+                SimpleType.FestivalKeyboard or SimpleType.FestivalGamepad => "FNF",
                 _ => null
             },
             InputType.DigitalPinInput or InputType.DigitalPeripheralInput => "Combined/Digital",

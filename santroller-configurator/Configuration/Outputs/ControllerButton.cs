@@ -57,11 +57,6 @@ public class ControllerButton : OutputButton
 
     public override string GenerateOutput(ConfigField mode)
     {
-        if (Model.EmulationType is EmulationType.FortniteFestival && mode is ConfigField.Keyboard &&
-            _fortniteKeys.TryGetValue(Type, out var fortniteKey))
-        {
-            return GetReportField(fortniteKey);
-        }
 
         // No guide button on og xbox or PS2
         if (mode is ConfigField.Xbox or ConfigField.Ps2 && Type is StandardButtonType.Guide)

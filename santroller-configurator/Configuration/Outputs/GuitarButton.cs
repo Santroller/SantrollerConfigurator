@@ -74,7 +74,7 @@ public class GuitarButton : OutputButton
         // PS3 and 360 just set the standard buttons, and rely on the solo flag
         // XB1 however has things broken out
         // For the universal report, we only put standard frets on nav, not solo
-        var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal or ConfigField.Ps4 or ConfigField.Shared);
+        var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal or ConfigField.Ps4 or ConfigField.Shared or ConfigField.Festival);
         return Type switch
         {
             InstrumentButtonType.StrumUp => GetReportField(StandardButtonType.DpadUp),
@@ -133,7 +133,7 @@ public class GuitarButton : OutputButton
         if (mode is not (ConfigField.Shared or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
             or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Keyboard
-            or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii or ConfigField.Ps2)) return "";
+            or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii or ConfigField.Ps2 or ConfigField.Festival)) return "";
         // If combined debounce is on, then additionally generate extra logic to ignore this input if the opposite debounce flag is active
         if (Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
         {

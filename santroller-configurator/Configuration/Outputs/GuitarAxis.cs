@@ -256,7 +256,7 @@ public class GuitarAxis : OutputAxis
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
-        if (mode is ConfigField.Keyboard or ConfigField.Shared && Model.IsFortniteFestivalPro)
+        if ((mode is ConfigField.Keyboard or ConfigField.Shared && Model.IsFortniteFestivalPro) || mode is ConfigField.Festival)
         {
             var input = Input;
             input = input is DigitalToAnalog ? input.InnermostInputs().First() : input;

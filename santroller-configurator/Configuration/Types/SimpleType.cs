@@ -20,5 +20,7 @@ public enum SimpleType
     Peripheral,
     Mpr121,
     Max1704X,
-    Ps2Outputs
+    Ps2Outputs,
+    FestivalKeyboard,
+    FestivalGamepad
 }
