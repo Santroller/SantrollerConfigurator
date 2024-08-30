@@ -251,7 +251,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             })
             .ToPropertyEx(this, x => x.IsIndexedLedPeripheral);
         Bindings.Connect()
-            .QueryWhenChanged(s => s.Any(s2 => s2 is EmulationMode {Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfLayer}))
+            .QueryWhenChanged(s => s.Any(s2 => s2 is EmulationMode
+            {
+                Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfLayer
+            }))
             .ToPropertyEx(this, x => x.IsFortniteFestivalPro);
         Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is BluetoothOutput))
@@ -284,10 +287,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Select(x => x.Item1 || x.Item2)
             .ToPropertyEx(this, x => x.IsOrWasBluetooth);
         Bindings.Connect()
-            .QueryWhenChanged(s => s.Any(s2 => s2 is UsbHostCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput))
+            .QueryWhenChanged(s => s.Any(s2 =>
+                s2 is UsbHostCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput))
             .ToPropertyEx(this, x => x.UsbHostEnabled);
         Bindings.Connect()
-            .QueryWhenChanged(s => s.Any(s2 => s2 is MidiCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
+            .QueryWhenChanged(s => s.Any(s2 =>
+                s2 is MidiCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
             .ToPropertyEx(this, x => x.HasMidi);
         Bindings.Connect().TransformMany(s => s.AllDigitalOutputs).Bind(out _digitalOutputs).Subscribe();
         if (Branded)
@@ -301,7 +306,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
 
         _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>().Where(s =>
-            s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire) && !s.IsFortnite()));
+            s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire) &&
+            !s.IsFortnite()));
         _deviceControllerTypes.Connect()
             .Bind(out var controllerTypes)
             .Subscribe();
@@ -389,7 +395,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public string? WiiOutputErrorText { get; set; }
 
     [Reactive] public string? Ps2OutputErrorText { get; set; }
-    
+
     [Reactive] public string? Mpr121ErrorText { get; set; }
 
     [Reactive] public string? Max170XErrorText { get; set; }
@@ -497,7 +503,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         .Where(type =>
             type is not EmulationType.FortniteFestival &&
             (Device.IsPico() ||
-            type is not (EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)));
+             type is not (EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)));
 
 
     public IEnumerable<MouseMovementType> MouseMovementTypes => Enum.GetValues<MouseMovementType>();
@@ -549,9 +555,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [Reactive] public int Debounce { get; set; }
-    
+
     [Reactive] public bool SelectDpadLeftXb1 { get; set; }
-    
+
     [Reactive] public bool MidiDrumAutoOff { get; set; }
 
     private ModeType _mode;
@@ -582,15 +588,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public int PollRate { get; set; }
     [Reactive] public int DjPollRate { get; set; }
-    
+
     [Reactive] public bool DjFullRange { get; set; }
-    
+
     [Reactive] public bool DjNavButtons { get; set; }
 
     private double _adxlFilter;
+
     public double AdxlFilter
     {
-        get=>_adxlFilter;
+        get => _adxlFilter;
         set
         {
             this.RaiseAndSetIfChanged(ref _adxlFilter, value);
@@ -1095,7 +1102,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public bool SliderBar { get; set; }
     [Reactive] public bool Tilt { get; set; }
-    
+
     [Reactive] public bool JoystickToDpad { get; set; }
 
 
@@ -1291,16 +1298,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] public bool IsStandardMode { get; }
     [ObservableAsProperty] public bool IsAdvancedMode { get; }
     [ObservableAsProperty] public bool IsGuitar { get; }
-    
+
     [ObservableAsProperty] public bool IsDrum { get; }
     [ObservableAsProperty] public bool IsTurntable { get; }
     [ObservableAsProperty] public bool IsProKeys { get; }
 
     [ObservableAsProperty] public bool SupportsPS4Instrument { get; }
-    
+
     public bool AdafruitHost
     {
-        get=>_adaFruitHostPin != null;
+        get => _adaFruitHostPin != null;
         set
         {
             if (value)
@@ -1312,6 +1319,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 _adaFruitHostPin = null;
             }
+
             this.RaisePropertyChanged();
             UpdateErrors();
         }
@@ -1372,13 +1380,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     // Since DM and DP need to be next to eachother, you cannot use pins at the far ends
     public List<int> AvailablePinsDm => AvailablePinsDigital.Skip(1).ToList();
     public List<int> AvailablePinsDp => AvailablePinsDigital.SkipLast(1).ToList();
-    
+
     public bool BindableAtt => Microcontroller is not (Uno or Mega);
     public List<int> AvailableMosiPinsInput => GetMosiPins(false);
     public List<int> AvailableMisoPinsInput => GetMisoPins(false);
     public List<int> AvailableMosiPinsOutput => GetMosiPins(true);
     public List<int> AvailableMisoPinsOutput => GetMisoPins(true);
     public List<int> AvailableSckPins => GetSckPins();
+
     private List<int> GetMosiPins(bool output)
     {
         return Microcontroller.SpiPins(output)
@@ -1405,7 +1414,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 _ledSpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
                 _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
-                _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt, _adaFruitHostPin
+                _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt,
+                _adaFruitHostPin
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -1421,6 +1431,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             type = DeviceControllerType.RockBandGuitar;
         }
+
         if (type.IsFortnite() && type.IsDrum())
         {
             type = DeviceControllerType.RockBandDrums;
@@ -1430,6 +1441,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             type = DeviceControllerType.Gamepad;
         }
+
         this.RaiseAndSetIfChanged(ref _deviceControllerType, type, nameof(DeviceControllerType));
         this.RaiseAndSetIfChanged(ref _emulationType, emulationType, nameof(EmulationType));
     }
@@ -1447,7 +1459,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (!Bindings.Items.Any(s => s is EmulationMode {Type: EmulationModeType.Fnf}))
             {
-                Bindings.Add(new EmulationMode(this,new DirectInput(-1, false, false, DevicePinMode.PullUp, this), EmulationModeType.Fnf));
+                Bindings.Add(new EmulationMode(this, new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
+                    EmulationModeType.Fnf));
             }
 
             var newType = DeviceControllerType == DeviceControllerType.FortniteProGuitar
@@ -1467,6 +1480,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             PollRate = 5;
         }
+
         // If the user has a ps2 or wii combined output mapped, they don't need the default bindings
         if (Bindings.Items.Any(s =>
                 s is WiiCombinedOutput or Ps2CombinedOutput or UsbHostCombinedOutput or BluetoothOutput)) return;
@@ -2029,14 +2043,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define LED_INIT \
                             {{ledInit}}
                         """;
-            if (IsFortniteFestivalPro)
-            {
-                config += $"""
-
-                             #define TICK_FESTIVAL \
-                                 {GenerateTick(ConfigField.Festival, writer)}
-                             """;
-            }
             if (HasWiiOutput)
             {
                 config += $"""
@@ -2049,16 +2055,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             if (HasPs2Output)
             {
                 config += $"""
-                                            
-                            #define TICK_PS2 \
-                              {GenerateTick(ConfigField.Ps2, writer)}
-                            
-                            #define PS2_ATT {Ps2OutputAtt}
-                            #define PS2_OUTPUT_ACK_SET() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, true, false)}
-                            #define PS2_OUTPUT_ACK_CLEAR() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, false, false)}
-                            #define PS2_OUTPUT_ATT_READ() {Microcontroller.GenerateDigitalRead(Ps2OutputAtt, false, false)}
-                            #define PS2_OUTPUT_SPI_PORT {_ps2OutputSpiConfig!.Definition}
-                            """;
+                                           
+                           #define TICK_PS2 \
+                             {GenerateTick(ConfigField.Ps2, writer)}
+
+                           #define PS2_ATT {Ps2OutputAtt}
+                           #define PS2_OUTPUT_ACK_SET() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, true, false)}
+                           #define PS2_OUTPUT_ACK_CLEAR() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, false, false)}
+                           #define PS2_OUTPUT_ATT_READ() {Microcontroller.GenerateDigitalRead(Ps2OutputAtt, false, false)}
+                           #define PS2_OUTPUT_SPI_PORT {_ps2OutputSpiConfig!.Definition}
+                           """;
             }
 
             if (_wiiOutputTwiConfig != null)
@@ -2188,14 +2194,18 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            """;
             }
 
-            var festivalTick = GenerateTick(ConfigField.Festival, writer);
-            if (festivalTick.Length != 0)
-            {
-                config += $"""
 
-                           #define TICK_FESTIVAL \
-                               {festivalTick}
-                           """;
+            if (IsFortniteFestivalPro)
+            {
+                var festivalTick = GenerateTick(ConfigField.Festival, writer);
+                if (festivalTick.Length != 0)
+                {
+                    config += $"""
+
+                               #define TICK_FESTIVAL \
+                                   {festivalTick}
+                               """;
+                }
             }
 
             var ledTickBt = GenerateTick(ConfigField.BluetoothLed, writer);
@@ -2207,6 +2217,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                {ledTickBt}
                            """;
             }
+
             var fnfDetTick = GenerateTick(ConfigField.DetectionFestival, writer);
             if (fnfDetTick.Length != 0)
             {
@@ -2243,6 +2254,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                               #define WII_SHARED
                               """;
                 }
+
                 var min = pinConfigse.MinBy(s => s.Clock);
                 actualPinConfigs.RemoveMany(pinConfigse);
                 actualPinConfigs.Add(min!);
@@ -2346,7 +2358,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     {Microcontroller.GenerateDigitalWrite(_adaFruitHostPin.Pin, true, false)};
                     """;
         }
-        return FixNewlines(Microcontroller.GenerateLedInit(this)+ret);
+
+        return FixNewlines(Microcontroller.GenerateLedInit(this) + ret);
     }
 
     private string GenerateInit()
@@ -2355,11 +2368,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (_adaFruitHostPin != null)
         {
             ret += $"""
-                    
+
                     {Microcontroller.GenerateDigitalWrite(_adaFruitHostPin.Pin, true, false)};
                     """;
         }
-        return FixNewlines(Microcontroller.GenerateInit(this)+ret);
+
+        return FixNewlines(Microcontroller.GenerateInit(this) + ret);
     }
 
     private string GenerateInitPeripheral()
@@ -2926,6 +2940,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         {
                             on += sbyte.MaxValue;
                         }
+
                         ledRead = $"(({ledRead}) ? {on} : 0)";
                     }
 
@@ -3022,6 +3037,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     {
                         on += sbyte.MaxValue;
                     }
+
                     ledRead = $"(({ledRead}) ? {on} : 0)";
                 }
 
@@ -3117,6 +3133,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         {
                             on += sbyte.MaxValue;
                         }
+
                         ledRead = $"(({ledRead}) ? {on} : 0)";
                     }
 
@@ -3214,6 +3231,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     {
                         on += sbyte.MaxValue;
                     }
+
                     ledRead = $"(({ledRead}) ? {on} : 0)";
                 }
 
@@ -3291,6 +3309,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         {
                             on += sbyte.MaxValue;
                         }
+
                         ledRead = $"(({ledRead}) ? {on} : 0)";
                     }
 
@@ -3394,8 +3413,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     {
                         on += sbyte.MaxValue;
                     }
+
                     ledRead = $"(({ledRead}) ? {on} : 0)";
                 }
+
                 // Now we have the value, calibrated as a uint8_t
                 ret +=
                     $"led_tmp = {ledRead};{Microcontroller.GenerateAnalogWrite(pin, $"{(analogLedOutput.OutputInverted ? "(255-" : "(")}led_tmp)", peripheral)};";
@@ -3674,7 +3695,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 }
                             }
 
-                            var generated = output.Generate(mode, index, ledIndex, "", "", strumIndices, combined, macros,
+                            var generated = output.Generate(mode, index, ledIndex, "", "", strumIndices, combined,
+                                macros,
                                 writer);
 
                             return new Tuple<Input, string>(input, generated);
@@ -3699,9 +3721,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         return FixNewlines(ret);
     }
 
-    private (int,int) CalculateDebounceTicks()
+    private (int, int) CalculateDebounceTicks()
     {
-
         var generatedMode = GetSimpleEmulationType() is EmulationType.KeyboardMouse
             ? ConfigField.Keyboard
             : ConfigField.Shared;
@@ -3824,7 +3845,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         if (UsbHostEnabled && type != UsbHostPinTypeDm && type != UsbHostPinTypeDp && !peripheral)
             pins["USB Host"] = [UsbHostDm, UsbHostDp];
-        
+
         if (_adaFruitHostPin != null && type != AdafruitHostType && !peripheral)
             pins["Adafruit USB Host Enable"] = [_adaFruitHostPin.Pin];
 
@@ -3873,6 +3894,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             foundError = true;
             LedErrorText = _stp16Oe.ErrorText;
         }
+
         if (HasPeripheral && _ledSpiConfigPeripheral?.ErrorText != null)
         {
             foundError = true;
