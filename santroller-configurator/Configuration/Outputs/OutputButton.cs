@@ -175,14 +175,14 @@ public abstract class OutputButton : Output
         
         var gen = Input.Generate();
         var reset = $"debounce[{debounceIndex}]={debounce};";
-        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled)
+        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
         {
             reset += $"ledDebounce[{ledIndex}]={debounce};";
         }
         if (writer != null)
         {
             reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
-            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled)
+            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
             {
                 reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
             }

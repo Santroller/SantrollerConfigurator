@@ -270,7 +270,7 @@ public class GuitarAxis : OutputAxis
             if (Input is not DigitalToAnalog && mode is ConfigField.Shared)
             {
                 var ledDebounce = "";
-                if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled)
+                if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
                 {
                     ledDebounce = $"ledDebounce[{ledIndex}]={debounce};";
                 }
