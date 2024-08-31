@@ -23,5 +23,6 @@ public enum SimpleType
     Ps2Outputs,
     FestivalKeyboard,
     FestivalGamepad,
-    FestivalLayer
+    FestivalLayer,
+    FestivalIos
 }

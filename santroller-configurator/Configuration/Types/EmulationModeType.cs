@@ -11,5 +11,6 @@ public enum EmulationModeType
     Xbox,
     Fnf,
     FnfHid,
-    FnfLayer
+    FnfLayer,
+    FnfIos
 }

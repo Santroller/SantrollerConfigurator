@@ -1793,6 +1793,9 @@
     <data name="EmulationModeTypeFnf" xml:space="preserve">
         <value>Fortnite Festival (Modo Pro - Teclado)</value>
     </data>
+    <data name="EmulationModeTypeIos" xml:space="preserve">
+        <value>Fortnite Festival (Modo Pro - iOS)</value>
+    </data>
     <data name="EmulationModeTypeFnfHid" xml:space="preserve">
         <value>Fortnite Festival (Modo Pro - Mando en PC)</value>
     </data>
@@ -1804,6 +1807,9 @@
     </data>
     <data name="SimpleTypeFestivalLayer" xml:space="preserve">
         <value>Fortnite Festival (Alternar entre Menú / Gameplay)</value>
+    </data>
+    <data name="SimpleTypeFestivalIos" xml:space="preserve">
+        <value>Fortnite Festival (Modo Pro - iOS)</value>
     </data>
     <data name="EmulationModeTypeFnfLayer" xml:space="preserve">
         <value>Fortnite Festival (Alternar entre Menú / Gameplay)</value>

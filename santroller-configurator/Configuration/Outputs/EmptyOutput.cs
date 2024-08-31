@@ -165,6 +165,11 @@ public class EmptyOutput : Output
                 Model.Bindings.Add(new EmulationMode(Model, new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), EmulationModeType.FnfLayer));
                 Model.UpdateErrors();
                 return;
+            case SimpleType.FestivalIos:
+                Model.Bindings.Remove(this);
+                Model.Bindings.Add(new EmulationMode(Model, new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), EmulationModeType.FnfIos));
+                Model.UpdateErrors();
+                return;
         }
 
         Output? output = Model.GetSimpleEmulationType() switch
