@@ -83,6 +83,7 @@ public class EmulationMode : Output
             EmulationModeType.Fnf => "KEYBOARD_MOUSE",
             EmulationModeType.FnfHid => "FNF",
             EmulationModeType.FnfLayer => "",
+            EmulationModeType.FnfIos => "IOS_FESTIVAL",
             _ => throw new ArgumentOutOfRangeException()
         };
     }

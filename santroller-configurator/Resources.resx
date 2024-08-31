@@ -1826,7 +1826,7 @@
     <data name="SimpleTypeFestivalGamepad" xml:space="preserve">
         <value>Fortnite Festival (Pro Mode - PC gamepad)</value>
     </data>
-    <data name="EmulationModeTypeIos" xml:space="preserve">
+    <data name="EmulationModeTypeFnfIos" xml:space="preserve">
         <value>Fortnite Festival (Pro Mode - iOS)</value>
     </data>
     <data name="SimpleTypeFestivalIos" xml:space="preserve">

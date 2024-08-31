@@ -3477,9 +3477,9 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string EmulationModeTypeIos {
+        public static string EmulationModeTypeFnfIos {
             get {
-                return ResourceManager.GetString("EmulationModeTypeIos", resourceCulture);
+                return ResourceManager.GetString("EmulationModeTypeFnfIos", resourceCulture);
             }
         }
         
