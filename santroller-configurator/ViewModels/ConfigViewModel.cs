@@ -1096,8 +1096,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public bool Ps3OnRpcs3 { get; set; }
 
-    [Reactive] public bool XInputAuth { get; set; }
-
     [Reactive] public bool Ps4Instruments { get; set; }
 
     [Reactive] public bool SliderBar { get; set; }
@@ -1637,7 +1635,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.RaisePropertyChanged(nameof(EmulationType));
         XInputOnWindows = true;
         Ps3OnRpcs3 = true;
-        XInputAuth = true;
         Ps4Instruments = false;
         MouseMovementType = MouseMovementType.Relative;
 
@@ -1891,7 +1888,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define WINDOWS_USES_XINPUT {{WriteBlob(writer, XInputOnWindows && IsStandardController)}}
                         #define WINDOWS_TURNTABLE_FULLRANGE {{WriteBlob(writer, XInputOnWindows && DjFullRange)}}
                         #define RPCS3_COMPAT {{WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}}
-                        #define XINPUT_AUTH {{WriteBlob(writer, XInputAuth && UsbHostEnabled)}}
                         #define SLIDER_BAR {{WriteBlob(writer, SliderBar)}}
                         #define TILT {{WriteBlob(writer, Tilt)}}
                         #define JOYSTICK_TO_DPAD {{WriteBlob(writer, JoystickToDpad)}}
@@ -1929,7 +1925,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define WINDOWS_USES_XINPUT {{(XInputOnWindows && IsStandardController).ToString().ToLower()}}
                         #define WINDOWS_TURNTABLE_FULLRANGE {{(XInputOnWindows && DjFullRange).ToString().ToLower()}}
                         #define RPCS3_COMPAT {{(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}}
-                        #define XINPUT_AUTH {{(XInputAuth && UsbHostEnabled).ToString().ToLower()}}
                         #define SLIDER_BAR {{SliderBar.ToString().ToLower()}}
                         #define TILT {{Tilt.ToString().ToLower()}}
                         #define JOYSTICK_TO_DPAD {{JoystickToDpad.ToString().ToLower()}}

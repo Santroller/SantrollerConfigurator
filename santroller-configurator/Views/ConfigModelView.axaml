@@ -490,18 +490,6 @@
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.XboxAuthLabel}" />
-
-                        <ToggleSwitch HorizontalAlignment="Center" Width="200"
-                                      HorizontalContentAlignment="Center"
-                                      IsChecked="{Binding Model.XInputAuth}"
-                                      OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                      OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                    </StackPanel>
-
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding Model.SupportsPS4Instrument}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
