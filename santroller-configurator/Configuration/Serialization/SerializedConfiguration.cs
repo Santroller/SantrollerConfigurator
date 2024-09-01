@@ -30,7 +30,6 @@ public class SerializedConfiguration
         DeviceType = model.DeviceControllerType;
         EmulationType = model.EmulationType;
         XInputOnWindows = model.XInputOnWindows;
-        XInputAuth = model.XInputAuth;
         LedType = model.LedType;
         LedMosi = model.LedMosi;
         LedSck = model.LedSck;
@@ -128,7 +127,6 @@ public class SerializedConfiguration
     [ProtoMember(44)] public int Stp16OePeripheral { get; private set; }
     [ProtoMember(45)] public int Stp16LePeripheral { get; private set; }
     [ProtoMember(46)] public RolloverMode RolloverMode { get; private set; }
-    [ProtoMember(47)] public bool XInputAuth { get; private set; }
     [ProtoMember(48)] public int LedBrightnessOn { get; private set; }
     [ProtoMember(49)] public bool Apa102IsFullSize { get; private set; }
 
@@ -175,7 +173,6 @@ public class SerializedConfiguration
         model.SetDeviceTypeAndRhythmTypeWithoutUpdating(DeviceType, EmulationType);
         model.XInputOnWindows = XInputOnWindows;
         model.Ps3OnRpcs3 = Ps3OnRpcs3;
-        model.XInputAuth = XInputAuth;
         model.Bindings.Clear();
         model.Mode = Mode;
         model.PollRate = PollRate;
@@ -287,7 +284,6 @@ public class SerializedConfiguration
     public void Merge(ConfigViewModel model)
     {
         model.XInputOnWindows = XInputOnWindows;
-        model.XInputAuth = XInputAuth;
         model.SliderBar = !SliderbarDisabled;
         model.Tilt = !TiltDisabled;
         model.JoystickToDpad = !JoystickToDpadDisabled;
