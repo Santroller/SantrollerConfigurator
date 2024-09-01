@@ -253,7 +253,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is EmulationMode
             {
-                Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfLayer
+                Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfLayer or EmulationModeType.FnfIos
             }))
             .ToPropertyEx(this, x => x.IsFortniteFestivalPro);
         Bindings.Connect()
