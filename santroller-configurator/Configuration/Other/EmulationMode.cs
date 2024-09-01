@@ -119,7 +119,7 @@ public class EmulationMode : Output
         {
             return mode == ConfigField.DetectionFestival
                 ? $$"""
-                    if ((last_festival_toggle - millis()) > 1000 && {{Input.Generate()}}) {
+                    if ((millis() - last_festival_toggle) > 1000 && {{Input.Generate()}}) {
                         last_festival_toggle = millis();
                         festival_gameplay_mode = !festival_gameplay_mode;
                     }
