@@ -941,7 +941,7 @@ public abstract partial class Output : ReactiveObject
         while (!found)
         {
             await Task.Delay(100);
-            for (var i = 0; i < noteCount; i++)
+            for (var i = 0; i < noteCount && i < _midiNotes.Length && i < current.Length; i++)
             {
                 if (_midiNotes[i] == current[i]) continue;
                 MidiNote = i;
