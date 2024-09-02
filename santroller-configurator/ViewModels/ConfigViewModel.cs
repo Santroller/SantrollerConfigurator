@@ -288,7 +288,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .ToPropertyEx(this, x => x.IsOrWasBluetooth);
         Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 =>
-                s2 is UsbHostCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput))
+                s2 is UsbHostCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput || s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
             .ToPropertyEx(this, x => x.UsbHostEnabled);
         Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 =>

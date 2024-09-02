@@ -313,7 +313,7 @@ public class KeyboardButton : OutputButton
             Key.Return => GetReportField("Enter"),
             Key.Next => GetReportField("PageDown"),
             Key.Prior => GetReportField("PageUp"),
-            Key.Oem1 => GetReportField("OemPlus"),
+            Key.Oem1 => GetReportField("OemSemicolon"),
             Key.Oem2 => GetReportField("OemQuestion"),
             Key.Oem3 => GetReportField("OemTilde"),
             Key.Oem4 => GetReportField("OemOpenBrackets"),
