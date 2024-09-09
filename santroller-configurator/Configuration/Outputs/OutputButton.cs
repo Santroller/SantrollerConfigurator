@@ -100,7 +100,7 @@ public abstract class OutputButton : Output
         {
             if (Model.Deque && this is GuitarButton {IsStrum: false})
             {
-                ifStatement = $"{GenerateOutput(ConfigField.Shared).Replace("report->", "current_queue_report.")}";
+                ifStatement = $"{GenerateOutput(ConfigField.Ps3).Replace("report->", "current_queue_report.")}";
             }
             var outputVar = GenerateOutput(mode);
             if (outputVar.Length == 0) return "";
@@ -212,7 +212,7 @@ public abstract class OutputButton : Output
             ret += $$"""
 
                       if ({{ifStatement}}) {
-                          {{GenerateOutput(ConfigField.Shared).Replace("report->", "current_queue_report.")}} = true;
+                          {{GenerateOutput(ConfigField.Ps3).Replace("report->", "current_queue_report.")}} = true;
                       }
                       """;
         }
