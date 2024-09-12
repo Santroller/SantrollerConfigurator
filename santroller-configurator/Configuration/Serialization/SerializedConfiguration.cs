@@ -323,20 +323,18 @@ public class SerializedConfiguration
                 output.LedOff = outputToMerge.LedOff;
                 output.LedIndices = outputToMerge.LedIndices;
                 output.LedIndicesPeripheral = outputToMerge.LedIndicesPeripheral;
-                if (outputToMerge is DjAxis djToMerge && output is DjAxis outputDj)
+                switch (outputToMerge)
                 {
-                    outputDj.Multiplier = djToMerge.Multiplier;
-                    outputDj.Invert = djToMerge.Invert;
-                }
-
-                if (outputToMerge is DrumAxis drumToMerge && output is DrumAxis outputDrum)
-                {
-                    outputDrum.Debounce = drumToMerge.Debounce;
-                }
-
-                if (outputToMerge is JoystickToDpad dpadToMerge && output is JoystickToDpad dpad)
-                {
-                    dpadToMerge.Threshold = dpad.Threshold;
+                    case DjAxis djToMerge when output is DjAxis outputDj:
+                        outputDj.Multiplier = djToMerge.Multiplier;
+                        outputDj.Invert = djToMerge.Invert;
+                        break;
+                    case DrumAxis drumToMerge when output is DrumAxis outputDrum:
+                        outputDrum.Debounce = drumToMerge.Debounce;
+                        break;
+                    case JoystickToDpad dpadToMerge when output is JoystickToDpad dpad:
+                        dpadToMerge.Threshold = dpad.Threshold;
+                        break;
                 }
 
                 switch (outputToMerge)
