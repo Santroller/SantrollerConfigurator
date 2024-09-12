@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
@@ -30,7 +31,7 @@ public abstract class Input : ReactiveObject
     public abstract string Title { get; }
 
     public abstract IReadOnlyList<string> RequiredDefines();
-    public abstract string Generate();
+    public abstract string Generate(BinaryWriter? writer);
 
     public abstract SerializedInput Serialise();
 

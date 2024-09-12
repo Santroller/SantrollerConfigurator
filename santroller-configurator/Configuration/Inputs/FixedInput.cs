@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -31,7 +32,7 @@ public class FixedInput : Input
         return Array.Empty<string>();
     }
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         return Value.ToString();
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -41,7 +42,7 @@ public class AdxlInput : TwiInput
 
     public override string Title => EnumToStringConverter.Convert(Input);
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         return Input switch
         {

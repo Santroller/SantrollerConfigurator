@@ -338,9 +338,9 @@ public abstract partial class OutputAxis : Output
         switch (Input)
         {
             case DigitalToAnalog:
-                return Input.Generate();
+                return Input.Generate(writer);
             case FixedInput when this is GuitarAxis {Type: GuitarAxisType.Pickup}:
-                return $"({Input.Generate()} >> 8) & 0xff";
+                return $"({Input.Generate(writer)} >> 8) & 0xff";
         }
 
         string function;
@@ -496,7 +496,7 @@ public abstract partial class OutputAxis : Output
             multiplier = 1f / (max - min) * ushort.MaxValue;
         }
 
-        var generated = "(" + Input.Generate();
+        var generated = "(" + Input.Generate(writer);
         if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && mode is ConfigField.XboxOne)
         {
             // XB1 tilt is special. it centers at 0 but is a uint, so we need to strip away negative values
@@ -556,7 +556,7 @@ public abstract partial class OutputAxis : Output
                 {
                     var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
                     extraTrigger = $$"""
-                                     if ({{Input.Generate()}} > {{axis.Threshold}}) {
+                                     if ({{Input.Generate(writer)}} > {{axis.Threshold}}) {
                                          report->{{trigger}} = true;
                                      }
                                      """;
@@ -605,7 +605,7 @@ public abstract partial class OutputAxis : Output
         {
             var trigger = this is ControllerAxis {Type: StandardAxisType.LeftTrigger} ? "l2" : "r2";
             return $$"""
-                     if ({{Input.Generate()}}) {
+                     if ({{Input.Generate(writer)}}) {
                          {{output}} = {{val}};
                          report->{{trigger}} = true;
                      }
@@ -613,7 +613,7 @@ public abstract partial class OutputAxis : Output
         }
 
         return $$"""
-                 if ({{Input.Generate()}}) {
+                 if ({{Input.Generate(writer)}}) {
                     {{output}} = {{val}};
                  }
                  """;

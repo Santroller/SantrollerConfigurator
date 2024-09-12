@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -125,7 +126,7 @@ public class MidiInput : Input
         return new[] {"INPUT_MIDI"};
     }
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         return Input switch
         {

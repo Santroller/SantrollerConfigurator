@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -106,7 +107,7 @@ public class Gh5NeckInput : TwiInput
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
     public override bool IsUint => true;
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         if (Input <= Gh5NeckInputType.Orange)
             return $"(fivetar_buttons[0] & {1 << Fret[Input]})";

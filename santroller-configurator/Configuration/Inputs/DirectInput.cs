@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -50,7 +51,7 @@ public class DirectInput : InputWithPin
         return new SerializedDirectInput(PinConfig.Pin, PinConfig.Peripheral, Inverted, PinConfig.PinMode);
     }
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         var invert = PinMode == DevicePinMode.PullUp;
         if (Inverted) invert = !invert;

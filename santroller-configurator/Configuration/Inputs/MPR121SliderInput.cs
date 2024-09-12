@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -131,7 +132,7 @@ public class Mpr121SliderInput : Input
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
     public override bool IsUint => true;
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         var inputs = new[] {InputGreen, InputRed, InputYellow, InputBlue, InputOrange};
         var mapping = string.Join(" | ", inputs.Select((t, i) => t > i

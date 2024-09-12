@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -273,7 +274,7 @@ public class Ps2Input : SpiInput
 
     public override string Title => EnumToStringConverter.Convert(Input);
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         return Mappings[Input];
     }

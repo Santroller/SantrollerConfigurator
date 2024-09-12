@@ -409,7 +409,7 @@ public partial class DrumAxis : OutputAxis
             }
 
             return $$"""
-                     if ({{input.Generate()}}) {
+                     if ({{input.Generate(writer)}}) {
                          {{reset}}
                          {{GenerateOutput(mode)}} = {{dtaVal}};
                      }
@@ -419,10 +419,10 @@ public partial class DrumAxis : OutputAxis
 
         // For drums, we want to do things based on a peak.
         // That means we ignore anything under Min, then when something peaks over Min, we capture that value and wait until we are back under Min before resetting.
-        var check = $"{Input.Generate()} > {Min}";
+        var check = $"{Input.Generate(writer)} > {Min}";
         if (Min > Max)
         {
-            check = $"({Input.Generate()} - {Min}) < {DeadZone}";
+            check = $"({Input.Generate(writer)} - {Min}) < {DeadZone}";
         }
 
         var analogReset = "";

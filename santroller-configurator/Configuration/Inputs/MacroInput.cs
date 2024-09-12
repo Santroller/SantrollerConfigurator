@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
@@ -288,9 +289,9 @@ public class MacroInput : Input
     public override bool IsUint => false;
 
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
-        return $"{Child1.Generate()} && {Child2.Generate()}";
+        return $"{Child1.Generate(writer)} && {Child2.Generate(writer)}";
     }
 
     public override string Title => "Macro";

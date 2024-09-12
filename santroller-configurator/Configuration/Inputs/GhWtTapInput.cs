@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -145,7 +146,7 @@ public class GhWtTapInput : Input
         new(PinConfigAnalog.Pin, DevicePinMode.Floating)
     };
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         var var = "rawWt";
         if (Peripheral)

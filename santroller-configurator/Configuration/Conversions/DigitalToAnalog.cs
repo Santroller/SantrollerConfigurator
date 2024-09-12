@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -143,9 +144,9 @@ public class DigitalToAnalog : Input
 
     public override string Title => Child.Title;
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
-        return Child.Generate();
+        return Child.Generate(writer);
     }
 
     public override SerializedInput Serialise()

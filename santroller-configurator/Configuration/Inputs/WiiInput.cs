@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -277,7 +278,7 @@ public class WiiInput : TwiInput
 
     public override string Title => EnumToStringConverter.Convert(Input);
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         return $"({Mappings[Input]})";
     }

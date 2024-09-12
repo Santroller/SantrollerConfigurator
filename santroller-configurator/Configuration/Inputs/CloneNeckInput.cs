@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -84,7 +85,7 @@ public class CloneNeckInput : TwiInput
     {
         return $"clone_buttons[{MappingsIdx[inputType]}] & {MappingsBit[inputType]}";
     }
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         return Input <= Gh5NeckInputType.TapOrange ? GetMapping(Input) : $"gh5_mappings[{string.Join(" | ", Taps.Select((type, i) => $"(({GetMapping(type)}) != 0) << {i}"))}]";
     }

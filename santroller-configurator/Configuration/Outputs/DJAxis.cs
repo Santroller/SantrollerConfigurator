@@ -168,7 +168,7 @@ public partial class DjAxis : OutputAxis
                             Type is DjAxisType.Crossfader or DjAxisType.EffectsKnob;
         // PS3 needs uint, xb360 needs int
         // So convert to the right method for that console, and then shift for ps3
-        var generated = $"({Input.Generate()})";
+        var generated = $"({Input.Generate(writer)})";
         var generatedPs3 = generated;
 
         var tableCommand = "handle_calibration_turntable_ps3";
@@ -214,7 +214,7 @@ public partial class DjAxis : OutputAxis
         return Type switch
         {
             DjAxisType.Crossfader => $"{GenerateOutput(mode)} = {gen};",
-            _ => $"if ({Input.Generate()}){{{GenerateOutput(mode)} = {gen};}}"
+            _ => $"if ({Input.Generate(writer)}){{{GenerateOutput(mode)} = {gen};}}"
         };
     }
 

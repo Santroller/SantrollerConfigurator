@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia.Input;
@@ -121,7 +122,7 @@ public class UsbHostInput : Input
         return new[] {"INPUT_USB_HOST"};
     }
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         var ret = (Input switch
         {

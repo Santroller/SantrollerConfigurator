@@ -93,23 +93,23 @@ public class PianoKey : OutputAxis
             return Key switch
             {
                 ProKeyType.TouchPad => $$"""
-                                                if ({{Input.Generate()}}) {
+                                                if ({{Input.Generate(writer)}}) {
                                                     report->touchPad = {{GenerateAssignment("report->touchPad", mode, false, false, false, false, writer)}};
                                                 }
                                                 """,
                 ProKeyType.Overdrive => $$"""
-                                          if ({{Input.Generate()}}) {
+                                          if ({{Input.Generate(writer)}}) {
                                               {{output}} = true;
                                           }
                                           """,
                 ProKeyType.Pedal => $$"""
-                                      if ({{Input.Generate()}}) {
+                                      if ({{Input.Generate(writer)}}) {
                                           report->pedalAnalog = {{GenerateAssignment("report->pedalAnalog", mode, false, false, false, false, writer)}};
                                           report->pedalDigital = true;
                                       }
                                       """,
                 _ => $$"""
-                       if ({{Input.Generate()}}) {
+                       if ({{Input.Generate(writer)}}) {
                            proKeyVelocities[{{(int) Key}}] = {{GenerateAssignment($"proKeyVelocities[{(int) Key}]", mode, false, false, false, false, writer)}};
                            {{output}} = true;
                        }
@@ -120,23 +120,23 @@ public class PianoKey : OutputAxis
         return Key switch
         {
             ProKeyType.TouchPad => $$"""
-                                            if ({{Input.Generate()}}) {
+                                            if ({{Input.Generate(writer)}}) {
                                                 report->touchPad = {{dta.On >> 9}};
                                             }
                                             """,
             ProKeyType.Overdrive => $$"""
-                                      if ({{Input.Generate()}}) {
+                                      if ({{Input.Generate(writer)}}) {
                                           {{output}} = true;
                                       }
                                       """,
             ProKeyType.Pedal => $$"""
-                                  if ({{Input.Generate()}}) {
+                                  if ({{Input.Generate(writer)}}) {
                                       report->pedalAnalog = {{dta.On >> 9}};
                                       report->pedalDigital = true;
                                   }
                                   """,
             _ => $$"""
-                   if ({{Input.Generate()}}) {
+                   if ({{Input.Generate(writer)}}) {
                        proKeyVelocities[{{(int) Key}}] = {{dta.On >> 9}};
                        {{output}} = true;
                    }

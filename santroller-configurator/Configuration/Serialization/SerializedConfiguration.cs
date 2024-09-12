@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DynamicData;
+using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
@@ -333,6 +334,11 @@ public class SerializedConfiguration
                     outputDrum.Debounce = drumToMerge.Debounce;
                 }
 
+                if (outputToMerge is JoystickToDpad dpadToMerge && output is JoystickToDpad dpad)
+                {
+                    dpadToMerge.Threshold = dpad.Threshold;
+                }
+
                 switch (outputToMerge)
                 {
                     case OutputAxis axisToMerge when output is OutputAxis outputAxis:
@@ -343,6 +349,11 @@ public class SerializedConfiguration
                     case OutputButton buttonToMerge when output is OutputButton outputButton:
                         outputButton.Debounce = buttonToMerge.Debounce;
                         break;
+                }
+
+                if (outputToMerge.Input is AnalogToDigital adcToMerge && output.Input is AnalogToDigital adc)
+                {
+                    adc.Threshold = adcToMerge.Threshold;
                 }
             }
         }

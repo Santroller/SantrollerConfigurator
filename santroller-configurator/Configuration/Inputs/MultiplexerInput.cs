@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -109,7 +110,7 @@ public class MultiplexerInput : DirectInput
         ? [PinConfig, PinConfigS0, PinConfigS1, PinConfigS2, PinConfigS3]
         : [PinConfig, PinConfigS0, PinConfigS1, PinConfigS2];
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         // We put all bits at once, so generate a mask for the bits that are being modified
         // Then, get the bits representing a channel and if the bit is set, then set that pin in bits, so that it actually 

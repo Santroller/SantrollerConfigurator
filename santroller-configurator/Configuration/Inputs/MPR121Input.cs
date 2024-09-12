@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -55,7 +56,7 @@ public class Mpr121Input : Input
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
     public override bool IsUint => true;
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
         return Input < Model.Mpr121CapacitiveCount ? $"(mpr121_raw & {1 << Input})" : $"((mpr121_raw & {1 << Input}) == 0)";
     }

@@ -68,7 +68,7 @@ public partial class BluetoothOutput : CombinedOutput
             return new[] {"BLUETOOTH_RX"};
         }
 
-        public override string Generate()
+        public override string Generate(BinaryWriter? writer)
         {
             return "";
         }

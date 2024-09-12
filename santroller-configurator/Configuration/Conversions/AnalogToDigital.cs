@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
@@ -10,6 +11,7 @@ using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
 namespace GuitarConfigurator.NetCore.Configuration.Conversions;
 
@@ -116,18 +118,28 @@ public class AnalogToDigital : Input
     public override string Title => Child.Title;
 
 
-    public override string Generate()
+    public override string Generate(BinaryWriter? writer)
     {
+        var threshold = Threshold;
+        if (Child.IsUint)
+        {
+            threshold = Math.Abs(threshold);
+        }
+        var thresholdVal = $"{threshold}";
+        if (writer != null)
+        {
+            thresholdVal = WriteBlob(writer, threshold);
+        }
         if (Child.IsUint)
             switch (AnalogToDigitalType)
             {
                 case AnalogToDigitalType.Drum:
-                    return $"({Child.Generate()}) > {Threshold}";
+                    return $"({Child.Generate(writer)}) > ({thresholdVal})";
                 case AnalogToDigitalType.Trigger:
                 case AnalogToDigitalType.JoyHigh:
-                    return $"({Child.Generate()}) > {short.MaxValue + Threshold}";
+                    return $"({Child.Generate(writer)}) > ({short.MaxValue} + ({thresholdVal}))";
                 case AnalogToDigitalType.JoyLow:
-                    return $"({Child.Generate()}) < {short.MaxValue - Threshold}";
+                    return $"({Child.Generate(writer)}) < ({short.MaxValue} - ({thresholdVal}))";
             }
         else
             switch (AnalogToDigitalType)
@@ -135,9 +147,9 @@ public class AnalogToDigital : Input
                 case AnalogToDigitalType.Drum:
                 case AnalogToDigitalType.Trigger:
                 case AnalogToDigitalType.JoyHigh:
-                    return $"({Child.Generate()}) > {Math.Abs(Threshold)}";
+                    return $"({Child.Generate(writer)}) > ({thresholdVal})";
                 case AnalogToDigitalType.JoyLow:
-                    return $"({Child.Generate()}) < {-Math.Abs(Threshold)}";
+                    return $"({Child.Generate(writer)}) < (-({thresholdVal}))";
             }
 
         return "";
