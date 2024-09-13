@@ -103,6 +103,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview"/>
+        <PackageReference Include="Nefarius.Drivers.WinUSB" Version="5.0.0" />
         <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.23.0" />
         <PackageReference Include="protobuf-net" Version="3.2.30"/>
         <PackageReference Include="ReactiveUI.Fody" Version="19.5.41"/>
@@ -168,12 +169,19 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
+        <Compile Include="Devices\windows\WindowsConfigurableUsbDeviceManager.cs" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Update="Resources.resx">
             <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>Resources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
+        <Compile Remove="Devices/windows/*.cs" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+        <Compile Remove="Devices/libusb/*.cs" />
     </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
         <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' "/>

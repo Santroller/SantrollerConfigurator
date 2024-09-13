@@ -3,7 +3,7 @@ using System.Diagnostics;
 using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
 
-namespace GuitarConfigurator.NetCore.Devices;
+namespace GuitarConfigurator.NetCore.Devices.libusb;
 
 public class LibUsbRealDevice(UsbDevice d) : LibUsbDevice(d.LocationId)
 {

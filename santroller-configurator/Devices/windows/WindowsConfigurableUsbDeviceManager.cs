@@ -1,5 +1,3 @@
-#if Windows
-
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -10,11 +8,8 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using DynamicData;
 using GuitarConfigurator.NetCore.ViewModels;
-using LibUsbDotNet;
-using LibUsbDotNet.DeviceNotify;
-using LibUsbDotNet.DeviceNotify.Info;
-using LibUsbDotNet.Main;
-using LibUsbDotNet.WinUsb;
+using Nefarius.Drivers.WinUSB;
+using Nefarius.Utilities.DeviceManagement.PnP;
 using Nefarius.Utilities.DeviceManagement.PnP;
 using ReactiveUI;
 
@@ -22,6 +17,11 @@ namespace GuitarConfigurator.NetCore.Devices;
 
 public class ConfigurableUsbDeviceManager
 {
+    private enum EventType
+    {
+        DeviceArrival,
+        DeviceRemoveComplete
+    }
     private readonly DeviceNotificationListener _deviceNotificationListener = new();
     private MainWindowViewModel _model;
 
@@ -39,6 +39,7 @@ public class ConfigurableUsbDeviceManager
         {
             _deviceNotificationListener.StartListen(guid);
             var instance = 0;
+            
             while (Devcon.FindByInterfaceGuid(guid, out var path,
                        out var instanceId, instance++))
             {
@@ -98,46 +99,6 @@ public class ConfigurableUsbDeviceManager
         });
     }
 
-    private class RegDeviceNotifyInfoEventArgs : DeviceNotifyEventArgs
-    {
-        internal RegDeviceNotifyInfoEventArgs(IUsbDeviceNotifyInfo info)
-        {
-            Device = info;
-        }
-    }
-
-    private class RegDeviceNotifyInfo : IUsbDeviceNotifyInfo
-    {
-        private readonly string _path;
-        private readonly string _instanceId;
-        private readonly string _serialNumber;
-
-        public RegDeviceNotifyInfo(string path, string instanceId, string serialNumber)
-        {
-            _path = path;
-            _instanceId = instanceId;
-            _serialNumber = serialNumber;
-        }
-
-        public UsbSymbolicName SymbolicName => UsbSymbolicName.Parse(_instanceId);
-
-        public string Name => _instanceId;
-
-        public Guid ClassGuid => DeviceInterfaceIds.UsbDevice;
-
-        public int IdVendor => SymbolicName.Vid;
-
-        public int IdProduct => SymbolicName.Pid;
-
-        public string SerialNumber => _serialNumber;
-
-        public bool Open(out UsbDevice usbDevice)
-        {
-            WinUsbDevice.Open(_path, out var winUsbDevice);
-            usbDevice = winUsbDevice;
-            return winUsbDevice != null && winUsbDevice.Open();
-        }
-    }
 
     private void DeviceArrived(DeviceEventArgs args)
     {
@@ -174,4 +135,3 @@ public class ConfigurableUsbDeviceManager
         }
     }
 }
-#endif

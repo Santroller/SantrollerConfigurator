@@ -1,7 +1,6 @@
 using LibUsbDotNet.Info;
-using LibUsbDotNet.LibUsb;
 
-namespace GuitarConfigurator.NetCore.Devices;
+namespace GuitarConfigurator.NetCore.Devices.libusb;
 
 public class LibUsbCachedDevice(CachedDeviceInfo device) : LibUsbDevice(device.PortInfo)
 {

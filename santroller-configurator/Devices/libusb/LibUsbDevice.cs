@@ -1,6 +1,6 @@
 using LibUsbDotNet.Info;
 
-namespace GuitarConfigurator.NetCore.Devices;
+namespace GuitarConfigurator.NetCore.Devices.libusb;
 
 public abstract class LibUsbDevice(LocationId locationId) : IUsbDevice
 {

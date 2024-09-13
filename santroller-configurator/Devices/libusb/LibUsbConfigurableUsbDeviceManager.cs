@@ -1,4 +1,3 @@
-#if !Windows
 using System.Linq;
 using System.Reactive.Concurrency;
 using DynamicData;
@@ -6,7 +5,7 @@ using GuitarConfigurator.NetCore.ViewModels;
 using LibUsbDotNet.LibUsb;
 using ReactiveUI;
 
-namespace GuitarConfigurator.NetCore.Devices;
+namespace GuitarConfigurator.NetCore.Devices.libusb;
 
 public class ConfigurableUsbDeviceManager
 {
@@ -89,5 +88,3 @@ public class ConfigurableUsbDeviceManager
         });
     }
 }
-
-#endif
