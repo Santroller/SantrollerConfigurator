@@ -60,7 +60,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
 
     public ConfigViewModel Model => ViewModel!;
 
-    private async void DoSaveConfigAsync(IInteractionContext<ConfigViewModel, Unit> obj)
+    private async void DoSaveConfigAsync(InteractionContext<ConfigViewModel, Unit> obj)
     {
         obj.SetOutput(new Unit());
         var extension = "." + obj.Input.Microcontroller.Board.ArdwiinoName + "config";
@@ -74,7 +74,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         Serializer.Serialize(stream, new SerializedConfiguration(obj.Input));
     }
 
-    private async void DoLoadConfigAsync(IInteractionContext<ConfigViewModel, Unit> obj)
+    private async void DoLoadConfigAsync(InteractionContext<ConfigViewModel, Unit> obj)
     {
         obj.SetOutput(new Unit());
         var extension = "." + obj.Input.Microcontroller.Board.ArdwiinoName + "config";
@@ -89,7 +89,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     }
 
     public async Task DoShowUnpluggedDialogAsync(
-        IInteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
+        InteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
     {
         var model = new AreYouSureWindowViewModel(ViewModel!.Main.AccentedButtonTextColor, interaction.Input.yesText, interaction.Input.noText,
             interaction.Input.text);
@@ -102,7 +102,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     }
 
     private async Task DoShowYesNoDialogAsync(
-        IInteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
+        InteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
     {
         var model = new AreYouSureWindowViewModel(ViewModel!.Main.AccentedButtonTextColor, interaction.Input.yesText, interaction.Input.noText,
             interaction.Input.text);
@@ -116,7 +116,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     
     
     private async Task DoShowResetDialogAsync(
-        IInteractionContext<ConfigViewModel, ResetWindowViewModel> interaction)
+        InteractionContext<ConfigViewModel, ResetWindowViewModel> interaction)
     {
         var model = new ResetWindowViewModel(ViewModel!.Main.AccentedButtonTextColor);
         var dialog = new ResetWindow
@@ -128,7 +128,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     }
 
     private async Task DoShowBindAllDialogAsync(
-        IInteractionContext<(ConfigViewModel model, Output output),
+        InteractionContext<(ConfigViewModel model, Output output),
             BindAllWindowViewModel> interaction)
     {
         var model = new BindAllWindowViewModel(interaction.Input.model,

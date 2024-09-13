@@ -5,14 +5,14 @@ using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
 
-public class BrandedConfigurationSection : ReactiveObject
+public partial class BrandedConfigurationSection : ReactiveObject
 {
     public ObservableCollection<BrandedConfiguration> Configurations { get; } = new();
-    [Reactive] public string Name { get; set; }
+    [Reactive] private string _name;
 
     public BrandedConfigurationSection(SerialisedBrandedConfigurationSection section, bool branded, MainWindowViewModel screen)
     {

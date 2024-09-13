@@ -6,11 +6,11 @@ using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public class FixedInput : Input
+public partial class FixedInput : Input
 {
     public FixedInput(ConfigViewModel model, int value, bool analog) : base(model)
     {
@@ -18,7 +18,7 @@ public class FixedInput : Input
         IsAnalog = analog;
     }
 
-    [Reactive] public int Value { get; set; }
+    [Reactive] private int _value;
 
     public override bool IsUint => true;
     public override bool Peripheral => false;

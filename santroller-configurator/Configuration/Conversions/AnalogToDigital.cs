@@ -10,12 +10,12 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
 namespace GuitarConfigurator.NetCore.Configuration.Conversions;
 
-public class AnalogToDigital : Input
+public partial class AnalogToDigital : Input
 {
     private AnalogToDigitalType _analogToDigitalType;
 
@@ -27,14 +27,14 @@ public class AnalogToDigital : Input
         IsAnalog = false;
         this.WhenAnyValue(x => x.Child.RawValue, x => x.Threshold).ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(s => RawValue = Calculate(s));
-        this.WhenAnyValue(x => x.Child.RawValue).ObserveOn(RxApp.MainThreadScheduler)
-            .ToPropertyEx(this, s => s.RawAnalogValue);
-        this.WhenAnyValue(x => x.Child.RawValue)
-            .Select(s => s < 0 ? -s : 0).ToPropertyEx(this, x => x.ValueLower);
-        this.WhenAnyValue(x => x.Child.RawValue)
-            .Select(s => s > 0 ? s : 0).ToPropertyEx(this, x => x.ValueUpper);
+        _rawAnalogValueHelper =  this.WhenAnyValue(x => x.Child.RawValue).ObserveOn(RxApp.MainThreadScheduler)
+            .ToProperty(this, s => s.RawAnalogValue);
+        _valueLowerHelper = this.WhenAnyValue(x => x.Child.RawValue)
+            .Select(s => s < 0 ? -s : 0).ToProperty(this, x => x.ValueLower);
+        _valueUpperHelper = this.WhenAnyValue(x => x.Child.RawValue)
+            .Select(s => s > 0 ? s : 0).ToProperty(this, x => x.ValueUpper);
         _displayThreshold = this.WhenAnyValue(x => x.Threshold, x => x.AnalogToDigitalType)
-            .Select(s => CalculateThreshold(s)).ToProperty(this, x => x.DisplayThreshold);
+            .Select(CalculateThreshold).ToProperty(this, x => x.DisplayThreshold);
         Threshold = threshold;
     }
 
@@ -43,10 +43,10 @@ public class AnalogToDigital : Input
     public float HalfProgressWidth => OutputAxis.ProgressWidth / 2;
     public Input Child { get; }
 
-    [ObservableAsProperty] public int RawAnalogValue { get; }
-    [ObservableAsProperty] public int ValueLower { get; }
+    [ObservableAsProperty] private int _rawAnalogValue;
+    [ObservableAsProperty] private int _valueLower;
 
-    [ObservableAsProperty] public int ValueUpper { get; }
+    [ObservableAsProperty] private int _valueUpper;
 
     public AnalogToDigitalType AnalogToDigitalType
     {
@@ -67,7 +67,7 @@ public class AnalogToDigital : Input
     public int Max => IsUint ? ushort.MaxValue : short.MaxValue;
     public int Min => IsUint ? ushort.MinValue : short.MinValue;
 
-    [Reactive] public int Threshold { get; set; }
+    [Reactive] private int _threshold;
     private readonly ObservableAsPropertyHelper<int> _displayThreshold;
 
 

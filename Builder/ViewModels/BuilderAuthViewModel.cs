@@ -2,16 +2,16 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace SantrollerConfiguratorBuilder.NetCore.ViewModels;
 
 public partial class BuilderAuthViewModel : ReactiveObject, IRoutableViewModel
 {
-    [Reactive] public bool LoggedIn { get; set; }
-    [Reactive] public bool Authenticating { get; set; }
-    [Reactive] public bool InsufficientAccess { get; set; }
-    [Reactive] public string ErrorMessage { get; set; } = "";
+    [Reactive] private bool _loggedIn;
+    [Reactive] private bool _authenticating;
+    [Reactive] private bool _insufficientAccess;
+    [Reactive] private string _errorMessage = "";
 
     public BuilderAuthViewModel(BuilderMainWindowViewModel screen)
     {

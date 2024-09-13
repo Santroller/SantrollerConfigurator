@@ -12,11 +12,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.ViewModels;
 using ProtoBuf;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
 
-public class BrandedConfigurationStore : ReactiveObject
+public partial class BrandedConfigurationStore : ReactiveObject
 {
     public BrandedConfigurationStore(string toolName, Color primaryColor, Color warningColor, Color errorColor)
     {
@@ -26,8 +26,8 @@ public class BrandedConfigurationStore : ReactiveObject
         ErrorColor = errorColor;
         Logo = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/Icons/logo.png")));
         Icon = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/icon.png")));
-        this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
-            .ToPropertyEx(this, x => x.ToolNameVersioned);
+        _toolNameVersionedHelper = this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
+            .ToProperty(this, x => x.ToolNameVersioned);
     }
 
     public BrandedConfigurationStore(SerialisedBrandedConfigurationStore store, bool branded,
@@ -60,22 +60,22 @@ public class BrandedConfigurationStore : ReactiveObject
                 store.Configurations.Select(s => new BrandedConfigurationSection(s, branded, screen)));
         }
 
-        this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
-            .ToPropertyEx(this, x => x.ToolNameVersioned);
+        _toolNameVersionedHelper = this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
+            .ToProperty(this, x => x.ToolNameVersioned);
     }
 
-    [ObservableAsProperty] public string ToolNameVersioned { get; } = null!;
-    [Reactive] public string ToolName { get; set; }
+    [ObservableAsProperty] private string _toolNameVersioned = null!;
+    [Reactive] private string _toolName;
 
-    [Reactive] public Color WarningColor { get; set; }
+    [Reactive] private Color _warningColor;
 
-    [Reactive] public Color PrimaryColor { get; set; }
+    [Reactive] private Color _primaryColor;
 
-    [Reactive] public Color ErrorColor { get; set; }
+    [Reactive] private Color _errorColor;
 
-    [Reactive] public Bitmap Logo { get; set; }
+    [Reactive] private Bitmap _logo;
 
-    [Reactive] public Bitmap Icon { get; set; }
+    [Reactive] private Bitmap _icon;
 
     public WindowIcon WindowIcon => new(Icon);
     public ObservableCollection<BrandedConfigurationSection> Configurations { get; } = new();

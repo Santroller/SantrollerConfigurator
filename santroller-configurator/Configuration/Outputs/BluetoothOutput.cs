@@ -16,7 +16,7 @@ using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
@@ -30,11 +30,11 @@ public partial class BluetoothOutput : CombinedOutput
         Input = new BluetoothInput(this);
         _timer.Interval = TimeSpan.FromSeconds(1);
         _timer.Tick += Tick;
-        this.WhenAnyValue(s => s.ScanTimer)
+        _scanTextHelper = this.WhenAnyValue(s => s.ScanTimer)
             .Select(scanTimer =>
                 scanTimer == 11 ? Resources.BluetoothStartScan : string.Format(Resources.BluetoothScanning, scanTimer))
-            .ToPropertyEx(this, x => x.ScanText);
-        this.WhenAnyValue(s => s.ScanTimer).Select(scanTimer => scanTimer != 11).ToPropertyEx(this, x => x.Scanning);
+            .ToProperty(this, x => x.ScanText);
+        _scanningHelper = this.WhenAnyValue(s => s.ScanTimer).Select(scanTimer => scanTimer != 11).ToProperty(this, x => x.Scanning);
         Addresses.Add(model.BtRxAddr.Length != 0 ? model.BtRxAddr : Resources.BluetoothNoDevice);
         if (Model.Device is Santroller santroller)
             LocalAddress = santroller.GetBluetoothAddress();
@@ -42,7 +42,7 @@ public partial class BluetoothOutput : CombinedOutput
             LocalAddress = Resources.BluetoothWriteConfigMessage;
     }
 
-    [Reactive] public string LocalAddress { get; private set; }
+    [Reactive] private string _localAddress;
 
     public AvaloniaList<string> Addresses { get; } = new();
 
@@ -94,15 +94,14 @@ public partial class BluetoothOutput : CombinedOutput
         {
             return "";
         }
-    } // ReSharper disable UnassignedGetOnlyAutoProperty
-    [ObservableAsProperty] public string ScanText { get; } = "";
+    }
+    [ObservableAsProperty] private string _scanText = "";
 
-    [ObservableAsProperty] public bool Scanning { get; }
-    // ReSharper enable UnassignedGetOnlyAutoProperty
+    [ObservableAsProperty] private bool _scanning;
 
-    [Reactive] public int ScanTimer { get; set; } = 11;
+    [Reactive] private int _scanTimer = 11;
 
-    [Reactive] public bool Connected { get; set; }
+    [Reactive] private bool _connected;
 
     public override bool IsCombined => true;
     public override bool IsStrum => false;

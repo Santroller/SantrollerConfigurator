@@ -8,20 +8,20 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public class Mpr121Input : Input
+public partial class Mpr121Input : Input
 {
     public Mpr121Input(int input, ConfigViewModel model, bool peripheral) : base(model)
     {
         Input = input;
         IsAnalog = false;
         Peripheral = peripheral;
-        this.WhenAnyValue(x => x.Model.Mpr121CapacitiveCount)
+        _availableInputsHelper = this.WhenAnyValue(x => x.Model.Mpr121CapacitiveCount)
             .Select(x => Enumerable.Range(4, 8).Concat(Enumerable.Range(0, x)))
-            .ToPropertyEx(this, x => x.AvailableInputs);
+            .ToProperty(this, x => x.AvailableInputs);
 
         this.WhenAnyValue(x => x.Model.Mpr121CapacitiveCount).Subscribe(x =>
         {
@@ -48,7 +48,7 @@ public class Mpr121Input : Input
         }
     }
 
-    [ObservableAsProperty] public IEnumerable<int> AvailableInputs { get; } = null!;
+    [ObservableAsProperty] private IEnumerable<int> _availableInputs  = null!;
 
     public override IList<PinConfig> PinConfigs => Array.Empty<PinConfig>();
     public override InputType? InputType => Types.InputType.Mpr121Input;

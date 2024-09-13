@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 
-public class DirectPinConfig : PinConfig
+public partial class DirectPinConfig : PinConfig
 {
     private int _pin;
 
@@ -19,7 +19,7 @@ public class DirectPinConfig : PinConfig
     public override string Type { get; }
     public override string Definition => "";
 
-    [Reactive] public DevicePinMode PinMode { get; set; }
+    [Reactive] private DevicePinMode _pinMode;
 
     public int Pin
     {

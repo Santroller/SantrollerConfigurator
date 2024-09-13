@@ -13,11 +13,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public class Ps2CombinedOutput : CombinedSpiOutput
+public partial class Ps2CombinedOutput : CombinedSpiOutput
 {
     public static readonly Dictionary<Ps2InputType, StandardButtonType> Buttons = new()
     {
@@ -160,11 +160,11 @@ public class Ps2CombinedOutput : CombinedSpiOutput
 
     public ReadOnlyObservableCollection<int> AvailablePinsInterrupt => Model.AvailablePinsInterrupt;
 
-    [Reactive] public Ps2ControllerType DetectedType { get; set; }
-    [Reactive] public Ps2ControllerType SelectedType { get; set; } = Ps2ControllerType.Selected;
+    [Reactive] private Ps2ControllerType _detectedType;
+    [Reactive] private Ps2ControllerType _selectedType  = Ps2ControllerType.Selected;
     public IEnumerable<Ps2ControllerType> Ps2ControllerTypes => Enum.GetValues<Ps2ControllerType>();
 
-    [Reactive] public bool ControllerFound { get; set; }
+    [Reactive] private bool _controllerFound;
 
     public override IEnumerable<Output> ValidOutputs()
     {

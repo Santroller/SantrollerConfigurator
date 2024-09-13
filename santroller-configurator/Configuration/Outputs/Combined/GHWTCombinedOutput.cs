@@ -10,11 +10,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public class GhwtCombinedOutput : CombinedOutput
+public partial class GhwtCombinedOutput : CombinedOutput
 {
     private static readonly Dictionary<GhWtInputType, StandardButtonType> Taps = new()
     {
@@ -103,7 +103,7 @@ public class GhwtCombinedOutput : CombinedOutput
         set => _pinConfigS2.Pin = value;
     }
 
-    [Reactive] public string RawTaps { get; set; } = string.Empty;
+    [Reactive] private string _rawTaps = string.Empty;
 
     public ReadOnlyObservableCollection<int> AvailablePinsDigital => Model.AvailablePinsDigital;
 

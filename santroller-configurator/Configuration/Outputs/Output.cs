@@ -23,7 +23,7 @@ using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
@@ -113,109 +113,106 @@ public abstract partial class Output : ReactiveObject
             Model.Bindings.Connect().Select(_ => Model.Bindings.Items.IndexOf(this) != 0));
         MoveDown = ReactiveCommand.Create(() => Model.MoveDown(this),
             Model.Bindings.Connect().Select(_ => Model.Bindings.Items.IndexOf(this) != Model.Bindings.Count - 1));
-        AvailableIndices = Array.Empty<LedIndex>();
-        AvailableIndicesPeripheral = Array.Empty<LedIndex>();
-        AvailableIndicesMpr121 = Array.Empty<LedIndex>();
-        this.WhenAnyValue(x => x.Model.LedCount)
+        _availableIndicesHelper = this.WhenAnyValue(x => x.Model.LedCount)
             .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, false, false, (byte) s)).ToArray())
-            .ToPropertyEx(this, x => x.AvailableIndices);
-        this.WhenAnyValue(x => x.Model.Mpr121CapacitiveCount)
+            .ToProperty(this, x => x.AvailableIndices);
+        _availableIndicesMpr121Helper = this.WhenAnyValue(x => x.Model.Mpr121CapacitiveCount)
             .Select(x => x > 4 ? x : 4)
             .Select(x => Enumerable.Range(x, 12 - x).Select(s => new LedIndex(this, false, true, (byte) s)).ToArray())
-            .ToPropertyEx(this, x => x.AvailableIndicesMpr121);
-        this.WhenAnyValue(x => x.Model.LedCountPeripheral)
+            .ToProperty(this, x => x.AvailableIndicesMpr121);
+        _availableIndicesPeripheralHelper = this.WhenAnyValue(x => x.Model.LedCountPeripheral)
             .Select(x => Enumerable.Range(1, x).Select(s => new LedIndex(this, true, false, (byte) s)).ToArray())
-            .ToPropertyEx(this, x => x.AvailableIndicesPeripheral);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is DjInput)
-            .ToPropertyEx(this, x => x.IsDj);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is UsbHostInput)
-            .ToPropertyEx(this, x => x.IsUsb);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is WiiInput)
-            .ToPropertyEx(this, x => x.IsWii);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is AdxlInput)
-            .ToPropertyEx(this, x => x.IsAdxl);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Mpr121Input)
-            .ToPropertyEx(this, x => x.IsMpr121);
-        this.WhenAnyValue(x => x.Input)
+            .ToProperty(this, x => x.AvailableIndicesPeripheral);
+        _isDjHelper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is DjInput)
+            .ToProperty(this, x => x.IsDj);
+        _isUsbHelper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is UsbHostInput)
+            .ToProperty(this, x => x.IsUsb);
+        _isWiiHelper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is WiiInput)
+            .ToProperty(this, x => x.IsWii);
+        _isAdxlHelper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is AdxlInput)
+            .ToProperty(this, x => x.IsAdxl);
+        _isMpr121Helper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Mpr121Input)
+            .ToProperty(this, x => x.IsMpr121);
+        _isGh5OrCloneHelper = this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is Gh5NeckInput or CloneNeckInput &&
                 this is not GuitarAxis {Type: GuitarAxisType.Slider})
-            .ToPropertyEx(this, x => x.IsGh5OrClone);
-        this.WhenAnyValue(x => x.Input)
+            .ToProperty(this, x => x.IsGh5OrClone);
+        _isUsbHostKeyboardHelper = this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.KeyboardInput})
-            .ToPropertyEx(this, x => x.IsUsbHostKeyboard);
-        this.WhenAnyValue(x => x.Input)
+            .ToProperty(this, x => x.IsUsbHostKeyboard);
+        _isMidiHelper = this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is MidiInput)
-            .ToPropertyEx(this, x => x.IsMidi);
-        this.WhenAnyValue(x => x.Input)
+            .ToProperty(this, x => x.IsMidi);
+        _isMidiNoteHelper = this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is MidiInput {Input: MidiType.Note})
-            .ToPropertyEx(this, x => x.IsMidiNote);
-        this.WhenAnyValue(x => x.Input)
+            .ToProperty(this, x => x.IsMidiNote);
+        _isUsbHostMouseAxisHelper = this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.MouseAxis})
-            .ToPropertyEx(this, x => x.IsUsbHostMouseAxis);
-        this.WhenAnyValue(x => x.Input)
+            .ToProperty(this, x => x.IsUsbHostMouseAxis);
+        _isUsbHostMouseButtonHelper = this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.MouseButton})
-            .ToPropertyEx(this, x => x.IsUsbHostMouseButton);
-        this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Ps2Input)
-            .ToPropertyEx(this, x => x.IsPs2);
-        this.WhenAnyValue(x => x.Input)
+            .ToProperty(this, x => x.IsUsbHostMouseButton);
+        _isPs2Helper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Ps2Input)
+            .ToProperty(this, x => x.IsPs2);
+        _isWtHelper = this.WhenAnyValue(x => x.Input)
             .Select(x =>
                 x.InnermostInputs().First() is GhWtTapInput && this is not GuitarAxis {Type: GuitarAxisType.Slider})
-            .ToPropertyEx(this, x => x.IsWt);
-        this.WhenAnyValue(x => x.Input.Title, x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails,
+            .ToProperty(this, x => x.IsWt);
+        _titleHelper = this.WhenAnyValue(x => x.Input.Title, x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails,
                 x => x.Model.LegendType, x => x.Model.SwapSwitchFaceButtons)
             .Select(x => $"{x.Item1} ({GetName(x.Item2, x.Item4, x.Item5)})")
-            .ToPropertyEx(this, x => x.Title);
-        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not LedType.None)
-            .ToPropertyEx(this, x => x.AreLedsEnabled);
-        LedIndices.ToObservableChangeSet(x => x).ToCollection().Select(s => s.Count != 0)
-            .ToPropertyEx(this, x => x.AreLedsSet);
-        LedIndicesPeripheral.ToObservableChangeSet(x => x).ToCollection().Select(s => s.Count != 0)
-            .ToPropertyEx(this, x => x.AreLedsSetPeripheral);
-        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not LedType.None)
-            .ToPropertyEx(this, x => x.AreLedsEnabledPeripheral);
-        this.WhenAnyValue(x => x.Model.LedType)
+            .ToProperty(this, x => x.Title);
+        _areLedsEnabledHelper = this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not LedType.None)
+            .ToProperty(this, x => x.AreLedsEnabled);
+        _areLedsSetHelper = LedIndices.ToObservableChangeSet(x => x).ToCollection().Select(s => s.Count != 0)
+            .ToProperty(this, x => x.AreLedsSet);
+        _areLedsSetPeripheralHelper = LedIndicesPeripheral.ToObservableChangeSet(x => x).ToCollection().Select(s => s.Count != 0)
+            .ToProperty(this, x => x.AreLedsSetPeripheral);
+        _areLedsEnabledPeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not LedType.None)
+            .ToProperty(this, x => x.AreLedsEnabledPeripheral);
+        _isApa102Helper = this.WhenAnyValue(x => x.Model.LedType)
             .Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812))
-            .ToPropertyEx(this, x => x.IsApa102);
-        this.WhenAnyValue(x => x.Model.LedTypePeripheral)
+            .ToProperty(this, x => x.IsApa102);
+        _isApa102PeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral)
             .Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812))
-            .ToPropertyEx(this, x => x.IsApa102Peripheral);
-        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
-            .ToPropertyEx(this, x => x.LedsUseColours);
-        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
-            .ToPropertyEx(this, x => x.LedsUseColoursPeripheral);
-        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is LedType.Ws2812)
-            .ToPropertyEx(this, x => x.IsWs2812);
-        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is LedType.Ws2812)
-            .ToPropertyEx(this, x => x.IsWs2812Peripheral);
-        this.WhenAnyValue(x => x.Model.LedType).Select(x => x is LedType.Stp16Cpc26)
-            .ToPropertyEx(this, x => x.IsStp);
-        this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is LedType.Stp16Cpc26)
-            .ToPropertyEx(this, x => x.IsStpPeripheral);
-        this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails, x => x.Model.LegendType,
+            .ToProperty(this, x => x.IsApa102Peripheral);
+        _ledsUseColoursHelper = this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
+            .ToProperty(this, x => x.LedsUseColours);
+        _ledsUseColoursPeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
+            .ToProperty(this, x => x.LedsUseColoursPeripheral);
+        _isWs2812Helper = this.WhenAnyValue(x => x.Model.LedType).Select(x => x is LedType.Ws2812)
+            .ToProperty(this, x => x.IsWs2812);
+        _isWs2812PeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is LedType.Ws2812)
+            .ToProperty(this, x => x.IsWs2812Peripheral);
+        _isStpHelper = this.WhenAnyValue(x => x.Model.LedType).Select(x => x is LedType.Stp16Cpc26)
+            .ToProperty(this, x => x.IsStp);
+        _isStpPeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is LedType.Stp16Cpc26)
+            .ToProperty(this, x => x.IsStpPeripheral);
+        _localisedNameHelper = this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails, x => x.Model.LegendType,
                 x => x.Model.SwapSwitchFaceButtons)
             .Select(x => GetName(x.Item1, x.Item3, x.Item4))
-            .ToPropertyEx(this, x => x.LocalisedName);
-        this.WhenAnyValue(x => x.Input.RawValue, x => x.Enabled).Select(x => x.Item2 ? x.Item1 : 0)
-            .ToPropertyEx(this, x => x.ValueRaw);
-        this.WhenAnyValue(x => x.ValueRaw, x => x.Input, x => x.IsCombined)
+            .ToProperty(this, x => x.LocalisedName);
+        _valueRawHelper = this.WhenAnyValue(x => x.Input.RawValue, x => x.Enabled).Select(x => x.Item2 ? x.Item1 : 0)
+            .ToProperty(this, x => x.ValueRaw);
+        _imageOpacityHelper = this.WhenAnyValue(x => x.ValueRaw, x => x.Input, x => x.IsCombined)
             .Select(GetOpacity)
-            .ToPropertyEx(this, s => s.ImageOpacity);
-        this.WhenAnyValue(x => x.Enabled)
+            .ToProperty(this, s => s.ImageOpacity);
+        _combinedOpacityHelper = this.WhenAnyValue(x => x.Enabled)
             .Select(s => s ? 1 : 0.5)
-            .ToPropertyEx(this, s => s.CombinedOpacity);
-        this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails,
+            .ToProperty(this, s => s.CombinedOpacity);
+        _outputTypeHelper = this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.ShouldUpdateDetails,
                 x => x.ChildOfCombined)
             .Select(x => x.Item3 ? GetChildOutputType() : GetOutputType())
-            .ToPropertyEx(this, x => x.OutputType);
-        this.WhenAnyValue(x => x.Enabled)
+            .ToProperty(this, x => x.OutputType);
+        _combinedBackgroundHelper = this.WhenAnyValue(x => x.Enabled)
             .Select(enabled => enabled ? Brush.Parse("#99000000") : Brush.Parse("#33000000"))
-            .ToPropertyEx(this, s => s.CombinedBackground);
+            .ToProperty(this, s => s.CombinedBackground);
         this.WhenAnyValue(x => x.Model.HasPeripheral).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.UsesPwm).Subscribe(s =>
         {
@@ -229,15 +226,17 @@ public abstract partial class Output : ReactiveObject
         AnalogOutputs = ReadOnlyObservableCollection<Output>.Empty;
         DigitalOutputs = ReadOnlyObservableCollection<Output>.Empty;
         AllDigitalOutputs = ReadOnlyObservableCollection<Output>.Empty;
-        if (this is OutputButton or {Input.IsAnalog:false})
+        if (this is OutputButton or {Input.IsAnalog: false})
         {
             AllDigitalOutputs = new ReadOnlyObservableCollection<Output>(new ObservableCollection<Output>([this]));
         }
+
         Outputs.Connect().Bind(out var allOutputs).Subscribe();
         AllOutputs = allOutputs;
         _configured = true;
         IsVisible = !Model.Branded || LedIndices.Any() || this is Led || this is BluetoothOutput ||
-                    this is CombinedOutput || this is OutputAxis {Input: not DigitalToAnalog} || this is {Input: AnalogToDigital} || this is JoystickToDpad;
+                    this is CombinedOutput || this is OutputAxis {Input: not DigitalToAnalog} ||
+                    this is {Input: AnalogToDigital} || this is JoystickToDpad;
     }
 
     private bool _outputPeripheral;
@@ -349,7 +348,7 @@ public abstract partial class Output : ReactiveObject
         {
             check = s.Item1 != 0;
         }
-        
+
         if (this is DrumAxis axis)
         {
             check = s.Item1 > axis.Min;
@@ -372,12 +371,11 @@ public abstract partial class Output : ReactiveObject
 
     private bool ShouldUpdateDetails { get; set; }
 
-    [Reactive] public Input Input { get; set; }
+    [Reactive] private Input _input;
 
+    [Reactive] private bool _enabled = true;
 
-    [Reactive] public bool Enabled { get; set; } = true;
-
-    [Reactive] public bool Expanded { get; set; }
+    [Reactive] private bool _expanded;
 
     public Color LedOn
     {
@@ -457,7 +455,7 @@ public abstract partial class Output : ReactiveObject
         get => GetUsbHostKey() ?? Key.A;
         set => SetUsbHostKey(value);
     }
-    
+
     public int MidiNote
     {
         get => GetMidiNote() ?? 1;
@@ -465,7 +463,7 @@ public abstract partial class Output : ReactiveObject
     }
 
     public IEnumerable<int> MidiNotes => Enumerable.Range(0, 129);
-    
+
     // Available notes to start pro keys at need to leave space for 25 keys
     public IEnumerable<int> MidiNotesFirst => Enumerable.Range(0, 129 - 25);
 
@@ -535,7 +533,9 @@ public abstract partial class Output : ReactiveObject
         get => (Input.InnermostInputs().First() as MidiInput)?.Input ?? MidiType.Note;
         set => SetInput(SelectedInputType, null, null, null, null, null, null, null, value);
     }
+
     public IEnumerable<MidiType> MidiTypes => Enum.GetValues<MidiType>();
+
     public IEnumerable<GhWtInputType> GhWtInputTypes =>
         Enum.GetValues<GhWtInputType>().Where(s => s is not GhWtInputType.TapAll);
 
@@ -645,50 +645,47 @@ public abstract partial class Output : ReactiveObject
         }
     }
 
-    // ReSharper disable UnassignedGetOnlyAutoProperty
-    [ObservableAsProperty] public Enum OutputType { get; } = null!;
-    [ObservableAsProperty] public string LocalisedName { get; } = "";
-    [ObservableAsProperty] public bool IsDj { get; }
-    [ObservableAsProperty] public bool IsWii { get; }
-    [ObservableAsProperty] public bool IsAdxl { get; }
-    [ObservableAsProperty] public bool IsMpr121 { get; }
-    [ObservableAsProperty] public bool IsUsb { get; }
-    [ObservableAsProperty] public bool IsPs2 { get; }
-    [ObservableAsProperty] public bool IsGh5OrClone { get; }
+    [ObservableAsProperty] private Enum _outputType = null!;
+    [ObservableAsProperty] private string _localisedName = "";
+    [ObservableAsProperty] private bool _isDj;
+    [ObservableAsProperty] private bool _isWii;
+    [ObservableAsProperty] private bool _isAdxl;
+    [ObservableAsProperty] private bool _isMpr121;
+    [ObservableAsProperty] private bool _isUsb;
+    [ObservableAsProperty] private bool _isPs2;
+    [ObservableAsProperty] private bool _isGh5OrClone;
 
-    [ObservableAsProperty] public bool IsUsbHostKeyboard { get; }
+    [ObservableAsProperty] private bool _isUsbHostKeyboard;
 
-    [ObservableAsProperty] public bool IsMidi { get; }
+    [ObservableAsProperty] private bool _isMidi;
 
-    [ObservableAsProperty] public bool IsMidiNote { get; }
-    [ObservableAsProperty] public bool IsUsbHostMouseAxis { get; }
-    [ObservableAsProperty] public bool IsUsbHostMouseButton { get; }
-    [ObservableAsProperty] public bool IsWt { get; }
-    [ObservableAsProperty] public bool AreLedsEnabled { get; }
-    [ObservableAsProperty] public bool AreLedsSet { get; }
-    [ObservableAsProperty] public bool AreLedsSetPeripheral { get; }
-    [ObservableAsProperty] public bool AreLedsEnabledPeripheral { get; }
-    [ObservableAsProperty] public bool IsApa102 { get; }
-    [ObservableAsProperty] public bool IsApa102Peripheral { get; }
-    [ObservableAsProperty] public bool LedsUseColours { get; }
-    [ObservableAsProperty] public bool LedsUseColoursPeripheral { get; }
-    [ObservableAsProperty] public bool IsStp { get; }
-    [ObservableAsProperty] public bool IsStpPeripheral { get; }
-    [ObservableAsProperty] public bool IsWs2812 { get; }
-    [ObservableAsProperty] public bool IsWs2812Peripheral { get; }
-    [ObservableAsProperty] public LedIndex[] AvailableIndices { get; }
-    [ObservableAsProperty] public LedIndex[] AvailableIndicesPeripheral { get; }
-    [ObservableAsProperty] public LedIndex[] AvailableIndicesMpr121 { get; }
+    [ObservableAsProperty] private bool _isMidiNote;
+    [ObservableAsProperty] private bool _isUsbHostMouseAxis;
+    [ObservableAsProperty] private bool _isUsbHostMouseButton;
+    [ObservableAsProperty] private bool _isWt;
+    [ObservableAsProperty] private bool _areLedsEnabled;
+    [ObservableAsProperty] private bool _areLedsSet;
+    [ObservableAsProperty] private bool _areLedsSetPeripheral;
+    [ObservableAsProperty] private bool _areLedsEnabledPeripheral;
+    [ObservableAsProperty] private bool _isApa102;
+    [ObservableAsProperty] private bool _isApa102Peripheral;
+    [ObservableAsProperty] private bool _ledsUseColours;
+    [ObservableAsProperty] private bool _ledsUseColoursPeripheral;
+    [ObservableAsProperty] private bool _isStp;
+    [ObservableAsProperty] private bool _isStpPeripheral;
+    [ObservableAsProperty] private bool _isWs2812;
+    [ObservableAsProperty] private bool _isWs2812Peripheral;
+    [ObservableAsProperty] private LedIndex[] _availableIndices = [];
+    [ObservableAsProperty] private LedIndex[] _availableIndicesPeripheral = [];
+    [ObservableAsProperty] private LedIndex[] _availableIndicesMpr121 = [];
 
-    [ObservableAsProperty] public double CombinedOpacity { get; }
-    [ObservableAsProperty] public IBrush CombinedBackground { get; } = Brush.Parse("#99000000");
+    [ObservableAsProperty] private double _combinedOpacity;
+    [ObservableAsProperty] private IBrush _combinedBackground = Brush.Parse("#99000000");
 
-    [ObservableAsProperty] public double ImageOpacity { get; }
+    [ObservableAsProperty] private double _imageOpacity;
 
-    [ObservableAsProperty] public int ValueRaw { get; }
-    [ObservableAsProperty] public string Title { get; } = "";
-
-    // ReSharper enable UnassignedGetOnlyAutoProperty
+    [ObservableAsProperty] private int _valueRaw;
+    [ObservableAsProperty] private string _title = "";
 
     public abstract bool IsCombined { get; }
     public ObservableCollection<byte> LedIndices { get; set; }
@@ -714,11 +711,11 @@ public abstract partial class Output : ReactiveObject
     public bool ShouldShowEnabled => ChildOfCombined && !Model.Branded;
     public bool IsEmpty => this is EmptyOutput;
 
-    [Reactive] public string ButtonText { get; set; }
-    [Reactive] public string ButtonTextMidiNote { get; set; }
-    [Reactive] public string ButtonTextUsbHostKey { get; set; }
-    [Reactive] public string ButtonTextUsbHostMouseAxis { get; set; }
-    [Reactive] public string ButtonTextUsbHostMouseButton { get; set; }
+    [Reactive] private string _buttonText;
+    [Reactive] private string _buttonTextMidiNote;
+    [Reactive] private string _buttonTextUsbHostKey;
+    [Reactive] private string _buttonTextUsbHostMouseAxis;
+    [Reactive] private string _buttonTextUsbHostMouseButton;
 
     public virtual string ErrorText
     {
@@ -793,19 +790,24 @@ public abstract partial class Output : ReactiveObject
             mco.FirstNote = value;
             return;
         }
+
         if (Input is AnalogToDigital atd)
         {
-            Input = new AnalogToDigital(new MidiInput(MidiType.Note, value, Model), atd.AnalogToDigitalType, atd.Threshold, Model);
+            Input = new AnalogToDigital(new MidiInput(MidiType.Note, value, Model), atd.AnalogToDigitalType,
+                atd.Threshold, Model);
             return;
-        } 
+        }
+
         Input = new MidiInput(MidiType.Note, value, Model);
     }
+
     private int? GetMidiNote()
     {
         if (this is MidiCombinedOutput mco)
         {
             return mco.FirstNote;
         }
+
         return (Input.InnermostInputs().First() as MidiInput)?.Key;
     }
 
@@ -813,12 +815,12 @@ public abstract partial class Output : ReactiveObject
     {
         return (Input.InnermostInputs().First() as UsbHostInput)?.Key;
     }
-    
+
     private MouseAxisType? GetUsbHostMouseAxis()
     {
         return (Input.InnermostInputs().First() as UsbHostInput)?.MouseAxisType;
     }
-    
+
     private MouseButtonType? GetUsbHostMouseButton()
     {
         return (Input.InnermostInputs().First() as UsbHostInput)?.MouseButtonType;
@@ -833,10 +835,11 @@ public abstract partial class Output : ReactiveObject
         {
             Input = new DigitalToAnalog(new UsbHostInput(value, Model), dta.On, Model, dta.Type);
             return;
-        } 
+        }
+
         Input = new UsbHostInput(value, Model);
     }
-    
+
     private void SetUsbHostMouseAxis(MouseAxisType value)
     {
         var current = GetUsbHostMouseAxis();
@@ -846,10 +849,11 @@ public abstract partial class Output : ReactiveObject
         {
             Input = new AnalogToDigital(new UsbHostInput(value, Model), atd.AnalogToDigitalType, atd.Threshold, Model);
             return;
-        } 
+        }
+
         Input = new UsbHostInput(value, Model);
     }
-    
+
     private void SetUsbHostMouseButton(MouseButtonType value)
     {
         var current = GetUsbHostMouseButton();
@@ -859,7 +863,8 @@ public abstract partial class Output : ReactiveObject
         {
             Input = new DigitalToAnalog(new UsbHostInput(value, Model), dta.On, Model, dta.Type);
             return;
-        } 
+        }
+
         Input = new UsbHostInput(value, Model);
     }
 
@@ -926,7 +931,9 @@ public abstract partial class Output : ReactiveObject
     {
         LedOn = LedOff;
     }
+
     private byte[] _midiNotes = new byte[127];
+
     [RelayCommand]
     private async Task FindAndAssignMidiNoteAsync()
     {
@@ -938,6 +945,7 @@ public abstract partial class Output : ReactiveObject
         {
             noteCount -= 25;
         }
+
         while (!found)
         {
             await Task.Delay(100);
@@ -954,6 +962,7 @@ public abstract partial class Output : ReactiveObject
         ButtonTextMidiNote = Resources.Assign;
         this.RaisePropertyChanged(nameof(MidiNote));
     }
+
     [RelayCommand]
     private async Task FindAndAssignUsbHostMouseAxisAsync()
     {
@@ -967,6 +976,7 @@ public abstract partial class Output : ReactiveObject
         ButtonTextUsbHostMouseAxis = Resources.Assign;
         this.RaisePropertyChanged(nameof(UsbHostKeyMouseAxisType));
     }
+
     [RelayCommand]
     private async Task FindAndAssignUsbHostMouseButtonAsync()
     {
@@ -982,6 +992,7 @@ public abstract partial class Output : ReactiveObject
         ButtonTextUsbHostMouseButton = Resources.Assign;
         this.RaisePropertyChanged(nameof(UsbHostKeyMouseButtonType));
     }
+
     [RelayCommand]
     private async Task FindAndAssignUsbHostKeyAsync()
     {
@@ -1254,6 +1265,7 @@ public abstract partial class Output : ReactiveObject
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer);
 
     public abstract string GenerateOutput(ConfigField mode);
+
     public virtual IEnumerable<Output> ValidOutputs()
     {
         var (extra, _) = ControllerEnumConverter.FilterValidOutputs(Model.DeviceControllerType, Outputs.Items);

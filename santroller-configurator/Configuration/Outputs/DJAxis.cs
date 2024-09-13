@@ -7,7 +7,7 @@ using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
@@ -48,10 +48,10 @@ public partial class DjAxis : OutputAxis
         UpdateDetails();
     }
 
-    [Reactive] public int Multiplier { get; set; }
-    [Reactive] public int LedMultiplier { get; set; }
+    [Reactive] private int _multiplier;
+    [Reactive] private int _ledMultiplier;
 
-    [Reactive] public bool Invert { get; set; }
+    [Reactive] private bool _invert;
 
     protected override int Calculate(
         (bool enabled, int value, int min, int max, int deadZone, bool trigger, DeviceControllerType

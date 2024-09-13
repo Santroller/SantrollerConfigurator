@@ -21,7 +21,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     }
 
     private async Task DoShowIssueDialogAsync(
-        IInteractionContext<(string _platformIOText, ConfigViewModel), RaiseIssueWindowViewModel?> interaction)
+        InteractionContext<(string _platformIOText, ConfigViewModel), RaiseIssueWindowViewModel?> interaction)
     {
         var model = new RaiseIssueWindowViewModel(interaction.Input);
         var dialog = new RaiseIssueWindow
@@ -33,7 +33,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     }
 
     private async Task DoShowYesNoDialogAsync(
-        IInteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
+        InteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
     {
         var model = new AreYouSureWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input.yesText, interaction.Input.noText,
             interaction.Input.text);
@@ -45,7 +45,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         interaction.SetOutput(model);
     }
     private async Task DoShowInformationDialogAsync(
-        IInteractionContext<string, InformationWindowViewModel> interaction)
+        InteractionContext<string, InformationWindowViewModel> interaction)
     {
         var model = new InformationWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input);
         var dialog = new InformationWindow

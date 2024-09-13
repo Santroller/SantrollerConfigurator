@@ -21,7 +21,7 @@ using GuitarConfigurator.NetCore.ViewModels;
 using Mono.Unix;
 using ProtoBuf;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace SantrollerConfiguratorBuilder.NetCore.ViewModels;
 
@@ -29,11 +29,11 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 {
     public BuilderConfig Config { get; }
 
-    [Reactive] public BrandedConfigurationStore? SelectedTool { get; set; }
-    [Reactive] public BrandedConfigurationSection? SelectedSection { get; set; }
-    [Reactive] public BrandedConfigurationSection? SelectedCopySection { get; set; }
-    [Reactive] public BrandedConfiguration? Selected { get; set; }
-    [Reactive] public bool ImageError { get; set; }
+    [Reactive] private BrandedConfigurationStore? _selectedTool;
+    [Reactive] private BrandedConfigurationSection? _selectedSection;
+    [Reactive] private BrandedConfigurationSection? _selectedCopySection;
+    [Reactive] private BrandedConfiguration? _selected;
+    [Reactive] private bool _imageError;
 
     public Interaction<BuilderMainWindowViewModel, IStorageFile?>
         LoadConfig { get; } =

@@ -11,11 +11,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public class WiiCombinedOutput : CombinedTwiOutput
+public partial class WiiCombinedOutput : CombinedTwiOutput
 {
     private static readonly Dictionary<WiiInputType, StandardButtonType> Buttons = new()
     {
@@ -199,10 +199,10 @@ public class WiiCombinedOutput : CombinedTwiOutput
         peripheral, WiiInput.WiiTwiFreq, "Wii", sda, scl)
     {
         Outputs.Clear();
-        this.WhenAnyValue(x => x.DetectedType).Select(s => s is WiiControllerType.Guitar)
-            .ToPropertyEx(this, x => x.IsGuitar);
-        this.WhenAnyValue(x => x.DetectedType).Select(s => s is WiiControllerType.Dj)
-            .ToPropertyEx(this, x => x.IsTurntable);
+        _isGuitarHelper = this.WhenAnyValue(x => x.DetectedType).Select(s => s is WiiControllerType.Guitar)
+            .ToProperty(this, x => x.IsGuitar);
+        _isTurntableHelper = this.WhenAnyValue(x => x.DetectedType).Select(s => s is WiiControllerType.Dj)
+            .ToProperty(this, x => x.IsTurntable);
         Outputs.Connect().Filter(x => x is OutputAxis or JoystickToDpad)
             .Filter(s => s.IsVisible)
             .AutoRefresh(s => s.LocalisedName)
@@ -232,16 +232,16 @@ public class WiiCombinedOutput : CombinedTwiOutput
     }
 
     // ReSharper disable once UnassignedGetOnlyAutoProperty
-    [ObservableAsProperty] public bool IsGuitar { get; }
-    [ObservableAsProperty] public bool IsTurntable { get; }
+    [ObservableAsProperty] private bool _isGuitar;
+    [ObservableAsProperty] private bool _isTurntable;
 
-    [Reactive] public WiiControllerType DetectedType { get; set; }
-    [Reactive] public WiiControllerType SelectedType { get; set; } = WiiControllerType.Selected;
+    [Reactive] private WiiControllerType _detectedType;
+    [Reactive] private WiiControllerType _selectedType = WiiControllerType.Selected;
 
     public IEnumerable<WiiControllerType> WiiControllerTypes => Enum.GetValues<WiiControllerType>()
         .Where(s => s is not (WiiControllerType.ClassicControllerPro or WiiControllerType.MotionPlus));
 
-    [Reactive] public bool ControllerFound { get; set; }
+    [Reactive] private bool _controllerFound;
 
     public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
     {

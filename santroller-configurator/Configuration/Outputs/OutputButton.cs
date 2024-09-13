@@ -11,13 +11,12 @@ using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using Splat.ModeDetection;
+using ReactiveUI.SourceGenerators;
 using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
-public abstract class OutputButton : Output
+public abstract partial class OutputButton : Output
 {
     private readonly ObservableAsPropertyHelper<float> _debounceDisplay;
     protected OutputButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
@@ -34,8 +33,7 @@ public abstract class OutputButton : Output
 
     public override bool UsesPwm => false;
 
-    [Reactive]
-    public int Debounce { get; set; }
+    [Reactive] public int _debounce;
 
     public float DebounceDisplay
     {

@@ -8,11 +8,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public class DjCombinedOutput : CombinedTwiOutput
+public partial class DjCombinedOutput : CombinedTwiOutput
 {
     public DjCombinedOutput(ConfigViewModel model, bool peripheral, int sda = -1, int scl = -1) :
         base(model, DjInput.DjTwiType, peripheral, DjInput.DjTwiFreq, "DJ", sda, scl)
@@ -39,9 +39,10 @@ public class DjCombinedOutput : CombinedTwiOutput
         get => Model.DjPollRate;
         set => Model.DjPollRate = value;
     }
-    [Reactive] public bool DetectedLeft { get; set; }
 
-    [Reactive] public bool DetectedRight { get; set; }
+    [Reactive] private bool _detectedLeft;
+
+    [Reactive] private bool _detectedRight;
 
     public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
     {

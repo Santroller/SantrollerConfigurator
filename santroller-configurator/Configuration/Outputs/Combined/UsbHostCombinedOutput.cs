@@ -9,11 +9,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public class UsbHostCombinedOutput : CombinedOutput
+public partial class UsbHostCombinedOutput : CombinedOutput
 {
     public UsbHostCombinedOutput(ConfigViewModel model) : base(
         model)
@@ -131,9 +131,9 @@ public class UsbHostCombinedOutput : CombinedOutput
         {DrumAxisType.Kick2, UsbHostInputType.Kick2},
     };
 
-    [Reactive] public string UsbHostInfo { get; set; } = "";
+    [Reactive] private string _usbHostInfo = "";
 
-    [Reactive] public int ConnectedDevices { get; set; }
+    [Reactive] private int _connectedDevices;
 
     // Since DM and DP need to be next to eachother, you cannot use pins at the far ends
     public List<int> AvailablePinsDm => Model.AvailablePinsDigital.Skip(1).ToList();

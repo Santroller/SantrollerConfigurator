@@ -29,7 +29,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
         InitializeComponent();
     }
     
-    private async Task LoadImageAsync(IInteractionContext<BuilderMainWindowViewModel, IStorageFile?> obj)
+    private async Task LoadImageAsync(InteractionContext<BuilderMainWindowViewModel, IStorageFile?> obj)
     {
         var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
@@ -43,7 +43,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
         }
         obj.SetOutput(file[0]);
     }
-    private async Task SaveUf2Async(IInteractionContext<BuilderMainWindowViewModel, IStorageFile?> obj)
+    private async Task SaveUf2Async(InteractionContext<BuilderMainWindowViewModel, IStorageFile?> obj)
     {
         var file = await ((Window) VisualRoot!).StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
@@ -52,7 +52,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
         });
         obj.SetOutput(file);
     }
-    private async Task SaveBinaryAsync(IInteractionContext<BuilderMainWindowViewModel, IStorageFolder?> obj)
+    private async Task SaveBinaryAsync(InteractionContext<BuilderMainWindowViewModel, IStorageFolder?> obj)
     {
         var dir = await ((Window) VisualRoot!).StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
         {
@@ -61,7 +61,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
         obj.SetOutput(dir.FirstOrDefault());
     }
     private async Task DoShowIssueDialogAsync(
-        IInteractionContext<(string _platformIOText, ConfigViewModel), RaiseIssueWindowViewModel?> interaction)
+        InteractionContext<(string _platformIOText, ConfigViewModel), RaiseIssueWindowViewModel?> interaction)
     {
         var model = new RaiseIssueWindowViewModel(interaction.Input);
         var dialog = new RaiseIssueWindow
@@ -73,7 +73,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
     }
 
     private async Task DoShowYesNoDialogAsync(
-        IInteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
+        InteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
     {
         var model = new AreYouSureWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input.yesText, interaction.Input.noText,
             interaction.Input.text);

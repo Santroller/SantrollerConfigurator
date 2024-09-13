@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using GuitarConfigurator.NetCore.Devices;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace SantrollerConfiguratorBranded.NetCore.ViewModels;
 

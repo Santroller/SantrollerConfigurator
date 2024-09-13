@@ -10,7 +10,7 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Other;
 
@@ -23,7 +23,7 @@ public class JoystickToDpadInput : FixedInput
     public override string Title => Resources.JoystickToDpadTitle;
 }
 
-public class JoystickToDpad : Output
+public partial class JoystickToDpad : Output
 {
     private static readonly List<WiiInputType> JoystickToDpadXWii =
     [
@@ -131,13 +131,13 @@ public class JoystickToDpad : Output
         }
     }
 
-    [Reactive] public bool Up { get; set; }
+    [Reactive] private bool _up;
 
-    [Reactive] public bool Down { get; set; }
+    [Reactive] private bool _down;
 
-    [Reactive] public bool Left { get; set; }
+    [Reactive] private bool _left;
 
-    [Reactive] public bool Right { get; set; }
+    [Reactive] private bool _right;
 
     public override bool IsCombined => false;
     public override bool IsStrum => false;

@@ -7,11 +7,11 @@ using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public class CloneCombinedOutput : CombinedTwiOutput
+public partial class CloneCombinedOutput : CombinedTwiOutput
 {
     private static readonly Dictionary<Gh5NeckInputType, InstrumentButtonType> Taps = new()
     {
@@ -61,7 +61,7 @@ public class CloneCombinedOutput : CombinedTwiOutput
         AllDigitalOutputs = allDigitalOutputs;
     }
 
-    [Reactive] public bool Detected { get; set; }
+    [Reactive] private bool _detected;
 
     public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
     {

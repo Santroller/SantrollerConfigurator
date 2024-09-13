@@ -6,11 +6,11 @@ using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public class DirectInput : InputWithPin
+public partial class DirectInput : InputWithPin
 {
     public DirectInput(int pin, bool invert, bool peripheral, DevicePinMode pinMode, ConfigViewModel model) : base(
         model, new DirectPinConfig(model, Guid.NewGuid().ToString(), pin, peripheral, pinMode))
@@ -24,7 +24,7 @@ public class DirectInput : InputWithPin
 
     public override bool IsUint => true;
 
-    [Reactive] public bool Inverted { get; set; }
+    [Reactive] private bool _inverted;
 
     public override InputType? InputType => IsAnalog ? Types.InputType.AnalogPinInput : Peripheral ? Types.InputType.DigitalPeripheralInput : Types.InputType.DigitalPinInput;
 

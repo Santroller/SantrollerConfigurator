@@ -10,11 +10,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public class MacroInput : Input
+public partial class MacroInput : Input
 {
     public MacroInput(Input child1, Input child2,
         ConfigViewModel model) : base(model)
@@ -25,14 +25,14 @@ public class MacroInput : Input
             .Select(x => x is {Item1: > 0, Item2: > 0} ? 1 : 0).ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(s => RawValue = s);
         IsAnalog = false;
-        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is DjInput)
-            .ToPropertyEx(this, x => x.IsDj);
-        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is WiiInput)
-            .ToPropertyEx(this, x => x.IsWii);
-        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is Ps2Input)
-            .ToPropertyEx(this, x => x.IsPs2);
-        this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is UsbHostInput)
-            .ToPropertyEx(this, x => x.IsUsb);
+        _isDjHelper = this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is DjInput)
+            .ToProperty(this, x => x.IsDj);
+        _isWiiHelper = this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is WiiInput)
+            .ToProperty(this, x => x.IsWii);
+        _isPs2Helper = this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is Ps2Input)
+            .ToProperty(this, x => x.IsPs2);
+        _isUsbHelper = this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is UsbHostInput)
+            .ToProperty(this, x => x.IsUsb);
     }
     public override bool Peripheral => Child1.Peripheral;
 
@@ -95,14 +95,12 @@ public class MacroInput : Input
         get => (Child2.InnermostInputs().First() as UsbHostInput)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType2, false, null, null, null, null, null, value);
     }
-    // ReSharper disable UnassignedGetOnlyAutoProperty
 
-    [ObservableAsProperty] public bool IsDj { get; }
-    [ObservableAsProperty] public bool IsWii { get; }
+    [ObservableAsProperty] private bool _isDj;
+    [ObservableAsProperty] private bool _isWii;
 
-    [ObservableAsProperty] public bool IsPs2 { get; }
-    [ObservableAsProperty] public bool IsUsb { get; }
-    // ReSharper enable UnassignedGetOnlyAutoProperty
+    [ObservableAsProperty] private bool _isPs2;
+    [ObservableAsProperty] private bool _isUsb;
 
 
     private void SetInput(InputType? inputType, bool isChild1, WiiInputType? wiiInput, Ps2InputType? ps2InputType,
@@ -279,8 +277,8 @@ public class MacroInput : Input
     }
 
 
-    [Reactive] public Input Child1 { get; set; }
-    [Reactive] public Input Child2 { get; set; }
+    [Reactive] private Input _child1;
+    [Reactive] private Input _child2;
     public override InputType? InputType => Types.InputType.MacroInput;
 
     public override IList<DevicePin> Pins => Child1.Pins.Concat(Child2.Pins).ToList();

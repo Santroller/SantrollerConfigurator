@@ -11,11 +11,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
-public class GuitarAxis : OutputAxis
+public partial class GuitarAxis : OutputAxis
 {
     public static readonly Dictionary<int, int> PickupSelectorRangesPS = new()
     {
@@ -89,7 +89,7 @@ public class GuitarAxis : OutputAxis
         Type = type;
         Inverted = invert;
         UpdateDetails();
-        this.WhenAnyValue(x => x.Value).Select(GetNamedAxisInfo).ToPropertyEx(this, x => x.NamedAxisInfo);
+        _namedAxisInfoHelper = this.WhenAnyValue(x => x.Value).Select(GetNamedAxisInfo).ToProperty(this, x => x.NamedAxisInfo);
     }
 
     public GuitarAxis(ConfigViewModel model, Input input, int pickupSelectorNotch2,
@@ -110,13 +110,13 @@ public class GuitarAxis : OutputAxis
         Type = type;
         Inverted = invert;
         UpdateDetails();
-        this.WhenAnyValue(x => x.Value).Select(GetNamedAxisInfo).ToPropertyEx(this, x => x.NamedAxisInfo);
+        _namedAxisInfoHelper = this.WhenAnyValue(x => x.Value).Select(GetNamedAxisInfo).ToProperty(this, x => x.NamedAxisInfo);
     }
 
     // ReSharper disable once UnassignedGetOnlyAutoProperty
-    [ObservableAsProperty] public string NamedAxisInfo { get; } = "";
+    [ObservableAsProperty] private string _namedAxisInfo = "";
 
-    [Reactive] public bool Inverted { get; set; }
+    [Reactive] private bool _inverted;
 
     public GuitarAxisType Type { get; }
     public bool HasNamedAxis => Type is GuitarAxisType.Slider or GuitarAxisType.Pickup;

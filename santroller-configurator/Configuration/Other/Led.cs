@@ -14,7 +14,7 @@ using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Other;
 
@@ -132,7 +132,7 @@ public enum RumbleCommand
     StageKitReset = 0xFF
 }
 
-public class Led : Output
+public partial class Led : Output
 {
     private readonly SourceList<LedCommandType> _rumbleCommands = new();
 
@@ -216,64 +216,62 @@ public class Led : Output
         _outputHasColours = this.WhenAnyValue(x => x.Command).Select(s => s is not LedCommandType.Ps4LightBar)
             .ToProperty(this, x => x.LedsHaveColours);
 
-        this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Player)
-            .ToPropertyEx(this, x => x.PlayerMode);
+        _playerModeHelper = this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Player)
+            .ToProperty(this, x => x.PlayerMode);
 
-        this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Combo)
-            .ToPropertyEx(this, x => x.ComboMode);
+        _comboModeHelper = this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Combo)
+            .ToProperty(this, x => x.ComboMode);
 
-        this.WhenAnyValue(x => x.Command, x => x.StageKitCommand).Select(s =>
+        _stageKitStrobeSpeedModeHelper = this.WhenAnyValue(x => x.Command, x => x.StageKitCommand).Select(s =>
                 s.Item1 is LedCommandType.StageKitLed && s.Item2 is StageKitCommand.Strobe)
-            .ToPropertyEx(this, x => x.StageKitStrobeSpeedMode);
+            .ToProperty(this, x => x.StageKitStrobeSpeedMode);
 
-        this.WhenAnyValue(x => x.Command, x => x.StageKitCommand).Select(s =>
+        _stageKitLedModeHelper = this.WhenAnyValue(x => x.Command, x => x.StageKitCommand).Select(s =>
                 s.Item1 is LedCommandType.StageKitLed && s.Item2 is StageKitCommand.LedBlue or StageKitCommand.LedGreen
                     or StageKitCommand.LedRed or StageKitCommand.LedYellow)
-            .ToPropertyEx(this, x => x.StageKitLedMode);
+            .ToProperty(this, x => x.StageKitLedMode);
 
-        this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.StageKitLed)
-            .ToPropertyEx(this, x => x.StageKitMode);
-        this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
+        _stageKitModeHelper = this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.StageKitLed)
+            .ToProperty(this, x => x.StageKitMode);
+        _fiveFretModeHelper = this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
             .Select(s => s.Item1 is LedCommandType.NoteHit && s.Item2.Is5FretGuitar())
-            .ToPropertyEx(this, x => x.FiveFretMode);
+            .ToProperty(this, x => x.FiveFretMode);
 
-        this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
+        _sixFretModeHelper = this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
             .Select(s => s.Item1 is LedCommandType.NoteHit && s.Item2 is DeviceControllerType.LiveGuitar)
-            .ToPropertyEx(this, x => x.SixFretMode);
+            .ToProperty(this, x => x.SixFretMode);
 
-        this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
+        _guitarHeroDrumsModeHelper = this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
             .Select(s =>
                 s.Item1 is LedCommandType.NoteHit && s.Item2 is DeviceControllerType.GuitarHeroDrums)
-            .ToPropertyEx(this, x => x.GuitarHeroDrumsMode);
+            .ToProperty(this, x => x.GuitarHeroDrumsMode);
 
-        this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
+        _rockBandDrumsModeHelper = this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
             .Select(s =>
                 s.Item1 is LedCommandType.NoteHit && s.Item2 is DeviceControllerType.RockBandDrums)
-            .ToPropertyEx(this, x => x.RockBandDrumsMode);
+            .ToProperty(this, x => x.RockBandDrumsMode);
 
-        this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
+        _turntableModeHelper = this.WhenAnyValue(x => x.Command, x => x.Model.DeviceControllerType)
             .Select(s => s.Item1 is LedCommandType.NoteHit && s.Item2 is DeviceControllerType.Turntable)
-            .ToPropertyEx(this, x => x.TurntableMode);
+            .ToProperty(this, x => x.TurntableMode);
         UpdateDetails();
     }
 
     public override bool UsesPwm => _usesPwm?.Value ?? false;
 
     public override bool LedsHaveColours =>
-        _outputHasColours.Value; // ReSharper disable UnassignedGetOnlyAutoProperty
+        _outputHasColours.Value;
 
-    [ObservableAsProperty] public bool FiveFretMode { get; }
-    [ObservableAsProperty] public bool SixFretMode { get; }
-    [ObservableAsProperty] public bool GuitarHeroDrumsMode { get; }
-    [ObservableAsProperty] public bool RockBandDrumsMode { get; }
-    [ObservableAsProperty] public bool TurntableMode { get; }
-    [ObservableAsProperty] public bool PlayerMode { get; }
-    [ObservableAsProperty] public bool ComboMode { get; }
-    [ObservableAsProperty] public bool StageKitStrobeSpeedMode { get; }
-    [ObservableAsProperty] public bool StageKitLedMode { get; }
-    [ObservableAsProperty] public bool StageKitMode { get; }
-
-    // ReSharper enable UnassignedGetOnlyAutoProperty
+    [ObservableAsProperty] private bool _fiveFretMode;
+    [ObservableAsProperty] private bool _sixFretMode;
+    [ObservableAsProperty] private bool _guitarHeroDrumsMode;
+    [ObservableAsProperty] private bool _rockBandDrumsMode;
+    [ObservableAsProperty] private bool _turntableMode;
+    [ObservableAsProperty] private bool _playerMode;
+    [ObservableAsProperty] private bool _comboMode;
+    [ObservableAsProperty] private bool _stageKitStrobeSpeedMode;
+    [ObservableAsProperty] private bool _stageKitLedMode;
+    [ObservableAsProperty] private bool _stageKitMode;
     public StageKitCommand[] StageKitCommands { get; } = Enum.GetValues<StageKitCommand>();
     public StageKitStrobeSpeed[] StageKitStrobeSpeeds { get; } = Enum.GetValues<StageKitStrobeSpeed>();
     public FiveFretGuitar[] FiveFretGuitars { get; } = Enum.GetValues<FiveFretGuitar>();
@@ -479,14 +477,12 @@ public class Led : Output
                         type.controllerType is DeviceControllerType.RockBandDrums
                             or DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandGuitar
                             or DeviceControllerType.GuitarHeroGuitar
-                            or DeviceControllerType.RockBandGuitar
                             or DeviceControllerType.LiveGuitar or DeviceControllerType.Turntable
                             or DeviceControllerType.StageKit => true,
                     LedCommandType.NoteHit or LedCommandType.NoteMiss when
                         type.controllerType is DeviceControllerType.RockBandDrums
                             or DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandGuitar
                             or DeviceControllerType.GuitarHeroGuitar
-                            or DeviceControllerType.RockBandGuitar
                             or DeviceControllerType.LiveGuitar => true,
                     LedCommandType.DjEuphoria when type.controllerType is DeviceControllerType.Turntable => true,
                     LedCommandType.Ps4LightBar when type.controllerType is DeviceControllerType.Gamepad => true,

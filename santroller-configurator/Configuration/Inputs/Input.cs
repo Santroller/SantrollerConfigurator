@@ -6,11 +6,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public abstract class Input : ReactiveObject
+public abstract partial class Input : ReactiveObject
 {
     protected Input(ConfigViewModel model)
     {
@@ -19,8 +19,8 @@ public abstract class Input : ReactiveObject
 
     protected ConfigViewModel Model { get; }
 
-    [Reactive] public bool IsAnalog { get; set; }
-    [Reactive] public int RawValue { get; set; }
+    [Reactive] private bool _isAnalog;
+    [Reactive] private int _rawValue;
     public abstract bool IsUint { get; }
 
     public abstract IList<DevicePin> Pins { get; }

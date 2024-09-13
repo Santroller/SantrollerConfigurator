@@ -10,11 +10,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public class UsbHostInput : Input
+public partial class UsbHostInput : Input
 {
     public UsbHostInput(UsbHostInputType input, ConfigViewModel model, bool combined = false) : base(model)
     {
@@ -102,8 +102,8 @@ public class UsbHostInput : Input
     private readonly ObservableAsPropertyHelper<int> _usbHostDm;
     private readonly ObservableAsPropertyHelper<int> _usbHostDp;
 
-    [Reactive] public string UsbHostInfo { get; set; } = "";
-    [Reactive] public int ConnectedDevices { get; set; }
+    [Reactive] private string _usbHostInfo = "";
+    [Reactive] private int _connectedDevices;
 
     public int UsbHostDm
     {

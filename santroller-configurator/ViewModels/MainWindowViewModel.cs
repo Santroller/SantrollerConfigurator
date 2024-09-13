@@ -25,12 +25,12 @@ using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.Devices.libusb;
 using GuitarConfigurator.NetCore.Utils;
-using Nefarius.Utilities.DeviceManagement.Drivers;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using Velopack;
 using Velopack.Sources;
 #if Windows
+using Nefarius.Utilities.DeviceManagement.Drivers;
 using Microsoft.Win32;
 #endif
 
@@ -137,60 +137,60 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         });
         Devices = devices;
         Router.Navigate.Execute(new MainViewModel(this));
-        Router.CurrentViewModel
+        _hasSidebarHelper = Router.CurrentViewModel
             .Select(s => s is ConfigViewModel)
-            .ToPropertyEx(this, s2 => s2.HasSidebar);
-        this.WhenAnyValue(x => x.ProgressbarColor, x => x.Progress)
+            .ToProperty(this, s2 => s2.HasSidebar);
+        _progressBarShouldUseDarkTextColorHelper = this.WhenAnyValue(x => x.ProgressbarColor, x => x.Progress)
             .Select(x => ShouldUseDarkTextColorForBackground(x.Item1) && x.Item2 > 45)
-            .ToPropertyEx(this, x => x.ProgressBarShouldUseDarkTextColor);
-        this.WhenAnyValue(x => x.ProgressbarColor)
+            .ToProperty(this, x => x.ProgressBarShouldUseDarkTextColor);
+        _accentedButtonTextColorHelper = this.WhenAnyValue(x => x.ProgressbarColor)
             .Select(ShouldUseDarkTextColorForBackground)
             .Select(x => x ? "#FF000000" : "#FFFFFFFF")
-            .ToPropertyEx(this, x => x.AccentedButtonTextColor);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, x => x.AccentedButtonTextColor);
+        _migrationSupportedHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s?.MigrationSupported != false)
-            .ToPropertyEx(this, s => s.MigrationSupported);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.MigrationSupported);
+        _connectedHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s != null)
-            .ToPropertyEx(this, s => s.Connected);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.Connected);
+        _isPicoHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s?.IsPico() == true)
-            .ToPropertyEx(this, s => s.IsPico);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.IsPico);
+        _is32U4Helper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is Arduino arduino && arduino.Is32U4())
-            .ToPropertyEx(this, s => s.Is32U4);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.Is32U4);
+        _isUnoMegaHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is Dfu || (s is Arduino arduino && (arduino.IsUno() || arduino.IsMega())))
-            .ToPropertyEx(this, s => s.IsUnoMega);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.IsUnoMega);
+        _isUnoHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is Arduino arduino && arduino.IsUno())
-            .ToPropertyEx(this, s => s.IsUno);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.IsUno);
+        _isMegaHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is Arduino arduino && arduino.IsMega())
-            .ToPropertyEx(this, s => s.IsMega);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.IsMega);
+        _isDfuHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is Dfu)
-            .ToPropertyEx(this, s => s.IsDfu);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.IsDfu);
+        _isGenericHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s?.IsGeneric() == true)
-            .ToPropertyEx(this, s => s.IsGeneric);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.IsGeneric);
+        _newDeviceHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is not (null or Ardwiino or Santroller))
-            .ToPropertyEx(this, s => s.NewDevice);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.NewDevice);
+        _newDeviceOrArdwiinoHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is not Santroller)
-            .ToPropertyEx(this, s => s.NewDeviceOrArdwiino);
-        this.WhenAnyValue(x => x.DeviceInputType)
+            .ToProperty(this, s => s.NewDeviceOrArdwiino);
+        _isPeripheralHelper = this.WhenAnyValue(x => x.DeviceInputType)
             .Select(s => s is DeviceInputType.Peripheral)
-            .ToPropertyEx(this, s => s.IsPeripheral);
-        this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
+            .ToProperty(this, s => s.IsPeripheral);
+        _readyToConfigureHelper = this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
             .Select(s =>
                 s is {Item1: not null and not Santroller {IsSantroller: false}, Item2: true} &&
                 (!s.Item3 || s.Item4 == null))
-            .ToPropertyEx(this, s => s.ReadyToConfigure);
-        this.WhenAnyValue(x => x.SelectedDevice)
+            .ToProperty(this, s => s.ReadyToConfigure);
+        _isSantrollerHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is not Santroller {IsSantroller: false})
-            .ToPropertyEx(this, s => s.IsSantroller);
+            .ToProperty(this, s => s.IsSantroller);
         // Make sure that the selected device input type is reset so that we don't end up doing something invalid
         this.WhenAnyValue(s => s.SelectedDevice).Subscribe(_ =>
         {
@@ -355,45 +355,45 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             _manager?.Register();
             _timer.Start();
         }
-    } // ReSharper disable UnassignedGetOnlyAutoProperty
-    [ObservableAsProperty] public bool MigrationSupported { get; }
-    [ObservableAsProperty] public bool IsPico { get; }
-    [ObservableAsProperty] public bool Is32U4 { get; }
-    [ObservableAsProperty] public bool IsUno { get; }
-    [ObservableAsProperty] public bool IsUnoMega { get; }
-    [ObservableAsProperty] public bool IsMega { get; }
-    [ObservableAsProperty] public bool IsDfu { get; }
-    [ObservableAsProperty] public bool IsGeneric { get; }
-    [ObservableAsProperty] public bool NewDevice { get; }
-    [ObservableAsProperty] public bool NewDeviceOrArdwiino { get; }
-    [ObservableAsProperty] public bool IsPeripheral { get; }
+    }
 
-    [ObservableAsProperty] public bool Connected { get; }
+    [ObservableAsProperty] private bool _migrationSupported;
+    [ObservableAsProperty] private bool _isPico;
+    [ObservableAsProperty] private bool _is32U4;
+    [ObservableAsProperty] private bool _isUno;
+    [ObservableAsProperty] private bool _isUnoMega;
+    [ObservableAsProperty] private bool _isMega;
+    [ObservableAsProperty] private bool _isDfu;
+    [ObservableAsProperty] private bool _isGeneric;
+    [ObservableAsProperty] private bool _newDevice;
+    [ObservableAsProperty] private bool _newDeviceOrArdwiino;
+    [ObservableAsProperty] private bool _isPeripheral;
 
-    [ObservableAsProperty] public bool HasSidebar { get; }
+    [ObservableAsProperty] private bool _connected;
 
-    [ObservableAsProperty] public bool ProgressBarShouldUseDarkTextColor { get; }
-    [ObservableAsProperty] public string AccentedButtonTextColor { get; } = "";
+    [ObservableAsProperty] private bool _hasSidebar;
 
-    [ObservableAsProperty] public bool ReadyToConfigure { get; }
-    [ObservableAsProperty] public bool IsSantroller { get; }
-    // ReSharper enable UnassignedGetOnlyAutoProperty
+    [ObservableAsProperty] private bool _progressBarShouldUseDarkTextColor;
+    [ObservableAsProperty] private string _accentedButtonTextColor = "";
+
+    [ObservableAsProperty] private bool _readyToConfigure;
+    [ObservableAsProperty] private bool _isSantroller;
 
     public IEnumerable<Arduino32U4Type> Arduino32U4Types => Enum.GetValues<Arduino32U4Type>();
     public IEnumerable<MegaType> MegaTypes => Enum.GetValues<MegaType>();
     public IEnumerable<UnoMegaType> UnoMegaTypes => Enum.GetValues<UnoMegaType>();
     public IEnumerable<AvrType> AvrTypes => Enum.GetValues<AvrType>();
 
-    [Reactive] public AvrType AvrType { get; set; }
+    [Reactive] private AvrType _avrType;
 
-    [Reactive] public UnoMegaType UnoMegaType { get; set; }
+    [Reactive] private UnoMegaType _unoMegaType;
 
-    [Reactive] public MegaType MegaType { get; set; }
+    [Reactive] private MegaType _megaType;
 
-    [Reactive] public DeviceInputType DeviceInputType { get; set; }
+    [Reactive] private DeviceInputType _deviceInputType;
 
-    [Reactive] public Arduino32U4Type Arduino32U4Type { get; set; }
-    [Reactive] public bool ShowError { get; set; }
+    [Reactive] private Arduino32U4Type _arduino32U4Type;
+    [Reactive] private bool _showError;
 
 
     public List<int> AvailableSdaPins => GetSdaPins();
@@ -426,8 +426,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         }
     }
 
-    [Reactive] public Bitmap Logo { get; set; }
-    [Reactive] public string? PeripheralErrorText { get; set; }
+    [Reactive] private Bitmap _logo;
+    [Reactive] private string? _peripheralErrorText;
 
     private List<int> GetSdaPins()
     {
@@ -463,23 +463,23 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         }
     }
 
-    [Reactive] public bool LookingForDfu { get; set; } = false;
+    [Reactive] private bool _lookingForDfu = false;
 
 
-    [Reactive] public bool Installed { get; set; }
-    [Reactive] public bool HasChanges { get; set; }
-    [Reactive] public bool Working { get; set; }
-    [Reactive] public bool DeviceNotProgrammed { get; set; }
+    [Reactive] private bool _installed;
+    [Reactive] private bool _hasChanges;
+    [Reactive] private bool _working;
+    [Reactive] private bool _deviceNotProgrammed;
 
-    [Reactive] public string ProgressbarColor { get; set; }
+    [Reactive] private string _progressbarColor;
 
-    [Reactive] public double Progress { get; set; }
+    [Reactive] private double _progress;
 
-    [Reactive] public string Message { get; set; }
+    [Reactive] private string _message;
 
-    [Reactive] public string UpdateMessage { get; set; } = Resources.UpToDate;
+    [Reactive] private string _updateMessage = Resources.UpToDate;
 
-    [Reactive] public bool HasUpdate { get; set; } = false;
+    [Reactive] private bool _hasUpdate = false;
 
     public PlatformIo Pio { get; } = new();
 
@@ -705,10 +705,11 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private static async Task<bool> CheckDependencies()
     {
         // Call check dependencies on startup, and pop up a dialog saying drivers are missing would you like to install if they are missing
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        #if Windows
             return DriverStore.ExistingDrivers.Any(s => s.Contains("atmel_usb_dfu"));
-
-        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath) && await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile) ;
+        #else
+            return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath) && await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile) ;
+        #endif
     }
 
     [RelayCommand]

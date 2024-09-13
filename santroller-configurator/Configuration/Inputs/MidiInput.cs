@@ -8,11 +8,11 @@ using GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public class MidiInput : Input
+public partial class MidiInput : Input
 {
     public static readonly string[] Notes = ["A","A#/Bb","B","C","C#/Db","D","D#/Eb","E","F","F#/Gb","G","G#/Ab"];
     public static readonly Dictionary<int, string> Drums = new Dictionary<int, string>()
@@ -118,8 +118,8 @@ public class MidiInput : Input
         };
 
 
-    [Reactive] public string UsbHostInfo { get; set; } = "";
-    [Reactive] public int ConnectedDevices { get; set; }
+    [Reactive] private string _usbHostInfo = "";
+    [Reactive] private int _connectedDevices;
 
     public override IReadOnlyList<string> RequiredDefines()
     {

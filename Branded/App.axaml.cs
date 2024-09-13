@@ -8,7 +8,7 @@ using GuitarConfigurator.NetCore;
 using GuitarConfigurator.NetCore.ViewModels;
 using GuitarConfigurator.NetCore.Views;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using SantrollerConfiguratorBranded.NetCore.ViewModels;
 using SantrollerConfiguratorBranded.NetCore.Views;
 using Splat;

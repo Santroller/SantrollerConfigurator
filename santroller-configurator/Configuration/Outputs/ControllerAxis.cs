@@ -5,11 +5,11 @@ using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
-public class ControllerAxis : OutputAxis
+public partial class ControllerAxis : OutputAxis
 {
 
     public ControllerAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min,
@@ -23,7 +23,7 @@ public class ControllerAxis : OutputAxis
         UpdateDetails();
     }
 
-    [Reactive] public int Threshold { get; set; }
+    [Reactive] private int _threshold;
     public StandardAxisType Type { get; }
 
     public override bool IsCombined => false;

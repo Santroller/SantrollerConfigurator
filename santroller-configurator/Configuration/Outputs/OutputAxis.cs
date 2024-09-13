@@ -11,7 +11,7 @@ using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -45,64 +45,63 @@ public abstract partial class OutputAxis : Output
         Max = max;
         Min = min;
         DeadZone = deadZone;
-        this.WhenAnyValue(x => x.Input).Select(i => i is {IsUint: true})
-            .ToPropertyEx(this, x => x.InputIsUint);
+        _inputIsUintHelper = this.WhenAnyValue(x => x.Input).Select(i => i is {IsUint: true})
+            .ToProperty(this, x => x.InputIsUint);
         var calibrationWatcher = this.WhenAnyValue(x => x.Input.RawValue);
         calibrationWatcher.Subscribe(ApplyCalibration);
-        this.WhenAnyValue(x => x.ValueRaw).Select(s => s < 0 ? -s : 0)
-            .ToPropertyEx(this, x => x.ValueRawLower);
-        this.WhenAnyValue(x => x.ValueRaw).Select(s => s > 0 ? s : 0)
-            .ToPropertyEx(this, x => x.ValueRawUpper);
+        _valueRawLowerHelper = this.WhenAnyValue(x => x.ValueRaw).Select(s => s < 0 ? -s : 0)
+            .ToProperty(this, x => x.ValueRawLower);
+        _valueRawUpperHelper = this.WhenAnyValue(x => x.ValueRaw).Select(s => s > 0 ? s : 0)
+            .ToProperty(this, x => x.ValueRawUpper);
 
-        this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MaxValue : short.MaxValue).ToPropertyEx(this, x => x.SliderMax);
-        this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MinValue : short.MinValue).ToPropertyEx(this, x => x.SliderMin);
+        _sliderMaxHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MaxValue : short.MaxValue).ToProperty(this, x => x.SliderMax);
+        _sliderMinHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MinValue : short.MinValue).ToProperty(this, x => x.SliderMin);
 
-        this
+        _valueHelper = this
             .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.DeadZone, x => x.Trigger,
-                x => x.Model.DeviceControllerType).Select(Calculate).ToPropertyEx(this, x => x.Value);
-        this.WhenAnyValue(x => x.Value).Select(s => s < 0 ? -s : 0).ToPropertyEx(this, x => x.ValueLower);
-        this.WhenAnyValue(x => x.Value).Select(s => s > 0 ? s : 0).ToPropertyEx(this, x => x.ValueUpper);
-        this
+                x => x.Model.DeviceControllerType).Select(Calculate).ToProperty(this, x => x.Value);
+        _valueLowerHelper = this.WhenAnyValue(x => x.Value).Select(s => s < 0 ? -s : 0).ToProperty(this, x => x.ValueLower);
+        _valueUpperHelper = this.WhenAnyValue(x => x.Value).Select(s => s > 0 ? s : 0).ToProperty(this, x => x.ValueUpper);
+        _computedDeadZoneMarginHelper = this
             .WhenAnyValue(x => x.Min, x => x.Max, x => x.Trigger, x => x.InputIsUint, x => x.DeadZone)
-            .Select(ComputeDeadZoneMargin).ToPropertyEx(this, x => x.ComputedDeadZoneMargin);
-        this.WhenAnyValue(x => x.Min, x => x.Max, x => x.InputIsUint)
-            .Select(ComputeMinMaxMargin).ToPropertyEx(this, x => x.CalibrationMinMaxMargin);
-        this.WhenAnyValue(x => x.Input).Select(s => s is DigitalToAnalog)
-            .ToPropertyEx(this, x => x.IsDigitalToAnalog);
-        this.WhenAnyValue(x => x.Input).Select(s => s is DigitalToAnalog or ConstantInput)
-            .ToPropertyEx(this, x => x.IsDigitalToAnalogOrConstant);
+            .Select(ComputeDeadZoneMargin).ToProperty(this, x => x.ComputedDeadZoneMargin);
+        _calibrationMinMaxMarginHelper = this.WhenAnyValue(x => x.Min, x => x.Max, x => x.InputIsUint)
+            .Select(ComputeMinMaxMargin).ToProperty(this, x => x.CalibrationMinMaxMargin);
+        _isDigitalToAnalogHelper = this.WhenAnyValue(x => x.Input).Select(s => s is DigitalToAnalog)
+            .ToProperty(this, x => x.IsDigitalToAnalog);
+        _isDigitalToAnalogOrConstantHelper = this.WhenAnyValue(x => x.Input).Select(s => s is DigitalToAnalog or ConstantInput)
+            .ToProperty(this, x => x.IsDigitalToAnalogOrConstant);
     }
     public override bool UsesPwm => true;
 
     public float FullProgressWidth => ProgressWidth;
-    public float HalfProgressWidth => ProgressWidth / 2; // ReSharper disable UnassignedGetOnlyAutoProperty
-    [ObservableAsProperty] public int ValueRawLower { get; }
+    public float HalfProgressWidth => ProgressWidth / 2; 
+    [ObservableAsProperty] private int _valueRawLower;
 
-    [ObservableAsProperty] public int ValueRawUpper { get; }
+    [ObservableAsProperty] private int _valueRawUpper;
 
-    [ObservableAsProperty] public int Value { get; }
+    [ObservableAsProperty] private int _value;
 
-    [ObservableAsProperty] public int ValueLower { get; }
+    [ObservableAsProperty] private int _valueLower;
 
-    [ObservableAsProperty] public int ValueUpper { get; }
+    [ObservableAsProperty] private int _valueUpper;
 
-    [ObservableAsProperty] public bool InputIsUint { get; }
-    [ObservableAsProperty] public bool IsDigitalToAnalog { get; }
-    [ObservableAsProperty] public bool IsDigitalToAnalogOrConstant { get; }
+    [ObservableAsProperty] private bool _inputIsUint;
+    [ObservableAsProperty] private bool _isDigitalToAnalog;
+    [ObservableAsProperty] private bool _isDigitalToAnalogOrConstant;
 
-    [ObservableAsProperty] public Thickness ComputedDeadZoneMargin { get; }
-    [ObservableAsProperty] public Thickness CalibrationMinMaxMargin { get; }
+    [ObservableAsProperty] private Thickness _computedDeadZoneMargin;
+    [ObservableAsProperty] private Thickness _calibrationMinMaxMargin;
 
-    [ObservableAsProperty] public int SliderMax { get; }
+    [ObservableAsProperty] private int _sliderMax;
 
-    [ObservableAsProperty] public int SliderMin { get; }
+    [ObservableAsProperty] private int _sliderMin;
 
-    // ReSharper enable UnassignedGetOnlyAutoProperty
-    [Reactive] public int Min { get; set; }
+    [Reactive] private int _min;
 
-    [Reactive] public int Max { get; set; }
+    [Reactive] private int _max;
 
-    [Reactive] public int DeadZone { get; set; }
+    [Reactive] private int _deadZone;
 
 
     public bool Trigger { get; }

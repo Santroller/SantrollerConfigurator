@@ -12,7 +12,7 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using Path = System.IO.Path;
 
 namespace SantrollerConfiguratorBranded.NetCore.ViewModels;
@@ -21,17 +21,16 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
 {
     public BrandedConfigurationStore Config { get; }
 
-    [ObservableAsProperty]
-    public Tuple<BrandedConfigurationSection, BrandedConfiguration>? SelectedDeviceConfig { get; set; }
+    [ObservableAsProperty] private Tuple<BrandedConfigurationSection, BrandedConfiguration>? _selectedDeviceConfig;
 
-    [Reactive] public BrandedConfigurationSection SelectedSection { get; set; }
-    [Reactive] public BrandedConfiguration SelectedConfig { get; set; }
+    [Reactive] private BrandedConfigurationSection _selectedSection;
+    [Reactive] private BrandedConfiguration _selectedConfig;
 
     public ConfigViewModel? Model { get; set; }
 
     private TaskCompletionSource<string>? _bootloaderPath;
 
-    [ObservableAsProperty] public bool ReadyToConfigureBranded { get; set; }
+    [ObservableAsProperty] private bool _readyToConfigureBranded;
 
     private bool _writing;
 
@@ -81,16 +80,17 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
                 }
         });
         this.WhenAnyValue(x => x.SelectedSection).Subscribe(s => { SelectedConfig = s.Configurations.First(); });
-        this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
+        _readyToConfigureBrandedHelper = this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral,
+                x => x.PeripheralErrorText)
             .Select(s =>
                 s is {Item1: not null, Item2: true} &&
                 (!s.Item3 || s.Item4 == null))
-            .ToPropertyEx(this, s => s.ReadyToConfigureBranded);
-        this.WhenAnyValue(x => x.SelectedDevice).Select(s =>
+            .ToProperty(this, s => s.ReadyToConfigureBranded);
+        _selectedDeviceConfigHelper = this.WhenAnyValue(x => x.SelectedDevice).Select(s =>
                 s is not Santroller santroller
                     ? null
                     : ValidConfigurations.GetValueOrDefault($"{santroller.Manufacturer}_{santroller.Product}"))
-            .ToPropertyEx(this, x => x.SelectedDeviceConfig);
+            .ToProperty(this, x => x.SelectedDeviceConfig);
     }
 
     public void DeviceAdded(IConfigurableDevice device)
@@ -171,7 +171,8 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
         Message = "Writing";
         await SelectedConfig.BuildUf2(Model, Path.Combine(path, "firmware.uf2"));
         return new PlatformIo.PlatformIoState(90,
-            Windows ? "Waiting for device (Stuck here? Try clicking refresh devices)" : "Waiting for device", false, null);
+            Windows ? "Waiting for device (Stuck here? Try clicking refresh devices)" : "Waiting for device", false,
+            null);
     }
 
     [RelayCommand]

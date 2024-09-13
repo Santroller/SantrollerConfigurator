@@ -8,7 +8,7 @@ using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 using static GuitarConfigurator.NetCore.Configuration.Outputs.Combined.WiiCombinedOutput;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;

@@ -8,11 +8,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public class GhWtTapInput : Input
+public partial class GhWtTapInput : Input
 {
     public static string GhWtAnalogPinType = "ghwt";
     public static string GhWtS0PinType = "ghwts0";
@@ -115,8 +115,8 @@ public class GhWtTapInput : Input
             this.RaisePropertyChanged(nameof(PinConfigs));
         }
     }
-    [Reactive]
-    public int RawTap { get; set; }
+
+    [Reactive] private int _rawTap;
 
     public override IList<PinConfig> PinConfigs => new List<PinConfig>
         {PinConfigAnalog, PinConfigS0, PinConfigS1, PinConfigS2};

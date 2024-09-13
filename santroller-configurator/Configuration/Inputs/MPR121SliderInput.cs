@@ -8,11 +8,11 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public class Mpr121SliderInput : Input
+public partial class Mpr121SliderInput : Input
 {
     public Mpr121SliderInput(ConfigViewModel model, bool peripheral, int inputGreen, int inputRed, int inputYellow,
         int inputBlue, int inputOrange) : base(model)
@@ -25,9 +25,9 @@ public class Mpr121SliderInput : Input
         InputBlue = inputBlue;
         InputOrange = inputOrange;
         // First four sensors are cap only, so hide them if they aren't enabled
-        this.WhenAnyValue(x => x.Model.Mpr121CapacitiveCount)
+        _availableInputsHelper = this.WhenAnyValue(x => x.Model.Mpr121CapacitiveCount)
             .Select(x => Enumerable.Range(4, 8).Concat(Enumerable.Range(0, x)))
-            .ToPropertyEx(this, x => x.AvailableInputs);
+            .ToProperty(this, x => x.AvailableInputs);
 
         this.WhenAnyValue(x => x.Model.Mpr121CapacitiveCount).Subscribe(x =>
         {
@@ -122,7 +122,7 @@ public class Mpr121SliderInput : Input
         }
     }
 
-    [ObservableAsProperty] public IEnumerable<int> AvailableInputs { get; } = null!;
+    [ObservableAsProperty] private IEnumerable<int> _availableInputs = null!;
 
     public IEnumerable<int> MappedInputs => new[] {InputGreen, InputRed, InputYellow, InputBlue, InputOrange};
 

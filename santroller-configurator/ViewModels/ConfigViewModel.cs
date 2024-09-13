@@ -33,7 +33,7 @@ using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.Utils;
 using ProtoBuf;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.ViewModels;
 
@@ -126,7 +126,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 SetUpDiff();
                 return Main.Write(this, true);
             },
-            this.WhenAnyValue(x => x.Main.Working,  x => x.HasError, x => x.Builder)
+            this.WhenAnyValue(x => x.Main.Working, x => x.HasError, x => x.Builder)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x =>
                     x is {Item1: false, Item2: false, Item3: false} or
                         {Item1: false, Item3: true}));
@@ -142,158 +142,160 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         SaveConfigCommand = ReactiveCommand.CreateFromObservable(() => SaveConfig.Handle(this));
 
         LoadConfigCommand = ReactiveCommand.CreateFromObservable(() => LoadConfig.Handle(this));
-        this.WhenAnyValue(x => x.Deque, x => x.PollRate)
+        _pollRateLabelHelper = this.WhenAnyValue(x => x.Deque, x => x.PollRate)
             .Select(GeneratePollRateLabel)
-            .ToPropertyEx(this, x => x.PollRateLabel);
-        this.WhenAnyValue(x => x.Mode).Select(x => x is ModeType.Advanced)
-            .ToPropertyEx(this, x => x.IsAdvancedMode);
-        this.WhenAnyValue(x => x.Mode).Select(x => x is ModeType.Standard)
-            .ToPropertyEx(this, x => x.IsStandardMode);
-        this.WhenAnyValue(x => x.PresetName).Select(x =>
+            .ToProperty(this, x => x.PollRateLabel);
+        _isAdvancedModeHelper = this.WhenAnyValue(x => x.Mode).Select(x => x is ModeType.Advanced)
+            .ToProperty(this, x => x.IsAdvancedMode);
+        _isStandardModeHelper = this.WhenAnyValue(x => x.Mode).Select(x => x is ModeType.Standard)
+            .ToProperty(this, x => x.IsStandardMode);
+        _savePresetLabelHelper = this.WhenAnyValue(x => x.PresetName).Select(x =>
                 String.IsNullOrWhiteSpace(x) ? Resources.SavePresetLabel :
                 Presets.Any(s => s.Item1 == x) ? string.Format(Resources.SavePresetLabel3, x) :
                 string.Format(Resources.SavePresetLabel2, x))
-            .ToPropertyEx(this, x => x.SavePresetLabel);
-        this.WhenAnyValue(x => x.CurrentPreset).Select(x =>
+            .ToProperty(this, x => x.SavePresetLabel);
+        _loadPresetLabelHelper = this.WhenAnyValue(x => x.CurrentPreset).Select(x =>
                 x is null ? Resources.LoadPresetLabel : string.Format(Resources.LoadPresetLabel2, x.Item1))
-            .ToPropertyEx(this, x => x.LoadPresetLabel);
-        this.WhenAnyValue(x => x.CurrentPreset).Select(x =>
+            .ToProperty(this, x => x.LoadPresetLabel);
+        _deletePresetLabelHelper = this.WhenAnyValue(x => x.CurrentPreset).Select(x =>
                 x is null ? Resources.DeletePresetLabel : string.Format(Resources.DeletePresetLabel2, x.Item1))
-            .ToPropertyEx(this, x => x.DeletePresetLabel);
-        this.WhenAnyValue(x => x.EmulationType)
+            .ToProperty(this, x => x.DeletePresetLabel);
+        _isBluetoothTxHelper = this.WhenAnyValue(x => x.EmulationType)
             .Select(x => x is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
-            .ToPropertyEx(this, x => x.IsBluetoothTx);
-        this.WhenAnyValue(x => x.EmulationType, x => x.Mode, x => x.DeviceControllerType)
+            .ToProperty(this, x => x.IsBluetoothTx);
+        _supportsDequeHelper = this.WhenAnyValue(x => x.EmulationType, x => x.Mode, x => x.DeviceControllerType)
             .Select(x => x.Item1 is EmulationType.Controller && x.Item2 is ModeType.Standard)
-            .ToPropertyEx(this, x => x.SupportsDeque);
-        this.WhenAnyValue(x => x.DeviceControllerType, x => x.Branded)
+            .ToProperty(this, x => x.SupportsDeque);
+        _supportsPS4InstrumentHelper = this.WhenAnyValue(x => x.DeviceControllerType, x => x.Branded)
             .Select(x => x.Item1 is DeviceControllerType.GuitarHeroGuitar
                 or DeviceControllerType.RockBandGuitar or DeviceControllerType.GuitarHeroDrums
                 or DeviceControllerType.RockBandDrums && !x.Item2)
-            .ToPropertyEx(this, x => x.SupportsPS4Instrument);
-        this.WhenAnyValue(x => x.DeviceControllerType)
+            .ToProperty(this, x => x.SupportsPS4Instrument);
+        _isGuitarHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x.IsGuitar())
-            .ToPropertyEx(this, x => x.IsGuitar);
-        this.WhenAnyValue(x => x.DeviceControllerType)
+            .ToProperty(this, x => x.IsGuitar);
+        _isDrumHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x.IsDrum())
-            .ToPropertyEx(this, x => x.IsDrum);
-        this.WhenAnyValue(x => x.DeviceControllerType)
+            .ToProperty(this, x => x.IsDrum);
+        _isProKeysHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.ProKeys)
-            .ToPropertyEx(this, x => x.IsProKeys);
-        this.WhenAnyValue(x => x.DeviceControllerType)
+            .ToProperty(this, x => x.IsProKeys);
+        _isGuitarHeroGuitarHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.GuitarHeroGuitar)
-            .ToPropertyEx(this, x => x.IsGuitarHeroGuitar);
-        this.WhenAnyValue(x => x.DeviceControllerType)
+            .ToProperty(this, x => x.IsGuitarHeroGuitar);
+        _isTurntableHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.Turntable)
-            .ToPropertyEx(this, x => x.IsTurntable);
-        this.WhenAnyValue(x => x.DeviceControllerType)
+            .ToProperty(this, x => x.IsTurntable);
+        _isStageKitHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.StageKit)
-            .ToPropertyEx(this, x => x.IsStageKit);
+            .ToProperty(this, x => x.IsStageKit);
         _strumDebounceDisplay = this.WhenAnyValue(x => x.StrumDebounce)
             .Select(x => x / 10.0f)
             .ToProperty(this, x => x.StrumDebounceDisplay);
         _debounceDisplay = this.WhenAnyValue(x => x.Debounce)
             .Select(x => x / 10.0f)
             .ToProperty(this, x => x.DebounceDisplay);
-        this.WhenAnyValue(x => x.EmulationType)
+        _isControllerHelper = this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.Controller)
-            .ToPropertyEx(this, x => x.IsController);
-        this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
+            .ToProperty(this, x => x.IsController);
+        _isStandardControllerHelper = this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
             .Select(x =>
                 GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller)
-            .ToPropertyEx(this, x => x.IsStandardController);
-        this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
+            .ToProperty(this, x => x.IsStandardController);
+        _isRpcs3CompatibleControllerHelper = this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
             .Select(x =>
                 GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller &&
                 x.Item2 is DeviceControllerType.Turntable or DeviceControllerType.RockBandDrums
                     or DeviceControllerType.RockBandGuitar or DeviceControllerType.LiveGuitar
                     or DeviceControllerType.StageKit)
-            .ToPropertyEx(this, x => x.IsRpcs3CompatibleController);
-        this.WhenAnyValue(x => x.EmulationType)
+            .ToProperty(this, x => x.IsRpcs3CompatibleController);
+        _isKeyboardHelper = this.WhenAnyValue(x => x.EmulationType)
             .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.KeyboardMouse)
-            .ToPropertyEx(this, x => x.IsKeyboard);
-        this.WhenAnyValue(x => x.LedType)
+            .ToProperty(this, x => x.IsKeyboard);
+        _isApa102Helper = this.WhenAnyValue(x => x.LedType)
             .Select(x => x is LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
                 or LedType.Apa102Rbg or LedType.Apa102Rgb)
-            .ToPropertyEx(this, x => x.IsApa102);
-        this.WhenAnyValue(x => x.LedType)
+            .ToProperty(this, x => x.IsApa102);
+        _isWs2812Helper = this.WhenAnyValue(x => x.LedType)
             .Select(x => x is LedType.Ws2812)
-            .ToPropertyEx(this, x => x.IsWs2812);
-        this.WhenAnyValue(x => x.LedTypePeripheral)
+            .ToProperty(this, x => x.IsWs2812);
+        _isWs2812PeripheralHelper = this.WhenAnyValue(x => x.LedTypePeripheral)
             .Select(x => x is LedType.Ws2812)
-            .ToPropertyEx(this, x => x.IsWs2812Peripheral);
-        this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
+            .ToProperty(this, x => x.IsWs2812Peripheral);
+        _isApa102PeripheralHelper = this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
             .Select(x => x is
             {
                 Item2: true, Item1: LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
                 or LedType.Apa102Rbg or LedType.Apa102Rgb
             })
-            .ToPropertyEx(this, x => x.IsApa102Peripheral);
-        this.WhenAnyValue(x => x.LedType)
+            .ToProperty(this, x => x.IsApa102Peripheral);
+        _isStp16Helper = this.WhenAnyValue(x => x.LedType)
             .Select(x => x is LedType.Stp16Cpc26)
-            .ToPropertyEx(this, x => x.IsStp16);
-        this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
+            .ToProperty(this, x => x.IsStp16);
+        _isStp16PeripheralHelper = this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
             .Select(x => x is
             {
                 Item2: true, Item1: LedType.Stp16Cpc26
             })
-            .ToPropertyEx(this, x => x.IsStp16Peripheral);
+            .ToProperty(this, x => x.IsStp16Peripheral);
 
-        this.WhenAnyValue(x => x.LedType)
+        _isIndexedLedHelper = this.WhenAnyValue(x => x.LedType)
             .Select(x => x is LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
                 or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26 or LedType.Ws2812)
-            .ToPropertyEx(this, x => x.IsIndexedLed);
-        this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
+            .ToProperty(this, x => x.IsIndexedLed);
+        _isIndexedLedPeripheralHelper = this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
             .Select(x => x is
             {
                 Item2: true, Item1: LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
                 or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26 or LedType.Ws2812
             })
-            .ToPropertyEx(this, x => x.IsIndexedLedPeripheral);
-        Bindings.Connect()
+            .ToProperty(this, x => x.IsIndexedLedPeripheral);
+        _isFortniteFestivalProHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is EmulationMode
             {
-                Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfLayer or EmulationModeType.FnfIos
+                Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfLayer
+                or EmulationModeType.FnfIos
             }))
-            .ToPropertyEx(this, x => x.IsFortniteFestivalPro);
-        Bindings.Connect()
+            .ToProperty(this, x => x.IsFortniteFestivalPro);
+        _isBluetoothRxHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is BluetoothOutput))
-            .ToPropertyEx(this, x => x.IsBluetoothRx);
-        Bindings.Connect()
+            .ToProperty(this, x => x.IsBluetoothRx);
+        _hasWiiCombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is WiiCombinedOutput))
-            .ToPropertyEx(this, x => x.HasWiiCombinedOutput);
-        Bindings.Connect()
+            .ToProperty(this, x => x.HasWiiCombinedOutput);
+        _hasPs2CombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is Ps2CombinedOutput))
-            .ToPropertyEx(this, x => x.HasPs2CombinedOutput);
-        Bindings.Connect()
+            .ToProperty(this, x => x.HasPs2CombinedOutput);
+        _hasGhwtCombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is GhwtCombinedOutput))
-            .ToPropertyEx(this, x => x.HasGhwtCombinedOutput);
-        Bindings.Connect()
+            .ToProperty(this, x => x.HasGhwtCombinedOutput);
+        _hasCloneCombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is CloneCombinedOutput))
-            .ToPropertyEx(this, x => x.HasCloneCombinedOutput);
-        Bindings.Connect()
+            .ToProperty(this, x => x.HasCloneCombinedOutput);
+        _hasDjCombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is DjCombinedOutput))
-            .ToPropertyEx(this, x => x.HasDjCombinedOutput);
-        Bindings.Connect()
+            .ToProperty(this, x => x.HasDjCombinedOutput);
+        _hasGh5CombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is Gh5CombinedOutput))
-            .ToPropertyEx(this, x => x.HasGh5CombinedOutput);
-        Bindings.Connect()
+            .ToProperty(this, x => x.HasGh5CombinedOutput);
+        _hasUsbHostCombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is UsbHostCombinedOutput))
-            .ToPropertyEx(this, x => x.HasUsbHostCombinedOutput);
-        this.WhenAnyValue(x => x.IsBluetoothTx, x => x.IsBluetoothRx)
+            .ToProperty(this, x => x.HasUsbHostCombinedOutput);
+        _isBluetoothHelper = this.WhenAnyValue(x => x.IsBluetoothTx, x => x.IsBluetoothRx)
             .Select(x => x.Item1 || x.Item2)
-            .ToPropertyEx(this, x => x.IsBluetooth);
-        this.WhenAnyValue(x => x.IsBluetooth, x => x.WasBluetooth)
+            .ToProperty(this, x => x.IsBluetooth);
+        _isOrWasBluetoothHelper = this.WhenAnyValue(x => x.IsBluetooth, x => x.WasBluetooth)
             .Select(x => x.Item1 || x.Item2)
-            .ToPropertyEx(this, x => x.IsOrWasBluetooth);
-        Bindings.Connect()
+            .ToProperty(this, x => x.IsOrWasBluetooth);
+        _usbHostEnabledHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 =>
-                s2 is UsbHostCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput || s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
-            .ToPropertyEx(this, x => x.UsbHostEnabled);
-        Bindings.Connect()
+                s2 is UsbHostCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput ||
+                s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
+            .ToProperty(this, x => x.UsbHostEnabled);
+        _hasMidiHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 =>
                 s2 is MidiCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
-            .ToPropertyEx(this, x => x.HasMidi);
+            .ToProperty(this, x => x.HasMidi);
         Bindings.Connect().TransformMany(s => s.AllDigitalOutputs).Bind(out _digitalOutputs).Subscribe();
         if (Branded)
         {
@@ -387,19 +389,19 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [Reactive] public RolloverMode RolloverMode { get; set; }
+    [Reactive] private RolloverMode _rolloverMode;
     public IEnumerable<RolloverMode> RolloverModes => Enum.GetValues<RolloverMode>();
 
-    [Reactive] public string? PeripheralErrorText { get; set; }
+    [Reactive] private string? _peripheralErrorText;
 
-    [Reactive] public string? WiiOutputErrorText { get; set; }
+    [Reactive] private string? _wiiOutputErrorText;
 
-    [Reactive] public string? Ps2OutputErrorText { get; set; }
+    [Reactive] private string? _ps2OutputErrorText;
 
-    [Reactive] public string? Mpr121ErrorText { get; set; }
+    [Reactive] private string? _mpr121ErrorText;
 
-    [Reactive] public string? Max170XErrorText { get; set; }
-    [Reactive] public string? LedErrorText { get; set; }
+    [Reactive] private string? _max170XErrorText;
+    [Reactive] private string? _ledErrorText;
 
     private readonly ReadOnlyObservableCollection<Output> _outputs;
     public ReadOnlyObservableCollection<Output> Outputs => _outputs;
@@ -417,7 +419,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private readonly ObservableAsPropertyHelper<float> _strumDebounceDisplay;
     private DeviceControllerType _deviceControllerType;
 
-    [Reactive] public int Mpr121CapacitiveCount { get; set; }
+    [Reactive] private int _mpr121CapacitiveCount;
 
     public float DebounceDisplay
     {
@@ -431,12 +433,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         set => StrumDebounce = (int) (value * 10);
     }
 
-    [Reactive] public string Variant { get; set; } = "";
-    [Reactive] public bool SwapSwitchFaceButtons { get; set; }
+    [Reactive] private string _variant = "";
+    [Reactive] private bool _swapSwitchFaceButtons;
 
-    [Reactive] public bool CombinedStrumDebounce { get; set; }
-    [Reactive] public string? RfErrorText { get; set; }
-    [Reactive] public string? UsbHostErrorText { get; set; }
+    [Reactive] private bool _combinedStrumDebounce;
+    [Reactive] private string? _rfErrorText;
+    [Reactive] private string? _usbHostErrorText;
 
     public bool AllExpanded
     {
@@ -523,23 +525,23 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public IEnumerable<LedType> LedTypes => Enum.GetValues<LedType>();
 
     public bool BindableTwi { get; }
-    [Reactive] public bool PollExpanded { get; set; }
+    [Reactive] private bool _pollExpanded;
 
-    [Reactive] public bool PresetsExpanded { get; set; }
-    [Reactive] public bool ControllerConfigExpanded { get; set; }
-    [Reactive] public bool BluetoothConfigExpanded { get; set; }
+    [Reactive] private bool _presetsExpanded;
+    [Reactive] private bool _controllerConfigExpanded;
+    [Reactive] private bool _bluetoothConfigExpanded;
 
-    [Reactive] public bool TestExpanded { get; set; } = true;
-    [Reactive] public bool HideControllerView { get; set; }
-    [Reactive] public bool LedConfigExpanded { get; set; }
-    [Reactive] public bool PeripheralExpanded { get; set; }
-    [Reactive] public bool WiiOutputExpanded { get; set; }
-    [Reactive] public bool Ps2OutputExpanded { get; set; }
-    [Reactive] public bool Mpr121Expanded { get; set; }
+    [Reactive] private bool _testExpanded = true;
+    [Reactive] private bool _hideControllerView;
+    [Reactive] private bool _ledConfigExpanded;
+    [Reactive] private bool _peripheralExpanded;
+    [Reactive] private bool _wiiOutputExpanded;
+    [Reactive] private bool _ps2OutputExpanded;
+    [Reactive] private bool _mpr121Expanded;
 
-    [Reactive] public bool Max170XExpanded { get; set; }
+    [Reactive] private bool _max170XExpanded;
 
-    [Reactive] public MouseMovementType MouseMovementType { get; set; }
+    [Reactive] private MouseMovementType _mouseMovementType;
 
     public ModeType Mode
     {
@@ -554,11 +556,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [Reactive] public int Debounce { get; set; }
+    [Reactive] private int _debounce;
 
-    [Reactive] public bool SelectDpadLeftXb1 { get; set; }
+    [Reactive] private bool _selectDpadLeftXb1;
 
-    [Reactive] public bool MidiDrumAutoOff { get; set; }
+    [Reactive] private bool _midiDrumAutoOff;
 
     private ModeType _mode;
     private bool _deque;
@@ -584,14 +586,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [Reactive] public int StrumDebounce { get; set; }
+    [Reactive] private int _strumDebounce;
 
-    [Reactive] public int PollRate { get; set; }
-    [Reactive] public int DjPollRate { get; set; }
+    [Reactive] private int _pollRate;
+    [Reactive] private int _djPollRate;
 
-    [Reactive] public bool DjFullRange { get; set; }
+    [Reactive] private bool _djFullRange;
 
-    [Reactive] public bool DjNavButtons { get; set; }
+    [Reactive] private bool _djNavButtons;
 
     private double _adxlFilter;
 
@@ -608,9 +610,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [Reactive] public bool DjSmoothing { get; set; }
+    [Reactive] private bool _djSmoothing;
 
-    [Reactive] public string BtRxAddr { get; set; }
+    [Reactive] private string _btRxAddr;
 
     public int LedMosi
     {
@@ -881,7 +883,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [Reactive] public bool Apa102IsFullSize { get; set; }
+    [Reactive] private bool _apa102IsFullSize;
 
     public int Stp16LePeripheral
     {
@@ -916,11 +918,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [Reactive] public bool Connected { get; set; }
-    [Reactive] public bool PeripheralConnected { get; set; }
-    [Reactive] public bool Mpr121Connected { get; set; }
-    [Reactive] public bool Max1704XConnected { get; set; }
-    [Reactive] public int Max1704XStatus { get; set; }
+    [Reactive] public bool _connected;
+    [Reactive] public bool _peripheralConnected;
+    [Reactive] public bool _mpr121Connected;
+    [Reactive] public bool _max1704XConnected;
+    [Reactive] public int _max1704XStatus;
 
 
     public int UsbHostDm
@@ -949,12 +951,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [Reactive] public byte LedCount { get; set; }
-    [Reactive] public byte LedCountPeripheral { get; set; }
+    [Reactive] private byte _ledCount;
+    [Reactive] private byte _ledCountPeripheral;
 
-    [Reactive] public int WtSensitivity { get; set; }
+    [Reactive] private int _wtSensitivity;
 
-    [Reactive] public bool HasError { get; set; }
+    [Reactive] private bool _hasError;
 
     public LedType LedType
     {
@@ -1092,16 +1094,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [Reactive] public bool XInputOnWindows { get; set; }
+    [Reactive] private bool _xInputOnWindows;
 
-    [Reactive] public bool Ps3OnRpcs3 { get; set; }
+    [Reactive] private bool _ps3OnRpcs3;
 
-    [Reactive] public bool Ps4Instruments { get; set; }
+    [Reactive] private bool _ps4Instruments;
 
-    [Reactive] public bool SliderBar { get; set; }
-    [Reactive] public bool Tilt { get; set; }
+    [Reactive] private bool _sliderBar;
+    [Reactive] private bool _tilt;
 
-    [Reactive] public bool JoystickToDpad { get; set; }
+    [Reactive] private bool _joystickToDpad;
 
 
     private bool _hasPeripheral;
@@ -1229,7 +1231,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private readonly ToolConfig _toolConfig = AssetUtils.GetConfig();
 
-    [Reactive] public string PresetName { get; set; } = "";
+    [Reactive] private string _presetName = "";
 
     private LegendType _legendType;
 
@@ -1266,7 +1268,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public SourceList<Output> Bindings { get; } = new();
 
-    [Reactive] public Tuple<string, SerializedConfiguration>? CurrentPreset { get; set; }
+    [Reactive] private Tuple<string, SerializedConfiguration>? _currentPreset;
 
     public ObservableCollection<Tuple<string, SerializedConfiguration>> Presets { get; } = [];
     public bool BindableSpi => IsPico;
@@ -1289,19 +1291,18 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             });
     }
 
-    // ReSharper disable UnassignedGetOnlyAutoProperty
-    [ObservableAsProperty] public string? LoadPresetLabel { get; }
-    [ObservableAsProperty] public string? DeletePresetLabel { get; }
-    [ObservableAsProperty] public string? SavePresetLabel { get; }
-    [ObservableAsProperty] public bool IsStandardMode { get; }
-    [ObservableAsProperty] public bool IsAdvancedMode { get; }
-    [ObservableAsProperty] public bool IsGuitar { get; }
+    [ObservableAsProperty] private string? _loadPresetLabel;
+    [ObservableAsProperty] private string? _deletePresetLabel;
+    [ObservableAsProperty] private string? _savePresetLabel;
+    [ObservableAsProperty] private bool _isStandardMode;
+    [ObservableAsProperty] private bool _isAdvancedMode;
+    [ObservableAsProperty] private bool _isGuitar;
 
-    [ObservableAsProperty] public bool IsDrum { get; }
-    [ObservableAsProperty] public bool IsTurntable { get; }
-    [ObservableAsProperty] public bool IsProKeys { get; }
+    [ObservableAsProperty] private bool _isDrum;
+    [ObservableAsProperty] private bool _isTurntable;
+    [ObservableAsProperty] private bool _isProKeys;
 
-    [ObservableAsProperty] public bool SupportsPS4Instrument { get; }
+    [ObservableAsProperty] private bool _supportsPS4Instrument;
 
     public bool AdafruitHost
     {
@@ -1323,39 +1324,39 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    [ObservableAsProperty] public bool IsGuitarHeroGuitar { get; }
-    [ObservableAsProperty] public bool IsStageKit { get; }
-    [ObservableAsProperty] public bool IsController { get; }
-    [ObservableAsProperty] public bool IsStandardController { get; }
+    [ObservableAsProperty] private bool _isGuitarHeroGuitar;
+    [ObservableAsProperty] private bool _isStageKit;
+    [ObservableAsProperty] private bool _isController;
+    [ObservableAsProperty] private bool _isStandardController;
 
-    [ObservableAsProperty] public bool IsRpcs3CompatibleController { get; }
-    [ObservableAsProperty] public bool IsFortniteFestivalPro { get; }
-    [ObservableAsProperty] public bool IsKeyboard { get; }
-    [ObservableAsProperty] public bool IsApa102 { get; }
-    [ObservableAsProperty] public bool IsWs2812 { get; }
-    [ObservableAsProperty] public bool IsWs2812Peripheral { get; }
-    [ObservableAsProperty] public bool IsApa102Peripheral { get; }
+    [ObservableAsProperty] private bool _isRpcs3CompatibleController;
+    [ObservableAsProperty] private bool _isFortniteFestivalPro;
+    [ObservableAsProperty] private bool _isKeyboard;
+    [ObservableAsProperty] private bool _isApa102;
+    [ObservableAsProperty] private bool _isWs2812;
+    [ObservableAsProperty] private bool _isWs2812Peripheral;
+    [ObservableAsProperty] private bool _isApa102Peripheral;
 
-    [ObservableAsProperty] public bool IsIndexedLed { get; }
-    [ObservableAsProperty] public bool IsIndexedLedPeripheral { get; }
-    [ObservableAsProperty] public bool IsStp16 { get; }
-    [ObservableAsProperty] public bool IsStp16Peripheral { get; }
-    [ObservableAsProperty] public bool IsBluetoothTx { get; }
-    [ObservableAsProperty] public bool SupportsDeque { get; }
-    [ObservableAsProperty] public string? PollRateLabel { get; }
-    [ObservableAsProperty] public bool IsBluetooth { get; }
-    [ObservableAsProperty] public bool IsOrWasBluetooth { get; }
-    [ObservableAsProperty] public bool IsBluetoothRx { get; }
-    [ObservableAsProperty] public bool HasWiiCombinedOutput { get; }
-    [ObservableAsProperty] public bool HasPs2CombinedOutput { get; }
-    [ObservableAsProperty] public bool HasGhwtCombinedOutput { get; }
-    [ObservableAsProperty] public bool HasCloneCombinedOutput { get; }
-    [ObservableAsProperty] public bool HasDjCombinedOutput { get; }
-    [ObservableAsProperty] public bool HasGh5CombinedOutput { get; }
-    [ObservableAsProperty] public bool HasUsbHostCombinedOutput { get; }
+    [ObservableAsProperty] private bool _isIndexedLed;
+    [ObservableAsProperty] private bool _isIndexedLedPeripheral;
+    [ObservableAsProperty] private bool _isStp16;
+    [ObservableAsProperty] private bool _isStp16Peripheral;
+    [ObservableAsProperty] private bool _isBluetoothTx;
+    [ObservableAsProperty] private bool _supportsDeque;
+    [ObservableAsProperty] private string? _pollRateLabel;
+    [ObservableAsProperty] private bool _isBluetooth;
+    [ObservableAsProperty] private bool _isOrWasBluetooth;
+    [ObservableAsProperty] private bool _isBluetoothRx;
+    [ObservableAsProperty] private bool _hasWiiCombinedOutput;
+    [ObservableAsProperty] private bool _hasPs2CombinedOutput;
+    [ObservableAsProperty] private bool _hasGhwtCombinedOutput;
+    [ObservableAsProperty] private bool _hasCloneCombinedOutput;
+    [ObservableAsProperty] private bool _hasDjCombinedOutput;
+    [ObservableAsProperty] private bool _hasGh5CombinedOutput;
+    [ObservableAsProperty] private bool _hasUsbHostCombinedOutput;
 
-    [ObservableAsProperty] public bool UsbHostEnabled { get; }
-    [ObservableAsProperty] public bool HasMidi { get; }
+    [ObservableAsProperty] private bool _usbHostEnabled;
+    [ObservableAsProperty] private bool _hasMidi;
 
     // ReSharper enable UnassignedGetOnlyAutoProperty
 
@@ -2861,7 +2862,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                      """;
             ret = analogLedOutputs.Aggregate(ret,
                 (current, analogLedOutput) =>
-                    current + $"bit_write({analogLedOutput.Input.Generate(writer)}, {variable}[{index / 8}],{index % 8});");
+                    current +
+                    $"bit_write({analogLedOutput.Input.Generate(writer)}, {variable}[{index / 8}],{index % 8});");
 
             ret += "}";
         }
