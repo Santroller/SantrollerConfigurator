@@ -350,14 +350,14 @@ public class GuitarAxis : OutputAxis
                 when Type == GuitarAxisType.Whammy && Input is DigitalToAnalog:
                 return $$"""
                          if ({{Input.Generate(writer)}}) {
-                             {{GenerateOutput(mode)}} = {{analogOn - short.MaxValue}};
+                             {{GenerateOutput(mode)}} = {{short.MaxValue}};
                          }
                          """;
             case ConfigField.XboxOne
                 when Type == GuitarAxisType.Whammy && Input is DigitalToAnalog:
                 return $$"""
                          if ({{Input.Generate(writer)}}) {
-                             {{GenerateOutput(mode)}} = {{analogOn >> 8}};
+                             {{GenerateOutput(mode)}} = {{byte.MaxValue}};
                          }
                          """;
             case ConfigField.XboxOne when Model.DeviceControllerType is DeviceControllerType.LiveGuitar:
