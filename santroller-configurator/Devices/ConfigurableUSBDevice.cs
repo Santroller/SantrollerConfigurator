@@ -1,28 +1,21 @@
-using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
-using GuitarConfigurator.NetCore.Utils;
 using GuitarConfigurator.NetCore.ViewModels;
-using LibUsbDotNet;
-using LibUsbDotNet.Main;
 using Version = SemanticVersioning.Version;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
 public abstract class ConfigurableUsbDevice : IConfigurableDevice
 {
-    public readonly UsbDevice Device;
-    public readonly string Path;
+    protected readonly IUsbDevice UsbDevice;
     public readonly string Serial;
     public readonly Version Version;
     private TaskCompletionSource<string?>? _bootloaderPath;
     private string? _lastBootloaderPath;
 
-    protected ConfigurableUsbDevice(UsbDevice device, string path, string serial, ushort version)
+    protected ConfigurableUsbDevice(IUsbDevice usbDevice, string serial, ushort version)
     {
-        Device = device;
-        Path = path;
+        UsbDevice = usbDevice;
         Serial = serial;
         Version = new Version((version >> 8) & 0xff, (version >> 4) & 0xf, version & 0xf);
     }
@@ -35,14 +28,9 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
 
     public abstract void Bootloader();
 
-    public bool IsSameDevice(PlatformIoPort port)
+    public bool IsSameDevice(IDevice device)
     {
-        return false;
-    }
-
-    public bool IsSameDevice(string serialOrPath)
-    {
-        return Serial == serialOrPath || Path == serialOrPath;
+        return UsbDevice.IsSameDevice(device);
     }
 
     public void DeviceAdded(IConfigurableDevice device)
@@ -113,10 +101,7 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
 
     public virtual void Disconnect()
     {
-        if (Device.IsOpen)
-        {
-            Device.Close();
-        }
+        UsbDevice.Close();
     }
 
     public bool IsPico()
@@ -126,56 +111,18 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
 
     public abstract bool LoadConfiguration(ConfigViewModel model, bool merge);
 
+    public void Close()
+    {
+        UsbDevice.Close();
+    }
     public byte[] ReadData(ushort wValue, byte bRequest, ushort size = 128)
     {
-        if (!Device.IsOpen) return Array.Empty<byte>();
-        const UsbCtrlFlags requestType = UsbCtrlFlags.Direction_In | UsbCtrlFlags.RequestType_Class |
-                                         UsbCtrlFlags.Recipient_Interface;
-        var buffer = new byte[size];
-
-        var sp = new UsbSetupPacket(
-            (byte) requestType,
-            bRequest,
-            wValue,
-            2,
-            buffer.Length);
-
-        if (!Device.ControlTransfer(ref sp, buffer, buffer.Length, out var length))
-        {
-            var firstError = UsbDevice.LastErrorString;
-            if (!Device.ControlTransfer(ref sp, buffer, buffer.Length, out length))
-            {
-                Console.WriteLine($"Failed to read data from device: {UsbDevice.LastErrorString}");
-                return Array.Empty<byte>();
-            }
-
-            Console.WriteLine($"Failed to read data from device (retry succeeded): {firstError}");
-        }
-
-        Array.Resize(ref buffer, length);
-        return buffer;
+        return UsbDevice.ReadData(wValue, bRequest, 2, size);
     }
 
 
     public void WriteData(ushort wValue, byte bRequest, byte[] buffer)
     {
-        if (!Device.IsOpen) return;
-        var requestType = UsbCtrlFlags.Direction_Out | UsbCtrlFlags.RequestType_Class |
-                          UsbCtrlFlags.Recipient_Interface;
-        var sp = new UsbSetupPacket(
-            (byte) requestType,
-            bRequest,
-            wValue,
-            2,
-            buffer.Length);
-        if (Device.ControlTransfer(ref sp, buffer, buffer.Length, out _)) return;
-        var firstError = UsbDevice.LastErrorString;
-        if (!Device.ControlTransfer(ref sp, buffer, buffer.Length, out _))
-        {
-            Trace.TraceError($"Failed to write data to device: {UsbDevice.LastErrorString}");
-            return;
-        }
-
-        Trace.TraceWarning($"Failed to write data to device (retry succeeded): {firstError}");
+        UsbDevice.WriteData(wValue, bRequest, 2, buffer);
     }
 }

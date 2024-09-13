@@ -17,6 +17,7 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using LibUsbDotNet;
+using LibUsbDotNet.LibUsb;
 using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Devices;
@@ -91,9 +92,9 @@ public class Santroller : ConfigurableUsbDevice
     public string Manufacturer { get; }
     public bool IsSantroller => Product == "Santroller";
 
-    public Santroller(string path, UsbDevice device, string serial,
+    public Santroller(IUsbDevice device, string serial,
         ushort version, string product, string manufacturer) : base(
-        device, path, serial, version)
+        device, serial, version)
     {
         _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.Background, Tick);
         _microcontroller = new Pico(Board.Generic);
@@ -107,7 +108,7 @@ public class Santroller : ConfigurableUsbDevice
         _keyboard = serial[^2] == 'K';
         Product = product;
         Manufacturer = manufacturer;
-        if (device is IUsbDevice usbDevice) usbDevice.ClaimInterface(2);
+        device.Claim();
 #if Windows
         var isXinput = (serial[^1] - '0') != 0;
         if (isXinput && _currentMode != ConsoleType.Windows)
@@ -146,7 +147,7 @@ public class Santroller : ConfigurableUsbDevice
         else
             WriteData(0, (byte) Commands.CommandJumpBootloader, Array.Empty<byte>());
 
-        Device.Close();
+        UsbDevice.Close();
     }
 
 
@@ -154,7 +155,7 @@ public class Santroller : ConfigurableUsbDevice
     {
         // Reverting just needs to go to dfu mode, thats good enough
         WriteData(0, (byte) Commands.CommandJumpBootloader, Array.Empty<byte>());
-        Device.Close();
+        UsbDevice.Close();
     }
 
 
@@ -166,7 +167,7 @@ public class Santroller : ConfigurableUsbDevice
     private void Tick(object? sender, EventArgs e)
     {
         if (_model == null || _bindings == null) return;
-        if (!Device.IsOpen || _model.Main.Working)
+        if (!UsbDevice.IsOpen || _model.Main.Working)
         {
             _timer.Stop();
             return;

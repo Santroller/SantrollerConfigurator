@@ -12,6 +12,7 @@ using GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using LibUsbDotNet;
+using LibUsbDotNet.LibUsb;
 using Version = SemanticVersioning.Version;
 
 namespace GuitarConfigurator.NetCore.Devices;
@@ -122,8 +123,8 @@ public class Ardwiino : ConfigurableUsbDevice
         StandardButtonType.RightShoulder
     ];
 
-    public Ardwiino(string path, UsbDevice device, string serial, ushort versionNumber)
-        : base(device, path, serial, versionNumber)
+    public Ardwiino(IUsbDevice device, string serial, ushort versionNumber)
+        : base(device, serial, versionNumber)
     {
         if (Version < new Version(6, 0, 0))
         {

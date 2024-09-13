@@ -2,10 +2,12 @@ using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Utils;
 using GuitarConfigurator.NetCore.ViewModels;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.LibUsb;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
-public class PicoDevice : IConfigurableDevice
+public class PicoDevice : IConfigurableDevice, IDevice
 {
     private readonly string _path;
 
@@ -16,20 +18,17 @@ public class PicoDevice : IConfigurableDevice
 
     public bool MigrationSupported => true;
 
-    public bool IsSameDevice(PlatformIoPort port)
-    {
-        return false;
-    }
 
     public bool IsGeneric()
     {
         return false;
     }
 
-    public bool IsSameDevice(string serialOrPath)
+    public bool IsSameDevice(IDevice device)
     {
-        return serialOrPath == _path;
+        return device is PicoDevice picoDevice && picoDevice._path == _path;
     }
+
 
     public void Bootloader()
     {

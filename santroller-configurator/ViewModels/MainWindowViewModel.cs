@@ -341,7 +341,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             }, () =>
             {
                 Complete(100);
-                Working = false;
                 Installed = true;
                 _manager?.Register();
                 _timer.Start();
@@ -351,7 +350,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         else
         {
             Complete(100);
-            Working = false;
             Installed = true;
             _manager?.Register();
             _timer.Start();

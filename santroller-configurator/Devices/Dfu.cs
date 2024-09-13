@@ -8,7 +8,8 @@ using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Utils;
 using GuitarConfigurator.NetCore.ViewModels;
-using LibUsbDotNet.DeviceNotify;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
 
 namespace GuitarConfigurator.NetCore.Devices;
@@ -19,15 +20,12 @@ public class Dfu : IConfigurableDevice
     public static readonly uint DfuPid16U2 = 0x2FEF;
     public static readonly uint DfuVid = 0x03eb;
 
-    private readonly DeviceNotifyEventArgs _args;
+    private readonly IUsbDevice _device;
 
-    private readonly string _port;
-
-    public Dfu(DeviceNotifyEventArgs args)
+    public Dfu(IUsbDevice device)
     {
-        _args = args;
-        var pid = args.Device.IdProduct;
-        _port = args.Device.Name;
+        _device = device;
+        var pid = device.VendorId;
         foreach (var board in Board.Boards)
             if (board.ProductIDs.Contains((uint) pid) && board.HasUsbmcu)
             {
@@ -43,15 +41,11 @@ public class Dfu : IConfigurableDevice
 
     public bool MigrationSupported => true;
 
-    public bool IsSameDevice(PlatformIoPort port)
+    public bool IsSameDevice(IDevice device)
     {
-        return false;
+        return _device.IsSameDevice(device);
     }
 
-    public bool IsSameDevice(string serialOrPath)
-    {
-        return serialOrPath == _port;
-    }
 
     public void DeviceAdded(IConfigurableDevice device)
     {
@@ -132,17 +126,17 @@ public class Dfu : IConfigurableDevice
 
     public string GetRestoreSuffix()
     {
-        return _args.Device.IdProduct == DfuPid8U2 ? "8" : "16";
+        return _device.ProductId == DfuPid8U2 ? "8" : "16";
     }
 
     public string GetRestoreProcessor()
     {
-        return _args.Device.IdProduct == DfuPid8U2 ? "at90usb82" : "atmega16u2";
+        return _device.ProductId == DfuPid8U2 ? "at90usb82" : "atmega16u2";
     }
 
     public override string ToString()
     {
-        return $"{Board.Name} ({_port})";
+        return $"{Board.Name} ({_device})";
     }
 
     public void Launch()
@@ -158,39 +152,12 @@ public class Dfu : IConfigurableDevice
         process.Start();
         process.WaitForExit();
 #else
-        _args.Device.Open(out var device);
-        if (device != null)
-        {
-            var requestType = UsbCtrlFlags.Direction_In | UsbCtrlFlags.RequestType_Class |
-                              UsbCtrlFlags.Recipient_Interface;
-
-            var sp = new UsbSetupPacket(
-                (byte) requestType,
-                3,
-                0,
-                0,
-                8);
-            var buffer = new byte[8];
-            device.ControlTransfer(ref sp, buffer, buffer.Length, out _);
-            buffer = [0x04, 0x03, 0x01, 0x00, 0x00];
-            requestType = UsbCtrlFlags.Direction_Out | UsbCtrlFlags.RequestType_Class |
-                          UsbCtrlFlags.Recipient_Interface;
-
-            sp = new UsbSetupPacket(
-                (byte) requestType,
-                1,
-                0,
-                0,
-                buffer.Length);
-            device.ControlTransfer(ref sp, buffer, buffer.Length, out _);
-            sp = new UsbSetupPacket(
-                (byte) requestType,
-                1,
-                0,
-                0,
-                0);
-            device.ControlTransfer(ref sp, buffer, 0, out _);
-        }
+        _device.Open();
+        if (!_device.IsOpen) return;
+        _device.ReadData(0, 3, 0, 8);
+        
+        _device.WriteData(0, 1, 0, [0x04, 0x03, 0x01, 0x00, 0x00]);
+        _device.WriteData(0, 1, 0, []);
 #endif
     }
 }

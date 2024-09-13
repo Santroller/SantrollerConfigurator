@@ -1,13 +1,15 @@
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
+using GuitarConfigurator.NetCore.Utils;
 using GuitarConfigurator.NetCore.ViewModels;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.LibUsb;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
-public interface IConfigurableDevice
+public interface IConfigurableDevice: IDevice
 {
     public bool MigrationSupported { get; }
-    public bool IsSameDevice(string serialOrPath);
 
     public void Bootloader();
 

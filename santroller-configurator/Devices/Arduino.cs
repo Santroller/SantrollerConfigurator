@@ -7,6 +7,8 @@ using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Utils;
 using GuitarConfigurator.NetCore.ViewModels;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.LibUsb;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
@@ -68,14 +70,9 @@ public class Arduino : IConfigurableDevice
 
     public bool MigrationSupported { get; }
 
-    public bool IsSameDevice(PlatformIoPort port)
+    public bool IsSameDevice(IDevice device)
     {
-        return port.Port == _port;
-    }
-
-    public bool IsSameDevice(string serialOrPath)
-    {
-        return false;
+        return device is Arduino arduino && arduino._port == _port;
     }
 
     public void Bootloader()

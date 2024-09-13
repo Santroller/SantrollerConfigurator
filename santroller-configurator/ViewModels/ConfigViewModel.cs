@@ -126,17 +126,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 SetUpDiff();
                 return Main.Write(this, true);
             },
-            this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected, x => x.HasError, x => x.Builder)
+            this.WhenAnyValue(x => x.Main.Working,  x => x.HasError, x => x.Builder)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x =>
-                    x is {Item1: false, Item2: true, Item3: false, Item4: false} or
-                        {Item1: false, Item2: true, Item4: true}));
+                    x is {Item1: false, Item2: false, Item3: false} or
+                        {Item1: false, Item3: true}));
 
         WriteUf2Command = ReactiveCommand.CreateFromObservable(() => Main.SaveUf2(this),
             this.WhenAnyValue(x => x.Main.Working)
                 .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is false));
         ResetCommand = ReactiveCommand.CreateFromTask(ResetAsync,
-            this.WhenAnyValue(x => x.Main.Working, x => x.Main.Connected)
-                .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is {Item1: false, Item2: true}));
+            this.WhenAnyValue(x => x.Main.Working)
+                .ObserveOn(RxApp.MainThreadScheduler).Select(x => x is false));
         GoBackCommand = ReactiveCommand.Create(GoBack, this.WhenAnyValue(x => x.Main.Working).Select(s => !s));
 
         SaveConfigCommand = ReactiveCommand.CreateFromObservable(() => SaveConfig.Handle(this));
@@ -4018,7 +4018,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void RemoveDevice(IConfigurableDevice device)
     {
         if (_disconnected || Main.Working || Device is not Santroller old ||
-            (!device.IsSameDevice(old.Serial) && !device.IsSameDevice(old.Path))) return;
+            !device.IsSameDevice(old)) return;
         old.StopTicking();
         Main.SetDifference(false);
         _disconnected = true;

@@ -1,13 +1,15 @@
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.ViewModels;
+using LibUsbDotNet.Info;
+using LibUsbDotNet.LibUsb;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
 public class EmptyDevice: IConfigurableDevice
 {
     public bool MigrationSupported => false;
-    public bool IsSameDevice(string serialOrPath)
+    public bool IsSameDevice(IDevice device)
     {
         return false;
     }
