@@ -346,6 +346,13 @@ public class GuitarAxis : OutputAxis
 
         switch (mode)
         {
+            case ConfigField.Xbox360
+                when Type == GuitarAxisType.Whammy && Input is DigitalToAnalog:
+                return $$"""
+                         if ({{Input.Generate(writer)}}) {
+                             {{GenerateOutput(mode)}} = {{analogOn - short.MaxValue}};
+                         }
+                         """;
             case ConfigField.XboxOne when Model.DeviceControllerType is DeviceControllerType.LiveGuitar:
                 return "";
             case ConfigField.Wii
