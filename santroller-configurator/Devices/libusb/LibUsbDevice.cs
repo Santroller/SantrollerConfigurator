@@ -1,6 +1,6 @@
 using LibUsbDotNet.Info;
 
-namespace GuitarConfigurator.NetCore.Devices.libusb;
+namespace GuitarConfigurator.NetCore.Devices;
 
 public abstract class LibUsbDevice(LocationId locationId) : IUsbDevice
 {
@@ -8,6 +8,10 @@ public abstract class LibUsbDevice(LocationId locationId) : IUsbDevice
     public abstract bool IsOpen { get; }
     public abstract ushort VendorId { get; }
     public abstract ushort ProductId { get; }
+    public abstract ushort Revision { get; }
+    public abstract string Serial { get; }
+    public abstract string Manufacturer { get; }
+    public abstract string Product { get; }
     public abstract void Open();
     public abstract void Close();
     public abstract void Claim();

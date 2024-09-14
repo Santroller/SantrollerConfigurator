@@ -1,12 +1,16 @@
 using LibUsbDotNet.Info;
 
-namespace GuitarConfigurator.NetCore.Devices.libusb;
+namespace GuitarConfigurator.NetCore.Devices;
 
 public class LibUsbCachedDevice(CachedDeviceInfo device) : LibUsbDevice(device.PortInfo)
 {
     public override bool IsOpen => false;
     public override ushort VendorId => device.Descriptor.VendorId;
     public override ushort ProductId => device.Descriptor.ProductId;
+    public override ushort Revision => device.Descriptor.Device;
+    public override string Serial => device.Descriptor.SerialNumber;
+    public override string Manufacturer => device.Descriptor.Manufacturer;
+    public override string Product => device.Descriptor.Product;
 
     public override void Open()
     {
