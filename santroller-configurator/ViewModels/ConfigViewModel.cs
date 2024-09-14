@@ -1279,6 +1279,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Main.AvailableDevices.Connect().ObserveOn(RxApp.MainThreadScheduler).Subscribe(s =>
             {
                 foreach (var change in s)
+                {
                     switch (change.Reason)
                     {
                         case ListChangeReason.Add:
@@ -1288,6 +1289,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             RemoveDevice(change.Item.Current);
                             break;
                     }
+                }
             });
     }
 

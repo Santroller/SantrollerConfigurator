@@ -61,7 +61,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public bool LibUsbMissing = false;
     public bool Builder { get; }
     public bool Windows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-
     public MainWindowViewModel(bool builder, bool branded, bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
         string error = "red")
     {

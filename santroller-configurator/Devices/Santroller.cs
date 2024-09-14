@@ -296,6 +296,7 @@ public class Santroller : ConfigurableUsbDevice
                 Console.WriteLine(ex);
             }
         }
+        Console.WriteLine("Done");
     }
 
     private void Load()

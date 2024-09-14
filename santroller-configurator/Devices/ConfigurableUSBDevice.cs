@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.ViewModels;
@@ -31,7 +32,7 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
 
     public bool IsSameDevice(IDevice device)
     {
-        return UsbDevice.IsSameDevice(device);
+        return device.IsSameDevice(UsbDevice);
     }
 
     public void DeviceAdded(IConfigurableDevice device)

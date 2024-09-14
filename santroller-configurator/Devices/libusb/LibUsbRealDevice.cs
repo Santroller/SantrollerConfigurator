@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using LibUsbDotNet;
 using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
 
@@ -53,6 +54,10 @@ public class LibUsbRealDevice(UsbDevice d) : LibUsbDevice(d.LocationId)
         }
         catch (UsbException ex)
         {
+            if (ex.ErrorCode == Error.NoDevice)
+            {
+                Close();
+            }
             Trace.TraceError($"Failed to read data from device: {ex.Message}");
             return [];
         }
@@ -77,6 +82,10 @@ public class LibUsbRealDevice(UsbDevice d) : LibUsbDevice(d.LocationId)
         }
         catch (UsbException ex)
         {
+            if (ex.ErrorCode == Error.NoDevice)
+            {
+                Close();
+            }
             Trace.TraceError($"Failed to write data to device: {ex.Message}");
         }
     }
@@ -101,7 +110,11 @@ public class LibUsbRealDevice(UsbDevice d) : LibUsbDevice(d.LocationId)
         }
         catch (UsbException ex)
         {
-            Trace.TraceError($"Failed to read data from device: {ex.Message}");
+            if (ex.ErrorCode == Error.NoDevice)
+            {
+                Close();
+            }
+            Console.WriteLine($"Failed to read data from device: {ex.Message}");
             return [];
         }
 
@@ -125,6 +138,10 @@ public class LibUsbRealDevice(UsbDevice d) : LibUsbDevice(d.LocationId)
         }
         catch (UsbException ex)
         {
+            if (ex.ErrorCode == Error.NoDevice)
+            {
+                Close();
+            }
             Trace.TraceError($"Failed to write data to device: {ex.Message}");
         }
     }
