@@ -1,14 +1,11 @@
 using System;
 using System.IO.Ports;
 using System.Linq;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Utils;
 using GuitarConfigurator.NetCore.ViewModels;
-using LibUsbDotNet.Info;
-using LibUsbDotNet.LibUsb;
 
 namespace GuitarConfigurator.NetCore.Devices;
 

@@ -16,8 +16,6 @@ using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
-using LibUsbDotNet;
-using LibUsbDotNet.LibUsb;
 using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Devices;
@@ -88,29 +86,23 @@ public class Santroller : ConfigurableUsbDevice
     private readonly DispatcherTimer _timer;
     private ReadOnlyObservableCollection<Output>? _bindings;
     private readonly ConsoleType _currentMode;
-    public string Product { get; }
-    public string Manufacturer { get; }
     public bool IsSantroller => Product == "Santroller";
 
-    public Santroller(IUsbDevice device, string serial,
-        ushort version, string product, string manufacturer) : base(
-        device, serial, version)
+    public Santroller(IUsbDevice device) : base(device)
     {
         _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(50), DispatcherPriority.Background, Tick);
         _microcontroller = new Pico(Board.Generic);
-        _deviceControllerType = (DeviceControllerType) (version >> 8);
-        _currentMode = (ConsoleType) (serial[^3] - '0');
-        if (serial[^2] >= 'K')
+        _deviceControllerType = (DeviceControllerType) Version.Major;
+        _currentMode = (ConsoleType) (Serial[^3] - '0');
+        if (Serial[^2] >= 'K')
         {
-            _deviceControllerType = (DeviceControllerType) (serial[^2] - 'K');
+            _deviceControllerType = (DeviceControllerType) (Serial[^2] - 'K');
         }
 
-        _keyboard = serial[^2] == 'K';
-        Product = product;
-        Manufacturer = manufacturer;
+        _keyboard = Serial[^2] == 'K';
         device.Claim();
 #if Windows
-        var isXinput = (serial[^1] - '0') != 0;
+        var isXinput = (Serial[^1] - '0') != 0;
         if (isXinput && _currentMode != ConsoleType.Windows)
         {
             InvalidDevice = true;

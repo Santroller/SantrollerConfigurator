@@ -1,21 +1,19 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
-using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.ComponentModel;
 using DynamicData;
 using GuitarConfigurator.NetCore.ViewModels;
 using Nefarius.Drivers.WinUSB;
-using Nefarius.Utilities.DeviceManagement.PnP;
 using Nefarius.Utilities.DeviceManagement.PnP;
 using ReactiveUI;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
-public class ConfigurableUsbDeviceManager
+public partial class ConfigurableUsbDeviceManager
 {
     private enum EventType
     {
@@ -39,9 +37,7 @@ public class ConfigurableUsbDeviceManager
         {
             _deviceNotificationListener.StartListen(guid);
             var instance = 0;
-            
-            while (Devcon.FindByInterfaceGuid(guid, out var path,
-                       out var instanceId, instance++))
+            while (Devcon.FindByInterfaceGuid(guid, out var path, out var instanceId, instance++))
             {
                 DeviceNotify(EventType.DeviceArrival, path, guid);
             }
@@ -52,49 +48,36 @@ public class ConfigurableUsbDeviceManager
     {
         RxApp.MainThreadScheduler.Schedule(() =>
         {
-            var ids = UsbSymbolicName.Parse(path);
+            
+            var dev = PnPDevice.GetDeviceByInterfaceId(path.ToUpper(), eventType == EventType.DeviceArrival ? DeviceLocationFlags.Normal : DeviceLocationFlags.Phantom);
+
+            USBPnPDevice pnpDev = new USBPnPDevice(dev, path.ToUpper());
+            var vid = pnpDev.VendorId;
+            var pid = pnpDev.ProductId;
+            var rev = pnpDev.Revision;
             if (eventType == EventType.DeviceArrival)
             {
-                var vid = ids.Vid;
-                var pid = ids.Pid;
-                var serial = ids.SerialNumber;
                 if (vid == Dfu.DfuVid && (pid == Dfu.DfuPid16U2 || pid == Dfu.DfuPid8U2))
                 {
-                    _model.AddDevice(
-                        new Dfu(new RegDeviceNotifyInfoEventArgs(new RegDeviceNotifyInfo(path,
-                            PnPDevice.GetInstanceIdFromInterfaceId(path), serial))));
+                    _model.AddDevice(new Dfu(pnpDev));
                 }
                 else if (guid == Santroller.DeviceGuid)
                 {
-                    WinUsbDevice.Open(path, out var dev);
-                    if (dev == null) return;
-                    var revision = (ushort) dev.Info.Descriptor.BcdDevice;
-                    serial = dev.Info.SerialString;
-                    // If a device gets disconnected just after connection (aka when swapping to xinput)
-                    // Then we dont get a serial string.
-                    if (string.IsNullOrEmpty(serial))
-                    {
-                        return;
-                    }
-
-                    _model.AddDevice(new Santroller(path, dev, serial, revision, dev.Info.ProductString,
-                        dev.Info.ManufacturerString));
+                    var udev = new USBRealDevice(pnpDev);
+                    if (!udev.IsOpen) return;
+                    _model.AddDevice(new Santroller(udev));
                 }
                 else if (guid == Ardwiino.DeviceGuid)
                 {
-                    WinUsbDevice.Open(path, out var dev);
-                    if (dev == null) return;
-                    var revision = (ushort) dev.Info.Descriptor.BcdDevice;
-                    _model.AddDevice(new Ardwiino(path, dev, serial, revision));
+                    var udev = new USBRealDevice(pnpDev);
+                    if (!udev.IsOpen) return;
+                    _model.AddDevice(new Ardwiino(udev));
                 }
             }
             else
             {
-                var serial = ids.SerialNumber;
                 _model.AvailableDevices.RemoveMany(
-                    _model.AvailableDevices.Items.Where(device =>
-                        device.IsSameDevice(path) || device.IsSameDevice(serial) ||
-                        device.IsSameDevice(PnPDevice.GetInstanceIdFromInterfaceId(path))));
+                    _model.AvailableDevices.Items.Where(device => device.IsSameDevice(pnpDev)));
             }
         });
     }

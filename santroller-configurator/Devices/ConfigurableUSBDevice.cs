@@ -8,19 +8,20 @@ namespace GuitarConfigurator.NetCore.Devices;
 public abstract class ConfigurableUsbDevice : IConfigurableDevice
 {
     protected readonly IUsbDevice UsbDevice;
-    public readonly string Serial;
     public readonly Version Version;
     private TaskCompletionSource<string?>? _bootloaderPath;
     private string? _lastBootloaderPath;
 
-    protected ConfigurableUsbDevice(IUsbDevice usbDevice, string serial, ushort version)
+    protected ConfigurableUsbDevice(IUsbDevice usbDevice)
     {
         UsbDevice = usbDevice;
-        Serial = serial;
-        Version = new Version((version >> 8) & 0xff, (version >> 4) & 0xf, version & 0xf);
+        Version = new Version((usbDevice.Revision >> 8) & 0xff, (usbDevice.Revision >> 4) & 0xf, usbDevice.Revision & 0xf);
     }
 
     public Board Board { get; set; }
+    public string Serial => UsbDevice.Serial;
+    public string Manufacturer => UsbDevice.Manufacturer;
+    public string Product => UsbDevice.Product;
 
     public IConfigurableDevice? BootloaderDevice { get; private set; }
 

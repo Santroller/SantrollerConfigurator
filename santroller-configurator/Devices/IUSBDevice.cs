@@ -6,6 +6,10 @@ public interface IUsbDevice: IDevice
     
     ushort VendorId { get; }
     ushort ProductId { get; }
+    ushort Revision { get; }
+    string Serial { get; }
+    string Manufacturer { get; }
+    string Product { get; }
     void Open();
     void Close();
 

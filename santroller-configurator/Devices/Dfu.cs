@@ -6,11 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Types;
-using GuitarConfigurator.NetCore.Utils;
 using GuitarConfigurator.NetCore.ViewModels;
-using LibUsbDotNet.Info;
-using LibUsbDotNet.LibUsb;
-using LibUsbDotNet.Main;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
@@ -142,7 +138,7 @@ public class Dfu : IConfigurableDevice
     public void Launch()
     {
 #if Windows
-        var mcu = _args.Device.IdProduct == 0x2FF7 ? "at90usb82" : "atmega16u2";
+        var mcu = _device.ProductId == 0x2FF7 ? "at90usb82" : "atmega16u2";
         
         var appdataFolder = AssetUtils.GetAppDataFolder();
         var dfuExecutable = Path.Combine(appdataFolder, "platformio", "dfu-programmer.exe");

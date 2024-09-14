@@ -169,7 +169,6 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
-        <Compile Include="Devices\windows\WindowsConfigurableUsbDeviceManager.cs" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Update="Resources.resx">
