@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Nefarius.Drivers.WinUSB;
 using Nefarius.Utilities.DeviceManagement.PnP;
 
@@ -62,22 +63,22 @@ public partial class USBPnPDevice : IUsbDevice
     public void Claim()
     {
     }
-    public override Task<byte[]> ReadDataAsync(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
+    public Task<byte[]> ReadDataAsync(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
     {
         return Task.FromResult(Array.Empty<byte>());
     }
 
-    public override Task WriteDataAsync(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
+    public Task WriteDataAsync(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
     {
         return Task.FromResult(0);
     }
 
-    public override byte[] ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
+    public byte[] ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
     {
         return [];
     }
 
-    public override void WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
+    public void WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
     {
     }
 

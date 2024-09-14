@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Nefarius.Drivers.WinUSB;
 using Nefarius.Utilities.DeviceManagement.PnP;
 
@@ -48,14 +49,27 @@ public partial class USBRealDevice : IUsbDevice
     {
     }
 
-    public async Task<byte[]> ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
+    public byte[] ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
     {
         return _device?.ControlIn(128 | 32 | 1, bRequest, wValue, wIndex, size) ?? [];
     }
 
-    public async Task WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
+    public void WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
     {
         _device?.ControlOut(0 | 32 | 1, bRequest, wValue, wIndex, buffer);
+    }
+    
+    public async Task<byte[]> ReadDataAsync(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
+    {
+        var data = new byte[size];
+        var len = await _device?.ControlInAsync(128 | 32 | 1, bRequest, wValue, wIndex, data)!;
+        Array.Resize(ref data, size);
+        return data;
+    }
+
+    public async Task WriteDataAsync(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
+    {
+       await _device?.ControlOutAsync(0 | 32 | 1, bRequest, wValue, wIndex, buffer)!;
     }
 
     [GeneratedRegex(".+VID_(.{4})&PID_(.{4})(?:&REV_(.{4}))?")]
