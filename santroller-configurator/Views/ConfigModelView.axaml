@@ -2672,7 +2672,7 @@
                             <Binding Path="AreLedsEnabled" />
                             <Binding Path="!IsCombined" />
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <ReflectionBinding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}" />
+                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                 <Binding Path="AreLedsSet" />
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
@@ -2763,7 +2763,7 @@
                                 <Binding Path="!IsApa102Peripheral" />
                             </MultiBinding>
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <ReflectionBinding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}" />
+                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                 <Binding Path="AreLedsSet" />
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
@@ -2790,7 +2790,7 @@
                                 <Binding Path="LedsUseColoursPeripheral" />
                             </MultiBinding>
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <ReflectionBinding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}" />
+                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                 <Binding Path="AreLedsSet" />
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
@@ -2819,7 +2819,7 @@
                                 <Binding Path="LedsUseColoursPeripheral" />
                             </MultiBinding>
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <ReflectionBinding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}" />
+                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                 <Binding Path="AreLedsSet" />
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>

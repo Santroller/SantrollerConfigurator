@@ -3,13 +3,17 @@ using System.Diagnostics;
 using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
 
-namespace GuitarConfigurator.NetCore.Devices.libusb;
+namespace GuitarConfigurator.NetCore.Devices;
 
 public class LibUsbRealDevice(UsbDevice d) : LibUsbDevice(d.LocationId)
 {
     public override bool IsOpen => d.IsOpen;
     public override ushort VendorId => d.VendorId;
     public override ushort ProductId => d.ProductId;
+    public override ushort Revision => d.Descriptor.Device;
+    public override string Serial => d.Descriptor.SerialNumber;
+    public override string Manufacturer => d.Descriptor.Manufacturer;
+    public override string Product => d.Descriptor.Product;
 
     public override void Open()
     {

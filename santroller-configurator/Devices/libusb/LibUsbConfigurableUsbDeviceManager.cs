@@ -5,7 +5,7 @@ using GuitarConfigurator.NetCore.ViewModels;
 using LibUsbDotNet.LibUsb;
 using ReactiveUI;
 
-namespace GuitarConfigurator.NetCore.Devices.libusb;
+namespace GuitarConfigurator.NetCore.Devices;
 
 public class ConfigurableUsbDeviceManager
 {
@@ -68,13 +68,11 @@ public class ConfigurableUsbDeviceManager
                             case "Ardwiino" when revision == Ardwiino.SerialArdwiinoRevision:
                                 return;
                             case "Ardwiino":
-                                _model.AddDevice(new Ardwiino(new LibUsbRealDevice(device), serial,
-                                    revision));
+                                _model.AddDevice(new Ardwiino(new LibUsbRealDevice(device)));
                                 break;
                             default:
                                 // Branded devices can have any name.
-                                _model.AddDevice(new Santroller(new LibUsbRealDevice(device), serial,
-                                    revision, product, manufacturer));
+                                _model.AddDevice(new Santroller(new LibUsbRealDevice(device)));
                                 break;
                         }
                     }
