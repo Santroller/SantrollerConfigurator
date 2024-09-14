@@ -9,7 +9,7 @@ namespace GuitarConfigurator.NetCore.Devices;
 
 public partial class USBRealDevice : IUsbDevice
 {
-    private readonly USBDevice? _device;
+    private USBDevice? _device;
     private readonly USBPnPDevice _pnpDevice;
 
     public USBRealDevice(USBPnPDevice device)
@@ -29,7 +29,7 @@ public partial class USBRealDevice : IUsbDevice
 
     public ushort ProductId => _pnpDevice.ProductId;
 
-    public ushort Revision  => _pnpDevice.Revision;
+    public ushort Revision => _pnpDevice.Revision;
 
     public string Serial => _pnpDevice.Serial;
 
@@ -43,6 +43,7 @@ public partial class USBRealDevice : IUsbDevice
 
     public void Close()
     {
+        _device = null;
     }
 
     public void Claim()
@@ -51,25 +52,59 @@ public partial class USBRealDevice : IUsbDevice
 
     public byte[] ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
     {
-        return _device?.ControlIn(128 | 32 | 1, bRequest, wValue, wIndex, size) ?? [];
+        if (_device == null) return [];
+        try
+        {
+            return _device?.ControlIn(128 | 32 | 1, bRequest, wValue, wIndex, size) ?? [];
+        }
+        catch (USBException ex)
+        {
+            Close();
+            return [];
+        }
     }
 
     public void WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
     {
-        _device?.ControlOut(0 | 32 | 1, bRequest, wValue, wIndex, buffer);
+        if (_device == null) return;
+        try
+        {
+            _device?.ControlOut(0 | 32 | 1, bRequest, wValue, wIndex, buffer);
+        }
+        catch (USBException ex)
+        {
+            Close();
+        }
     }
-    
+
     public async Task<byte[]> ReadDataAsync(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
     {
-        var data = new byte[size];
-        var len = await _device?.ControlInAsync(128 | 32 | 1, bRequest, wValue, wIndex, data)!;
-        Array.Resize(ref data, size);
-        return data;
+        if (_device == null) return [];
+        try
+        {
+            var data = new byte[size];
+            var len = await _device?.ControlInAsync(128 | 32 | 1, bRequest, wValue, wIndex, data)!;
+            Array.Resize(ref data, size);
+            return data;
+        }
+        catch (USBException ex)
+        {
+            Close();
+            return [];
+        }
     }
 
     public async Task WriteDataAsync(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
     {
-       await _device?.ControlOutAsync(0 | 32 | 1, bRequest, wValue, wIndex, buffer)!;
+        if (_device == null) return;
+        try
+        {
+            await _device?.ControlOutAsync(0 | 32 | 1, bRequest, wValue, wIndex, buffer)!;
+        }
+        catch (USBException ex)
+        {
+            Close();
+        }
     }
 
     [GeneratedRegex(".+VID_(.{4})&PID_(.{4})(?:&REV_(.{4}))?")]
