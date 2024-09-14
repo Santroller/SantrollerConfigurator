@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
 using GuitarConfigurator.NetCore.ViewModels;
@@ -48,44 +49,60 @@ public partial class ConfigurableUsbDeviceManager
     {
         RxApp.MainThreadScheduler.Schedule(() =>
         {
-            
-            var dev = PnPDevice.GetDeviceByInterfaceId(path.ToUpper(), eventType == EventType.DeviceArrival ? DeviceLocationFlags.Normal : DeviceLocationFlags.Phantom);
-
-            USBPnPDevice pnpDev = new USBPnPDevice(dev, path.ToUpper());
-            var vid = pnpDev.VendorId;
-            var pid = pnpDev.ProductId;
-            var rev = pnpDev.Revision;
-            if (eventType == EventType.DeviceArrival)
+            try
             {
-                if (vid == Dfu.DfuVid && (pid == Dfu.DfuPid16U2 || pid == Dfu.DfuPid8U2))
+                var dev = PnPDevice.GetDeviceByInterfaceId(path,
+                    eventType == EventType.DeviceArrival ? DeviceLocationFlags.Normal : DeviceLocationFlags.Phantom);
+                USBPnPDevice pnpDev = new USBPnPDevice(dev, path.ToUpper());
+                var vid = pnpDev.VendorId;
+                var pid = pnpDev.ProductId;
+                var rev = pnpDev.Revision;
+                if (eventType == EventType.DeviceArrival)
                 {
-                    _model.AddDevice(new Dfu(pnpDev));
+                    if (vid == Dfu.DfuVid && (pid == Dfu.DfuPid16U2 || pid == Dfu.DfuPid8U2))
+                    {
+                        _model.AddDevice(new Dfu(pnpDev));
+                    }
+                    else if (guid == Santroller.DeviceGuid)
+                    {
+                        if (!
+                            USBDevice.GetDevices(guid).Any(s => s.DevicePath.ToUpper().Equals(path.ToUpper())))
+                        {
+                            return;
+                        }
+                        var udev = new USBRealDevice(pnpDev);
+                        if (!udev.IsOpen) return;
+                        _model.AddDevice(new Santroller(udev));
+                    }
+                    else if (guid == Ardwiino.DeviceGuid)
+                    {
+                        if (!
+                            USBDevice.GetDevices(guid).Any(s => s.DevicePath.ToUpper().Equals(path.ToUpper())))
+                        {
+                            return;
+                        }
+                        var udev = new USBRealDevice(pnpDev);
+                        if (!udev.IsOpen) return;
+                        _model.AddDevice(new Ardwiino(udev));
+                    }
                 }
-                else if (guid == Santroller.DeviceGuid)
+                else
                 {
-                    var udev = new USBRealDevice(pnpDev);
-                    if (!udev.IsOpen) return;
-                    _model.AddDevice(new Santroller(udev));
-                }
-                else if (guid == Ardwiino.DeviceGuid)
-                {
-                    var udev = new USBRealDevice(pnpDev);
-                    if (!udev.IsOpen) return;
-                    _model.AddDevice(new Ardwiino(udev));
+                    _model.AvailableDevices.RemoveMany(
+                        _model.AvailableDevices.Items.Where(device => device.IsSameDevice(pnpDev)));
                 }
             }
-            else
+            catch (Exception ex)
             {
-                _model.AvailableDevices.RemoveMany(
-                    _model.AvailableDevices.Items.Where(device => device.IsSameDevice(pnpDev)));
+                Console.WriteLine(ex);
             }
         });
     }
 
-
     private void DeviceArrived(DeviceEventArgs args)
     {
         DeviceNotify(EventType.DeviceArrival, args.SymLink, args.InterfaceGuid);
+
     }
 
     private void DeviceRemoved(DeviceEventArgs args)
