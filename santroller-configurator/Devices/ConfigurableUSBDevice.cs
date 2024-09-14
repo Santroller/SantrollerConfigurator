@@ -116,6 +116,16 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
     {
         UsbDevice.Close();
     }
+    public Task<byte[]> ReadDataAsync(ushort wValue, byte bRequest, ushort size = 128)
+    {
+        return UsbDevice.ReadDataAsync(wValue, bRequest, 2, size);
+    }
+
+
+    public Task WriteDataAsync(ushort wValue, byte bRequest, byte[] buffer)
+    {
+        return UsbDevice.WriteDataAsync(wValue, bRequest, 2, buffer);
+    }
     public byte[] ReadData(ushort wValue, byte bRequest, ushort size = 128)
     {
         return UsbDevice.ReadData(wValue, bRequest, 2, size);

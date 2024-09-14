@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using LibUsbDotNet.Info;
 
 namespace GuitarConfigurator.NetCore.Devices;
@@ -29,6 +30,8 @@ public abstract class LibUsbDevice(LocationId locationId) : IUsbDevice
 
         return false;
     }
+    public abstract Task<byte[]> ReadDataAsync(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128);
+    public abstract Task WriteDataAsync(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer);
     public abstract byte[] ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128);
     public abstract void WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer);
 }

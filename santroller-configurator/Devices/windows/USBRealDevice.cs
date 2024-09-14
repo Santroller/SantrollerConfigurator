@@ -48,12 +48,12 @@ public partial class USBRealDevice : IUsbDevice
     {
     }
 
-    public byte[] ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
+    public async Task<byte[]> ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
     {
         return _device?.ControlIn(128 | 32 | 1, bRequest, wValue, wIndex, size) ?? [];
     }
 
-    public void WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
+    public async Task WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
     {
         _device?.ControlOut(0 | 32 | 1, bRequest, wValue, wIndex, buffer);
     }

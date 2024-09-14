@@ -62,13 +62,22 @@ public partial class USBPnPDevice : IUsbDevice
     public void Claim()
     {
     }
+    public override Task<byte[]> ReadDataAsync(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
+    {
+        return Task.FromResult(Array.Empty<byte>());
+    }
 
-    public byte[] ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
+    public override Task WriteDataAsync(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
+    {
+        return Task.FromResult(0);
+    }
+
+    public override byte[] ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
     {
         return [];
     }
 
-    public void WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
+    public override void WriteData(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
     {
     }
 

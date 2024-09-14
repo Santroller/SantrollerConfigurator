@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using LibUsbDotNet.Info;
 
 namespace GuitarConfigurator.NetCore.Devices;
@@ -23,6 +25,16 @@ public class LibUsbCachedDevice(CachedDeviceInfo device) : LibUsbDevice(device.P
 
     public override void Claim()
     {
+    }
+
+    public override Task<byte[]> ReadDataAsync(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
+    {
+        return Task.FromResult(Array.Empty<byte>());
+    }
+
+    public override Task WriteDataAsync(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
+    {
+        return Task.FromResult(0);
     }
 
     public override byte[] ReadData(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
 
@@ -73,6 +74,54 @@ public class LibUsbRealDevice(UsbDevice d) : LibUsbDevice(d.LocationId)
         try
         {
             d.ControlTransfer(sp, buffer, 0, buffer.Length);
+        }
+        catch (UsbException ex)
+        {
+            Trace.TraceError($"Failed to write data to device: {ex.Message}");
+        }
+    }
+    
+    public override async Task<byte[]> ReadDataAsync(ushort wValue, byte bRequest, ushort wIndex, ushort size = 128)
+    {
+        if (!d.IsOpen) return [];
+        const UsbCtrlFlags requestType = UsbCtrlFlags.Direction_In | UsbCtrlFlags.RequestType_Class |
+                                         UsbCtrlFlags.Recipient_Interface;
+        var buffer = new byte[size];
+
+        var sp = new UsbSetupPacket(
+            (byte) requestType,
+            bRequest,
+            wValue,
+            2,
+            buffer.Length);
+        try
+        {
+            var length = await d.ControlTransferAsync(sp, buffer, 0, buffer.Length);
+            Array.Resize(ref buffer, length);
+        }
+        catch (UsbException ex)
+        {
+            Trace.TraceError($"Failed to read data from device: {ex.Message}");
+            return [];
+        }
+
+        return buffer;
+    }
+
+    public override async Task WriteDataAsync(ushort wValue, byte bRequest, ushort wIndex, byte[] buffer)
+    {
+        if (!d.IsOpen) return;
+        const UsbCtrlFlags requestType = UsbCtrlFlags.Direction_Out | UsbCtrlFlags.RequestType_Class |
+                                         UsbCtrlFlags.Recipient_Interface;
+        var sp = new UsbSetupPacket(
+            (byte) requestType,
+            bRequest,
+            wValue,
+            2,
+            buffer.Length);
+        try
+        {
+            await d.ControlTransferAsync(sp, buffer, 0, buffer.Length);
         }
         catch (UsbException ex)
         {
