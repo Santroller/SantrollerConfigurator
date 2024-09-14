@@ -182,9 +182,6 @@
     <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
         <Compile Remove="Devices/libusb/*.cs" />
     </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\..\LibUsbDotNet\src\LibUsbDotNet\LibUsbDotNet.csproj" />
-    </ItemGroup>
     <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(RuntimeIdentifier)' == ''">
         <Copy SourceFiles="$(TargetDir)\runtimes\unix\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' != 'Windows_NT' " />
         <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
