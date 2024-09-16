@@ -23,12 +23,14 @@ public class Dfu : IConfigurableDevice
         _device = device;
         var pid = device.VendorId;
         foreach (var board in Board.Boards)
+        {
             if (board.ProductIDs.Contains((uint) pid) && board.HasUsbmcu)
             {
                 Board = board;
                 Console.WriteLine(Board.Environment);
                 return;
             }
+        }
 
         throw new InvalidOperationException("Not expected");
     }

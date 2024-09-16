@@ -84,7 +84,7 @@ public partial class USBRealDevice : IUsbDevice
         {
             var data = new byte[size];
             var len = await _device?.ControlInAsync(128 | 32 | 1, bRequest, wValue, wIndex, data)!;
-            Array.Resize(ref data, size);
+            Array.Resize(ref data, len);
             return data;
         }
         catch (USBException ex)
