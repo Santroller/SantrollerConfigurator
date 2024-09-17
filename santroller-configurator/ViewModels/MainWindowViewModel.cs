@@ -658,8 +658,14 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             {
                 var uf2 = Path.Combine(drive.RootDirectory.FullName, "INFO_UF2.txt");
                 if (drive.IsReady)
-                    if (File.Exists(uf2) && (await File.ReadAllTextAsync(uf2)).Contains("RPI-RP2"))
-                        AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName));
+                    if (File.Exists(uf2))
+                    {
+                        var text = await File.ReadAllTextAsync(uf2);
+                        if (text.Contains("RPI-RP2") || text.Contains("RP2350"))
+                        {
+                            AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName));
+                        }
+                    }
             }
             catch (IOException)
             {
