@@ -660,8 +660,14 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 if (drive.IsReady)
                     if (File.Exists(uf2))
                     {
+                        // TODO: 2350 needs to build with 2350 toolchain
+                        // var text = await File.ReadAllTextAsync(uf2);
+                        // if (text.Contains("RPI-RP2") || text.Contains("RP2350"))
+                        // {
+                        //     AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName));
+                        // }
                         var text = await File.ReadAllTextAsync(uf2);
-                        if (text.Contains("RPI-RP2") || text.Contains("RP2350"))
+                        if (text.Contains("RPI-RP2"))
                         {
                             AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName));
                         }
