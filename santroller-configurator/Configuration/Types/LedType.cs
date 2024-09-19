@@ -17,7 +17,8 @@ public enum LedType
     Apa102Brg,
     Apa102Bgr,
     Stp16Cpc26,
-    Ws2812
+    Ws2812,
+    Ws2812W
 }
 
 public static class LedTypeMethods
@@ -30,7 +31,7 @@ public static class LedTypeMethods
         {
             LedType.Apa102Rgb or LedType.Apa102Rbg or LedType.Apa102Grb or LedType.Apa102Gbr or LedType.Apa102Brg or LedType.Apa102Bgr =>
                 [brightness, color.R, color.G, color.B],
-            LedType.Ws2812 =>
+            LedType.Ws2812 or LedType.Ws2812W =>
             [
                 Ws2812Bits[(color.R >> 6) & 0x3], Ws2812Bits[(color.R >> 4) & 0x3], Ws2812Bits[(color.R >> 2) & 0x3],
                 Ws2812Bits[color.R & 0x3], Ws2812Bits[(color.G >> 6) & 0x3], Ws2812Bits[(color.G >> 4) & 0x3],
@@ -42,7 +43,7 @@ public static class LedTypeMethods
     }
     public static byte[] TranslateLedBytes(this LedType type, byte[] led)
     {
-        if (type == LedType.Ws2812)
+        if (type is LedType.Ws2812 or LedType.Ws2812W)
         {
             return led;
         }
@@ -80,7 +81,7 @@ public static class LedTypeMethods
         BinaryWriter? writer)
     {
         var variable = peripheral ? "ledStatePeripheral" : "ledState";
-        if (type == LedType.Ws2812)
+        if (type is LedType.Ws2812 or LedType.Ws2812W)
         {
             return writer == null
                 ? $"""
@@ -132,7 +133,7 @@ public static class LedTypeMethods
         string b, byte index)
     {
         var variable = peripheral ? "ledStatePeripheral" : "ledState";
-        if (type == LedType.Ws2812)
+        if (type is LedType.Ws2812 or LedType.Ws2812W)
         {
             return $"""
                          {variable}[{index - 1}].r[0] = ws2812_bits[({r} >> 6) & 0x3];
@@ -200,7 +201,7 @@ public static class LedTypeMethods
             }
         }
 
-        if (type == LedType.Ws2812)
+        if (type is LedType.Ws2812 or LedType.Ws2812W)
         {
             return $"""
                          {variable}[{index - 1}].r[0] = ws2812_bits[(({r}) >> 6) & 0x3];

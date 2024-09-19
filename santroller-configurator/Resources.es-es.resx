@@ -2082,30 +2082,6 @@
     <data name="LedTypeNone" xml:space="preserve">
         <value>Ninguno</value>
     </data>
-    <data name="LedTypeWs2812" xml:space="preserve">
-        <value>WS2812</value>
-    </data>
-    <data name="LedTypeApa102Rgb" xml:space="preserve">
-        <value>APA102 - RGB</value>
-    </data>
-    <data name="LedTypeApa102Rbg" xml:space="preserve">
-        <value>APA102 - RBG</value>
-    </data>
-    <data name="LedTypeApa102Grb" xml:space="preserve">
-        <value>APA102 - GRB</value>
-    </data>
-    <data name="LedTypeApa102Gbr" xml:space="preserve">
-        <value>APA102 - GBR</value>
-    </data>
-    <data name="LedTypeApa102Brg" xml:space="preserve">
-        <value>APA102 - BRG</value>
-    </data>
-    <data name="LedTypeApa102Bgr" xml:space="preserve">
-        <value>APA102 - BGR</value>
-    </data>
-    <data name="LedTypeStp16Cpc26" xml:space="preserve">
-        <value>STP16CPC26</value>
-    </data>
     <data name="LegendTypeXbox" xml:space="preserve">
         <value>Xbox</value>
     </data>

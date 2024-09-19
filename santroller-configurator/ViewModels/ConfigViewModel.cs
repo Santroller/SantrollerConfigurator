@@ -224,10 +224,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 or LedType.Apa102Rbg or LedType.Apa102Rgb)
             .ToProperty(this, x => x.IsApa102);
         _isWs2812Helper = this.WhenAnyValue(x => x.LedType)
-            .Select(x => x is LedType.Ws2812)
+            .Select(x => x is LedType.Ws2812 or LedType.Ws2812W)
             .ToProperty(this, x => x.IsWs2812);
         _isWs2812PeripheralHelper = this.WhenAnyValue(x => x.LedTypePeripheral)
-            .Select(x => x is LedType.Ws2812)
+            .Select(x => x is LedType.Ws2812 or LedType.Ws2812W)
             .ToProperty(this, x => x.IsWs2812Peripheral);
         _isApa102PeripheralHelper = this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
             .Select(x => x is
@@ -248,13 +248,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         _isIndexedLedHelper = this.WhenAnyValue(x => x.LedType)
             .Select(x => x is LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
-                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26 or LedType.Ws2812)
+                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26 or LedType.Ws2812 or LedType.Ws2812W)
             .ToProperty(this, x => x.IsIndexedLed);
         _isIndexedLedPeripheralHelper = this.WhenAnyValue(x => x.LedTypePeripheral, x => x.HasPeripheral)
             .Select(x => x is
             {
                 Item2: true, Item1: LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
-                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26 or LedType.Ws2812
+                or LedType.Apa102Rbg or LedType.Apa102Rgb or LedType.Stp16Cpc26 or LedType.Ws2812 or LedType.Ws2812W
             })
             .ToProperty(this, x => x.IsIndexedLedPeripheral);
         _isFortniteFestivalProHelper = Bindings.Connect()
@@ -1020,6 +1020,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         UpdateErrors();
                         break;
                     case LedType.Ws2812:
+                    case LedType.Ws2812W:
                         _ledSpiConfig = Microcontroller.AssignSpiPins(this, WS2812SpiType, false, false, false,
                             _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, true,
                             true,
@@ -1088,6 +1089,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         UpdateErrors();
                         break;
                     case LedType.Ws2812:
+                    case LedType.Ws2812W:
                         _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, WS2812PeripheralSpiType, false,
                             false, false,
                             _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
@@ -2051,7 +2053,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define LED_COUNT_STP {{(LedType is LedType.Stp16Cpc26 ? LedCount : 0)}}
                         #define LED_COUNT_PERIPHERAL_STP {{(LedTypePeripheral is LedType.Stp16Cpc26 ? LedCountPeripheral : 0)}}
                         #define LED_COUNT_WS2812 {{(LedType is LedType.Ws2812 ? LedCount : 0)}}
+                        #define LED_COUNT_WS2812W {{(LedType is LedType.Ws2812W ? LedCount : 0)}}
                         #define LED_COUNT_PERIPHERAL_WS2812 {{(LedTypePeripheral is LedType.Ws2812 ? LedCountPeripheral : 0)}}
+                        #define LED_COUNT_PERIPHERAL_WS2812W {{(LedTypePeripheral is LedType.Ws2812W ? LedCountPeripheral : 0)}}
                         #define ADC_PINS {{{string.Join(",", analogPins)}}}
                         #define ADC_COUNT {{analogPins.Count}}
                         #define TICK_SHARED \
@@ -2762,6 +2766,21 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].b[2]);
                  spi_transfer(APA102_SPI_PORT, ledState[{i}].b[3]);
                  """;
+            // Ignore w channel for now
+            if (LedType is LedType.Ws2812W)
+            {
+                
+                ret +=
+                      """
+
+                      spi_transfer(APA102_SPI_PORT, 0);
+                      spi_transfer(APA102_SPI_PORT, 0);
+                      spi_transfer(APA102_SPI_PORT, 0);
+                      spi_transfer(APA102_SPI_PORT, 0);
+                      spi_transfer(APA102_SPI_PORT, 0);
+                      spi_transfer(APA102_SPI_PORT, 0);
+                      """;
+            }
         }
 
         return FixNewlines(ret);
@@ -2771,7 +2790,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
         if (!outputs.Any(s => s.LedIndices.Any())) return "";
-        if (LedType == LedType.None) return "";
+        if (LedTypePeripheral == LedType.None) return "";
         var ret = "";
         var ledMax = LedCount;
         for (var i = 0; i < ledMax; i++)
@@ -2792,6 +2811,21 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                  slaveWriteLED(ledState[{i}].b[2]);
                  slaveWriteLED(ledState[{i}].b[3]);
                  """;
+            // Ignore w channel for now
+            if (LedTypePeripheral is LedType.Ws2812W)
+            {
+                
+                ret +=
+                    $"""
+
+                     slaveWriteLED(0);
+                     slaveWriteLED(0);
+                     slaveWriteLED(0);
+                     slaveWriteLED(0);
+                     slaveWriteLED(0);
+                     slaveWriteLED(0);
+                     """;
+            }
         }
 
         return FixNewlines(ret);
@@ -3141,14 +3175,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var type = peripheral ? LedTypePeripheral : LedType;
         var variable = peripheral ? "ledStatePeripheral" : "ledState";
         if (mode != ConfigField.Shared || type is LedType.None) return "";
-        if (type == LedType.Stp16Cpc26)
+        switch (type)
         {
-            return ComputeLedsStp16(peripheral, debouncesRelatedToLed, analogRelatedToLed, writer);
-        }
-
-        if (type == LedType.Ws2812)
-        {
-            return ComputeLedsWs2812(mode, peripheral, debouncesRelatedToLed, analogRelatedToLed, writer);
+            case LedType.Stp16Cpc26:
+                return ComputeLedsStp16(peripheral, debouncesRelatedToLed, analogRelatedToLed, writer);
+            case LedType.Ws2812 or LedType.Ws2812W:
+                return ComputeLedsWs2812(mode, peripheral, debouncesRelatedToLed, analogRelatedToLed, writer);
         }
 
         // Handle leds, including when multiple leds are assigned to a single output.

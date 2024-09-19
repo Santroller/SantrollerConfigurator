@@ -2109,8 +2109,12 @@
     <data name="LedTypeNone" xml:space="preserve">
         <value>None</value>
     </data>
+
     <data name="LedTypeWs2812" xml:space="preserve">
-        <value>WS2812</value>
+        <value>WS2812 RGB</value>
+    </data>
+    <data name="LedTypeWs2812W" xml:space="preserve">
+        <value>WS2812 RGBW</value>
     </data>
     <data name="LedTypeApa102Rgb" xml:space="preserve">
         <value>APA102 - RGB</value>

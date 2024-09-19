@@ -552,7 +552,7 @@ public class Santroller : ConfigurableUsbDevice
         var bytes = _model.LedType.GetLedBytes(color, brightness);
         
         // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
-        if (_model.LedType != LedType.Ws2812 && !_model.Branded)
+        if (_model.LedType != LedType.Ws2812 && _model.LedType != LedType.Ws2812W && !_model.Branded)
         {
             if (_model.LastLedType != _model.LedType)
             {
@@ -571,7 +571,7 @@ public class Santroller : ConfigurableUsbDevice
         var bytes = _model.LedType.GetLedBytes(color, brightness);
         
         // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
-        if (_model.LedTypePeripheral != LedType.Ws2812 && !_model.Branded)
+        if (_model.LedTypePeripheral != LedType.Ws2812 && _model.LedTypePeripheral != LedType.Ws2812W && !_model.Branded)
         {
             if (_model.LastLedTypePeripheral != _model.LedTypePeripheral)
             {

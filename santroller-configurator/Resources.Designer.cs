@@ -4047,6 +4047,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string LedTypeWs2812W {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812W", resourceCulture);
+            }
+        }
+        
         public static string LedTypeApa102Rgb {
             get {
                 return ResourceManager.GetString("LedTypeApa102Rgb", resourceCulture);
