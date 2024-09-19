@@ -129,8 +129,8 @@ public abstract partial class Output : ReactiveObject
             .ToProperty(this, x => x.IsUsb);
         _isWiiHelper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is WiiInput)
             .ToProperty(this, x => x.IsWii);
-        _isAdxlHelper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is AdxlInput)
-            .ToProperty(this, x => x.IsAdxl);
+        _isAccelHelper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is AccelInput)
+            .ToProperty(this, x => x.IsAccel);
         _isMpr121Helper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Mpr121Input)
             .ToProperty(this, x => x.IsMpr121);
         _isGh5OrCloneHelper = this.WhenAnyValue(x => x.Input)
@@ -214,6 +214,7 @@ public abstract partial class Output : ReactiveObject
             .Select(enabled => enabled ? Brush.Parse("#99000000") : Brush.Parse("#33000000"))
             .ToProperty(this, s => s.CombinedBackground);
         this.WhenAnyValue(x => x.Model.HasPeripheral).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
+        this.WhenAnyValue(x => x.Model.HasAccel).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.UsesPwm).Subscribe(s =>
         {
             if (s && !AvailablePwmPins.Contains(_outputPin))
@@ -522,9 +523,9 @@ public abstract partial class Output : ReactiveObject
         set => SetInput(SelectedInputType, null, null, value, null, null, null, null, null);
     }
 
-    public AdxlInputType AdxlInputType
+    public AccelInputType AccelInputType
     {
-        get => (Input.InnermostInputs().First() as AdxlInput)?.Input ?? AdxlInputType.AccelX;
+        get => (Input.InnermostInputs().First() as AccelInput)?.Input ?? AccelInputType.AccelX;
         set => SetInput(SelectedInputType, null, null, null, null, null, null, value, null);
     }
 
@@ -558,7 +559,7 @@ public abstract partial class Output : ReactiveObject
         Enum.GetValues<WiiInputType>().OrderBy(s => EnumToStringConverter.Convert(s));
 
     public IEnumerable<DjInputType> DjInputTypes => Enum.GetValues<DjInputType>();
-    public IEnumerable<AdxlInputType> AdxlInputTypes => Enum.GetValues<AdxlInputType>();
+    public IEnumerable<AccelInputType> AdxlInputTypes => Enum.GetValues<AccelInputType>();
 
     public IEnumerable<InputType> InputTypes =>
         Enum.GetValues<InputType>().Where(s =>
@@ -571,7 +572,8 @@ public abstract partial class Output : ReactiveObject
             (s is not InputType.DigitalPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.Mpr121Input || Model.HasMpr121) &&
             s is not InputType.BluetoothInput &&
-            (s is not InputType.UsbHostInput || Model.IsPico));
+            (s is not InputType.UsbHostInput || Model.IsPico) &&
+            (s is not InputType.AccelInput || Model.HasAccel));
 
     private Enum GetChildOutputType()
     {
@@ -579,7 +581,7 @@ public abstract partial class Output : ReactiveObject
 
         if (Input.InnermostInputs().First() is Ps2Input ps2) return ps2.Input;
 
-        if (Input.InnermostInputs().First() is AdxlInput adxl) return adxl.Input;
+        if (Input.InnermostInputs().First() is AccelInput adxl) return adxl.Input;
 
         if (Input.InnermostInputs().First() is DjInput dj) return dj.Input;
 
@@ -649,7 +651,7 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] private string _localisedName = "";
     [ObservableAsProperty] private bool _isDj;
     [ObservableAsProperty] private bool _isWii;
-    [ObservableAsProperty] private bool _isAdxl;
+    [ObservableAsProperty] private bool _isAccel;
     [ObservableAsProperty] private bool _isMpr121;
     [ObservableAsProperty] private bool _isUsb;
     [ObservableAsProperty] private bool _isPs2;
@@ -1055,7 +1057,7 @@ public abstract partial class Output : ReactiveObject
 
     private void SetInput(InputType? inputType, WiiInputType? wiiInput, Ps2InputType? ps2InputType,
         GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
-        UsbHostInputType? usbInputType, AdxlInputType? adxlInputType, MidiType? midiType)
+        UsbHostInputType? usbInputType, AccelInputType? accelInputType, MidiType? midiType)
     {
         Input input;
         switch (inputType)
@@ -1109,13 +1111,13 @@ public abstract partial class Output : ReactiveObject
             case InputType.DigitalPeripheralInput:
                 input = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
                 break;
-            case InputType.AdxlInput when Input.InnermostInputs().First() is not AdxlInput:
-                adxlInputType ??= AdxlInputType.AccelX;
-                input = new AdxlInput(adxlInputType.Value, Model, false);
+            case InputType.AccelInput when Input.InnermostInputs().First() is not AccelInput:
+                accelInputType ??= AccelInputType.AccelX;
+                input = new AccelInput(accelInputType.Value, Model, false);
                 break;
-            case InputType.AdxlInput when Input.InnermostInputs().First() is AdxlInput adxl:
-                adxlInputType ??= AdxlInputType.AccelX;
-                input = new AdxlInput(adxlInputType.Value, Model, adxl.Peripheral, adxl.Sda, adxl.Scl);
+            case InputType.AccelInput when Input.InnermostInputs().First() is AccelInput accel:
+                accelInputType ??= AccelInputType.AccelX;
+                input = new AccelInput(accelInputType.Value, Model, accel.Peripheral);
                 break;
             case InputType.TurntableInput when Input.InnermostInputs().First() is not DjInput:
                 djInputType ??= DjInputType.LeftGreen;

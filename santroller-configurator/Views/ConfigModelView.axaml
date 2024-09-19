@@ -881,39 +881,6 @@
                 </StackPanel>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type inputs:AdxlInput}">
-                <StackPanel Orientation="Vertical">
-                    <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
-                        <ComboBox VerticalAlignment="Center"
-                                  SelectedItem="{Binding Scl}"
-                                  ItemsSource="{Binding AvailableSclPins}"
-                                  DropDownOpened="ReloadPinTemplates"
-                                  ItemTemplate="{StaticResource PinToStringTemplate}"
-                                  Width="200" />
-                    </StackPanel>
-                    <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
-                        <ComboBox VerticalAlignment="Center"
-                                  SelectedItem="{Binding Sda}"
-                                  ItemsSource="{Binding AvailableSdaPins}"
-                                  DropDownOpened="ReloadPinTemplates"
-                                  ItemTemplate="{StaticResource PinToStringTemplate}"
-                                  Width="200" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.LowPassFilterLabel}" />
-                        <NumericUpDown Value="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).AdxlFilter}" Minimum="0"
-                                       Maximum="1" Width="200" Height="30" ShowButtonSpinner="False" AllowSpin="False" />
-                    </StackPanel>
-                </StackPanel>
-            </DataTemplate>
             <DataTemplate DataType="{x:Type inputs:Mpr121Input}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
@@ -3987,6 +3954,87 @@
                         </StackPanel>
                     </StackPanel>
                 </Expander>
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}"
+                          IsExpanded="{Binding AccelExpanded}" IsVisible="{Binding HasAccel}">
+                    <Expander.HeaderTemplate>
+                        <DataTemplate DataType="viewModels:ConfigViewModel">
+                            <Panel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="75"
+                                           Source="avares://SantrollerConfigurator/Assets/Icons/GuitarHeroGuitar/Tilt.png">
+                                    </Image>
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.AccelerometerSettingsLabel}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="45 0 0 0" HorizontalAlignment="Center"
+                                            IsVisible="{Binding HasAccel}">
+                                    <CheckBox IsChecked="{Binding AccelConnected}" VerticalAlignment="Center"
+                                              IsEnabled="False"
+                                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                                </StackPanel>
+                                <Label Foreground="Red" Margin="45 0 0 0"
+                                       Content="{Binding AccelErrorText}"
+                                       VerticalAlignment="Bottom"
+                                       HorizontalAlignment="Center"
+                                       HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       IsVisible="{Binding AccelErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                            IsVisible="{Binding !Branded}">
+                                    <Button
+                                        Command="{Binding RemoveAccelCommand}"
+                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                </StackPanel>
+                            </Panel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <StackPanel>
+                        <StackPanel IsVisible="{Binding !Branded}">
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding AccelScl}"
+                                          ItemsSource="{Binding AvailableSclPinsInput}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding AccelSda}"
+                                          ItemsSource="{Binding AvailableSdaPinsInput}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.AccelerometerType}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding AccelSensorType}"
+                                          ItemsSource="{Binding AccelSensorTypes}"
+                                          ItemTemplate="{StaticResource EnumToStringTemplate}"
+                                          Width="200" />
+                            </StackPanel>
+                        </StackPanel>
+                            
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.LowPassFilterLabel}" />
+                            <NumericUpDown Value="{Binding AccelFilter}" Minimum="0"
+                                           Maximum="1" Width="200" Height="30" ShowButtonSpinner="False" AllowSpin="False" />
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
                 <ItemsControl ItemsSource="{Binding Outputs}" x:Name="OutputsContainer">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="output:Output">
@@ -4092,7 +4140,7 @@
                                                         <Binding Path="IsGh5OrClone" />
                                                         <Binding Path="IsWt" />
                                                         <Binding Path="IsUsb" />
-                                                        <Binding Path="IsAdxl" />
+                                                        <Binding Path="IsAccel" />
                                                     </MultiBinding>
                                                 </MultiBinding>
                                             </StackPanel.IsVisible>
@@ -4105,8 +4153,8 @@
                                                       ItemsSource="{Binding WiiInputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                             <ComboBox VerticalAlignment="Center"
-                                                      IsVisible="{Binding IsAdxl}"
-                                                      SelectedItem="{Binding AdxlInputType}"
+                                                      IsVisible="{Binding IsAccel}"
+                                                      SelectedItem="{Binding AccelInputType}"
                                                       ItemsSource="{Binding AdxlInputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                             <ComboBox VerticalAlignment="Center"

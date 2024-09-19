@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
+using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
@@ -76,7 +77,7 @@ public class SerializedConfiguration
         JoystickToDpadDisabled = !model.JoystickToDpad;
         HideControllerView = model.HideControllerView;
         Ps4Instruments = model.Ps4Instruments;
-        AdxlFilter = model.AdxlFilter;
+        AdxlFilter = model.AccelFilter;
         HasWiiOutput = model.HasWiiOutput;
         WiiOutputScl = model.WiiOutputScl;
         WiiOutputSda = model.WiiOutputSda;
@@ -91,6 +92,9 @@ public class SerializedConfiguration
         SelectDpadLeftXb1 = model.SelectDpadLeftXb1;
         AdafruitHost = model.AdafruitHost;
         MidiDrumAutoOff = model.MidiDrumAutoOff;
+        AccelSensorType = model.AccelSensorType;
+        AccelScl = model.AccelScl;
+        AccelSda = model.AccelSda;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -161,13 +165,18 @@ public class SerializedConfiguration
     [ProtoMember(77)] public bool AdafruitHost { get; private set; } = false;
     [ProtoMember(78)] public bool MidiDrumAutoOff { get; private set; } = false;
     [ProtoMember(79)] public bool JoystickToDpadDisabled { get; private set; } = false;
+    [ProtoMember(80)] public bool HasAccel { get; private set; }
+    [ProtoMember(81)] public int AccelSda { get; private set; }
+    [ProtoMember(82)] public int AccelScl { get; private set; }
+    
+    [ProtoMember(83)] public AccelSensorType AccelSensorType { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
         model.SelectDpadLeftXb1 = SelectDpadLeftXb1;
         model.DjNavButtons = DjNavButtons;
         model.DjFullRange = DjFullRange;
-        model.AdxlFilter = AdxlFilter;
+        model.AccelFilter = AdxlFilter;
         model.Ps4Instruments = Ps4Instruments;
         model.HideControllerView = HideControllerView;
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
@@ -200,6 +209,17 @@ public class SerializedConfiguration
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
         model.AdafruitHost = AdafruitHost;
         model.MidiDrumAutoOff = MidiDrumAutoOff;
+        model.HasAccel = HasAccel;
+        if (HasAccel)
+        {
+            model.AccelScl = AccelScl;
+            model.AccelSda = AccelSda;
+            model.AccelSensorType = AccelSensorType;
+        }
+        else
+        {
+            model.AccelSensorType = AccelSensorType.Adxl345;
+        }
         if (HasPeripheral)
         {
             model.PeripheralScl = PeripheralScl;
@@ -244,6 +264,11 @@ public class SerializedConfiguration
             model.Bindings.Clear();
             model.Bindings.AddRange(generated);
             model.UpdateErrors();
+        }
+
+        if (model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(s2 => s2 is AccelInput)))
+        {
+            model.HasAccel = true;
         }
 
         if (model.UsbHostEnabled) model.UsbHostDp = UsbHostDp;
@@ -303,7 +328,7 @@ public class SerializedConfiguration
         model.DjFullRange = DjFullRange;
         model.DjNavButtons = DjNavButtons;
         model.SelectDpadLeftXb1 = SelectDpadLeftXb1;
-        model.AdxlFilter = AdxlFilter;
+        model.AccelFilter = AdxlFilter;
         model.MidiDrumAutoOff = MidiDrumAutoOff;
         var clone = new List<Output>(model.Bindings.Items);
         var generated = Bindings.Select(s => s.Generate(model)).SelectMany(s => s.Outputs.Items)

@@ -124,6 +124,11 @@ public partial class EmptyOutput : Output
     {
         switch (value)
         {
+            case SimpleType.Accel:
+                Model.HasAccel = true;
+                Model.Bindings.Remove(this);
+                Model.UpdateErrors();
+                return;
             case SimpleType.WiiOutputs:
                 Model.HasWiiOutput = true;
                 Model.Bindings.Remove(this);

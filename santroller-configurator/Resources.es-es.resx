@@ -1944,8 +1944,8 @@
     <data name="InputTypeAnalogPinInput" xml:space="preserve">
         <value>Entrada de Pin Análogo</value>
     </data>
-    <data name="InputTypeAdxlInput" xml:space="preserve">
-        <value>Entrada de ADXL345</value>
+    <data name="InputTypeAccelInput" xml:space="preserve">
+        <value>Entrada de Aceleración</value>
     </data>
     <data name="InputTypeMpr121Input" xml:space="preserve">
         <value>Entrada de MPR121</value>
@@ -2198,19 +2198,19 @@
     <data name="PickupSelectorTypeNone" xml:space="preserve">
         <value>Ninguno</value>
     </data>
-    <data name="AdxlInputTypePitch" xml:space="preserve">
+    <data name="AccelInputTypePitch" xml:space="preserve">
         <value>Eje de Inclinación (Pitch)</value>
     </data>
-    <data name="AdxlInputTypeRoll" xml:space="preserve">
+    <data name="AccelInputTypeRoll" xml:space="preserve">
         <value>Eje de Giro (Roll)</value>
     </data>
-    <data name="AdxlInputTypeAccelX" xml:space="preserve">
+    <data name="AccelInputTypeAccelX" xml:space="preserve">
         <value>Aceleración en Eje X</value>
     </data>
-    <data name="AdxlInputTypeAccelY" xml:space="preserve">
+    <data name="AccelInputTypeAccelY" xml:space="preserve">
         <value>Aceleración en Eje Y</value>
     </data>
-    <data name="AdxlInputTypeAccelZ" xml:space="preserve">
+    <data name="AccelInputTypeAccelZ" xml:space="preserve">
         <value>Aceleración en Eje Z</value>
     </data>
     <data name="Ps2ControllerTypeDigital" xml:space="preserve">
@@ -2484,6 +2484,9 @@
     </data>
     <data name="RumbleMotorTypeRight" xml:space="preserve">
         <value>Derecho</value>
+    </data>
+    <data name="SimpleTypeAccel" xml:space="preserve">
+        <value>Acelerómetro</value>
     </data>
     <data name="SimpleTypeWiiInputSimple" xml:space="preserve">
         <value>Entradas de Extensión de Wii</value>

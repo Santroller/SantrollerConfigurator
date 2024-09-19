@@ -71,7 +71,8 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadMax1270X,
         CommandReadMax1270XValid,
         CommandReadMidi,
-        CommandSetAdxlFilter
+        CommandSetAccelFilter,
+        CommandReadAccelValid
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -247,6 +248,7 @@ public class Santroller : ConfigurableUsbDevice
                 var mpr121Raw = Array.Empty<byte>();
                 var peripheralConnected = false;
                 var mpr121Connected = false;
+                var accelConnected = false;
                 var max1270XRaw = Array.Empty<byte>();
                 var max1270XConnected = false;
                 var midiRaw = Array.Empty<byte>();
@@ -263,9 +265,10 @@ public class Santroller : ConfigurableUsbDevice
                     usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, 100);
                     midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
                 }
-
-                if (_model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(s2 => s2 is AdxlInput)))
+                
+                if (_model.HasAccel)
                 {
+                    accelConnected = (await ReadDataAsync(0, (byte) Commands.CommandReadAccelValid, 1)).Any(x => x != 0);
                     adxlRaw = await ReadDataAsync(0, (byte) Commands.CommandReadAdxl, 3 * sizeof(short));
                 }
 
@@ -284,7 +287,7 @@ public class Santroller : ConfigurableUsbDevice
                 var bluetoothRaw = Array.Empty<byte>();
                 if (IsPico()) bluetoothRaw = await ReadDataAsync(0, (byte) Commands.CommandGetBtState, 1);
 
-                _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw);
+                _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw, accelConnected);
                 foreach (var output in _bindings)
                     output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                         djRightRaw, gh5Raw,
@@ -579,9 +582,9 @@ public class Santroller : ConfigurableUsbDevice
         WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led}.Concat(bytes).ToArray());
     }
 
-    public void SetAdxlFilter(double filter)
+    public void SetAccelFilter(double filter)
     {
-        WriteData(0, (byte) Commands.CommandSetAdxlFilter, BitConverter.GetBytes(filter));
+        WriteData(0, (byte) Commands.CommandSetAccelFilter, BitConverter.GetBytes(filter));
     }
 
     public void SetLedStp(byte led, bool state)

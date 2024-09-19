@@ -13,49 +13,50 @@ using static GuitarConfigurator.NetCore.Configuration.Outputs.Combined.WiiCombin
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public class AdxlInput : TwiInput
+public class AccelInput : Input
 {
-    public static readonly string AdxlTwiType = "adxl";
-    public static readonly int AdxlTwiFreq = 400000;
 
-    public AdxlInput(AdxlInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
-        int scl = -1,
-        bool combined = false) : base(
-        AdxlTwiType, AdxlTwiFreq, peripheral, sda, scl, model)
+    public AccelInput(AccelInputType input, ConfigViewModel model, bool combined = false) : base(model)
     {
         Input = input;
         Combined = combined;
         BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
         IsAnalog = true;
     }
-
-    public AdxlInputType Input { get; }
+    public AccelInputType Input { get; }
 
     public bool Combined { get; }
 
     public bool BindableTwi { get; }
 
-    public override InputType? InputType => Types.InputType.AdxlInput;
+    public override IList<PinConfig> PinConfigs => [];
+    public override InputType? InputType => Types.InputType.AccelInput;
+    public override bool Peripheral => false;
 
     public override bool IsUint => false;
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
 
     public override string Title => EnumToStringConverter.Convert(Input);
 
+    public override IReadOnlyList<string> RequiredDefines()
+    {
+        return [];
+    }
+
     public override string Generate(BinaryWriter? writer)
     {
         return Input switch
         {
-            AdxlInputType.AccelX => "filtered[0]",
-            AdxlInputType.AccelY => "filtered[1]",
-            AdxlInputType.AccelZ => "filtered[2]",
+            AccelInputType.AccelX => "filtered[0]",
+            AccelInputType.AccelY => "filtered[1]",
+            AccelInputType.AccelZ => "filtered[2]",
             _ => "filtered[0]"
         };
     }
 
     public override SerializedInput Serialise()
     {
-        return new SerializedAdxlInput(Sda, Scl, Input, Peripheral);
+        return new SerializedAccelInput(Input);
     }
 
     public override void Update(Dictionary<int, int> analogRaw,
@@ -70,9 +71,9 @@ public class AdxlInput : TwiInput
         if (adxlRaw.IsEmpty || adxlRaw.Length < 6) return;
         RawValue = Input switch
         {
-            AdxlInputType.AccelX => BitConverter.ToInt16(adxlRaw.ToArray(), 0),
-            AdxlInputType.AccelY => BitConverter.ToInt16(adxlRaw.ToArray(), 2),
-            AdxlInputType.AccelZ => BitConverter.ToInt16(adxlRaw.ToArray(), 4),
+            AccelInputType.AccelX => BitConverter.ToInt16(adxlRaw.ToArray(), 0),
+            AccelInputType.AccelY => BitConverter.ToInt16(adxlRaw.ToArray(), 2),
+            AccelInputType.AccelZ => BitConverter.ToInt16(adxlRaw.ToArray(), 4),
             _ => RawValue
         };
     }
@@ -81,10 +82,5 @@ public class AdxlInput : TwiInput
         ConfigField mode)
     {
         return string.Join("\n", bindings.Select(binding => binding.Item2));
-    }
-
-    public override IReadOnlyList<string> RequiredDefines()
-    {
-        return base.RequiredDefines().Concat(["INPUT_ADXL"]).ToList();
     }
 }

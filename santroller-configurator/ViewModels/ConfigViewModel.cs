@@ -60,6 +60,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly int Mpr121TwiFreq = 400000;
     public static readonly string Max170XTwiType = "MAX170x";
     public static readonly int Max170XTwiFreq = 400000;
+    public static readonly string AccelTwiType = "adxl";
+    public static readonly int AccelTwiFreq = 400000;
     public static readonly string UsbHostPinTypeDm = "USB D-";
     public static readonly string UsbHostPinTypeDp = "USB D+";
     public static readonly string UnoPinTypeTx = "Uno Serial Tx Pin";
@@ -76,6 +78,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private TwiConfig? _peripheralTwiConfig;
     private TwiConfig? _mpr121TwiConfig;
     private TwiConfig? _max170XTwiConfig;
+    private TwiConfig? _accelTwiConfig;
     private TwiConfig? _wiiOutputTwiConfig;
     private DirectPinConfig? _ps2OutputAtt;
     private DirectPinConfig? _ps2OutputAck;
@@ -86,6 +89,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private DirectPinConfig? _adaFruitHostPin;
 
     private EmulationType _emulationType;
+    
+    [Reactive] private AccelSensorType _accelSensorType;
+
+    public IEnumerable<AccelSensorType> AccelSensorTypes => Enum.GetValues<AccelSensorType>();
 
     private LedType _ledType;
     private LedType _ledTypePeripheral;
@@ -402,6 +409,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] private string? _max170XErrorText;
     [Reactive] private string? _ledErrorText;
+    [Reactive] private string? _accelErrorText;
 
     private readonly ReadOnlyObservableCollection<Output> _outputs;
     public ReadOnlyObservableCollection<Output> Outputs => _outputs;
@@ -541,6 +549,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] private bool _max170XExpanded;
 
+    [Reactive] private bool _accelExpanded;
+
     [Reactive] private MouseMovementType _mouseMovementType;
 
     public ModeType Mode
@@ -595,17 +605,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] private bool _djNavButtons;
 
-    private double _adxlFilter;
+    private double _accelFilter;
 
-    public double AdxlFilter
+    public double AccelFilter
     {
-        get => _adxlFilter;
+        get => _accelFilter;
         set
         {
-            this.RaiseAndSetIfChanged(ref _adxlFilter, value);
+            this.RaiseAndSetIfChanged(ref _accelFilter, value);
             if (Device is Santroller santroller)
             {
-                santroller.SetAdxlFilter(value);
+                santroller.SetAccelFilter(value);
             }
         }
     }
@@ -704,6 +714,27 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     }
                 }
             }
+        }
+    }
+    public int AccelSda
+    {
+        get => _accelTwiConfig?.Sda ?? 0;
+        set
+        {
+            if (_accelTwiConfig == null) return;
+            _accelTwiConfig.Sda = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int AccelScl
+    {
+        get => _accelTwiConfig?.Scl ?? 0;
+        set
+        {
+            if (_accelTwiConfig == null) return;
+            _accelTwiConfig.Scl = value;
+            this.RaisePropertyChanged();
         }
     }
 
@@ -923,6 +954,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool _mpr121Connected;
     [Reactive] public bool _max1704XConnected;
     [Reactive] public int _max1704XStatus;
+    [Reactive] public bool _accelConnected;
 
 
     public int UsbHostDm
@@ -1132,6 +1164,25 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.RaisePropertyChanged(nameof(Mpr121Sda));
             this.RaisePropertyChanged(nameof(Mpr121Scl));
             this.RaiseAndSetIfChanged(ref _hasMpr121, value);
+            UpdateErrors();
+        }
+    }
+
+    private bool _hasAccel;
+
+    public bool HasAccel
+    {
+        get => _hasAccel;
+        set
+        {
+            _accelTwiConfig =
+                value
+                    ? Microcontroller.AssignTwiPins(this, AccelTwiType, false, -1, -1, AccelTwiFreq, false)
+                    : null;
+
+            this.RaisePropertyChanged(nameof(AccelSda));
+            this.RaisePropertyChanged(nameof(AccelScl));
+            this.RaiseAndSetIfChanged(ref _hasAccel, value);
             UpdateErrors();
         }
     }
@@ -1416,7 +1467,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 _ledSpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
                 _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
                 _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt,
-                _adaFruitHostPin
+                _adaFruitHostPin, _accelTwiConfig
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -1610,9 +1661,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         ClearOutputs();
         HasWiiOutput = false;
         HasPs2Output = false;
-        AdxlFilter = 0.05;
+        AccelFilter = 0.05;
         Mpr121CapacitiveCount = 0;
         Deque = false;
+        AccelSensorType = AccelSensorType.Adxl345;
         LedType = LedType.None;
         LedTypePeripheral = LedType.None;
         LedCount = 1;
@@ -1900,7 +1952,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define INPUT_DJ_TURNTABLE_SMOOTHING {{WriteBlob(writer, DjSmoothing)}}
                         #define WT_SENSITIVITY {{WriteBlob(writer, WtSensitivity)}}
                         #define LED_BRIGHTNESS {{WriteBlob(writer, LedBrightnessOn)}}
-                        #define LOW_PASS_ALPHA {{WriteBlob(writer, AdxlFilter)}}
+                        #define LOW_PASS_ALPHA {{WriteBlob(writer, AccelFilter)}}
                         #define DJ_NAV_BUTTONS {{WriteBlob(writer, DjNavButtons)}}
                         #define COMBINED_DEBOUNCE {{WriteBlob(writer, CombinedStrumDebounce)}}
                         """;
@@ -1937,7 +1989,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define INPUT_DJ_TURNTABLE_POLL_RATE {{DjPollRate * 1000}}
                         #define INPUT_DJ_TURNTABLE_SMOOTHING {{DjSmoothing.ToString().ToLower()}}
                         #define LED_BRIGHTNESS {{LedBrightnessOn}}
-                        #define LOW_PASS_ALPHA {{AdxlFilter.ToString(CultureInfo.GetCultureInfo("en"))}}
+                        #define LOW_PASS_ALPHA {{AccelFilter.ToString(CultureInfo.GetCultureInfo("en"))}}
                         #define DJ_NAV_BUTTONS {{DjNavButtons.ToString().ToLower()}}
                         #define COMBINED_DEBOUNCE {{CombinedStrumDebounce.ToString().ToLower()}}
                         """;
@@ -2070,6 +2122,29 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 config += $"""
 
                            #define WII_OUTPUT_TWI_PORT {_wiiOutputTwiConfig.Definition}
+                           """;
+            }
+
+            if (_accelTwiConfig != null)
+            {
+                config += $"""
+
+                           #define ACCEL_TWI_PORT {_accelTwiConfig.Definition}
+                           """;
+            }
+            
+            if (_hasAccel)
+            {
+                config += $"""
+
+                          #define ACCEL_TYPE {(int)_accelSensorType}
+                          """;
+            }
+            else
+            {
+                config += """
+                           
+                           #define ACCEL_TYPE 0
                            """;
             }
 
@@ -2441,6 +2516,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [RelayCommand]
+    public void RemoveAccel()
+    {
+        HasAccel = false;
+        Bindings.RemoveMany(Bindings.Items.Where(s => s.Input.InnermostInputs().Any(s2 => s2 is AccelInput)));
+    }
+
+    [RelayCommand]
     public void RemoveMpr121()
     {
         HasMpr121 = false;
@@ -2550,7 +2632,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 CombinedStrumDebounce = false;
                 HasWiiOutput = false;
                 HasPs2Output = false;
-                AdxlFilter = 0.05;
+                AccelFilter = 0.05;
                 Mpr121CapacitiveCount = 0;
                 WtSensitivity = 5;
                 PollRate = 0;
@@ -3882,6 +3964,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             LedErrorText = _ledSpiConfig.ErrorText;
         }
 
+        AccelErrorText = null;
+        if (_accelTwiConfig?.ErrorText != null)
+        {
+            foundError = true;
+            AccelErrorText = _accelTwiConfig.ErrorText;
+        }
+
         if (_stp16Le?.ErrorText != null)
         {
             foundError = true;
@@ -4032,7 +4121,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     public void Update(byte[] btRaw, bool peripheralConnected, bool mpr121Connected, bool max1270XConnected,
-        byte[] max1270XRaw)
+        byte[] max1270XRaw, bool accelConnected)
     {
         if (IsBluetoothTx && btRaw.Length != 0)
         {
@@ -4043,6 +4132,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         Mpr121Connected = mpr121Connected;
         Max1704XConnected = max1270XConnected;
+        AccelConnected = accelConnected;
         if (max1270XRaw.Length != 0)
         {
             Max1704XStatus = max1270XRaw[0];

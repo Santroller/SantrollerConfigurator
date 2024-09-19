@@ -3735,15 +3735,33 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string AccelSensorTypeAdxl345 {
+            get {
+                return ResourceManager.GetString("AccelSensorTypeAdxl345", resourceCulture);
+            }
+        }
+        
+        public static string AccelSensorTypeLis3dh {
+            get {
+                return ResourceManager.GetString("AccelSensorTypeLis3dh", resourceCulture);
+            }
+        }
+        
+        public static string AccelSensorTypeMpu6050 {
+            get {
+                return ResourceManager.GetString("AccelSensorTypeMpu6050", resourceCulture);
+            }
+        }
+        
         public static string InputTypeAnalogPinInput {
             get {
                 return ResourceManager.GetString("InputTypeAnalogPinInput", resourceCulture);
             }
         }
         
-        public static string InputTypeAdxlInput {
+        public static string InputTypeAccelInput {
             get {
-                return ResourceManager.GetString("InputTypeAdxlInput", resourceCulture);
+                return ResourceManager.GetString("InputTypeAccelInput", resourceCulture);
             }
         }
         
@@ -4251,33 +4269,33 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string AdxlInputTypePitch {
+        public static string AccelInputTypePitch {
             get {
-                return ResourceManager.GetString("AdxlInputTypePitch", resourceCulture);
+                return ResourceManager.GetString("AccelInputTypePitch", resourceCulture);
             }
         }
         
-        public static string AdxlInputTypeRoll {
+        public static string AccelInputTypeRoll {
             get {
-                return ResourceManager.GetString("AdxlInputTypeRoll", resourceCulture);
+                return ResourceManager.GetString("AccelInputTypeRoll", resourceCulture);
             }
         }
         
-        public static string AdxlInputTypeAccelX {
+        public static string AccelInputTypeAccelX {
             get {
-                return ResourceManager.GetString("AdxlInputTypeAccelX", resourceCulture);
+                return ResourceManager.GetString("AccelInputTypeAccelX", resourceCulture);
             }
         }
         
-        public static string AdxlInputTypeAccelY {
+        public static string AccelInputTypeAccelY {
             get {
-                return ResourceManager.GetString("AdxlInputTypeAccelY", resourceCulture);
+                return ResourceManager.GetString("AccelInputTypeAccelY", resourceCulture);
             }
         }
         
-        public static string AdxlInputTypeAccelZ {
+        public static string AccelInputTypeAccelZ {
             get {
-                return ResourceManager.GetString("AdxlInputTypeAccelZ", resourceCulture);
+                return ResourceManager.GetString("AccelInputTypeAccelZ", resourceCulture);
             }
         }
         
@@ -4776,6 +4794,12 @@ namespace GuitarConfigurator.NetCore {
         public static string RumbleMotorTypeRight {
             get {
                 return ResourceManager.GetString("RumbleMotorTypeRight", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeAccel {
+            get {
+                return ResourceManager.GetString("SimpleTypeAccel", resourceCulture);
             }
         }
         
@@ -6009,6 +6033,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string AccelerometerType {
+            get {
+                return ResourceManager.GetString("AccelerometerType", resourceCulture);
+            }
+        }
+        
         public static string TurntableSmoothingLabel {
             get {
                 return ResourceManager.GetString("TurntableSmoothingLabel", resourceCulture);
@@ -6756,6 +6786,12 @@ namespace GuitarConfigurator.NetCore {
         public static string MAX1704xSettingsLabel {
             get {
                 return ResourceManager.GetString("MAX1704xSettingsLabel", resourceCulture);
+            }
+        }
+        
+        public static string AccelerometerSettingsLabel {
+            get {
+                return ResourceManager.GetString("AccelerometerSettingsLabel", resourceCulture);
             }
         }
         

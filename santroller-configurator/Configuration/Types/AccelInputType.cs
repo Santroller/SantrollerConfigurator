@@ -1,6 +1,6 @@
 namespace GuitarConfigurator.NetCore.Configuration.Types;
 
-public enum AdxlInputType
+public enum AccelInputType
 {
     AccelX,
     AccelY,

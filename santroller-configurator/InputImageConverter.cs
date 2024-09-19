@@ -71,6 +71,7 @@ public class InputImageConverter : IMultiValueConverter
                 SimpleType.Led => "Led",
                 SimpleType.Midi => "Keyboard",
                 SimpleType.Peripheral => "Peripheral",
+                SimpleType.Accel => "Tilt",
                 SimpleType.Mpr121 => "Peripheral",
                 SimpleType.FestivalKeyboard or SimpleType.FestivalGamepad or SimpleType.FestivalLayer or SimpleType.FestivalIos => "FNF",
                 _ => null
@@ -80,6 +81,9 @@ public class InputImageConverter : IMultiValueConverter
             InputType.ConstantInput => "Combined/Constant",
             InputType.WiiInput => "Combined/Wii",
             InputType.Ps2Input => "Combined/PS2",
+            InputType.AccelInput => "Combined/Tilt",
+            AccelSensorType => "Combined/Tilt",
+            AccelInputType => "Combined/Tilt",
             InputType.TurntableInput => "Combined/DJ",
             InputType.WtNeckInput => "Combined/GHWT",
             InputType.Gh5NeckInput => "Combined/GH5",
