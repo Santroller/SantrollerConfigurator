@@ -23,6 +23,14 @@ public enum LedType
 
 public static class LedTypeMethods
 {
+    public static bool IsWs2812(this LedType type)
+    {
+        return type is LedType.Ws2812 or LedType.Ws2812W;
+    }
+    public static bool IsApa102(this LedType type)
+    {
+        return type is LedType.Apa102Rgb or LedType.Apa102Rbg or LedType.Apa102Grb or LedType.Apa102Gbr or LedType.Apa102Brg or LedType.Apa102Bgr;
+    }
     private static readonly byte[] Ws2812Bits = [0x88, 0x8C, 0xC8, 0xCC];
 
     public static byte[] GetLedBytes(this LedType type, Color color, byte brightness)

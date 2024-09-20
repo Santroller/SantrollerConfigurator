@@ -2773,12 +2773,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 ret +=
                       """
 
-                      spi_transfer(APA102_SPI_PORT, 0);
-                      spi_transfer(APA102_SPI_PORT, 0);
-                      spi_transfer(APA102_SPI_PORT, 0);
-                      spi_transfer(APA102_SPI_PORT, 0);
-                      spi_transfer(APA102_SPI_PORT, 0);
-                      spi_transfer(APA102_SPI_PORT, 0);
+                      spi_transfer(APA102_SPI_PORT, 0x88);
+                      spi_transfer(APA102_SPI_PORT, 0x88);
+                      spi_transfer(APA102_SPI_PORT, 0x88);
+                      spi_transfer(APA102_SPI_PORT, 0x88);
                       """;
             }
         }
