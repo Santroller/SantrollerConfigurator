@@ -34,11 +34,12 @@ public abstract partial class OutputAxis : Output
     protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,
-        int min, int max,
+        int min, int max, int offset,
         int deadZone, bool trigger, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
         bool childOfCombined) : base(model, input, ledOn, ledOff,
         ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
+        Offset = offset;
         Trigger = trigger;
         LedOn = ledOn;
         LedOff = ledOff;
@@ -58,8 +59,8 @@ public abstract partial class OutputAxis : Output
         _sliderMinHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MinValue : short.MinValue).ToProperty(this, x => x.SliderMin);
 
         _valueHelper = this
-            .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.DeadZone, x => x.Trigger,
-                x => x.Model.DeviceControllerType).Select(Calculate).ToProperty(this, x => x.Value);
+            .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.Offset, x => x.DeadZone, x => x.Trigger,
+                x => x.Model.DeviceControllerType, Calculate).ToProperty(this, x => x.Value);
         _valueLowerHelper = this.WhenAnyValue(x => x.Value).Select(s => s < 0 ? -s : 0).ToProperty(this, x => x.ValueLower);
         _valueUpperHelper = this.WhenAnyValue(x => x.Value).Select(s => s > 0 ? s : 0).ToProperty(this, x => x.ValueUpper);
         _computedDeadZoneMarginHelper = this
@@ -102,6 +103,8 @@ public abstract partial class OutputAxis : Output
     [Reactive] private int _max;
 
     [Reactive] private int _deadZone;
+
+    [Reactive] private int _offset;
 
 
     public bool Trigger { get; }
@@ -217,39 +220,41 @@ public abstract partial class OutputAxis : Output
         this.RaisePropertyChanged(nameof(CalibrationStatus));
     }
 
-    protected virtual int Calculate(
-        (bool enabled, int value, int min, int max, int deadZone, bool trigger, DeviceControllerType
-            deviceControllerType) values)
+    protected virtual int Calculate(bool enabled, int value, int min, int max, int offset, int deadZone, bool trigger, DeviceControllerType
+            deviceControllerType)
     {
-        if (!values.enabled) return 0;
-        double val = values.value;
+        if (!enabled) return 0;
+        float fmin = min;
+        float fmax = max;
+        double val = value;
+        
+        if (this is ControllerAxis)
+        {
+            val += offset;
+        }
 
-        var min = (float) values.min;
-        var max = (float) values.max;
-        var deadZone = (float) values.deadZone;
-        var trigger = values.trigger;
-        var inverted = min > max;
+        var inverted = fmin > fmax;
         if (trigger)
         {
             // Trigger is uint, so if the input is not, shove it forward to put it into the right range
             if (!InputIsUint)
             {
                 val += short.MaxValue;
-                min += short.MaxValue;
-                max += short.MaxValue;
+                fmin += short.MaxValue;
+                fmax += short.MaxValue;
             }
 
             if (inverted)
             {
-                min -= deadZone;
-                if (val > min) return 0;
-                if (val < max) val = max;
+                fmin -= deadZone;
+                if (val > fmin) return 0;
+                if (val < fmax) val = fmax;
             }
             else
             {
-                min += deadZone;
-                if (val < min) return 0;
-                if (val > max) val = max;
+                fmin += deadZone;
+                if (val < fmin) return 0;
+                if (val > fmax) val = fmax;
             }
         }
         else
@@ -258,38 +263,39 @@ public abstract partial class OutputAxis : Output
             if (InputIsUint)
             {
                 val -= short.MaxValue;
-                max -= short.MaxValue;
-                min -= short.MaxValue;
+                fmax -= short.MaxValue;
+                fmin -= short.MaxValue;
             }
 
-            var deadZoneCalc = val - (max + min) / 2;
+            var deadZoneCalc = val - (fmax + fmin) / 2;
             if (deadZoneCalc < deadZone && deadZoneCalc > -deadZone) return 0;
 
             val -= Math.Sign(val) * deadZone;
-            if (max > min)
+            if (fmax > fmin)
             {
-                min += deadZone;
-                max -= deadZone;
+                fmin += deadZone;
+                fmax -= deadZone;
             }
             else
             {
-                min -= deadZone;
-                max += deadZone;
+                fmin -= deadZone;
+                fmax += deadZone;
             }
         }
 
         if (trigger)
         {
-            val = (val - min) / (max - min) * ushort.MaxValue;
+            val = (val - fmin) / (fmax - fmin) * ushort.MaxValue;
             if (val > ushort.MaxValue) val = ushort.MaxValue;
             if (val < 0) val = 0;
         }
         else
         {
-            val = (val - min) / (max - min) * (short.MaxValue - short.MinValue) + short.MinValue;
+            val = (val - fmin) / (fmax - fmin) * (short.MaxValue - short.MinValue) + short.MinValue;
             if (val > short.MaxValue) val = short.MaxValue;
             if (val < short.MinValue) val = short.MinValue;
         }
+        
 
         return (int) val;
     }
@@ -509,16 +515,22 @@ public abstract partial class OutputAxis : Output
         {
             return singleByte ? $"({generated}) >> 8" : generated;
         }
+
+        var offset = Offset;
+        if (this is not ControllerAxis)
+        {
+            offset = 0;
+        }
         
         var mulInt = (short) (multiplier * 512);
         if (writer == null)
             return intBased
-                ? $"{function}({prev}, {generated}, {(max + min) / 2}, {min}, {mulInt}, {DeadZone})"
-                : $"{function}({prev}, {generated}, {min}, {mulInt}, {DeadZone})";
+                ? $"{function}({prev}, ({generated})+({offset}), {(max + min) / 2}, {min}, {mulInt}, {DeadZone})"
+                : $"{function}({prev}, ({generated})+({offset}), {min}, {mulInt}, {DeadZone})";
 
         return intBased
-            ? $"{function}({prev}, {generated}, {WriteBlob(writer, (max + min) / 2)}, {WriteBlob(writer, min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, DeadZone)})"
-            : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) DeadZone)})";
+            ? $"{function}({prev}, ({generated})+({WriteBlob(writer, offset)}), {WriteBlob(writer, (max + min) / 2)}, {WriteBlob(writer, min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, DeadZone)})"
+            : $"{function}({prev}, ({generated})+({WriteBlob(writer, offset)}), {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) DeadZone)})";
     }
 
 

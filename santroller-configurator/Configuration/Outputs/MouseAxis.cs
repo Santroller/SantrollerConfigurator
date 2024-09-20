@@ -13,7 +13,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 public class MouseAxis : OutputAxis
 {
     public MouseAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min,
-        int max, int deadZone, MouseAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max,
+        int max, int deadZone, MouseAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max,0,
         deadZone, false, outputEnabled, outputInverted, outputPeripheral, outputPin, false)
     {
         Type = type;

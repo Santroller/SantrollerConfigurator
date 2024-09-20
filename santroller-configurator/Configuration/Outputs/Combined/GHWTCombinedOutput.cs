@@ -242,7 +242,7 @@ public partial class GhwtCombinedOutput : CombinedOutput
                 new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,0,
                 ushort.MaxValue, StandardAxisType.LeftStickX, false, false ,false, -1, true));
         }
         else

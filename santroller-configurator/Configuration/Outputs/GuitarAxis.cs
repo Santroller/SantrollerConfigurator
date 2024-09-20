@@ -82,7 +82,7 @@ public partial class GuitarAxis : OutputAxis
         GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model,
         input, ledOn,
-        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, deadZone,
+        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, 0,deadZone,
         type is GuitarAxisType.Slider or GuitarAxisType.Whammy, outputEnabled, outputInverted, outputPeripheral,
         outputPin, childOfCombined)
     {
@@ -99,7 +99,7 @@ public partial class GuitarAxis : OutputAxis
         GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model,
         input, ledOn,
-        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, deadZone,
+        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max,0, deadZone,
         true, outputEnabled, outputInverted, outputPeripheral,
         outputPin, childOfCombined)
     {
@@ -141,14 +141,13 @@ public partial class GuitarAxis : OutputAxis
         }
     }
 
-    protected override int Calculate(
-        (bool enabled, int value, int min, int max, int deadZone, bool trigger, DeviceControllerType
-            deviceControllerType) values)
+    protected override int Calculate(bool enabled, int value, int min, int max, int offset, int deadZone, bool trigger, DeviceControllerType
+        deviceControllerType)
     {
         return Type switch
         {
-            GuitarAxisType.Slider or GuitarAxisType.Pickup => values.value,
-            _ => base.Calculate(values)
+            GuitarAxisType.Slider or GuitarAxisType.Pickup => value,
+            _ => base.Calculate(enabled, value, min, max, offset, deadZone, trigger, deviceControllerType)
         };
     }
 

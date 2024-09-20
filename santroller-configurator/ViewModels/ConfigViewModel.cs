@@ -1612,7 +1612,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                         ushort.MinValue,
                         ushort.MaxValue,
-                        0, ushort.MaxValue, axisType, false, false, false, -1, false));
+                        0,0, ushort.MaxValue, axisType, false, false, false, -1, false));
                     break;
                 case GuitarAxisType.Slider:
                     break;
@@ -1813,7 +1813,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                 isTrigger ? ushort.MinValue : short.MinValue,
-                isTrigger ? ushort.MaxValue : short.MaxValue, 0,
+                isTrigger ? ushort.MaxValue : short.MaxValue, 0,0,
                 ushort.MaxValue, type, false, false, false, -1, false));
         }
 

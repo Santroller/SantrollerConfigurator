@@ -12,13 +12,14 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedControllerAxis : SerializedOutput
 {
     public SerializedControllerAxis(SerializedInput input, StandardAxisType type, Color ledOn, Color ledOff,
-        byte[] ledIndex, byte[] ledIndexPeripheral, int min, int max, int deadzone, int threshold, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
+        byte[] ledIndex, byte[] ledIndexPeripheral, int min, int max, int offset, int deadzone, int threshold, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
         LedOff = ledOff.ToUInt32();
         Min = min;
         Max = max;
+        Offset = offset;
         Deadzone = deadzone;
         Type = type;
         LedIndex = ledIndex;
@@ -48,12 +49,14 @@ public class SerializedControllerAxis : SerializedOutput
     [ProtoMember(14)] public bool OutputInverted { get; }
     [ProtoMember(15)] public bool OutputPeripheral { get; }
     [ProtoMember(16)] public byte[] LedIndexMpr121 { get; }
+    [ProtoMember(17)] public int Offset { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var input = Input.Generate(model);
         var output = new ControllerAxis(model, input, Color.FromUInt32(LedOn), Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Min,
             Max,
+            Offset,
             Deadzone,
             Threshold,
             Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);

@@ -16,7 +16,8 @@ public partial class DjAxis : OutputAxis
     public DjAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max,
         int deadZone, DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
-        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max,
+        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
+        min, max, 0,
         deadZone,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
@@ -29,7 +30,7 @@ public partial class DjAxis : OutputAxis
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int multiplier, int ledMultiplier,
         DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, 0,
-        0,
+        0, 0,
         0,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
@@ -53,19 +54,19 @@ public partial class DjAxis : OutputAxis
 
     [Reactive] private bool _invert;
 
-    protected override int Calculate(
-        (bool enabled, int value, int min, int max, int deadZone, bool trigger, DeviceControllerType
-            deviceControllerType) values)
+    protected override int Calculate(bool enabled, int value, int min, int max, int offset, int deadZone, bool trigger,
+        DeviceControllerType
+            deviceControllerType)
     {
         return Type switch
         {
-            DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity when Input.IsUint => (values.value -
+            DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity when Input.IsUint => (value -
                 short.MaxValue) * Multiplier,
-            DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity => values.value * Multiplier,
+            DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity => value * Multiplier,
 
-            DjAxisType.EffectsKnob when Input.IsUint => (values.value - short.MaxValue) * (Invert ? -1 : 1),
-            DjAxisType.EffectsKnob => values.value * (Invert ? -1 : 1),
-            _ => base.Calculate(values)
+            DjAxisType.EffectsKnob when Input.IsUint => (value - short.MaxValue) * (Invert ? -1 : 1),
+            DjAxisType.EffectsKnob => value * (Invert ? -1 : 1),
+            _ => base.Calculate(enabled, value, min, max, offset, deadZone, trigger, deviceControllerType)
         };
     }
 
@@ -131,19 +132,22 @@ public partial class DjAxis : OutputAxis
         if (IsVelocity)
         {
             return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
-                LedIndicesPeripheral.ToArray(), Multiplier, LedMultiplier, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
+                LedIndicesPeripheral.ToArray(), Multiplier, LedMultiplier, OutputEnabled, OutputPin, OutputInverted,
+                PeripheralOutput,
                 ChildOfCombined, LedIndicesMpr121.ToArray());
         }
 
         if (IsEffectsKnob)
         {
             return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
-                LedIndicesPeripheral.ToArray(), Invert ? -1 : 1, LedMultiplier, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
+                LedIndicesPeripheral.ToArray(), Invert ? -1 : 1, LedMultiplier, OutputEnabled, OutputPin,
+                OutputInverted, PeripheralOutput,
                 ChildOfCombined, LedIndicesMpr121.ToArray());
         }
 
         return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
-            LedIndicesPeripheral.ToArray(), Min, Max, DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
+            LedIndicesPeripheral.ToArray(), Min, Max, DeadZone, OutputEnabled, OutputPin, OutputInverted,
+            PeripheralOutput,
             ChildOfCombined, LedIndicesMpr121.ToArray());
     }
 
@@ -158,7 +162,8 @@ public partial class DjAxis : OutputAxis
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         if (mode == ConfigField.Shared)
-            return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
+            return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+                macros,
                 writer);
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Xbox)) return "";

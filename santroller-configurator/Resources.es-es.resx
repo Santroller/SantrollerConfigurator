@@ -3115,6 +3115,9 @@
     <data name="DeadzoneLabel" xml:space="preserve">
         <value>Zona Muerta</value>
     </data>
+    <data name="OffsetLabel" xml:space="preserve">
+        <value>Compensación</value>
+    </data>
     <data name="CurrentFretsLabel" xml:space="preserve">
         <value>Trastes Actuales</value>
     </data>

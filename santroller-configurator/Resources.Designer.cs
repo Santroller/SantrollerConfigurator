@@ -6165,6 +6165,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string OffsetLabel {
+            get {
+                return ResourceManager.GetString("OffsetLabel", resourceCulture);
+            }
+        }
+        
         public static string CurrentFretsLabel {
             get {
                 return ResourceManager.GetString("CurrentFretsLabel", resourceCulture);

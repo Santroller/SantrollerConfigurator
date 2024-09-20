@@ -89,7 +89,7 @@ public partial class CloneCombinedOutput : CombinedTwiOutput
         Outputs.Add(new ControllerAxis(Model,
             new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, combined: true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0, ushort.MaxValue,StandardAxisType.RightStickY, false, false ,false, -1, true));
+            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,0, ushort.MaxValue,StandardAxisType.RightStickY, false, false ,false, -1, true));
         UpdateBindings();
     }
 
@@ -209,7 +209,7 @@ public partial class CloneCombinedOutput : CombinedTwiOutput
                 new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,0,
                 ushort.MaxValue, StandardAxisType.LeftStickX, false, false ,false, -1, true));
         }
         else
