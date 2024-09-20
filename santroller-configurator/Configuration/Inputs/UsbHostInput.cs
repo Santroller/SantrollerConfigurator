@@ -224,7 +224,6 @@ public partial class UsbHostInput : Input
             ConnectedDevices = usbHostRaw.Length / 2;
             UsbHostInfo = buffer.Trim();
         }
-
         if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;
         var inputs = StructTools.RawDeserialize<UsbHostInputs>(usbHostInputsRaw, 0);
         RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType, ProKeyType);
@@ -339,8 +338,8 @@ public partial class UsbHostInput : Input
         private readonly sbyte scrollY;
         private readonly sbyte scrollX;
         private readonly UInt32 proKeys;
-        private readonly sbyte pedal;
-        private readonly sbyte touchPad;
+        private readonly byte pedal;
+        private readonly byte touchPad;
 
         public int RawValue(UsbHostInputType inputType, Key key, MouseAxisType mouseAxisType,
             MouseButtonType mouseButtonType, ProKeyType proKeyType)
