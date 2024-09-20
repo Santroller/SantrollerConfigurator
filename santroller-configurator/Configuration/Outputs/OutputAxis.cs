@@ -353,69 +353,56 @@ public abstract partial class OutputAxis : Output
             case ConfigField.Shared or ConfigField.Universal or ConfigField.XboxOne or ConfigField.Wii when whammy:
                 singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
-                if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.XboxOne when trigger:
                 function = "handle_calibration_xbox_one_trigger";
-                if (ShouldFlip(mode)) function = "UINT16_MAX -" + function;
                 break;
             case ConfigField.XboxOne when forceAccel:
                 singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
-                if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.XboxOne:
                 intBased = true;
                 function = "handle_calibration_xbox";
-                if (ShouldFlip(mode)) function = "-" + function;
                 break;
             case ConfigField.Xbox360 or ConfigField.Xbox when whammy:
                 function = "handle_calibration_xbox_whammy";
-                if (ShouldFlip(mode)) function = "-" + function;
                 break;
             case ConfigField.Xbox360 or ConfigField.Xbox when trigger:
                 singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
-                if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Xbox360 or ConfigField.Xbox:
                 intBased = true;
                 function = "handle_calibration_xbox";
-                if (ShouldFlip(mode)) function = "-" + function;
                 break;
             case ConfigField.Mouse:
                 intBased = true;
                 function = "handle_calibration_mouse";
-                if (ShouldFlip(mode)) function = "-" + function;
                 break;
             // For LED stuff (Shared), we can use the standard handle_calibration_ps3 instead.
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture when forceAccel:
                 intBased = true;
                 function = "handle_calibration_ps3_accel";
-                if (ShouldFlip(mode)) function = "-" + function;
                 break;
             case ConfigField.Ps2 when whammy:
                 function = "-handle_calibration_ps3_whammy";
                 singleByte = true;
-                if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Wii when whammy:
                 function = "handle_calibration_ps3_whammy";
                 singleByte = true;
-                if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
                 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2 when trigger:
                 singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
-                if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
                 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2:
                 singleByte = true;
                 intBased = true;
                 function = "handle_calibration_ps3";
-                if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
                 break;
             default:
                 return "";
@@ -424,14 +411,12 @@ public abstract partial class OutputAxis : Output
         if (drum)
         {
             function = "handle_calibration_drum";
-            if (ShouldFlip(mode)) function = "UINT16_MAX -" + function;
         }
 
         if (this is PianoKey)
         {
             singleByte = true;
             function = "handle_calibration_ps3_360_trigger";
-            if (ShouldFlip(mode)) function = "UINT8_MAX -" + function;
         }
 
         var min = Min;
@@ -513,6 +498,11 @@ public abstract partial class OutputAxis : Output
                 true when InputIsUint => ") - INT16_MAX",
                 _ => ")"
             };
+        }
+        
+        if (ShouldFlip(mode))
+        {
+            generated = intBased ? $"(-({generated}))" : $"(UINT16_MAX-({generated}))";
         }
 
         if (Input is FixedInput)
