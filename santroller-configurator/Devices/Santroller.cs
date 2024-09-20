@@ -160,6 +160,7 @@ public class Santroller : ConfigurableUsbDevice
     private async Task Tick()
     {
         if (_model == null || _bindings == null) return;
+        _running = true;
         while (UsbDevice.IsOpen && !_model.Main.Working && _running)
         {
 
