@@ -2048,8 +2048,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define DIGITAL_COUNT {{debounces.Item1}}
                         #define LED_DEBOUNCE_COUNT {{debounces.Item2}}
                         #define HAS_LED_OUTPUT {{Bindings.Items.SelectMany(s => s.Outputs.Items).Any(s => s.OutputEnabled).ToString().ToLower()}}
-                        #define LED_COUNT {{(LedType is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812) ? LedCount : 0)}}
-                        #define LED_COUNT_PERIPHERAL {{(LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812) ? LedCountPeripheral : 0)}}
+                        #define LED_COUNT {{(LedType is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812 or LedType.Ws2812W) ? LedCount : 0)}}
+                        #define LED_COUNT_PERIPHERAL {{(LedTypePeripheral is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812 or LedType.Ws2812W) ? LedCountPeripheral : 0)}}
                         #define LED_COUNT_STP {{(LedType is LedType.Stp16Cpc26 ? LedCount : 0)}}
                         #define LED_COUNT_PERIPHERAL_STP {{(LedTypePeripheral is LedType.Stp16Cpc26 ? LedCountPeripheral : 0)}}
                         #define LED_COUNT_WS2812 {{(LedType is LedType.Ws2812 ? LedCount : 0)}}
