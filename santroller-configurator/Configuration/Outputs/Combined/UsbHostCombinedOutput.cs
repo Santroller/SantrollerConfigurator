@@ -238,6 +238,14 @@ public partial class UsbHostCombinedOutput : CombinedOutput
         {
             valid.UnionWith(Enum.GetValues<DjInputType>().Cast<object>());
         }
+        if (Model.DeviceControllerType == DeviceControllerType.ProKeys)
+        {
+            foreach (var proKeyType in ProKeyTypes)
+            {
+                Outputs.Add(new PianoKey(Model, new UsbHostInput(proKeyType, Model, true), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
+                    proKeyType, 1,  false, false ,false, -1, true));
+            }
+        }
         LoadMatchingFromDict(valid, Mappings);
         switch (Model.DeviceControllerType)
         {

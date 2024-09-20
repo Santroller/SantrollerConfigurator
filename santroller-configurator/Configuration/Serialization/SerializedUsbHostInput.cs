@@ -10,13 +10,14 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedUsbHostInput : SerializedInput
 {
     public SerializedUsbHostInput(UsbHostInputType type, Key key, MouseButtonType mouseButtonType,
-        MouseAxisType mouseAxisType, bool combined)
+        MouseAxisType mouseAxisType, ProKeyType proKeyType, bool combined)
     {
         Type = type;
         Combined = combined;
         Key = key;
         MouseButtonType = mouseButtonType;
         MouseAxisType = mouseAxisType;
+        ProKeyType = proKeyType;
     }
 
     [ProtoMember(3)] private UsbHostInputType Type { get; }
@@ -24,6 +25,7 @@ public class SerializedUsbHostInput : SerializedInput
     [ProtoMember(5)] private Key Key { get; }
     [ProtoMember(6)] private MouseButtonType MouseButtonType { get; }
     [ProtoMember(7)] private MouseAxisType MouseAxisType { get; }
+    [ProtoMember(8)] private ProKeyType ProKeyType { get; }
 
     public override Input Generate(ConfigViewModel model)
     {
@@ -32,6 +34,7 @@ public class SerializedUsbHostInput : SerializedInput
             UsbHostInputType.KeyboardInput => new UsbHostInput(Key, model, Combined),
             UsbHostInputType.MouseAxis => new UsbHostInput(MouseAxisType, model, Combined),
             UsbHostInputType.MouseButton => new UsbHostInput(MouseButtonType, model, Combined),
+            UsbHostInputType.ProKey => new UsbHostInput(ProKeyType, model, Combined),
             _ => new UsbHostInput(Type, model, Combined)
         };
     }

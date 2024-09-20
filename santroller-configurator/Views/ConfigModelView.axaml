@@ -4219,9 +4219,7 @@
                                                       ItemsSource="{Binding MidiTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                         </StackPanel>
-                                        <ContentControl ContentTemplate="{StaticResource OutputTemplate}"
-                                                        Content="{Binding}" />
-
+                                        
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsMidiNote}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
@@ -4275,6 +4273,19 @@
                                                     IsEnabled="{Binding ConfigurableInput}"
                                                     Content="{Binding ButtonTextUsbHostKey}" />
                                         </StackPanel>
+                                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostProKey}">
+                                            <Label VerticalAlignment="Center"
+                                                   VerticalContentAlignment="Center"
+                                                   Width="300"
+                                                   Content="{x:Static netCore:Resources.InputLabel}" />
+                                            <ComboBox VerticalAlignment="Center"
+                                                      SelectedItem="{Binding UsbHostKeyProKeyType}"
+                                                      ItemsSource="{Binding ProKeyTypes}"
+                                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                                        </StackPanel>
+                                        <ContentControl ContentTemplate="{StaticResource OutputTemplate}"
+                                                        Content="{Binding}" />
+
                                         <ItemsControl IsVisible="{Binding IsCombined}"
                                                       HorizontalAlignment="Stretch"
                                                       IsEnabled="{Binding IsCombined}"

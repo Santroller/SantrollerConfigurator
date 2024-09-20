@@ -860,6 +860,9 @@
     <data name="StandardButtonTypeRightThumbClick" xml:space="preserve">
         <value>Right Stick Click</value>
     </data>
+    <data name="UsbHostInputTypeProKey" xml:space="preserve">
+        <value>Pro Keys</value>
+    </data>
     <data name="UsbHostInputTypeX" xml:space="preserve">
         <value>X Button</value>
     </data>

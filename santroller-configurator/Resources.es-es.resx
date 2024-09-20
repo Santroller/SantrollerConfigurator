@@ -3670,6 +3670,9 @@
     <data name="DeviceControllerTypeProKeys" xml:space="preserve">
         <value>Teclado Pro</value>
     </data>
+    <data name="UsbHostInputTypeProKey" xml:space="preserve">
+        <value>Teclado Pro</value>
+    </data>
     <data name="InputTypeMidiInput" xml:space="preserve">
         <value>Entrada MIDI</value>
     </data>

@@ -1719,6 +1719,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string UsbHostInputTypeProKey {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeProKey", resourceCulture);
+            }
+        }
+        
         public static string UsbHostInputTypeX {
             get {
                 return ResourceManager.GetString("UsbHostInputTypeX", resourceCulture);

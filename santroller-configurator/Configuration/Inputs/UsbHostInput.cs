@@ -37,6 +37,7 @@ public partial class UsbHostInput : Input
         MouseAxisType = MouseAxisType.X;
         Combined = combined;
         Input = UsbHostInputType.KeyboardInput;
+        ProKeyType = ProKeyType.Key1;
         _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
         _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
         IsAnalog = false;
@@ -49,6 +50,7 @@ public partial class UsbHostInput : Input
         MouseAxisType = MouseAxisType.X;
         Combined = combined;
         Input = UsbHostInputType.MouseButton;
+        ProKeyType = ProKeyType.Key1;
         _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
         _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
         IsAnalog = false;
@@ -60,10 +62,23 @@ public partial class UsbHostInput : Input
         MouseButtonType = MouseButtonType.Left;
         MouseAxisType = mouseAxisType;
         Input = UsbHostInputType.MouseAxis;
+        ProKeyType = ProKeyType.Key1;
         Combined = combined;
         _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
         _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
         IsAnalog = true;
+    }
+    public UsbHostInput(ProKeyType proKeyType, ConfigViewModel model, bool combined = false) : base(model)
+    {
+        Key = Key.A;
+        MouseButtonType = MouseButtonType.Left;
+        MouseAxisType = MouseAxisType.X;
+        ProKeyType = proKeyType;
+        Input = UsbHostInputType.ProKey;
+        Combined = combined;
+        _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
+        _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
+        IsAnalog = proKeyType is ProKeyType.Pedal or ProKeyType.TouchPad;
     }
 
     public bool Combined { get; }
@@ -77,6 +92,8 @@ public partial class UsbHostInput : Input
     public MouseAxisType MouseAxisType { get; }
 
     public MouseButtonType MouseButtonType { get; }
+
+    public ProKeyType ProKeyType { get; }
 
     public override bool IsUint => Input is not (UsbHostInputType.LeftStickX or UsbHostInputType.LeftStickY
         or UsbHostInputType.RightStickX or UsbHostInputType.RightStickY or UsbHostInputType.Crossfader
@@ -93,6 +110,7 @@ public partial class UsbHostInput : Input
             UsbHostInputType.KeyboardInput => EnumToStringConverter.Convert(Key),
             UsbHostInputType.MouseAxis => EnumToStringConverter.Convert(MouseAxisType),
             UsbHostInputType.MouseButton => EnumToStringConverter.Convert(MouseButtonType),
+            UsbHostInputType.ProKey => EnumToStringConverter.Convert(ProKeyType),
             _ => EnumToStringConverter.Convert(Input)
         };
 
@@ -142,7 +160,7 @@ public partial class UsbHostInput : Input
 
     public override SerializedInput Serialise()
     {
-        return new SerializedUsbHostInput(Input, Key, MouseButtonType, MouseAxisType, Combined);
+        return new SerializedUsbHostInput(Input, Key, MouseButtonType, MouseAxisType, ProKeyType, Combined);
     }
 
     public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw,
@@ -209,7 +227,7 @@ public partial class UsbHostInput : Input
 
         if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;
         var inputs = StructTools.RawDeserialize<UsbHostInputs>(usbHostInputsRaw, 0);
-        RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType);
+        RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType, ProKeyType);
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings, ConfigField mode)
@@ -320,9 +338,12 @@ public partial class UsbHostInput : Input
         private readonly sbyte mouseY;
         private readonly sbyte scrollY;
         private readonly sbyte scrollX;
+        private readonly UInt32 proKeys;
+        private readonly sbyte pedal;
+        private readonly sbyte touchPad;
 
         public int RawValue(UsbHostInputType inputType, Key key, MouseAxisType mouseAxisType,
-            MouseButtonType mouseButtonType)
+            MouseButtonType mouseButtonType, ProKeyType proKeyType)
         {
             var val = inputType switch
             {
@@ -370,8 +391,15 @@ public partial class UsbHostInput : Input
                 UsbHostInputType.GenericAxisRy => genericRY,
                 UsbHostInputType.GenericAxisRz => genericRZ,
                 UsbHostInputType.GenericAxisSlider => genericSlider,
+                UsbHostInputType.ProKey when proKeyType is ProKeyType.Pedal => pedal,
+                UsbHostInputType.ProKey when proKeyType is ProKeyType.TouchPad => touchPad,
+                UsbHostInputType.ProKey => (proKeys &
+                                            ((uint) 1 <<
+                                             (int) proKeyType)) != 0
+                    ? 1
+                    : 0,
                 UsbHostInputType.KeyboardInput when key is Key.LeftAlt or Key.LeftCtrl or Key.LeftShift or Key.RightAlt
-                    or Key.RightShift
+                    or Key.RightCtrl
                     or Key.RightShift => (keys &
                                           ((UInt128) 1 <<
                                            KeyboardButton.Keys.IndexOf(key))) != 0
