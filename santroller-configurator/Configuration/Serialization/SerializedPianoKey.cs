@@ -11,9 +11,10 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract(SkipConstructor = true)]
 public class SerializedPianoKey : SerializedOutput
 {
-    public SerializedPianoKey(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
+    public SerializedPianoKey(SerializedInput input, int threshold, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         ProKeyType type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
+        Threshold = threshold;
         Input = input;
         LedOn = ledOn.ToUInt32();
         LedOff = ledOff.ToUInt32();
@@ -41,11 +42,13 @@ public class SerializedPianoKey : SerializedOutput
     [ProtoMember(13)] public bool OutputPeripheral { get; }
     
     [ProtoMember(14)] public byte[] LedIndexMpr121 { get; }
+    
+    [ProtoMember(15)] public int Threshold { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new PianoKey(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(),  Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(),  Type, Threshold,OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;
     }

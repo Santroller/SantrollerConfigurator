@@ -123,7 +123,7 @@ public class MidiCombinedOutput : CombinedOutput
         var outputs = Outputs.Items.OfType<PianoKey>().Where(s => s.Key is not (ProKeyType.Pedal or ProKeyType.TouchPad or ProKeyType.Overdrive)).Select(s => new PianoKey(Model,
             new MidiInput(MidiType.Note, FirstNote + (int) s.Key, Model), s.LedOn,
             s.LedOff, s.LedIndices.ToArray(), s.LedIndicesPeripheral.ToArray(), s.LedIndicesMpr121.ToArray(), s.Key,
-            s.OutputEnabled, false,
+            0,s.OutputEnabled, false,
             s.OutputInverted, s.OutputPin, true) {Expanded = s.Expanded}).ToList();
         Outputs.Clear();
         Outputs.AddRange(outputs);
@@ -159,22 +159,22 @@ public class MidiCombinedOutput : CombinedOutput
                     {
                         case ProKeyType.Overdrive:
                             Outputs.Add(new PianoKey(Model, new MidiInput(MidiType.ModWheel, 0, Model), Colors.Black,
-                                Colors.Black, [], [], [], key, false, false, 
+                                Colors.Black, [], [], [], key, ushort.MaxValue/2,false, false, 
                                 false, -1, true));
                             break;
                         case ProKeyType.TouchPad:
                             Outputs.Add(new PianoKey(Model, new MidiInput(MidiType.PitchWheel, 0, Model), Colors.Black,
-                                Colors.Black, [], [], [], key, false, false, 
+                                Colors.Black, [], [], [], key, 0,false, false, 
                                 false, -1, true));
                             break;
                         case ProKeyType.Pedal:
                             Outputs.Add(new PianoKey(Model, new MidiInput(MidiType.SustainPedal, 0, Model), Colors.Black,
-                                Colors.Black, [], [], [], key, false, false, 
+                                Colors.Black, [], [], [], key, ushort.MaxValue/2,false, false, 
                                 false, -1, true));
                             break;
                         default:
                             Outputs.Add(new PianoKey(Model, new MidiInput(MidiType.Note, FirstNote+(int)key, Model), Colors.Black,
-                                Colors.Black, [], [], [], key, false, false, 
+                                Colors.Black, [], [], [], key, 0,false, false, 
                                 false, -1, true));
                             break;
                     }

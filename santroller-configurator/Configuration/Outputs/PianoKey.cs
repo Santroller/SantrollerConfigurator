@@ -9,23 +9,33 @@ using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
+using ReactiveUI;
+using ReactiveUI.SourceGenerators;
+using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
-public class PianoKey : OutputAxis
+public partial class PianoKey : OutputAxis
 {
     public readonly ProKeyType Key;
+    [Reactive] private int _threshold;
 
     public PianoKey(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
-        byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, ProKeyType key, bool outputEnabled, bool outputPeripheral,
+        byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, ProKeyType key, int threshold, bool outputEnabled, bool outputPeripheral,
         bool outputInverted,
         int outputPin, bool childOfCombined) : base(model, input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
         0, ushort.MaxValue, 0, 0, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
+        Threshold = threshold;
         Key = key;
         UpdateDetails();
+        _hasThresholdHelper =
+            this.WhenAnyValue(x => x.Key, x => x.IsDigitalToAnalog, (pianoKey, dta) => !dta && pianoKey is ProKeyType.Overdrive or ProKeyType.Pedal)
+                .ToProperty(this, x => x.HasThreshold);
     }
+
+    [ObservableAsProperty] private bool _hasThreshold;
 
     public override string LedOnLabel => Resources.LedColourActiveButtonColour;
     public override string LedOffLabel => Resources.LedColourInactiveButtonColour;
@@ -97,15 +107,26 @@ public class PianoKey : OutputAxis
                                                     report->touchPad = {{GenerateAssignment("report->touchPad", mode, false, false, false, false, writer)}};
                                                 }
                                                 """,
-                ProKeyType.Overdrive => $$"""
-                                          if ({{Input.Generate(writer)}}) {
+                ProKeyType.Overdrive when writer != null => $$"""
+                                          if ({{Input.Generate(writer)}} > ({{WriteBlob(writer, Threshold)}})) {
                                               {{output}} = true;
                                           }
                                           """,
+                ProKeyType.Overdrive => $$"""
+                                          if ({{Input.Generate(writer)}} > {{Threshold}}) {
+                                              {{output}} = true;
+                                          }
+                                          """,
+                ProKeyType.Pedal when writer != null => $$"""
+                                                          if ({{Input.Generate(writer)}}) {
+                                                              report->pedalAnalog = {{GenerateAssignment("report->pedalAnalog", mode, false, false, false, false, writer)}};
+                                                              report->pedalDigital = {{Input.Generate(writer)}} > ({{WriteBlob(writer, Threshold)}});
+                                                          }
+                                                          """,
                 ProKeyType.Pedal => $$"""
                                       if ({{Input.Generate(writer)}}) {
                                           report->pedalAnalog = {{GenerateAssignment("report->pedalAnalog", mode, false, false, false, false, writer)}};
-                                          report->pedalDigital = true;
+                                          report->pedalDigital = {{Input.Generate(writer)}} > {{Threshold}};
                                       }
                                       """,
                 _ => $$"""
@@ -146,7 +167,7 @@ public class PianoKey : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedPianoKey(Input!.Serialise(), LedOn, LedOff, LedIndices.ToArray(),
+        return new SerializedPianoKey(Input!.Serialise(), Threshold, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Key, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
             ChildOfCombined, LedIndicesMpr121.ToArray());
     }
