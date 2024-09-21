@@ -506,7 +506,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         if (config.IsBluetooth) environment = "picow";
         if (DeviceInputType is DeviceInputType.Peripheral)
         {
-            environment = "pico_slave";
+            environment += "_slave";
         }
 
         if (config.Device is not (Ardwiino or Santroller))
