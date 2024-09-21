@@ -31,6 +31,9 @@ public abstract partial class OutputAxis : Output
 
     private OutputAxisCalibrationState _calibrationState = OutputAxisCalibrationState.None;
 
+
+    public static double OffsetMin => short.MinValue;
+    public static double OffsetMax => short.MaxValue;
     protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,

@@ -1,20 +1,24 @@
 using System;
 using System.Linq;
+using System.Reactive.Linq;
 using Avalonia.Media;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
+using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public partial class ControllerAxis : OutputAxis
 {
-
-    public ControllerAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min,
+    public ControllerAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+        byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min,
         int max, int offset,
-        int deadZone, int threshold, StandardAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min,
+        int deadZone, int threshold, StandardAxisType type, bool outputEnabled, bool outputPeripheral,
+        bool outputInverted, int outputPin, bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices,
+        ledIndicesPeripheral, ledIndicesMpr121, min,
         max,
         offset, deadZone, IsTrigger(type), outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
@@ -90,7 +94,8 @@ public partial class ControllerAxis : OutputAxis
 
     public override string GenerateOutput(ConfigField mode)
     {
-        return mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.XboxOne or ConfigField.Xbox360 or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii or ConfigField.Ps2)
+        return mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.XboxOne
+            or ConfigField.Xbox360 or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii or ConfigField.Ps2)
             ? ""
             : GetReportField(Type);
     }
@@ -134,7 +139,8 @@ public partial class ControllerAxis : OutputAxis
     public override bool ShouldFlip(ConfigField mode)
     {
         // Need to flip y axis on PS3/4
-        return mode is ConfigField.Ps4 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture && Type is StandardAxisType.LeftStickY or StandardAxisType.RightStickY;
+        return mode is ConfigField.Ps4 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture &&
+               Type is StandardAxisType.LeftStickY or StandardAxisType.RightStickY;
     }
 
     protected override bool SupportsCalibration()
@@ -144,8 +150,10 @@ public partial class ControllerAxis : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedControllerAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Min, Max, Offset,
-            DeadZone,Threshold, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined, LedIndicesMpr121.ToArray());
+        return new SerializedControllerAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
+            LedIndicesPeripheral.ToArray(), Min, Max, Offset,
+            DeadZone, Threshold, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined,
+            LedIndicesMpr121.ToArray());
     }
 
     public override void UpdateBindings()
