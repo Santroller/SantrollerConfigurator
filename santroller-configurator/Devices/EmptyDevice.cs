@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.ViewModels;
@@ -22,7 +23,7 @@ public class EmptyDevice: IConfigurableDevice
 
     public Microcontroller GetMicrocontroller(ConfigViewModel model)
     {
-        return new Pico(Board.PicoBoard);
+        return new Pico(Board.PicoBoards.First());
     }
 
     public bool LoadConfiguration(ConfigViewModel model, bool merge)
@@ -35,26 +36,17 @@ public class EmptyDevice: IConfigurableDevice
         return Task.FromResult<string?>(null);
     }
 
-    public bool IsGeneric()
-    {
-        return false;
-    }
+    public bool IsGeneric => false;
 
-    public bool IsPico()
-    {
-        return true;
-    }
+    public bool IsPico => true;
+
+    public bool Is32U4 => false;
 
     public void Reconnect()
     {
     }
 
     public bool HasDfuMode()
-    {
-        return false;
-    }
-
-    public bool Is32U4()
     {
         return false;
     }

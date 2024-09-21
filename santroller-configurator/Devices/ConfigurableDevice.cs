@@ -18,10 +18,10 @@ public interface IConfigurableDevice: IDevice
     public bool LoadConfiguration(ConfigViewModel model, bool merge);
 
     public Task<string?> GetUploadPortAsync();
-    public bool IsGeneric();
-    public bool IsPico();
+    public bool IsGeneric { get; }
+    public bool IsPico { get; }
+    public bool Is32U4 { get; }
     void Reconnect();
     bool HasDfuMode();
-    bool Is32U4();
     void Disconnect();
 }

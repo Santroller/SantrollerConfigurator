@@ -61,7 +61,7 @@ public class RestoreViewModel : ReactiveObject, IRoutableViewModel
 
     private void AddDevice(IConfigurableDevice device)
     {
-        if (_santroller.IsPico() && device is PicoDevice)
+        if (_santroller.IsPico && device is PicoDevice)
         {
             if (_done) return;
             Main.Message = "Programming";
@@ -89,14 +89,14 @@ public class RestoreViewModel : ReactiveObject, IRoutableViewModel
             });
             
         }
-        else if (!_santroller.IsPico() && !_santroller.HasDfuMode() && device is Arduino)
+        else if (!_santroller.IsPico && !_santroller.HasDfuMode() && device is Arduino)
         {
             Main.Message = "Programming";
             Main.Progress = 50;
             // Erase the device so it stays in bootloader mode, the ide can just program that
             _ = Main.Pio.RunAvrdudeErase(device, "", 0, 100).Subscribe(s => { }, s => { }, () => { Main.Complete(100); });
         }
-        else if (!_santroller.IsPico() && _santroller.HasDfuMode() && device is Arduino)
+        else if (!_santroller.IsPico && _santroller.HasDfuMode() && device is Arduino)
         {
             Main.Complete(100);
         }

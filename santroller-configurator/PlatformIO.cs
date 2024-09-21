@@ -217,7 +217,7 @@ public class PlatformIo
                                 args.Add("--upload-port");
                                 args.Add(arduino2.GetSerialPort());
                             }
-                            else if (!device.Is32U4())
+                            else if (!device.Is32U4)
                             {
                                 Console.WriteLine("Detecting port please wait");
                                 Trace.WriteLine("Detecting port please wait");
@@ -251,7 +251,7 @@ public class PlatformIo
                     if (device != null)
                     {
                         string? port = null;
-                        if (device.Is32U4())
+                        if (device.Is32U4)
                         {
                             sections += 1;
                             var subject = RunAvrdudeErase(device, Resources.ErasingMessage, 0,
@@ -329,7 +329,7 @@ public class PlatformIo
             var buffer = new char[1];
             var hasError = false;
             // In detect mode, the pro micro also goes through two separate programming stages.
-            var main = device?.HasDfuMode() == false && !(device is Arduino arduino && arduino.Is32U4());
+            var main = device?.HasDfuMode() == false && !(device is Arduino {Is32U4: true});
             while (!_currentProcess.HasExited)
             {
                 if (state == 0)

@@ -286,7 +286,7 @@ public class Santroller : ConfigurableUsbDevice
                 }
 
                 var bluetoothRaw = Array.Empty<byte>();
-                if (IsPico()) bluetoothRaw = await ReadDataAsync(0, (byte) Commands.CommandGetBtState, 1);
+                if (IsPico) bluetoothRaw = await ReadDataAsync(0, (byte) Commands.CommandGetBtState, 1);
 
                 _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw, accelConnected);
                 foreach (var output in _bindings)
@@ -613,7 +613,7 @@ public class Santroller : ConfigurableUsbDevice
 
     public IReadOnlyList<string> GetBtScanResults()
     {
-        if (!IsPico()) return Array.Empty<string>();
+        if (!IsPico) return Array.Empty<string>();
         var data = ReadData(0, (byte) Commands.CommandGetBtDevices);
         var addressesAsStrings = new List<string>();
         for (var i = 0; i < data.Length; i += BtAddressLength)
@@ -626,7 +626,7 @@ public class Santroller : ConfigurableUsbDevice
 
     public string GetBluetoothAddress()
     {
-        return !IsPico() ? "" : GetString(ReadData(0, (byte) Commands.CommandGetBtAddress));
+        return !IsPico ? "" : GetString(ReadData(0, (byte) Commands.CommandGetBtAddress));
     }
 
     public int AnalogRead(int pin)

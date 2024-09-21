@@ -81,19 +81,17 @@ public class Dfu : IConfigurableDevice
         return Task.FromResult<string?>(null);
     }
 
-    public bool IsAvr()
-    {
-        return true;
-    }
-
     public void Bootloader()
     {
     }
 
-    public bool IsPico()
-    {
-        return false;
-    }
+    public bool IsPico => false;
+
+    public bool Is32U4 => false;
+
+    public bool IsGeneric => false;
+
+    public bool IsAvr => true;
 
     public void Reconnect()
     {
@@ -108,18 +106,8 @@ public class Dfu : IConfigurableDevice
         return true;
     }
 
-    public bool Is32U4()
-    {
-        return false;
-    }
-
     public void Disconnect()
     {
-    }
-
-    public bool IsGeneric()
-    {
-        return false;
     }
 
     public string GetRestoreSuffix()

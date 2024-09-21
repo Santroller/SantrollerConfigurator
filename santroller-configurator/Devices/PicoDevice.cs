@@ -1,26 +1,29 @@
+using System.Linq;
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
-using GuitarConfigurator.NetCore.Utils;
 using GuitarConfigurator.NetCore.ViewModels;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
-public class PicoDevice : IConfigurableDevice, IDevice
+public class PicoDevice : IConfigurableDevice
 {
     private readonly string _path;
-
-    public PicoDevice(string path)
+    private readonly Board _board;
+    public PicoDevice(string path, string env)
     {
         _path = path;
+        _board = Board.PicoBoards.First(s => s.Environment == env);
     }
 
     public bool MigrationSupported => true;
 
 
-    public bool IsGeneric()
-    {
-        return false;
-    }
+    public bool IsGeneric => false;
+    public bool IsAvr => false;
+
+    public bool IsPico => true;
+
+    public bool Is32U4 => false;
 
     public bool IsSameDevice(IDevice device)
     {
@@ -44,22 +47,12 @@ public class PicoDevice : IConfigurableDevice, IDevice
 
     public Microcontroller GetMicrocontroller(ConfigViewModel model)
     {
-        return Board.FindMicrocontroller(Board.PicoBoard);
+        return new Pico(_board);
     }
 
     public Task<string?> GetUploadPortAsync()
     {
         return Task.FromResult((string?) _path);
-    }
-
-    public bool IsAvr()
-    {
-        return false;
-    }
-
-    public bool IsPico()
-    {
-        return true;
     }
 
     public void Reconnect()
@@ -75,11 +68,6 @@ public class PicoDevice : IConfigurableDevice, IDevice
         return false;
     }
 
-    public bool Is32U4()
-    {
-        return false;
-    }
-
     public void Disconnect()
     {
     }
@@ -91,6 +79,6 @@ public class PicoDevice : IConfigurableDevice, IDevice
 
     public override string ToString()
     {
-        return $"Raspberry Pi Pico ({_path})";
+        return $"{_board.Name} ({_path})";
     }
 }

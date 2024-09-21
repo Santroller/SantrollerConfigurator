@@ -152,25 +152,25 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             .Select(s => s != null)
             .ToProperty(this, s => s.Connected);
         _isPicoHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s?.IsPico() == true)
+            .Select(s => s is {IsPico: true})
             .ToProperty(this, s => s.IsPico);
         _is32U4Helper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is Arduino arduino && arduino.Is32U4())
+            .Select(s => s is Arduino {Is32U4: true})
             .ToProperty(this, s => s.Is32U4);
         _isUnoMegaHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is Dfu || (s is Arduino arduino && (arduino.IsUno() || arduino.IsMega())))
+            .Select(s => s is Dfu or Arduino {IsUno: true} or Arduino {IsMega: true})
             .ToProperty(this, s => s.IsUnoMega);
         _isUnoHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is Arduino arduino && arduino.IsUno())
+            .Select(s => s is Arduino {IsUno: true})
             .ToProperty(this, s => s.IsUno);
         _isMegaHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is Arduino arduino && arduino.IsMega())
+            .Select(s => s is Arduino {IsMega: true})
             .ToProperty(this, s => s.IsMega);
         _isDfuHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is Dfu)
             .ToProperty(this, s => s.IsDfu);
         _isGenericHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s?.IsGeneric() == true)
+            .Select(s => s is {IsGeneric: true})
             .ToProperty(this, s => s.IsGeneric);
         _newDeviceHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is not (null or Ardwiino or Santroller))
@@ -189,6 +189,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         _isSantrollerHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is not Santroller {IsSantroller: false})
             .ToProperty(this, s => s.IsSantroller);
+        _isPicoCdcHelper = this.WhenAnyValue(x => x.SelectedDevice)
+            .Select(s => s is Arduino {Board.IsPico: true})
+            .ToProperty(this, s => s.IsPicoCdc);
         // Make sure that the selected device input type is reset so that we don't end up doing something invalid
         this.WhenAnyValue(s => s.SelectedDevice).Subscribe(_ =>
         {
@@ -306,7 +309,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     }
     public void AddDevice(IConfigurableDevice device)
     {
-        if (_picoOnly && !device.IsPico()) return;
+        if (_picoOnly && !device.IsPico) return;
         AvailableDevices.Add(device);
     }
 
@@ -376,6 +379,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     [ObservableAsProperty] private bool _readyToConfigure;
     [ObservableAsProperty] private bool _isSantroller;
+    [ObservableAsProperty] private bool _isPicoCdc;
 
     public IEnumerable<Arduino32U4Type> Arduino32U4Types => Enum.GetValues<Arduino32U4Type>();
     public IEnumerable<MegaType> MegaTypes => Enum.GetValues<MegaType>();
@@ -660,16 +664,14 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 if (drive.IsReady)
                     if (File.Exists(uf2))
                     {
-                        // TODO: 2350 needs to build with 2350 toolchain
-                        // var text = await File.ReadAllTextAsync(uf2);
-                        // if (text.Contains("RPI-RP2") || text.Contains("RP2350"))
-                        // {
-                        //     AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName));
-                        // }
                         var text = await File.ReadAllTextAsync(uf2);
+                        if (text.Contains("RP2350"))
+                        {
+                            AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName, "pico2"));
+                        }
                         if (text.Contains("RPI-RP2"))
                         {
-                            AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName));
+                            AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName, "pico"));
                         }
                     }
             }

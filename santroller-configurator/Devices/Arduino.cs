@@ -11,7 +11,6 @@ namespace GuitarConfigurator.NetCore.Devices;
 
 public class Arduino : IConfigurableDevice
 {
-    private readonly bool _generic;
     private TaskCompletionSource<string?>? _arduino32U4Path;
     private string _port;
 
@@ -30,7 +29,7 @@ public class Arduino : IConfigurableDevice
         // Handle any other RP2040 based boards we don't already have code for, using just the generic rp2040 board in this case
         if (port.Vid == Board.RaspberryPiVendorId)
         {
-            Board = Board.PicoBoard;
+            Board = Board.PicoBoards.First();
             MigrationSupported = true;
             return;
         }
@@ -57,7 +56,7 @@ public class Arduino : IConfigurableDevice
         {
             Board = Board.Generic;
             MigrationSupported = true;
-            _generic = true;
+            IsGeneric = true;
         }
     }
 
@@ -74,7 +73,7 @@ public class Arduino : IConfigurableDevice
 
     public void Bootloader()
     {
-        if (Is32U4() && Is32U4Bootloader) return;
+        if (Is32U4 && Is32U4Bootloader) return;
         var serial = new SerialPort(_port, 1200);
         serial.Open();
         serial.Close();
@@ -141,7 +140,7 @@ public class Arduino : IConfigurableDevice
 
     public Task<string?> GetUploadPortAsync()
     {
-        if (IsPico())
+        if (IsPico)
         {
             _arduino32U4Path = new TaskCompletionSource<string?>();
             Bootloader();
@@ -161,13 +160,13 @@ public class Arduino : IConfigurableDevice
     {
         switch (device)
         {
-            case Arduino arduino when Is32U4() && arduino.Is32U4():
+            case Arduino arduino when Is32U4 && arduino.Is32U4:
                 Console.WriteLine("Found device with port: " + arduino.GetSerialPort());
                 _port = arduino.GetSerialPort();
                 Board = arduino.Board;
                 Is32U4Bootloader = true;
                 break;
-            case PicoDevice pico when IsPico() && _arduino32U4Path != null:
+            case PicoDevice pico when IsPico && _arduino32U4Path != null:
                 Console.WriteLine("Found device with port: " + pico.GetPath());
                 _port = pico.GetPath();
                 _arduino32U4Path.TrySetResult(pico.GetPath());
@@ -176,25 +175,19 @@ public class Arduino : IConfigurableDevice
         }
     }
 
-    public bool IsPico()
-    {
-        return Board.IsPico();
-    }
+    public bool IsPico => Board.IsPico;
+    public bool Is32U4 => Board.Is32U4;
+    public bool IsGeneric { get; }
 
-    public bool Is32U4()
-    {
-        return Board.Is32U4();
-    }
+    public bool IsUno => Board.Uno.Name == Board.Name;
+
+    public bool IsMega => Board.MegaBoards.Contains(Board);
 
     public void Disconnect()
     {
         
     }
 
-    public bool IsGeneric()
-    {
-        return _generic;
-    }
 
     public string GetSerialPort()
     {
@@ -204,15 +197,5 @@ public class Arduino : IConfigurableDevice
     public override string ToString()
     {
         return $"{Board.Name} ({_port})";
-    }
-
-    public bool IsUno()
-    {
-        return Board.Uno.Name == Board.Name;
-    }
-
-    public bool IsMega()
-    {
-        return Board.MegaBoards.Contains(Board);
     }
 }

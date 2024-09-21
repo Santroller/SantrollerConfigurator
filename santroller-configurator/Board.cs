@@ -5,7 +5,7 @@ using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 
 namespace GuitarConfigurator.NetCore;
 
-public struct Board
+public readonly record struct Board
 {
     public const short RaspberryPiVendorId = 0x2e8a;
     public string ArdwiinoName { get; }
@@ -35,6 +35,7 @@ public struct Board
     [
         "pico",
         "picow",
+        "pico2",
         "0xcb_helios",
         "adafruit_feather_rp2040",
         "adafruit_itsybitsy_rp2040",
@@ -124,8 +125,14 @@ public struct Board
             false, true)
     ];
 
-    public static readonly Board PicoBoard = new("pico", "Raspberry PI Pico", 125000000, "pico",
-        [0x000a], false);
+    public static readonly Board[] PicoBoards = [
+        new("pico", "Raspberry PI Pico", 125000000, "pico",
+            [0x000a], false),
+        new("picow", "Raspberry PI Pico W", 125000000, "picow",
+            [], false),
+        new("pico2", "Raspberry PI Pico 2", 125000000, "pico2",
+            [], false),
+    ];
 
     public static readonly Board[] MegaBoards =
     [
@@ -141,14 +148,15 @@ public struct Board
 
     public static readonly Board[] Boards = MegaBoards
         .Concat(Atmega32U4Boards)
-        .Concat(new[] {Uno, DfuBoard, PicoBoard})
+        .Concat(new[] {Uno, DfuBoard})
+        .Concat(PicoBoards)
         .ToArray();
 
     public static Board FindBoard(string ardwiinoName, uint cpuFreq)
     {
         if (PicoArdwiinoNames.Contains(ardwiinoName))
         {
-            return PicoBoard;
+            return PicoBoards.FirstOrDefault(s => s.ArdwiinoName == ardwiinoName, PicoBoards[0]);
         }
 
         foreach (var board in Boards)
@@ -167,28 +175,13 @@ public struct Board
 
         if (MegaBoards.Contains(board)) return new Mega(board);
 
-        if (board.Name == PicoBoard.Name) return new Pico(board);
+        if (PicoBoards.Contains(board)) return new Pico(board);
 
         throw new NotSupportedException("Not sure how we got here");
     }
 
-    public bool IsAvr()
-    {
-        return Atmega32U4Boards.Contains(this) || Name == Uno.Name || MegaBoards.Contains(this);
-    }
-
-    public bool IsPico()
-    {
-        return PicoBoard.Name == Name;
-    }
-
-    public bool IsGeneric()
-    {
-        return Generic.Name == Name;
-    }
-
-    public bool Is32U4()
-    {
-        return Atmega32U4Boards.Contains(this);
-    }
+    public bool IsAvr => Atmega32U4Boards.Contains(this) || Name == Uno.Name || MegaBoards.Contains(this);
+    public bool IsPico => PicoBoards.Contains(this);
+    public bool IsGeneric => Generic.Name == Name;
+    public bool Is32U4 => Atmega32U4Boards.Contains(this);
 }

@@ -37,15 +37,15 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
 
     public void DeviceAdded(IConfigurableDevice device)
     {
-        if (Board.Is32U4() && device is Arduino arduino2 && (arduino2.Board.Is32U4() || arduino2.Board.IsGeneric()))
+        if (Board.Is32U4 && device is Arduino arduino2 && (arduino2.Board.Is32U4 || arduino2.Board.IsGeneric))
         {
             _bootloaderPath?.TrySetResult(arduino2.GetSerialPort());
-            if (arduino2.Is32U4Bootloader || arduino2.Board.IsGeneric())
+            if (arduino2.Is32U4Bootloader || arduino2.Board.IsGeneric)
             {
                 _lastBootloaderPath = arduino2.GetSerialPort();
             }
         }
-        else if (device is PicoDevice pico && Board.IsPico())
+        else if (device is PicoDevice pico && Board.IsPico)
         {
             _bootloaderPath?.TrySetResult(pico.GetPath());
         }
@@ -64,7 +64,7 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
 
     public async Task<string?> GetUploadPortAsync()
     {
-        if (!Board.ArdwiinoName.Contains("pico") && !Board.HasUsbmcu && !Is32U4()) return null;
+        if (!Board.ArdwiinoName.Contains("pico") && !Board.HasUsbmcu && !Is32U4) return null;
         if (_lastBootloaderPath != null)
         {
             return _lastBootloaderPath;
@@ -75,15 +75,12 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
         return await _bootloaderPath.Task;
     }
 
-    public bool IsAvr()
-    {
-        return Board.IsAvr();
-    }
+    public bool IsAvr => Board.IsAvr;
 
-    public bool IsGeneric()
-    {
-        return Board.IsGeneric();
-    }
+    public bool IsGeneric => Board.IsGeneric;
+    public bool Is32U4 => Board.Is32U4;
+
+    public bool IsPico => Board.IsPico;
 
     public void Reconnect()
     {
@@ -96,19 +93,10 @@ public abstract class ConfigurableUsbDevice : IConfigurableDevice
         return Board.HasUsbmcu;
     }
 
-    public bool Is32U4()
-    {
-        return Board.Is32U4();
-    }
 
     public virtual void Disconnect()
     {
         UsbDevice.Close();
-    }
-
-    public bool IsPico()
-    {
-        return Board.IsPico();
     }
 
     public abstract bool LoadConfiguration(ConfigViewModel model, bool merge);

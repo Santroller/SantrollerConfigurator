@@ -512,7 +512,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public IEnumerable<EmulationType> EmulationTypes => Enum.GetValues<EmulationType>()
         .Where(type =>
             type is not EmulationType.FortniteFestival &&
-            (Device.IsPico() ||
+            (Device.IsPico ||
              type is not (EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)));
 
 
@@ -1476,7 +1476,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public string UrlPathSegment { get; } = Guid.NewGuid().ToString()[..5];
 
     public IScreen HostScreen { get; }
-    public bool IsPico => Device.IsPico();
+    public bool IsPico => Device.IsPico;
 
     public void SetDeviceTypeAndRhythmTypeWithoutUpdating(DeviceControllerType type, EmulationType emulationType)
     {

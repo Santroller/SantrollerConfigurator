@@ -41,7 +41,7 @@ public partial class DirectInput : InputWithPin
     {
         var modes = Enum.GetValues<DevicePinMode>()
             .Where(mode => mode is not (DevicePinMode.Output or DevicePinMode.Analog));
-        return Model.Microcontroller.Board.IsAvr()
+        return Model.Microcontroller.Board.IsAvr
             ? modes.Where(mode => mode is not (DevicePinMode.BusKeep or DevicePinMode.PullDown))
             : modes;
     }
