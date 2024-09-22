@@ -1934,11 +1934,11 @@
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{x:Static output:GuitarAxis.OffsetMin}"
-                                    Maximum="{x:Static output:GuitarAxis.OffsetMax}" Value="{Binding Offset}" />
+                                    Minimum="{x:Static output:OutputAxis.OffsetMin}"
+                                    Maximum="{x:Static output:OutputAxis.OffsetMax}" Value="{Binding Offset}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
-                                           Minimum="{Binding SliderMin, Mode=OneTime}"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Minimum="{x:Static output:OutputAxis.OffsetMinDecimal}"
+                                           Maximum="{x:Static output:OutputAxis.OffsetMaxDecimal}"
                                            Value="{Binding Offset}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"

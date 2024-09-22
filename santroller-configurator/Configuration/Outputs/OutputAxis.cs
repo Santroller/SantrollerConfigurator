@@ -34,6 +34,8 @@ public abstract partial class OutputAxis : Output
 
     public static double OffsetMin => short.MinValue;
     public static double OffsetMax => short.MaxValue;
+    public static decimal OffsetMinDecimal => short.MinValue;
+    public static decimal OffsetMaxDecimal => short.MaxValue;
     protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,
@@ -51,7 +53,7 @@ public abstract partial class OutputAxis : Output
         DeadZone = deadZone;
         _inputIsUintHelper = this.WhenAnyValue(x => x.Input).Select(i => i is {IsUint: true})
             .ToProperty(this, x => x.InputIsUint);
-        var calibrationWatcher = this.WhenAnyValue(x => x.Input.RawValue);
+        var calibrationWatcher = this.WhenAnyValue(x => x.Input.RawValue, x => x.Offset);
         calibrationWatcher.Subscribe(ApplyCalibration);
         _valueRawLowerHelper = this.WhenAnyValue(x => x.ValueRaw).Select(s => s < 0 ? -s : 0)
             .ToProperty(this, x => x.ValueRawLower);
@@ -171,8 +173,9 @@ public abstract partial class OutputAxis : Output
     }
 
     private int _tempMin;
-    private void ApplyCalibration(int rawValue)
+    private void ApplyCalibration((int rawValue, int offset) s)
     {
+        var rawValue = s.rawValue + s.offset;
         switch (_calibrationState)
         {
             case OutputAxisCalibrationState.Min:
@@ -216,7 +219,7 @@ public abstract partial class OutputAxis : Output
         _calibrationState++;
         if (_calibrationState == OutputAxisCalibrationState.Last) _calibrationState = OutputAxisCalibrationState.None;
 
-        ApplyCalibration(ValueRaw);
+        ApplyCalibration((ValueRaw, Offset));
 
         this.RaisePropertyChanged(nameof(CalibrationButtonText));
         this.RaisePropertyChanged(nameof(CalibrationText));
