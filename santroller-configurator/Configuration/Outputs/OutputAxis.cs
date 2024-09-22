@@ -53,7 +53,7 @@ public abstract partial class OutputAxis : Output
         DeadZone = deadZone;
         _inputIsUintHelper = this.WhenAnyValue(x => x.Input).Select(i => i is {IsUint: true})
             .ToProperty(this, x => x.InputIsUint);
-        var calibrationWatcher = this.WhenAnyValue(x => x.Input.RawValue, x => x.Offset);
+        var calibrationWatcher = this.WhenAnyValue(x => x.Input.RawValue);
         calibrationWatcher.Subscribe(ApplyCalibration);
         _valueRawLowerHelper = this.WhenAnyValue(x => x.ValueRaw).Select(s => s < 0 ? -s : 0)
             .ToProperty(this, x => x.ValueRawLower);
@@ -173,9 +173,8 @@ public abstract partial class OutputAxis : Output
     }
 
     private int _tempMin;
-    private void ApplyCalibration((int rawValue, int offset) s)
+    private void ApplyCalibration(int rawValue)
     {
-        var rawValue = s.rawValue + s.offset;
         switch (_calibrationState)
         {
             case OutputAxisCalibrationState.Min:
@@ -219,7 +218,7 @@ public abstract partial class OutputAxis : Output
         _calibrationState++;
         if (_calibrationState == OutputAxisCalibrationState.Last) _calibrationState = OutputAxisCalibrationState.None;
 
-        ApplyCalibration((ValueRaw, Offset));
+        ApplyCalibration(ValueRaw);
 
         this.RaisePropertyChanged(nameof(CalibrationButtonText));
         this.RaisePropertyChanged(nameof(CalibrationText));
@@ -233,11 +232,6 @@ public abstract partial class OutputAxis : Output
         float fmin = min;
         float fmax = max;
         double val = value;
-        
-        if (this is ControllerAxis)
-        {
-            val += offset;
-        }
 
         var inverted = fmin > fmax;
         if (trigger)
@@ -286,6 +280,13 @@ public abstract partial class OutputAxis : Output
             {
                 fmin -= deadZone;
                 fmax += deadZone;
+            }
+            
+        
+            if (this is ControllerAxis)
+            {
+                fmin += offset;
+                fmax += offset;
             }
         }
 
@@ -352,6 +353,12 @@ public abstract partial class OutputAxis : Output
                 return Input.Generate(writer);
             case FixedInput when this is GuitarAxis {Type: GuitarAxisType.Pickup}:
                 return $"({Input.Generate(writer)} >> 8) & 0xff";
+        }
+
+        var offset = Offset;
+        if (this is not ControllerAxis || trigger)
+        {
+            offset = 0;
         }
 
         string function;
@@ -463,6 +470,12 @@ public abstract partial class OutputAxis : Output
             {
                 max = short.MaxValue;
             }
+            
+            if (this is ControllerAxis)
+            {
+                min += offset;
+                max += offset;
+            }
 
             multiplier = 1f / (max - min) * (short.MaxValue - short.MinValue);
         }
@@ -520,12 +533,6 @@ public abstract partial class OutputAxis : Output
         if (Input is FixedInput)
         {
             return singleByte ? $"({generated}) >> 8" : generated;
-        }
-
-        var offset = Offset;
-        if (this is not ControllerAxis)
-        {
-            offset = 0;
         }
         
         var mulInt = (short) (multiplier * 512);
