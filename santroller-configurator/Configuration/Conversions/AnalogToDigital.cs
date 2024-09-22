@@ -73,27 +73,24 @@ public partial class AnalogToDigital : Input
 
     private int CalculateThreshold((int threshold, AnalogToDigitalType type) type)
     {
-        if (!IsUint)
+        if (!IsUint || type.type is AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger)
         {
             return type.threshold;
         }
-        switch (type.type)
-        {
-            case AnalogToDigitalType.Trigger:
-            case AnalogToDigitalType.JoyHigh:
-                return short.MaxValue + type.threshold;
-            case AnalogToDigitalType.JoyLow:
-                return short.MaxValue - type.threshold;
-        }
 
-        return 0;
+        return type.type switch
+        {
+            AnalogToDigitalType.JoyHigh => short.MaxValue + type.threshold,
+            AnalogToDigitalType.JoyLow => short.MaxValue - type.threshold,
+            _ => 0
+        };
     }
     public int DisplayThreshold
     {
         get => _displayThreshold.Value;
         set
         {
-            if (!Child.IsUint)
+            if (!Child.IsUint || AnalogToDigitalType is AnalogToDigitalType.Trigger or AnalogToDigitalType.Drum)
             {
                 Threshold = value;
             }
@@ -143,8 +140,8 @@ public partial class AnalogToDigital : Input
             switch (AnalogToDigitalType)
             {
                 case AnalogToDigitalType.Drum:
-                    return $"({Child.Generate(writer)}) > ({thresholdVal})";
                 case AnalogToDigitalType.Trigger:
+                    return $"({Child.Generate(writer)}) > ({thresholdVal})";
                 case AnalogToDigitalType.JoyHigh:
                     return $"({Child.Generate(writer)}) > ({short.MaxValue} + ({thresholdVal}))";
                 case AnalogToDigitalType.JoyLow:
@@ -176,7 +173,9 @@ public partial class AnalogToDigital : Input
         {
             switch (AnalogToDigitalType)
             {
+                case AnalogToDigitalType.Drum:
                 case AnalogToDigitalType.Trigger:
+                    return val.raw > val.threshold ? 1 : 0;
                 case AnalogToDigitalType.JoyHigh:
                     return val.raw > short.MaxValue + val.threshold ? 1 : 0;
                 case AnalogToDigitalType.JoyLow:
@@ -187,6 +186,7 @@ public partial class AnalogToDigital : Input
         {
             switch (AnalogToDigitalType)
             {
+                case AnalogToDigitalType.Drum:
                 case AnalogToDigitalType.Trigger:
                 case AnalogToDigitalType.JoyHigh:
                     return val.raw > Math.Abs(val.threshold) ? 1 : 0;

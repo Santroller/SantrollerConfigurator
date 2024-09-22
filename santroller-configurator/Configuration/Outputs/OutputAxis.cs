@@ -538,12 +538,12 @@ public abstract partial class OutputAxis : Output
         var mulInt = (short) (multiplier * 512);
         if (writer == null)
             return intBased
-                ? $"{function}({prev}, ({generated})+({offset}), {(max + min) / 2}, {min}, {mulInt}, {DeadZone})"
-                : $"{function}({prev}, ({generated})+({offset}), {min}, {mulInt}, {DeadZone})";
+                ? $"{function}({prev}, {generated}, {(max + min) / 2}, {min}, {mulInt}, {DeadZone})"
+                : $"{function}({prev}, {generated}, {min}, {mulInt}, {DeadZone})";
 
         return intBased
-            ? $"{function}({prev}, ({generated})+({WriteBlob(writer, offset)}), {WriteBlob(writer, (max + min) / 2)}, {WriteBlob(writer, min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, DeadZone)})"
-            : $"{function}({prev}, ({generated})+({WriteBlob(writer, offset)}), {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) DeadZone)})";
+            ? $"{function}({prev}, {generated}, {WriteBlob(writer, (max + min) / 2)}, {WriteBlob(writer, min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, DeadZone)})"
+            : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) DeadZone)})";
     }
 
 
