@@ -36,13 +36,15 @@ public abstract partial class OutputAxis : Output
     public static double OffsetMax => short.MaxValue;
     public static decimal OffsetMinDecimal => short.MinValue;
     public static decimal OffsetMaxDecimal => short.MaxValue;
+
     protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,
         int min, int max, int offset,
         int deadZone, bool trigger, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
         bool childOfCombined) : base(model, input, ledOn, ledOff,
-        ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin,
+        childOfCombined)
     {
         Offset = offset;
         Trigger = trigger;
@@ -60,14 +62,19 @@ public abstract partial class OutputAxis : Output
         _valueRawUpperHelper = this.WhenAnyValue(x => x.ValueRaw).Select(s => s > 0 ? s : 0)
             .ToProperty(this, x => x.ValueRawUpper);
 
-        _sliderMaxHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MaxValue : short.MaxValue).ToProperty(this, x => x.SliderMax);
-        _sliderMinHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MinValue : short.MinValue).ToProperty(this, x => x.SliderMin);
+        _sliderMaxHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int) ushort.MaxValue : short.MaxValue)
+            .ToProperty(this, x => x.SliderMax);
+        _sliderMinHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int) ushort.MinValue : short.MinValue)
+            .ToProperty(this, x => x.SliderMin);
 
         _valueHelper = this
-            .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.Offset, x => x.DeadZone, x => x.Trigger,
+            .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.Offset, x => x.DeadZone,
+                x => x.Trigger,
                 x => x.Model.DeviceControllerType, Calculate).ToProperty(this, x => x.Value);
-        _valueLowerHelper = this.WhenAnyValue(x => x.Value).Select(s => s < 0 ? -s : 0).ToProperty(this, x => x.ValueLower);
-        _valueUpperHelper = this.WhenAnyValue(x => x.Value).Select(s => s > 0 ? s : 0).ToProperty(this, x => x.ValueUpper);
+        _valueLowerHelper = this.WhenAnyValue(x => x.Value).Select(s => s < 0 ? -s : 0)
+            .ToProperty(this, x => x.ValueLower);
+        _valueUpperHelper = this.WhenAnyValue(x => x.Value).Select(s => s > 0 ? s : 0)
+            .ToProperty(this, x => x.ValueUpper);
         _computedDeadZoneMarginHelper = this
             .WhenAnyValue(x => x.Min, x => x.Max, x => x.Trigger, x => x.InputIsUint, x => x.DeadZone)
             .Select(ComputeDeadZoneMargin).ToProperty(this, x => x.ComputedDeadZoneMargin);
@@ -75,13 +82,15 @@ public abstract partial class OutputAxis : Output
             .Select(ComputeMinMaxMargin).ToProperty(this, x => x.CalibrationMinMaxMargin);
         _isDigitalToAnalogHelper = this.WhenAnyValue(x => x.Input).Select(s => s is DigitalToAnalog)
             .ToProperty(this, x => x.IsDigitalToAnalog);
-        _isDigitalToAnalogOrConstantHelper = this.WhenAnyValue(x => x.Input).Select(s => s is DigitalToAnalog or ConstantInput)
+        _isDigitalToAnalogOrConstantHelper = this.WhenAnyValue(x => x.Input)
+            .Select(s => s is DigitalToAnalog or ConstantInput)
             .ToProperty(this, x => x.IsDigitalToAnalogOrConstant);
     }
+
     public override bool UsesPwm => true;
 
     public float FullProgressWidth => ProgressWidth;
-    public float HalfProgressWidth => ProgressWidth / 2; 
+    public float HalfProgressWidth => ProgressWidth / 2;
     [ObservableAsProperty] private int _valueRawLower;
 
     [ObservableAsProperty] private int _valueRawUpper;
@@ -173,6 +182,7 @@ public abstract partial class OutputAxis : Output
     }
 
     private int _tempMin;
+
     private void ApplyCalibration(int rawValue)
     {
         switch (_calibrationState)
@@ -187,6 +197,7 @@ public abstract partial class OutputAxis : Output
                 {
                     Min = _tempMin - Max;
                 }
+
                 break;
             case OutputAxisCalibrationState.DeadZone:
                 var min = Math.Min(Min, Max);
@@ -225,12 +236,15 @@ public abstract partial class OutputAxis : Output
         this.RaisePropertyChanged(nameof(CalibrationStatus));
     }
 
-    protected virtual int Calculate(bool enabled, int value, int min, int max, int offset, int deadZone, bool trigger, DeviceControllerType
+    protected virtual int Calculate(bool enabled, int value, int min, int max, int offset, int deadZone, bool trigger,
+        DeviceControllerType
             deviceControllerType)
     {
         if (!enabled) return 0;
         float fmin = min;
         float fmax = max;
+        float tmin = min;
+        float tmax = max;
         double val = value;
 
         var inverted = fmin > fmax;
@@ -256,6 +270,9 @@ public abstract partial class OutputAxis : Output
                 if (val < fmin) return 0;
                 if (val > fmax) val = fmax;
             }
+
+            tmin = fmin;
+            tmax = fmax;
         }
         else
         {
@@ -281,12 +298,14 @@ public abstract partial class OutputAxis : Output
                 fmin -= deadZone;
                 fmax += deadZone;
             }
-            
-        
+
+            tmin = fmin;
+            tmax = fmax;
+
             if (this is ControllerAxis)
             {
-                fmin += offset;
-                fmax += offset;
+                tmin += offset;
+                tmax -= offset;
             }
         }
 
@@ -298,11 +317,11 @@ public abstract partial class OutputAxis : Output
         }
         else
         {
-            val = (val - fmin) / (fmax - fmin) * (short.MaxValue - short.MinValue) + short.MinValue;
+            val = (val - fmin) / (tmax - tmin) * (short.MaxValue - short.MinValue) + short.MinValue;
             if (val > short.MaxValue) val = short.MaxValue;
             if (val < short.MinValue) val = short.MinValue;
         }
-        
+
 
         return (int) val;
     }
@@ -470,14 +489,16 @@ public abstract partial class OutputAxis : Output
             {
                 max = short.MaxValue;
             }
-            
+
+            var tmin = min;
+            var tmax = max;
             if (this is ControllerAxis)
             {
-                min += offset;
-                max += offset;
+                tmin += offset;
+                tmax -= offset;
             }
 
-            multiplier = 1f / (max - min) * (short.MaxValue - short.MinValue);
+            multiplier = 1f / (tmax - tmin) * (short.MaxValue - short.MinValue);
         }
         else
         {
@@ -524,7 +545,7 @@ public abstract partial class OutputAxis : Output
                 _ => ")"
             };
         }
-        
+
         if (ShouldFlip(mode))
         {
             generated = intBased ? $"(-({generated}))" : $"(UINT16_MAX-({generated}))";
@@ -534,7 +555,7 @@ public abstract partial class OutputAxis : Output
         {
             return singleByte ? $"({generated}) >> 8" : generated;
         }
-        
+
         var mulInt = (short) (multiplier * 512);
         if (writer == null)
             return intBased
@@ -565,7 +586,8 @@ public abstract partial class OutputAxis : Output
             var extraTrigger = "";
             if (this is ControllerAxis axis)
             {
-                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Ps2 or ConfigField.Universal or ConfigField.Wii &&
+                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Ps2
+                        or ConfigField.Universal or ConfigField.Wii &&
                     axis.Type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger)
                 {
                     var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
@@ -595,12 +617,14 @@ public abstract partial class OutputAxis : Output
             case ConfigField.XboxOne:
                 break;
             // 360 triggers, and ps3 and ps4 triggers are uint8_t
-            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii  or ConfigField.Ps2
+            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
+                or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2
                 when Trigger:
                 val >>= 8;
                 break;
             // ps3 and ps4 axis are uint8_t, so we both need to shift and add 128
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2 when !Trigger:
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
+                or ConfigField.Wii or ConfigField.Ps2 when !Trigger:
                 val = (val >> 8) + 128;
                 break;
             // Mouse is always not a trigger, and is int8_t
@@ -612,7 +636,8 @@ public abstract partial class OutputAxis : Output
         }
 
         // On the PS3, we need to convert triggers from analog to digital
-        if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii && this is ControllerAxis
+        if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
+                or ConfigField.Wii && this is ControllerAxis
             {
                 Type: StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger
             })
