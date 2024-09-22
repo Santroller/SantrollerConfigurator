@@ -457,6 +457,7 @@ public abstract partial class OutputAxis : Output
             {
                 max -= short.MaxValue;
                 min -= short.MaxValue;
+                center -= short.MaxValue;
             }
 
             if (inverted)
