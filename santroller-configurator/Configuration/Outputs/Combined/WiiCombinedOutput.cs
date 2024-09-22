@@ -176,6 +176,17 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         {WiiInputType.DrumKickPedal, DrumAxisType.Kick}
         // {WiiInputType.DrumHiHatPedal, DrumAxisType.Kick2},
     };
+    
+    private static readonly Dictionary<DrumAxisType, WiiInputType> DrumToWii = new()
+    {
+        {DrumAxisType.Green, WiiInputType.DrumGreen},
+        {DrumAxisType.Red, WiiInputType.DrumRed},
+        {DrumAxisType.Yellow, WiiInputType.DrumYellow},
+        {DrumAxisType.Blue, WiiInputType.DrumBlue},
+        {DrumAxisType.Orange, WiiInputType.DrumOrange},
+        {DrumAxisType.Kick, WiiInputType.DrumKickPedal}
+        // {DrumAxisType.Kick2, WiiInputType.DrumHiHatPedal},
+    };
 
     private static readonly Dictionary<WiiInputType, DrumAxisType> DrumAxisRb = new()
     {
@@ -470,6 +481,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                         Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), -30000, 30000, 10,
                         10, pair.Value, false, false, false, -1,
                         true));
+                Outputs.RemoveMany(Outputs.Items.Where(s => s is ControllerButton cb && cb.Input.InnermostInputs().Any(s2 => s2 is WiiInput w && (DrumAxisGh.ContainsKey(w.Input) || DrumAxisRb.ContainsKey(w.Input)))));
             }
             else
             {
@@ -500,6 +512,15 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         }
         else
         {
+            var currentDrums = Outputs.Items.OfType<DrumAxis>();
+            foreach (var drumAxis in currentDrums)
+            {
+                Outputs.Add(new ControllerButton(Model, drumAxis.Input,
+                    drumAxis.LedOn, drumAxis.LedOff, drumAxis.LedIndices.ToArray(),
+                    drumAxis.LedIndicesPeripheral.ToArray(), drumAxis.LedIndicesMpr121.ToArray(), drumAxis.Debounce,
+                    Buttons[DrumToWii[drumAxis.Type]], false, false, false, -1, true));
+            }
+
             // Remove all drum inputs if we aren't in Drum emulation mode
             Outputs.RemoveMany(Outputs.Items.Where(s => s is DrumAxis));
         }

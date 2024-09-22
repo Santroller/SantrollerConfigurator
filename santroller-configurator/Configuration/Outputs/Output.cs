@@ -944,10 +944,11 @@ public abstract partial class Output : ReactiveObject
 
     public abstract Enum GetOutputType();
 
-    public static string GetReportField(object type, string field = "report")
+    public static string GetReportField(object type, string field = "report", bool pointer=true)
     {
         var typeName = type.ToString()!;
-        return $"{field}->{char.ToLower(typeName[0])}{typeName[1..]}";
+        var op = pointer ? "->" : ".";
+        return $"{field}{op}{char.ToLower(typeName[0])}{typeName[1..]}";
     }
 
     [RelayCommand]

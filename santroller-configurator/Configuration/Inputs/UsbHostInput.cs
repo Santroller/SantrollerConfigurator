@@ -147,8 +147,8 @@ public partial class UsbHostInput : Input
             UsbHostInputType.KeyboardInput => Output.GetReportField(Key, "usb_host_data.keyboard"),
             UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, "usb_host_data.mouse"),
             UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, "usb_host_data.mouse"),
-            _ => Output.GetReportField(Input, "usb_host_data")
-        }).Replace("->", ".");
+            _ => Output.GetReportField(Input, "usb_host_data", false)
+        });
 
         if (ByteBased.Contains(Input))
         {

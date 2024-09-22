@@ -247,11 +247,11 @@ public partial class DrumAxis : OutputAxis
         switch (mode)
         {
             case ConfigField.Xbox360:
-                if (ButtonsXbox360.TryGetValue(Type, out var value))
+                if (Model.DeviceControllerType.IsGh() && ButtonsXbox360.TryGetValue(Type, out var value))
                     outputButtons += $"\n{GetReportField(value)} = true;";
                 break;
             case ConfigField.Xbox:
-                if (ButtonsXbox360.TryGetValue(Type, out var value5))
+                if (Model.DeviceControllerType.IsGh() && ButtonsXbox360.TryGetValue(Type, out var value5))
                     outputButtons += $"\n{GetReportField(value5)} = 0xff;";
                 break;
             case ConfigField.XboxOne:
@@ -259,7 +259,7 @@ public partial class DrumAxis : OutputAxis
                     outputButtons += $"\n{GetReportField(value1)} = true;";
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture:
-                if (ButtonsPs3.TryGetValue(Type, out var value2))
+                if (Model.DeviceControllerType.IsGh() && ButtonsPs3.TryGetValue(Type, out var value2))
                     outputButtons += $"\n{GetReportField(value2)} = true;";
                 break;
             case ConfigField.Universal:
@@ -276,7 +276,7 @@ public partial class DrumAxis : OutputAxis
 
         // XB1 is RB by definition
         if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) &&
-             Type is DrumAxisType.Kick or DrumAxisType.Kick2) || mode is ConfigField.Keyboard)
+             Type is DrumAxisType.Kick or DrumAxisType.Kick2))
         {
             return $$"""
                      if ({{ifStatement}}) {
@@ -287,59 +287,60 @@ public partial class DrumAxis : OutputAxis
 
         if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
         {
-            if (mode is ConfigField.Xbox)
-            {
-                switch (Type)
-                {
-                    case DrumAxisType.YellowCymbal:
-                        outputButtons += $"\n{GetReportField(YellowCymbalFlag)} = true;";
-                        outputButtons += $"\n{GetReportField("cymbalFlag")} = 0xFF;";
+            outputButtons += $"{GetReportField(Type,"current_drum_report",false)} = true;";
+            // if (mode is ConfigField.Xbox)
+            // {
+            //     switch (Type)
+            //     {
+            //         case DrumAxisType.YellowCymbal:
+            //             outputButtons += $"\n{GetReportField(YellowCymbalFlag)} = true;";
+            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = 0xFF;";
+            //
+            //             break;
+            //         case DrumAxisType.BlueCymbal:
+            //             outputButtons += $"\n{GetReportField(BlueCymbalFlag)} = true;";
+            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = 0xFF;";
+            //
+            //             break;
+            //         case DrumAxisType.GreenCymbal:
+            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = 0xFF;";
+            //             break;
+            //         case DrumAxisType.Green:
+            //         case DrumAxisType.Red:
+            //         case DrumAxisType.Yellow:
+            //         case DrumAxisType.Blue:
+            //             outputButtons += $"\n{GetReportField("padFlag")} = true;";
+            //
+            //             break;
+            //     }
+            // }
+            // else
+            // {
+            //     switch (Type)
+            //     {
+            //         case DrumAxisType.YellowCymbal:
+            //             outputButtons += $"\n{GetReportField(YellowCymbalFlag)} = true;";
+            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
+            //
+            //             break;
+            //         case DrumAxisType.BlueCymbal:
+            //             outputButtons += $"\n{GetReportField(BlueCymbalFlag)} = true;";
+            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
+            //
+            //             break;
+            //         case DrumAxisType.GreenCymbal:
+            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
+            //             break;
+            //         case DrumAxisType.Green:
+            //         case DrumAxisType.Red:
+            //         case DrumAxisType.Yellow:
+            //         case DrumAxisType.Blue:
+            //             outputButtons += $"\n{GetReportField("padFlag")} = true;";
+            //
+            //             break;
+            //     }
+            // }
 
-                        break;
-                    case DrumAxisType.BlueCymbal:
-                        outputButtons += $"\n{GetReportField(BlueCymbalFlag)} = true;";
-                        outputButtons += $"\n{GetReportField("cymbalFlag")} = 0xFF;";
-
-                        break;
-                    case DrumAxisType.GreenCymbal:
-                        outputButtons += $"\n{GetReportField("cymbalFlag")} = 0xFF;";
-                        break;
-                    case DrumAxisType.Green:
-                    case DrumAxisType.Red:
-                    case DrumAxisType.Yellow:
-                    case DrumAxisType.Blue:
-                        outputButtons += $"\n{GetReportField("padFlag")} = true;";
-
-                        break;
-                }
-            }
-            else
-            {
-                switch (Type)
-                {
-                    case DrumAxisType.YellowCymbal:
-                        outputButtons += $"\n{GetReportField(YellowCymbalFlag)} = true;";
-                        outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
-
-                        break;
-                    case DrumAxisType.BlueCymbal:
-                        outputButtons += $"\n{GetReportField(BlueCymbalFlag)} = true;";
-                        outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
-
-                        break;
-                    case DrumAxisType.GreenCymbal:
-                        outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
-                        break;
-                    case DrumAxisType.Green:
-                    case DrumAxisType.Red:
-                    case DrumAxisType.Yellow:
-                    case DrumAxisType.Blue:
-                        outputButtons += $"\n{GetReportField("padFlag")} = true;";
-
-                        break;
-                }
-            }
-            
         }
 
         // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
