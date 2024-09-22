@@ -73,35 +73,39 @@ public partial class AnalogToDigital : Input
 
     private int CalculateThreshold((int threshold, AnalogToDigitalType type) type)
     {
-        if (!IsUint || type.type is AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger)
+        if (!IsUint)
         {
             return type.threshold;
         }
-
-        return type.type switch
+        switch (type.type)
         {
-            AnalogToDigitalType.JoyHigh => short.MaxValue + type.threshold,
-            AnalogToDigitalType.JoyLow => short.MaxValue - type.threshold,
-            _ => 0
-        };
+            case AnalogToDigitalType.Drum:
+            case AnalogToDigitalType.Trigger:
+                return type.threshold;
+            case AnalogToDigitalType.JoyHigh:
+                return short.MaxValue + type.threshold;
+            case AnalogToDigitalType.JoyLow:
+                return short.MaxValue - type.threshold;
+        }
+
+        return 0;
     }
     public int DisplayThreshold
     {
         get => _displayThreshold.Value;
         set
         {
-            if (!Child.IsUint || AnalogToDigitalType is AnalogToDigitalType.Trigger or AnalogToDigitalType.Drum)
+            if (!Child.IsUint)
             {
                 Threshold = value;
             }
-            else if (AnalogToDigitalType is AnalogToDigitalType.JoyLow)
+
+            Threshold = AnalogToDigitalType switch
             {
-                Threshold = short.MaxValue - value;
-            }
-            else
-            {
-                Threshold = value - short.MaxValue;
-            }
+                AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger => value,
+                AnalogToDigitalType.JoyLow => short.MaxValue - value,
+                _ => value - short.MaxValue
+            };
         }
     }
 
@@ -121,7 +125,7 @@ public partial class AnalogToDigital : Input
     public override string Generate(BinaryWriter? writer)
     {
         var threshold = Threshold;
-        if (Child.IsUint)
+        if (Child.IsUint && AnalogToDigitalType is not (AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger))
         {
             threshold = Math.Abs(threshold);
         }
@@ -171,28 +175,23 @@ public partial class AnalogToDigital : Input
     {
         if (Child.IsUint)
         {
-            switch (AnalogToDigitalType)
+            return AnalogToDigitalType switch
             {
-                case AnalogToDigitalType.Drum:
-                case AnalogToDigitalType.Trigger:
-                    return val.raw > val.threshold ? 1 : 0;
-                case AnalogToDigitalType.JoyHigh:
-                    return val.raw > short.MaxValue + val.threshold ? 1 : 0;
-                case AnalogToDigitalType.JoyLow:
-                    return val.raw < short.MaxValue - val.threshold ? 1 : 0;
-            }
+                AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger => val.raw > val.threshold ? 1 : 0,
+                AnalogToDigitalType.JoyHigh => val.raw > short.MaxValue + val.threshold ? 1 : 0,
+                AnalogToDigitalType.JoyLow => val.raw < short.MaxValue - val.threshold ? 1 : 0,
+                _ => 0
+            };
         }
         else
         {
-            switch (AnalogToDigitalType)
+            return AnalogToDigitalType switch
             {
-                case AnalogToDigitalType.Drum:
-                case AnalogToDigitalType.Trigger:
-                case AnalogToDigitalType.JoyHigh:
-                    return val.raw > Math.Abs(val.threshold) ? 1 : 0;
-                case AnalogToDigitalType.JoyLow:
-                    return val.raw < -Math.Abs(val.threshold) ? 1 : 0;
-            }
+                AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger => val.raw > val.threshold ? 1 : 0,
+                AnalogToDigitalType.JoyHigh => val.raw > Math.Abs(val.threshold) ? 1 : 0,
+                AnalogToDigitalType.JoyLow => val.raw < -Math.Abs(val.threshold) ? 1 : 0,
+                _ => 0
+            };
         }
 
         return 0;
@@ -200,7 +199,7 @@ public partial class AnalogToDigital : Input
 
     public override IEnumerable<Input> InnermostInputs()
     {
-        return new []{Child};
+        return [Child];
     }
 
     public override void Update(Dictionary<int, int> analogRaw,
