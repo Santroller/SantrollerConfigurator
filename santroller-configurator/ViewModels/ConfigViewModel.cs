@@ -1177,6 +1177,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _hasAccel;
         set
         {
+            if (_hasAccel == value) return;
             _accelTwiConfig =
                 value
                     ? Microcontroller.AssignTwiPins(this, AccelTwiType, false, -1, -1, AccelTwiFreq, false)

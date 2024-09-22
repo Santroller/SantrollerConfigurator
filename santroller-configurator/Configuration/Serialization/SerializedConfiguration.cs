@@ -95,6 +95,7 @@ public class SerializedConfiguration
         AccelSensorType = model.AccelSensorType;
         AccelScl = model.AccelScl;
         AccelSda = model.AccelSda;
+        HasAccel = model.HasAccel;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
