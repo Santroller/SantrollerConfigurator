@@ -6171,9 +6171,9 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string OffsetLabel {
+        public static string CenterLabel {
             get {
-                return ResourceManager.GetString("OffsetLabel", resourceCulture);
+                return ResourceManager.GetString("CenterLabel", resourceCulture);
             }
         }
         

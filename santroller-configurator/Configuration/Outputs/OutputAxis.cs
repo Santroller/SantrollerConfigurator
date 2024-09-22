@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Media;
@@ -31,22 +30,16 @@ public abstract partial class OutputAxis : Output
 
     private OutputAxisCalibrationState _calibrationState = OutputAxisCalibrationState.None;
 
-
-    public static double OffsetMin => short.MinValue;
-    public static double OffsetMax => short.MaxValue;
-    public static decimal OffsetMinDecimal => short.MinValue;
-    public static decimal OffsetMaxDecimal => short.MaxValue;
-
     protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,
-        int min, int max, int offset,
+        int min, int max, int center,
         int deadZone, bool trigger, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
         bool childOfCombined) : base(model, input, ledOn, ledOff,
         ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin,
         childOfCombined)
     {
-        Offset = offset;
+        Center = center;
         Trigger = trigger;
         LedOn = ledOn;
         LedOff = ledOff;
@@ -68,7 +61,7 @@ public abstract partial class OutputAxis : Output
             .ToProperty(this, x => x.SliderMin);
 
         _valueHelper = this
-            .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.Offset, x => x.DeadZone,
+            .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.Center, x => x.DeadZone,
                 x => x.Trigger,
                 x => x.Model.DeviceControllerType, Calculate).ToProperty(this, x => x.Value);
         _valueLowerHelper = this.WhenAnyValue(x => x.Value).Select(s => s < 0 ? -s : 0)
@@ -118,7 +111,7 @@ public abstract partial class OutputAxis : Output
 
     [Reactive] private int _deadZone;
 
-    [Reactive] private int _offset;
+    [Reactive] private int _center;
 
 
     public bool Trigger { get; }
@@ -197,7 +190,7 @@ public abstract partial class OutputAxis : Output
                 {
                     Min = _tempMin - Max;
                 }
-
+                Center = (Max + Min) / 2;
                 break;
             case OutputAxisCalibrationState.DeadZone:
                 var min = Math.Min(Min, Max);
@@ -214,7 +207,7 @@ public abstract partial class OutputAxis : Output
                 else
                 {
                     // For non triggers, deadzone starts in the middle and grows in both directions
-                    DeadZone = Math.Abs((max + min) / 2 - rawValue);
+                    DeadZone = Math.Abs(Center - rawValue);
                 }
 
                 break;
@@ -235,17 +228,20 @@ public abstract partial class OutputAxis : Output
         this.RaisePropertyChanged(nameof(CalibrationText));
         this.RaisePropertyChanged(nameof(CalibrationStatus));
     }
+    
+    private static float Map(float x, float inMin, float inMax, float outMin, float outMax) {
+        return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    }
 
-    protected virtual int Calculate(bool enabled, int value, int min, int max, int offset, int deadZone, bool trigger,
+    protected virtual int Calculate(bool enabled, int value, int min, int max, int center, int deadZone, bool trigger,
         DeviceControllerType
             deviceControllerType)
     {
         if (!enabled) return 0;
         float fmin = min;
         float fmax = max;
-        float tmin = min;
-        float tmax = max;
-        double val = value;
+        float fcenter = center;
+        float val = value;
 
         var inverted = fmin > fmax;
         if (trigger)
@@ -270,9 +266,6 @@ public abstract partial class OutputAxis : Output
                 if (val < fmin) return 0;
                 if (val > fmax) val = fmax;
             }
-
-            tmin = fmin;
-            tmax = fmax;
         }
         else
         {
@@ -282,9 +275,10 @@ public abstract partial class OutputAxis : Output
                 val -= short.MaxValue;
                 fmax -= short.MaxValue;
                 fmin -= short.MaxValue;
+                fcenter -= short.MaxValue;
             }
 
-            var deadZoneCalc = val - (fmax + fmin) / 2;
+            var deadZoneCalc = val - center;
             if (deadZoneCalc < deadZone && deadZoneCalc > -deadZone) return 0;
 
             val -= Math.Sign(val) * deadZone;
@@ -298,26 +292,24 @@ public abstract partial class OutputAxis : Output
                 fmin -= deadZone;
                 fmax += deadZone;
             }
-
-            tmin = fmin;
-            tmax = fmax;
-
-            if (this is ControllerAxis)
-            {
-                tmin += offset;
-                tmax -= offset;
-            }
         }
 
         if (trigger)
         {
-            val = (val - fmin) / (fmax - fmin) * ushort.MaxValue;
+            val = Map(val, fmin, fmax, 0, ushort.MaxValue);
             if (val > ushort.MaxValue) val = ushort.MaxValue;
             if (val < 0) val = 0;
         }
         else
         {
-            val = (val - fmin) / (tmax - tmin) * (short.MaxValue - short.MinValue) + short.MinValue;
+            if (val < fcenter)
+            {
+                val = Map(val, fmin, fcenter, short.MinValue, 0);
+            }
+            else
+            {
+                val = Map(val, fcenter, fmax, 0, short.MaxValue);
+            }
             if (val > short.MaxValue) val = short.MaxValue;
             if (val < short.MinValue) val = short.MinValue;
         }
@@ -374,15 +366,14 @@ public abstract partial class OutputAxis : Output
                 return $"({Input.Generate(writer)} >> 8) & 0xff";
         }
 
-        var offset = Offset;
-        if (this is not ControllerAxis || trigger)
-        {
-            offset = 0;
-        }
-
         string function;
         var intBased = false;
         var singleByte = false;
+        var center = Center;
+        if (this is not ControllerAxis)
+        {
+            center = 0;
+        }
 
         switch (mode)
         {
@@ -460,7 +451,6 @@ public abstract partial class OutputAxis : Output
         var min = Min;
         var max = Max;
         var inverted = Min > Max;
-        float multiplier;
         if (intBased)
         {
             if (InputIsUint)
@@ -489,16 +479,6 @@ public abstract partial class OutputAxis : Output
             {
                 max = short.MaxValue;
             }
-
-            var tmin = min;
-            var tmax = max;
-            if (this is ControllerAxis)
-            {
-                tmin += offset;
-                tmax -= offset;
-            }
-
-            multiplier = 1f / (tmax - tmin) * (short.MaxValue - short.MinValue);
         }
         else
         {
@@ -522,9 +502,8 @@ public abstract partial class OutputAxis : Output
             {
                 max = ushort.MaxValue;
             }
-
-            multiplier = 1f / (max - min) * ushort.MaxValue;
         }
+        var multiplier = 1f / (max - min) * ushort.MaxValue;
 
         var generated = "(" + Input.Generate(writer);
         if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && mode is ConfigField.XboxOne)
@@ -559,11 +538,11 @@ public abstract partial class OutputAxis : Output
         var mulInt = (short) (multiplier * 512);
         if (writer == null)
             return intBased
-                ? $"{function}({prev}, {generated}, {(max + min) / 2}, {min}, {mulInt}, {DeadZone})"
+                ? $"{function}({prev}, {generated}, {min}, {max}, {center}, {DeadZone})"
                 : $"{function}({prev}, {generated}, {min}, {mulInt}, {DeadZone})";
 
         return intBased
-            ? $"{function}({prev}, {generated}, {WriteBlob(writer, (max + min) / 2)}, {WriteBlob(writer, min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, DeadZone)})"
+            ? $"{function}({prev}, {generated}, {WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, DeadZone)})"
             : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) DeadZone)})";
     }
 

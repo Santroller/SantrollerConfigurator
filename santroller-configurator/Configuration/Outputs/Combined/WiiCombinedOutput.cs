@@ -309,7 +309,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                 Outputs.Add(new ControllerAxis(Model, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue,
-                    0,8000, threshold,
+                    ushort.MaxValue/2,8000, threshold,
                     pair.Value, false, false, false, -1, true));
             }
             else

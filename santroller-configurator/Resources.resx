@@ -3212,8 +3212,8 @@
     <data name="DeadzoneLabel" xml:space="preserve">
         <value>Deadzone</value>
     </data>
-    <data name="OffsetLabel" xml:space="preserve">
-        <value>Offset</value>
+    <data name="CenterLabel" xml:space="preserve">
+        <value>Center</value>
     </data>
     <data name="CurrentFretsLabel" xml:space="preserve">
         <value>Current Frets</value>

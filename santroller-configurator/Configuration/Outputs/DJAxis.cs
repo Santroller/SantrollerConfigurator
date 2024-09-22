@@ -54,7 +54,7 @@ public partial class DjAxis : OutputAxis
 
     [Reactive] private bool _invert;
 
-    protected override int Calculate(bool enabled, int value, int min, int max, int offset, int deadZone, bool trigger,
+    protected override int Calculate(bool enabled, int value, int min, int max, int center, int deadZone, bool trigger,
         DeviceControllerType
             deviceControllerType)
     {
@@ -66,7 +66,7 @@ public partial class DjAxis : OutputAxis
 
             DjAxisType.EffectsKnob when Input.IsUint => (value - short.MaxValue) * (Invert ? -1 : 1),
             DjAxisType.EffectsKnob => value * (Invert ? -1 : 1),
-            _ => base.Calculate(enabled, value, min, max, offset, deadZone, trigger, deviceControllerType)
+            _ => base.Calculate(enabled, value, min, max, center, deadZone, trigger, deviceControllerType)
         };
     }
 

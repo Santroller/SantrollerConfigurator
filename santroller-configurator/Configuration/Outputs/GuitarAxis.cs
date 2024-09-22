@@ -141,13 +141,13 @@ public partial class GuitarAxis : OutputAxis
         }
     }
 
-    protected override int Calculate(bool enabled, int value, int min, int max, int offset, int deadZone, bool trigger, DeviceControllerType
+    protected override int Calculate(bool enabled, int value, int min, int max, int center, int deadZone, bool trigger, DeviceControllerType
         deviceControllerType)
     {
         return Type switch
         {
             GuitarAxisType.Slider or GuitarAxisType.Pickup => value,
-            _ => base.Calculate(enabled, value, min, max, offset, deadZone, trigger, deviceControllerType)
+            _ => base.Calculate(enabled, value, min, max, center, deadZone, trigger, deviceControllerType)
         };
     }
 

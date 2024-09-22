@@ -1612,7 +1612,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                         ushort.MinValue,
                         ushort.MaxValue,
-                        0,0, ushort.MaxValue, axisType, false, false, false, -1, false));
+                        ushort.MaxValue/2,0, ushort.MaxValue, axisType, false, false, false, -1, false));
                     break;
                 case GuitarAxisType.Slider:
                     break;
@@ -1809,11 +1809,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             if (ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
                     .Length == 0) continue;
             var isTrigger = type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger;
+            int min = isTrigger ? ushort.MinValue : short.MinValue;
+            int max = isTrigger ? ushort.MaxValue : short.MaxValue;
             Bindings.Add(new ControllerAxis(this,
                 new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
-                isTrigger ? ushort.MinValue : short.MinValue,
-                isTrigger ? ushort.MaxValue : short.MaxValue, 0,0,
+                min, max, (max+min)/2,0,
                 ushort.MaxValue, type, false, false, false, -1, false));
         }
 
