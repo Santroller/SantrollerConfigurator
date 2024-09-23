@@ -69,7 +69,7 @@ public abstract partial class OutputAxis : Output
         _valueUpperHelper = this.WhenAnyValue(x => x.Value).Select(s => s > 0 ? s : 0)
             .ToProperty(this, x => x.ValueUpper);
         _computedDeadZoneMarginHelper = this
-            .WhenAnyValue(x => x.Min, x => x.Max, x => x.Trigger, x => x.InputIsUint, x => x.DeadZone)
+            .WhenAnyValue(x => x.Min, x => x.Max, x=>x.Center, x => x.Trigger, x => x.InputIsUint, x => x.DeadZone)
             .Select(ComputeDeadZoneMargin).ToProperty(this, x => x.ComputedDeadZoneMargin);
         _calibrationMinMaxMarginHelper = this.WhenAnyValue(x => x.Min, x => x.Max, x => x.InputIsUint)
             .Select(ComputeMinMaxMargin).ToProperty(this, x => x.CalibrationMinMaxMargin);
@@ -122,7 +122,7 @@ public abstract partial class OutputAxis : Output
     public string? CalibrationText => GetCalibrationText();
     public string? CalibrationStatus => GetCalibrationStatus();
 
-    private static Thickness ComputeDeadZoneMargin((int min, int max, bool trigger, bool inputIsUint, int deadZone) s)
+    private static Thickness ComputeDeadZoneMargin((int min, int max, int center, bool trigger, bool inputIsUint, int deadZone) s)
     {
         float min = Math.Min(s.min, s.max);
         float max = Math.Max(s.min, s.max);
@@ -136,7 +136,7 @@ public abstract partial class OutputAxis : Output
         }
         else
         {
-            var mid = (max + min) / 2;
+            var mid = s.center;
             min = mid - s.deadZone;
             max = mid + s.deadZone;
         }
