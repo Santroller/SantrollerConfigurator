@@ -48,33 +48,42 @@ public class ConfigurableUsbDeviceManager
                     }
                     else if (Ardwiino.HardwareIds.Contains((vid, pid)))
                     {
-                        device.Open();
-                        if (!device.IsOpen)
+                        try
                         {
-                            break;
-                        }
-                        var info = device.Info;
-                        var revision = info.Device;
-                        var product = info.Product ?? "Santroller";
-                        var manufacturer = info.Manufacturer ?? "sanjay900";
-                        var serial = info.SerialNumber?.Split("\0", 2)[0] ?? "";
-                        // All our devices have a serial number specified, so skip devices that don't have one
-                        if (string.IsNullOrEmpty(serial))
-                        {
-                            return;
-                        }
-                        switch (product)
-                        {
-                            case "Ardwiino" when _model.Programming:
-                            case "Ardwiino" when revision == Ardwiino.SerialArdwiinoRevision:
+                            device.Open();
+                            if (!device.IsOpen)
+                            {
+                                break;
+                            }
+
+                            var info = device.Info;
+                            var revision = info.Device;
+                            var product = info.Product ?? "Santroller";
+                            var manufacturer = info.Manufacturer ?? "sanjay900";
+                            var serial = info.SerialNumber?.Split("\0", 2)[0] ?? "";
+                            // All our devices have a serial number specified, so skip devices that don't have one
+                            if (string.IsNullOrEmpty(serial))
+                            {
                                 return;
-                            case "Ardwiino":
-                                _model.AddDevice(new Ardwiino(new LibUsbRealDevice(device)));
-                                break;
-                            default:
-                                // Branded devices can have any name.
-                                _model.AddDevice(new Santroller(new LibUsbRealDevice(device)));
-                                break;
+                            }
+
+                            switch (product)
+                            {
+                                case "Ardwiino" when _model.Programming:
+                                case "Ardwiino" when revision == Ardwiino.SerialArdwiinoRevision:
+                                    return;
+                                case "Ardwiino":
+                                    _model.AddDevice(new Ardwiino(new LibUsbRealDevice(device)));
+                                    break;
+                                default:
+                                    // Branded devices can have any name.
+                                    _model.AddDevice(new Santroller(new LibUsbRealDevice(device)));
+                                    break;
+                            }
+                        }
+                        catch (UsbException ex)
+                        {
+                            Console.WriteLine(ex);
                         }
                     }
                     break;
