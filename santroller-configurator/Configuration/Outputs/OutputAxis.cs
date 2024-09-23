@@ -266,6 +266,9 @@ public abstract partial class OutputAxis : Output
                 if (val < fmin) return 0;
                 if (val > fmax) val = fmax;
             }
+            val = Map(val, fmin, fmax, 0, ushort.MaxValue);
+            if (val > ushort.MaxValue) val = ushort.MaxValue;
+            if (val < 0) val = 0;
         }
         else
         {
@@ -277,37 +280,20 @@ public abstract partial class OutputAxis : Output
                 fmin -= short.MaxValue;
                 fcenter -= short.MaxValue;
             }
-
-            var deadZoneCalc = val - center;
-            if (deadZoneCalc < deadZone && deadZoneCalc > -deadZone) return 0;
-
-            val -= Math.Sign(val) * deadZone;
-            if (fmax > fmin)
-            {
-                fmin += deadZone;
-                fmax -= deadZone;
-            }
-            else
-            {
-                fmin -= deadZone;
-                fmax += deadZone;
-            }
-        }
-
-        if (trigger)
-        {
-            val = Map(val, fmin, fmax, 0, ushort.MaxValue);
-            if (val > ushort.MaxValue) val = ushort.MaxValue;
-            if (val < 0) val = 0;
-        }
-        else
-        {
             if (val < fcenter)
             {
+                if (fcenter - val < deadZone)
+                {
+                    return 0;
+                }
                 val = Map(val, fmin, fcenter, short.MinValue, 0);
             }
             else
             {
+                if (val - fcenter < deadZone)
+                {
+                    return 0;
+                }
                 val = Map(val, fcenter, fmax, 0, short.MaxValue);
             }
             if (val > short.MaxValue) val = short.MaxValue;
@@ -458,17 +444,6 @@ public abstract partial class OutputAxis : Output
                 max -= short.MaxValue;
                 min -= short.MaxValue;
                 center -= short.MaxValue;
-            }
-
-            if (inverted)
-            {
-                min -= DeadZone;
-                max += DeadZone;
-            }
-            else
-            {
-                min += DeadZone;
-                max -= DeadZone;
             }
 
             if (min < short.MinValue)
