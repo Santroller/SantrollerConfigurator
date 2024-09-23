@@ -286,7 +286,7 @@ public abstract partial class OutputAxis : Output
                 {
                     return 0;
                 }
-                val = Map(val, fmin, fcenter, short.MinValue, 0);
+                val = Map(val, fmin, fcenter-deadZone, short.MinValue, 0);
             }
             else
             {
@@ -294,7 +294,7 @@ public abstract partial class OutputAxis : Output
                 {
                     return 0;
                 }
-                val = Map(val, fcenter, fmax, 0, short.MaxValue);
+                val = Map(val, fcenter+deadZone, fmax, 0, short.MaxValue);
             }
             if (val > short.MaxValue) val = short.MaxValue;
             if (val < short.MinValue) val = short.MinValue;
