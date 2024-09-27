@@ -147,6 +147,7 @@ public partial class UsbHostInput : Input
             UsbHostInputType.KeyboardInput => Output.GetReportField(Key, "usb_host_data.keyboard"),
             UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, "usb_host_data.mouse"),
             UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, "usb_host_data.mouse"),
+            UsbHostInputType.ProKey => Output.GetReportField(ProKeyType, "usb_host_data", false),
             _ => Output.GetReportField(Input, "usb_host_data", false)
         });
 
