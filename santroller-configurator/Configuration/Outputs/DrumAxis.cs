@@ -243,15 +243,16 @@ public partial class DrumAxis : OutputAxis
             input = new WiiInput(typeAxis, Model, wii.Peripheral);
         }
 
+        var hasButtons = Model.DeviceControllerType.IsGh() || Type is DrumAxisType.Kick or DrumAxisType.Kick2;
         var outputButtons = "";
         switch (mode)
         {
             case ConfigField.Xbox360:
-                if (Model.DeviceControllerType.IsGh() && ButtonsXbox360.TryGetValue(Type, out var value))
+                if (hasButtons && ButtonsXbox360.TryGetValue(Type, out var value))
                     outputButtons += $"\n{GetReportField(value)} = true;";
                 break;
             case ConfigField.Xbox:
-                if (Model.DeviceControllerType.IsGh() && ButtonsXbox360.TryGetValue(Type, out var value5))
+                if (hasButtons && ButtonsXbox360.TryGetValue(Type, out var value5))
                     outputButtons += $"\n{GetReportField(value5)} = 0xff;";
                 break;
             case ConfigField.XboxOne:
@@ -259,7 +260,7 @@ public partial class DrumAxis : OutputAxis
                     outputButtons += $"\n{GetReportField(value1)} = true;";
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture:
-                if (Model.DeviceControllerType.IsGh() && ButtonsPs3.TryGetValue(Type, out var value2))
+                if (hasButtons && ButtonsPs3.TryGetValue(Type, out var value2))
                     outputButtons += $"\n{GetReportField(value2)} = true;";
                 break;
             case ConfigField.Universal:
