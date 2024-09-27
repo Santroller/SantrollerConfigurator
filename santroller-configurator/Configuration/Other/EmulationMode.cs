@@ -76,6 +76,7 @@ public class EmulationMode : Output
         {
             EmulationModeType.Xbox360 => "XBOX360",
             EmulationModeType.XboxOne => "XBOXONE",
+            EmulationModeType.Xbox => "OG_XBOX",
             EmulationModeType.Wii => "WII_RB",
             EmulationModeType.Ps3 => "REAL_PS3",
             EmulationModeType.Ps4Or5 => "PS4",

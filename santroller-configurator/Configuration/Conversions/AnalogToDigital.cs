@@ -183,18 +183,14 @@ public partial class AnalogToDigital : Input
                 _ => 0
             };
         }
-        else
-        {
-            return AnalogToDigitalType switch
-            {
-                AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger => val.raw > val.threshold ? 1 : 0,
-                AnalogToDigitalType.JoyHigh => val.raw > Math.Abs(val.threshold) ? 1 : 0,
-                AnalogToDigitalType.JoyLow => val.raw < -Math.Abs(val.threshold) ? 1 : 0,
-                _ => 0
-            };
-        }
 
-        return 0;
+        return AnalogToDigitalType switch
+        {
+            AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger => val.raw > val.threshold ? 1 : 0,
+            AnalogToDigitalType.JoyHigh => val.raw > Math.Abs(val.threshold) ? 1 : 0,
+            AnalogToDigitalType.JoyLow => val.raw < -Math.Abs(val.threshold) ? 1 : 0,
+            _ => 0
+        };
     }
 
     public override IEnumerable<Input> InnermostInputs()
