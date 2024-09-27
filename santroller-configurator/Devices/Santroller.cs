@@ -287,7 +287,10 @@ public class Santroller : ConfigurableUsbDevice
 
                 var bluetoothRaw = Array.Empty<byte>();
                 if (IsPico) bluetoothRaw = await ReadDataAsync(0, (byte) Commands.CommandGetBtState, 1);
-
+                if (!UsbDevice.IsOpen || _model.Main.Working)
+                {
+                    return;
+                }
                 _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw, accelConnected);
                 foreach (var output in _bindings)
                     output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
@@ -300,7 +303,6 @@ public class Santroller : ConfigurableUsbDevice
                 Console.WriteLine(ex);
             }
         }
-        Console.WriteLine("Done");
     }
 
     private void Load()
