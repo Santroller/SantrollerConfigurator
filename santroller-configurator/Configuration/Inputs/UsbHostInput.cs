@@ -258,7 +258,8 @@ public partial class UsbHostInput : Input
         UsbHostInputType.KickVelocity,
         UsbHostInputType.Whammy,
         UsbHostInputType.Pickup,
-        UsbHostInputType.MouseAxis
+        UsbHostInputType.MouseAxis,
+        UsbHostInputType.ProKey
     ];
 
 

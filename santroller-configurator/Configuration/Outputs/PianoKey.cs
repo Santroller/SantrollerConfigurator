@@ -2,16 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Avalonia.Input;
 using Avalonia.Media;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
-using ReactiveUI;
-using ReactiveUI.SourceGenerators;
-using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
