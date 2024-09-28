@@ -97,12 +97,12 @@ public partial class PianoKey : OutputAxis
             {
                 ProKeyType.TouchPad => $$"""
                                                 if ({{Input.Generate(writer)}}) {
-                                                    report->touchPad = {{GenerateAssignment("report->touchPad", mode, false, false, false, false, writer)}};
+                                                    report->touchPad = ({{GenerateAssignment("report->touchPad", mode, false, false, false, false, writer)}}) >> 1;
                                                 }
                                                 """,
                 ProKeyType.PedalAnalog => $$"""
                                       if ({{Input.Generate(writer)}}) {
-                                          report->pedalAnalog = {{GenerateAssignment("report->pedalAnalog", mode, false, false, false, false, writer)}};
+                                          report->pedalAnalog = ({{GenerateAssignment("report->pedalAnalog", mode, false, false, false, false, writer)}}) >> 1;
                                       }
                                       """,
                 _ => $$"""
