@@ -124,11 +124,22 @@ public partial class BrandedConfiguration : ReactiveObject
             }
         }
 
-        await using var stream = File.OpenWrite(outputFile);
-        foreach (var uf2Block in blocks)
+        var tempFile = Path.GetTempFileName();
+        try
         {
-            uf2Block.numBlocks = (uint) blocks.Count;
-            await StructTools.RawSerialiseAsync(uf2Block, stream);
+            await using (var stream = File.OpenWrite(tempFile))
+            {
+                foreach (var uf2Block in blocks)
+                {
+                    uf2Block.numBlocks = (uint) blocks.Count;
+                    await StructTools.RawSerialiseAsync(uf2Block, stream);
+                }
+            }
+            File.Copy(tempFile, outputFile);
+        }
+        finally
+        {
+            File.Delete(tempFile);
         }
     }
 
