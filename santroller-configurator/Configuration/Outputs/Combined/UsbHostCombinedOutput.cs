@@ -33,7 +33,7 @@ public partial class UsbHostCombinedOutput : CombinedOutput
             .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var digitalOutputs)
             .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or {Input.IsAnalog:false})
+        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or {Input.IsAnalog: false})
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var allDigitalOutputs)
@@ -171,56 +171,60 @@ public partial class UsbHostCombinedOutput : CombinedOutput
             if (!valid.Contains(key))
             {
                 continue;
-            } 
+            }
+
             var input = new UsbHostInput(value, Model, true);
             int min = input.IsUint ? ushort.MinValue : short.MinValue;
             int max = input.IsUint ? ushort.MaxValue : short.MaxValue;
             Output? output = key switch
             {
                 StandardAxisType.RightTrigger or StandardAxisType.LeftTrigger => new ControllerAxis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    min, max, (max+min)/2,0, 50000, (StandardAxisType)key, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    min, max, (max + min) / 2, 0, 50000, (StandardAxisType) key, false, false, false, -1, true),
                 StandardAxisType standardAxisType => new ControllerAxis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    min, max, (max+min)/2,0, ushort.MaxValue, standardAxisType, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    min, max, (max + min) / 2, 0, ushort.MaxValue, standardAxisType, false, false, false, -1, true),
                 StandardButtonType standardButtonType => new ControllerButton(Model,
                     input, Colors.Black,
-                    Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), Array.Empty<byte>(), 5,
-                    standardButtonType, false, false ,false, -1, true),
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5,
+                    standardButtonType, false, false, false, -1, true),
                 InstrumentButtonType standardButtonType => new GuitarButton(Model,
                     input, Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(), 5,
-                    standardButtonType, false, false ,false, -1, true),
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5,
+                    standardButtonType, false, false, false, -1, true),
                 DrumAxisType drumAxisType => new DrumAxis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    min, max, 0, 10, drumAxisType, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    min, max, 0, 10, drumAxisType, false, false, false, -1, true),
                 Ps3AxisType ps3AxisType => new Ps3Axis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    min, max, 0, ps3AxisType, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    min, max, 0, ps3AxisType, false, false, false, -1, true),
                 GuitarAxisType.Pickup => new GuitarAxis(Model,
-                    input, GuitarAxis.PickupSelectorRangesPS[1] << 8,GuitarAxis.PickupSelectorRangesPS[2] << 8,GuitarAxis.PickupSelectorRangesPS[3] << 8,GuitarAxis.PickupSelectorRangesPS[4] << 8, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    min, max, 0, false, GuitarAxisType.Pickup, false, false ,false, -1, true),
+                    input, GuitarAxis.PickupSelectorRangesPS[1] << 8, GuitarAxis.PickupSelectorRangesPS[2] << 8,
+                    GuitarAxis.PickupSelectorRangesPS[3] << 8, GuitarAxis.PickupSelectorRangesPS[4] << 8, Colors.Black,
+                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    min, max, 0, false, GuitarAxisType.Pickup, false, false, false, -1, true),
                 GuitarAxisType.Slider => new GuitarAxis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    min, max, 0, false, GuitarAxisType.Slider, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    min, max, 0, false, GuitarAxisType.Slider, false, false, false, -1, true),
                 GuitarAxisType guitarAxisType => new GuitarAxis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    min, max, 0, false, guitarAxisType, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    min, max, 0, false, guitarAxisType, false, false, false, -1, true),
                 DjAxisType.LeftTableVelocity => new DjAxis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    1, 1, DjAxisType.LeftTableVelocity, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    1, 1, DjAxisType.LeftTableVelocity, false, false, false, -1, true),
                 DjAxisType.RightTableVelocity => new DjAxis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    1, 1,DjAxisType.RightTableVelocity, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    1, 1, DjAxisType.RightTableVelocity, false, false, false, -1, true),
                 DjAxisType.EffectsKnob => new DjAxis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    1, 1,DjAxisType.EffectsKnob, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    1, 1, DjAxisType.EffectsKnob, false, false, false, -1, true),
                 DjAxisType djAxisType => new DjAxis(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    min, max, 0, djAxisType, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    min, max, 0, djAxisType, false, false, false, -1, true),
                 DjInputType djInputType => new DjButton(Model,
-                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(), 10,
-                    djInputType, false, false ,false, -1, true),
+                    input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                    10,
+                    djInputType, false, false, false, -1, true),
                 _ => null
             };
             if (output != null)
@@ -238,14 +242,27 @@ public partial class UsbHostCombinedOutput : CombinedOutput
         {
             valid.UnionWith(Enum.GetValues<DjInputType>().Cast<object>());
         }
+
         if (Model.DeviceControllerType == DeviceControllerType.ProKeys)
         {
             foreach (var proKeyType in ProKeyTypes)
             {
-                Outputs.Add(new PianoKey(Model, new UsbHostInput(proKeyType, Model, true), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
-                    proKeyType, 1,  false, false ,false, -1, true));
+                switch (proKeyType)
+                {
+                    case ProKeyType.Overdrive or ProKeyType.PedalDigital:
+                        Outputs.Add(new PianoKeyButton(Model, new UsbHostInput(proKeyType, Model, true), Colors.Black,
+                            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                            proKeyType, false, false, false, -1, true));
+                        break;
+                    default:
+                        Outputs.Add(new PianoKey(Model, new UsbHostInput(proKeyType, Model, true), Colors.Black,
+                            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                            proKeyType, false, false, false, -1, true));
+                        break;
+                }
             }
         }
+
         LoadMatchingFromDict(valid, Mappings);
         switch (Model.DeviceControllerType)
         {
@@ -290,8 +307,9 @@ public partial class UsbHostCombinedOutput : CombinedOutput
         ReadOnlySpan<byte> midiRaw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
-            ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
-        
+            ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
+            digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
+
         var buffer = "";
         if (usbHostRaw.IsEmpty)
         {
@@ -340,7 +358,8 @@ public partial class UsbHostCombinedOutput : CombinedOutput
             buffer += consoleType switch
             {
                 ConsoleType.Generic => string.Format(Resources.GenericGamepadLabel, subType),
-                ConsoleType.Keyboard or ConsoleType.Mouse or ConsoleType.Xbox360BigButton => $"{EnumToStringConverter.Convert(consoleType)}\n",
+                ConsoleType.Keyboard or ConsoleType.Mouse or ConsoleType.Xbox360BigButton =>
+                    $"{EnumToStringConverter.Convert(consoleType)}\n",
                 _ => $"{EnumToStringConverter.Convert(consoleType)} {subType}\n"
             };
 

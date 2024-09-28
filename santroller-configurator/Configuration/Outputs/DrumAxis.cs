@@ -115,7 +115,7 @@ public partial class DrumAxis : OutputAxis
         int deadZone, int debounce, DrumAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted,
         int outputPin, bool childOfCombined) : base(model, input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
-        min, max, 0,deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        min, max, 0, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
         Debounce = debounce;
@@ -158,6 +158,7 @@ public partial class DrumAxis : OutputAxis
         {
             return "kick2";
         }
+
         return mode switch
         {
             ConfigField.Universal or ConfigField.Shared => UniversalAxisMappings.GetValueOrDefault(Type, ""),
@@ -177,21 +178,52 @@ public partial class DrumAxis : OutputAxis
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        var input = Input;
+        if (Input is WiiInput
+            {
+                Input: >= WiiInputType.DrumGreenPressure and <= WiiInputType.DrumOrangePressure
+                or WiiInputType.DrumKickPedalPressure
+            } wii)
+        {
+            // For wii stuff, generate the debounce based on the digital signal from the controller
+            var type = wii.Input;
+            var typeButton = Enum.Parse<WiiInputType>(type.ToString().Replace("Pressure", ""));
+            input = new WiiInput(typeButton, Model, wii.Peripheral);
+        }
+
+        if (Input is UsbHostInput
+            {
+                Input: >= UsbHostInputType.RedVelocity and <= UsbHostInputType.KickVelocity
+            } usb)
+        {
+            // For usb host stuff, generate the debounce based on the digital signal from the controller
+            var type = usb.Input;
+            if (type is UsbHostInputType.KickVelocity)
+            {
+                type = UsbHostInputType.Kick1;
+            }
+
+            var typeButton = Enum.Parse<UsbHostInputType>(type.ToString().Replace("Velocity", ""));
+            input = new UsbHostInput(typeButton, Model);
+        }
+
         if (mode == ConfigField.Shared)
         {
             if (Input is not WiiInput &&
                 (!Model.DeviceControllerType.IsRb() || Type is not (DrumAxisType.Kick or DrumAxisType.Kick2)) &&
-                Model is {IsKeyboard: false}) return "";
-            var i = Input;
-            if (i.IsAnalog)
+                Model is {IsKeyboard: false} && Input is not UsbHostInput) return "";
+
+            if (input.IsAnalog)
             {
-                i = new AnalogToDigital(i, AnalogToDigitalType.Drum, Min, Model);
+                input = new AnalogToDigital(input, AnalogToDigitalType.Drum, Min, Model);
             }
 
-            return new ControllerButton(Model, i, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
+            return new ControllerButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
+                    LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
                     (byte) Debounce, StandardButtonType.A,
                     false, false, false, -1, false)
-                .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+                .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+                    macros, writer);
         }
 
         // Some drums never send a note off, so we fabricate one here.
@@ -201,8 +233,8 @@ public partial class DrumAxis : OutputAxis
         }
 
         if (mode is not (ConfigField.Ps3
-                or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
-                or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
+            or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
+            or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;
         if (!Model.IsAdvancedMode) debounce = Model.Debounce;
@@ -215,32 +247,21 @@ public partial class DrumAxis : OutputAxis
         debounce += 1;
 
         var ifStatement = $"debounce[{debounceIndex}]";
-        var input = Input;
         var reset = $"debounce[{debounceIndex}]={debounce};";
-        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
+        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
+            Model.HasMpr121)
         {
             reset += $"ledDebounce[{ledIndex}]={debounce};";
         }
+
         if (writer != null)
         {
             reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
-            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
+            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
+                Model.HasMpr121)
             {
                 reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
             }
-        }
-
-        if (Input is WiiInput
-            {
-                Input: >= WiiInputType.DrumGreen and <= WiiInputType.DrumOrange or WiiInputType.DrumKickPedal
-            } wii)
-        {
-            // Wii inputs provide their own digital signals, so don't generate one ourselves.
-            reset = "";
-            // For wii stuff, generate the debounce based on the digital signal from the controller
-            var type = wii.Input;
-            var typeAxis = Enum.Parse<WiiInputType>($"{type}Pressure");
-            input = new WiiInput(typeAxis, Model, wii.Peripheral);
         }
 
         var hasButtons = Model.DeviceControllerType.IsGh() || Type is DrumAxisType.Kick or DrumAxisType.Kick2;
@@ -288,7 +309,7 @@ public partial class DrumAxis : OutputAxis
 
         if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
         {
-            outputButtons += $"{GetReportField(Type,"current_drum_report",false)} = true;";
+            outputButtons += $"{GetReportField(Type, "current_drum_report", false)} = true;";
             // if (mode is ConfigField.Xbox)
             // {
             //     switch (Type)
@@ -341,7 +362,6 @@ public partial class DrumAxis : OutputAxis
             //             break;
             //     }
             // }
-
         }
 
         // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
@@ -419,23 +439,34 @@ public partial class DrumAxis : OutputAxis
                      """;
         }
 
+        if (!input.IsAnalog)
+        {
+            return $$"""
+                     if ({{ifStatement}}) {
+                         {{GenerateOutput(mode)}} = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
+                         {{outputButtons}}
+                     }
+                     """;
+        }
+
         // For drums, we want to do things based on a peak.
         // That means we ignore anything under Min, then when something peaks over Min, we capture that value and wait until we are back under Min before resetting.
-        var check = $"{Input.Generate(writer)} > {Min}";
+        var check = $"{input.Generate(writer)} > {Min}";
         if (Min > Max)
         {
-            check = $"({Input.Generate(writer)} - {Min}) < {DeadZone}";
+            check = $"({input.Generate(writer)} - {Min}) < {DeadZone}";
         }
 
         var analogReset = "";
         if (mode is ConfigField.Xbox360 or ConfigField.Xbox)
         {
             analogReset = $$"""
-                    else {
-                      {{GenerateOutput(mode)}} = {{resetVal}};
-                    }
-                    """;
+                            else {
+                              {{GenerateOutput(mode)}} = {{resetVal}};
+                            }
+                            """;
         }
+
         return $$"""
                  if ({{check}}) {
                      if (!{{ifStatement}}) {
@@ -476,6 +507,7 @@ public partial class DrumAxis : OutputAxis
     {
         return new SerializedDrumAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Min, Max,
-            DeadZone, Debounce, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined, LedIndicesMpr121.ToArray());
+            DeadZone, Debounce, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined,
+            LedIndicesMpr121.ToArray());
     }
 }

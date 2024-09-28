@@ -109,6 +109,9 @@ public enum UsbHostInputType
     KeyboardInput,
     MouseAxis,
     MouseButton,
-    ProKey
+    ProKey,
+    YellowCymbal,
+    BlueCymbal,
+    GreenCymbal
     
 }

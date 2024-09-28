@@ -1770,21 +1770,6 @@
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding HasThreshold}">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ThresholdLabel}" />
-
-                        <Grid>
-                            <Label VerticalAlignment="Center" HorizontalContentAlignment="Center"
-                                   Content="{Binding Threshold}"
-                                   Width="{Binding FullProgressWidth, Mode=OneTime}" />
-                            <Slider Foreground="White" VerticalAlignment="Center"
-                                    Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding Min, Mode=OneTime}"
-                                    Maximum="{Binding Max, Mode=OneTime}" Value="{Binding Threshold}" />
-                        </Grid>
-                    </StackPanel>
                 </StackPanel>
             </DataTemplate>
             <DataTemplate DataType="{x:Type output:ControllerAxis}">

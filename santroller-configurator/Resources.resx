@@ -3826,8 +3826,11 @@
     <data name="ProKeyTypeOverdrive" xml:space="preserve">
         <value>Overdrive</value>
     </data>
-    <data name="ProKeyTypePedal" xml:space="preserve">
-        <value>Pedal</value>
+    <data name="ProKeyTypePedalAnalog" xml:space="preserve">
+        <value>Analog Pedal</value>
+    </data>
+    <data name="ProKeyTypePedalDigital" xml:space="preserve">
+        <value>Digital Pedal</value>
     </data>
     <data name="ProKeyTypeTouchPad" xml:space="preserve">
         <value>Effects Touchpad</value>

@@ -271,10 +271,14 @@ public partial class EmptyOutput : Output
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
                     djInputType, false, false, false, -1, false),
+                ProKeyType proKeyType and (ProKeyType.Overdrive or ProKeyType.PedalDigital) => new PianoKeyButton(Model,
+                    new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
+                    Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 
+                    proKeyType,  false, false, false, -1, false),
                 ProKeyType proKeyType => new PianoKey(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 
-                    proKeyType, ushort.MaxValue / 2, false, false, false, -1, false),
+                    proKeyType, false, false, false, -1, false),
                 _ => null
             },
 

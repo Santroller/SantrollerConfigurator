@@ -27,7 +27,7 @@ public partial class UsbHostInput : Input
         _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
         IsAnalog = input is (>= UsbHostInputType.LeftTrigger and < UsbHostInputType.GenericButton1
             or >= UsbHostInputType.GenericAxisX) and not UsbHostInputType.KeyboardInput
-            and not UsbHostInputType.MouseButton;
+            and not UsbHostInputType.MouseButton and not UsbHostInputType.YellowCymbal and not UsbHostInputType.BlueCymbal and not UsbHostInputType.GreenCymbal;
     }
 
     public UsbHostInput(Key key, ConfigViewModel model, bool combined = false) : base(model)
@@ -78,7 +78,7 @@ public partial class UsbHostInput : Input
         Combined = combined;
         _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
         _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
-        IsAnalog = proKeyType is ProKeyType.Pedal or ProKeyType.TouchPad;
+        IsAnalog = proKeyType is ProKeyType.PedalAnalog or ProKeyType.TouchPad;
     }
 
     public bool Combined { get; }
@@ -270,19 +270,33 @@ public partial class UsbHostInput : Input
 
         private bool ButtonPressed(UsbHostInputType inputType)
         {
-            if (inputType is >= UsbHostInputType.LeftTrigger
-                and (< UsbHostInputType.GenericButton1 or > UsbHostInputType.GenericButton16)) return false;
-            var val = (uint) inputType;
-            switch (val)
+            // Annoyingly, we added these later so we can't just put them in the array where we want
+            switch (inputType)
             {
-                case >= (uint) UsbHostInputType.GenericButton1:
-                    val -= (uint) UsbHostInputType.GenericButton1;
-                    return (genericButtons & (1 << (int) val)) != 0;
-                case >= 32:
-                    val -= 32;
-                    return (buttons2 & (1 << (int) val)) != 0;
+                case UsbHostInputType.YellowCymbal:
+                    return (buttons2 & (1 << 2)) != 0;
+                case UsbHostInputType.BlueCymbal:
+                    return (buttons2 & (1 << 3)) != 0;
+                case UsbHostInputType.GreenCymbal:
+                    return (buttons2 & (1 << 4)) != 0;
+                case >= UsbHostInputType.LeftTrigger
+                    and (< UsbHostInputType.GenericButton1 or > UsbHostInputType.GenericButton16):
+                    return false;
                 default:
-                    return (buttons & (1 << (int) val)) != 0;
+                {
+                    var val = (uint) inputType;
+                    switch (val)
+                    {
+                        case >= (uint) UsbHostInputType.GenericButton1:
+                            val -= (uint) UsbHostInputType.GenericButton1;
+                            return (genericButtons & (1 << (int) val)) != 0;
+                        case >= 32:
+                            val -= 32;
+                            return (buttons2 & (1 << (int) val)) != 0;
+                        default:
+                            return (buttons & (1 << (int) val)) != 0;
+                    }
+                }
             }
         }
 
@@ -391,7 +405,7 @@ public partial class UsbHostInput : Input
                 UsbHostInputType.GenericAxisRy => genericRY,
                 UsbHostInputType.GenericAxisRz => genericRZ,
                 UsbHostInputType.GenericAxisSlider => genericSlider,
-                UsbHostInputType.ProKey when proKeyType is ProKeyType.Pedal => pedal,
+                UsbHostInputType.ProKey when proKeyType is ProKeyType.PedalAnalog => pedal,
                 UsbHostInputType.ProKey when proKeyType is ProKeyType.TouchPad => touchPad,
                 UsbHostInputType.ProKey => (proKeys &
                                             ((uint) 1 <<

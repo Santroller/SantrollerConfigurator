@@ -7395,9 +7395,15 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string ProKeyTypePedal {
+        public static string ProKeyTypePedalAnalog {
             get {
-                return ResourceManager.GetString("ProKeyTypePedal", resourceCulture);
+                return ResourceManager.GetString("ProKeyTypePedalAnalog", resourceCulture);
+            }
+        }
+        
+        public static string ProKeyTypePedalDigital {
+            get {
+                return ResourceManager.GetString("ProKeyTypePedalDigital", resourceCulture);
             }
         }
         

@@ -28,6 +28,7 @@ public enum ProKeyType
     Key24,
     Key25,
     Overdrive,
-    Pedal,
-    TouchPad
+    PedalDigital,
+    TouchPad,
+    PedalAnalog
 }
