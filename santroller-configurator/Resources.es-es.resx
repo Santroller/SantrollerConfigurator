@@ -2942,7 +2942,7 @@
         <value>Detectado</value>
     </data>
     <data name="ConnectedToTransmitterLabel" xml:space="preserve">
-        <value>Conectado a dispositivo</value>
+        <value>Conectado a un dispositivo</value>
     </data>
     <data name="LocalAddressLabel" xml:space="preserve">
         <value>Dirección Local</value>
