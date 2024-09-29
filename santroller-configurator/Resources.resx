@@ -3036,13 +3036,13 @@
         <value>Bluetooth Classic (Most game controllers)</value>
     </data>
     <data name="BluetoothLE" xml:space="preserve">
-        <value>Bluetooth Low Energy (Santroller transmitter, GHL iOS)</value>
+        <value>Bluetooth Low Energy (Santroller transmitter)</value>
     </data>
     <data name="DetectedLabel" xml:space="preserve">
         <value>Detected</value>
     </data>
     <data name="ConnectedToTransmitterLabel" xml:space="preserve">
-        <value>Connected to Transmitter</value>
+        <value>Connected to Device</value>
     </data>
     <data name="LocalAddressLabel" xml:space="preserve">
         <value>Local Address</value>

@@ -2942,7 +2942,7 @@
         <value>Detectado</value>
     </data>
     <data name="ConnectedToTransmitterLabel" xml:space="preserve">
-        <value>Conectado a Transmisor</value>
+        <value>Conectado a dispositivo</value>
     </data>
     <data name="LocalAddressLabel" xml:space="preserve">
         <value>Dirección Local</value>
@@ -3779,15 +3779,24 @@
         <value>Sobrecarga</value>
     </data>
     <data name="ProKeyTypePedalAnalog" xml:space="preserve">
-        <value>Analog Pedal</value>
+        <value>Pedal Análogo</value>
     </data>
     <data name="ProKeyTypePedalDigital" xml:space="preserve">
-        <value>Digital Pedal</value>
+        <value>Pedal Digital</value>
     </data>
     <data name="ProKeyTypeTouchPad" xml:space="preserve">
         <value>Panel táctil de Efectos</value>
     </data>
     <data name="SimpleTypeMidi" xml:space="preserve">
         <value>Entradas Midi</value>
+    </data>
+    <data name="BluetoothMode" xml:space="preserve">
+        <value>Modo Bluetooth</value>
+    </data>
+    <data name="BluetoothClassic" xml:space="preserve">
+        <value>Bluetooth Clásico (La mayoría de controles)</value>
+    </data>
+    <data name="BluetoothLE" xml:space="preserve">
+        <value>Bluetooth de Baja Energía (Transmisor Santroller)</value>
     </data>
 </root>
