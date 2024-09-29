@@ -24,10 +24,18 @@ public class SerializedCombinedBluetoothOutput : SerializedOutput
     {
         var combined = new BluetoothCombinedOutput(model);
         model.Bindings.Add(combined);
-        var array = new BitArray(Enabled);
-        var outputs = Outputs.Select(s => s.Generate(model)).ToList();
-        for (var i = 0; i < outputs.Count; i++) outputs[i].Enabled = array[i];
-        combined.SetOutputsOrDefaults(outputs);
+        if (Outputs != null)
+        {
+            var array = new BitArray(Enabled);
+            var outputs = Outputs.Select(s => s.Generate(model)).ToList();
+            for (var i = 0; i < outputs.Count; i++) outputs[i].Enabled = array[i];
+            combined.SetOutputsOrDefaults(outputs);
+        }
+        else
+        {
+            combined.SetOutputsOrDefaults(new List<Output>());
+        }
+
         return combined;
     }
 }
