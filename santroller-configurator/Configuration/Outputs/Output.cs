@@ -219,6 +219,7 @@ public abstract partial class Output : ReactiveObject
             .ToProperty(this, s => s.CombinedBackground);
         this.WhenAnyValue(x => x.Model.HasPeripheral).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.Model.HasAccel).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
+        this.WhenAnyValue(x => x.Model.IsBluetoothRx).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.UsesPwm).Subscribe(s =>
         {
             if (s && !AvailablePwmPins.Contains(_outputPin))
@@ -239,7 +240,7 @@ public abstract partial class Output : ReactiveObject
         Outputs.Connect().Bind(out var allOutputs).Subscribe();
         AllOutputs = allOutputs;
         _configured = true;
-        IsVisible = !Model.Branded || LedIndices.Any() || this is Led || this is BluetoothOutput ||
+        IsVisible = !Model.Branded || LedIndices.Any() || this is Led || this is Combined.BluetoothCombinedOutput ||
                     this is CombinedOutput || this is OutputAxis {Input: not DigitalToAnalog} ||
                     this is {Input: AnalogToDigital} || this is JoystickToDpad;
     }
@@ -581,7 +582,7 @@ public abstract partial class Output : ReactiveObject
             (s is not InputType.MultiplexerInput || Model.IsPico) &&
             (s is not InputType.DigitalPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.Mpr121Input || Model.HasMpr121) &&
-            s is not InputType.BluetoothInput &&
+            (s is not InputType.BluetoothInput || Model.IsBluetoothRx) &&
             (s is not InputType.UsbHostInput || Model.IsPico) &&
             (s is not InputType.AccelInput || Model.HasAccel));
 
@@ -1110,6 +1111,14 @@ public abstract partial class Output : ReactiveObject
                 midiType ??= midiInput.Input;
                 input = new MidiInput(midiType.Value, midiInput.Key, Model);
                 break;
+            case InputType.BluetoothInput when Input.InnermostInputs().First() is not BluetoothInput:
+                usbInputType ??= UsbHostInputType.A;
+                input = new BluetoothInput(usbInputType.Value, Model);
+                break;
+            case InputType.BluetoothInput when Input.InnermostInputs().First() is BluetoothInput usbHost:
+                usbInputType ??= usbHost.Input;
+                input = new BluetoothInput(usbInputType.Value, Model);
+                break;
             case InputType.UsbHostInput when Input.InnermostInputs().First() is not UsbHostInput:
                 usbInputType ??= UsbHostInputType.A;
                 input = new UsbHostInput(usbInputType.Value, Model);
@@ -1337,21 +1346,21 @@ public abstract partial class Output : ReactiveObject
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
         ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
-        ReadOnlySpan<byte> midiRaw)
+        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
     {
         _midiNotes = midiRaw.ToArray();
         if (Enabled)
             Input.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                 ghWtRaw,
                 ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral,
-                cloneRaw, adxlRaw, mpr121Raw, midiRaw);
+                cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw);
 
         foreach (var output in AllOutputs)
             if (output != this)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                     ghWtRaw,
                     ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-                    digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
+                    digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw);
     }
 
     public void UpdateErrors()

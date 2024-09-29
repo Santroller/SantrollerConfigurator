@@ -72,7 +72,8 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadMax1270XValid,
         CommandReadMidi,
         CommandSetAccelFilter,
-        CommandReadAccelValid
+        CommandReadAccelValid,
+        CommandReadBluetoothInputs
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -244,6 +245,7 @@ public class Santroller : ConfigurableUsbDevice
                 var cloneRaw = await ReadDataAsync(0, (byte) Commands.CommandReadClone, 4);
                 var usbHostRaw = Array.Empty<byte>();
                 var usbHostInputsRaw = Array.Empty<byte>();
+                var bluetoothInputsRaw = Array.Empty<byte>();
                 var peripheralWtRaw = Array.Empty<byte>();
                 var adxlRaw = Array.Empty<byte>();
                 var mpr121Raw = Array.Empty<byte>();
@@ -266,6 +268,11 @@ public class Santroller : ConfigurableUsbDevice
                     usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, 101);
                     midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
                 }
+                if (_model.IsBluetoothRx)
+                {
+                    bluetoothInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadBluetoothInputs, 101);
+                }
+
                 
                 if (_model.HasAccel)
                 {
@@ -296,7 +303,7 @@ public class Santroller : ConfigurableUsbDevice
                     output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                         djRightRaw, gh5Raw,
                         ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
-                        peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
+                        peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw);
             }
             catch (Exception ex)
             {
@@ -617,13 +624,7 @@ public class Santroller : ConfigurableUsbDevice
     {
         if (!IsPico) return Array.Empty<string>();
         var data = ReadData(0, (byte) Commands.CommandGetBtDevices);
-        var addressesAsStrings = new List<string>();
-        for (var i = 0; i < data.Length; i += BtAddressLength)
-        {
-            addressesAsStrings.Add(GetString(data[i..(i + BtAddressLength)]));
-        }
-
-        return addressesAsStrings;
+        return Encoding.UTF8.GetString(data).Split("\0").Where(s => s.Length != 0).ToList();
     }
 
     public string GetBluetoothAddress()

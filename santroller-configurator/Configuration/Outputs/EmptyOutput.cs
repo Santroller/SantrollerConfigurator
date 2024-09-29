@@ -203,7 +203,7 @@ public partial class EmptyOutput : Output
                     SimpleType.Reset => new Reset(Model,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, Model)),
                     SimpleType.UsbHost => new UsbHostCombinedOutput(Model),
-                    SimpleType.Bluetooth => new BluetoothOutput(Model),
+                    SimpleType.Bluetooth => new Combined.BluetoothCombinedOutput(Model),
                     SimpleType.Midi => new MidiCombinedOutput(Model, 0),
                     _ => null
                 },
@@ -303,7 +303,7 @@ public partial class EmptyOutput : Output
         if (output != null)
         {
             output.Expanded = true;
-            if (output is BluetoothOutput)
+            if (output is Combined.BluetoothCombinedOutput)
             {
                 Model.ResetBluetoothRelated();
             }

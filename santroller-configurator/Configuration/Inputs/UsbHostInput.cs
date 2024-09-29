@@ -140,15 +140,17 @@ public partial class UsbHostInput : Input
         return new[] {"INPUT_USB_HOST"};
     }
 
+    public virtual string Field => "usb_host_data";
+    
     public override string Generate(BinaryWriter? writer)
     {
         var ret = (Input switch
         {
-            UsbHostInputType.KeyboardInput => Output.GetReportField(Key, "usb_host_data.keyboard"),
-            UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, "usb_host_data.mouse"),
-            UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, "usb_host_data.mouse"),
-            UsbHostInputType.ProKey => Output.GetReportField(ProKeyType, "usb_host_data", false),
-            _ => Output.GetReportField(Input, "usb_host_data", false)
+            UsbHostInputType.KeyboardInput => Output.GetReportField(Key, $"{Field}.keyboard"),
+            UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, $"{Field}.mouse"),
+            UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, $"{Field}.mouse"),
+            UsbHostInputType.ProKey => Output.GetReportField(ProKeyType, Field, false),
+            _ => Output.GetReportField(Input, Field, false)
         });
 
         if (ByteBased.Contains(Input))
@@ -164,6 +166,13 @@ public partial class UsbHostInput : Input
         return new SerializedUsbHostInput(Input, Key, MouseButtonType, MouseAxisType, ProKeyType, Combined);
     }
 
+    public void Update(ReadOnlySpan<byte> usbHostInputsRaw)
+    {
+        if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;
+        var inputs = StructTools.RawDeserialize<UsbHostInputs>(usbHostInputsRaw, 0);
+        RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType, ProKeyType);
+    }
+
     public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw,
         ReadOnlySpan<byte> ps2Raw,
         ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw,
@@ -171,8 +180,9 @@ public partial class UsbHostInput : Input
         ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
-        ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw)
+        ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
     {
+        
         var buffer = "";
         // When combined, the combined output renders this, so we don't need to calculate it
         if (!Combined && !usbHostRaw.IsEmpty)
@@ -225,9 +235,7 @@ public partial class UsbHostInput : Input
             ConnectedDevices = usbHostRaw.Length / 2;
             UsbHostInfo = buffer.Trim();
         }
-        if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;
-        var inputs = StructTools.RawDeserialize<UsbHostInputs>(usbHostInputsRaw, 0);
-        RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType, ProKeyType);
+        Update(usbHostInputsRaw);
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings, ConfigField mode)

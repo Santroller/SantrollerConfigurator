@@ -19,5 +19,5 @@ public enum InputType
     DigitalPeripheralInput,
     AccelInput,
     Mpr121Input,
-    MidiInput,
+    MidiInput
 }

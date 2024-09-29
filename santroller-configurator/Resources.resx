@@ -3029,6 +3029,15 @@
     <data name="SelectedDeviceLabel" xml:space="preserve">
         <value>Selected Device</value>
     </data>
+    <data name="BluetoothMode" xml:space="preserve">
+        <value>Bluetooth Mode</value>
+    </data>
+    <data name="BluetoothClassic" xml:space="preserve">
+        <value>Bluetooth Classic (Most game controllers)</value>
+    </data>
+    <data name="BluetoothLE" xml:space="preserve">
+        <value>Bluetooth Low Energy (Santroller transmitter, GHL iOS)</value>
+    </data>
     <data name="DetectedLabel" xml:space="preserve">
         <value>Detected</value>
     </data>

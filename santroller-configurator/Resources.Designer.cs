@@ -5805,6 +5805,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string BluetoothMode {
+            get {
+                return ResourceManager.GetString("BluetoothMode", resourceCulture);
+            }
+        }
+        
+        public static string BluetoothClassic {
+            get {
+                return ResourceManager.GetString("BluetoothClassic", resourceCulture);
+            }
+        }
+        
+        public static string BluetoothLE {
+            get {
+                return ResourceManager.GetString("BluetoothLE", resourceCulture);
+            }
+        }
+        
         public static string DetectedLabel {
             get {
                 return ResourceManager.GetString("DetectedLabel", resourceCulture);

@@ -229,7 +229,7 @@
                     <ComboBox HorizontalAlignment="Stretch" Margin="20 20 20 0"
                               SelectedItem="{Binding AnalogToDigitalType}"
                               ItemTemplate="{StaticResource EnumToStringTemplate}"
-                              ItemsSource="{Binding AnalogToDigitalTypes}"/>
+                              ItemsSource="{Binding AnalogToDigitalTypes}" />
                     <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Threshold}" VerticalAlignment="Center" />
                     <ContentControl Content="{Binding Child}"
                                     ContentTemplate="{StaticResource OutputHeaderTemplates}" />
@@ -244,6 +244,14 @@
                 </StackPanel>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type combined:BluetoothCombinedOutput}">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Connected}" VerticalAlignment="Center" IsEnabled="False"
+                              Content="{x:Static netCore:Resources.ConnectedToTransmitterLabel}" />
+                    <Label VerticalAlignment="Center" Content="{x:Static netCore:Resources.LocalAddressLabel}" />
+                    <Label Content="{Binding LocalAddress}" VerticalAlignment="Center" />
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type combined:UsbHostCombinedOutput}">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="{Binding ConnectedDevices}" VerticalAlignment="Center" />
@@ -260,14 +268,6 @@
                 <StackPanel Orientation="Horizontal">
                     <CheckBox IsChecked="{Binding Detected}" VerticalAlignment="Center" IsEnabled="False"
                               Content="{x:Static netCore:Resources.DetectedLabel}" />
-                </StackPanel>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type output:BluetoothOutput}">
-                <StackPanel Orientation="Horizontal">
-                    <CheckBox IsChecked="{Binding Connected}" VerticalAlignment="Center" IsEnabled="False"
-                              Content="{x:Static netCore:Resources.ConnectedToTransmitterLabel}" />
-                    <Label VerticalAlignment="Center" Content="{x:Static netCore:Resources.LocalAddressLabel}" />
-                    <Label Content="{Binding LocalAddress}" VerticalAlignment="Center" />
                 </StackPanel>
             </DataTemplate>
             <DataTemplate DataType="{x:Type combined:GhwtCombinedOutput}" />
@@ -456,6 +456,33 @@
             </DataTemplate>
         </netCore:OutputTemplateSelector>
         <netCore:OutputTemplateSelector x:Key="OutputTemplates">
+            <DataTemplate DataType="{x:Type combined:BluetoothCombinedOutput}">
+                <StackPanel>
+                    <Button Content="{Binding ScanText}" IsEnabled="{Binding !Scanning}"
+                            Command="{Binding ScanCommand}" />
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.BluetoothMode}" />
+
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedIndex="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).Classic}"
+                                  Width="200">
+                            <ComboBoxItem Content="{x:Static netCore:Resources.BluetoothLE}" />
+                            <ComboBoxItem Content="{x:Static netCore:Resources.BluetoothClassic}" />
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.SelectedDeviceLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).BtRxAddr}"
+                                  ItemsSource="{Binding Addresses}"
+                                  Width="200" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type combined:UsbHostCombinedOutput}">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -1650,7 +1677,8 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
                             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
+                                    <Label VerticalAlignment="Center" Width="300"
+                                           Content="{x:Static netCore:Resources.ValueLabel}" />
                                     <Grid>
                                         <Rectangle Margin="{Binding CalibrationMinMaxMargin}"
                                                    HorizontalAlignment="Stretch"
@@ -1696,7 +1724,8 @@
 
                         </StackPanel>
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                            <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.MinLabel}" />
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.MinLabel}" />
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1713,7 +1742,8 @@
                         </StackPanel>
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                            <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.MaxLabel}" />
+                            <Label VerticalAlignment="Center" Width="300"
+                                   Content="{x:Static netCore:Resources.MaxLabel}" />
 
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
@@ -2164,7 +2194,8 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type conversions:AnalogToDigital}">
                 <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                    <StackPanel Orientation="Horizontal"
+                                IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.TypeLabel}" />
@@ -2178,46 +2209,47 @@
                                Width="300" Content="{x:Static netCore:Resources.ThresholdLabel}" />
 
                         <StackPanel Orientation="Vertical">
-                        <Grid>
-                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUint}">
-                                <ProgressBar Opacity="0.5" Value="{Binding RawAnalogValue}"
-                                             IsIndeterminate="False" Minimum="0" Maximum="65536"
-                                             Height="30"
-                                             Width="{Binding FullProgressWidth, Mode=OneTime}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsUint}"
-                                        Width="{Binding FullProgressWidth, Mode=OneTime}">
-                                <ProgressBar Opacity="0.5" CornerRadius="0 3 3 0"
-                                             Value="{Binding ValueLower}"
-                                             IsIndeterminate="False" Minimum="0" Maximum="32768"
-                                             Height="30"
-                                             Width="{Binding HalfProgressWidth, Mode=OneTime}">
-                                    <ProgressBar.RenderTransform>
-                                        <ScaleTransform ScaleX="-1" />
-                                    </ProgressBar.RenderTransform>
-                                </ProgressBar>
-                                <ProgressBar Opacity="0.5" CornerRadius="0 3 3 0"
-                                             Value="{Binding ValueUpper}"
-                                             IsIndeterminate="False" Minimum="0" Maximum="32768"
-                                             Height="30"
-                                             Width="{Binding HalfProgressWidth, Mode=OneTime}" />
-                            </StackPanel>
-                            <Label VerticalAlignment="Center" HorizontalContentAlignment="Center"
-                                   Content="{Binding RawAnalogValue}" Width="{Binding FullProgressWidth, Mode=OneTime}" />
-                            <Slider Foreground="White" VerticalAlignment="Center"
-                                    Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding Min, Mode=OneTime}"
-                                    Maximum="{Binding Max, Mode=OneTime}" Value="{Binding DisplayThreshold}" />
-                        </Grid>
-                            
-                        <NumericUpDown FormatString="{}{0:#,0}"
-                                       Minimum="{Binding Min, Mode=OneTime}"
-                                       Maximum="{Binding Max, Mode=OneTime}"
-                                       Value="{Binding DisplayThreshold}"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Left"
-                                       Width="200" />
-                    </StackPanel>
+                            <Grid>
+                                <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUint}">
+                                    <ProgressBar Opacity="0.5" Value="{Binding RawAnalogValue}"
+                                                 IsIndeterminate="False" Minimum="0" Maximum="65536"
+                                                 Height="30"
+                                                 Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsUint}"
+                                            Width="{Binding FullProgressWidth, Mode=OneTime}">
+                                    <ProgressBar Opacity="0.5" CornerRadius="0 3 3 0"
+                                                 Value="{Binding ValueLower}"
+                                                 IsIndeterminate="False" Minimum="0" Maximum="32768"
+                                                 Height="30"
+                                                 Width="{Binding HalfProgressWidth, Mode=OneTime}">
+                                        <ProgressBar.RenderTransform>
+                                            <ScaleTransform ScaleX="-1" />
+                                        </ProgressBar.RenderTransform>
+                                    </ProgressBar>
+                                    <ProgressBar Opacity="0.5" CornerRadius="0 3 3 0"
+                                                 Value="{Binding ValueUpper}"
+                                                 IsIndeterminate="False" Minimum="0" Maximum="32768"
+                                                 Height="30"
+                                                 Width="{Binding HalfProgressWidth, Mode=OneTime}" />
+                                </StackPanel>
+                                <Label VerticalAlignment="Center" HorizontalContentAlignment="Center"
+                                       Content="{Binding RawAnalogValue}"
+                                       Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                                <Slider Foreground="White" VerticalAlignment="Center"
+                                        Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
+                                        Minimum="{Binding Min, Mode=OneTime}"
+                                        Maximum="{Binding Max, Mode=OneTime}" Value="{Binding DisplayThreshold}" />
+                            </Grid>
+
+                            <NumericUpDown FormatString="{}{0:#,0}"
+                                           Minimum="{Binding Min, Mode=OneTime}"
+                                           Maximum="{Binding Max, Mode=OneTime}"
+                                           Value="{Binding DisplayThreshold}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Width="200" />
+                        </StackPanel>
                     </StackPanel>
                     <ContentControl Content="{Binding Child}"
                                     ContentTemplate="{StaticResource OutputTemplates}" />
@@ -2528,21 +2560,7 @@
                 </StackPanel>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type output:BluetoothOutput}">
-                <StackPanel>
-                    <Button Content="{Binding ScanText}" IsEnabled="{Binding !Scanning}"
-                            Command="{Binding ScanCommand}" />
-                    <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center"
-                               VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SelectedDeviceLabel}" />
-                        <ComboBox VerticalAlignment="Center"
-                                  SelectedItem="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).BtRxAddr}"
-                                  ItemsSource="{Binding Addresses}"
-                                  Width="200" />
-                    </StackPanel>
-                </StackPanel>
-            </DataTemplate>
+            
             <DataTemplate DataType="{x:Type combined:MidiCombinedOutput}">
                 <StackPanel Orientation="Horizontal"
                             IsVisible="{Binding $parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).IsProKeys}">
@@ -2661,7 +2679,8 @@
                             <Binding Path="AreLedsEnabled" />
                             <Binding Path="!IsCombined" />
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
+                                <Binding
+                                    Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                 <Binding Path="AreLedsSet" />
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
@@ -2752,7 +2771,8 @@
                                 <Binding Path="!IsApa102Peripheral" />
                             </MultiBinding>
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
+                                <Binding
+                                    Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                 <Binding Path="AreLedsSet" />
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
@@ -2779,7 +2799,8 @@
                                 <Binding Path="LedsUseColoursPeripheral" />
                             </MultiBinding>
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
+                                <Binding
+                                    Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                 <Binding Path="AreLedsSet" />
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
@@ -2808,7 +2829,8 @@
                                 <Binding Path="LedsUseColoursPeripheral" />
                             </MultiBinding>
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
+                                <Binding
+                                    Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                 <Binding Path="AreLedsSet" />
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
@@ -2831,7 +2853,9 @@
                             <Binding Path="!IsCombined" />
                             <Binding Path="!UsesPwm" />
                             <Binding Path="LedsHaveColours" />
-                            <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded"></Binding>
+                            <Binding
+                                Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
+                            </Binding>
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <StackPanel Orientation="Horizontal">
@@ -2848,7 +2872,9 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="UsesPwm" />
                             <Binding Path="LedsHaveColours" />
-                            <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded"></Binding>
+                            <Binding
+                                Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
+                            </Binding>
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <StackPanel Orientation="Horizontal">
@@ -2905,7 +2931,9 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="UsesPwm" />
                             <Binding Path="OutputEnabled" />
-                            <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded"></Binding>
+                            <Binding
+                                Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
+                            </Binding>
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <StackPanel Orientation="Horizontal">
@@ -2913,7 +2941,9 @@
                             <MultiBinding Converter="{x:Static BoolConverters.And}">
                                 <Binding Path="!UsesPwm" />
                                 <Binding Path="OutputEnabled" />
-                                <Binding Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded"></Binding>
+                                <Binding
+                                    Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
+                                </Binding>
                             </MultiBinding>
                         </StackPanel.IsVisible>
                         <Label VerticalAlignment="Center"
@@ -3058,8 +3088,8 @@
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
-                        
-                        
+
+
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsTurntable}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
@@ -3130,7 +3160,7 @@
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" >
+                        <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.JoystickToDpadTitle}" />
@@ -4035,7 +4065,7 @@
                                           ItemTemplate="{StaticResource PinToStringTemplateTwi}"
                                           Width="200" />
                             </StackPanel>
-                            
+
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
@@ -4047,13 +4077,14 @@
                                           Width="200" />
                             </StackPanel>
                         </StackPanel>
-                            
+
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.LowPassFilterLabel}" />
                             <NumericUpDown Value="{Binding AccelFilter}" Minimum="0"
-                                           Maximum="1" Width="200" Height="30" ShowButtonSpinner="False" AllowSpin="False" />
+                                           Maximum="1" Width="200" Height="30" ShowButtonSpinner="False"
+                                           AllowSpin="False" />
                         </StackPanel>
                     </StackPanel>
                 </Expander>
@@ -4210,7 +4241,7 @@
                                                       ItemsSource="{Binding MidiTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                         </StackPanel>
-                                        
+
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsMidiNote}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"

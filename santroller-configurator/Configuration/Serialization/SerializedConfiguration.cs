@@ -96,6 +96,7 @@ public class SerializedConfiguration
         AccelScl = model.AccelScl;
         AccelSda = model.AccelSda;
         HasAccel = model.HasAccel;
+        ClassicMode = model.Classic;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -171,9 +172,11 @@ public class SerializedConfiguration
     [ProtoMember(82)] public int AccelScl { get; private set; }
     
     [ProtoMember(83)] public AccelSensorType AccelSensorType { get; private set; }
+    [ProtoMember(84)] public bool ClassicMode { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
+        model.Classic = ClassicMode;
         model.SelectDpadLeftXb1 = SelectDpadLeftXb1;
         model.DjNavButtons = DjNavButtons;
         model.DjFullRange = DjFullRange;

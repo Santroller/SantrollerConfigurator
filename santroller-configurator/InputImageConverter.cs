@@ -84,6 +84,7 @@ public class InputImageConverter : IMultiValueConverter
             InputType.AccelInput => "Combined/Tilt",
             AccelSensorType => "Combined/Tilt",
             AccelInputType => "Combined/Tilt",
+            InputType.BluetoothInput => "Combined/Bluetooth",
             InputType.TurntableInput => "Combined/DJ",
             InputType.WtNeckInput => "Combined/GHWT",
             InputType.Gh5NeckInput => "Combined/GH5",

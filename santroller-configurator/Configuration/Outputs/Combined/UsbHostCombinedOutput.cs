@@ -164,6 +164,15 @@ public partial class UsbHostCombinedOutput : CombinedOutput
             CreateDefaults();
     }
 
+    public virtual UsbHostInput MakeInput(UsbHostInputType type)
+    {
+        return new UsbHostInput(type, Model, true);
+    }
+    public virtual UsbHostInput MakeInput(ProKeyType type)
+    {
+        return new UsbHostInput(type, Model, true);
+    }
+
     private void LoadMatchingFromDict(IReadOnlySet<object> valid, Dictionary<object, UsbHostInputType> dict)
     {
         foreach (var (key, value) in dict)
@@ -173,7 +182,7 @@ public partial class UsbHostCombinedOutput : CombinedOutput
                 continue;
             }
 
-            var input = new UsbHostInput(value, Model, true);
+            var input = MakeInput(value);
             int min = input.IsUint ? ushort.MinValue : short.MinValue;
             int max = input.IsUint ? ushort.MaxValue : short.MaxValue;
             Output? output = key switch
@@ -250,12 +259,12 @@ public partial class UsbHostCombinedOutput : CombinedOutput
                 switch (proKeyType)
                 {
                     case ProKeyType.Overdrive or ProKeyType.PedalDigital:
-                        Outputs.Add(new PianoKeyButton(Model, new UsbHostInput(proKeyType, Model, true), Colors.Black,
+                        Outputs.Add(new PianoKeyButton(Model, MakeInput(proKeyType), Colors.Black,
                             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                             proKeyType, false, false, false, -1, true));
                         break;
                     default:
-                        Outputs.Add(new PianoKey(Model, new UsbHostInput(proKeyType, Model, true), Colors.Black,
+                        Outputs.Add(new PianoKey(Model, MakeInput(proKeyType), Colors.Black,
                             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                             proKeyType, false, false, false, -1, true));
                         break;
@@ -304,11 +313,11 @@ public partial class UsbHostCombinedOutput : CombinedOutput
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
         ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
-        ReadOnlySpan<byte> midiRaw)
+        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
             ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-            digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
+            digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw);
 
         var buffer = "";
         if (usbHostRaw.IsEmpty)

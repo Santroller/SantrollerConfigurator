@@ -34,6 +34,7 @@ using GuitarConfigurator.NetCore.Utils;
 using ProtoBuf;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
+using BluetoothCombinedOutput = GuitarConfigurator.NetCore.Configuration.Outputs.Combined.BluetoothCombinedOutput;
 
 namespace GuitarConfigurator.NetCore.ViewModels;
 
@@ -89,7 +90,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private DirectPinConfig? _adaFruitHostPin;
 
     private EmulationType _emulationType;
-    
+
     [Reactive] private AccelSensorType _accelSensorType;
 
     public IEnumerable<AccelSensorType> AccelSensorTypes => Enum.GetValues<AccelSensorType>();
@@ -265,7 +266,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }))
             .ToProperty(this, x => x.IsFortniteFestivalPro);
         _isBluetoothRxHelper = Bindings.Connect()
-            .QueryWhenChanged(s => s.Any(s2 => s2 is BluetoothOutput))
+            .QueryWhenChanged(s => s.Any(s2 => s2 is BluetoothCombinedOutput))
             .ToProperty(this, x => x.IsBluetoothRx);
         _hasWiiCombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is WiiCombinedOutput))
@@ -624,6 +625,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] private string _btRxAddr;
 
+    [Reactive] private bool _classic;
+
     public int LedMosi
     {
         get => _ledSpiConfig?.Mosi ?? 0;
@@ -716,6 +719,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
         }
     }
+
     public int AccelSda
     {
         get => _accelTwiConfig?.Sda ?? 0;
@@ -1538,7 +1542,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         // If the user has a ps2 or wii combined output mapped, they don't need the default bindings
         if (Bindings.Items.Any(s =>
-                s is WiiCombinedOutput or Ps2CombinedOutput or UsbHostCombinedOutput or BluetoothOutput)) return;
+                s is WiiCombinedOutput or Ps2CombinedOutput or UsbHostCombinedOutput
+                    or BluetoothCombinedOutput)) return;
 
 
         if (_deviceControllerType == DeviceControllerType.Turntable)
@@ -1613,7 +1618,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                         ushort.MinValue,
                         ushort.MaxValue,
-                        ushort.MaxValue/2,0, ushort.MaxValue, axisType, false, false, false, -1, false));
+                        ushort.MaxValue / 2, 0, ushort.MaxValue, axisType, false, false, false, -1, false));
                     break;
                 case GuitarAxisType.Slider:
                     break;
@@ -1726,7 +1731,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 usbOutput.SetOutputsOrDefaults(Array.Empty<Output>());
                 break;
             case DeviceInputType.Bluetooth:
-                var bluetoothOutput = new BluetoothOutput(this)
+                var bluetoothOutput = new BluetoothCombinedOutput(this)
                 {
                     Expanded = true
                 };
@@ -1815,7 +1820,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Bindings.Add(new ControllerAxis(this,
                 new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
-                min, max, (max+min)/2,0,
+                min, max, (max + min) / 2, 0,
                 ushort.MaxValue, type, false, false, false, -1, false));
         }
 
@@ -1844,7 +1849,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
         }
 
-        Bindings.RemoveMany(Bindings.Items.Where(s => s is BluetoothOutput));
+        Bindings.RemoveMany(Bindings.Items.Where(s => s is BluetoothCombinedOutput));
     }
 
     public static string WriteBlob(BinaryWriter writer, byte[] data)
@@ -1965,7 +1970,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 var addr = new byte[Santroller.BtAddressLength];
                 // If we have a valid bluetooth address, write it
-                if (BtRxAddr.Length != 0 && BtRxAddr.Contains(":"))
+                if (BtRxAddr.Length != 0 && BtRxAddr.Contains("("))
+                {
+                    addr = Encoding.UTF8.GetBytes(BtRxAddr.Substring(BtRxAddr.Length - Santroller.BtAddressLength,
+                        Santroller.BtAddressLength - 1));
+                }
+                else if (BtRxAddr.Length != 0 && BtRxAddr.Contains(":"))
                 {
                     addr = Encoding.UTF8.GetBytes(BtRxAddr);
                 }
@@ -1974,6 +1984,20 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                            #define BT_ADDR {WriteBlob(writer, addr)}
                            """;
+                if (Classic)
+                {
+                    config += """
+
+                              #define BLUETOOTH_RX_CLASSIC
+                              """;
+                }
+                else
+                {
+                    config += """
+
+                              #define BLUETOOTH_RX_BLE
+                              """;
+                }
             }
         }
         else
@@ -1997,12 +2021,38 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define DJ_NAV_BUTTONS {{DjNavButtons.ToString().ToLower()}}
                         #define COMBINED_DEBOUNCE {{CombinedStrumDebounce.ToString().ToLower()}}
                         """;
-            if (BtRxAddr.Length != 0 && BtRxAddr.Contains(':'))
+            if (IsBluetoothRx)
             {
-                config += $"""
+                if (BtRxAddr.Contains('('))
+                {
+                    config += $"""
 
-                           #define BT_ADDR "{BtRxAddr}"
-                           """;
+                               #define BT_ADDR "{BtRxAddr.Substring(BtRxAddr.Length - Santroller.BtAddressLength,
+                               Santroller.BtAddressLength - 1)}"
+                               """;
+                }
+                else if (BtRxAddr.Contains(':'))
+                {
+                    config += $"""
+
+                               #define BT_ADDR "{BtRxAddr}"
+                               """;
+                }
+
+                if (Classic)
+                {
+                    config += """
+
+                              #define BLUETOOTH_RX_CLASSIC
+                              """;
+                }
+                else
+                {
+                    config += """
+
+                              #define BLUETOOTH_RX_BLE
+                              """;
+                }
             }
         }
 
@@ -2138,20 +2188,20 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            #define ACCEL_TWI_PORT {_accelTwiConfig.Definition}
                            """;
             }
-            
+
             if (_hasAccel)
             {
                 config += $"""
 
-                          #define ACCEL_TYPE {(int)_accelSensorType}
-                          """;
+                           #define ACCEL_TYPE {(int) _accelSensorType}
+                           """;
             }
             else
             {
                 config += """
-                           
-                           #define ACCEL_TYPE 0
-                           """;
+
+                          #define ACCEL_TYPE 0
+                          """;
             }
 
             var keyboardTick = GenerateTick(ConfigField.Keyboard, writer);
@@ -2771,15 +2821,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             // Ignore w channel for now
             if (LedType is LedType.Ws2812W)
             {
-                
                 ret +=
-                      """
+                    """
 
-                      spi_transfer(APA102_SPI_PORT, 0x88);
-                      spi_transfer(APA102_SPI_PORT, 0x88);
-                      spi_transfer(APA102_SPI_PORT, 0x88);
-                      spi_transfer(APA102_SPI_PORT, 0x88);
-                      """;
+                    spi_transfer(APA102_SPI_PORT, 0x88);
+                    spi_transfer(APA102_SPI_PORT, 0x88);
+                    spi_transfer(APA102_SPI_PORT, 0x88);
+                    spi_transfer(APA102_SPI_PORT, 0x88);
+                    """;
             }
         }
 
@@ -2814,7 +2863,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             // Ignore w channel for now
             if (LedTypePeripheral is LedType.Ws2812W)
             {
-                
                 ret +=
                     $"""
 

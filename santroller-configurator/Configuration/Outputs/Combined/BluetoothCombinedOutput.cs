@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
 using Avalonia.Collections;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
-using GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
+using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Devices;
@@ -18,83 +17,56 @@ using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
-namespace GuitarConfigurator.NetCore.Configuration.Outputs;
+namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public partial class BluetoothOutput : CombinedOutput
+public partial class BluetoothCombinedOutput : UsbHostCombinedOutput
 {
     private readonly DispatcherTimer _timer = new();
 
 
-    public BluetoothOutput(ConfigViewModel model) : base(model)
+    public BluetoothCombinedOutput(ConfigViewModel model) : base(model)
     {
-        Input = new BluetoothInput(this);
+        Outputs.Clear();
         _timer.Interval = TimeSpan.FromSeconds(1);
         _timer.Tick += Tick;
-        _scanTextHelper = this.WhenAnyValue(s => s.ScanTimer)
+        _scanTextHelper = this.WhenAnyValue<BluetoothCombinedOutput, int>(s => s.ScanTimer)
             .Select(scanTimer =>
                 scanTimer == 11 ? Resources.BluetoothStartScan : string.Format(Resources.BluetoothScanning, scanTimer))
             .ToProperty(this, x => x.ScanText);
-        _scanningHelper = this.WhenAnyValue(s => s.ScanTimer).Select(scanTimer => scanTimer != 11).ToProperty(this, x => x.Scanning);
+        _scanningHelper = this.WhenAnyValue<BluetoothCombinedOutput, int>(s => s.ScanTimer).Select(scanTimer => scanTimer != 11)
+            .ToProperty(this, x => x.Scanning);
         Addresses.Add(model.BtRxAddr.Length != 0 ? model.BtRxAddr : Resources.BluetoothNoDevice);
         if (Model.Device is Santroller santroller)
             LocalAddress = santroller.GetBluetoothAddress();
         else
             LocalAddress = Resources.BluetoothWriteConfigMessage;
+        Outputs.Connect().Filter(x => x is OutputAxis)
+            .Filter(s => s.IsVisible)
+            .AutoRefresh(s => s.LocalisedName)
+            .Filter(s => s.LocalisedName.Length != 0)
+            .Bind(out var analogOutputs)
+            .Subscribe();
+        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad)
+            .Filter(s => s.IsVisible)
+            .AutoRefresh(s => s.LocalisedName)
+            .Filter(s => s.LocalisedName.Length != 0)
+            .Bind(out var digitalOutputs)
+            .Subscribe();
+        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or {Input.IsAnalog: false})
+            .AutoRefresh(s => s.LocalisedName)
+            .Filter(s => s.LocalisedName.Length != 0)
+            .Bind(out var allDigitalOutputs)
+            .Subscribe();
+        AnalogOutputs = analogOutputs;
+        DigitalOutputs = digitalOutputs;
+        AllDigitalOutputs = allDigitalOutputs;
+        UpdateDetails();
     }
 
     [Reactive] private string _localAddress;
 
     public AvaloniaList<string> Addresses { get; } = new();
 
-    private class BluetoothInput : Input
-    {
-        public BluetoothInput(BluetoothOutput bluetoothOutput) : base(bluetoothOutput.Model)
-        {
-            BluetoothOutput = bluetoothOutput;
-        }
-
-        public BluetoothOutput BluetoothOutput { get; }
-
-        public override bool IsUint => false;
-        public override bool Peripheral => false;
-        public override IList<DevicePin> Pins => new List<DevicePin>();
-        public override IList<PinConfig> PinConfigs => new List<PinConfig>();
-        public override InputType? InputType => Types.InputType.BluetoothInput;
-
-        public override string Title => Resources.BluetoothTitle;
-
-        public override IReadOnlyList<string> RequiredDefines()
-        {
-            return new[] {"BLUETOOTH_RX"};
-        }
-
-        public override string Generate(BinaryWriter? writer)
-        {
-            return "";
-        }
-
-        public override SerializedInput Serialise()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Update(Dictionary<int, int> analogRaw,
-            Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw, ReadOnlySpan<byte> wiiRaw,
-            ReadOnlySpan<byte> djLeftRaw, ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw,
-            ReadOnlySpan<byte> ghWtRaw, ReadOnlySpan<byte> ps2ControllerType,
-            ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw,
-            ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
-            ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
-            ReadOnlySpan<byte> midiRaw)
-        {
-        }
-
-        public override string GenerateAll(List<Tuple<Input, string>> bindings,
-            ConfigField mode)
-        {
-            return "";
-        }
-    }
     [ObservableAsProperty] private string _scanText = "";
 
     [ObservableAsProperty] private bool _scanning;
@@ -112,7 +84,7 @@ public partial class BluetoothOutput : CombinedOutput
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedBluetoothOutput();
+        return new SerializedCombinedBluetoothOutput(Outputs.Items.ToList());
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
@@ -134,16 +106,25 @@ public partial class BluetoothOutput : CombinedOutput
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
         ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
-        ReadOnlySpan<byte> midiRaw)
+        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
-            ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw);
+            ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
+            digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw);
         if (LocalAddress == Resources.BluetoothWriteConfigMessage && Model.Device is Santroller santroller)
             LocalAddress = santroller.GetBluetoothAddress();
         if (bluetoothRaw.IsEmpty) return;
         Connected = bluetoothRaw[0] != 0;
     }
 
+    public override UsbHostInput MakeInput(UsbHostInputType type)
+    {
+        return new BluetoothInput(type, Model, true);
+    }
+    public override UsbHostInput MakeInput(ProKeyType type)
+    {
+        return new BluetoothInput(type, Model, true);
+    }
 
     [RelayCommand]
     public void Scan()
@@ -164,6 +145,7 @@ public partial class BluetoothOutput : CombinedOutput
             _timer.Stop();
             return;
         }
+
         if (Model.Device is not Santroller santroller) return;
 
         ScanTimer--;
@@ -173,26 +155,23 @@ public partial class BluetoothOutput : CombinedOutput
             Addresses.Clear();
             Addresses.Add(Resources.BluetoothNoDevice);
             Model.BtRxAddr = Resources.BluetoothNoDevice;
-            
         }
         else
         {
+            var val = Model.BtRxAddr;
             Addresses.Clear();
             Addresses.AddRange(addresses);
-            if (string.IsNullOrWhiteSpace(Model.BtRxAddr) || !Model.BtRxAddr.Contains(":"))
+            if (string.IsNullOrWhiteSpace(val) || !val.Contains(':'))
             {
-                Model.BtRxAddr = Addresses.First();
+                val = Addresses.First();
             }
+
+            Model.BtRxAddr = val;
         }
 
         if (ScanTimer != 0) return;
         ScanTimer = 11;
         _timer.Stop();
-    }
-
-
-    public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
-    {
     }
 
     public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
