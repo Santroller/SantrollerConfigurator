@@ -95,4 +95,9 @@ public class ConfigurableUsbDeviceManager
             }
         });
     }
+
+    public static void Rescan()
+    {
+              
+    }
 }

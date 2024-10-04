@@ -120,6 +120,7 @@ public partial class ConfigurableUsbDeviceManager
 
     public async Task RescanAsync()
     {   
+        // Start app as admin and then call rescan function and wait for it to exit
         try 
         {
             var info2 = new ProcessStartInfo(Environment.ProcessPath!, "-Rescan");
