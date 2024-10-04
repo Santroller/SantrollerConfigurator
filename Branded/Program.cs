@@ -1,6 +1,8 @@
-﻿using Avalonia;
+﻿using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
+using GuitarConfigurator.NetCore.Devices;
 
 namespace SantrollerConfiguratorBranded.NetCore;
 
@@ -8,6 +10,11 @@ public static class Program
 {
     public static void Main(string[] args)
     {
+        if (args.FirstOrDefault() == "-Rescan")
+        {
+            ConfigurableUsbDeviceManager.Rescan();
+            return;
+        }
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
     }
 
