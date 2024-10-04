@@ -1,8 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
+using GuitarConfigurator.NetCore.Devices;
 using Velopack;
 
 namespace GuitarConfigurator.NetCore;
@@ -16,11 +19,18 @@ public static class Program
     {
         AllocConsole();
         Directory.CreateDirectory(AssetUtils.GetAppDataFolder());
+        
+
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
     }
 #else
     public static void Main(string[] args)
     {
+        if (args.FirstOrDefault() == "-Rescan")
+        {
+            ConfigurableUsbDeviceManager.Rescan();
+            return;
+        }
         VelopackApp.Build().Run();
         Directory.CreateDirectory(AssetUtils.GetAppDataFolder());
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);

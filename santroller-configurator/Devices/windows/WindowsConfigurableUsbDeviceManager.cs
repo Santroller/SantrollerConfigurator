@@ -122,8 +122,7 @@ public partial class ConfigurableUsbDeviceManager
     {   
         try 
         {
-            var info2 = new ProcessStartInfo("powershell.exe");
-            info2.ArgumentList.AddRange(new[] {"-Command", "pnputil /enum-devices /connected | findstr 1209 | ForEach-Object { pnputil /remove-device $_.Split(\":\")[1].Trim() }; pnputil /scan-devices /async"});
+            var info2 = new ProcessStartInfo(Environment.ProcessPath!, "-Rescan");
             info2.UseShellExecute = true;
             info2.CreateNoWindow = true;
             info2.WindowStyle = ProcessWindowStyle.Hidden;
@@ -132,6 +131,30 @@ public partial class ConfigurableUsbDeviceManager
             if (process2 == null) return;
             await process2.WaitForExitAsync();
         } catch (Win32Exception) {
+        }
+    }
+
+    public static void Rescan()
+    {
+        
+        foreach (var guid in (Guid[])[DeviceInterfaceIds.UsbDevice, Ardwiino.DeviceGuid, Santroller.DeviceGuid, DeviceInterfaceIds.HidDevice, DeviceInterfaceIds.XUsbDevice])
+        {
+            var instance = 0;
+            while (Devcon.FindByInterfaceGuid(guid, out var path,
+                       out var instanceId, instance++, false))
+            {
+                if (!path.Contains("VID_1209&PID_2882")) continue;
+                var usbDevice = PnPDevice
+                    .GetDeviceByInterfaceId(path, DeviceLocationFlags.Phantom);
+                try
+                {
+                    usbDevice.Uninstall();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
         }
     }
 }
