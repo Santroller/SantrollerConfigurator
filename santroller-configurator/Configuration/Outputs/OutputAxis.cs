@@ -356,10 +356,6 @@ public abstract partial class OutputAxis : Output
         var intBased = false;
         var singleByte = false;
         var center = Center;
-        if (this is not ControllerAxis)
-        {
-            center = 0;
-        }
 
         switch (mode)
         {
@@ -478,6 +474,10 @@ public abstract partial class OutputAxis : Output
             {
                 max = ushort.MaxValue;
             }
+        }
+        if (this is not ControllerAxis)
+        {
+            center = 0;
         }
         var multiplier = 1f / (max - min) * ushort.MaxValue;
 
