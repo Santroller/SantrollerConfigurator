@@ -37,7 +37,9 @@ public partial class BluetoothInput : UsbHostInput
     }
     public override string Field => "bt_data";
     public override InputType? InputType => Types.InputType.BluetoothInput;
-    
+
+    public override IList<PinConfig> PinConfigs => [];
+
     public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw,
         ReadOnlySpan<byte> ps2Raw,
         ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw,
