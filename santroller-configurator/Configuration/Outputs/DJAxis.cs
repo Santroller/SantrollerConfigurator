@@ -13,10 +13,10 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public partial class DjAxis : OutputAxis
 {
-    public DjAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    public DjAxis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max,
         int deadZone, DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
-        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
+        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
         min, max, 0,
         deadZone,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
@@ -26,10 +26,10 @@ public partial class DjAxis : OutputAxis
         UpdateDetails();
     }
 
-    public DjAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    public DjAxis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int multiplier, int ledMultiplier,
         DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
-        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, 0,
+        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, 0,
         0, 0,
         0,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
@@ -131,7 +131,7 @@ public partial class DjAxis : OutputAxis
     {
         if (IsVelocity)
         {
-            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
+            return new SerializedDjAxis(Input.Serialise(), Enabled, Type, LedOn, LedOff, LedIndices.ToArray(),
                 LedIndicesPeripheral.ToArray(), Multiplier, LedMultiplier, OutputEnabled, OutputPin, OutputInverted,
                 PeripheralOutput,
                 ChildOfCombined, LedIndicesMpr121.ToArray());
@@ -139,13 +139,13 @@ public partial class DjAxis : OutputAxis
 
         if (IsEffectsKnob)
         {
-            return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
+            return new SerializedDjAxis(Input.Serialise(), Enabled, Type, LedOn, LedOff, LedIndices.ToArray(),
                 LedIndicesPeripheral.ToArray(), Invert ? -1 : 1, LedMultiplier, OutputEnabled, OutputPin,
                 OutputInverted, PeripheralOutput,
                 ChildOfCombined, LedIndicesMpr121.ToArray());
         }
 
-        return new SerializedDjAxis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(),
+        return new SerializedDjAxis(Input.Serialise(), Enabled, Type, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Min, Max, DeadZone, OutputEnabled, OutputPin, OutputInverted,
             PeripheralOutput,
             ChildOfCombined, LedIndicesMpr121.ToArray());

@@ -8,10 +8,17 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedKeyboardButton : SerializedOutput
 {
-    public SerializedKeyboardButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex,
+    public SerializedKeyboardButton(SerializedInput input, byte[] ledIndex, byte[] ledIndexPeripheral, byte[] ledIndexMpr121)
+    {
+        Input = input;
+        LedIndex = ledIndex;
+        LedIndexPeripheral = ledIndexPeripheral;
+        LedIndexMpr121 = ledIndexMpr121;
+    }
+    public SerializedKeyboardButton(SerializedInput input, bool enabled, Color ledOn, Color ledOff, byte[] ledIndex,
         byte[] ledIndexPeripheral, int debounce,
         Key type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, byte[] ledIndexMpr121)
     {
@@ -27,6 +34,7 @@ public class SerializedKeyboardButton : SerializedOutput
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
         LedIndexMpr121 = ledIndexMpr121;
+        Enabled = enabled;
     }
 
     [ProtoMember(1)] public SerializedInput Input { get; }
@@ -43,11 +51,12 @@ public class SerializedKeyboardButton : SerializedOutput
     [ProtoMember(12)] public bool OutputPeripheral { get; }
 
     [ProtoMember(13)] public byte[] LedIndexMpr121 { get; }
+    [ProtoMember(14)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
-        var combined = new KeyboardButton(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Debounce,
+        var combined = new KeyboardButton(model, Enabled, Input.Generate(model), Color.FromUInt32(LedOn),
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121, Debounce,
             Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
         model.Bindings.Add(combined);
         return combined;

@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedGhWtInput : SerializedInput
 {
+    public SerializedGhWtInput()
+    {
+        
+    }
     public SerializedGhWtInput(bool peripheral, int pin, int pins0, int pins1, int pins2, GhWtInputType type)
     {
         Pin = pin;

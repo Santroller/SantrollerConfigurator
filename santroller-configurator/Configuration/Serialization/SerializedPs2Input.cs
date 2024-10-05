@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedPs2Input : SerializedInput
 {
+    public SerializedPs2Input()
+    {
+        
+    }
     public SerializedPs2Input(bool peripheral, int miso, int mosi, int sck, int att, int ack, Ps2InputType type)
     {
         Miso = miso;

@@ -15,10 +15,10 @@ public partial class PianoKey : OutputAxis
 {
     public readonly ProKeyType Key;
 
-    public PianoKey(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    public PianoKey(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, ProKeyType key, bool outputEnabled, bool outputPeripheral,
         bool outputInverted,
-        int outputPin, bool childOfCombined) : base(model, input, ledOn,
+        int outputPin, bool childOfCombined) : base(model, enabled, input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
         0, ushort.MaxValue, 0, 0, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {

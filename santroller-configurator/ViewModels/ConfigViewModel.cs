@@ -1138,11 +1138,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] private bool _ps4Instruments;
 
-    [Reactive] private bool _sliderBar;
-    [Reactive] private bool _tilt;
-
-    [Reactive] private bool _joystickToDpad;
-
 
     private bool _hasPeripheral;
     private bool _hasWiiOutput;
@@ -1518,7 +1513,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (!Bindings.Items.Any(s => s is EmulationMode {Type: EmulationModeType.Fnf}))
             {
-                Bindings.Add(new EmulationMode(this, new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
+                Bindings.Add(new EmulationMode(this, true, new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
                     EmulationModeType.Fnf));
             }
 
@@ -1601,19 +1596,19 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             switch (type)
             {
                 case StandardButtonType buttonType:
-                    Bindings.Add(new ControllerButton(this,
+                    Bindings.Add(new ControllerButton(this,true,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1,
                         buttonType, false, false, false, -1, false));
                     break;
                 case InstrumentButtonType buttonType:
-                    Bindings.Add(new GuitarButton(this,
+                    Bindings.Add(new GuitarButton(this,true,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1,
                         buttonType, false, false, false, -1, false));
                     break;
                 case StandardAxisType axisType:
-                    Bindings.Add(new ControllerAxis(this,
+                    Bindings.Add(new ControllerAxis(this,true,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                         ushort.MinValue,
@@ -1623,7 +1618,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 case GuitarAxisType.Slider:
                     break;
                 case GuitarAxisType axisType:
-                    Bindings.Add(new GuitarAxis(this, new DirectInput(-1,
+                    Bindings.Add(new GuitarAxis(this, true,new DirectInput(-1,
                             false, false, DevicePinMode.Analog, this),
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                         ushort.MinValue,
@@ -1631,7 +1626,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         0, false, axisType, false, false, false, -1, false));
                     break;
                 case DrumAxisType axisType:
-                    Bindings.Add(new DrumAxis(this,
+                    Bindings.Add(new DrumAxis(this,true,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                         ushort.MinValue,
@@ -1639,7 +1634,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         0, 10, axisType, false, false, false, -1, false));
                     break;
                 case DjAxisType.EffectsKnob:
-                    Bindings.Add(new DjAxis(this,
+                    Bindings.Add(new DjAxis(this,true,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, 1,
                         DjAxisType.EffectsKnob, false, false, false, -1,
@@ -1647,7 +1642,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     break;
                 case DjAxisType axisType:
                     if (axisType is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity) continue;
-                    Bindings.Add(new DjAxis(this,
+                    Bindings.Add(new DjAxis(this,true,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                         Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                         ushort.MinValue,
@@ -1679,8 +1674,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         LedCountPeripheral = 1;
         _deviceControllerType = DeviceControllerType.Gamepad;
         CombinedStrumDebounce = false;
-        Tilt = true;
-        SliderBar = true;
         WtSensitivity = 5;
         PollRate = 0;
         StrumDebounce = 0;
@@ -1817,7 +1810,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             var isTrigger = type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger;
             int min = isTrigger ? ushort.MinValue : short.MinValue;
             int max = isTrigger ? ushort.MaxValue : short.MaxValue;
-            Bindings.Add(new ControllerAxis(this,
+            Bindings.Add(new ControllerAxis(this,true,
                 new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                 min, max, (max + min) / 2, 0,
@@ -1828,7 +1821,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
                     .Length == 0) continue;
-            Bindings.Add(new ControllerButton(this,
+            Bindings.Add(new ControllerButton(this,true,
                 new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, type,
                 false, false, false, -1, false));
@@ -1952,9 +1945,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define WINDOWS_USES_XINPUT {{WriteBlob(writer, XInputOnWindows && IsStandardController)}}
                         #define WINDOWS_TURNTABLE_FULLRANGE {{WriteBlob(writer, XInputOnWindows && DjFullRange)}}
                         #define RPCS3_COMPAT {{WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}}
-                        #define SLIDER_BAR {{WriteBlob(writer, SliderBar)}}
-                        #define TILT {{WriteBlob(writer, Tilt)}}
-                        #define JOYSTICK_TO_DPAD {{WriteBlob(writer, JoystickToDpad)}}
                         #define INPUT_QUEUE {{WriteBlob(writer, Deque)}}
                         #define POLL_RATE {{WriteBlob(writer, (byte) PollRate)}}
                         #define INPUT_DJ_TURNTABLE_POLL_RATE {{WriteBlob(writer, (byte) DjPollRate)}}
@@ -2008,9 +1998,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define WINDOWS_USES_XINPUT {{(XInputOnWindows && IsStandardController).ToString().ToLower()}}
                         #define WINDOWS_TURNTABLE_FULLRANGE {{(XInputOnWindows && DjFullRange).ToString().ToLower()}}
                         #define RPCS3_COMPAT {{(Ps3OnRpcs3 && IsRpcs3CompatibleController).ToString().ToLower()}}
-                        #define SLIDER_BAR {{SliderBar.ToString().ToLower()}}
-                        #define TILT {{Tilt.ToString().ToLower()}}
-                        #define JOYSTICK_TO_DPAD {{JoystickToDpad.ToString().ToLower()}}
                         #define INPUT_QUEUE {{Deque.ToString().ToLower()}}
                         #define POLL_RATE {{PollRate}}
                         #define WT_SENSITIVITY {{WtSensitivity}}
@@ -2733,7 +2720,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (IsController)
             Bindings.Add(new EmptyOutput(this));
         else if (IsKeyboard)
-            Bindings.Add(new KeyboardButton(this, new DirectInput(0, false, false, DevicePinMode.PullUp, this),
+            Bindings.Add(new KeyboardButton(this, true,new DirectInput(0, false, false, DevicePinMode.PullUp, this),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, Key.Space,
                 false, false, false, -1));
 
@@ -3737,6 +3724,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                    """;
         }
 
+        var enabled = new Dictionary<Output, string>();
+
         // Handle most mappings
         ret += outputsByType
             .Aggregate("", (current, group) =>
@@ -3859,6 +3848,24 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             var generated = output.Generate(mode, index, ledIndex, "", "", strumIndices, combined,
                                 macros,
                                 writer);
+                            if (writer != null && generated.Length != 0)
+                            {
+                                if (!enabled.TryGetValue(output, out var blob))
+                                {
+                                    blob = WriteBlob(writer, output.Enabled);
+                                    enabled[output] = blob;
+                                }
+
+                                generated = $$"""
+                                              if ({{blob}}) {
+                                                  {{generated}}
+                                              }
+                                              """;
+                            }
+                            else
+                            {
+                                if (!output.Enabled) generated = "";
+                            }
 
                             return new Tuple<Input, string>(input, generated);
                         })

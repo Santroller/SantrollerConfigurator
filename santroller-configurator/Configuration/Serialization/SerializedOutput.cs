@@ -21,7 +21,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoInclude(112, typeof(SerializedDjButton))]
 [ProtoInclude(113, typeof(SerializedGuitarAxis))]
 [ProtoInclude(114, typeof(SerializedDjAxis))]
-[ProtoInclude(115, typeof(SerializedRbButton))]
+[ProtoInclude(115, typeof(SerializedGuitarButton))]
 [ProtoInclude(117, typeof(SerializedLed))]
 [ProtoInclude(118, typeof(SerializedEmulationMode))]
 [ProtoInclude(119, typeof(SerializedJoystickToDpad))]

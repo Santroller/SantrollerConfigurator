@@ -76,11 +76,11 @@ public partial class GuitarAxis : OutputAxis
     public int PickupSelectorNotch5 { get; set; }
 
 
-    public GuitarAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff,
+    public GuitarAxis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff,
         byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max, int deadZone,
         bool invert,
         GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
-        bool childOfCombined) : base(model,
+        bool childOfCombined) : base(model,enabled,
         input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, 0,deadZone,
         type is GuitarAxisType.Slider or GuitarAxisType.Whammy, outputEnabled, outputInverted, outputPeripheral,
@@ -92,12 +92,12 @@ public partial class GuitarAxis : OutputAxis
         _namedAxisInfoHelper = this.WhenAnyValue(x => x.Value).Select(GetNamedAxisInfo).ToProperty(this, x => x.NamedAxisInfo);
     }
 
-    public GuitarAxis(ConfigViewModel model, Input input, int pickupSelectorNotch2,
+    public GuitarAxis(ConfigViewModel model, bool enabled, Input input, int pickupSelectorNotch2,
         int pickupSelectorNotch3, int pickupSelectorNotch4, int pickupSelectorNotch5, Color ledOn, Color ledOff,
         byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max, int deadZone,
         bool invert,
         GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
-        bool childOfCombined) : base(model,
+        bool childOfCombined) : base(model, enabled,
         input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max,0, deadZone,
         true, outputEnabled, outputInverted, outputPeripheral,
@@ -232,7 +232,7 @@ public partial class GuitarAxis : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedGuitarAxis(Input!.Serialise(), Type, PickupSelectorNotch2, PickupSelectorNotch3,
+        return new SerializedGuitarAxis(Input!.Serialise(), Enabled, Type, PickupSelectorNotch2, PickupSelectorNotch3,
             PickupSelectorNotch4, PickupSelectorNotch5, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Inverted, Min, Max,
             DeadZone, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined,
@@ -308,12 +308,12 @@ public partial class GuitarAxis : OutputAxis
                              }
                              """;
                 case GuitarAxisType.Tilt:
-                    return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
+                    return new KeyboardButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
                         LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.PageDown,
                         OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, ledIndex, extra,
                         combinedExtra, strumIndexes, combinedDebounce, macros, writer);
                 case GuitarAxisType.Whammy:
-                    return new KeyboardButton(Model, input, LedOn, LedOff, LedIndices.ToArray(),
+                    return new KeyboardButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
                         LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.RightCtrl,
                         OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, ledIndex, extra,
                         combinedExtra, strumIndexes, combinedDebounce, macros, writer);
@@ -365,7 +365,7 @@ public partial class GuitarAxis : OutputAxis
                 when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
                 // Wii tilt doesn't exist so instead map to select
                 return $$"""
-                         if (TILT && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              report->back = true;
                          }
                          """;
@@ -373,18 +373,16 @@ public partial class GuitarAxis : OutputAxis
                 // Wii tilt doesn't exist so instead map to select
                 return
                     $$"""
-                      if (TILT) {
-                          uint8_t tilt_test = {{GenerateAssignment("0", mode, false, false, false, false, writer)}};
-                          if (tilt_test > 0xF0) {
-                              report->back = true;
-                          }
+                      uint8_t tilt_test = {{GenerateAssignment("0", mode, false, false, false, false, writer)}};
+                      if (tilt_test > 0xF0) {
+                          report->back = true;
                       }
                       """;
             case ConfigField.Ps2
                 when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
                 // PS2 tilt is digital
                 return $$"""
-                         if (TILT && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              report->tilt = true;
                          }
                          """;
@@ -392,11 +390,9 @@ public partial class GuitarAxis : OutputAxis
                 // PS2 tilt is digital
                 return
                     $$"""
-                      if (TILT) {
-                          uint8_t tilt_test = {{GenerateAssignment("0", mode, false, false, false, false, writer)}};
-                          if (tilt_test > 0xF0) {
-                              report->tilt = true;
-                          }
+                      uint8_t tilt_test = {{GenerateAssignment("0", mode, false, false, false, false, writer)}};
+                      if (tilt_test > 0xF0) {
+                          report->tilt = true;
                       }
                       """;
             
@@ -409,23 +405,19 @@ public partial class GuitarAxis : OutputAxis
                 when Type is GuitarAxisType.Tilt && Input is DigitalToAnalog:
                 // XB1 tilt is uint8_t
                 return $$"""
-                         if (TILT && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              {{GenerateOutput(mode)}} = 255;
                          }
                          """;
             case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt:
                 return
-                    $$"""
-                      if (TILT) {
-                        {{GenerateOutput(mode)}} = {{GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)}};
-                      }
-                      """;
+                    $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};";
             case ConfigField.Xbox360 or ConfigField.Xbox when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 analogOn = -((sbyte) (analogOn ^ 0x80) * -257);
 
                 return $$"""
-                         if (SLIDER_BAR && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              {{GenerateOutput(mode)}} = {{analogOn}};
                          }
                          """;
@@ -433,7 +425,7 @@ public partial class GuitarAxis : OutputAxis
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 return $$"""
-                         if (SLIDER_BAR && ({{Input.Generate(writer)}} != PS3_STICK_CENTER)) {
+                         if (({{Input.Generate(writer)}} != PS3_STICK_CENTER)) {
                              {{GenerateOutput(mode)}} = -((int8_t)(({{Input.Generate(writer)}}) ^ 0x80) * -257);
                          }
                          """;
@@ -446,14 +438,14 @@ public partial class GuitarAxis : OutputAxis
             case ConfigField.Universal or ConfigField.Ps2 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
                 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 return $$"""
-                         if (SLIDER_BAR && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              {{GenerateOutput(mode)}} = {{analogOn & 0xFF}};
                          }
                          """;
             case ConfigField.Ps3 or ConfigField.Ps2 or ConfigField.Ps3WithoutCapture or ConfigField.Universal
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 return $$"""
-                         if (SLIDER_BAR && ({{Input.Generate(writer)}} != PS3_STICK_CENTER)) {
+                         if (({{Input.Generate(writer)}} != PS3_STICK_CENTER)) {
                             {{GenerateOutput(mode)}} = {{Input.Generate(writer)}};
                          }
                          """;
@@ -462,7 +454,7 @@ public partial class GuitarAxis : OutputAxis
                 when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 // Convert gh5 mappings back to wt
                 return $$"""
-                         if (SLIDER_BAR && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              {{GenerateOutput(mode)}} = {{WiiGh5Mappings[analogOn & 0xFF]}};
                          }
                          """;
@@ -470,7 +462,7 @@ public partial class GuitarAxis : OutputAxis
                 when Type == GuitarAxisType.Slider && Input is not DigitalToAnalog:
                 // Convert gh5 mappings back to wt
                 return $$"""
-                         if (SLIDER_BAR && ({{Input.Generate(writer)}} != PS3_STICK_CENTER)) {
+                         if (({{Input.Generate(writer)}} != PS3_STICK_CENTER)) {
                             uint8_t slider_tmp = {{Input.Generate(writer)}};
                             if (slider_tmp <= 0x15) {
                                {{GenerateOutput(mode)}} = 0x04;
@@ -503,7 +495,7 @@ public partial class GuitarAxis : OutputAxis
                      Type == GuitarAxisType.Tilt && Input is DigitalToAnalog:
             {
                 return $$"""
-                         if (TILT && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              report->tilt = 0x180;
                          }
                          """;
@@ -515,7 +507,7 @@ public partial class GuitarAxis : OutputAxis
                      } &&
                      Type == GuitarAxisType.Tilt && Input is not DigitalToAnalog:
                 return $$"""
-                         if (TILT && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              {{GenerateOutput(mode)}} = {{GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)}};
                          }
                          """;
@@ -528,7 +520,7 @@ public partial class GuitarAxis : OutputAxis
                      Type == GuitarAxisType.Tilt && Input is DigitalToAnalog:
             {
                 return $$"""
-                         if (TILT && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              report->tilt = 0x180;
                              report->tilt2 = 0xFF;
                          }
@@ -543,7 +535,7 @@ public partial class GuitarAxis : OutputAxis
 
                 // GHL expects right stick x to go to 0xFF or 0x00 to signify tilt being active
                 return $$"""
-                         if (TILT && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              {{GenerateOutput(mode)}} = {{GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)}};
                              uint8_t tilt_test = {{GenerateAssignment(GenerateOutput(mode), mode, false, false, false, false, writer)}};
                              if (tilt_test > 0xF0) {
@@ -559,7 +551,7 @@ public partial class GuitarAxis : OutputAxis
                      Type == GuitarAxisType.Tilt && Input is DigitalToAnalog:
                 // PS3 rb uses a digital bit, so just map the bit right across and skip the analog conversion
                 return $$"""
-                         if (TILT && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              {{GenerateOutput(mode)}} = true;
                          }
                          """;
@@ -568,7 +560,7 @@ public partial class GuitarAxis : OutputAxis
                      Type == GuitarAxisType.Tilt && Input is not DigitalToAnalog:
                 // PS3 RB expects tilt as a digital bit, so map that here.
                 return $$"""
-                         if (TILT && {{Input.Generate(writer)}}) {
+                         if ({{Input.Generate(writer)}}) {
                              {{GenerateOutput(mode)}} |= {{GenerateAssignment("0", ConfigField.XboxOne, true, false, false, false, writer)}} > 0xE0;
                          }
                          """;
@@ -641,16 +633,8 @@ public partial class GuitarAxis : OutputAxis
                          """;
             case ConfigField.Xbox or ConfigField.Xbox360 or ConfigField.Ps4 when Type is GuitarAxisType.Tilt:
                 return Input is DigitalToAnalog
-                    ? $$"""
-                        if (TILT) {
-                            {{base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer)}};
-                        }
-                        """
-                    : $$"""
-                        if (TILT) {
-                            {{GenerateOutput(mode)}} = {{GenerateAssignment(GenerateOutput(mode), mode, false, false, false, false, writer)}};
-                        }
-                        """;
+                    ? $"{base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer)};"
+                    : $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, false, false, writer)};";
             default:
                 if (Input is DigitalToAnalog)
                     return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,

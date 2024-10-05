@@ -87,11 +87,12 @@ public abstract partial class Output : ReactiveObject
     public ReactiveCommand<Unit, Unit> MoveDown { get; }
 
 
-    protected Output(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    protected Output(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, bool outputEnabled, bool outputInverted,
         bool peripheralOutput, int outputPin,
         bool childOfCombined)
     {
+        Enabled = enabled;
         Model = model;
         OutputPin = outputPin;
         OutputEnabled = outputEnabled;
@@ -379,7 +380,7 @@ public abstract partial class Output : ReactiveObject
 
     [Reactive] private Input _input;
 
-    [Reactive] private bool _enabled = true;
+    [Reactive] private bool _enabled;
 
     [Reactive] private bool _expanded;
 
@@ -722,7 +723,7 @@ public abstract partial class Output : ReactiveObject
 
     public bool ChildOfCombined { get; }
 
-    public bool ShouldShowEnabled => ChildOfCombined && !Model.Branded;
+    public bool ShouldShowEnabled => !IsCombined;
     public bool IsEmpty => this is EmptyOutput;
 
     [Reactive] private string _buttonText;
@@ -923,12 +924,12 @@ public abstract partial class Output : ReactiveObject
 
         Output? newOutput = value switch
         {
-            Key key => new KeyboardButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
+            Key key => new KeyboardButton(Model, Enabled, Input, LedOn, LedOff, LedIndices.ToArray(),
                 LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), debounce, key, false, false, false, -1),
-            MouseButtonType mouseButtonType => new MouseButton(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
+            MouseButtonType mouseButtonType => new MouseButton(Model, Enabled, Input, LedOn, LedOff, LedIndices.ToArray(),
                 LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
                 debounce, mouseButtonType, false, false, false, -1),
-            MouseAxisType axisType => new MouseAxis(Model, Input, LedOn, LedOff, LedIndices.ToArray(),
+            MouseAxisType axisType => new MouseAxis(Model,Enabled,  Input, LedOn, LedOff, LedIndices.ToArray(),
                 LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), min, max,
                 deadzone, axisType, false, false, false, -1),
             _ => null
@@ -1309,7 +1310,7 @@ public abstract partial class Output : ReactiveObject
     public virtual IEnumerable<Output> ValidOutputs()
     {
         var (extra, _) = ControllerEnumConverter.FilterValidOutputs(Model.DeviceControllerType, Outputs.Items);
-        return Outputs.Items.Except(extra).Where(output => output.Enabled);
+        return Outputs.Items.Except(extra);
     }
 
     [RelayCommand]

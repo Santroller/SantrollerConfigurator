@@ -6,9 +6,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedBluetoothInput : SerializedInput
 {
+    public SerializedBluetoothInput()
+    {
+        
+    }
     public SerializedBluetoothInput(UsbHostInputType type, Key key, MouseButtonType mouseButtonType,
         MouseAxisType mouseAxisType, ProKeyType proKeyType, bool combined)
     {

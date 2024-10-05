@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedGh5NeckInput : SerializedInput
 {
+    public SerializedGh5NeckInput()
+    {
+        
+    }
     public SerializedGh5NeckInput(bool peripheral, int sda, int scl, Gh5NeckInputType type)
     {
         Sda = sda;

@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedDjInput : SerializedInput
 {
+    public SerializedDjInput()
+    {
+        
+    }
     public SerializedDjInput(bool peripheral, int sda, int scl, DjInputType type)
     {
         Sda = sda;

@@ -254,13 +254,14 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
 
     [Reactive] private bool _controllerFound;
 
-    public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
+    public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
     {
         Outputs.Clear();
-        if (outputs.Count != 0)
-            Outputs.AddRange(outputs);
-        else
+        Outputs.AddRange(outputs);
+        if (Outputs.Count == 0)
+        {
             CreateDefaults();
+        }
     }
 
     private static Func<Output, bool> CreateFilter(
@@ -301,7 +302,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         Outputs.Clear();
         foreach (var pair in Buttons)
         {
-            var output = new ControllerButton(Model, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+            var output = new ControllerButton(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                 Colors.Black,
                 Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
                 pair.Value, false, false, false, -1, true);
@@ -317,7 +318,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                 {
                     threshold = 50000;
                 }
-                Outputs.Add(new ControllerAxis(Model, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+                Outputs.Add(new ControllerAxis(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue,
                     ushort.MaxValue/2,8000, threshold,
@@ -325,7 +326,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
             }
             else
             {
-                Outputs.Add(new ControllerAxis(Model, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+                Outputs.Add(new ControllerAxis(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), -30000, 30000, 0,4000,
                     ushort.MaxValue,
@@ -333,25 +334,25 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
             }
         }
 
-        Outputs.Add(new ControllerAxis(Model,
+        Outputs.Add(new ControllerAxis(Model,true,
             new WiiInput(WiiInputType.GuitarTapBar, Model, Peripheral, Sda, Scl, true),
             Colors.Black,
             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue,
             0,0,
             ushort.MaxValue, StandardAxisType.RightStickY, false, false, false, -1, true));
         foreach (var pair in AxisAcceleration)
-            Outputs.Add(new ControllerAxis(Model, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+            Outputs.Add(new ControllerAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                 Colors.Black,
                 Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue,
                 short.MaxValue, 0,0,
                 ushort.MaxValue, pair.Value, false, false, false, -1,
                 true));
-        var dpad = new JoystickToDpad(Model, Peripheral, short.MaxValue / 2, true)
+        var dpad = new JoystickToDpad(Model, true,Peripheral, short.MaxValue / 2, true)
         {
             Enabled = false
         };
         Outputs.Add(dpad);
-        Outputs.Add(new StartSelectHome(Model, Peripheral, true) {Enabled = false});
+        Outputs.Add(new StartSelectHome(Model, true,Peripheral, true) {Enabled = false});
         UpdateBindings();
     }
 
@@ -374,14 +375,14 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         }
 
         var tapAnalog =
-            Outputs.Items.FirstOrDefault(s => s is {Enabled: true, Input: WiiInput {Input: WiiInputType.GuitarTapBar}});
+            Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarTapBar}});
         var tapFrets =
-            Outputs.Items.FirstOrDefault(s => s is {Enabled: true, Input: WiiInput {Input: WiiInputType.GuitarTapAll}});
+            Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarTapAll}});
         if (tapAnalog == null && tapFrets == null) return outputs;
         // Map Tap bar to Upper frets on RB guitars
         if (tapAnalog != null && Model.DeviceControllerType is DeviceControllerType.RockBandGuitar)
         {
-            outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model,
+            outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model,tapAnalog.Enabled,
                 new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5,
                 pair.Value, false, false, false, -1, true)));
@@ -392,7 +393,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         if (tapFrets == null) return outputs;
         if (Model.DeviceControllerType.Is5FretGuitar())
         {
-            outputs.AddRange(Tap.Select(pair => new ControllerButton(Model,
+            outputs.AddRange(Tap.Select(pair => new ControllerButton(Model,tapFrets.Enabled,
                 new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5,
                 pair.Value, false, false, false, -1, true)));
@@ -450,7 +451,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                 {
                     if (UIntInputs.Contains(pair.Key))
                     {
-                        Outputs.Add(new ControllerAxis(Model, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+                        Outputs.Add(new ControllerAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                             Colors.Black,
                             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 0,
                             ushort.MaxValue, 0,8000,
@@ -458,7 +459,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                     }
                     else
                     {
-                        Outputs.Add(new ControllerAxis(Model, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+                        Outputs.Add(new ControllerAxis(Model,true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                             Colors.Black,
                             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), -30000, 30000,
                             0,4000,
@@ -476,7 +477,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
             if (!Outputs.Items.Any(s => s is DrumAxis))
             {
                 foreach (var pair in isGh ? DrumAxisGh : DrumAxisRb)
-                    Outputs.Add(new DrumAxis(Model, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+                    Outputs.Add(new DrumAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                         Colors.Black,
                         Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), -30000, 30000, 10,
                         10, pair.Value, false, false, false, -1,
@@ -493,7 +494,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                 Outputs.Remove(first);
                 // Rb maps orange to green, while gh maps orange to orange
                 if (isGh)
-                    Outputs.Add(new DrumAxis(Model,
+                    Outputs.Add(new DrumAxis(Model,true,
                         new WiiInput(WiiInputType.DrumOrange, Model, Peripheral, Sda, Scl, true),
                         first.LedOn, first.LedOff, first.LedIndices.ToArray(), first.LedIndicesPeripheral.ToArray(),
                         first.LedIndicesMpr121.ToArray(),
@@ -501,7 +502,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                         10,
                         DrumAxisType.Orange, false, false, false, -1, true));
                 else
-                    Outputs.Add(new DrumAxis(Model,
+                    Outputs.Add(new DrumAxis(Model,true,
                         new WiiInput(WiiInputType.DrumOrange, Model, Peripheral, Sda, Scl, true),
                         first.LedOn, first.LedOff, first.LedIndices.ToArray(), first.LedIndicesPeripheral.ToArray(),
                         first.LedIndicesMpr121.ToArray(),
@@ -515,7 +516,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
             var currentDrums = Outputs.Items.OfType<DrumAxis>();
             foreach (var drumAxis in currentDrums)
             {
-                Outputs.Add(new ControllerButton(Model, drumAxis.Input,
+                Outputs.Add(new ControllerButton(Model, true,drumAxis.Input,
                     drumAxis.LedOn, drumAxis.LedOff, drumAxis.LedIndices.ToArray(),
                     drumAxis.LedIndicesPeripheral.ToArray(), drumAxis.LedIndicesMpr121.ToArray(), drumAxis.Debounce,
                     Buttons[DrumToWii[drumAxis.Type]], false, false, false, -1, true));
@@ -534,7 +535,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         {
             if (tapFrets == null)
             {
-                Outputs.Add(new GuitarButton(Model,
+                Outputs.Add(new GuitarButton(Model,true,
                     new WiiInput(WiiInputType.GuitarTapAll, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
@@ -546,7 +547,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
 
             if (pedal == null)
             {
-                Outputs.Add(new GuitarAxis(Model,
+                Outputs.Add(new GuitarAxis(Model,true,
                     new DigitalToAnalog(new WiiInput(WiiInputType.GuitarPedal, Model, Peripheral, Sda, Scl, true), short.MaxValue, Model, DigitalToAnalogType.Tilt),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue,
@@ -569,7 +570,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         {
             if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Whammy}))
             {
-                Outputs.Add(new GuitarAxis(Model,
+                Outputs.Add(new GuitarAxis(Model,true,
                     new WiiInput(WiiInputType.GuitarWhammy, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue,
@@ -587,7 +588,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         {
             if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Slider}))
             {
-                Outputs.Add(new GuitarAxis(Model,
+                Outputs.Add(new GuitarAxis(Model,true,
                     new WiiInput(WiiInputType.GuitarTapBar, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue, 0,
@@ -611,7 +612,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                 var items = currentButtonStandard.Where(s => s.Input is WiiInput wii && wii.Input == wiiInputType)
                     .ToList();
                 Outputs.RemoveMany(items);
-                Outputs.AddRange(items.Select(item => new DjButton(Model, item.Input,
+                Outputs.AddRange(items.Select(item => new DjButton(Model, true,item.Input,
                     item.LedOn, item.LedOff, item.LedIndices.ToArray(), item.LedIndicesPeripheral.ToArray(),
                     item.LedIndicesMpr121.ToArray(),
                     item.Debounce, djInputType, false, false, false, -1, true)));
@@ -619,7 +620,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
 
             if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.Crossfader}))
             {
-                Outputs.Add(new DjAxis(Model,
+                Outputs.Add(new DjAxis(Model,true,
                     new WiiInput(WiiInputType.DjCrossfadeSlider, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue, 0,
@@ -628,7 +629,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
 
             if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.EffectsKnob}))
             {
-                Outputs.Add(new DjAxis(Model,
+                Outputs.Add(new DjAxis(Model,true,
                     new WiiInput(WiiInputType.DjEffectDial, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 0, ushort.MaxValue, 0,
@@ -637,7 +638,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
 
             if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.LeftTableVelocity}))
             {
-                Outputs.Add(new DjAxis(Model,
+                Outputs.Add(new DjAxis(Model,true,
                     new WiiInput(WiiInputType.DjTurntableLeft, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue,
@@ -647,7 +648,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
 
             if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.RightTableVelocity}))
             {
-                Outputs.Add(new DjAxis(Model,
+                Outputs.Add(new DjAxis(Model,true,
                     new WiiInput(WiiInputType.DjTurntableRight, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue,
@@ -661,7 +662,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
             foreach (var djButton in currentButtonDj)
             {
                 Outputs.Remove(djButton);
-                Outputs.Add(new ControllerButton(Model, djButton.Input,
+                Outputs.Add(new ControllerButton(Model, true,djButton.Input,
                     djButton.LedOn, djButton.LedOff, djButton.LedIndices.ToArray(),
                     djButton.LedIndicesPeripheral.ToArray(), djButton.LedIndicesMpr121.ToArray(), djButton.Debounce,
                     Buttons[DjToWiiButton[djButton.Type]], false, false, false, -1, true));

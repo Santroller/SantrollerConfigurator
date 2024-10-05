@@ -4,7 +4,7 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 [ProtoInclude(101, typeof(SerializedAnalogToDigital))]
 [ProtoInclude(102, typeof(SerializedDigitalToAnalog))]
 [ProtoInclude(103, typeof(SerializedDirectInput))]

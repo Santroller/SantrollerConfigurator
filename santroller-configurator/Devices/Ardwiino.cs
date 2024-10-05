@@ -501,7 +501,7 @@ public class Ardwiino : ConfigurableUsbDevice
                     (ControllerAxisType) axis == XboxTilt &&
                     config.all.main.tiltType == 2)
                 {
-                    bindings.Add(new GuitarAxis(model,
+                    bindings.Add(new GuitarAxis(model,true,
                         new DigitalToAnalog(new DirectInput(pin.pin, false, false, DevicePinMode.PullUp, model), 32767,
                             model, DigitalToAnalogType.Tilt),
                         on,
@@ -524,14 +524,14 @@ public class Ardwiino : ConfigurableUsbDevice
                     if (deviceType.IsGuitar() &&
                         (ControllerAxisType) axis == XboxWhammy)
                     {
-                        bindings.Add(new GuitarAxis(model,
+                        bindings.Add(new GuitarAxis(model,true,
                             new DirectInput(pin.pin, false, false, DevicePinMode.Analog, model), on,
                             off,
                             ledIndex, Array.Empty<byte>(), Array.Empty<byte>(), min, max, axisDeadzone, false, GuitarAxisType.Whammy, false, false ,false, -1, false));
                     }
                     else
                     {
-                        bindings.Add(new ControllerAxis(model,
+                        bindings.Add(new ControllerAxis(model,true,
                             new DirectInput(pin.pin, false, false, DevicePinMode.Analog, model), on, off,
                             ledIndex, Array.Empty<byte>(), Array.Empty<byte>(), min, max,(max+min)/2, axisDeadzone, ushort.MaxValue, genAxis, false, false ,false, -1, false));
                     }
@@ -569,7 +569,7 @@ public class Ardwiino : ConfigurableUsbDevice
                         break;
                 }
 
-                bindings.Add(new ControllerButton(model, new DirectInput(pin, false, false, pinMode, model), on, off,
+                bindings.Add(new ControllerButton(model, true,new DirectInput(pin, false, false, pinMode, model), on, off,
                     ledIndex, Array.Empty<byte>(), Array.Empty<byte>(), debounce, genButton, false, false ,false, -1, false));
             }
 
@@ -579,7 +579,7 @@ public class Ardwiino : ConfigurableUsbDevice
                 var select = config.all.pins.pins![(int) ControllerButtons.XboxBack];
                 if (start != NotUsed && select != NotUsed)
                 {
-                    bindings.Add(new ControllerButton(model,
+                    bindings.Add(new ControllerButton(model,true,
                         new MacroInput(new DirectInput(start, false, false, DevicePinMode.PullUp, model),
                             new DirectInput(select, false, false, DevicePinMode.PullUp, model), model), Colors.Black,
                         Colors.Black,
@@ -604,7 +604,7 @@ public class Ardwiino : ConfigurableUsbDevice
                     if (ledIndexes.TryGetValue((int) (XboxTilt + XboxBtnCount), out var index))
                         ledIndex = [index];
 
-                    bindings.Add(new GuitarAxis(model,
+                    bindings.Add(new GuitarAxis(model,true,
                         new DigitalToAnalog(new DirectInput(pin.pin, false, false, DevicePinMode.PullUp, model), 32767,
                             model, DigitalToAnalogType.Tilt),
                         on,
@@ -635,11 +635,11 @@ public class Ardwiino : ConfigurableUsbDevice
             {
                 var ledOn = lx.LedOn;
                 var ledOff = lx.LedOff;
-                bindings.Add(new ControllerButton(model,
+                bindings.Add(new ControllerButton(model,true,
                     new AnalogToDigital(lx.Input, AnalogToDigitalType.JoyLow, threshold, model), ledOn, ledOff,
                     Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), config.debounce.buttons, StandardButtonType.DpadLeft, false, false ,false, -1,
                     false));
-                bindings.Add(new ControllerButton(model,
+                bindings.Add(new ControllerButton(model,true,
                     new AnalogToDigital(lx.Input, AnalogToDigitalType.JoyHigh, threshold, model), ledOn, ledOff,
                     Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), config.debounce.buttons, StandardButtonType.DpadRight, false, false ,false, -1,
                     false));
@@ -649,11 +649,11 @@ public class Ardwiino : ConfigurableUsbDevice
             {
                 var ledOn = ly.LedOn;
                 var ledOff = ly.LedOff;
-                bindings.Add(new ControllerButton(model,
+                bindings.Add(new ControllerButton(model,true,
                     new AnalogToDigital(ly.Input, AnalogToDigitalType.JoyLow, threshold, model), ledOn, ledOff,
                     Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), config.debounce.buttons, StandardButtonType.DpadDown, false, false ,false, -1,
                     false));
-                bindings.Add(new ControllerButton(model,
+                bindings.Add(new ControllerButton(model,true,
                     new AnalogToDigital(ly.Input, AnalogToDigitalType.JoyHigh, threshold, model), ledOn, ledOff,
                     Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), config.debounce.buttons, StandardButtonType.DpadUp, false, false ,false, -1,
                     false));

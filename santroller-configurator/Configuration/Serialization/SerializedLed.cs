@@ -8,10 +8,16 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedLed : SerializedOutput
 {
-    public SerializedLed(Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, LedCommandType type, int param1, int param2,
+    public SerializedLed()
+    {
+        LedIndex = [];
+        LedIndexPeripheral = [];
+        LedIndexMpr121 = [];
+    }
+    public SerializedLed(bool enabled, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, LedCommandType type, int param1, int param2,
         bool outputEnabled, bool peripheral, bool inverted, int pin, byte[] ledIndexMpr121)
     {
         LedOn = ledOn.ToUInt32();
@@ -26,6 +32,7 @@ public class SerializedLed : SerializedOutput
         Param2 = param2;
         Inverted = inverted;
         Peripheral = peripheral;
+        Enabled = enabled;
     }
 
     [ProtoMember(1)] public uint LedOn { get; }
@@ -41,11 +48,12 @@ public class SerializedLed : SerializedOutput
     [ProtoMember(11)] public byte[] LedIndexPeripheral { get; }
     
     [ProtoMember(12)] public byte[] LedIndexMpr121 { get; }
+    [ProtoMember(13)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
-        var combined = new Led(model, OutputEnabled, Inverted, Pin, Peripheral, Color.FromUInt32(LedOn), Color.FromUInt32(LedOff),
-            LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Type, Param1, Param2);
+        var combined = new Led(model, Enabled, OutputEnabled, Inverted, Pin, Peripheral, Color.FromUInt32(LedOn), Color.FromUInt32(LedOff),
+            LedIndex, LedIndexPeripheral, LedIndexMpr121, Type, Param1, Param2);
         model.Bindings.Add(combined);
         return combined;
     }

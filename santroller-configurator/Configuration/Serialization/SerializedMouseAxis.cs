@@ -8,9 +8,15 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedMouseAxis : SerializedOutput
 {
+    public SerializedMouseAxis()
+    {
+        LedIndex = [];
+        LedIndexMpr121 = [];
+        LedIndexPeripheral = [];
+    }
     public SerializedMouseAxis(SerializedInput input, MouseAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         int min, int max,
         int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, byte[] ledIndexMpr121)
@@ -31,7 +37,7 @@ public class SerializedMouseAxis : SerializedOutput
         LedIndexMpr121 = ledIndexMpr121;
     }
 
-    [ProtoMember(1)] public SerializedInput Input { get; }
+    [ProtoMember(1)] public SerializedInput? Input { get; }
     [ProtoMember(2)] public uint LedOn { get; }
     [ProtoMember(3)] public uint LedOff { get; }
     [ProtoMember(4)] public int Min { get; }
@@ -46,12 +52,17 @@ public class SerializedMouseAxis : SerializedOutput
     
     [ProtoMember(13)] public byte[] LedIndexMpr121 { get; }
 
-    public MouseAxisType Type { get; }
+    [ProtoMember(14)] public MouseAxisType Type { get; }
+    [ProtoMember(15)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
-        var combined = new MouseAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Min, Max, Deadzone,
+        if (Input == null)
+        {
+            throw new NotImplementedException("Null child unexpected!");
+        }
+        var combined = new MouseAxis(model, Enabled, Input.Generate(model), Color.FromUInt32(LedOn),
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121, Min, Max, Deadzone,
             Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
         model.Bindings.Add(combined);
         return combined;

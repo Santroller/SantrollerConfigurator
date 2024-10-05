@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedWiiInput : SerializedInput
 {
+    public SerializedWiiInput()
+    {
+        
+    }
     public SerializedWiiInput(int sda, int scl, WiiInputType type, bool peripheral)
     {
         Sda = sda;

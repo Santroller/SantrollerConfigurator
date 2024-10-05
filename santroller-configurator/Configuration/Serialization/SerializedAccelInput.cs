@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedAccelInput : SerializedInput
 {
+    private SerializedAccelInput()
+    {
+        
+    }
     public SerializedAccelInput(AccelInputType type)
     {
         Type = type;

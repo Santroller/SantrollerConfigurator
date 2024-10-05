@@ -13,22 +13,16 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 public class SerializedCombinedUsbHostOutput : SerializedOutput
 {
     [ProtoMember(1)] public List<SerializedOutput> Outputs { get; }
-
-    [ProtoMember(2)] public byte[] Enabled { get; }
     public SerializedCombinedUsbHostOutput(List<Output> outputs)
     {
         Outputs = outputs.Select(s => s.Serialize()).ToList();
-        Enabled = GetBytes(new BitArray(outputs.Select(s => s.Enabled).ToArray()));
     }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new UsbHostCombinedOutput(model);
         model.Bindings.Add(combined);
-        var array = new BitArray(Enabled);
-        var outputs = Outputs.Select(s => s.Generate(model)).ToList();
-        for (var i = 0; i < outputs.Count; i++) outputs[i].Enabled = array[i];
-        combined.SetOutputsOrDefaults(outputs);
+        combined.SetOutputsOrDefaults(Outputs.Select(s => s.Generate(model)));
         return combined;
     }
 }

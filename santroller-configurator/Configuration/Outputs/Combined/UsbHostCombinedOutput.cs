@@ -155,13 +155,14 @@ public partial class UsbHostCombinedOutput : CombinedOutput
         return SimpleType.UsbHost;
     }
 
-    public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
+    public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
     {
         Outputs.Clear();
-        if (outputs.Count != 0)
-            Outputs.AddRange(outputs);
-        else
+        Outputs.AddRange(outputs);
+        if (Outputs.Count == 0)
+        {
             CreateDefaults();
+        }
     }
 
     public virtual UsbHostInput MakeInput(UsbHostInputType type)
@@ -187,50 +188,50 @@ public partial class UsbHostCombinedOutput : CombinedOutput
             int max = input.IsUint ? ushort.MaxValue : short.MaxValue;
             Output? output = key switch
             {
-                StandardAxisType.RightTrigger or StandardAxisType.LeftTrigger => new ControllerAxis(Model,
+                StandardAxisType.RightTrigger or StandardAxisType.LeftTrigger => new ControllerAxis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     min, max, (max + min) / 2, 0, 50000, (StandardAxisType) key, false, false, false, -1, true),
-                StandardAxisType standardAxisType => new ControllerAxis(Model,
+                StandardAxisType standardAxisType => new ControllerAxis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     min, max, (max + min) / 2, 0, ushort.MaxValue, standardAxisType, false, false, false, -1, true),
-                StandardButtonType standardButtonType => new ControllerButton(Model,
+                StandardButtonType standardButtonType => new ControllerButton(Model,true,
                     input, Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5,
                     standardButtonType, false, false, false, -1, true),
-                InstrumentButtonType standardButtonType => new GuitarButton(Model,
+                InstrumentButtonType standardButtonType => new GuitarButton(Model,true,
                     input, Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5,
                     standardButtonType, false, false, false, -1, true),
-                DrumAxisType drumAxisType => new DrumAxis(Model,
+                DrumAxisType drumAxisType => new DrumAxis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     min, max, 0, 10, drumAxisType, false, false, false, -1, true),
-                Ps3AxisType ps3AxisType => new Ps3Axis(Model,
+                Ps3AxisType ps3AxisType => new Ps3Axis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     min, max, 0, ps3AxisType, false, false, false, -1, true),
-                GuitarAxisType.Pickup => new GuitarAxis(Model,
+                GuitarAxisType.Pickup => new GuitarAxis(Model,true,
                     input, GuitarAxis.PickupSelectorRangesPS[1] << 8, GuitarAxis.PickupSelectorRangesPS[2] << 8,
                     GuitarAxis.PickupSelectorRangesPS[3] << 8, GuitarAxis.PickupSelectorRangesPS[4] << 8, Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     min, max, 0, false, GuitarAxisType.Pickup, false, false, false, -1, true),
-                GuitarAxisType.Slider => new GuitarAxis(Model,
+                GuitarAxisType.Slider => new GuitarAxis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     min, max, 0, false, GuitarAxisType.Slider, false, false, false, -1, true),
-                GuitarAxisType guitarAxisType => new GuitarAxis(Model,
+                GuitarAxisType guitarAxisType => new GuitarAxis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     min, max, 0, false, guitarAxisType, false, false, false, -1, true),
-                DjAxisType.LeftTableVelocity => new DjAxis(Model,
+                DjAxisType.LeftTableVelocity => new DjAxis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     1, 1, DjAxisType.LeftTableVelocity, false, false, false, -1, true),
-                DjAxisType.RightTableVelocity => new DjAxis(Model,
+                DjAxisType.RightTableVelocity => new DjAxis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     1, 1, DjAxisType.RightTableVelocity, false, false, false, -1, true),
-                DjAxisType.EffectsKnob => new DjAxis(Model,
+                DjAxisType.EffectsKnob => new DjAxis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     1, 1, DjAxisType.EffectsKnob, false, false, false, -1, true),
-                DjAxisType djAxisType => new DjAxis(Model,
+                DjAxisType djAxisType => new DjAxis(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     min, max, 0, djAxisType, false, false, false, -1, true),
-                DjInputType djInputType => new DjButton(Model,
+                DjInputType djInputType => new DjButton(Model,true,
                     input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                     10,
                     djInputType, false, false, false, -1, true),
@@ -259,12 +260,12 @@ public partial class UsbHostCombinedOutput : CombinedOutput
                 switch (proKeyType)
                 {
                     case ProKeyType.Overdrive or ProKeyType.PedalDigital:
-                        Outputs.Add(new PianoKeyButton(Model, MakeInput(proKeyType), Colors.Black,
+                        Outputs.Add(new PianoKeyButton(Model, true,MakeInput(proKeyType), Colors.Black,
                             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                             proKeyType, false, false, false, -1, true));
                         break;
                     default:
-                        Outputs.Add(new PianoKey(Model, MakeInput(proKeyType), Colors.Black,
+                        Outputs.Add(new PianoKey(Model, true,MakeInput(proKeyType), Colors.Black,
                             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                             proKeyType, false, false, false, -1, true));
                         break;

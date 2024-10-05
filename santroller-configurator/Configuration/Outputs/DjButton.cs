@@ -14,10 +14,10 @@ public class DjButton : OutputButton
 {
     public readonly DjInputType Type;
 
-    public DjButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    public DjButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int debounce,
         DjInputType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
-        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, debounce,
+        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, debounce,
         outputEnabled, outputInverted, outputPeripheral, outputPin,
         childOfCombined)
     {
@@ -106,7 +106,7 @@ public class DjButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedDjButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(),
+        return new SerializedDjButton(Input.Serialise(),Enabled,  LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
             ChildOfCombined, LedIndicesMpr121.ToArray());
     }

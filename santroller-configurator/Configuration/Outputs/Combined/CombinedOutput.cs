@@ -10,7 +10,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
 public abstract class CombinedOutput : Output
 {
-    protected CombinedOutput(ConfigViewModel model) : base(model, new FixedInput(model, 0, false), Colors.Black,
+    protected CombinedOutput(ConfigViewModel model) : base(model, true, new FixedInput(model, 0, false), Colors.Black,
         Colors.Black, Array.Empty<byte>(),Array.Empty<byte>(), Array.Empty<byte>(), false, false, false, -1, false)
     {
     }
@@ -22,7 +22,7 @@ public abstract class CombinedOutput : Output
     public override bool IsStrum => false;
     public override bool IsKeyboard => false;
 
-    public abstract void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs);
+    public abstract void SetOutputsOrDefaults(IEnumerable<Output> outputs);
 
     public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,

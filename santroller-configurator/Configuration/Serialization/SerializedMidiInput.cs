@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedMidiInput : SerializedInput
 {
+    public SerializedMidiInput()
+    {
+        
+    }
     public SerializedMidiInput(MidiType type, int key)
     {
         Key = key;

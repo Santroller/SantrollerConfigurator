@@ -19,8 +19,8 @@ public class EmulationMode : Output
     private readonly SourceList<EmulationModeType> _emulationModes = new();
     private EmulationModeType _emulationModeType;
 
-    public EmulationMode(ConfigViewModel model, Input input, EmulationModeType type) : base(
-        model, input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), false,
+    public EmulationMode(ConfigViewModel model, bool enabled, Input input, EmulationModeType type) : base(
+        model, enabled, input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), false,
         false, false, -1, false)
     {
         Type = type;
@@ -91,7 +91,7 @@ public class EmulationMode : Output
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedEmulationMode(Type, Input.Serialise());
+        return new SerializedEmulationMode(Type, Input.Serialise(), Enabled);
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,

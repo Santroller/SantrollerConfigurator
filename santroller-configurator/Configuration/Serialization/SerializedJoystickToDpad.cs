@@ -6,23 +6,29 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedJoystickToDpad : SerializedOutput
 {
-    public SerializedJoystickToDpad(int threshold, bool wii, bool peripheral)
+    public SerializedJoystickToDpad()
+    {
+        
+    }
+    public SerializedJoystickToDpad(int threshold, bool wii, bool peripheral, bool enabled)
     {
         Threshold = threshold;
         Wii = wii;
         Peripheral = peripheral;
+        Enabled = enabled;
     }
 
     [ProtoMember(1)] public int Threshold { get; }
     [ProtoMember(2)] public bool Wii { get; }
     [ProtoMember(8)] private bool Peripheral { get; }
+    [ProtoMember(9)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
-        var combined = new JoystickToDpad(model, Peripheral, Threshold, Wii);
+        var combined = new JoystickToDpad(model, Enabled, Peripheral, Threshold, Wii);
         model.Bindings.Add(combined);
         return combined;
     }

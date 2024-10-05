@@ -3,9 +3,16 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerialisedBrandedConfiguration
 {
+    public SerialisedBrandedConfiguration()
+    {
+        VendorName = "";
+        ProductName = "";
+        Configuration = new SerializedConfiguration();
+        Uf2 = [];
+    }
     [ProtoMember(1)] public string VendorName;
     [ProtoMember(2)] public string ProductName;
     [ProtoMember(3)] public SerializedConfiguration Configuration;

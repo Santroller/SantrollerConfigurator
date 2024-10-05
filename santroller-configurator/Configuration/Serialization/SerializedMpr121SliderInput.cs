@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedMpr121SliderInput : SerializedInput
 {
+    public SerializedMpr121SliderInput()
+    {
+        
+    }
     public SerializedMpr121SliderInput(bool peripheral, int inputGreen, int inputRed, int inputYellow, int inputBlue, int inputOrange)
     {
         Peripheral = peripheral;

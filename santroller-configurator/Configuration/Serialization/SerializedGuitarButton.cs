@@ -8,12 +8,19 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
-public class SerializedRbButton : SerializedOutput
+[ProtoContract]
+public class SerializedGuitarButton : SerializedOutput
 {
-    public SerializedRbButton(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int debounce,
+    public SerializedGuitarButton()
+    {
+        LedIndex = [];
+        LedIndexMpr121 = [];
+        LedIndexPeripheral = [];
+    }
+    public SerializedGuitarButton(SerializedInput input, bool enabled, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int debounce,
         InstrumentButtonType type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
+        Enabled = enabled;
         Input = input;
         LedOn = ledOn.ToUInt32();
         LedOff = ledOff.ToUInt32();
@@ -29,7 +36,7 @@ public class SerializedRbButton : SerializedOutput
         OutputPeripheral = outputPeripheral;
     }
 
-    [ProtoMember(1)] public SerializedInput Input { get; }
+    [ProtoMember(1)] public SerializedInput? Input { get; }
     [ProtoMember(2)] public uint LedOn { get; }
     [ProtoMember(3)] public uint LedOff { get; }
     [ProtoMember(5)] public InstrumentButtonType Type { get; }
@@ -43,11 +50,16 @@ public class SerializedRbButton : SerializedOutput
     [ProtoMember(13)] public bool OutputPeripheral { get; }
     
     [ProtoMember(14)] public byte[] LedIndexMpr121 { get; }
+    [ProtoMember(15)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
-        var combined = new GuitarButton(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
+        if (Input == null)
+        {
+            throw new NotImplementedException("Null child unexpected!");
+        }
+        var combined = new GuitarButton(model, Enabled,Input.Generate(model), Color.FromUInt32(LedOn),
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121, Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;
     }

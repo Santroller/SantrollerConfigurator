@@ -44,13 +44,14 @@ public partial class DjCombinedOutput : CombinedTwiOutput
 
     [Reactive] private bool _detectedRight;
 
-    public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
+    public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
     {
         Outputs.Clear();
-        if (outputs.Count != 0)
-            Outputs.AddRange(outputs);
-        else
+        Outputs.AddRange(outputs);
+        if (Outputs.Count == 0)
+        {
             CreateDefaults();
+        }
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
@@ -69,13 +70,13 @@ public partial class DjCombinedOutput : CombinedTwiOutput
         Outputs.Clear();
 
         Outputs.AddRange(DjInputTypes.Where(s => s is not (DjInputType.LeftTurntable or DjInputType.RightTurntable))
-            .Select(button => new DjButton(Model,
+            .Select(button => new DjButton(Model,true,
                 new DjInput(button, Model, Peripheral, combined: true),
                 Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, button, false, false ,false, -1, true)));
-        Outputs.Add(new DjAxis(Model, new DjInput(DjInputType.LeftTurntable, Model, Peripheral, combined: true),
+        Outputs.Add(new DjAxis(Model,true, new DjInput(DjInputType.LeftTurntable, Model, Peripheral, combined: true),
             Colors.Black,
             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, 1,DjAxisType.LeftTableVelocity, false, false ,false, -1, true));
-        Outputs.Add(new DjAxis(Model, new DjInput(DjInputType.RightTurntable, Model, Peripheral, combined: true),
+        Outputs.Add(new DjAxis(Model, true,new DjInput(DjInputType.RightTurntable, Model, Peripheral, combined: true),
             Colors.Black,
             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, 1,DjAxisType.RightTableVelocity, false, false ,false, -1, true));
     }

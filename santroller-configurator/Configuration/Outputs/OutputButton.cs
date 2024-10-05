@@ -19,11 +19,11 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 public abstract partial class OutputButton : Output
 {
     private readonly ObservableAsPropertyHelper<float> _debounceDisplay;
-    protected OutputButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    protected OutputButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,
         int debounce, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
-        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Debounce = debounce;
         _debounceDisplay = this.WhenAnyValue(x => x.Debounce)
@@ -109,19 +109,17 @@ public abstract partial class OutputButton : Output
                 if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown})
                 {
                     return  $$"""
-                              if (TILT) {
-                                  if ({{ifStatement}} && !lastTilt) {
-                                    lastTilt = millis();
-                                  }
-                                  if ({{ifStatement}}) {
-                                    tiltActive = true;
-                                  }
-                                  if ({{ifStatement}} && ((millis() - lastTilt) < 1000)) {
-                                     setKey({{debounceIndex}},{{keyCode}},report,true);
-                                     {{extra}}
-                                  } else {
-                                     setKey({{debounceIndex}},{{keyCode}},report,false);
-                                  }
+                              if ({{ifStatement}} && !lastTilt) {
+                                lastTilt = millis();
+                              }
+                              if ({{ifStatement}}) {
+                                tiltActive = true;
+                              }
+                              if ({{ifStatement}} && ((millis() - lastTilt) < 1000)) {
+                                 setKey({{debounceIndex}},{{keyCode}},report,true);
+                                 {{extra}}
+                              } else {
+                                 setKey({{debounceIndex}},{{keyCode}},report,false);
                               }
                               """;
                 }
@@ -148,17 +146,15 @@ public abstract partial class OutputButton : Output
             if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} && mode == ConfigField.Keyboard)
             {
                 return  $$"""
-                          if (TILT) {
-                              if ({{ifStatement}}) {
-                                  if (!lastTilt ) {
-                                    lastTilt = millis();
-                                  }
-                                  if ((millis() - lastTilt) < 1000) {
-                                      {{outputVar}} = true;
-                                      {{extra}}
-                                  }
-                                  tiltActive = true;
+                          if ({{ifStatement}}) {
+                              if (!lastTilt ) {
+                                lastTilt = millis();
                               }
+                              if ((millis() - lastTilt) < 1000) {
+                                  {{outputVar}} = true;
+                                  {{extra}}
+                              }
+                              tiltActive = true;
                           }
                           """;
             }
@@ -194,12 +190,6 @@ public abstract partial class OutputButton : Output
                 if (!macros.TryGetValue(gen2, out var inputs2)) continue;
                 extra += string.Join("\n    ", inputs2.Select(s => $"debounce[{s.Item1}]=0;"));
             }
-        }
-        
-            
-        if (GenerateOutput(ConfigField.Ps3).Contains("dpad") && Input is AnalogToDigital)
-        {
-            extraStatement += "&& JOYSTICK_TO_DPAD";
         }
         var ret = $$"""
                  if (({{gen}} {{extraStatement}})) {

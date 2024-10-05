@@ -96,13 +96,14 @@ public class MidiCombinedOutput : CombinedOutput
         return SimpleType.Midi;
     }
 
-    public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
+    public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
     {
         Outputs.Clear();
-        if (outputs.Count != 0)
-            Outputs.AddRange(outputs);
-        else
+        Outputs.AddRange(outputs);
+        if (Outputs.Count == 0)
+        {
             CreateDefaults();
+        }
     }
 
     private int _firstNote;
@@ -121,7 +122,7 @@ public class MidiCombinedOutput : CombinedOutput
     public void UpdateDefaults()
     {
         if (Model.DeviceControllerType is not DeviceControllerType.ProKeys) return;
-        var outputs = Outputs.Items.OfType<PianoKey>().Where(s => s.Key is not (ProKeyType.PedalAnalog or ProKeyType.PedalDigital or ProKeyType.TouchPad or ProKeyType.Overdrive)).Select(s => new PianoKey(Model,
+        var outputs = Outputs.Items.OfType<PianoKey>().Where(s => s.Key is not (ProKeyType.PedalAnalog or ProKeyType.PedalDigital or ProKeyType.TouchPad or ProKeyType.Overdrive)).Select(s => new PianoKey(Model, true,
             new MidiInput(MidiType.Note, FirstNote + (int) s.Key, Model), s.LedOn,
             s.LedOff, s.LedIndices.ToArray(), s.LedIndicesPeripheral.ToArray(), s.LedIndicesMpr121.ToArray(), s.Key,
             s.OutputEnabled, false,
@@ -138,7 +139,7 @@ public class MidiCombinedOutput : CombinedOutput
             case DeviceControllerType.GuitarHeroDrums:
                 foreach (var (key, drumAxisType) in MappingsDrumGh)
                 {
-                    Outputs.Add(new DrumAxis(Model, new MidiInput(MidiType.Note, key, Model), Colors.Black,
+                    Outputs.Add(new DrumAxis(Model, true,new MidiInput(MidiType.Note, key, Model), Colors.Black,
                         Colors.Black, [], [], [], ushort.MaxValue / 2, ushort.MaxValue, 0, 0,
                         drumAxisType, false, false, false, -1, true));
                 }
@@ -147,7 +148,7 @@ public class MidiCombinedOutput : CombinedOutput
             case DeviceControllerType.RockBandDrums:
                 foreach (var (key, drumAxisType) in MappingsDrumRb)
                 {
-                    Outputs.Add(new DrumAxis(Model, new MidiInput(MidiType.Note, key, Model), Colors.Black,
+                    Outputs.Add(new DrumAxis(Model, true, new MidiInput(MidiType.Note, key, Model), Colors.Black,
                         Colors.Black, [], [], [], ushort.MaxValue / 2, ushort.MaxValue, 0, 0,
                         drumAxisType, false, false, false, -1, true));
                 }
@@ -159,27 +160,27 @@ public class MidiCombinedOutput : CombinedOutput
                     switch (key)
                     {
                         case ProKeyType.PedalAnalog:
-                            Outputs.Add(new PianoKey(Model, new MidiInput(MidiType.SustainPedal, 0, Model), Colors.Black,
+                            Outputs.Add(new PianoKey(Model, true,new MidiInput(MidiType.SustainPedal, 0, Model), Colors.Black,
                                 Colors.Black, [], [], [], key, false, false, 
                                 false, -1, true));
                             break;
                         case ProKeyType.TouchPad:
-                            Outputs.Add(new PianoKey(Model, new MidiInput(MidiType.PitchWheel, 0, Model), Colors.Black,
+                            Outputs.Add(new PianoKey(Model, true,new MidiInput(MidiType.PitchWheel, 0, Model), Colors.Black,
                                 Colors.Black, [], [], [], key, false, false, 
                                 false, -1, true));
                             break;
                         case ProKeyType.Overdrive:
-                            Outputs.Add(new PianoKeyButton(Model, new AnalogToDigital(new MidiInput(MidiType.ModWheel, 0, Model), AnalogToDigitalType.Trigger, ushort.MaxValue/2, Model), Colors.Black,
+                            Outputs.Add(new PianoKeyButton(Model, true,new AnalogToDigital(new MidiInput(MidiType.ModWheel, 0, Model), AnalogToDigitalType.Trigger, ushort.MaxValue/2, Model), Colors.Black,
                                 Colors.Black, [], [], [], key, false, false, 
                                 false, -1, true));
                             break;
                         case ProKeyType.PedalDigital:
-                            Outputs.Add(new PianoKeyButton(Model, new AnalogToDigital(new MidiInput(MidiType.SustainPedal, 0, Model), AnalogToDigitalType.Trigger, ushort.MaxValue/2, Model), Colors.Black,
+                            Outputs.Add(new PianoKeyButton(Model, true,new AnalogToDigital(new MidiInput(MidiType.SustainPedal, 0, Model), AnalogToDigitalType.Trigger, ushort.MaxValue/2, Model), Colors.Black,
                                 Colors.Black, [], [], [], key, false, false, 
                                 false, -1, true));
                             break;
                         default:
-                            Outputs.Add(new PianoKey(Model, new MidiInput(MidiType.Note, FirstNote+(int)key, Model), Colors.Black,
+                            Outputs.Add(new PianoKey(Model, true,new MidiInput(MidiType.Note, FirstNote+(int)key, Model), Colors.Black,
                                 Colors.Black, [], [], [], key, false, false, 
                                 false, -1, true));
                             break;

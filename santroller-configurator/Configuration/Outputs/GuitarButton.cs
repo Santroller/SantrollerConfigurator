@@ -15,10 +15,10 @@ public class GuitarButton : OutputButton
 {
     public readonly InstrumentButtonType Type;
 
-    public GuitarButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    public GuitarButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int debounce,
         InstrumentButtonType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
-        bool childOfCombined) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, debounce,
+        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, debounce,
         outputEnabled, outputInverted, outputPeripheral, outputPin,
         childOfCombined)
     {
@@ -182,7 +182,7 @@ public class GuitarButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedRbButton(Input!.Serialise(), LedOn, LedOff, LedIndices.ToArray(),
+        return new SerializedGuitarButton(Input!.Serialise(), Enabled, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
             ChildOfCombined, LedIndicesMpr121.ToArray());
     }

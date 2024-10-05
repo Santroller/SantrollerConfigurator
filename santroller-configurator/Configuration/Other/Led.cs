@@ -140,11 +140,11 @@ public partial class Led : Output
 
     private readonly ObservableAsPropertyHelper<bool> _usesPwm;
 
-    public Led(ConfigViewModel model, bool outputEnabled, bool outputInverted, int outputPin, bool peripheral,
+    public Led(ConfigViewModel model, bool enabled, bool outputEnabled, bool outputInverted, int outputPin, bool peripheral,
         Color ledOn,
         Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, LedCommandType command,
         int param,
-        int param2) : base(model,
+        int param2) : base(model, enabled,
         new FixedInput(model, 0, false),
         ledOn, ledOff,
         ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, peripheral, outputPin, false)
@@ -537,7 +537,7 @@ public partial class Led : Output
                 break;
         }
 
-        return new SerializedLed(LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Command, param1,
+        return new SerializedLed(Enabled, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Command, param1,
             param2, OutputEnabled,
             PeripheralOutput, OutputInverted,
             OutputPin, LedIndicesMpr121.ToArray());

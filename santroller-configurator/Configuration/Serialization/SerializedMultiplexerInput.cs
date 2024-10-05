@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedMultiplexerInput : SerializedInput
 {
+    public SerializedMultiplexerInput()
+    {
+        
+    }
     public SerializedMultiplexerInput(int pin, bool peripheral, int pins0, int pins1, int pins2, int pins3, MultiplexerType type,
         int channel)
     {

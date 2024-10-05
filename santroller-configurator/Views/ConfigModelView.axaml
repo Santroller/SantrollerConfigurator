@@ -2560,7 +2560,7 @@
                 </StackPanel>
             </DataTemplate>
 
-            
+
             <DataTemplate DataType="{x:Type combined:MidiCombinedOutput}">
                 <StackPanel Orientation="Horizontal"
                             IsVisible="{Binding $parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).IsProKeys}">
@@ -2652,7 +2652,7 @@
             <DataTemplate />
         </netCore:OutputTemplateSelector>
         <DataTemplate DataType="output:Output" x:Key="OutputTemplate">
-            <StackPanel Opacity="{Binding CombinedOpacity}">
+            <StackPanel>
                 <Panel>
                     <StackPanel>
                         <Label HorizontalAlignment="Center" IsVisible="{Binding ChildOfCombined}"
@@ -2664,7 +2664,7 @@
                                             Content="{Binding }" />
                         </StackPanel>
                     </StackPanel>
-                    <ToggleSwitch HorizontalAlignment="Right" IsVisible="{Binding ShouldShowEnabled}"
+                    <ToggleSwitch HorizontalAlignment="Right" IsVisible="{Binding ChildOfCombined}"
                                   IsChecked="{Binding Enabled}" OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                   OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                 </Panel>
@@ -2971,12 +2971,12 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate DataType="output:Output" x:Key="CombinedOutputTemplate">
-            <ContentControl Content="{Binding}"
+            <ContentControl Content="{Binding}" Opacity="{Binding CombinedOpacity}"
                             ContentTemplate="{StaticResource OutputTemplate}" Background="{Binding CombinedBackground}"
                             Padding="10" Margin="0 5 10 5" Width="720" />
         </DataTemplate>
         <DataTemplate DataType="output:Output" x:Key="DigitalOutputTemplate">
-            <StackPanel Opacity="{Binding CombinedOpacity}">
+            <StackPanel>
                 <Panel>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -3112,17 +3112,6 @@
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsGuitarHeroGuitar}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.GuitarTapBarEnabled}" />
-                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
-                                          HorizontalContentAlignment="Center"
-                                          IsChecked="{Binding SliderBar}"
-                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
-
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsGuitar}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
@@ -3147,26 +3136,6 @@
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding MidiDrumAutoOff}"
-                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsGuitar}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.GuitarAxisTypeTilt}" />
-                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
-                                          HorizontalContentAlignment="Center"
-                                          IsChecked="{Binding Tilt}"
-                                          OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.JoystickToDpadTitle}" />
-                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
-                                          HorizontalContentAlignment="Center"
-                                          IsChecked="{Binding JoystickToDpad}"
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
@@ -4096,7 +4065,7 @@
                                           Header="{Binding}" IsExpanded="{Binding Expanded}">
                                     <Expander.HeaderTemplate>
                                         <DataTemplate DataType="output:Output">
-                                            <Panel>
+                                            <Panel Opacity="{Binding CombinedOpacity}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <ContentControl
                                                         ContentTemplate="{StaticResource ImageOutputTemplate}"
@@ -4109,30 +4078,44 @@
                                                                 HorizontalAlignment="Center"
                                                                 ContentTemplate="{StaticResource OutputHeaderTemplates}" />
 
-                                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
-                                                            IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
-                                                    <Button
-                                                        Command="{Binding RemoveCommand}"
-                                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
-                                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+
+                                                    <ToggleSwitch HorizontalAlignment="Right"
+                                                                  IsChecked="{Binding Enabled}"
+                                                                  OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                                                  OffContent="{x:Static netCore:Resources.DisabledLabel}">
+                                                        <ToggleSwitch.IsVisible>
+                                                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                                <Binding Path="!IsCombined" />
+                                                                <Binding Path="!ChildOfCombined" />
+                                                            </MultiBinding>
+                                                        </ToggleSwitch.IsVisible>
+                                                    </ToggleSwitch>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
                                                         <Button
-                                                            Command="{Binding MoveUp}">
-                                                            <Path HorizontalAlignment="Center"
-                                                                  VerticalAlignment="Center"
-                                                                  Stretch="None"
-                                                                  Stroke="White"
-                                                                  Data="M 0 7 L 7 0 L 14 7"
-                                                                  StrokeThickness="1" />
-                                                        </Button>
-                                                        <Button
-                                                            Command="{Binding MoveDown}">
-                                                            <Path HorizontalAlignment="Center"
-                                                                  VerticalAlignment="Center"
-                                                                  Stretch="None"
-                                                                  Stroke="White"
-                                                                  Data="M 0 0 L 7 7 L 14 0"
-                                                                  StrokeThickness="1" />
-                                                        </Button>
+                                                            Command="{Binding RemoveCommand}"
+                                                            Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                            <Button
+                                                                Command="{Binding MoveUp}">
+                                                                <Path HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"
+                                                                      Stretch="None"
+                                                                      Stroke="White"
+                                                                      Data="M 0 7 L 7 0 L 14 7"
+                                                                      StrokeThickness="1" />
+                                                            </Button>
+                                                            <Button
+                                                                Command="{Binding MoveDown}">
+                                                                <Path HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Center"
+                                                                      Stretch="None"
+                                                                      Stroke="White"
+                                                                      Data="M 0 0 L 7 7 L 14 0"
+                                                                      StrokeThickness="1" />
+                                                            </Button>
+                                                        </StackPanel>
                                                     </StackPanel>
                                                 </StackPanel>
                                                 <Label Foreground="Red" Margin="45 0 0 0"
@@ -4145,7 +4128,7 @@
                                             </Panel>
                                         </DataTemplate>
                                     </Expander.HeaderTemplate>
-                                    <StackPanel>
+                                    <StackPanel Opacity="{Binding CombinedOpacity}">
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsKeyboard}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"

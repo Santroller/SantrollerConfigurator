@@ -30,12 +30,12 @@ public abstract partial class OutputAxis : Output
 
     private OutputAxisCalibrationState _calibrationState = OutputAxisCalibrationState.None;
 
-    protected OutputAxis(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    protected OutputAxis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,
         int min, int max, int center,
         int deadZone, bool trigger, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
-        bool childOfCombined) : base(model, input, ledOn, ledOff,
+        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff,
         ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin,
         childOfCombined)
     {

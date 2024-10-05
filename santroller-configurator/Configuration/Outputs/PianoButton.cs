@@ -19,10 +19,10 @@ public partial class PianoKeyButton : OutputButton
 {
     public readonly ProKeyType Key;
 
-    public PianoKeyButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    public PianoKeyButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, ProKeyType key, bool outputEnabled, bool outputPeripheral,
         bool outputInverted,
-        int outputPin, bool childOfCombined) : base(model, input, ledOn,
+        int outputPin, bool childOfCombined) : base(model, enabled, input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
         0, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {

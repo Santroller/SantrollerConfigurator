@@ -8,11 +8,21 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedControllerAxis : SerializedOutput
 {
-    public SerializedControllerAxis(SerializedInput input, StandardAxisType type, Color ledOn, Color ledOff,
-        byte[] ledIndex, byte[] ledIndexPeripheral, int min, int max, int offset, int deadzone, int threshold, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
+    public SerializedControllerAxis()
+    {
+        LedIndex = [];
+        LedIndexPeripheral = [];
+        LedIndexMpr121 = [];
+    }
+
+    public SerializedControllerAxis(SerializedInput input, bool enabled, StandardAxisType type, Color ledOn,
+        Color ledOff,
+        byte[] ledIndex, byte[] ledIndexPeripheral, int min, int max, int offset, int deadzone, int threshold,
+        bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined,
+        byte[] ledIndexMpr121)
     {
         Input = input;
         LedOn = ledOn.ToUInt32();
@@ -31,9 +41,10 @@ public class SerializedControllerAxis : SerializedOutput
         OutputPin = outputPin;
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
+        Enabled = enabled;
     }
 
-    [ProtoMember(1)] public SerializedInput Input { get; }
+    [ProtoMember(1)] public SerializedInput? Input { get; }
     [ProtoMember(2)] public uint LedOn { get; }
     [ProtoMember(3)] public uint LedOff { get; }
     [ProtoMember(4)] public int Min { get; }
@@ -50,11 +61,17 @@ public class SerializedControllerAxis : SerializedOutput
     [ProtoMember(15)] public bool OutputPeripheral { get; }
     [ProtoMember(16)] public byte[] LedIndexMpr121 { get; }
     [ProtoMember(17)] public int Offset { get; }
+    [ProtoMember(18)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
+        if (Input == null)
+        {
+            throw new NotImplementedException("Null child unexpected!");
+        }
         var input = Input.Generate(model);
-        var output = new ControllerAxis(model, input, Color.FromUInt32(LedOn), Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Min,
+        var output = new ControllerAxis(model, Enabled, input, Color.FromUInt32(LedOn), Color.FromUInt32(LedOff),
+            LedIndex, LedIndexPeripheral, LedIndexMpr121, Min,
             Max,
             Offset,
             Deadzone,

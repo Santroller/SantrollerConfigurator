@@ -4,9 +4,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedConstantInput : SerializedInput
 {
+    public SerializedConstantInput()
+    {
+        
+    }
     public SerializedConstantInput(int value, bool analog, int min, int max, bool tapBar, bool rbPickup)
     {
         Value = value;

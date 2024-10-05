@@ -9,33 +9,23 @@ using BluetoothCombinedOutput = GuitarConfigurator.NetCore.Configuration.Outputs
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedCombinedBluetoothOutput : SerializedOutput
 {
+    public SerializedCombinedBluetoothOutput()
+    {
+        Outputs = [];
+    }
     [ProtoMember(1)] public List<SerializedOutput> Outputs { get; }
-
-    [ProtoMember(2)] public byte[] Enabled { get; }
     public SerializedCombinedBluetoothOutput(List<Output> outputs)
     {
         Outputs = outputs.Select(s => s.Serialize()).ToList();
-        Enabled = GetBytes(new BitArray(outputs.Select(s => s.Enabled).ToArray()));
     }
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new BluetoothCombinedOutput(model);
         model.Bindings.Add(combined);
-        if (Outputs != null)
-        {
-            var array = new BitArray(Enabled);
-            var outputs = Outputs.Select(s => s.Generate(model)).ToList();
-            for (var i = 0; i < outputs.Count; i++) outputs[i].Enabled = array[i];
-            combined.SetOutputsOrDefaults(outputs);
-        }
-        else
-        {
-            combined.SetOutputsOrDefaults(new List<Output>());
-        }
-
+        combined.SetOutputsOrDefaults(Outputs.Select(s => s.Generate(model)));
         return combined;
     }
 }

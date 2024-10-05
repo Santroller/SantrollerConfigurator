@@ -261,9 +261,9 @@ public class KeyboardButton : OutputButton
 
     public Key Key;
 
-    public KeyboardButton(ConfigViewModel model, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    public KeyboardButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, 
-        int debounce, Key type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin) : base(model, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
+        int debounce, Key type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
         debounce, outputEnabled, outputInverted, outputPeripheral, outputPin, false)
     {
         Key = type;
@@ -326,7 +326,7 @@ public class KeyboardButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedKeyboardButton(Input.Serialise(), LedOn, LedOff, LedIndices.ToArray(),
+        return new SerializedKeyboardButton(Input.Serialise(), Enabled, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Debounce, Key, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, LedIndicesMpr121.ToArray());
     }
 }

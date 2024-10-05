@@ -9,9 +9,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedPs2CombinedOutput : SerializedOutput
 {
+    public SerializedPs2CombinedOutput()
+    {
+        Outputs = [];
+    }
     public SerializedPs2CombinedOutput(bool peripheral, int miso, int mosi, int sck, int att, int ack, List<Output> outputs)
     {
         Miso = miso;
@@ -20,7 +24,6 @@ public class SerializedPs2CombinedOutput : SerializedOutput
         Att = att;
         Ack = ack;
         Outputs = outputs.Select(s => s.Serialize()).ToList();
-        Enabled = GetBytes(new BitArray(outputs.Select(s => s.Enabled).ToArray()));
         Peripheral = peripheral;
     }
 
@@ -31,18 +34,13 @@ public class SerializedPs2CombinedOutput : SerializedOutput
     [ProtoMember(8)] public int Ack { get; }
 
     [ProtoMember(9)] public List<SerializedOutput> Outputs { get; }
-
-    [ProtoMember(10)] public byte[] Enabled { get; }
     [ProtoMember(11)] private bool Peripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new Ps2CombinedOutput(model, Peripheral, Miso, Mosi, Sck, Att, Ack);
         model.Bindings.Add(combined);
-        var outputs = Outputs.Select(s => s.Generate(model)).ToList();
-        var array = new BitArray(Enabled);
-        for (var i = 0; i < outputs.Count; i++) outputs[i].Enabled = array[i];
-        combined.SetOutputsOrDefaults(outputs);
+        combined.SetOutputsOrDefaults(Outputs.Select(s => s.Generate(model)));
         return combined;
     }
 }

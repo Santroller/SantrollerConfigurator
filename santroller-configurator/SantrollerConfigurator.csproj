@@ -106,13 +106,16 @@
         <PackageReference Include="Nefarius.Drivers.WinUSB" Version="5.0.0" Condition="'$(OS)' == 'Windows_NT'" />
         <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.23.0" Condition="'$(OS)' == 'Windows_NT'" />
         <PackageReference Include="protobuf-net" Version="3.2.30" />
-        <PackageReference Include="ReactiveUI.SourceGenerators" Version="1.1.31" />
+        <PackageReference Include="ReactiveUI.SourceGenerators" Version="1.0.3" />
         <PackageReference Include="System.IO.Ports" Version="8.0.0" />
         <PackageReference Include="SemanticVersioning" Version="3.0.0-beta2" />
+        <PackageReference Include="System.Net.Http" Version="4.3.4" />
+        <PackageReference Include="System.Private.Uri" Version="4.3.2" />
         <PackageReference Include="System.Text.Json" Version="8.0.4" />
         <PackageReference Include="GitVersion.MsBuild" Version="6.0.2">
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
         <PackageReference Include="Velopack" Version="0.0.594" />
     </ItemGroup>
     <PropertyGroup>

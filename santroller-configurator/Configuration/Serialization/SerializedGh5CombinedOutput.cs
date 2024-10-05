@@ -13,7 +13,6 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract]
 public class SerializedGh5CombinedOutput : SerializedOutput
 {
-    // ReSharper disable once UnusedMember.Global
     public SerializedGh5CombinedOutput()
     {
         
@@ -23,7 +22,6 @@ public class SerializedGh5CombinedOutput : SerializedOutput
         Sda = sda;
         Scl = scl;
         Outputs = outputs.Select(s => s.Serialize()).ToList();
-        Enabled = GetBytes(new BitArray(outputs.Select(s => s.Enabled).ToArray()));
         Peripheral = peripheral;
     }
 
@@ -31,18 +29,13 @@ public class SerializedGh5CombinedOutput : SerializedOutput
     [ProtoMember(5)] public int Scl { get; }
 
     [ProtoMember(6)] public List<SerializedOutput> Outputs { get; } = [];
-
-    [ProtoMember(7)] public byte[] Enabled { get; } = Array.Empty<byte>();
     [ProtoMember(8)] private bool Peripheral { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
         var combined = new Gh5CombinedOutput(model, Peripheral, Sda, Scl);
         model.Bindings.Add(combined);
-        var array = new BitArray(Enabled);
-        var outputs = Outputs.Select(s => s.Generate(model)).ToList();
-        for (var i = 0; i < outputs.Count; i++) outputs[i].Enabled = array[i];
-        combined.SetOutputsOrDefaults(outputs);
+        combined.SetOutputsOrDefaults(Outputs.Select(s => s.Generate(model)));
         return combined;
     }
 }

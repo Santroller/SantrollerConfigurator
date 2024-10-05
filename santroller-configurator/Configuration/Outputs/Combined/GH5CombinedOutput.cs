@@ -63,13 +63,14 @@ public partial class Gh5CombinedOutput : CombinedTwiOutput
 
     [Reactive] private bool _detected;
 
-    public override void SetOutputsOrDefaults(IReadOnlyCollection<Output> outputs)
+    public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
     {
         Outputs.Clear();
-        if (outputs.Count != 0)
-            Outputs.AddRange(outputs);
-        else
+        Outputs.AddRange(outputs);
+        if (Outputs.Count == 0)
+        {
             CreateDefaults();
+        }
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
@@ -86,7 +87,7 @@ public partial class Gh5CombinedOutput : CombinedTwiOutput
     public void CreateDefaults()
     {
         Outputs.Clear();
-        Outputs.Add(new ControllerAxis(Model,
+        Outputs.Add(new ControllerAxis(Model, true,
             new Gh5NeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, combined: true),
             Colors.Black,
             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,0, ushort.MaxValue,
@@ -102,13 +103,13 @@ public partial class Gh5CombinedOutput : CombinedTwiOutput
         var tapFrets =
             Outputs.Items.FirstOrDefault(
                 s => s is {Enabled: true, Input: Gh5NeckInput {Input: Gh5NeckInputType.TapAll}});
-        if (tapAnalog == null && tapFrets == null) return Outputs.Items.Where(s => s.Enabled);
-        var outputs = new List<Output>(Outputs.Items.Where(s => s.Enabled));
+        if (tapAnalog == null && tapFrets == null) return Outputs.Items;
+        var outputs = new List<Output>(Outputs.Items);
 
         // Map Tap bar to Upper frets on RB guitars
         if (tapAnalog != null && Model.DeviceControllerType is DeviceControllerType.RockBandGuitar)
         {
-            outputs.AddRange(TapsRb.Select(pair => new GuitarButton(Model,
+            outputs.AddRange(TapsRb.Select(pair => new GuitarButton(Model, tapAnalog.Enabled,
                 new Gh5NeckInput(pair.Key, Model, Peripheral, Sda, Scl, true), Colors.Black, Colors.Black,
                 Array.Empty<byte>(),Array.Empty<byte>(), Array.Empty<byte>(), 5,
                 pair.Value, false, false ,false, -1, true)));
@@ -118,7 +119,7 @@ public partial class Gh5CombinedOutput : CombinedTwiOutput
 
         if (tapFrets == null) return outputs;
 
-        outputs.AddRange(Taps.Select(pair => new GuitarButton(Model,
+        outputs.AddRange(Taps.Select(pair => new GuitarButton(Model, tapFrets.Enabled,
             new Gh5NeckInput(pair.Key, Model, Peripheral, Sda, Scl, true),
             Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true)));
 
@@ -157,7 +158,7 @@ public partial class Gh5CombinedOutput : CombinedTwiOutput
         {
             if (tapAll == null)
             {
-                var button = new GuitarButton(Model,
+                var button = new GuitarButton(Model, true,
                     new Gh5NeckInput(Gh5NeckInputType.TapAll, Model, Peripheral, combined: true), Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(), 5, InstrumentButtonType.Slider, false, false ,false, -1, true)
                 {
@@ -170,7 +171,7 @@ public partial class Gh5CombinedOutput : CombinedTwiOutput
             {
                 var item = Outputs.Items.FirstOrDefault(s => s.Input is Gh5NeckInput gh5 && gh5.Input == key);
                 if (item != null) continue;
-                var button = new GuitarButton(Model,
+                var button = new GuitarButton(Model, true,
                     new Gh5NeckInput(key, Model, Peripheral, combined: true), Colors.Black,
                     Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(), 5, value, false, false ,false, -1, true)
                 {
@@ -181,7 +182,7 @@ public partial class Gh5CombinedOutput : CombinedTwiOutput
 
             if (axisController == null) return;
             Outputs.Remove(axisController);
-            Outputs.Add(new GuitarAxis(Model,
+            Outputs.Add(new GuitarAxis(Model, true,
                 new Gh5NeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
                     true),
                 Colors.Black,
@@ -209,7 +210,7 @@ public partial class Gh5CombinedOutput : CombinedTwiOutput
 
             if (axisController != null) return;
 
-            Outputs.Add(new ControllerAxis(Model,
+            Outputs.Add(new ControllerAxis(Model, true,
                 new Gh5NeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
                     true),
                 Colors.Black,

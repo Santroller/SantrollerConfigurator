@@ -72,9 +72,6 @@ public class SerializedConfiguration
         HasMax1704X = model.HasMax1704X;
         Max1704XSda = model.Max1704XSda;
         Max1704XScl = model.Max1704XScl;
-        SliderbarDisabled = !model.SliderBar;
-        TiltDisabled = !model.Tilt;
-        JoystickToDpadDisabled = !model.JoystickToDpad;
         HideControllerView = model.HideControllerView;
         Ps4Instruments = model.Ps4Instruments;
         AdxlFilter = model.AccelFilter;
@@ -146,12 +143,10 @@ public class SerializedConfiguration
     [ProtoMember(57)] public bool HasMax1704X { get; private set; }
     [ProtoMember(58)] public int Max1704XSda { get; private set; }
     [ProtoMember(59)] public int Max1704XScl { get; private set; }
-    [ProtoMember(60)] public bool SliderbarDisabled { get; private set; }
     [ProtoMember(61)] public bool HideControllerView { get; private set; }
     [ProtoMember(62)] public bool Ps4Instruments { get; private set; }
 
     [ProtoMember(63)] public double AdxlFilter { get; private set; } = 0.05;
-    [ProtoMember(64)] public bool TiltDisabled { get; private set; }
     [ProtoMember(65)] public bool HasWiiOutput { get; private set; }
     [ProtoMember(66)] public int WiiOutputSda { get; private set; }
     [ProtoMember(67)] public int WiiOutputScl { get; private set; }
@@ -166,7 +161,6 @@ public class SerializedConfiguration
     [ProtoMember(76)] public bool SelectDpadLeftXb1 { get; private set; } = false;
     [ProtoMember(77)] public bool AdafruitHost { get; private set; } = false;
     [ProtoMember(78)] public bool MidiDrumAutoOff { get; private set; } = false;
-    [ProtoMember(79)] public bool JoystickToDpadDisabled { get; private set; } = false;
     [ProtoMember(80)] public bool HasAccel { get; private set; }
     [ProtoMember(81)] public int AccelSda { get; private set; }
     [ProtoMember(82)] public int AccelScl { get; private set; }
@@ -191,10 +185,6 @@ public class SerializedConfiguration
         model.Mode = Mode;
         model.PollRate = PollRate;
         model.Debounce = Debounce;
-        model.StrumDebounce = StrumDebounce;
-        model.SliderBar = !SliderbarDisabled;
-        model.Tilt = !TiltDisabled;
-        model.JoystickToDpad = !JoystickToDpadDisabled;
         model.Deque = QueueBasedInputs;
         model.DjPollRate = DjPollRate;
         model.DjSmoothing = DjSmooth;
@@ -314,9 +304,6 @@ public class SerializedConfiguration
     public void Merge(ConfigViewModel model)
     {
         model.XInputOnWindows = XInputOnWindows;
-        model.SliderBar = !SliderbarDisabled;
-        model.Tilt = !TiltDisabled;
-        model.JoystickToDpad = !JoystickToDpadDisabled;
         model.PollRate = PollRate;
         model.Debounce = Debounce;
         model.StrumDebounce = StrumDebounce;

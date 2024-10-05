@@ -8,10 +8,16 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedGuitarAxis : SerializedOutput
 {
-    public SerializedGuitarAxis(SerializedInput input, GuitarAxisType type, int pickupSelectorNotch2, int pickupSelectorNotch3, int pickupSelectorNotch4, int pickupSelectorNotch5,
+    public SerializedGuitarAxis()
+    {
+        LedIndex = [];
+        LedIndexPeripheral = [];
+        LedIndexMpr121 = [];
+    }
+    public SerializedGuitarAxis(SerializedInput input, bool enabled, GuitarAxisType type, int pickupSelectorNotch2, int pickupSelectorNotch3, int pickupSelectorNotch4, int pickupSelectorNotch5,
         Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, bool invert, int min, int max,
         int deadzone, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral,
         bool childOfCombined, byte[] ledIndexMpr121)
@@ -36,9 +42,10 @@ public class SerializedGuitarAxis : SerializedOutput
         OutputPin = outputPin;
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
+        Enabled = enabled;
     }
 
-    [ProtoMember(1)] public virtual SerializedInput Input { get; }
+    [ProtoMember(1)] public virtual SerializedInput? Input { get; }
     [ProtoMember(2)] public virtual uint LedOn { get; }
     [ProtoMember(3)] public virtual uint LedOff { get; }
     [ProtoMember(4)] public virtual byte[] LedIndex { get; }
@@ -60,20 +67,25 @@ public class SerializedGuitarAxis : SerializedOutput
     [ProtoMember(20)] public int PickupSelectorNotch3 { get; }
     [ProtoMember(21)] public int PickupSelectorNotch4 { get; }
     [ProtoMember(22)] public int PickupSelectorNotch5 { get; }
+    [ProtoMember(23)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
+        if (Input == null)
+        {
+            throw new NotImplementedException("Null child unexpected!");
+        }
         if (Type == GuitarAxisType.Pickup)
         {
-            var combined = new GuitarAxis(model, Input.Generate(model), PickupSelectorNotch2, PickupSelectorNotch3, PickupSelectorNotch4, PickupSelectorNotch5, Color.FromUInt32(LedOn),
-                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Min, Max,
+            var combined = new GuitarAxis(model, Enabled, Input.Generate(model), PickupSelectorNotch2, PickupSelectorNotch3, PickupSelectorNotch4, PickupSelectorNotch5, Color.FromUInt32(LedOn),
+                Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121, Min, Max,
                 Deadzone,
                 Invert, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
             model.Bindings.Add(combined);
             return combined;
         }
-        var combined2 = new GuitarAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Min, Max,
+        var combined2 = new GuitarAxis(model, Enabled, Input.Generate(model), Color.FromUInt32(LedOn),
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121, Min, Max,
             Deadzone,
             Invert, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(combined2);

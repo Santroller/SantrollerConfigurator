@@ -44,8 +44,9 @@ public class StartSelectHome : Output
 
     private bool Peripheral { get; }
 
-    public StartSelectHome(ConfigViewModel model, bool peripheral, bool wii) : base(
-        model, new StartSelectHomeInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+    public StartSelectHome(ConfigViewModel model, bool enabled, bool peripheral, bool wii) : base(
+        model, enabled, new StartSelectHomeInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(),
+        Array.Empty<byte>(), Array.Empty<byte>(),
         false, false, peripheral, -1, true)
     {
         Wii = wii;
@@ -54,18 +55,20 @@ public class StartSelectHome : Output
         {
             for (var i = 0; i < StartWii.Count; i++)
             {
-                _outputs.Add(new ControllerButton(Model,
+                _outputs.Add(new ControllerButton(Model, true,
                     new MacroInput(new WiiInput(StartWii[i], model, peripheral),
                         new WiiInput(SelectWii[i], model, peripheral), Model), Colors.Black, Colors.Black,
-                    Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false, false ,false, -1, true));
+                    Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false,
+                    false, false, -1, true));
             }
         }
         else
         {
-            _outputs.Add(new ControllerButton(Model,
+            _outputs.Add(new ControllerButton(Model, true,
                 new MacroInput(new Ps2Input(Ps2InputType.Start, model, peripheral),
                     new Ps2Input(Ps2InputType.Select, model, peripheral), Model), Colors.Black, Colors.Black,
-                Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false, false ,false, -1, true));
+                Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.Guide, false,
+                false, false, -1, true));
         }
 
         UpdateDetails();
@@ -84,12 +87,17 @@ public class StartSelectHome : Output
 
     public override IEnumerable<Output> ValidOutputs()
     {
+        foreach (var output in _outputs)
+        {
+            output.Enabled = Enabled;
+        }
+
         return _outputs;
     }
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedStartSelectHome(Wii, Peripheral);
+        return new SerializedStartSelectHome(Wii, Enabled, Peripheral);
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
@@ -137,6 +145,7 @@ public class StartSelectHome : Output
         Input.RawValue = _outputs.Any(x => x.ValueRaw != 0) ? 1 : 0;
         UpdateDetails();
     }
+
     public override string GenerateOutput(ConfigField mode)
     {
         return "";

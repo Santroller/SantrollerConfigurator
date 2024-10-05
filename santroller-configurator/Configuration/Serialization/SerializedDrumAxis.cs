@@ -8,10 +8,16 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedDrumAxis : SerializedOutput
 {
-    public SerializedDrumAxis(SerializedInput input, DrumAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
+    public SerializedDrumAxis()
+    {
+        LedIndex = [];
+        LedIndexPeripheral = [];
+        LedIndexMpr121 = [];
+    }
+    public SerializedDrumAxis(SerializedInput input, bool enabled, DrumAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         int min, int max, int deadzone, int debounce, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
         Input = input;
@@ -30,9 +36,10 @@ public class SerializedDrumAxis : SerializedOutput
         OutputPin = outputPin;
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
+        Enabled = enabled;
     }
 
-    [ProtoMember(1)] public SerializedInput Input { get; }
+    [ProtoMember(1)] public SerializedInput? Input { get; }
     [ProtoMember(2)] public uint LedOn { get; }
     [ProtoMember(3)] public uint LedOff { get; }
     [ProtoMember(4)] public byte[] LedIndex { get; }
@@ -48,11 +55,16 @@ public class SerializedDrumAxis : SerializedOutput
     [ProtoMember(15)] public bool OutputInverted { get; }
     [ProtoMember(16)] public bool OutputPeripheral { get; }
     [ProtoMember(17)] public byte[] LedIndexMpr121 { get; }
+    [ProtoMember(18)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
-        var combined = new DrumAxis(model, Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121 ?? Array.Empty<byte>(), Min, Max, Deadzone,
+        if (Input == null)
+        {
+            throw new NotImplementedException("Null child unexpected!");
+        }
+        var combined = new DrumAxis(model, Enabled, Input.Generate(model), Color.FromUInt32(LedOn),
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121, Min, Max, Deadzone,
             Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;

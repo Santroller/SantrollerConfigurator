@@ -47,8 +47,8 @@ public partial class JoystickToDpad : Output
 
     private bool Peripheral { get; }
 
-    public JoystickToDpad(ConfigViewModel model, bool peripheral, int threshold, bool wii) : base(
-        model, new JoystickToDpadInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+    public JoystickToDpad(ConfigViewModel model,bool enabled,  bool peripheral, int threshold, bool wii) : base(
+        model, enabled, new JoystickToDpadInput(model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
         false ,false, false, -1, true)
     {
         Threshold = threshold;
@@ -58,13 +58,13 @@ public partial class JoystickToDpad : Output
         {
             foreach (var wiiInputType in JoystickToDpadXWii)
             {
-                _outputs.Add(new ControllerButton(model,
+                _outputs.Add(new ControllerButton(model,enabled,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow,
                         Threshold,
                         model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
                     StandardButtonType.DpadLeft, false, false ,false, -1,
                     true));
-                _outputs.Add(new ControllerButton(model,
+                _outputs.Add(new ControllerButton(model,enabled,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh,
                         Threshold,
                         model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
@@ -74,12 +74,12 @@ public partial class JoystickToDpad : Output
 
             foreach (var wiiInputType in JoystickToDpadYWii)
             {
-                _outputs.Add(new ControllerButton(model,
+                _outputs.Add(new ControllerButton(model,enabled,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh,
                         Threshold,
                         model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
                     StandardButtonType.DpadUp, false, false ,false, -1, true));
-                _outputs.Add(new ControllerButton(model,
+                _outputs.Add(new ControllerButton(model,enabled,
                     new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow,
                         Threshold,
                         model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
@@ -89,22 +89,22 @@ public partial class JoystickToDpad : Output
         }
         else
         {
-            _outputs.Add(new ControllerButton(model,
+            _outputs.Add(new ControllerButton(model,enabled,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral),
                     AnalogToDigitalType.JoyLow, Threshold,
                     model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
                 StandardButtonType.DpadLeft, false, false ,false, -1, true));
-            _outputs.Add(new ControllerButton(model,
+            _outputs.Add(new ControllerButton(model,enabled,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral),
                     AnalogToDigitalType.JoyHigh, Threshold,
                     model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
                 StandardButtonType.DpadRight, false, false ,false, -1, true));
-            _outputs.Add(new ControllerButton(model,
+            _outputs.Add(new ControllerButton(model,enabled,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral),
                     AnalogToDigitalType.JoyHigh, Threshold,
                     model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
                 StandardButtonType.DpadUp, false, false ,false, -1, true));
-            _outputs.Add(new ControllerButton(model,
+            _outputs.Add(new ControllerButton(model,enabled,
                 new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral),
                     AnalogToDigitalType.JoyLow, Threshold,
                     model), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 10,
@@ -149,12 +149,17 @@ public partial class JoystickToDpad : Output
 
     public override IEnumerable<Output> ValidOutputs()
     {
+        foreach (var output in _outputs)
+        {
+            output.Enabled = Enabled;
+        }
+
         return _outputs;
     }
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedJoystickToDpad(Threshold, Wii, Peripheral);
+        return new SerializedJoystickToDpad(Threshold, Wii, Peripheral, Enabled);
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,

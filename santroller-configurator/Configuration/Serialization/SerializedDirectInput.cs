@@ -5,9 +5,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedDirectInput : SerializedInput
 {
+    public SerializedDirectInput()
+    {
+        
+    }
     public SerializedDirectInput(int pin, bool peripheral, bool inverted, DevicePinMode pinMode)
     {
         Pin = pin;

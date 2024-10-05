@@ -7,9 +7,13 @@ using ProtoBuf;
 
 namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 
-[ProtoContract(SkipConstructor = true)]
+[ProtoContract]
 public class SerializedRumble : SerializedOutput
 {
+    public SerializedRumble()
+    {
+        
+    }
     public SerializedRumble(RumbleMotorType type, int pin, bool peripheral)
     {
         Type = type;
@@ -20,10 +24,11 @@ public class SerializedRumble : SerializedOutput
     [ProtoMember(1)] public RumbleMotorType Type { get; }
     [ProtoMember(2)] public int Pin { get; }
     [ProtoMember(3)] public bool Peripheral { get; }
+    [ProtoMember(4)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
-        var combined = new Rumble(model, Pin, Peripheral, Type);
+        var combined = new Rumble(model, Enabled, Pin, Peripheral, Type);
         model.Bindings.Add(combined);
         return combined;
     }
