@@ -559,11 +559,9 @@ public partial class GuitarAxis : OutputAxis
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Tilt && Input is not DigitalToAnalog:
                 // PS3 RB expects tilt as a digital bit, so map that here.
-                return $$"""
-                         if ({{Input.Generate(writer)}}) {
-                             {{GenerateOutput(mode)}} |= {{GenerateAssignment("0", ConfigField.XboxOne, true, false, false, false, writer)}} > 0xE0;
-                         }
-                         """;
+                return $"""
+                        {GenerateOutput(mode)} |= abs({GenerateAssignment("0", ConfigField.Xbox360, false, false, false, false, writer)}) > 0x70;
+                        """;
             case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup && Input is DigitalToAnalog:
@@ -633,14 +631,14 @@ public partial class GuitarAxis : OutputAxis
                          """;
             case ConfigField.Xbox or ConfigField.Xbox360 or ConfigField.Ps4 when Type is GuitarAxisType.Tilt:
                 return Input is DigitalToAnalog
-                    ? $"{base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer)};"
-                    : $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, false, false, writer)};";
+                    ? $"{base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer)};\n"
+                    : $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, false, false, writer)};\n";
             default:
                 if (Input is DigitalToAnalog)
                     return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
                         macros, writer);
                 return
-                    $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, Type is GuitarAxisType.Whammy, false, writer)};";
+                    $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, false, false, Type is GuitarAxisType.Whammy, false, writer)};\n";
         }
     }
 
