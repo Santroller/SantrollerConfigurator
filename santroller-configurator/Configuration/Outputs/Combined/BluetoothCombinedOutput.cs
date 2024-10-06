@@ -19,17 +19,16 @@ using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public partial class BluetoothCombinedOutput : UsbHostCombinedOutput
+public partial class BluetoothCombinedOutput : HostCombinedOutput
 {
     private readonly DispatcherTimer _timer = new();
 
 
     public BluetoothCombinedOutput(ConfigViewModel model) : base(model)
     {
-        Outputs.Clear();
         _timer.Interval = TimeSpan.FromSeconds(1);
         _timer.Tick += Tick;
-        _scanTextHelper = this.WhenAnyValue<BluetoothCombinedOutput, int>(s => s.ScanTimer)
+        _scanTextHelper = this.WhenAnyValue(s => s.ScanTimer)
             .Select(scanTimer =>
                 scanTimer == 11 ? Resources.BluetoothStartScan : string.Format(Resources.BluetoothScanning, scanTimer))
             .ToProperty(this, x => x.ScanText);
@@ -40,26 +39,6 @@ public partial class BluetoothCombinedOutput : UsbHostCombinedOutput
             LocalAddress = santroller.GetBluetoothAddress();
         else
             LocalAddress = Resources.BluetoothWriteConfigMessage;
-        Outputs.Connect().Filter(x => x is OutputAxis)
-            .Filter(s => s.IsVisible)
-            .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Length != 0)
-            .Bind(out var analogOutputs)
-            .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad)
-            .Filter(s => s.IsVisible)
-            .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Length != 0)
-            .Bind(out var digitalOutputs)
-            .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton or JoystickToDpad or {Input.IsAnalog: false})
-            .AutoRefresh(s => s.LocalisedName)
-            .Filter(s => s.LocalisedName.Length != 0)
-            .Bind(out var allDigitalOutputs)
-            .Subscribe();
-        AnalogOutputs = analogOutputs;
-        DigitalOutputs = digitalOutputs;
-        AllDigitalOutputs = allDigitalOutputs;
         UpdateDetails();
     }
 
@@ -117,11 +96,11 @@ public partial class BluetoothCombinedOutput : UsbHostCombinedOutput
         Connected = bluetoothRaw[0] != 0;
     }
 
-    public override UsbHostInput MakeInput(UsbHostInputType type)
+    public override HostInput MakeInput(UsbHostInputType type)
     {
         return new BluetoothInput(type, Model, true);
     }
-    public override UsbHostInput MakeInput(ProKeyType type)
+    public override HostInput MakeInput(ProKeyType type)
     {
         return new BluetoothInput(type, Model, true);
     }

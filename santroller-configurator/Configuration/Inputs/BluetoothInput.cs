@@ -14,7 +14,7 @@ using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public partial class BluetoothInput : UsbHostInput
+public partial class BluetoothInput : HostInput
 {
     public BluetoothInput(UsbHostInputType input, ConfigViewModel model, bool combined = false) : base(input, model, combined)
     {
@@ -38,7 +38,17 @@ public partial class BluetoothInput : UsbHostInput
     public override string Field => "bt_data";
     public override InputType? InputType => Types.InputType.BluetoothInput;
 
+    public override IList<DevicePin> Pins => [];
     public override IList<PinConfig> PinConfigs => [];
+
+    public override IReadOnlyList<string> RequiredDefines()
+    {
+        return [];
+    }
+    public override SerializedInput Serialise()
+    {
+        return new SerializedBluetoothInput(Input, Key, MouseButtonType, MouseAxisType, ProKeyType, Combined);
+    }
 
     public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw,
         ReadOnlySpan<byte> ps2Raw,
