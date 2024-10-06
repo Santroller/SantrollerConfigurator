@@ -136,9 +136,9 @@ jobs:
         env:
           RUN_ID: ${{ github.run_id }}
         run: |
-          cp ~/artifacts/$RUN_ID/windows/*.exe Builder/Assets
-          cp ~/artifacts/$RUN_ID/linux/* Builder/Assets
-          cp ~/artifacts/$RUN_ID/macos/*.zip Builder/Assets
+          cp ~/artifacts/$RUN_ID/windows/SantrollerConfiguratorBranded-win-64.exe Builder/Assets
+          cp ~/artifacts/$RUN_ID/linux/SantrollerConfiguratorBranded-linux-64 Builder/Assets
+          cp ~/artifacts/$RUN_ID/macos/SantrollerConfiguratorBranded-macOS.zip Builder/Assets
       - name: Build
         run: |
           cd Builder
@@ -173,9 +173,9 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           scp -r sanjay@192.168.0.79:./artifacts/$Env:RUN_ID .
-          cp $Env:RUN_ID/windows/*.exe Builder/Assets
-          cp $Env:RUN_ID/linux/* Builder/Assets
-          cp $Env:RUN_ID/macos/*.zip Builder/Assets
+          cp $Env:RUN_ID/windows/SantrollerConfiguratorBranded-win-64.exe Builder/Assets
+          cp $Env:RUN_ID/linux/SantrollerConfiguratorBranded-linux-64 Builder/Assets
+          cp $Env:RUN_ID/macos/SantrollerConfiguratorBranded-macOS.zip Builder/Assets
       - name: Build
         run: |
           cd Builder
@@ -211,9 +211,9 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           scp -r sanjay@192.168.0.79:./artifacts/$RUN_ID .
-          cp $RUN_ID/windows/*.exe Builder/Assets
-          cp $RUN_ID/linux/* Builder/Assets
-          cp $RUN_ID/macos/*.zip Builder/Assets
+          cp $RUN_ID/windows/SantrollerConfiguratorBranded-win-64.exe Builder/Assets
+          cp $RUN_ID/linux/SantrollerConfiguratorBranded-linux-64 Builder/Assets
+          cp $RUN_ID/macos/SantrollerConfiguratorBranded-macOS.zip Builder/Assets
       - name: Build
         run: |
           cd Builder
