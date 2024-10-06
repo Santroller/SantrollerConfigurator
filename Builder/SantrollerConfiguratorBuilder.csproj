@@ -73,9 +73,15 @@
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-macOS.zip" />
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-linux-64" />
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-win-64.exe" />
+    </ItemGroup>
+    <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">
         <AvaloniaResource Include="Assets\rcodesign\linux\rcodesign" />
-        <AvaloniaResource Include="Assets\rcodesign\macos\rcodesign" />
+    </ItemGroup>
+    <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
         <AvaloniaResource Include="Assets\rcodesign\win\rcodesign.exe" />
+    </ItemGroup>
+    <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">
+        <AvaloniaResource Include="Assets\rcodesign\macos\rcodesign" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AsmResolver" Version="5.5.1" />
