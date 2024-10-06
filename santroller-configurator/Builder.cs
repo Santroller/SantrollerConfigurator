@@ -13,6 +13,7 @@ public class Builder : Task
 {
     public string Parameter1 { get; set; } = "";
     public string Parameter2 { get; set; } = "";
+    public string Parameter3 { get; set; } = "";
 
     public override bool Execute()
     {
@@ -65,6 +66,13 @@ public class Builder : Task
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
                     var fullPath = Path.Combine(assets, entry.FullName);
+                    if (Parameter3 == "Builder")
+                    {
+                        if (fullPath.Contains("atmelavr") || fullPath.Contains("arduino-avr") || fullPath.Contains("avrdude"))
+                        {
+                            continue;
+                        }
+                    }
                     if (Path.GetFileName(fullPath).Length == 0)
                     {
                         Directory.CreateDirectory(fullPath);

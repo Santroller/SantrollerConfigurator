@@ -3,6 +3,7 @@
         <ParameterGroup>
             <Parameter1 ParameterType="System.String" />
             <Parameter2 ParameterType="System.String" />
+            <Parameter3 ParameterType="System.String" />
         </ParameterGroup>
         <Task>
             <Using Namespace="System.Text" />
@@ -190,7 +191,7 @@
         <Copy SourceFiles="$(TargetDir)\runtimes\win\lib\net8.0\System.IO.Ports.dll" DestinationFolder="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT' " />
     </Target>
     <Target Name="ZipOutputPath" BeforeTargets="PostBuildEvent" Condition="'$(SkipAssets)' != 'Skip'">
-        <Builder Parameter1="$(TargetDir)" Parameter2="None" />
+        <Builder Parameter1="$(TargetDir)" Parameter2="None" Parameter3="None" />
     </Target>
     <!--  Only macOS runs bundleapp  -->
     <Target Name="ZipOutputPath2" AfterTargets="BundleApp" Condition="'$(SkipAssets)' != 'Skip'">
