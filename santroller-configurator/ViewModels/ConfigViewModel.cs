@@ -296,6 +296,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Select(x => x.Item1 || x.Item2)
             .ToProperty(this, x => x.IsOrWasBluetooth);
         _usbHostEnabledHelper = Bindings.Connect()
+            .AutoRefresh(s => s.Input)
             .QueryWhenChanged(s => s.Any(s2 =>
                 s2 is UsbHostCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.UsbHostInput ||
                 s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
