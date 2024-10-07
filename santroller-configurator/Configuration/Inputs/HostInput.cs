@@ -109,9 +109,9 @@ public abstract partial class HostInput : Input
     {
         var ret = (Input switch
         {
-            UsbHostInputType.KeyboardInput => Output.GetReportField(Key, $"{Field}.keyboard"),
-            UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, $"{Field}.mouse"),
-            UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, $"{Field}.mouse"),
+            UsbHostInputType.KeyboardInput => Output.GetReportField(Key, $"{Field}.keyboard", false),
+            UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, $"{Field}.mouse", false),
+            UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, $"{Field}.mouse", false),
             UsbHostInputType.ProKey => Output.GetReportField(ProKeyType, Field, false),
             _ => Output.GetReportField(Input, Field, false)
         });
