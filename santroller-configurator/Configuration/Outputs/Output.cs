@@ -216,11 +216,20 @@ public abstract partial class Output : ReactiveObject
             .Select(x => x.Item3 ? GetChildOutputType() : GetOutputType())
             .ToProperty(this, x => x.OutputType);
         _combinedBackgroundHelper = this.WhenAnyValue(x => x.Enabled)
-            .Select(enabled => enabled ? Brush.Parse("#99000000") : Brush.Parse("#33000000"))
+            .Select(val => val ? Brush.Parse("#99000000") : Brush.Parse("#33000000"))
             .ToProperty(this, s => s.CombinedBackground);
         this.WhenAnyValue(x => x.Model.HasPeripheral).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.Model.HasAccel).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.Model.IsBluetoothRx).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
+        this.WhenAnyValue(x => x.Model.AccelSensorType).Subscribe(s => this.RaisePropertyChanged(nameof(AdxlInputTypes)));
+        this.WhenAnyValue(x => x.Model.AccelSensorType).Subscribe(s => this.RaisePropertyChanged(nameof(AccelInputType)));
+        this.WhenAnyValue(x => x.AdxlInputTypes).Subscribe(s =>
+        {
+            if (!s.Contains(AccelInputType))
+            {
+                AccelInputType = AccelInputType.AccelX;
+            }
+        });
         this.WhenAnyValue(x => x.UsesPwm).Subscribe(s =>
         {
             if (s && !AvailablePwmPins.Contains(_outputPin))
@@ -571,7 +580,7 @@ public abstract partial class Output : ReactiveObject
         Enum.GetValues<WiiInputType>().OrderBy(s => EnumToStringConverter.Convert(s));
 
     public IEnumerable<DjInputType> DjInputTypes => Enum.GetValues<DjInputType>();
-    public IEnumerable<AccelInputType> AdxlInputTypes => Enum.GetValues<AccelInputType>();
+    public IEnumerable<AccelInputType> AdxlInputTypes => Enum.GetValues<AccelInputType>().Where(s => Model.AccelSensorType is AccelSensorType.Lis3dh || !s.IsAdc());
 
     public IEnumerable<InputType> InputTypes =>
         Enum.GetValues<InputType>().Where(s =>

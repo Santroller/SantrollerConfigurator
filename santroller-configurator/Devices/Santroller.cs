@@ -277,7 +277,7 @@ public class Santroller : ConfigurableUsbDevice
                 if (_model.HasAccel)
                 {
                     accelConnected = (await ReadDataAsync(0, (byte) Commands.CommandReadAccelValid, 1)).Any(x => x != 0);
-                    adxlRaw = await ReadDataAsync(0, (byte) Commands.CommandReadAdxl, 3 * sizeof(short));
+                    adxlRaw = await ReadDataAsync(0, (byte) Commands.CommandReadAdxl, 6 * sizeof(short));
                 }
 
                 if (_model.HasMpr121)

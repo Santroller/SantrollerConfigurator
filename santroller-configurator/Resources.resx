@@ -2253,6 +2253,15 @@
     <data name="AccelInputTypeAccelZ" xml:space="preserve">
         <value>Acceleration on Z Axis</value>
     </data>
+    <data name="AccelInputTypeAdc0" xml:space="preserve">
+        <value>ADC 0</value>
+    </data>
+    <data name="AccelInputTypeAdc1" xml:space="preserve">
+        <value>ADC 1</value>
+    </data>
+    <data name="AccelInputTypeAdc2" xml:space="preserve">
+        <value>ADC 2</value>
+    </data>
     <data name="Ps2ControllerTypeDigital" xml:space="preserve">
         <value>PS1 Controller</value>
     </data>

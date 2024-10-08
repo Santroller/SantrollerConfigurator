@@ -33,7 +33,7 @@ public class AccelInput : Input
     public override InputType? InputType => Types.InputType.AccelInput;
     public override bool Peripheral => false;
 
-    public override bool IsUint => false;
+    public override bool IsUint => Input is AccelInputType.Adc0 or AccelInputType.Adc1 or AccelInputType.Adc2;
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
 
     public override string Title => EnumToStringConverter.Convert(Input);
@@ -50,6 +50,9 @@ public class AccelInput : Input
             AccelInputType.AccelX => "filtered[0]",
             AccelInputType.AccelY => "filtered[1]",
             AccelInputType.AccelZ => "filtered[2]",
+            AccelInputType.Adc0 => "accel_adc[0]",
+            AccelInputType.Adc1 => "accel_adc[1]",
+            AccelInputType.Adc2 => "accel_adc[2]",
             _ => "filtered[0]"
         };
     }
@@ -69,13 +72,24 @@ public class AccelInput : Input
         ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
     {
         if (adxlRaw.IsEmpty || adxlRaw.Length < 6) return;
+        var data = adxlRaw.ToArray();
         RawValue = Input switch
         {
-            AccelInputType.AccelX => BitConverter.ToInt16(adxlRaw.ToArray(), 0),
-            AccelInputType.AccelY => BitConverter.ToInt16(adxlRaw.ToArray(), 2),
-            AccelInputType.AccelZ => BitConverter.ToInt16(adxlRaw.ToArray(), 4),
+            AccelInputType.AccelX => BitConverter.ToInt16(data, 0),
+            AccelInputType.AccelY => BitConverter.ToInt16(data, 2),
+            AccelInputType.AccelZ => BitConverter.ToInt16(data, 4),
             _ => RawValue
         };
+        if (adxlRaw.Length > 6)
+        {
+            RawValue = Input switch
+            {
+                AccelInputType.Adc0 => BitConverter.ToUInt16(data, 6),
+                AccelInputType.Adc1 => BitConverter.ToUInt16(data, 8),
+                AccelInputType.Adc2 => BitConverter.ToUInt16(data, 10),
+                _ => RawValue
+            };
+        }
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings,
