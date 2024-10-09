@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
@@ -134,7 +135,7 @@ public class SerializedConfiguration
     [ProtoMember(48)] public int LedBrightnessOn { get; private set; }
     [ProtoMember(49)] public bool Apa102IsFullSize { get; private set; }
 
-    [ProtoMember(50)] public bool Ps3OnRpcs3 { get; private set; } = true;
+    [ProtoMember(50)] [DefaultValue(true)] public bool Ps3OnRpcs3 { get; private set; } = true;
     [ProtoMember(51)] public int Mpr121CapacitiveCount { get; private set; }
     [ProtoMember(52)] public bool HasMpr121 { get; private set; }
     [ProtoMember(53)] public int Mpr121Sda { get; private set; }
@@ -157,14 +158,14 @@ public class SerializedConfiguration
     [ProtoMember(72)] public int Ps2OutputAtt { get; private set; }
     [ProtoMember(73)] public int Ps2OutputAck { get; private set; }
     [ProtoMember(74)] public bool DjNavButtons { get; private set; } = false;
-    [ProtoMember(75)] public bool DjFullRange { get; private set; } = true;
+    [ProtoMember(75)] [DefaultValue(true)] public bool DjFullRange { get; private set; } = true;
     [ProtoMember(76)] public bool SelectDpadLeftXb1 { get; private set; } = false;
     [ProtoMember(77)] public bool AdafruitHost { get; private set; } = false;
     [ProtoMember(78)] public bool MidiDrumAutoOff { get; private set; } = false;
     [ProtoMember(80)] public bool HasAccel { get; private set; }
     [ProtoMember(81)] public int AccelSda { get; private set; }
     [ProtoMember(82)] public int AccelScl { get; private set; }
-    
+
     [ProtoMember(83)] public AccelSensorType AccelSensorType { get; private set; }
     [ProtoMember(84)] public bool ClassicMode { get; private set; }
 
@@ -214,6 +215,7 @@ public class SerializedConfiguration
         {
             model.AccelSensorType = AccelSensorType.Adxl345;
         }
+
         if (HasPeripheral)
         {
             model.PeripheralScl = PeripheralScl;

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -22,7 +23,7 @@ public class SerializedStartSelectHome : SerializedOutput
 
     [ProtoMember(2)] public bool Wii { get; }
     [ProtoMember(8)] private bool Peripheral { get; }
-    [ProtoMember(9)] private bool Enabled { get; } = true;
+    [ProtoMember(9)] [DefaultValue(true)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {

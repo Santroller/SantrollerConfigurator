@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Avalonia.Media;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -61,7 +62,7 @@ public class SerializedControllerAxis : SerializedOutput
     [ProtoMember(15)] public bool OutputPeripheral { get; }
     [ProtoMember(16)] public byte[] LedIndexMpr121 { get; }
     [ProtoMember(17)] public int Offset { get; }
-    [ProtoMember(18)] private bool Enabled { get; } = true;
+    [ProtoMember(18)] [DefaultValue(true)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {

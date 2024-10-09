@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -23,7 +24,7 @@ public class SerializedEmulationMode : SerializedOutput
 
     [ProtoMember(1)] public SerializedInput? Input { get; }
     [ProtoMember(2)] public EmulationModeType Type { get; }
-    [ProtoMember(3)] private bool Enabled { get; } = true;
+    [ProtoMember(3)] [DefaultValue(true)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {

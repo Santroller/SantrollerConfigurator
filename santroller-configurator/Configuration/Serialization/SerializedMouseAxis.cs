@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Avalonia.Media;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -53,7 +54,7 @@ public class SerializedMouseAxis : SerializedOutput
     [ProtoMember(13)] public byte[] LedIndexMpr121 { get; }
 
     [ProtoMember(14)] public MouseAxisType Type { get; }
-    [ProtoMember(15)] private bool Enabled { get; } = true;
+    [ProtoMember(15)] [DefaultValue(true)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {

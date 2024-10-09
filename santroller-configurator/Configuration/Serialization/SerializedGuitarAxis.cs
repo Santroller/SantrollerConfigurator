@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Avalonia.Media;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
@@ -67,7 +68,7 @@ public class SerializedGuitarAxis : SerializedOutput
     [ProtoMember(20)] public int PickupSelectorNotch3 { get; }
     [ProtoMember(21)] public int PickupSelectorNotch4 { get; }
     [ProtoMember(22)] public int PickupSelectorNotch5 { get; }
-    [ProtoMember(23)] private bool Enabled { get; } = true;
+    [ProtoMember(23)] [DefaultValue(true)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {

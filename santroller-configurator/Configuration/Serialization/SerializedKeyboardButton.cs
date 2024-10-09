@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using Avalonia.Input;
 using Avalonia.Media;
 using DynamicData;
@@ -51,7 +52,7 @@ public class SerializedKeyboardButton : SerializedOutput
     [ProtoMember(12)] public bool OutputPeripheral { get; }
 
     [ProtoMember(13)] public byte[] LedIndexMpr121 { get; }
-    [ProtoMember(14)] private bool Enabled { get; } = true;
+    [ProtoMember(14)] [DefaultValue(true)] private bool Enabled { get; } = true;
 
     public override Output Generate(ConfigViewModel model)
     {
