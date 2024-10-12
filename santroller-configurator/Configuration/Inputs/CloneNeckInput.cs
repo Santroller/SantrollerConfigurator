@@ -134,6 +134,6 @@ public class CloneNeckInput : TwiInput
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return base.RequiredDefines().Concat(new[] {"INPUT_CLONE_NECK"}).ToList();
+        return base.RequiredDefines().Concat(["INPUT_CLONE_NECK"]).ToList();
     }
 }

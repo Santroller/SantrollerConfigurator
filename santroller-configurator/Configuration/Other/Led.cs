@@ -208,7 +208,7 @@ public partial class Led : Output
                 or LedCommandType.StarPowerInactive).ToProperty(this, x => x.UsesPwm);
         _rumbleCommands.AddRange(Enum.GetValues<LedCommandType>());
         _rumbleCommands.Connect()
-            .Filter(this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.Model.EmulationType,
+            .Filter(this.WhenAnyValue(x => x.Model.DeviceControllerType, 
                 x => x.Model.IsApa102, x=>x.Model.IsBluetooth).Select(FilterLeds))
             .Bind(out var rumbleCommands)
             .Subscribe();
@@ -456,7 +456,7 @@ public partial class Led : Output
     }
 
     public static Func<LedCommandType, bool> FilterLeds(
-        (DeviceControllerType controllerType, EmulationType emulationType, bool isApa102, bool isBluetooth) type)
+        (DeviceControllerType controllerType, bool isApa102, bool isBluetooth) type)
     {
         return command =>
         {
@@ -464,12 +464,12 @@ public partial class Led : Output
             {
                 return true;
             }
-            return type.emulationType switch
+            return type.controllerType switch
             {
-                EmulationType.KeyboardMouse or EmulationType.BluetoothKeyboardMouse => command is
+                DeviceControllerType.KeyboardMouse => command is
                     LedCommandType.KeyboardCapsLock or LedCommandType.KeyboardScrollLock
                     or LedCommandType.KeyboardNumLock,
-                EmulationType.Controller or EmulationType.Bluetooth => command switch
+                _ => command switch
                 {
                     LedCommandType.Auth or LedCommandType.Player => true,
                     LedCommandType.Combo or LedCommandType.StarPowerActive or LedCommandType.StarPowerInactive
@@ -487,8 +487,7 @@ public partial class Led : Output
                     LedCommandType.DjEuphoria when type.controllerType is DeviceControllerType.Turntable => true,
                     LedCommandType.Ps4LightBar when type.controllerType is DeviceControllerType.Gamepad => true,
                     _ => false
-                },
-                _ => false
+                }
             };
         };
     }

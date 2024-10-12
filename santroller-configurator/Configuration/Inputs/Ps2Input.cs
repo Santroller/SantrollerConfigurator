@@ -185,13 +185,13 @@ public class Ps2Input : SpiInput
             {Ps2InputType.GuitarTapBar, Ps2ControllerType.Guitar}
         };
 
-    private static readonly IReadOnlyList<Ps2InputType> Dualshock = new[]
-    {
+    private static readonly IReadOnlyList<Ps2InputType> Dualshock =
+    [
         Ps2InputType.LeftStickX,
         Ps2InputType.LeftStickY,
         Ps2InputType.RightStickX,
         Ps2InputType.RightStickY
-    };
+    ];
 
     private static readonly Dictionary<Ps2ControllerType, string> CType = new()
     {
@@ -464,7 +464,7 @@ public class Ps2Input : SpiInput
     {
         Dictionary<Ps2InputType, List<string>> ds2Axis = new();
         Dictionary<Ps2ControllerType, List<string>> mappedBindings = new();
-        HashSet<string> digitalBindings = new();
+        HashSet<string> digitalBindings = [];
         
         foreach (var binding in bindings)
             if (binding.Item1.InnermostInputs().First() is Ps2Input input)

@@ -18,7 +18,7 @@ public class Rumble : Output
     private RumbleMotorType _rumbleMotorType;
 
     public Rumble(ConfigViewModel model, bool enabled, int pin, bool peripheral, RumbleMotorType rumbleMotorType) : base(model,
-        enabled, new FixedInput(model, 0, false), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), true, false, peripheral, pin, false)
+        enabled, new FixedInput(model, 0, false), Colors.Black, Colors.Black, [], [], [], true, false, peripheral, pin, false)
     {
         RumbleMotorType = rumbleMotorType;
     }

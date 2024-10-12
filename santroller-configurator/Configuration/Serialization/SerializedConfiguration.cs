@@ -31,7 +31,6 @@ public class SerializedConfiguration
         RolloverMode = model.RolloverMode;
         Bindings = bindings.Select(s => s.Serialize()).ToList();
         DeviceType = model.DeviceControllerType;
-        EmulationType = model.EmulationType;
         XInputOnWindows = model.XInputOnWindows;
         LedType = model.LedType;
         LedMosi = model.LedMosi;
@@ -95,6 +94,7 @@ public class SerializedConfiguration
         AccelSda = model.AccelSda;
         HasAccel = model.HasAccel;
         ClassicMode = model.Classic;
+        IsBluetoothTx = model.IsBluetoothTx;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -168,6 +168,7 @@ public class SerializedConfiguration
 
     [ProtoMember(83)] public AccelSensorType AccelSensorType { get; private set; }
     [ProtoMember(84)] public bool ClassicMode { get; private set; }
+    [ProtoMember(85)] public bool IsBluetoothTx { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -179,7 +180,7 @@ public class SerializedConfiguration
         model.Ps4Instruments = Ps4Instruments;
         model.HideControllerView = HideControllerView;
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
-        model.SetDeviceTypeAndRhythmTypeWithoutUpdating(DeviceType, EmulationType);
+        model.SetDeviceTypeWithoutUpdating(DeviceType);
         model.XInputOnWindows = XInputOnWindows;
         model.Ps3OnRpcs3 = Ps3OnRpcs3;
         model.Bindings.Clear();
@@ -205,6 +206,8 @@ public class SerializedConfiguration
         model.AdafruitHost = AdafruitHost;
         model.MidiDrumAutoOff = MidiDrumAutoOff;
         model.HasAccel = HasAccel;
+        model.IsBluetoothTx = IsBluetoothTx ||
+                              EmulationType is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse;
         if (HasAccel)
         {
             model.AccelScl = AccelScl;

@@ -29,7 +29,6 @@ public class RaiseIssueWindowViewModel : ReactiveObject
                         OS VersionString: {os.VersionString}
 
                         Device Type: {_model.DeviceControllerType}
-                        Emulation Type: {_model.EmulationType}
                         Led Type: {_model.LedType}
 
                         Microcontroller Type: {_model.Microcontroller.Board.Name}
@@ -56,7 +55,6 @@ public class RaiseIssueWindowViewModel : ReactiveObject
                     OS VersionString: {os.VersionString}
 
                     Device Type: {_model.DeviceControllerType}
-                    Emulation Type: {_model.EmulationType}
                     Led Type: {_model.LedType}
 
                     Microcontroller Type: {_model.Microcontroller.Board.Name}

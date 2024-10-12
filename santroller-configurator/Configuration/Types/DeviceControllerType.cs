@@ -18,7 +18,8 @@ public enum DeviceControllerType
     ProGuitarSquire,
     ProKeys,
     FortniteProGuitar,
-    FortniteProDrums
+    FortniteProDrums,
+    KeyboardMouse
 }
 
 public static class DeviceControllerRhythmTypeExtensions {

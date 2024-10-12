@@ -184,6 +184,8 @@ public class ControllerEnumConverter : IMultiValueConverter
 
         switch (deviceControllerType)
         {
+            case DeviceControllerType.KeyboardMouse:
+                return false;
             case DeviceControllerType.Gamepad:
             case DeviceControllerType.StageKit:
                 return true;
@@ -228,6 +230,7 @@ public class ControllerEnumConverter : IMultiValueConverter
                     .Concat(InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>()),
             DeviceControllerType.DancePad => Array.Empty<object>(),
             DeviceControllerType.ProKeys => Enum.GetValues<ProKeyType>().Cast<object>(),
+            DeviceControllerType.KeyboardMouse => Array.Empty<object>(),
             _ => Enum.GetValues<StandardAxisType>().Cast<object>()
         };
         return Enum.GetValues<SimpleType>().Cast<object>()

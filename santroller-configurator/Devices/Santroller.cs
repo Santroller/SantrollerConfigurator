@@ -136,10 +136,10 @@ public class Santroller : ConfigurableUsbDevice
     {
         if (Board.HasUsbmcu)
         {
-            WriteData(0, (byte) Commands.CommandJumpBootloaderUno, Array.Empty<byte>());
+            WriteData(0, (byte) Commands.CommandJumpBootloaderUno, []);
         }
         else
-            WriteData(0, (byte) Commands.CommandJumpBootloader, Array.Empty<byte>());
+            WriteData(0, (byte) Commands.CommandJumpBootloader, []);
 
         UsbDevice.Close();
     }
@@ -148,7 +148,7 @@ public class Santroller : ConfigurableUsbDevice
     public override void Revert()
     {
         // Reverting just needs to go to dfu mode, thats good enough
-        WriteData(0, (byte) Commands.CommandJumpBootloader, Array.Empty<byte>());
+        WriteData(0, (byte) Commands.CommandJumpBootloader, []);
         UsbDevice.Close();
     }
 
@@ -541,7 +541,7 @@ public class Santroller : ConfigurableUsbDevice
 
     public void DigitalWrite(int pin, bool value)
     {
-        var ports = _microcontroller.GetPortsForTicking(new[] {new DevicePin(pin, DevicePinMode.Output)});
+        var ports = _microcontroller.GetPortsForTicking([new DevicePin(pin, DevicePinMode.Output)]);
         foreach (var (port, mask) in ports)
         {
             WriteData(0, (byte) Commands.CommandWriteDigital,
@@ -617,7 +617,7 @@ public class Santroller : ConfigurableUsbDevice
 
     public void StartScan()
     {
-        WriteData(0, (byte) Commands.CommandStartBtScan, Array.Empty<byte>());
+        WriteData(0, (byte) Commands.CommandStartBtScan, []);
     }
 
     public IReadOnlyList<string> GetBtScanResults()

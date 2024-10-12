@@ -26,4 +26,5 @@ public enum SimpleType
     FestivalLayer,
     FestivalIos,
     Accel,
+    BluetoothTx
 }

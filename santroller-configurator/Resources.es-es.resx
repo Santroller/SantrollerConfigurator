@@ -1845,6 +1845,13 @@
     <data name="EmulationTypeFortniteFestival" xml:space="preserve">
         <value>Fortnite Festival</value>
     </data>
+
+    <data name="FestivalAddBinding" xml:space="preserve">
+        <value>Habilitar Ajustes de Fortnite Festival</value>
+    </data>
+    <data name="AddBluetoothTx" xml:space="preserve">
+        <value>Habilitar Ajustes de Transmisor Bluetooth</value>
+    </data>
     <data name="EmulationTypeKeyboardMouse" xml:space="preserve">
         <value>Teclado + Mouse</value>
     </data>
@@ -1940,6 +1947,9 @@
     </data>
     <data name="JoystickToDpad" xml:space="preserve">
         <value>Mapear Joystick a Dpad</value>
+    </data>
+    <data name="AccelSensorTypeMainAnalog" xml:space="preserve">
+        <value>Análogo</value>
     </data>
     <data name="InputTypeAnalogPinInput" xml:space="preserve">
         <value>Entrada de Pin Análogo</value>
@@ -2461,6 +2471,9 @@
     <data name="RumbleMotorTypeRight" xml:space="preserve">
         <value>Derecho</value>
     </data>
+    <data name="SimpleTypeBluetoothTx" xml:space="preserve">
+        <value>Transmisor Bluetooth</value>
+    </data>
     <data name="SimpleTypeAccel" xml:space="preserve">
         <value>Acelerómetro</value>
     </data>
@@ -2936,7 +2949,7 @@
         <value>Pin de Comando / MOSI (Naranjo)</value>
     </data>
     <data name="SelectedDeviceLabel" xml:space="preserve">
-        <value>Dispositivo Seleccionado</value>
+        <value>Dispositivo a programar</value>
     </data>
     <data name="DetectedLabel" xml:space="preserve">
         <value>Detectado</value>
@@ -3233,7 +3246,7 @@
         <value>Cargar Preestablecido</value>
     </data>
     <data name="ControllerTypeLabel" xml:space="preserve">
-        <value>Tipo de Control</value>
+        <value>Control a Emular</value>
     </data>
     <data name="WindowsControllerModeLabel" xml:space="preserve">
         <value>Modo de Control en Windows</value>
@@ -3410,8 +3423,8 @@
     <data name="LoadDefaultsLabel" xml:space="preserve">
         <value>Cargar Predeterminados</value>
     </data>
-    <data name="ResetSettingsLabel" xml:space="preserve">
-        <value>Reiniciar Ajustes</value>
+    <data name="ConnectionMethodLabel" xml:space="preserve">
+        <value>Método de Conexión</value>
     </data>
     <data name="ClearAllLabel" xml:space="preserve">
         <value>Limpiar Todo</value>

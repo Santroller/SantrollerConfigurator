@@ -21,17 +21,17 @@ public static class DrumAxisTypeMethods
 {
     public static IEnumerable<DrumAxisType> RbTypes()
     {
-        return new[]
-        {
+        return
+        [
             DrumAxisType.Green, DrumAxisType.Red, DrumAxisType.Yellow, DrumAxisType.Blue, DrumAxisType.GreenCymbal,
             DrumAxisType.YellowCymbal, DrumAxisType.BlueCymbal, DrumAxisType.Kick, DrumAxisType.Kick2
-        };
+        ];
     }
 
     public static IEnumerable<DrumAxisType> GhTypes()
     {
-        return new[]
-        {
+        return
+        [
             DrumAxisType.Green,
             DrumAxisType.Red,
             DrumAxisType.Yellow,
@@ -39,19 +39,19 @@ public static class DrumAxisTypeMethods
             DrumAxisType.Orange,
             DrumAxisType.Kick,
             DrumAxisType.Kick2
-        };
+        ];
     }
     
     public static IEnumerable<DrumAxisType> FortniteTypes()
     {
-        return new[]
-        {
+        return
+        [
             DrumAxisType.Green,
             DrumAxisType.Red,
             DrumAxisType.Yellow,
             DrumAxisType.Blue,
             DrumAxisType.Orange
-        };
+        ];
     }
 
     public static IEnumerable<DrumAxisType> GetTypeFor(DeviceControllerType type)

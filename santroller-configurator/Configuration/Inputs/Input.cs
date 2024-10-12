@@ -37,7 +37,7 @@ public abstract partial class Input : ReactiveObject
 
     public virtual IEnumerable<Input> InnermostInputs()
     {
-        return new []{this};
+        return [this];
     }
 
     public virtual IList<Input> Inputs()

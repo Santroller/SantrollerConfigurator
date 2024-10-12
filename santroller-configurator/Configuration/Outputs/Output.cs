@@ -1095,7 +1095,7 @@ public abstract partial class Output : ReactiveObject
         ButtonText = Resources.Assign;
     }
 
-    private void SetInput(InputType? inputType, WiiInputType? wiiInput, Ps2InputType? ps2InputType,
+    protected void SetInput(InputType? inputType, WiiInputType? wiiInput, Ps2InputType? ps2InputType,
         GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
         UsbHostInputType? usbInputType, AccelInputType? accelInputType, MidiType? midiType)
     {
@@ -1152,9 +1152,12 @@ public abstract partial class Output : ReactiveObject
             case InputType.Mpr121Input:
                 input = new Mpr121Input(0, Model, false);
                 break;
-            case InputType.MacroInput:
+            case InputType.MacroInput when Input.InputType is InputType.MacroInput:
                 input = new MacroInput(new DirectInput(-1, false, false, DevicePinMode.PullUp, Model),
                     new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), Model);
+                break;
+            case InputType.MacroInput:
+                input = new MacroInput(Input, Input.Serialise().Generate(Model), Model);
                 break;
             case InputType.DigitalPeripheralInput:
                 input = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
@@ -1330,7 +1333,7 @@ public abstract partial class Output : ReactiveObject
 
     protected virtual IEnumerable<PinConfig> GetOwnPinConfigs()
     {
-        return OutputPinConfig != null ? new[] {OutputPinConfig} : Enumerable.Empty<PinConfig>();
+        return OutputPinConfig != null ? [OutputPinConfig] : [];
     }
 
     protected virtual IEnumerable<DevicePin> GetOwnPins()

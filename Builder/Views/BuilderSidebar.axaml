@@ -126,7 +126,7 @@
 
                 <Button Command="{Binding ResetWithConfirmationCommand}"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="20 5 20 0"
-                        Content="{x:Static netCore:Resources.ResetSettingsLabel}" />
+                        Content="{x:Static netCore:Resources.LoadDefaultsLabel}" />
                 <Button Command="{Binding BindAllCommand}" HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center" Margin="20 5 20 0"
                         Content="{x:Static netCore:Resources.ConfigureAllInputsLabel}" />

@@ -124,7 +124,7 @@ public partial class Mpr121SliderInput : Input
 
     [ObservableAsProperty] private IEnumerable<int> _availableInputs = null!;
 
-    public IEnumerable<int> MappedInputs => new[] {InputGreen, InputRed, InputYellow, InputBlue, InputOrange};
+    public IEnumerable<int> MappedInputs => [InputGreen, InputRed, InputYellow, InputBlue, InputOrange];
 
     public override IList<PinConfig> PinConfigs => Array.Empty<PinConfig>();
     public override InputType? InputType => Types.InputType.Mpr121Input;
@@ -180,6 +180,6 @@ public partial class Mpr121SliderInput : Input
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return new[] {"INPUT_MPR121"};
+        return ["INPUT_MPR121"];
     }
 }

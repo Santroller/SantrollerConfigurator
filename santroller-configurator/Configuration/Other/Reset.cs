@@ -17,7 +17,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Other;
 public class Reset : Output
 {
     public Reset(ConfigViewModel model,bool enabled,  Input input) : base(
-        model, enabled, input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), false, false, false, -1,
+        model, enabled, input, Colors.Black, Colors.Black, [], [], [], false, false, false, -1,
         false)
     {
     }

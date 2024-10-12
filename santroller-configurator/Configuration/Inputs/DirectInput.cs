@@ -69,7 +69,7 @@ public partial class DirectInput : InputWithPin
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return new[] {"INPUT_DIRECT"};
+        return ["INPUT_DIRECT"];
     }
 
     public override void Update(Dictionary<int, int> analogRaw,

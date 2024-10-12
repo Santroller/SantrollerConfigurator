@@ -261,18 +261,18 @@ public partial class MacroInput : Input
         {
             if (Model.IsPico)
             {
-                return new[]
-                {
+                return
+                [
                     Types.InputType.AnalogPinInput, Types.InputType.DigitalPinInput, Types.InputType.WiiInput,
                     Types.InputType.Ps2Input, Types.InputType.TurntableInput, Types.InputType.UsbHostInput
-                };
+                ];
             }
 
-            return new[]
-            {
+            return
+            [
                 Types.InputType.AnalogPinInput, Types.InputType.DigitalPinInput, Types.InputType.WiiInput,
                 Types.InputType.Ps2Input, Types.InputType.TurntableInput
-            };
+            ];
         }
     }
 
@@ -301,7 +301,7 @@ public partial class MacroInput : Input
 
     public override IEnumerable<Input> InnermostInputs()
     {
-        return new []{Child1, Child2};
+        return [Child1, Child2];
     }
 
     public override IList<Input> Inputs()

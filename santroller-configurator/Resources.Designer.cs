@@ -57,6 +57,30 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ModeBindingProMode {
+            get {
+                return ResourceManager.GetString("ModeBindingProMode", resourceCulture);
+            }
+        }
+        
+        public static string ModeBindingProModeWindows {
+            get {
+                return ResourceManager.GetString("ModeBindingProModeWindows", resourceCulture);
+            }
+        }
+        
+        public static string ModeBindingProModeToggle {
+            get {
+                return ResourceManager.GetString("ModeBindingProModeToggle", resourceCulture);
+            }
+        }
+        
+        public static string ModeBindingProModeiOS {
+            get {
+                return ResourceManager.GetString("ModeBindingProModeiOS", resourceCulture);
+            }
+        }
+        
         public static string DetectAxis {
             get {
                 return ResourceManager.GetString("DetectAxis", resourceCulture);
@@ -1470,6 +1494,12 @@ namespace GuitarConfigurator.NetCore {
         public static string DeviceControllerTypeRockBandGuitar {
             get {
                 return ResourceManager.GetString("DeviceControllerTypeRockBandGuitar", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeKeyboardMouse {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeKeyboardMouse", resourceCulture);
             }
         }
         
@@ -3549,6 +3579,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string FestivalAddBinding {
+            get {
+                return ResourceManager.GetString("FestivalAddBinding", resourceCulture);
+            }
+        }
+        
+        public static string AddBluetoothTx {
+            get {
+                return ResourceManager.GetString("AddBluetoothTx", resourceCulture);
+            }
+        }
+        
         public static string EmulationTypeKeyboardMouse {
             get {
                 return ResourceManager.GetString("EmulationTypeKeyboardMouse", resourceCulture);
@@ -3729,6 +3771,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string TiltSensorLabel {
+            get {
+                return ResourceManager.GetString("TiltSensorLabel", resourceCulture);
+            }
+        }
+        
         public static string GuitarAxisTypeTilt {
             get {
                 return ResourceManager.GetString("GuitarAxisTypeTilt", resourceCulture);
@@ -3756,6 +3804,36 @@ namespace GuitarConfigurator.NetCore {
         public static string AccelSensorTypeMpu6050 {
             get {
                 return ResourceManager.GetString("AccelSensorTypeMpu6050", resourceCulture);
+            }
+        }
+        
+        public static string AccelSensorTypeMainAdxl345 {
+            get {
+                return ResourceManager.GetString("AccelSensorTypeMainAdxl345", resourceCulture);
+            }
+        }
+        
+        public static string AccelSensorTypeMainLis3dh {
+            get {
+                return ResourceManager.GetString("AccelSensorTypeMainLis3dh", resourceCulture);
+            }
+        }
+        
+        public static string AccelSensorTypeMainMpu6050 {
+            get {
+                return ResourceManager.GetString("AccelSensorTypeMainMpu6050", resourceCulture);
+            }
+        }
+        
+        public static string AccelSensorTypeMainAnalog {
+            get {
+                return ResourceManager.GetString("AccelSensorTypeMainAnalog", resourceCulture);
+            }
+        }
+        
+        public static string AccelSensorTypeMainDigital {
+            get {
+                return ResourceManager.GetString("AccelSensorTypeMainDigital", resourceCulture);
             }
         }
         
@@ -4929,6 +5007,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SimpleTypeBluetoothTx {
+            get {
+                return ResourceManager.GetString("SimpleTypeBluetoothTx", resourceCulture);
+            }
+        }
+        
         public static string SimpleTypeLed {
             get {
                 return ResourceManager.GetString("SimpleTypeLed", resourceCulture);
@@ -5634,6 +5718,12 @@ namespace GuitarConfigurator.NetCore {
         public static string MouseAxisTypeLabel {
             get {
                 return ResourceManager.GetString("MouseAxisTypeLabel", resourceCulture);
+            }
+        }
+        
+        public static string ConnectionMethodLabel {
+            get {
+                return ResourceManager.GetString("ConnectionMethodLabel", resourceCulture);
             }
         }
         
@@ -6771,12 +6861,6 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string ResetSettingsLabel {
-            get {
-                return ResourceManager.GetString("ResetSettingsLabel", resourceCulture);
-            }
-        }
-        
         public static string ClearAllLabel {
             get {
                 return ResourceManager.GetString("ClearAllLabel", resourceCulture);
@@ -6804,12 +6888,6 @@ namespace GuitarConfigurator.NetCore {
         public static string WarningLabel {
             get {
                 return ResourceManager.GetString("WarningLabel", resourceCulture);
-            }
-        }
-        
-        public static string ClearTypeLabel {
-            get {
-                return ResourceManager.GetString("ClearTypeLabel", resourceCulture);
             }
         }
         

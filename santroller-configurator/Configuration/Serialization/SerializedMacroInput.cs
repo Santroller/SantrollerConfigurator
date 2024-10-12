@@ -31,7 +31,7 @@ public class SerializedMacroInput : SerializedInput
             throw new NotImplementedException("Null child unexpected!");
         }
         // Need to make sure a binding exists so that the inputs generated below have an output to grab their pins from (combined only)
-        model.Bindings.Add(new ControllerButton(model, true, Child1.Generate(model), Colors.Transparent, Colors.Transparent, Array.Empty<byte>(),Array.Empty<byte>(), Array.Empty<byte>(), 10, StandardButtonType.A, false, false, false, -1, false));
+        model.Bindings.Add(new ControllerButton(model, true, Child1.Generate(model), Colors.Transparent, Colors.Transparent, [],[], [], 10, StandardButtonType.A, false, false, false, -1, false));
         return new MacroInput(Child1.Generate(model), Child2.Generate(model), model);
     }
 }

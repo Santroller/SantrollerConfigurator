@@ -169,6 +169,6 @@ public class Gh5NeckInput : TwiInput
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return base.RequiredDefines().Concat(new[] {"INPUT_GH5_NECK"}).ToList();
+        return base.RequiredDefines().Concat(["INPUT_GH5_NECK"]).ToList();
     }
 }

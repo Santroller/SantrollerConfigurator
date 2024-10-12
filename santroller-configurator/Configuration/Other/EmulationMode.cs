@@ -11,16 +11,17 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
+using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Other;
 
-public class EmulationMode : Output
+public partial class EmulationMode : Output
 {
     private readonly SourceList<EmulationModeType> _emulationModes = new();
     private EmulationModeType _emulationModeType;
 
     public EmulationMode(ConfigViewModel model, bool enabled, Input input, EmulationModeType type) : base(
-        model, enabled, input, Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), false,
+        model, enabled, input, Colors.Black, Colors.Black, [], [], [], false,
         false, false, -1, false)
     {
         Type = type;
@@ -30,7 +31,22 @@ public class EmulationMode : Output
             .Bind(out var modes)
             .Subscribe();
         EmulationModes = modes;
+        UpdateExplanation();
     }
+
+    private void UpdateExplanation()
+    {
+        Explanation = Type switch
+        {
+            EmulationModeType.Fnf => Resources.ModeBindingProMode,
+            EmulationModeType.FnfHid => Resources.ModeBindingProModeWindows,
+            EmulationModeType.FnfLayer => Resources.ModeBindingProModeToggle,
+            EmulationModeType.FnfIos => Resources.ModeBindingProModeiOS,
+            _ => ""
+        };
+    }
+
+    [Reactive] private string _explanation = "";
 
     public ReadOnlyObservableCollection<EmulationModeType> EmulationModes { get; }
 
@@ -41,11 +57,19 @@ public class EmulationMode : Output
         {
             this.RaiseAndSetIfChanged(ref _emulationModeType, value);
             UpdateDetails();
-
-            // Set 6KRO for compatibility
-            if (Type is EmulationModeType.Fnf)
+            UpdateExplanation();
+            switch (Type)
             {
-                Model.RolloverMode = RolloverMode.SixKro;
+                // 
+                case EmulationModeType.FnfLayer when Input is not MacroInput:
+                {
+                    SetInput(InputType.MacroInput, null, null, null, null, null, null, null, null);
+                    break;
+                }
+                // Set 6KRO for compatibility
+                case EmulationModeType.Fnf:
+                    Model.RolloverMode = RolloverMode.SixKro;
+                    break;
             }
 
             var idx = Model.Bindings.Items.IndexOf(this);
@@ -98,7 +122,8 @@ public class EmulationMode : Output
         bool swapSwitchFaceButtons)
     {
         var title = Resources.ConsoleModeBindingTitle;
-        if (Type is EmulationModeType.Fnf or EmulationModeType.FnfHid)
+        if (Type is EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfIos
+            or EmulationModeType.FnfLayer)
         {
             title = Resources.ModeBindingTitle;
         }

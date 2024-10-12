@@ -61,7 +61,7 @@ public abstract class SpiInput : Input, ISpi
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return new[] {$"{_spiType.ToUpper()}_SPI_PORT {_spiConfig.Definition}"};
+        return [$"{_spiType.ToUpper()}_SPI_PORT {_spiConfig.Definition}"];
     }
 
     private List<int> GetMosiPins()

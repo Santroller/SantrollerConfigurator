@@ -556,7 +556,7 @@ public class WiiInput : TwiInput
         ConfigField mode)
     {
         Dictionary<WiiControllerType, List<string>> mappedBindings = new();
-        HashSet<string> digitalBindings = new();
+        HashSet<string> digitalBindings = [];
         foreach (var binding in bindings)
         {
             if (binding.Item1.InnermostInputs().First() is not WiiInput input) continue;
@@ -636,14 +636,14 @@ public class WiiInput : TwiInput
     public override IReadOnlyList<string> RequiredDefines()
     {
         if (Input.ToString().StartsWith("GuitarTap"))
-            return base.RequiredDefines().Concat(new[] {"INPUT_WII", "INPUT_WII_TAP"}).ToList();
+            return base.RequiredDefines().Concat(["INPUT_WII", "INPUT_WII_TAP"]).ToList();
         return WiiControllerType switch
         {
-            WiiControllerType.Drum => base.RequiredDefines().Concat(new[] {"INPUT_WII", "INPUT_WII_DRUM"}).ToList(),
+            WiiControllerType.Drum => base.RequiredDefines().Concat(["INPUT_WII", "INPUT_WII_DRUM"]).ToList(),
             WiiControllerType.Nunchuk => base.RequiredDefines()
-                .Concat(new[] {"INPUT_WII", "INPUT_WII_NUNCHUK"})
+                .Concat(["INPUT_WII", "INPUT_WII_NUNCHUK"])
                 .ToList(),
-            _ => base.RequiredDefines().Concat(new[] {"INPUT_WII"}).ToList()
+            _ => base.RequiredDefines().Concat(["INPUT_WII"]).ToList()
         };
     }
 

@@ -89,8 +89,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private DirectPinConfig? _stp16LePeripheral;
     private DirectPinConfig? _adaFruitHostPin;
 
-    private EmulationType _emulationType;
-
     [Reactive] private AccelSensorType _accelSensorType;
 
     public IEnumerable<AccelSensorType> AccelSensorTypes => Enum.GetValues<AccelSensorType>();
@@ -168,11 +166,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _deletePresetLabelHelper = this.WhenAnyValue(x => x.CurrentPreset).Select(x =>
                 x is null ? Resources.DeletePresetLabel : string.Format(Resources.DeletePresetLabel2, x.Item1))
             .ToProperty(this, x => x.DeletePresetLabel);
-        _isBluetoothTxHelper = this.WhenAnyValue(x => x.EmulationType)
-            .Select(x => x is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
-            .ToProperty(this, x => x.IsBluetoothTx);
-        _supportsDequeHelper = this.WhenAnyValue(x => x.EmulationType, x => x.Mode, x => x.DeviceControllerType)
-            .Select(x => x.Item1 is EmulationType.Controller && x.Item2 is ModeType.Standard)
+        _supportsDequeHelper = this.WhenAnyValue(x => x.Mode, x => x.DeviceControllerType)
+            .Select(x => x.Item2 is DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandGuitar &&
+                         x.Item1 is ModeType.Standard)
             .ToProperty(this, x => x.SupportsDeque);
         _supportsPS4InstrumentHelper = this.WhenAnyValue(x => x.DeviceControllerType, x => x.Branded)
             .Select(x => x.Item1 is DeviceControllerType.GuitarHeroGuitar
@@ -203,22 +199,20 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _debounceDisplay = this.WhenAnyValue(x => x.Debounce)
             .Select(x => x / 10.0f)
             .ToProperty(this, x => x.DebounceDisplay);
-        _isControllerHelper = this.WhenAnyValue(x => x.EmulationType)
-            .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.Controller)
+        _isControllerHelper = this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(x => x is not DeviceControllerType.KeyboardMouse)
             .ToProperty(this, x => x.IsController);
-        _isStandardControllerHelper = this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
-            .Select(x =>
-                GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller)
+        _isStandardControllerHelper = this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(x => x is not DeviceControllerType.KeyboardMouse)
             .ToProperty(this, x => x.IsStandardController);
-        _isRpcs3CompatibleControllerHelper = this.WhenAnyValue(x => x.EmulationType, x => x.DeviceControllerType)
+        _isRpcs3CompatibleControllerHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x =>
-                GetSimpleEmulationTypeFor(x.Item1) is EmulationType.Controller &&
-                x.Item2 is DeviceControllerType.Turntable or DeviceControllerType.RockBandDrums
+                x is DeviceControllerType.Turntable or DeviceControllerType.RockBandDrums
                     or DeviceControllerType.RockBandGuitar or DeviceControllerType.LiveGuitar
                     or DeviceControllerType.StageKit)
             .ToProperty(this, x => x.IsRpcs3CompatibleController);
-        _isKeyboardHelper = this.WhenAnyValue(x => x.EmulationType)
-            .Select(x => GetSimpleEmulationTypeFor(x) is EmulationType.KeyboardMouse)
+        _isKeyboardHelper = this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(x => x is DeviceControllerType.KeyboardMouse)
             .ToProperty(this, x => x.IsKeyboard);
         _isApa102Helper = this.WhenAnyValue(x => x.LedType)
             .Select(x => x is LedType.Apa102Bgr or LedType.Apa102Brg or LedType.Apa102Gbr or LedType.Apa102Grb
@@ -1307,15 +1301,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         set
         {
             this.RaiseAndSetIfChanged(ref _deviceControllerType, value);
-            UpdateBindings();
+            UpdateBindings(false);
         }
-    }
-
-
-    public EmulationType EmulationType
-    {
-        get => _emulationType;
-        set => _ = SetDefaultBindingsAsync(value);
     }
 
     public Microcontroller Microcontroller { get; private set; }
@@ -1397,7 +1384,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] private bool _isIndexedLedPeripheral;
     [ObservableAsProperty] private bool _isStp16;
     [ObservableAsProperty] private bool _isStp16Peripheral;
-    [ObservableAsProperty] private bool _isBluetoothTx;
+    [Reactive] private bool _isBluetoothTx;
     [ObservableAsProperty] private bool _supportsDeque;
     [ObservableAsProperty] private string? _pollRateLabel;
     [ObservableAsProperty] private bool _isBluetooth;
@@ -1479,7 +1466,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public IScreen HostScreen { get; }
     public bool IsPico => Device.IsPico;
 
-    public void SetDeviceTypeAndRhythmTypeWithoutUpdating(DeviceControllerType type, EmulationType emulationType)
+    public void SetDeviceTypeWithoutUpdating(DeviceControllerType type)
     {
         // Remove legacy fortnite confiurations
         if (type.IsFortnite() && type.IsGuitar())
@@ -1492,40 +1479,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             type = DeviceControllerType.RockBandDrums;
         }
 
-        if (emulationType is EmulationType.FortniteFestival)
-        {
-            type = DeviceControllerType.Gamepad;
-        }
-
         this.RaiseAndSetIfChanged(ref _deviceControllerType, type, nameof(DeviceControllerType));
-        this.RaiseAndSetIfChanged(ref _emulationType, emulationType, nameof(EmulationType));
     }
 
-    public void UpdateBindings()
+    public void UpdateBindings(bool defaults)
     {
         foreach (var binding in Bindings.Items) binding.UpdateBindings();
         InstrumentButtonTypeExtensions.ConvertBindings(Bindings, this, false);
         if (!IsGuitar)
         {
             Deque = false;
-        }
-
-        if (DeviceControllerType is DeviceControllerType.FortniteProGuitar or DeviceControllerType.FortniteProDrums)
-        {
-            if (!Bindings.Items.Any(s => s is EmulationMode {Type: EmulationModeType.Fnf}))
-            {
-                Bindings.Add(new EmulationMode(this, true, new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                    EmulationModeType.Fnf));
-            }
-
-            var newType = DeviceControllerType == DeviceControllerType.FortniteProGuitar
-                ? DeviceControllerType.RockBandGuitar
-                : DeviceControllerType.RockBandDrums;
-            DeviceControllerType = newType;
-            _emulationType = EmulationType.Controller;
-            this.RaisePropertyChanged(nameof(EmulationType));
-            DeviceControllerType = newType;
-            return;
         }
 
         var (extra, types) =
@@ -1546,7 +1509,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (!Bindings.Items.Any(s => s is DjCombinedOutput))
             {
-                var dj = new DjCombinedOutput(this, false);
+                var dj = new DjCombinedOutput(this, false) {Expanded = defaults};
                 Bindings.Add(dj);
                 dj.SetOutputsOrDefaults(Array.Empty<Output>());
             }
@@ -1597,58 +1560,86 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             switch (type)
             {
                 case StandardButtonType buttonType:
-                    Bindings.Add(new ControllerButton(this,true,
+                    Bindings.Add(new ControllerButton(this, true,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1,
-                        buttonType, false, false, false, -1, false));
+                        Colors.Black, Colors.Black, [], [], [], 1,
+                        buttonType, false, false, false, -1, false) {Expanded = defaults});
                     break;
                 case InstrumentButtonType buttonType:
-                    Bindings.Add(new GuitarButton(this,true,
+                    Bindings.Add(new GuitarButton(this, true,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1,
-                        buttonType, false, false, false, -1, false));
+                        Colors.Black, Colors.Black, [], [], [], 1,
+                        buttonType, false, false, false, -1, false) {Expanded = defaults});
                     break;
                 case StandardAxisType axisType:
-                    Bindings.Add(new ControllerAxis(this,true,
-                        new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
-                        ushort.MinValue,
-                        ushort.MaxValue,
-                        ushort.MaxValue / 2, 0, ushort.MaxValue, axisType, false, false, false, -1, false));
+                    Bindings.Add(new ControllerAxis(this, true,
+                            new DirectInput(-1, false, false, DevicePinMode.Analog, this),
+                            Colors.Black, Colors.Black, [], [], [],
+                            ushort.MinValue,
+                            ushort.MaxValue,
+                            ushort.MaxValue / 2, 0, ushort.MaxValue, axisType, false, false, false, -1, false)
+                        {Expanded = defaults});
                     break;
                 case GuitarAxisType.Slider:
                     break;
-                case GuitarAxisType axisType:
-                    Bindings.Add(new GuitarAxis(this, true,new DirectInput(-1,
-                            false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                case GuitarAxisType.Tilt when defaults:
+                    Input input = Main.AccelSensorTypeMain switch
+                    {
+                        AccelSensorTypeMain.Digital => new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
+                        AccelSensorTypeMain.Adxl345 or AccelSensorTypeMain.Lis3dh or AccelSensorTypeMain.Mpu6050 =>
+                            new AccelInput(AccelInputType.AccelX, this),
+                        _ => new DirectInput(-1, false, false, DevicePinMode.Analog, this)
+                    };
+                    if (Main.AccelSensorTypeMain is AccelSensorTypeMain.Adxl345 or AccelSensorTypeMain.Lis3dh
+                        or AccelSensorTypeMain.Mpu6050)
+                    {
+                        AccelSensorType = Main.AccelSensorTypeMain switch
+                        {
+                            AccelSensorTypeMain.Adxl345 => AccelSensorType.Adxl345,
+                            AccelSensorTypeMain.Lis3dh => AccelSensorType.Lis3dh,
+                            AccelSensorTypeMain.Mpu6050 => AccelSensorType.Mpu6050,
+                            _ => AccelSensorType
+                        };
+                        HasAccel = true;
+                    }
+
+                    Bindings.Add(new GuitarAxis(this, true, input,
+                        Colors.Black, Colors.Black, [], [], [],
                         ushort.MinValue,
                         ushort.MaxValue,
-                        0, false, axisType, false, false, false, -1, false));
+                        0, false, GuitarAxisType.Tilt, false, false, false, -1, false) {Expanded = defaults});
+                    break;
+                case GuitarAxisType axisType:
+                    Bindings.Add(new GuitarAxis(this, true, new DirectInput(-1,
+                            false, false, DevicePinMode.Analog, this),
+                        Colors.Black, Colors.Black, [], [], [],
+                        ushort.MinValue,
+                        ushort.MaxValue,
+                        0, false, axisType, false, false, false, -1, false) {Expanded = defaults});
                     break;
                 case DrumAxisType axisType:
-                    Bindings.Add(new DrumAxis(this,true,
+                    Bindings.Add(new DrumAxis(this, true,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                        Colors.Black, Colors.Black, [], [], [],
                         ushort.MinValue,
                         ushort.MaxValue,
-                        0, 10, axisType, false, false, false, -1, false));
+                        0, 10, axisType, false, false, false, -1, false) {Expanded = defaults});
                     break;
                 case DjAxisType.EffectsKnob:
-                    Bindings.Add(new DjAxis(this,true,
+                    Bindings.Add(new DjAxis(this, true,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, 1,
+                        Colors.Black, Colors.Black, [], [], [], 1, 1,
                         DjAxisType.EffectsKnob, false, false, false, -1,
-                        false));
+                        false) {Expanded = defaults});
                     break;
                 case DjAxisType axisType:
                     if (axisType is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity) continue;
-                    Bindings.Add(new DjAxis(this,true,
+                    Bindings.Add(new DjAxis(this, true,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
+                        Colors.Black, Colors.Black, [], [], [],
                         ushort.MinValue,
                         ushort.MaxValue, 0, axisType, false, false, false, -1,
-                        false));
+                        false) {Expanded = defaults});
                     break;
             }
 
@@ -1673,7 +1664,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         LedTypePeripheral = LedType.None;
         LedCount = 1;
         LedCountPeripheral = 1;
-        _deviceControllerType = DeviceControllerType.Gamepad;
+        _deviceControllerType = Main.DeviceControllerType;
         CombinedStrumDebounce = false;
         WtSensitivity = 5;
         PollRate = 0;
@@ -1689,19 +1680,86 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         HasPeripheral = false;
         BtRxAddr = "";
         this.RaisePropertyChanged(nameof(DeviceControllerType));
-        this.RaisePropertyChanged(nameof(EmulationType));
         XInputOnWindows = true;
         Ps3OnRpcs3 = true;
         Ps4Instruments = false;
         MouseMovementType = MouseMovementType.Relative;
+        IsBluetoothTx = Main.BluetoothTx;
+        
+        if (IsBluetooth)
+        {
+            ResetBluetoothRelated();
+        }
+        else
+        {
+            // Reset max1704x state when we disable bluetooth.
+            HasMax1704X = false;
+        }
+
+        if (Main.DeviceInputType is DeviceInputType.Usb)
+        {
+            UsbHostDm = 3;
+        }
+
+        ClearOutputs();
+        if (Main.Fortnite)
+        {
+            Input defInput = Main.DeviceInputType switch
+            {
+                DeviceInputType.Wii => new WiiInput(WiiInputType.ClassicA, this, false, 18, 19),
+                DeviceInputType.Ps2 => new Ps2Input(Ps2InputType.Cross, this, false, 4, 3, 6, 10, 7),
+                DeviceInputType.Usb => new UsbHostInput(UsbHostInputType.A, this),
+                DeviceInputType.Bluetooth => new BluetoothInput(UsbHostInputType.A, this),
+                _ => new DirectInput(-1, false, false, DevicePinMode.PullUp, this)
+            };
+
+            Bindings.Add(new EmulationMode(this, true, defInput, EmulationModeType.Fnf)
+            {
+                Expanded = true
+            });
+            Bindings.Add(new EmulationMode(this, true, new MacroInput(defInput, defInput.Serialise().Generate(this), this), EmulationModeType.FnfLayer)
+            {
+                Expanded = true
+            });
+            Bindings.Add(new EmulationMode(this, true, defInput, EmulationModeType.FnfIos)
+            {
+                Expanded = true
+            });
+        }
 
         switch (Main.DeviceInputType)
         {
             case DeviceInputType.Direct:
-                _ = SetDefaultBindingsAsync(EmulationType);
+                if (_deviceControllerType is DeviceControllerType.KeyboardMouse) return;
+
+                foreach (var type in Enum.GetValues<StandardAxisType>())
+                {
+                    if (ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
+                            .Length == 0) continue;
+                    var isTrigger = type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger;
+                    int min = isTrigger ? ushort.MinValue : short.MinValue;
+                    int max = isTrigger ? ushort.MaxValue : short.MaxValue;
+                    Bindings.Add(new ControllerAxis(this, true,
+                        new DirectInput(-1, false, false, DevicePinMode.Analog, this),
+                        Colors.Black, Colors.Black, [], [], [],
+                        min, max, (max + min) / 2, 0,
+                        ushort.MaxValue, type, false, false, false, -1, false) {Expanded = true});
+                }
+
+                foreach (var type in Enum.GetValues<StandardButtonType>())
+                {
+                    if (ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
+                            .Length == 0) continue;
+                    Bindings.Add(new ControllerButton(this, true,
+                        new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
+                        Colors.Black, Colors.Black, [], [], [], 1,
+                        type,
+                        false, false, false, -1, false) {Expanded = true});
+                }
+
                 break;
             case DeviceInputType.Wii:
-                var output = new WiiCombinedOutput(this, false)
+                var output = new WiiCombinedOutput(this, false, 18, 19)
                 {
                     Expanded = true
                 };
@@ -1709,7 +1767,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 output.SetOutputsOrDefaults(Array.Empty<Output>());
                 break;
             case DeviceInputType.Ps2:
-                var ps2Output = new Ps2CombinedOutput(this, false)
+                var ps2Output = new Ps2CombinedOutput(this, false, 4, 3, 6, 10, 7)
                 {
                     Expanded = true
                 };
@@ -1741,93 +1799,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 throw new ArgumentOutOfRangeException();
         }
 
+        BluetoothConfigExpanded = true;
+        AccelExpanded = true;
+        PeripheralExpanded = true;
+        PollExpanded = true;
+        ControllerConfigExpanded = true;
+        LedConfigExpanded = true;
 
-        UpdateBindings();
-        UpdateErrors();
-    }
 
-    private async Task SetDefaultBindingsAsync(EmulationType emulationType)
-    {
-        if (emulationType is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
-        {
-            ResetBluetoothRelated();
-        }
-        else
-        {
-            // Reset max1704x state when we disable bluetooth.
-            HasMax1704X = false;
-        }
-
-        if (DeviceControllerType.IsGuitar() && emulationType == EmulationType.Controller)
-        {
-            _emulationType = emulationType;
-            this.RaisePropertyChanged(nameof(EmulationType));
-            DeviceControllerType = DeviceControllerType.GuitarHeroGuitar;
-            return;
-        }
-
-        if (DeviceControllerType.IsDrum() && emulationType == EmulationType.Controller)
-        {
-            _emulationType = emulationType;
-            this.RaisePropertyChanged(nameof(EmulationType));
-            DeviceControllerType = DeviceControllerType.GuitarHeroDrums;
-            return;
-        }
-
-        // If going from say bluetooth controller to standard controller, the pin bindings can stay
-        if (GetSimpleEmulationTypeFor(EmulationType) == GetSimpleEmulationTypeFor(emulationType))
-        {
-            _emulationType = emulationType;
-            this.RaisePropertyChanged(nameof(EmulationType));
-            UpdateErrors();
-            return;
-        }
-
-        if (Bindings.Items.Any())
-        {
-            var yesNo = await ShowYesNoDialog.Handle(("Clear", "Cancel",
-                "The following action will clear all your bindings, are you sure you want to do this?")).ToTask();
-            if (!yesNo.Response)
-            {
-                var last = _emulationType;
-                _emulationType = emulationType;
-                this.RaisePropertyChanged(nameof(EmulationType));
-                _emulationType = last;
-                this.RaisePropertyChanged(nameof(EmulationType));
-                return;
-            }
-        }
-
-        _emulationType = emulationType;
-        this.RaisePropertyChanged(nameof(EmulationType));
-        ClearOutputs();
-
-        if (GetSimpleEmulationType() is EmulationType.KeyboardMouse) return;
-
-        foreach (var type in Enum.GetValues<StandardAxisType>())
-        {
-            if (ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
-                    .Length == 0) continue;
-            var isTrigger = type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger;
-            int min = isTrigger ? ushort.MinValue : short.MinValue;
-            int max = isTrigger ? ushort.MaxValue : short.MaxValue;
-            Bindings.Add(new ControllerAxis(this,true,
-                new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
-                min, max, (max + min) / 2, 0,
-                ushort.MaxValue, type, false, false, false, -1, false));
-        }
-
-        foreach (var type in Enum.GetValues<StandardButtonType>())
-        {
-            if (ControllerEnumConverter.Convert(type, _deviceControllerType, LegendType, SwapSwitchFaceButtons)
-                    .Length == 0) continue;
-            Bindings.Add(new ControllerButton(this,true,
-                new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, type,
-                false, false, false, -1, false));
-        }
-
+        UpdateBindings(true);
         UpdateErrors();
     }
 
@@ -2016,7 +1996,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     config += $"""
 
                                #define BT_ADDR "{BtRxAddr.Substring(BtRxAddr.Length - Santroller.BtAddressLength,
-                               Santroller.BtAddressLength - 1)}"
+                                   Santroller.BtAddressLength - 1)}"
                                """;
                 }
                 else if (BtRxAddr.Contains(':'))
@@ -2048,10 +2028,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         config += $"""
                    #define ABSOLUTE_MOUSE_COORDS {(MouseMovementType == MouseMovementType.Absolute).ToString().ToLower()}
                    #define ARDWIINO_BOARD "{Microcontroller.Board.ArdwiinoName}"
-                   #define EMULATION_TYPE {GetEmulationType()}
                    #define DEVICE_TYPE {(byte) DeviceControllerType}
                    #define PS4_INSTRUMENT {(Ps4Instruments && UsbHostEnabled && DeviceControllerType is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar).ToString().ToLower()}
                    """;
+
+        if (IsBluetoothTx)
+        {
+            config += $"""
+
+                       #define BLUETOOTH_TX true
+                       """;
+        }
 
         // Actually write the config as configured
         if (!HasError)
@@ -2352,13 +2339,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            #define HANDLE_LED_RUMBLE_OFF \
                                {offLed}
                            """;
-            if (EmulationType is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse)
-            {
-                config += $"""
-
-                           #define BLUETOOTH_TX {(EmulationType is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse).ToString().ToLower()}
-                           """;
-            }
 
             var actualPinConfigs = GetPinConfigs();
             var twiConfigs = actualPinConfigs.OfType<TwiConfig>().GroupBy(s => s.Definition);
@@ -2405,7 +2385,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            #define MPR121_DDR {outputs.SelectMany(s => s.LedIndicesMpr121).Select(s => 1 << s - 4).DefaultIfEmpty(0).Aggregate((acc, s) => acc | s)}
                            #define MPR121_ENABLE {outputs.SelectMany(s => s.LedIndicesMpr121.Select(led => (int) led).Concat(s.Input.InnermostInputs().Where(input => input is Mpr121Input or Mpr121SliderInput).SelectMany(input => input switch
                            {
-                               Mpr121Input mpr121Input => new[] {mpr121Input.Input},
+                               Mpr121Input mpr121Input => [mpr121Input.Input],
                                Mpr121SliderInput mpr121SliderInput => mpr121SliderInput.MappedInputs,
                                _ => Array.Empty<int>()
                            }))).Where(s => s >= Mpr121CapacitiveCount && s >= 4).Select(s => 1 << s - 4).DefaultIfEmpty(0).Aggregate((acc, s) => acc | s)}
@@ -2502,32 +2482,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public PinConfig[] UsbHostPinConfigs()
     {
-        return UsbHostEnabled ? [_usbHostDm, _usbHostDp] : Array.Empty<PinConfig>();
-    }
-
-    private byte GetEmulationType()
-    {
-        return (byte) GetSimpleEmulationType();
-    }
-
-    private EmulationType GetSimpleEmulationTypeFor(EmulationType type)
-    {
-        switch (type)
-        {
-            case EmulationType.Bluetooth:
-            case EmulationType.Controller:
-                return EmulationType.Controller;
-            case EmulationType.KeyboardMouse:
-            case EmulationType.BluetoothKeyboardMouse:
-                return EmulationType.KeyboardMouse;
-            default:
-                return EmulationType;
-        }
-    }
-
-    public EmulationType GetSimpleEmulationType()
-    {
-        return GetSimpleEmulationTypeFor(EmulationType);
+        return UsbHostEnabled ? [_usbHostDm, _usbHostDp] : [];
     }
 
     private async Task BindAllAsync()
@@ -2668,28 +2623,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 break;
             case ResetType.Defaults:
                 Bindings.Clear();
-                Deque = false;
-                LedType = LedType.None;
-                LedTypePeripheral = LedType.None;
-                LedCount = 1;
-                LedCountPeripheral = 1;
-                CombinedStrumDebounce = false;
-                HasWiiOutput = false;
-                HasPs2Output = false;
-                AccelFilter = 0.05;
-                Mpr121CapacitiveCount = 0;
-                WtSensitivity = 5;
-                PollRate = 0;
-                StrumDebounce = 0;
-                Debounce = 10;
-                DjPollRate = 10;
-                DjSmoothing = false;
-                SwapSwitchFaceButtons = false;
-                HasPeripheral = false;
-                BtRxAddr = "";
-                XInputOnWindows = true;
-                MouseMovementType = MouseMovementType.Relative;
-                UpdateBindings();
+                Main.DeviceControllerType = response.DeviceControllerType;
+                Main.DeviceInputType = response.DeviceInputType;
+                Main.Fortnite = response.Fortnite;
+                Main.BluetoothTx = response.BluetoothTx;
+                SetDefaults();
                 UpdateErrors();
                 break;
             case ResetType.Cancel:
@@ -2721,8 +2659,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (IsController)
             Bindings.Add(new EmptyOutput(this));
         else if (IsKeyboard)
-            Bindings.Add(new KeyboardButton(this, true,new DirectInput(0, false, false, DevicePinMode.PullUp, this),
-                Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 1, Key.Space,
+            Bindings.Add(new KeyboardButton(this, true, new DirectInput(0, false, false, DevicePinMode.PullUp, this),
+                Colors.Black, Colors.Black, [], [], [], 1, Key.Space,
                 false, false, false, -1));
 
         UpdateErrors();
@@ -3652,7 +3590,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         Dictionary<string, int> ledDebounces = new();
         var strumIndices = new List<int>();
 
-        var generatedMode = GetSimpleEmulationType() is EmulationType.KeyboardMouse
+        var generatedMode = DeviceControllerType is DeviceControllerType.KeyboardMouse
             ? ConfigField.Keyboard
             : ConfigField.Shared;
 
@@ -3892,7 +3830,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private (int, int) CalculateDebounceTicks(BinaryWriter? writer)
     {
-        var generatedMode = GetSimpleEmulationType() is EmulationType.KeyboardMouse
+        var generatedMode = DeviceControllerType is DeviceControllerType.KeyboardMouse
             ? ConfigField.Keyboard
             : ConfigField.Shared;
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
@@ -4190,6 +4128,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 Microcontroller = device.GetMicrocontroller(this);
                 Main.SetDifference(false);
                 santroller.StartTicking(this);
+                UpdateBluetoothAddress();
             }
 
             Device.DeviceAdded(device);

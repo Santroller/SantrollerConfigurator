@@ -90,7 +90,7 @@ public partial class CloneCombinedOutput : CombinedTwiOutput
         Outputs.Add(new ControllerAxis(Model, true,
             new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, combined: true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,0, ushort.MaxValue,StandardAxisType.RightStickY, false, false ,false, -1, true));
+            Colors.Black, [], [], [], short.MinValue, short.MaxValue, 0,0, ushort.MaxValue,StandardAxisType.RightStickY, false, false ,false, -1, true));
         UpdateBindings();
     }
 
@@ -109,7 +109,7 @@ public partial class CloneCombinedOutput : CombinedTwiOutput
         if (tapAnalog != null && Model.DeviceControllerType is DeviceControllerType.RockBandGuitar)
         {
             outputs.AddRange(TapsRb.Select(pair => new GuitarButton(Model,tapAnalog.Enabled,
-                new CloneNeckInput(pair.Key, Model, Peripheral, Sda, Scl, true), Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5,
+                new CloneNeckInput(pair.Key, Model, Peripheral, Sda, Scl, true), Colors.Black, Colors.Black, [], [], [], 5,
                 pair.Value, false, false ,false, -1, true)));
 
             outputs.Remove(tapAnalog);
@@ -118,7 +118,7 @@ public partial class CloneCombinedOutput : CombinedTwiOutput
         if (tapFrets == null) return outputs;
 
         outputs.AddRange(Taps.Select(pair => new GuitarButton(Model, tapFrets.Enabled,new CloneNeckInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-            Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, false, false ,false, -1, true)));
+            Colors.Black, Colors.Black, [], [], [], 5, pair.Value, false, false ,false, -1, true)));
 
         outputs.Remove(tapFrets);
 
@@ -157,7 +157,7 @@ public partial class CloneCombinedOutput : CombinedTwiOutput
             {
                 var button = new GuitarButton(Model,true,
                     new CloneNeckInput(Gh5NeckInputType.TapAll, Model, Peripheral, combined: true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, InstrumentButtonType.Slider, false, false ,false, -1, true)
+                    Colors.Black, [], [], [], 5, InstrumentButtonType.Slider, false, false ,false, -1, true)
                 {
                     Enabled = false
                 };
@@ -170,7 +170,7 @@ public partial class CloneCombinedOutput : CombinedTwiOutput
                 if (item != null) continue;
                 var button = new GuitarButton(Model,true,
                     new CloneNeckInput(key, Model, Peripheral, combined: true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, value, false, false ,false, -1, true)
+                    Colors.Black, [], [], [], 5, value, false, false ,false, -1, true)
                 {
                     Enabled = false
                 };
@@ -183,7 +183,7 @@ public partial class CloneCombinedOutput : CombinedTwiOutput
                 new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,
+                Colors.Black, [], [], [], short.MinValue, short.MaxValue, 0,
                 false, GuitarAxisType.Slider, false, false ,false, -1, true));
         }
         else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
@@ -210,7 +210,7 @@ public partial class CloneCombinedOutput : CombinedTwiOutput
                 new CloneNeckInput(Gh5NeckInputType.TapBar, Model, Peripheral, Sda, Scl,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue, 0,0,
+                Colors.Black, [], [], [], short.MinValue, short.MaxValue, 0,0,
                 ushort.MaxValue, StandardAxisType.LeftStickX, false, false ,false, -1, true));
         }
         else

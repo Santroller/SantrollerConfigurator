@@ -217,10 +217,10 @@ public partial class GhWtTapInput : Input
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return new[]
-        {
+        return
+        [
             Peripheral ? "INPUT_WT_SLAVE_NECK" : "INPUT_WT_NECK", $"WT_PIN_INPUT {Pin}", $"WT_PIN_S0 {PinS0}",
             $"WT_PIN_S1 {PinS1}", $"WT_PIN_S2 {PinS2}"
-        };
+        ];
     }
 }

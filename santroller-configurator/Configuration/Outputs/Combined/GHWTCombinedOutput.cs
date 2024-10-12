@@ -134,7 +134,7 @@ public partial class GhwtCombinedOutput : CombinedOutput
             new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                 true),
             Colors.Black,
-            Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue, short.MaxValue,
+            Colors.Black, [], [], [], short.MinValue, short.MaxValue,
             0,
             false, GuitarAxisType.Slider, false, false, false, -1, true));
         UpdateBindings();
@@ -154,7 +154,7 @@ public partial class GhwtCombinedOutput : CombinedOutput
             outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model, tapAnalog.Enabled,
                 new GhWtTapInput(pair.Key, Model, Peripheral, Pin, PinS0, PinS1, PinS2, true), Colors.Black,
                 Colors.Black,
-                Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, false, false, false, -1,
+                [], [], [], 5, pair.Value, false, false, false, -1,
                 true)));
 
             outputs.Remove(tapAnalog);
@@ -163,7 +163,7 @@ public partial class GhwtCombinedOutput : CombinedOutput
         if (tapFrets == null) return outputs;
         outputs.AddRange(Taps.Select(pair => new ControllerButton(Model, tapFrets.Enabled,
             new GhWtTapInput(pair.Key, Model, Peripheral, Pin, PinS0, PinS1, PinS2, true), Colors.Black, Colors.Black,
-            Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5, pair.Value, false, false, false, -1,
+            [], [], [], 5, pair.Value, false, false, false, -1,
             true)).Cast<Output>());
 
         outputs.Remove(tapFrets);
@@ -218,7 +218,7 @@ public partial class GhwtCombinedOutput : CombinedOutput
                 var button = new GuitarButton(Model, true,
                     new GhWtTapInput(GhWtInputType.TapAll, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                         true), Colors.Black,
-                    Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), 5,
+                    Colors.Black, [], [], [], 5,
                     InstrumentButtonType.SliderToFrets, false, false, false, -1, true);
                 button.Enabled = false;
                 Outputs.Add(button);
@@ -230,7 +230,7 @@ public partial class GhwtCombinedOutput : CombinedOutput
                 new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue,
+                Colors.Black, [], [], [], short.MinValue,
                 short.MaxValue, 0,
                 false, GuitarAxisType.Slider, false, false, false, -1, true));
         }
@@ -247,7 +247,7 @@ public partial class GhwtCombinedOutput : CombinedOutput
                 new GhWtTapInput(GhWtInputType.TapBar, Model, Peripheral, Pin, PinS0, PinS1, PinS2,
                     true),
                 Colors.Black,
-                Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue,
+                Colors.Black, [], [], [], short.MinValue,
                 short.MaxValue, 0, 0,
                 ushort.MaxValue, StandardAxisType.LeftStickX, false, false, false, -1, true));
         }
@@ -268,6 +268,6 @@ public partial class GhwtCombinedOutput : CombinedOutput
 
     protected override IEnumerable<PinConfig> GetOwnPinConfigs()
     {
-        return new PinConfig[] {_pin, _pinConfigS0, _pinConfigS1, _pinConfigS2};
+        return [_pin, _pinConfigS0, _pinConfigS1, _pinConfigS2];
     }
 }

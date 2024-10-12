@@ -16,25 +16,25 @@ public static class GuitarAxisTypeMethods
 {
     public static IEnumerable<GuitarAxisType> RbTypes()
     {
-        return new[]
-        {
+        return
+        [
             GuitarAxisType.Pickup, GuitarAxisType.Tilt, GuitarAxisType.Whammy
-        };
+        ];
     }
     public static IEnumerable<GuitarAxisType> GhlTypes()
     {
-        return new[]
-        {
+        return
+        [
             GuitarAxisType.Tilt, GuitarAxisType.Whammy
-        };
+        ];
     }
 
     public static IEnumerable<GuitarAxisType> GhTypes()
     {
-        return new[]
-        {
+        return
+        [
             GuitarAxisType.Slider, GuitarAxisType.Tilt, GuitarAxisType.Whammy
-        };
+        ];
     }
 
     public static IEnumerable<GuitarAxisType> GetTypeFor(DeviceControllerType deviceControllerType)

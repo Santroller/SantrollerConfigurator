@@ -123,7 +123,7 @@ public partial class MidiInput : Input
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return new[] {"INPUT_MIDI"};
+        return ["INPUT_MIDI"];
     }
 
     public override string Generate(BinaryWriter? writer)

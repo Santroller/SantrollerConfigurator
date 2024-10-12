@@ -38,8 +38,8 @@ public class SerialisedBrandedConfigurationStore
     [ProtoMember(6)] public Color PrimaryColor { get; set; }
     
     [ProtoMember(7)] public Color ErrorColor { get; set; }
-    [ProtoMember(8)] public byte[] Logo { get; set; } = Array.Empty<byte>();
-    [ProtoMember(9)] public byte[] Icon { get; set; } = Array.Empty<byte>();
+    [ProtoMember(8)] public byte[] Logo { get; set; } = [];
+    [ProtoMember(9)] public byte[] Icon { get; set; } = [];
     [ProtoMember(4)] public List<SerialisedBrandedConfiguration> OldConfigurations { get; set; } = [];
     [ProtoMember(10)] public List<SerialisedBrandedConfigurationSection> Configurations { get; set; } = [];
 }

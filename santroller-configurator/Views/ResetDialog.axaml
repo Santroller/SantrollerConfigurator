@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:GuitarConfigurator.NetCore.ViewModels"
         xmlns:netCore="clr-namespace:GuitarConfigurator.NetCore"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GuitarConfigurator.NetCore.Views.ResetWindow"
         TransparencyLevelHint="AcrylicBlur"
@@ -19,6 +20,16 @@
         x:DataType="viewModels:ResetWindowViewModel"
         ExtendClientAreaToDecorationsHint="True">
     <Panel>
+        <Panel.Resources>
+            <netCore:EnumToStringConverter x:Key="EnumToStringConverter" />
+            <netCore:PinToStringConverterPico x:Key="PinToStringConverterPico" />
+            <DataTemplate x:Key="EnumToStringTemplate" DataType="system:Object">
+                <TextBlock Text="{Binding Converter={StaticResource EnumToStringConverter }}" />
+            </DataTemplate>
+            <DataTemplate x:Key="PinToStringTemplateTwi" DataType="system:Object">
+                <TextBlock Text="{Binding Converter={StaticResource PinToStringConverterPico }}" />
+            </DataTemplate>
+        </Panel.Resources>
         <ExperimentalAcrylicBorder IsHitTestVisible="False">
             <ExperimentalAcrylicBorder.Material>
                 <ExperimentalAcrylicMaterial
@@ -31,15 +42,79 @@
         <Panel Margin="40">
             <DockPanel HorizontalAlignment="Stretch">
                 <StackPanel Height="50" Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom">
-                    <Button Foreground="{Binding AccentedTextColor}" Margin="0 0 5 0" Command="{Binding ClearCommand}" Content="{x:Static netCore:Resources.ClearAllLabel}"
-                            Classes="accent" />
                     <Button Foreground="{Binding AccentedTextColor}" Margin="0 0 5 0" Command="{Binding DefaultCommand}" Content="{x:Static netCore:Resources.LoadDefaultsLabel}"
                             Classes="accent" />
                     <Button Command="{Binding CancelCommand}" Content="Cancel" />
                 </StackPanel>
                 <ScrollViewer>
                     <StackPanel>
-                        <Label Content="{x:Static netCore:Resources.ClearTypeLabel}" />
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.ConnectionMethodLabel}">
+
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      SelectedItem="{Binding DeviceInputType}"
+                                      ItemsSource="{Binding DeviceInputTypes}"
+                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.ControllerTypeLabel}">
+
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      SelectedItem="{Binding DeviceControllerType}"
+                                      ItemsSource="{Binding DeviceControllerTypes}"
+                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="IsPico" />
+                                    <Binding Path="!IsBluetoothRx" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.AddBluetoothTx}">
+
+                            </Label>
+                            <CheckBox IsChecked="{Binding BluetoothTx}"></CheckBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="SupportsFortnite" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.FestivalAddBinding}">
+
+                            </Label>
+                            <CheckBox IsChecked="{Binding Fortnite}"></CheckBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="IsDirect" />
+                                    <Binding Path="IsGuitar" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.TiltSensorLabel}">
+
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      SelectedItem="{Binding AccelSensorTypeMain}"
+                                      ItemsSource="{Binding AccelSensorTypeMains}"
+                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </DockPanel>

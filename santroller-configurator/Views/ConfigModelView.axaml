@@ -210,6 +210,10 @@
         <netCore:OutputTemplateSelector x:Key="OutputSelectionTemplate">
             <DataTemplate DataType="{x:Type other:EmulationMode}">
                 <StackPanel>
+                    <Label VerticalAlignment="Center"
+                           VerticalContentAlignment="Center"
+                           HorizontalAlignment="Left"
+                           Content="{Binding Explanation}" />
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
@@ -3013,11 +3017,11 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.EmulationTypeLabel}" />
+                                       Width="300" Content="{x:Static netCore:Resources.ControllerTypeLabel}" />
                                 <ComboBox HorizontalAlignment="Stretch" Width="200"
-                                          SelectedItem="{Binding EmulationType}"
+                                          SelectedItem="{Binding DeviceControllerType}"
                                           ItemTemplate="{StaticResource EnumToStringTemplate}"
-                                          ItemsSource="{Binding EmulationTypes}" />
+                                          ItemsSource="{Binding DeviceControllerRhythmTypes}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsKeyboard}">
                                 <Label VerticalAlignment="Center"
@@ -3027,15 +3031,6 @@
                                           SelectedItem="{Binding MouseMovementType}"
                                           ItemTemplate="{StaticResource EnumToStringTemplate}"
                                           ItemsSource="{Binding MouseMovementTypes}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsController}">
-                                <Label VerticalAlignment="Center"
-                                       VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.ControllerTypeLabel}" />
-                                <ComboBox HorizontalAlignment="Stretch" Width="200"
-                                          SelectedItem="{Binding DeviceControllerType}"
-                                          ItemTemplate="{StaticResource EnumToStringTemplate}"
-                                          ItemsSource="{Binding DeviceControllerRhythmTypes}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.IsVisible>
@@ -4150,7 +4145,6 @@
                                                     <Binding
                                                         Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                                     <Binding Path="!IsCombined" />
-                                                    <Binding Path="ConfigurableInput" />
                                                 </MultiBinding>
                                             </StackPanel.IsVisible>
                                             <Label VerticalAlignment="Center"

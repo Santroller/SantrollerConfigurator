@@ -66,6 +66,6 @@ public abstract class TwiInput : Input, ITwi
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return new[] {$"{_twiType.ToUpper()}_TWI_PORT {_twiConfig.Definition}"};
+        return [$"{_twiType.ToUpper()}_TWI_PORT {_twiConfig.Definition}"];
     }
 }

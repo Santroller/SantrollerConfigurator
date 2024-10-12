@@ -148,7 +148,7 @@ public readonly record struct Board
 
     public static readonly Board[] Boards = MegaBoards
         .Concat(Atmega32U4Boards)
-        .Concat(new[] {Uno, DfuBoard})
+        .Concat([Uno, DfuBoard])
         .Concat(PicoBoards)
         .ToArray();
 

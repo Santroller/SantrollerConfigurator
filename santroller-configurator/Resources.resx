@@ -29,6 +29,28 @@
     <data name="ModeBindingTitle" xml:space="preserve">
         <value>{0} Mode Binding</value>
     </data>
+    <data name="ModeBindingProMode" xml:space="preserve">
+        <value>Holding this button while plugging your instrument in will cause the instrument to emulate a keyboard instead of a standard controller, making it compatible with Fortnite Festival.
+This is not necessary on Switch, Android or iOS.
+        </value>
+    </data>
+    <data name="ModeBindingProModeWindows" xml:space="preserve">
+        <value>Holding this button while plugging your instrument in will cause the instrument to partially emulate a riffmaster instead of a standard controller, making it compatible with Fortnite Festival on Windows.
+Normally, keyboard mode works fine for most people and is recommended over this however.
+        </value>
+    </data>
+    <data name="ModeBindingProModeToggle" xml:space="preserve">
+        <value>Pressing these buttons will toggle the control scheme between a gameplay and a navigation scheme.
+This is useful for Android and Switch in particular, as these devices have totally different control schemes during gameplay.
+Feel free to remove this option if you do not intend to use your instrument on Android or Switch.
+        </value>
+    </data>
+    <data name="ModeBindingProModeiOS" xml:space="preserve">
+        <value>Holding this button while plugging your instrument in will cause the instrument to emulate a keyboard instead of a standard controller, making it compatible with Fortnite Festival.
+This is specifically used on iOS as iOS doesn't detect normal Santroller devices or keyboards, so we emulate a special mode for it.
+Feel free to remove this option if you do not intend to use your instrument on iOS.
+        </value>
+    </data>
     <data name="DetectAxis" xml:space="preserve">
         <value>Move the axis to detect</value>
     </data>
@@ -736,6 +758,9 @@
     </data>
     <data name="DeviceControllerTypeRockBandGuitar" xml:space="preserve">
         <value>Rock Band Guitar</value>
+    </data>
+    <data name="DeviceControllerTypeKeyboardMouse" xml:space="preserve">
+        <value>Keyboard + Mouse</value>
     </data>
     <data name="DeviceControllerTypeGuitarHeroDrums" xml:space="preserve">
         <value>Guitar Hero Drums</value>
@@ -1863,6 +1888,12 @@
     <data name="EmulationTypeFortniteFestival" xml:space="preserve">
         <value>Fortnite Festival</value>
     </data>
+    <data name="FestivalAddBinding" xml:space="preserve">
+        <value>Enable Fortnite Festival Settings</value>
+    </data>
+    <data name="AddBluetoothTx" xml:space="preserve">
+        <value>Enable Bluetooth Transmitter Settings</value>
+    </data>
     <data name="EmulationTypeKeyboardMouse" xml:space="preserve">
         <value>Keyboard + Mouse</value>
     </data>
@@ -1953,6 +1984,9 @@
     <data name="GuitarAxisTypeSlider" xml:space="preserve">
         <value>Slider</value>
     </data>
+    <data name="TiltSensorLabel" xml:space="preserve">
+        <value>Tilt Sensor Type</value>
+    </data>
     <data name="GuitarAxisTypeTilt" xml:space="preserve">
         <value>Tilt</value>
     </data>
@@ -1967,6 +2001,21 @@
     </data>
     <data name="AccelSensorTypeMpu6050" xml:space="preserve">
         <value>MPU-6050</value>
+    </data>
+    <data name="AccelSensorTypeMainAdxl345" xml:space="preserve">
+        <value>ADXL345</value>
+    </data>
+    <data name="AccelSensorTypeMainLis3dh" xml:space="preserve">
+        <value>LIS3DH</value>
+    </data>
+    <data name="AccelSensorTypeMainMpu6050" xml:space="preserve">
+        <value>MPU-6050</value>
+    </data>
+    <data name="AccelSensorTypeMainAnalog" xml:space="preserve">
+        <value>Analog</value>
+    </data>
+    <data name="AccelSensorTypeMainDigital" xml:space="preserve">
+        <value>Digital</value>
     </data>
     <data name="InputTypeAnalogPinInput" xml:space="preserve">
         <value>Analog Pin Input</value>
@@ -2585,6 +2634,10 @@
     <data name="SimpleTypeBluetooth" xml:space="preserve">
         <value>Bluetooth Inputs</value>
     </data>
+
+    <data name="SimpleTypeBluetoothTx" xml:space="preserve">
+        <value>Bluetooth Transmitter</value>
+    </data>
     <data name="SimpleTypeLed" xml:space="preserve">
         <value>LED Binding</value>
     </data>
@@ -2945,6 +2998,9 @@
     <data name="MouseAxisTypeLabel" xml:space="preserve">
         <value>Mouse Axis</value>
     </data>
+    <data name="ConnectionMethodLabel" xml:space="preserve">
+        <value>Connection Method</value>
+    </data>
     <data name="InputTypeLabel" xml:space="preserve">
         <value>Input Type</value>
     </data>
@@ -3036,7 +3092,7 @@
         <value>Español</value>
     </data>
     <data name="SelectedDeviceLabel" xml:space="preserve">
-        <value>Selected Device</value>
+        <value>Device to program</value>
     </data>
     <data name="BluetoothMode" xml:space="preserve">
         <value>Bluetooth Mode</value>
@@ -3321,7 +3377,7 @@
         <value>The device you are configuring was unplugged. Click to return to the main menu.</value>
     </data>
     <data name="EmulationTypeLabel" xml:space="preserve">
-        <value>Emulation Type</value>
+        <value>Device Type</value>
     </data>
     <data name="ModeLabel" xml:space="preserve">
         <value>Mode</value>
@@ -3348,7 +3404,7 @@
         <value>Load Preset</value>
     </data>
     <data name="ControllerTypeLabel" xml:space="preserve">
-        <value>Controller Type</value>
+        <value>Device to Emulate</value>
     </data>
     <data name="WindowsControllerModeLabel" xml:space="preserve">
         <value>Windows Controller Mode</value>
@@ -3513,9 +3569,6 @@
     <data name="LoadDefaultsLabel" xml:space="preserve">
         <value>Load Defaults</value>
     </data>
-    <data name="ResetSettingsLabel" xml:space="preserve">
-        <value>Reset Settings</value>
-    </data>
     <data name="ClearAllLabel" xml:space="preserve">
         <value>Clear All</value>
     </data>
@@ -3530,9 +3583,6 @@
     </data>
     <data name="WarningLabel" xml:space="preserve">
         <value>The following action will clear your settings</value>
-    </data>
-    <data name="ClearTypeLabel" xml:space="preserve">
-        <value>Would you like to clear all settings, or load defaults?</value>
     </data>
     <data name="WiiOutputSettingsLabel" xml:space="preserve">
         <value>Wii Extension Emulation Settings</value>

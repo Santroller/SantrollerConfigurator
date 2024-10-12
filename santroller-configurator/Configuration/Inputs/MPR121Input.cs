@@ -97,6 +97,6 @@ public partial class Mpr121Input : Input
 
     public override IReadOnlyList<string> RequiredDefines()
     {
-        return new[] {"INPUT_MPR121"};
+        return ["INPUT_MPR121"];
     }
 }

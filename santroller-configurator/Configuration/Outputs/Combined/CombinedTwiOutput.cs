@@ -70,6 +70,6 @@ public abstract class CombinedTwiOutput : CombinedOutput, ITwi
 
     protected override IEnumerable<PinConfig> GetOwnPinConfigs()
     {
-        return new[] {_twiConfig};
+        return [_twiConfig];
     }
 }

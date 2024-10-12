@@ -139,12 +139,78 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding Main.NewDevice}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.InputTypeLabel}">
+                                   Width="300" Content="{x:Static netCore:Resources.ConnectionMethodLabel}">
 
                             </Label>
                             <ComboBox HorizontalAlignment="Stretch"
                                       SelectedItem="{Binding Main.DeviceInputType}"
                                       ItemsSource="{Binding Main.DeviceInputTypes}"
+                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="Main.NewDevice" />
+                                    <Binding Path="!Main.IsPeripheral" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.ControllerTypeLabel}">
+
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      SelectedItem="{Binding Main.DeviceControllerType}"
+                                      ItemsSource="{Binding Main.DeviceControllerTypes}"
+                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="Main.NewDevice" />
+                                    <Binding Path="Main.IsPico" />
+                                    <Binding Path="!Main.IsPeripheral" />
+                                    <Binding Path="!Main.IsBluetoothRx" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.AddBluetoothTx}">
+
+                            </Label>
+                            <CheckBox IsChecked="{Binding Main.BluetoothTx}"></CheckBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="Main.NewDevice" />
+                                    <Binding Path="Main.SupportsFortnite" />
+                                    <Binding Path="!Main.IsPeripheral" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.FestivalAddBinding}">
+
+                            </Label>
+                            <CheckBox IsChecked="{Binding Main.Fortnite}"></CheckBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel.IsVisible>
+                                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                    <Binding Path="Main.NewDevice" />
+                                    <Binding Path="Main.IsDirect" />
+                                    <Binding Path="Main.IsGuitar" />
+                                </MultiBinding>
+                            </StackPanel.IsVisible>
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.TiltSensorLabel}">
+
+                            </Label>
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      SelectedItem="{Binding Main.AccelSensorTypeMain}"
+                                      ItemsSource="{Binding Main.AccelSensorTypeMains}"
                                       ItemTemplate="{StaticResource EnumToStringTemplate}" />
                         </StackPanel>
                         <StackPanel IsVisible="{Binding Main.IsPeripheral}" Orientation="Horizontal">

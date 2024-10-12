@@ -65,6 +65,7 @@ public class InputImageConverter : IMultiValueConverter
                 SimpleType.DjTurntableSimple => "DJ",
                 SimpleType.UsbHost => "Usb",
                 SimpleType.Bluetooth => "Bluetooth",
+                SimpleType.BluetoothTx => "Bluetooth",
                 SimpleType.Rumble => "Rumble",
                 SimpleType.ConsoleMode => "Console",
                 SimpleType.Reset => "Reset",

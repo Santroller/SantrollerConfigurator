@@ -86,6 +86,6 @@ public abstract class CombinedSpiOutput : CombinedOutput, ISpi
 
     protected override IEnumerable<PinConfig> GetOwnPinConfigs()
     {
-        return new[] {SpiConfig};
+        return [SpiConfig];
     }
 }

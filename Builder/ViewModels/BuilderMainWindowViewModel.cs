@@ -492,7 +492,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         start += steps;
         Progress = start;
         var process = Process.Start(rcodeSizeProcess,
-            new[] {"sign", Path.Join(zipRoot, SelectedTool.ToolNameVersioned + ".app")});
+            ["sign", Path.Join(zipRoot, SelectedTool.ToolNameVersioned + ".app")]);
         await process.WaitForExitAsync();
         var outputZip = Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip");
         if (File.Exists(outputZip))

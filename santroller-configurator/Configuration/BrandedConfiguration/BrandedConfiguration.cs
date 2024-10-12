@@ -38,7 +38,7 @@ public partial class BrandedConfiguration : ReactiveObject
         Model.SetDefaults();
         VendorName = vendorName;
         ProductName = productName;
-        Uf2 = Array.Empty<Uf2Block>();
+        Uf2 = [];
     }
 
     public string ExtraConfig()

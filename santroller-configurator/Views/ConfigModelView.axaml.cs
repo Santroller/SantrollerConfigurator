@@ -11,8 +11,10 @@ using Avalonia.Platform.Storage;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
+using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ProtoBuf;
@@ -54,7 +56,8 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            Dispatcher.UIThread.Post(OutputsContainer.ContainerFromItem(e.NewItems![0]!)!.BringIntoView, DispatcherPriority.Background);
+            Dispatcher.UIThread.Post(OutputsContainer.ContainerFromItem(e.NewItems![0]!)!.BringIntoView,
+                DispatcherPriority.Background);
         }
     }
 
@@ -67,7 +70,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         var file = await ((Window) VisualRoot!).StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             ShowOverwritePrompt = true, DefaultExtension = extension, SuggestedFileName = "controller" + extension,
-            FileTypeChoices = new[] {new FilePickerFileType(extension) {Patterns = new[] {"*" + extension}}}
+            FileTypeChoices = [new FilePickerFileType(extension) {Patterns = ["*" + extension]}]
         });
         if (file == null) return;
         await using var stream = await file.OpenWriteAsync();
@@ -81,7 +84,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             AllowMultiple = false,
-            FileTypeFilter = new[] {new FilePickerFileType(extension) {Patterns = new[] {"*" + extension}}}
+            FileTypeFilter = [new FilePickerFileType(extension) {Patterns = ["*" + extension]}]
         });
         if (file.Count == 0) return;
         await using var stream = await file[0].OpenReadAsync();
@@ -91,7 +94,8 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     public async Task DoShowUnpluggedDialogAsync(
         InteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
     {
-        var model = new AreYouSureWindowViewModel(ViewModel!.Main.AccentedButtonTextColor, interaction.Input.yesText, interaction.Input.noText,
+        var model = new AreYouSureWindowViewModel(ViewModel!.Main.AccentedButtonTextColor, interaction.Input.yesText,
+            interaction.Input.noText,
             interaction.Input.text);
         var dialog = new UnpluggedWindow
         {
@@ -104,7 +108,8 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     private async Task DoShowYesNoDialogAsync(
         InteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
     {
-        var model = new AreYouSureWindowViewModel(ViewModel!.Main.AccentedButtonTextColor, interaction.Input.yesText, interaction.Input.noText,
+        var model = new AreYouSureWindowViewModel(ViewModel!.Main.AccentedButtonTextColor, interaction.Input.yesText,
+            interaction.Input.noText,
             interaction.Input.text);
         var dialog = new AreYouSureWindow
         {
@@ -113,12 +118,18 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window) VisualRoot!);
         interaction.SetOutput(model);
     }
-    
-    
+
+
     private async Task DoShowResetDialogAsync(
         InteractionContext<ConfigViewModel, ResetWindowViewModel> interaction)
     {
-        var model = new ResetWindowViewModel(ViewModel!.Main.AccentedButtonTextColor);
+        var model = new ResetWindowViewModel(ViewModel!.Main.AccentedButtonTextColor, interaction.Input.Device,
+            ViewModel!.Main.DeviceInputType, ViewModel!.DeviceControllerType, ViewModel!.IsBluetoothTx,
+            ViewModel!.Bindings.Items.Any(s => s is EmulationMode
+            {
+                Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfIos
+                or EmulationModeType.FnfLayer
+            }));
         var dialog = new ResetWindow
         {
             DataContext = model

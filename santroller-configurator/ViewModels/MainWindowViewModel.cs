@@ -157,6 +157,12 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         _is32U4Helper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is Arduino {Is32U4: true})
             .ToProperty(this, s => s.Is32U4);
+        _supportsFortniteHelper = this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(s => s.Is5FretGuitar() || s.IsDrum())
+            .ToProperty(this, s => s.SupportsFortnite);
+        _isGuitarHelper = this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(s => s.IsGuitar())
+            .ToProperty(this, s => s.IsGuitar);
         _isUnoMegaHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is Dfu or Arduino {IsUno: true} or Arduino {IsMega: true})
             .ToProperty(this, s => s.IsUnoMega);
@@ -181,6 +187,12 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         _isPeripheralHelper = this.WhenAnyValue(x => x.DeviceInputType)
             .Select(s => s is DeviceInputType.Peripheral)
             .ToProperty(this, s => s.IsPeripheral);
+        _isDirectHelper = this.WhenAnyValue(x => x.DeviceInputType)
+            .Select(s => s is DeviceInputType.Direct)
+            .ToProperty(this, s => s.IsDirect);
+        _isBluetoothRxHelper = this.WhenAnyValue(x => x.DeviceInputType)
+            .Select(s => s is DeviceInputType.Bluetooth)
+            .ToProperty(this, s => s.IsBluetoothRx);
         _readyToConfigureHelper = this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
             .Select(s =>
                 s is {Item1: not null and not Santroller {IsSantroller: false}, Item2: true} &&
@@ -239,6 +251,14 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     
     public bool Programming { get; private set; }
     public ReadOnlyObservableCollection<DeviceInputType> DeviceInputTypes { get; }
+
+    [Reactive] private DeviceControllerType _deviceControllerType = DeviceControllerType.Gamepad;
+    [Reactive] private AccelSensorTypeMain _accelSensorTypeMain;
+
+    public List<AccelSensorTypeMain> AccelSensorTypeMains => Enum.GetValues<AccelSensorTypeMain>().ToList();
+    public List<DeviceControllerType> DeviceControllerTypes => Enum.GetValues<DeviceControllerType>().Where(s =>
+        s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire) &&
+        !s.IsFortnite()).ToList();
 
     public Interaction<(string yesText, string noText, string text), AreYouSureWindowViewModel>
         ShowYesNoDialog { get; } = new();
@@ -366,9 +386,13 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [ObservableAsProperty] private bool _isMega;
     [ObservableAsProperty] private bool _isDfu;
     [ObservableAsProperty] private bool _isGeneric;
+    [ObservableAsProperty] private bool _isGuitar;
+    [ObservableAsProperty] private bool _isDirect;
     [ObservableAsProperty] private bool _newDevice;
     [ObservableAsProperty] private bool _newDeviceOrArdwiino;
     [ObservableAsProperty] private bool _isPeripheral;
+    [ObservableAsProperty] private bool _isBluetoothRx;
+    [ObservableAsProperty] private bool _supportsFortnite;
 
     [ObservableAsProperty] private bool _connected;
 
@@ -472,6 +496,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [Reactive] private bool _hasChanges;
     [Reactive] private bool _working;
     [Reactive] private bool _deviceNotProgrammed;
+    [Reactive] private bool _bluetoothTx;
+    [Reactive] private bool _fortnite;
 
     [Reactive] private string _progressbarColor;
 
@@ -748,7 +774,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             var assetDir = PlatformIo.GetAssetDir();
             var driverFolder = Path.Combine(assetDir, "platformio", "drivers");
             var info = new ProcessStartInfo(Path.Combine(windowsDir, "pnputil.exe"));
-            info.ArgumentList.AddRange(new[] {"-i", "-a", Path.Combine(driverFolder, "atmel_usb_dfu.inf")});
+            info.ArgumentList.AddRange(["-i", "-a", Path.Combine(driverFolder, "atmel_usb_dfu.inf")]);
             info.UseShellExecute = true;
             info.CreateNoWindow = true;
             info.WindowStyle = ProcessWindowStyle.Hidden;
@@ -767,21 +793,21 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             var rules = Path.Combine(appdataFolder, UdevFile);
             await AssetUtils.ExtractFileAsync(UdevFile, rules);
             var info = new ProcessStartInfo("pkexec");
-            info.ArgumentList.AddRange(new[] {"cp", rules, UdevPath});
+            info.ArgumentList.AddRange(["cp", rules, UdevPath]);
             info.UseShellExecute = true;
             var process = Process.Start(info);
             if (process == null) return;
             await process.WaitForExitAsync();
             // And then reload rules and trigger
             info = new ProcessStartInfo("pkexec");
-            info.ArgumentList.AddRange(new[] {"udevadm", "control", "--reload-rules"});
+            info.ArgumentList.AddRange(["udevadm", "control", "--reload-rules"]);
             info.UseShellExecute = true;
             process = Process.Start(info);
             if (process == null) return;
             await process.WaitForExitAsync();
 
             info = new ProcessStartInfo("pkexec");
-            info.ArgumentList.AddRange(new[] {"udevadm", "trigger"});
+            info.ArgumentList.AddRange(["udevadm", "trigger"]);
             info.UseShellExecute = true;
             process = Process.Start(info);
             if (process == null) return;
