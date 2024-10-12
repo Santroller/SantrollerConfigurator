@@ -6,6 +6,7 @@ public enum DeviceInputType
     Wii,
     Ps2,
     Usb,
+    Feather,
     Bluetooth,
     Peripheral
 }

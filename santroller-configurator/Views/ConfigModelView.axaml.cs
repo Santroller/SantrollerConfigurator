@@ -123,8 +123,29 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     private async Task DoShowResetDialogAsync(
         InteractionContext<ConfigViewModel, ResetWindowViewModel> interaction)
     {
+        var deviceInputType = ViewModel!.Main.DeviceInputType;
+        if (ViewModel!.Bindings.Items.Any(s => s.Outputs.Items.Any(s2 => s2.Input.InputType is InputType.WiiInput)))
+        {
+            deviceInputType = DeviceInputType.Wii;
+        }
+        if (ViewModel!.Bindings.Items.Any(s => s.Outputs.Items.Any(s2 => s2.Input.InputType is InputType.Ps2Input)))
+        {
+            deviceInputType = DeviceInputType.Ps2;
+        }
+        if (ViewModel!.UsbHostEnabled)
+        {
+            deviceInputType = DeviceInputType.Usb;
+        }
+        if (ViewModel!.IsBluetoothRx)
+        {
+            deviceInputType = DeviceInputType.Bluetooth;
+        }
+        if (ViewModel!.AdafruitHost)
+        {
+            deviceInputType = DeviceInputType.Feather;
+        }
         var model = new ResetWindowViewModel(ViewModel!.Main.AccentedButtonTextColor, interaction.Input.Device,
-            ViewModel!.Main.DeviceInputType, ViewModel!.DeviceControllerType, ViewModel!.IsBluetoothTx,
+            deviceInputType, ViewModel!.DeviceControllerType, ViewModel!.IsBluetoothTx,
             ViewModel!.Bindings.Items.Any(s => s is EmulationMode
             {
                 Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfIos

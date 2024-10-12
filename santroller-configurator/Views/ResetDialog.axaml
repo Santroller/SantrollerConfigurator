@@ -76,6 +76,7 @@
                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                                     <Binding Path="IsPico" />
                                     <Binding Path="!IsBluetoothRx" />
+                                    <Binding Path="!IsFeather" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
                             <Label VerticalAlignment="Center"
@@ -98,13 +99,7 @@
                             </Label>
                             <CheckBox IsChecked="{Binding Fortnite}"></CheckBox>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <StackPanel.IsVisible>
-                                <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                    <Binding Path="IsDirect" />
-                                    <Binding Path="IsGuitar" />
-                                </MultiBinding>
-                            </StackPanel.IsVisible>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding NeedsTilt}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{x:Static netCore:Resources.TiltSensorLabel}">

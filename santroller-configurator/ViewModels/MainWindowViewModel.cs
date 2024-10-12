@@ -135,6 +135,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         });
         Devices = devices;
         Router.Navigate.Execute(new MainViewModel(this));
+        _needsTiltHelper = this.WhenAnyValue(x => x.DeviceInputType, x => x.DeviceControllerType)
+            .Select(s => s.Item1 is DeviceInputType.Direct or DeviceInputType.Wii && s.Item2.IsGuitar())
+            .ToProperty(this, s => s.NeedsTilt);
+
         _hasSidebarHelper = Router.CurrentViewModel
             .Select(s => s is ConfigViewModel)
             .ToProperty(this, s2 => s2.HasSidebar);
@@ -193,6 +197,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         _isBluetoothRxHelper = this.WhenAnyValue(x => x.DeviceInputType)
             .Select(s => s is DeviceInputType.Bluetooth)
             .ToProperty(this, s => s.IsBluetoothRx);
+        _isFeatherHelper = this.WhenAnyValue(x => x.DeviceInputType)
+            .Select(s => s is DeviceInputType.Feather)
+            .ToProperty(this, s => s.IsFeather);
         _readyToConfigureHelper = this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
             .Select(s =>
                 s is {Item1: not null and not Santroller {IsSantroller: false}, Item2: true} &&
@@ -318,7 +325,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     private static Func<DeviceInputType, bool> CreateFilter(IConfigurableDevice? s)
     {
-        return type => type is not (DeviceInputType.Usb or DeviceInputType.Bluetooth or DeviceInputType.Peripheral) ||
+        return type => type is not (DeviceInputType.Usb or DeviceInputType.Bluetooth or DeviceInputType.Peripheral or DeviceInputType.Feather) ||
                        s is PicoDevice;
     }
 
@@ -387,11 +394,13 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [ObservableAsProperty] private bool _isDfu;
     [ObservableAsProperty] private bool _isGeneric;
     [ObservableAsProperty] private bool _isGuitar;
+    [ObservableAsProperty] private bool _needsTilt;
     [ObservableAsProperty] private bool _isDirect;
     [ObservableAsProperty] private bool _newDevice;
     [ObservableAsProperty] private bool _newDeviceOrArdwiino;
     [ObservableAsProperty] private bool _isPeripheral;
     [ObservableAsProperty] private bool _isBluetoothRx;
+    [ObservableAsProperty] private bool _isFeather;
     [ObservableAsProperty] private bool _supportsFortnite;
 
     [ObservableAsProperty] private bool _connected;

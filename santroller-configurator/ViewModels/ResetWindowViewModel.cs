@@ -38,7 +38,8 @@ public partial class ResetWindowViewModel : ReactiveObject
     [ObservableAsProperty] private bool _isBluetoothRx;
     [ObservableAsProperty] private bool _supportsFortnite;
     [ObservableAsProperty] private bool _isGuitar;
-    [ObservableAsProperty] private bool _isDirect;
+    [ObservableAsProperty] private bool _needsTilt;
+    [ObservableAsProperty] private bool _isFeather;
 
 
     public List<AccelSensorTypeMain> AccelSensorTypeMains => Enum.GetValues<AccelSensorTypeMain>().ToList();
@@ -54,7 +55,7 @@ public partial class ResetWindowViewModel : ReactiveObject
         DeviceControllerType = controllerType;
         DeviceInputTypes = Enum.GetValues<DeviceInputType>().Where(s =>
             s is not DeviceInputType.Peripheral && (
-            s is not (DeviceInputType.Usb or DeviceInputType.Bluetooth) ||
+            s is not (DeviceInputType.Usb or DeviceInputType.Bluetooth or DeviceInputType.Feather) ||
             selectedDevice is {IsPico: true})).ToList();;
         AccentedTextColor = accentedTextColor;
         ClearCommand = ReactiveCommand.CreateFromObservable(() =>
@@ -72,9 +73,12 @@ public partial class ResetWindowViewModel : ReactiveObject
             Response = ResetType.Cancel;
             return CloseWindowInteraction.Handle(new Unit());
         });
-        _isDirectHelper = this.WhenAnyValue(x => x.DeviceInputType)
-            .Select(s => s is DeviceInputType.Direct)
-            .ToProperty(this, s => s.IsDirect);
+        _isFeatherHelper = this.WhenAnyValue(x => x.DeviceInputType)
+            .Select(s => s is DeviceInputType.Feather)
+            .ToProperty(this, s => s.IsFeather);
+        _needsTiltHelper = this.WhenAnyValue(x => x.DeviceInputType, x => x.DeviceControllerType)
+            .Select(s => s.Item1 is DeviceInputType.Direct or DeviceInputType.Wii && s.Item2.IsGuitar())
+            .ToProperty(this, s => s.NeedsTilt);
         _isBluetoothRxHelper = this.WhenAnyValue(x => x.DeviceInputType)
             .Select(s => s is DeviceInputType.Bluetooth)
             .ToProperty(this, s => s.IsBluetoothRx);

@@ -1685,7 +1685,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         Ps4Instruments = false;
         MouseMovementType = MouseMovementType.Relative;
         IsBluetoothTx = Main.BluetoothTx;
-        
+
         if (IsBluetooth)
         {
             ResetBluetoothRelated();
@@ -1700,16 +1700,26 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             UsbHostDm = 3;
         }
+        AdafruitHost = Main.DeviceInputType is DeviceInputType.Feather;
 
         ClearOutputs();
         if (Main.Fortnite)
         {
             Input defInput = Main.DeviceInputType switch
             {
-                DeviceInputType.Wii => new WiiInput(WiiInputType.ClassicA, this, false, 18, 19),
-                DeviceInputType.Ps2 => new Ps2Input(Ps2InputType.Cross, this, false, 4, 3, 6, 10, 7),
-                DeviceInputType.Usb => new UsbHostInput(UsbHostInputType.A, this),
-                DeviceInputType.Bluetooth => new BluetoothInput(UsbHostInputType.A, this),
+                DeviceInputType.Wii => new WiiInput(WiiInputType.GuitarPlus, this, false, 18, 19),
+                DeviceInputType.Ps2 => new Ps2Input(Ps2InputType.GuitarStart, this, false, 4, 3, 6, 10, 7),
+                DeviceInputType.Usb or DeviceInputType.Feather => new UsbHostInput(UsbHostInputType.Start, this),
+                DeviceInputType.Bluetooth => new BluetoothInput(UsbHostInputType.Start, this),
+                _ => new DirectInput(-1, false, false, DevicePinMode.PullUp, this)
+            };
+            
+            Input defInput2 = Main.DeviceInputType switch
+            {
+                DeviceInputType.Wii => new WiiInput(WiiInputType.GuitarMinus, this, false, 18, 19),
+                DeviceInputType.Ps2 => new Ps2Input(Ps2InputType.GuitarSelect, this, false, 4, 3, 6, 10, 7),
+                DeviceInputType.Usb or DeviceInputType.Feather => new UsbHostInput(UsbHostInputType.Back, this),
+                DeviceInputType.Bluetooth => new BluetoothInput(UsbHostInputType.Back, this),
                 _ => new DirectInput(-1, false, false, DevicePinMode.PullUp, this)
             };
 
@@ -1717,11 +1727,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 Expanded = true
             });
-            Bindings.Add(new EmulationMode(this, true, new MacroInput(defInput, defInput.Serialise().Generate(this), this), EmulationModeType.FnfLayer)
+            Bindings.Add(new EmulationMode(this, true,
+                new MacroInput(defInput, defInput2, this), EmulationModeType.FnfLayer)
             {
                 Expanded = true
             });
-            Bindings.Add(new EmulationMode(this, true, defInput, EmulationModeType.FnfIos)
+            Bindings.Add(new EmulationMode(this, true, defInput2, EmulationModeType.FnfIos)
             {
                 Expanded = true
             });
@@ -1775,6 +1786,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 ps2Output.SetOutputsOrDefaults(Array.Empty<Output>());
                 break;
             case DeviceInputType.Usb:
+            case DeviceInputType.Feather:
                 var usbOutput = new UsbHostCombinedOutput(this)
                 {
                     Expanded = true
@@ -2531,6 +2543,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void RemovePeripheral()
     {
         HasPeripheral = false;
+    }
+
+    [RelayCommand]
+    public void RemoveBtTxCommand()
+    {
+        IsBluetoothTx = false;
     }
 
     [RelayCommand]

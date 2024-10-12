@@ -5175,6 +5175,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string DeviceInputTypeFeather {
+            get {
+                return ResourceManager.GetString("DeviceInputTypeFeather", resourceCulture);
+            }
+        }
+        
         public static string DeviceInputTypeBluetooth {
             get {
                 return ResourceManager.GetString("DeviceInputTypeBluetooth", resourceCulture);

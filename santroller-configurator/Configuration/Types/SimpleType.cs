@@ -11,6 +11,7 @@ public enum SimpleType
     DjTurntableSimple,
     UsbHost,
     Bluetooth,
+    BluetoothTx,
     Led,
     Rumble,
     ConsoleMode,
@@ -25,6 +26,5 @@ public enum SimpleType
     FestivalGamepad,
     FestivalLayer,
     FestivalIos,
-    Accel,
-    BluetoothTx
+    Accel
 }

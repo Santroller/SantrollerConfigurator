@@ -3572,6 +3572,13 @@
                                           HorizontalAlignment="Center"
                                           IsEnabled="False"
                                           Content="{x:Static netCore:Resources.ConnectedToReceiverLabel}" />
+                                
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                            IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                    <Button
+                                        Command="{Binding RemoveBtTxCommand}"
+                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                </StackPanel>
                             </Panel>
                         </DataTemplate>
                     </Expander.HeaderTemplate>

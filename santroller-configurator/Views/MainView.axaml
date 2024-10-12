@@ -171,6 +171,7 @@
                                     <Binding Path="Main.IsPico" />
                                     <Binding Path="!Main.IsPeripheral" />
                                     <Binding Path="!Main.IsBluetoothRx" />
+                                    <Binding Path="!Main.IsFeather" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
                             <Label VerticalAlignment="Center"
@@ -199,8 +200,7 @@
                             <StackPanel.IsVisible>
                                 <MultiBinding Converter="{x:Static BoolConverters.And}">
                                     <Binding Path="Main.NewDevice" />
-                                    <Binding Path="Main.IsDirect" />
-                                    <Binding Path="Main.IsGuitar" />
+                                    <Binding Path="Main.NeedsTilt" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
                             <Label VerticalAlignment="Center"
