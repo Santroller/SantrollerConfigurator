@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Formats.Tar;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -336,6 +337,12 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Selected = old;
     }
 
+    public string SanitiseFile(string path)
+    {
+        var invalids = System.IO.Path.GetInvalidFileNameChars();
+        return String.Join("_", path.Split(invalids, StringSplitOptions.RemoveEmptyEntries) ).TrimEnd('.');
+    }
+    
     [RelayCommand]
     public async Task Package()
     {
@@ -349,12 +356,26 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             Message = Resources.UniqueName;
             return;
         }
+        
+        var folder = await SaveBinaryHandler.Handle(this);
+        if (folder == null)
+        {
+            Complete(100);
+            return;
+        }
+
+        var workingDir = WebUtility.UrlDecode(folder.Path.AbsolutePath);
+        var uf2Dir = Path.Join(workingDir, "uf2");
+        Directory.CreateDirectory(uf2Dir);
+        var toolName = SanitiseFile(SelectedTool.ToolNameVersioned);
 
         // Compile all configs and save the resulting UF2 into the brandedconfiguration
         var start = 0;
         var steps = 100 / (SelectedTool.Configurations.Sum(s => s.Configurations.Count) + 4);
         foreach (var section in SelectedTool.Configurations)
         {
+            var sectionDir = Path.Join(uf2Dir, SanitiseFile(section.Name));
+            Directory.CreateDirectory(sectionDir);
             foreach (var config in section.Configurations)
             {
                 if (config.Model.HasError)
@@ -367,6 +388,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
                 config.Model.Variant = config.ProductName;
                 await Write(config.Model, false, config.ExtraConfig(), start, steps);
+                File.Copy(config.GetUf2Name(), Path.Join(sectionDir, SanitiseFile(config.ProductName)+".uf2"), true);
                 if (!config.LoadUf2())
                 {
                     ProgressbarColor = ProgressBarError;
@@ -382,19 +404,11 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Message = "Building Linux executable";
         start += steps;
         Progress = start;
-        var folder = await SaveBinaryHandler.Handle(this);
-        if (folder == null)
-        {
-            Complete(100);
-            return;
-        }
-
-        var workingDir = WebUtility.UrlDecode(folder.Path.AbsolutePath);
         // Extract linux executable and append branded config into executable.
         var assemblyName = Assembly.GetEntryAssembly()!.GetName().Name!;
         var uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-linux-64");
         await using var linuxOutput =
-            File.Open(Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-linux-64"),
+            File.Open(Path.Join(workingDir, $"{toolName}-linux-64"),
                 FileMode.Create,
                 FileAccess.ReadWrite);
         await using var linuxInput = AssetLoader.Open(uri);
@@ -408,7 +422,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
         await using var windowsInput = AssetLoader.Open(uri);
         await using var windowsOutput =
-            File.Open(Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-win-64.exe"),
+            File.Open(Path.Join(workingDir, $"{toolName}-win-64.exe"),
                 FileMode.Create,
                 FileAccess.ReadWrite);
         await ExecutableUtils.UpdatePeFileIcon(SelectedTool.Icon, windowsInput, windowsOutput);
@@ -428,7 +442,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Directory.CreateDirectory(tempDir);
         await using var macosOutputTemp =
             File.Open(
-                Path.Join(tempDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip"),
+                Path.Join(tempDir, $"{toolName}-macOS.zip"),
                 FileMode.Create,
                 FileAccess.ReadWrite);
 
@@ -465,7 +479,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
         Directory.Delete(Path.Join(contentsRoot, "MacOS", "Resources"), true);
         Directory.Move(Path.Join(zipRoot, "SantrollerConfiguratorBranded.app"),
-            Path.Join(zipRoot, SelectedTool.ToolNameVersioned + ".app"));
+            Path.Join(zipRoot, $"{toolName}.app"));
 
 #if Windows
         var rcodeSign = new Uri($"avares://{assemblyName}/Assets/rcodesign/win/rcodesign.exe");
@@ -492,19 +506,20 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         start += steps;
         Progress = start;
         var process = Process.Start(rcodeSizeProcess,
-            ["sign", Path.Join(zipRoot, SelectedTool.ToolNameVersioned + ".app")]);
+            ["sign", Path.Join(zipRoot, $"{toolName}.app")]);
         await process.WaitForExitAsync();
-        var outputZip = Path.Join(workingDir, $"{SelectedTool.ToolName} - v{GitVersionInformation.SemVer}-macOS.zip");
-        if (File.Exists(outputZip))
+        var outputTar = Path.Join(tempDir, $"{toolName}-macOS.tar");
+        var outputTarGZip = Path.Join(workingDir, $"{toolName}-macOS.tar.gz");
+        if (File.Exists(outputTarGZip))
         {
-            File.Delete(outputZip);
+            File.Delete(outputTarGZip);
         }
 
-        ZipFile.CreateFromDirectory(zipRoot, outputZip);
-        await using var macosOutput = File.Open(outputZip, FileMode.Open);
-        using var archive2 = new ZipArchive(macosOutput, ZipArchiveMode.Update);
-        archive2.GetEntry($"{SelectedTool.ToolNameVersioned}.app/Contents/MacOS/SantrollerConfiguratorBranded")!
-            .ExternalAttributes = attrs;
+        await TarFile.CreateFromDirectoryAsync(zipRoot, outputTar, false);
+        await using var originalFileStream = File.Open(outputTar, FileMode.Open);
+        await using var compressedFileStream = File.Create(outputTarGZip);
+        await using var compressor = new GZipStream(compressedFileStream, CompressionMode.Compress);
+        await originalFileStream.CopyToAsync(compressor);
         Directory.Delete(tempDir, true);
         Complete(100);
     }

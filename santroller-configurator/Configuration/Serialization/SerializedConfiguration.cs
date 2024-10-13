@@ -344,6 +344,7 @@ public class SerializedConfiguration
                 output.LedOff = outputToMerge.LedOff;
                 output.LedIndices = outputToMerge.LedIndices;
                 output.LedIndicesPeripheral = outputToMerge.LedIndicesPeripheral;
+                output.Enabled = outputToMerge.Enabled;
                 switch (outputToMerge)
                 {
                     case DjAxis djToMerge when output is DjAxis outputDj:

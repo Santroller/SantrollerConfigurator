@@ -143,16 +143,20 @@ public partial class BrandedConfiguration : ReactiveObject
         }
     }
 
-    public bool LoadUf2()
+    public string GetUf2Name()
     {
         var env = "pico";
         if (Model.IsBluetooth)
         {
             env = "picow";
         }
-
-        var uf2File = Path.Combine(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", env,
+        return Path.Combine(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", env,
             "firmware.uf2");
+    }
+
+    public bool LoadUf2()
+    {
+        var uf2File = GetUf2Name();
         if (!File.Exists(uf2File))
         {
             return false;
