@@ -52,7 +52,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private UpdateInfo? _updateInfo;
 
     private readonly ToolConfig _toolConfig = AssetUtils.GetConfig();
-    public string ToolName => Resources.ToolName + " - v" + GitVersionInformation.SemVer;
+    public virtual string ToolName => Resources.ToolName + " - v" + GitVersionInformation.SemVer;
+    public virtual string AlreadyOpenMessage => $"You already have a copy of {Resources.ToolName} running, exiting.";
 
 
     private readonly SourceList<DeviceInputType> _allDeviceInputTypes = new();
@@ -220,6 +221,11 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             DeviceInputType = DeviceInputType.Direct;
             this.RaisePropertyChanged(nameof(DeviceInputType));
         });
+    }
+    
+    public void Close()
+    {
+        Environment.Exit(0);
     }
 
     public async Task CheckForUpdates()

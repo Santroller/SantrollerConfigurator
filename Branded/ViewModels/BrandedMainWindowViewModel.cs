@@ -35,6 +35,8 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
     private bool _writing;
 
     public bool HasMultipleConfigs => Config.Configurations.Count > 1;
+    public override string ToolName => Config.ToolName + " - v" + GitVersionInformation.SemVer;
+    public override string AlreadyOpenMessage => $"You already have a copy of {Config.ToolName} running, exiting.";
 
     public Dictionary<string, Tuple<BrandedConfigurationSection, BrandedConfiguration>> ValidConfigurations { get; }
 

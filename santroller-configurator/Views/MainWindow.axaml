@@ -10,7 +10,7 @@
         x:Class="GuitarConfigurator.NetCore.Views.MainWindow"
         TransparencyLevelHint="AcrylicBlur"
         Icon="/Assets/icon.png"
-        Title="{x:Static netCore:Resources.ToolName}"
+        Title="{Binding ToolName}"
         Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"
         x:DataType="viewModels:MainWindowViewModel"

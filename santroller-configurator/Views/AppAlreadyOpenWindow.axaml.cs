@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace GuitarConfigurator.NetCore.Views;
 
-public partial class AppAlreadyOpenWindow : ReactiveWindow<AppAlreadyOpenWindowViewModel>
+public partial class AppAlreadyOpenWindow : ReactiveWindow<MainWindowViewModel>
 {
     public AppAlreadyOpenWindow()
     {

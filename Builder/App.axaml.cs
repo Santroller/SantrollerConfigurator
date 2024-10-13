@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -26,16 +27,31 @@ public class App : Application
             throw new Exception("Invalid ApplicationLifetime");
 
         Locator.CurrentMutable.RegisterConstant<IScreen>(new BuilderMainWindowViewModel());
-        Locator.CurrentMutable.Register<IViewFor<BuilderMainViewModel>>(() => new BuilderMainView());
-        Locator.CurrentMutable.Register<IViewFor<BuilderAuthViewModel>>(() => new BuilderAuthView());
-        Locator.CurrentMutable.Register<IViewFor<ConfigViewModel>>(() => new ConfigView());
-        lifetime.MainWindow = new BuilderMainWindow {DataContext = Locator.Current.GetService<IScreen>()};
-        lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
-        lifetime.Exit += (_, _) =>
+        var mutex = new Mutex(true, @"Global\SantrollerConfig", out var mutexCreated);
+        if (!mutexCreated)
         {
-            PlatformIo.Exit();
-            Environment.Exit(0);
-        };
+            lifetime.MainWindow = new AppAlreadyOpenWindow {DataContext = Locator.Current.GetService<IScreen>()};
+            lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
+            lifetime.Exit += (_, _) =>
+            {
+                mutex.Close();
+                Environment.Exit(0);
+            };
+        }
+        else
+        {
+            Locator.CurrentMutable.Register<IViewFor<BuilderMainViewModel>>(() => new BuilderMainView());
+            Locator.CurrentMutable.Register<IViewFor<BuilderAuthViewModel>>(() => new BuilderAuthView());
+            Locator.CurrentMutable.Register<IViewFor<ConfigViewModel>>(() => new ConfigView());
+            lifetime.MainWindow = new BuilderMainWindow {DataContext = Locator.Current.GetService<IScreen>()};
+            lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
+            lifetime.Exit += (_, _) =>
+            {
+                PlatformIo.Exit();
+                Environment.Exit(0);
+            };
+        }
+
         base.OnFrameworkInitializationCompleted();
     }
 }

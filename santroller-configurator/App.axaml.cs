@@ -23,10 +23,12 @@ public class App : Application
         if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime lifetime)
             throw new Exception("Invalid ApplicationLifetime");
         
+        Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(false, false, false));
         var mutex = new Mutex( true, @"Global\SantrollerConfig", out var mutexCreated );
         if (!mutexCreated)
         {
-            lifetime.MainWindow = new AppAlreadyOpenWindow {DataContext = new AppAlreadyOpenWindowViewModel()};
+            lifetime.MainWindow = new AppAlreadyOpenWindow {DataContext = Locator.Current.GetService<IScreen>()};
+            lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
             lifetime.Exit += (_, _) =>
             {
                 mutex.Close();
@@ -35,8 +37,6 @@ public class App : Application
         }
         else
         {
-            // Make sure we kill all python processes on exit
-            Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(false, false, false));
             Locator.CurrentMutable.Register<IViewFor<ConfigViewModel>>(() => new ConfigView());
             Locator.CurrentMutable.Register<IViewFor<RestoreViewModel>>(() => new RestoreView());
             Locator.CurrentMutable.Register<IViewFor<InitialConfigViewModel>>(() => new InitialConfigureView());

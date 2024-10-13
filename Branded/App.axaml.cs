@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -28,13 +29,29 @@ public class App : Application
             throw new Exception("Invalid ApplicationLifetime");
         var model = new BrandedMainWindowViewModel();
         Locator.CurrentMutable.RegisterConstant<IScreen>(model);
-        Locator.CurrentMutable.Register<IViewFor<ConfigViewModel>>(() => new ConfigView());
-        Locator.CurrentMutable.Register<IViewFor<InitialConfigViewModel>>(() => new InitialConfigureView());
-        Locator.CurrentMutable.Register<IViewFor<BrandedMainViewModel>>(() => new BrandedMainView());
-        lifetime.MainWindow = new BrandedMainWindow {DataContext = Locator.Current.GetService<IScreen>()};
-        lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
-        Current!.Resources["SystemAccentColor"] = Color.Parse(model.ProgressBarPrimary);
-        lifetime.Exit += (_, _) => { Environment.Exit(0); };
+        var mutex = new Mutex(true, @"Global\SantrollerConfig", out var mutexCreated);
+        
+        lifetime.Exit += (_, _) =>
+        {
+            mutex.Close();
+            Environment.Exit(0);
+        };
+        if (!mutexCreated)
+        {
+            lifetime.MainWindow = new AppAlreadyOpenWindow {DataContext = Locator.Current.GetService<IScreen>()};
+            lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
+            Current!.Resources["SystemAccentColor"] = Color.Parse(model.ProgressBarPrimary);
+        }
+        else
+        {
+            Locator.CurrentMutable.Register<IViewFor<ConfigViewModel>>(() => new ConfigView());
+            Locator.CurrentMutable.Register<IViewFor<InitialConfigViewModel>>(() => new InitialConfigureView());
+            Locator.CurrentMutable.Register<IViewFor<BrandedMainViewModel>>(() => new BrandedMainView());
+            lifetime.MainWindow = new BrandedMainWindow {DataContext = Locator.Current.GetService<IScreen>()};
+            lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
+            Current!.Resources["SystemAccentColor"] = Color.Parse(model.ProgressBarPrimary);
+        }
+
         base.OnFrameworkInitializationCompleted();
     }
 }
