@@ -234,8 +234,8 @@
                                HorizontalAlignment="Center"
                                IsVisible="{Binding Main.PeripheralErrorText, Converter={x:Static ObjectConverters.IsNotNull}}" />
                     </StackPanel>
-                    <StackPanel Width="600" HorizontalAlignment="Center">
-                        <TextBlock IsVisible="{Binding !Main.IsSantroller}" Foreground="#FFFF461C"
+                    <StackPanel Width="600" HorizontalAlignment="Center" IsVisible="{Binding !Main.IsSantroller}" >
+                        <TextBlock Foreground="#FFFF461C"
                                    Text="{x:Static netCore:Resources.IncorrectTool}" TextAlignment="Center"
                                    VerticalAlignment="Center" Margin="0 20 0 0" TextWrapping="Wrap"/>
 
