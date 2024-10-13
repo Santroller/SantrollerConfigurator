@@ -31,16 +31,9 @@ public class App : Application
         Locator.CurrentMutable.RegisterConstant<IScreen>(model);
         var mutex = new Mutex(true, @"Global\SantrollerConfig", out var mutexCreated);
         
-        lifetime.Exit += (_, _) =>
-        {
-            mutex.Close();
-            Environment.Exit(0);
-        };
         if (!mutexCreated)
         {
             lifetime.MainWindow = new AppAlreadyOpenWindow {DataContext = Locator.Current.GetService<IScreen>()};
-            lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
-            Current!.Resources["SystemAccentColor"] = Color.Parse(model.ProgressBarPrimary);
         }
         else
         {
@@ -48,9 +41,15 @@ public class App : Application
             Locator.CurrentMutable.Register<IViewFor<InitialConfigViewModel>>(() => new InitialConfigureView());
             Locator.CurrentMutable.Register<IViewFor<BrandedMainViewModel>>(() => new BrandedMainView());
             lifetime.MainWindow = new BrandedMainWindow {DataContext = Locator.Current.GetService<IScreen>()};
-            lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
-            Current!.Resources["SystemAccentColor"] = Color.Parse(model.ProgressBarPrimary);
         }
+
+        lifetime.Exit += (_, _) =>
+        {
+            mutex.Close();
+            Environment.Exit(0);
+        };
+        lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
+        Current!.Resources["SystemAccentColor"] = Color.Parse(model.ProgressBarPrimary);
 
         base.OnFrameworkInitializationCompleted();
     }
