@@ -3501,14 +3501,15 @@ Siéntete libre de remover esta opción si no usarás tu instrumento en iOS.
     <data name="ConfigurationErrorLabel" xml:space="preserve">
         <value>Hay errores en tu configuración</value>
     </data>
+    <data name="IncorrectTool" xml:space="preserve">
+        <value>El dispositivo que seleccionaste no se diseñó para ser programado con esta herramienta.
+Se recomienda que obtengas la herramienta correcta para el dispositivo con el vendedor de este.
+El uso de la herramienta estándar en estos dispositivos es sólo para usuarios avanzados, y si lo haces, tendrás que contactar al vendedor de tu dispositivo para recibir soporte en caso de que encuentres algún problema.</value>
+    </data>
     <data name="NonCommercialUse" xml:space="preserve">
-        <value>Este software no debe ser usado comercialmente.</value>
-    </data>
-    <data name="NonCommercialUse2" xml:space="preserve">
-        <value>Al hacer click en el botón de configuración, reconoces que los dispositivos programados con esta herramienta son para uso personal.</value>
-    </data>
-    <data name="NonCommercialUse3" xml:space="preserve">
-        <value>Si te gustaría vender dispositivos usando la plataforma Santroller, haz click en el siguiente botón.</value>
+        <value>Este software no debe ser usado comercialmente.
+Al hacer click en el botón de configuración, reconoces que los dispositivos programados con esta herramienta son para uso personal.
+Si te gustaría vender dispositivos usando la plataforma Santroller, haz click en el siguiente botón.</value>
     </data>
     <data name="NonCommercialButton" xml:space="preserve">
         <value>Vender dispositivos usando esta herramienta</value>
@@ -3518,12 +3519,6 @@ Siéntete libre de remover esta opción si no usarás tu instrumento en iOS.
     </data>
     <data name="NotShowing" xml:space="preserve">
         <value>¿El control no aparece? Prueba a hacer click en el botón de abajo, puede arreglar el problema.</value>
-    </data>
-    <data name="IncorrectTool" xml:space="preserve">
-        <value>El dispositivo seleccionado no está diseñado para ser programado con esta herramienta.</value>
-    </data>
-    <data name="IncorrectTool2" xml:space="preserve">
-        <value>Por favor contacta al vendedor de tu dispositivo para obtener la herramienta correcta.</value>
     </data>
     <data name="UnoUnplugReplugMessage" xml:space="preserve">
         <value>{0} - Por favor desconecta tu dispositivo, mantén el botón de reinicio y reconéctalo</value>

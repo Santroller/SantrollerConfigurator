@@ -3627,13 +3627,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
         <value>There are errors in your configuration</value>
     </data>
     <data name="NonCommercialUse" xml:space="preserve">
-        <value>This software may not be used commercially.</value>
-    </data>
-    <data name="NonCommercialUse2" xml:space="preserve">
-        <value>By clicking the configure button, you are acknowledging that devices you program with this tool are for personal use.</value>
-    </data>
-    <data name="NonCommercialUse3" xml:space="preserve">
-        <value>If you would like to sell devices using the Santroller platform, click the following button.</value>
+        <value>This software may not be used commercially.
+By clicking the configure button, you are acknowledging that devices you program with this tool are for personal use.
+If you would like to sell devices using the Santroller platform, click the following button.</value>
     </data>
     <data name="NonCommercialButton" xml:space="preserve">
         <value>Selling devices using this tool</value>
@@ -3645,10 +3641,12 @@ Feel free to remove this option if you do not intend to use your instrument on i
         <value>Controller not showing up? Try clicking the below button, it may fix the problem.</value>
     </data>
     <data name="IncorrectTool" xml:space="preserve">
-        <value>The device you have selected is not designed to be programed with this tool.</value>
+        <value>The device you have selected is not designed to be programed with this tool.
+It is recommended that you obtain the correct tool for your device from the seller of your device.
+Using the standard tool on one of these devices is for advanced users only, and if you do this, you will need to contact your seller for support if you encounter any issues.</value>
     </data>
-    <data name="IncorrectTool2" xml:space="preserve">
-        <value>Please contact the seller of your device for the correct tool.</value>
+    <data name="IncorrectTool4" xml:space="preserve">
+        <value>By ticking this box you acknowledge that you are an advanced user and that you know what you are doing.</value>
     </data>
     <data name="UnoUnplugReplugMessage" xml:space="preserve">
         <value>{0} - Please unplug your device, hold the reset button and plug it back in</value>

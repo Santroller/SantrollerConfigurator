@@ -156,7 +156,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _isStandardModeHelper = this.WhenAnyValue(x => x.Mode).Select(x => x is ModeType.Standard)
             .ToProperty(this, x => x.IsStandardMode);
         _savePresetLabelHelper = this.WhenAnyValue(x => x.PresetName).Select(x =>
-                String.IsNullOrWhiteSpace(x) ? Resources.SavePresetLabel :
+                string.IsNullOrWhiteSpace(x) ? Resources.SavePresetLabel :
                 Presets.Any(s => s.Item1 == x) ? string.Format(Resources.SavePresetLabel3, x) :
                 string.Format(Resources.SavePresetLabel2, x))
             .ToProperty(this, x => x.SavePresetLabel);

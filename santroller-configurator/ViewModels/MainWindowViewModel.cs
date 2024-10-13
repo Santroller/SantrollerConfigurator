@@ -61,7 +61,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public bool LibUsbMissing = false;
     public bool Builder { get; }
     public bool Windows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-    public MainWindowViewModel(bool builder, bool branded, bool picoOnly, string primary = "#FF0078D7", string warning = "#FFd7cb00",
+
+    public MainWindowViewModel(bool builder, bool branded, bool picoOnly, string primary = "#FF0078D7",
+        string warning = "#FFd7cb00",
         string error = "red")
     {
         Builder = builder;
@@ -71,7 +73,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         ProgressBarWarning = warning;
         _picoOnly = picoOnly;
         SelectedLanguage = _toolConfig.Language;
-        
+
         Message = Resources.ConnectedMessage;
         GoBack = ReactiveCommand.CreateFromObservable(() =>
             Router.NavigateAndReset.Execute(Router.NavigationStack.First()));
@@ -96,7 +98,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             hasLibUsb = false;
             Console.WriteLine(e);
         }
-        
+
         if (!branded)
         {
             _ = CheckForUpdates();
@@ -200,10 +202,11 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         _isFeatherHelper = this.WhenAnyValue(x => x.DeviceInputType)
             .Select(s => s is DeviceInputType.Feather)
             .ToProperty(this, s => s.IsFeather);
-        _readyToConfigureHelper = this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral, x => x.PeripheralErrorText)
+        _readyToConfigureHelper = this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral,
+                x => x.PeripheralErrorText, x => x.AdvancedBranded)
             .Select(s =>
-                s is {Item1: not null and not Santroller {IsSantroller: false}, Item2: true} &&
-                (!s.Item3 || s.Item4 == null))
+                s is {Item1: not null, Item2: true} and ({Item1: not Santroller {IsSantroller: false}} or {Item5: true})
+                    and ({Item3: false} or {Item4: null}))
             .ToProperty(this, s => s.ReadyToConfigure);
         _isSantrollerHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is not Santroller {IsSantroller: false})
@@ -229,6 +232,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             {
                 return;
             }
+
             var tokens = await File.ReadAllTextAsync(file);
             var accessToken = HttpUtility.ParseQueryString(tokens).Get("access_token")!;
             source = new GithubSource("https://github.com/Santroller/SantrollerConfiguratorBinaries", accessToken,
@@ -247,7 +251,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         }
         catch (Exception ex)
         {
-             Console.WriteLine(ex);   
+            Console.WriteLine(ex);
         }
 
         UpdateMessage = _updateInfo == null
@@ -255,7 +259,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             : string.Format(Resources.NewVersion, _updateInfo.TargetFullRelease.Version);
         HasUpdate = _updateInfo != null;
     }
-    
+
     public bool Programming { get; private set; }
     public ReadOnlyObservableCollection<DeviceInputType> DeviceInputTypes { get; }
 
@@ -263,13 +267,14 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [Reactive] private AccelSensorTypeMain _accelSensorTypeMain;
 
     public List<AccelSensorTypeMain> AccelSensorTypeMains => Enum.GetValues<AccelSensorTypeMain>().ToList();
+
     public List<DeviceControllerType> DeviceControllerTypes => Enum.GetValues<DeviceControllerType>().Where(s =>
         s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire) &&
         !s.IsFortnite()).ToList();
 
     public Interaction<(string yesText, string noText, string text), AreYouSureWindowViewModel>
         ShowYesNoDialog { get; } = new();
-    
+
     public Interaction<string, InformationWindowViewModel>
         ShowInformationDialog { get; } = new();
 
@@ -291,6 +296,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private Language _language = Language.En;
 
     public IEnumerable<Language> Languages => Enum.GetValues<Language>();
+
     public Language SelectedLanguage
     {
         set
@@ -300,10 +306,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 switch (value)
                 {
                     case Language.En:
-                        Resources.Culture = new CultureInfo("en"); 
+                        Resources.Culture = new CultureInfo("en");
                         break;
                     case Language.Es:
-                        Resources.Culture = new CultureInfo("es-ES"); 
+                        Resources.Culture = new CultureInfo("es-ES");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -316,17 +322,18 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                     AssetUtils.SaveConfig(_toolConfig);
                 }
             }
+
             this.RaiseAndSetIfChanged(ref _language, value);
-            
-            
         }
         get => _language;
     }
 
     private static Func<DeviceInputType, bool> CreateFilter(IConfigurableDevice? s)
     {
-        return type => type is not (DeviceInputType.Usb or DeviceInputType.Bluetooth or DeviceInputType.Peripheral or DeviceInputType.Feather) ||
-                       s is PicoDevice;
+        return type =>
+            type is not (DeviceInputType.Usb or DeviceInputType.Bluetooth or DeviceInputType.Peripheral
+                or DeviceInputType.Feather) ||
+            s is PicoDevice;
     }
 
     public static bool ShouldUseDarkTextColorForBackground(string color)
@@ -334,6 +341,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         var c = Color.Parse(color);
         return c.R * 0.299 + c.G * 0.587 + c.B * 0.114 > 140;
     }
+
     public void AddDevice(IConfigurableDevice device)
     {
         if (_picoOnly && !device.IsPico) return;
@@ -507,6 +515,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [Reactive] private bool _deviceNotProgrammed;
     [Reactive] private bool _bluetoothTx;
     [Reactive] private bool _fortnite;
+    [Reactive] private bool _advancedBranded;
 
     [Reactive] private string _progressbarColor;
 
@@ -605,6 +614,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 {
                     text = s.ToString();
                 }
+
                 ProgressbarColor = ProgressBarError;
                 ShowIssueDialog.Handle((text, config)).Subscribe(_ => Programming = false);
             },
@@ -704,6 +714,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                         {
                             AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName, "pico2"));
                         }
+
                         if (text.Contains("RPI-RP2"))
                         {
                             AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName, "pico"));
@@ -752,22 +763,22 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private static async Task<bool> CheckDependencies()
     {
         // Call check dependencies on startup, and pop up a dialog saying drivers are missing would you like to install if they are missing
-        #if Windows
+#if Windows
             return DriverStore.ExistingDrivers.Any(s => s.Contains("atmel_usb_dfu"));
-        #else
-            return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath) && await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile) ;
-        #endif
+#else
+        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath) &&
+            await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile);
+#endif
     }
 
     [RelayCommand]
     private async Task RescanAsync()
     {
-        #if Windows
+#if Windows
            await _manager?.RescanAsync()!;
-        #endif
+#endif
 
         await ShowInformationDialog.Handle(Resources.UnplugReplugMessage);
-
     }
 
     private async Task InstallDependenciesAsync()
@@ -864,6 +875,5 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     public virtual void SaveConfiguration()
     {
-        
     }
 }

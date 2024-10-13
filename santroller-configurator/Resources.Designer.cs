@@ -6981,18 +6981,6 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string NonCommercialUse2 {
-            get {
-                return ResourceManager.GetString("NonCommercialUse2", resourceCulture);
-            }
-        }
-        
-        public static string NonCommercialUse3 {
-            get {
-                return ResourceManager.GetString("NonCommercialUse3", resourceCulture);
-            }
-        }
-        
         public static string NonCommercialButton {
             get {
                 return ResourceManager.GetString("NonCommercialButton", resourceCulture);
@@ -7017,9 +7005,9 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string IncorrectTool2 {
+        public static string IncorrectTool4 {
             get {
-                return ResourceManager.GetString("IncorrectTool2", resourceCulture);
+                return ResourceManager.GetString("IncorrectTool4", resourceCulture);
             }
         }
         
