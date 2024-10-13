@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -21,20 +22,36 @@ public class App : Application
     {
         if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime lifetime)
             throw new Exception("Invalid ApplicationLifetime");
-
-        // Make sure we kill all python processes on exit
-        Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(false, false, false));
-        Locator.CurrentMutable.Register<IViewFor<ConfigViewModel>>(() => new ConfigView());
-        Locator.CurrentMutable.Register<IViewFor<RestoreViewModel>>(() => new RestoreView());
-        Locator.CurrentMutable.Register<IViewFor<InitialConfigViewModel>>(() => new InitialConfigureView());
-        Locator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
-        lifetime.MainWindow = new MainWindow {DataContext = Locator.Current.GetService<IScreen>()};
-        lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
-        lifetime.Exit += (_, _) =>
+        
+        var mutex = new Mutex( true, @"Global\SantrollerConfig", out var mutexCreated );
+        if (!mutexCreated)
         {
-            PlatformIo.Exit();
-            Environment.Exit(0);
-        };
+            lifetime.MainWindow = new AppAlreadyOpenWindow {DataContext = new AppAlreadyOpenWindowViewModel()};
+            lifetime.Exit += (_, _) =>
+            {
+                mutex.Close();
+                Environment.Exit(0);
+            };
+        }
+        else
+        {
+            // Make sure we kill all python processes on exit
+            Locator.CurrentMutable.RegisterConstant<IScreen>(new MainWindowViewModel(false, false, false));
+            Locator.CurrentMutable.Register<IViewFor<ConfigViewModel>>(() => new ConfigView());
+            Locator.CurrentMutable.Register<IViewFor<RestoreViewModel>>(() => new RestoreView());
+            Locator.CurrentMutable.Register<IViewFor<InitialConfigViewModel>>(() => new InitialConfigureView());
+            Locator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
+            lifetime.MainWindow = new MainWindow {DataContext = Locator.Current.GetService<IScreen>()};
+            lifetime.MainWindow.RequestedThemeVariant = ThemeVariant.Dark;
+            lifetime.Exit += (_, _) =>
+            {
+                mutex.Close();
+                PlatformIo.Exit();
+                Environment.Exit(0);
+            };
+        }
+
+        
         base.OnFrameworkInitializationCompleted();
     }
 }

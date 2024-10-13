@@ -156,6 +156,10 @@
             <DependentUpon>InitialConfigure.axaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Compile Update="Views\AppAlreadyOpenWindow.axaml.cs">
+            <DependentUpon>AppAlreadyOpenWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
         <Compile Update="Views\UnpluggedDialog.axaml.cs">
             <DependentUpon>UnpluggedDialog.axaml</DependentUpon>
             <SubType>Code</SubType>
