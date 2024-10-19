@@ -148,13 +148,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         SaveConfigCommand = ReactiveCommand.CreateFromObservable(() => SaveConfig.Handle(this));
 
         LoadConfigCommand = ReactiveCommand.CreateFromObservable(() => LoadConfig.Handle(this));
-        _pollRateLabelHelper = this.WhenAnyValue(x => x.Deque, x => x.PollRate)
+        _pollRateLabelHelper = this.WhenAnyValue(x => x.Deque, x => x.PollRate, x => x.LocalDebounceMode)
             .Select(GeneratePollRateLabel)
             .ToProperty(this, x => x.PollRateLabel);
-        _isAdvancedModeHelper = this.WhenAnyValue(x => x.Mode).Select(x => x is ModeType.Advanced)
-            .ToProperty(this, x => x.IsAdvancedMode);
-        _isStandardModeHelper = this.WhenAnyValue(x => x.Mode).Select(x => x is ModeType.Standard)
-            .ToProperty(this, x => x.IsStandardMode);
         _savePresetLabelHelper = this.WhenAnyValue(x => x.PresetName).Select(x =>
                 string.IsNullOrWhiteSpace(x) ? Resources.SavePresetLabel :
                 Presets.Any(s => s.Item1 == x) ? string.Format(Resources.SavePresetLabel3, x) :
@@ -166,10 +162,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _deletePresetLabelHelper = this.WhenAnyValue(x => x.CurrentPreset).Select(x =>
                 x is null ? Resources.DeletePresetLabel : string.Format(Resources.DeletePresetLabel2, x.Item1))
             .ToProperty(this, x => x.DeletePresetLabel);
-        _supportsDequeHelper = this.WhenAnyValue(x => x.Mode, x => x.DeviceControllerType)
+        _supportsDequeHelper = this.WhenAnyValue(x => x.LocalDebounceMode, x => x.DeviceControllerType)
             .Select(x => x.Item2 is DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandGuitar &&
-                         x.Item1 is ModeType.Standard)
+                         !x.Item1)
             .ToProperty(this, x => x.SupportsDeque);
+        _minPollRateHelper = this.WhenAnyValue(x => x.Deque)
+            .Select(x => x ? 1 : 0)
+            .ToProperty(this, x => x.MinPollRate);
         _supportsPS4InstrumentHelper = this.WhenAnyValue(x => x.DeviceControllerType, x => x.Branded)
             .Select(x => x.Item1 is DeviceControllerType.GuitarHeroGuitar
                 or DeviceControllerType.RockBandGuitar or DeviceControllerType.GuitarHeroDrums
@@ -357,7 +356,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             LocalAddress = santroller.GetBluetoothAddress();
     }
 
-    private static string GeneratePollRateLabel((bool dequeue, int rate) arg)
+    private static string GeneratePollRateLabel((bool dequeue, int rate, bool localDeque) arg)
     {
         var rate = Math.Floor((1f / Math.Max(arg.rate, 1)) * 1000);
         return arg.dequeue ? $"Dequeue Rate ({rate}+ fps required)" : $"Poll Rate (0 for fastest speed) ({rate}hz)";
@@ -549,26 +548,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] private MouseMovementType _mouseMovementType;
 
-    public ModeType Mode
-    {
-        get => _mode;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _mode, value);
-            if (value is ModeType.Advanced)
-            {
-                Deque = false;
-            }
-        }
-    }
-
     [Reactive] private int _debounce;
 
     [Reactive] private bool _selectDpadLeftXb1;
 
     [Reactive] private bool _midiDrumAutoOff;
 
-    private ModeType _mode;
     private bool _deque;
 
     public bool Deque
@@ -1337,8 +1322,21 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] private string? _loadPresetLabel;
     [ObservableAsProperty] private string? _deletePresetLabel;
     [ObservableAsProperty] private string? _savePresetLabel;
-    [ObservableAsProperty] private bool _isStandardMode;
-    [ObservableAsProperty] private bool _isAdvancedMode;
+    private bool _localDebounceMode;
+
+    public bool LocalDebounceMode
+    {
+        get => _localDebounceMode;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _localDebounceMode, value);
+            if (value)
+            {
+                Deque = false;
+            }
+        }
+    }
+
     [ObservableAsProperty] private bool _isGuitar;
 
     [ObservableAsProperty] private bool _isDrum;
@@ -1400,6 +1398,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [ObservableAsProperty] private bool _usbHostEnabled;
     [ObservableAsProperty] private bool _hasMidi;
+    [ObservableAsProperty] private int _minPollRate;
 
     // ReSharper enable UnassignedGetOnlyAutoProperty
 
@@ -1700,6 +1699,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             UsbHostDm = 3;
         }
+
         AdafruitHost = Main.DeviceInputType is DeviceInputType.Feather;
 
         ClearOutputs();
@@ -1713,7 +1713,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 DeviceInputType.Bluetooth => new BluetoothInput(UsbHostInputType.Start, this),
                 _ => new DirectInput(-1, false, false, DevicePinMode.PullUp, this)
             };
-            
+
             Input defInput2 = Main.DeviceInputType switch
             {
                 DeviceInputType.Wii => new WiiInput(WiiInputType.GuitarMinus, this, false, 18, 19),

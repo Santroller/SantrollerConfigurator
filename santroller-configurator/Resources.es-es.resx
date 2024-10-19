@@ -3131,6 +3131,28 @@ Siéntete libre de remover esta opción si no usarás tu instrumento en iOS.
     <data name="PinModeText" xml:space="preserve">
         <value>Modo de Pin</value>
     </data>
+    <data name="DebouceModeLabel" xml:space="preserve">
+        <value>Modo de Debounce</value>
+    </data>
+    <data name="DebouceModeGlobalLabel" xml:space="preserve">
+        <value>Global</value>
+    </data>
+    <data name="DebouceModePerInputLabel" xml:space="preserve">
+        <value>Por Entrada</value>
+    </data>
+
+    <data name="DevicePinModePullUp" xml:space="preserve">
+        <value>Levantar</value>
+    </data>
+    <data name="DevicePinModeFloating" xml:space="preserve">
+        <value>Flotante</value>
+    </data>
+    <data name="DevicePinModePullDown" xml:space="preserve">
+        <value>Bajar</value>
+    </data>
+    <data name="DevicePinModeBusKeep" xml:space="preserve">
+        <value>Mantener</value>
+    </data>
     <data name="PinLabel" xml:space="preserve">
         <value>Pin</value>
     </data>

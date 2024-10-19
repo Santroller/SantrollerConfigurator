@@ -6255,6 +6255,30 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string DevicePinModePullUp {
+            get {
+                return ResourceManager.GetString("DevicePinModePullUp", resourceCulture);
+            }
+        }
+        
+        public static string DevicePinModeFloating {
+            get {
+                return ResourceManager.GetString("DevicePinModeFloating", resourceCulture);
+            }
+        }
+        
+        public static string DevicePinModePullDown {
+            get {
+                return ResourceManager.GetString("DevicePinModePullDown", resourceCulture);
+            }
+        }
+        
+        public static string DevicePinModeBusKeep {
+            get {
+                return ResourceManager.GetString("DevicePinModeBusKeep", resourceCulture);
+            }
+        }
+        
         public static string PinLabel {
             get {
                 return ResourceManager.GetString("PinLabel", resourceCulture);
@@ -6546,6 +6570,24 @@ namespace GuitarConfigurator.NetCore {
         public static string WindowsControllerModeLabel {
             get {
                 return ResourceManager.GetString("WindowsControllerModeLabel", resourceCulture);
+            }
+        }
+        
+        public static string DebouceModeLabel {
+            get {
+                return ResourceManager.GetString("DebouceModeLabel", resourceCulture);
+            }
+        }
+        
+        public static string DebouceModeGlobalLabel {
+            get {
+                return ResourceManager.GetString("DebouceModeGlobalLabel", resourceCulture);
+            }
+        }
+        
+        public static string DebouceModePerInputLabel {
+            get {
+                return ResourceManager.GetString("DebouceModePerInputLabel", resourceCulture);
             }
         }
         

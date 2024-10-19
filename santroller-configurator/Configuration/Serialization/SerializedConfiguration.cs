@@ -41,7 +41,7 @@ public class SerializedConfiguration
         MouseMovementType = model.MouseMovementType;
         WtSensitivity = model.WtSensitivity;
         UsbHostDp = model.UsbHostDp;
-        Mode = model.Mode;
+        LocalDebounceMode = model.LocalDebounceMode;
         Debounce = model.Debounce;
         StrumDebounce = model.StrumDebounce;
         PollRate = model.PollRate;
@@ -108,7 +108,6 @@ public class SerializedConfiguration
     [ProtoMember(11)] public MouseMovementType MouseMovementType { get; private set; }
     [ProtoMember(12)] public int WtSensitivity { get; private set; }
     [ProtoMember(14)] public int UsbHostDp { get; private set; }
-    [ProtoMember(23)] public ModeType Mode { get; private set; }
     [ProtoMember(24)] public int Debounce { get; private set; }
     [ProtoMember(25)] public int StrumDebounce { get; private set; }
     [ProtoMember(26)] public int PollRate { get; private set; }
@@ -169,6 +168,7 @@ public class SerializedConfiguration
     [ProtoMember(83)] public AccelSensorType AccelSensorType { get; private set; }
     [ProtoMember(84)] public bool ClassicMode { get; private set; }
     [ProtoMember(85)] public bool IsBluetoothTx { get; private set; }
+    [ProtoMember(86)] public bool LocalDebounceMode { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -184,7 +184,7 @@ public class SerializedConfiguration
         model.XInputOnWindows = XInputOnWindows;
         model.Ps3OnRpcs3 = Ps3OnRpcs3;
         model.Bindings.Clear();
-        model.Mode = Mode;
+        model.LocalDebounceMode = LocalDebounceMode;
         model.PollRate = PollRate;
         model.Debounce = Debounce;
         model.Deque = QueueBasedInputs;

@@ -1158,15 +1158,6 @@
             <DataTemplate DataType="{x:Type inputs:DirectInput}">
                 <StackPanel Orientation="Vertical"
                             IsVisible="{Binding !$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Branded}">
-                    <StackPanel
-                        IsVisible="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).IsAdvancedMode}">
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsAnalog}">
-                            <Label VerticalAlignment="Center" Width="300"
-                                   Content="{x:Static netCore:Resources.PinModeText}" />
-                            <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinMode}"
-                                      ItemsSource="{Binding DevicePinModes}" />
-                        </StackPanel>
-                    </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.PinLabel}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding Pin}"
@@ -1181,6 +1172,13 @@
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.InvertLabel}" />
                         <ToggleSwitch IsChecked="{Binding Inverted}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsAnalog}">
+                        <Label VerticalAlignment="Center" Width="300"
+                               Content="{x:Static netCore:Resources.PinModeText}" />
+                        <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinMode}"
+                                  ItemsSource="{Binding DevicePinModes}"
+                                  ItemTemplate="{StaticResource EnumToStringTemplate}" />
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
@@ -2136,7 +2134,7 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type output:OutputButton}">
                 <StackPanel Orientation="Horizontal"
-                            IsVisible="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).IsAdvancedMode}">
+                            IsVisible="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).LocalDebounceMode}">
                     <Label VerticalAlignment="Center"
                            VerticalContentAlignment="Center"
                            Width="300" Content="{x:Static netCore:Resources.DebounceLabel}" />
@@ -3168,39 +3166,17 @@
                         </DataTemplate>
                     </Expander.HeaderTemplate>
                     <StackPanel>
-                        <StackPanel IsVisible="{Binding SupportsDeque}">
-                            <StackPanel IsVisible="{Binding IsGuitar}" Orientation="Horizontal">
-                                <Label VerticalAlignment="Center"
-                                       VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.QueueBasedInputsLabel}" />
-                                <ToggleSwitch HorizontalAlignment="Center"
-                                              Width="200"
-                                              HorizontalContentAlignment="Center" IsChecked="{Binding Deque}"
-                                              OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                              OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel IsVisible="{Binding !Deque}" Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="300" Content="{Binding PollRateLabel }" />
                             <NumericUpDown FormatString="{}{0:#,0}"
                                            Value="{Binding PollRate}"
                                            Width="200"
-                                           Minimum="0"
+                                           Minimum="{Binding MinPollRate}"
                                            Maximum="10" HorizontalAlignment="Stretch" />
                         </StackPanel>
-                        <StackPanel IsVisible="{Binding Deque}" Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="300" Content="{Binding PollRateLabel }" />
-                            <NumericUpDown FormatString="{}{0:#,0}"
-                                           Value="{Binding PollRate}"
-                                           Width="200"
-                                           Minimum="1"
-                                           Maximum="10" HorizontalAlignment="Stretch" />
-                        </StackPanel>
-                        <StackPanel IsVisible="{Binding !IsAdvancedMode}">
+                        <StackPanel IsVisible="{Binding !LocalDebounceMode}">
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding Deque}">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
@@ -3242,6 +3218,28 @@
                                           IsChecked="{Binding CombinedStrumDebounce}"
                                           OnContent="{x:Static netCore:Resources.StrumCombinedLabel}"
                                           OffContent="{x:Static netCore:Resources.StrumIndividualLabel}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.DebouceModeLabel}" />
+                            <ComboBox HorizontalAlignment="Stretch" Width="200"
+                                      SelectedIndex="{Binding LocalDebounceMode}">
+                                <ComboBoxItem Content="{x:Static netCore:Resources.DebouceModeGlobalLabel}" />
+                                <ComboBoxItem Content="{x:Static netCore:Resources.DebouceModePerInputLabel}" />
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel IsVisible="{Binding SupportsDeque}">
+                            <StackPanel IsVisible="{Binding IsGuitar}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.QueueBasedInputsLabel}" />
+                                <ToggleSwitch HorizontalAlignment="Center"
+                                              Width="200"
+                                              HorizontalContentAlignment="Center" IsChecked="{Binding Deque}"
+                                              OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                              OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </Expander>
