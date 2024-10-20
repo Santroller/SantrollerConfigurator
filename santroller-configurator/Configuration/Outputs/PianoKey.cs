@@ -124,7 +124,7 @@ public partial class PianoKey : OutputAxis
                                   """,
             _ => $$"""
                    if ({{Input.Generate(writer)}}) {
-                       proKeyVelocities[{{(int) Key}}] = {{dta.On >> 9}};
+                       proKeyVelocities[{{(int) Key}}] = {{dta.On >> 8}};
                        {{output}} = true;
                    }
                    """

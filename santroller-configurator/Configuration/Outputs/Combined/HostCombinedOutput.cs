@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Media;
 using DynamicData;
+using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Other;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -256,8 +257,14 @@ public abstract partial class HostCombinedOutput : CombinedOutput
                             Colors.Black, [], [], [],
                             proKeyType, false, false, false, -1, true));
                         break;
-                    default:
+                    case ProKeyType.TouchPad or ProKeyType.PedalAnalog:
                         Outputs.Add(new PianoKey(Model, true,MakeInput(proKeyType), Colors.Black,
+                            Colors.Black, [], [], [],
+                            proKeyType, false, false, false, -1, true));
+                        break;
+                    // At the moment we don't actually store velocities from pro keys.
+                    default:
+                        Outputs.Add(new PianoKey(Model, true,new DigitalToAnalog(MakeInput(proKeyType), ushort.MaxValue, Model, DigitalToAnalogType.Trigger), Colors.Black,
                             Colors.Black, [], [], [],
                             proKeyType, false, false, false, -1, true));
                         break;

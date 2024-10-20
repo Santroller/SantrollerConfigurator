@@ -116,7 +116,7 @@ public abstract partial class HostInput : Input
             _ => Output.GetReportField(Input, Field, false)
         });
 
-        if (ByteBased.Contains(Input))
+        if (ByteBased.Contains(Input) && IsAnalog)
         {
             ret = "(" + ret + " << 8)";
         }
