@@ -238,7 +238,7 @@ public partial class DrumAxis : OutputAxis
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;
         if (!Model.LocalDebounceMode) debounce = Model.Debounce;
-        if (Model.Deque)
+        if (!Model.Deque)
         {
             // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
             debounce /= 10;

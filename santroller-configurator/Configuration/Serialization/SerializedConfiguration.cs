@@ -187,6 +187,7 @@ public class SerializedConfiguration
         model.LocalDebounceMode = LocalDebounceMode;
         model.PollRate = PollRate;
         model.Debounce = Debounce;
+        model.StrumDebounce = StrumDebounce;
         model.Deque = QueueBasedInputs;
         model.DjPollRate = DjPollRate;
         model.DjSmoothing = DjSmooth;

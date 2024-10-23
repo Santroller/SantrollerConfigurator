@@ -82,7 +82,7 @@ public abstract partial class OutputButton : Output
             }
         }
 
-        if (Model.Deque)
+        if (!Model.Deque)
         {
             // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
             debounce /= 10;

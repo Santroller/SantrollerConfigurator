@@ -1596,7 +1596,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 case GuitarAxisType.Tilt when defaults:
                     Input input = Main.AccelSensorTypeMain switch
                     {
-                        AccelSensorTypeMain.Digital => new DirectInput(-1, false, false, DevicePinMode.PullUp, this),
+                        AccelSensorTypeMain.Digital => new DigitalToAnalog(new DirectInput(-1, false, false, DevicePinMode.PullUp, this), short.MaxValue, this, DigitalToAnalogType.Tilt),
                         AccelSensorTypeMain.Adxl345 or AccelSensorTypeMain.Lis3dh or AccelSensorTypeMain.Mpu6050 =>
                             new AccelInput(AccelInputType.AccelX, this),
                         _ => new DirectInput(-1, false, false, DevicePinMode.Analog, this)

@@ -259,7 +259,7 @@ public partial class GuitarAxis : OutputAxis
             var input = Input;
             input = input is DigitalToAnalog ? input.InnermostInputs().First() : input;
             var debounce = Model.Debounce;
-            if (Model.Deque)
+            if (!Model.Deque)
             {
                 // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
                 debounce /= 10;
