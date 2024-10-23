@@ -112,6 +112,18 @@ public enum UsbHostInputType
     ProKey,
     YellowCymbal,
     BlueCymbal,
-    GreenCymbal
+    GreenCymbal,
+    LowEFret,
+    AFret,
+    DFret,
+    GFret,
+    BFret,
+    HighEFret,
+    LowEFretVelocity,
+    AFretVelocity,
+    DFretVelocity,
+    GFretVelocity,
+    BFretVelocity,
+    HighEFretVelocity,
     
 }

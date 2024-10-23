@@ -144,6 +144,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="UsbHostCombinedTitle" xml:space="preserve">
         <value>Usb Host Inputs</value>
     </data>
+    <data name="ProGuitarInputsTitle" xml:space="preserve">
+        <value>Pro Guitar Inputs</value>
+    </data>
     <data name="MidiInputsTitle" xml:space="preserve">
         <value>MIDI Inputs</value>
     </data>
@@ -887,6 +890,43 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="UsbHostInputTypeProKey" xml:space="preserve">
         <value>Pro Keys</value>
+    </data>
+
+    <data name="UsbHostInputTypeLowEFret" xml:space="preserve">
+        <value>Low E String Fret</value>
+    </data>
+    <data name="UsbHostInputTypeAFret" xml:space="preserve">
+        <value>A String Fret</value>
+    </data>
+    <data name="UsbHostInputTypeDFret" xml:space="preserve">
+        <value>D String Fret</value>
+    </data>
+    <data name="UsbHostInputTypeGFret" xml:space="preserve">
+        <value>G String Fret</value>
+    </data>
+    <data name="UsbHostInputTypeBFret" xml:space="preserve">
+        <value>B String Fret</value>
+    </data>
+    <data name="UsbHostInputTypeHighEFret" xml:space="preserve">
+        <value>High E String Fret</value>
+    </data>
+    <data name="UsbHostInputTypeLowEFretVelocity" xml:space="preserve">
+        <value>Low E String Velocity</value>
+    </data>
+    <data name="UsbHostInputTypeAFretVelocity" xml:space="preserve">
+        <value>A String Velocity</value>
+    </data>
+    <data name="UsbHostInputTypeDFretVelocity" xml:space="preserve">
+        <value>D String Velocity</value>
+    </data>
+    <data name="UsbHostInputTypeGFretVelocity" xml:space="preserve">
+        <value>G String Velocity</value>
+    </data>
+    <data name="UsbHostInputTypeBFretVelocity" xml:space="preserve">
+        <value>B String Velocity</value>
+    </data>
+    <data name="UsbHostInputTypeHighEFretVelocity" xml:space="preserve">
+        <value>High E String Velocity</value>
     </data>
     <data name="UsbHostInputTypeX" xml:space="preserve">
         <value>X Button</value>
@@ -2627,6 +2667,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="SimpleTypeMidi" xml:space="preserve">
         <value>Midi Inputs</value>
+    </data>
+    <data name="SimpleTypeProGuitar" xml:space="preserve">
+        <value>Pro Guitar Inputs</value>
     </data>
     <data name="SimpleTypeMax1704X" xml:space="preserve">
         <value>MAX1704x</value>

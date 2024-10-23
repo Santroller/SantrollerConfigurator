@@ -310,7 +310,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
 
         _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>().Where(s =>
-            s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire) &&
             !s.IsFortnite()));
         _deviceControllerTypes.Connect()
             .Bind(out var controllerTypes)
@@ -1498,6 +1497,19 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             PollRate = 5;
         }
 
+        if (_deviceControllerType.IsProGuitar())
+        {
+            if (!Bindings.Items.Any(s => s is ProGuitarCombinedOutput))
+            {
+                var dj = new ProGuitarCombinedOutput(this) {Expanded = defaults};
+                Bindings.Add(dj);
+                dj.SetOutputsOrDefaults(Array.Empty<Output>());
+            }
+        }
+        else
+        {
+            Bindings.RemoveMany(Bindings.Items.Where(s => s is ProGuitarCombinedOutput));
+        }
         // If the user has a ps2 or wii combined output mapped, they don't need the default bindings
         if (Bindings.Items.Any(s =>
                 s is WiiCombinedOutput or Ps2CombinedOutput or UsbHostCombinedOutput
@@ -2036,12 +2048,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
         }
 
-        config += "\n";
         config += $"""
+                   
                    #define ABSOLUTE_MOUSE_COORDS {(MouseMovementType == MouseMovementType.Absolute).ToString().ToLower()}
                    #define ARDWIINO_BOARD "{Microcontroller.Board.ArdwiinoName}"
                    #define DEVICE_TYPE {(byte) DeviceControllerType}
                    #define PS4_INSTRUMENT {(Ps4Instruments && UsbHostEnabled && DeviceControllerType is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar).ToString().ToLower()}
+                   #define PRO_GUITAR {Outputs.Any(s => s is ProGuitarCombinedOutput).ToString().ToLower()}
                    """;
 
         if (IsBluetoothTx)

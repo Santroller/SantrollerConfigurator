@@ -257,14 +257,8 @@ public abstract partial class HostCombinedOutput : CombinedOutput
                             Colors.Black, [], [], [],
                             proKeyType, false, false, false, -1, true));
                         break;
-                    case ProKeyType.TouchPad or ProKeyType.PedalAnalog:
-                        Outputs.Add(new PianoKey(Model, true,MakeInput(proKeyType), Colors.Black,
-                            Colors.Black, [], [], [],
-                            proKeyType, false, false, false, -1, true));
-                        break;
-                    // At the moment we don't actually store velocities from pro keys.
                     default:
-                        Outputs.Add(new PianoKey(Model, true,new DigitalToAnalog(MakeInput(proKeyType), ushort.MaxValue, Model, DigitalToAnalogType.Trigger), Colors.Black,
+                        Outputs.Add(new PianoKey(Model, true,MakeInput(proKeyType), Colors.Black,
                             Colors.Black, [], [], [],
                             proKeyType, false, false, false, -1, true));
                         break;

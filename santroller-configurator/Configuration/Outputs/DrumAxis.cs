@@ -310,63 +310,10 @@ public partial class DrumAxis : OutputAxis
         if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
         {
             outputButtons += $"{GetReportField(Type, "current_drum_report", false)} = true;";
-            // if (mode is ConfigField.Xbox)
-            // {
-            //     switch (Type)
-            //     {
-            //         case DrumAxisType.YellowCymbal:
-            //             outputButtons += $"\n{GetReportField(YellowCymbalFlag)} = true;";
-            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = 0xFF;";
-            //
-            //             break;
-            //         case DrumAxisType.BlueCymbal:
-            //             outputButtons += $"\n{GetReportField(BlueCymbalFlag)} = true;";
-            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = 0xFF;";
-            //
-            //             break;
-            //         case DrumAxisType.GreenCymbal:
-            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = 0xFF;";
-            //             break;
-            //         case DrumAxisType.Green:
-            //         case DrumAxisType.Red:
-            //         case DrumAxisType.Yellow:
-            //         case DrumAxisType.Blue:
-            //             outputButtons += $"\n{GetReportField("padFlag")} = true;";
-            //
-            //             break;
-            //     }
-            // }
-            // else
-            // {
-            //     switch (Type)
-            //     {
-            //         case DrumAxisType.YellowCymbal:
-            //             outputButtons += $"\n{GetReportField(YellowCymbalFlag)} = true;";
-            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
-            //
-            //             break;
-            //         case DrumAxisType.BlueCymbal:
-            //             outputButtons += $"\n{GetReportField(BlueCymbalFlag)} = true;";
-            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
-            //
-            //             break;
-            //         case DrumAxisType.GreenCymbal:
-            //             outputButtons += $"\n{GetReportField("cymbalFlag")} = true;";
-            //             break;
-            //         case DrumAxisType.Green:
-            //         case DrumAxisType.Red:
-            //         case DrumAxisType.Yellow:
-            //         case DrumAxisType.Blue:
-            //             outputButtons += $"\n{GetReportField("padFlag")} = true;";
-            //
-            //             break;
-            //     }
-            // }
         }
 
         // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
         var dtaVal = 0;
-        var resetVal = 0;
         if (input is DigitalToAnalog dta) dtaVal = dta.On;
 
         var assignedVal = $"(lastDrum[{debounceIndex}])";
@@ -377,9 +324,15 @@ public partial class DrumAxis : OutputAxis
                 assignedVal = $"(lastDrum[{debounceIndex}]) >> 12";
                 dtaVal >>= 12;
                 break;
-            // PS3 and PC HID uses 8 bit velocities
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal:
+            // PC HID uses 8 bit velocities
+            case ConfigField.Universal:
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture when Model.DeviceControllerType.IsGh():
                 assignedVal = $"(lastDrum[{debounceIndex}]) >> 8";
+                dtaVal >>= 8;
+                break;
+            // PS3 uses 8 bit velocities, but inverts
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture:
+                assignedVal = $"255-((lastDrum[{debounceIndex}]) >> 8)";
                 dtaVal >>= 8;
                 break;
             // Xbox 360 GH use uint8_t velocities
@@ -402,14 +355,12 @@ public partial class DrumAxis : OutputAxis
                         case DrumAxisType.YellowCymbal:
                             assignedVal = $"-(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
                             dtaVal = -(0x7fff - (dtaVal >> 1));
-                            resetVal = -(0x7fff);
                             break;
                         case DrumAxisType.Red:
                         case DrumAxisType.Blue:
                         case DrumAxisType.BlueCymbal:
                             assignedVal = $"(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
                             dtaVal = 0x7fff - (dtaVal >> 1);
-                            resetVal = 0x7fff;
                             break;
                     }
                 }
@@ -457,16 +408,6 @@ public partial class DrumAxis : OutputAxis
             check = $"({input.Generate(writer)} - {Min}) < {DeadZone}";
         }
 
-        var analogReset = "";
-        if (mode is ConfigField.Xbox360 or ConfigField.Xbox)
-        {
-            analogReset = $$"""
-                            else {
-                              {{GenerateOutput(mode)}} = {{resetVal}};
-                            }
-                            """;
-        }
-
         return $$"""
                  if ({{check}}) {
                      if (!{{ifStatement}}) {
@@ -477,8 +418,9 @@ public partial class DrumAxis : OutputAxis
                  if ({{ifStatement}}) {
                      {{outputButtons}}
                      {{GenerateOutput(mode)}} = {{assignedVal}};
-                 } 
-                 {{analogReset}}
+                 } else {
+                   {{GenerateOutput(mode)}} = 0;
+                 }
                  """;
     }
 

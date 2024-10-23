@@ -275,7 +275,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     public List<AccelSensorTypeMain> AccelSensorTypeMains => Enum.GetValues<AccelSensorTypeMain>().ToList();
 
     public List<DeviceControllerType> DeviceControllerTypes => Enum.GetValues<DeviceControllerType>().Where(s =>
-        s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire) &&
         !s.IsFortnite()).ToList();
 
     public Interaction<(string yesText, string noText, string text), AreYouSureWindowViewModel>

@@ -39,6 +39,10 @@ public static class DeviceControllerRhythmTypeExtensions {
     {
         return type is DeviceControllerType.FortniteDrums or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum or DeviceControllerType.FortniteProGuitar or DeviceControllerType.FortniteProDrums;
     }
+    public static bool IsProGuitar(this DeviceControllerType type)
+    {
+        return type is DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire;
+    }
     public static bool IsGh(this DeviceControllerType type)
     {
         return type is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.GuitarHeroGuitar;

@@ -137,6 +137,8 @@ public static class InstrumentButtonTypeExtensions
             DeviceControllerType.GuitarHeroGuitar => GuitarButtons,
             DeviceControllerType.FortniteGuitar => GuitarButtons,
             DeviceControllerType.FortniteGuitarStrum => GuitarButtons,
+            DeviceControllerType.ProGuitarMustang => GuitarButtons,
+            DeviceControllerType.ProGuitarSquire => GuitarButtons,
             DeviceControllerType.RockBandGuitar => RbButtons,
             DeviceControllerType.LiveGuitar => GhlButtons,
             _ => Enumerable.Empty<InstrumentButtonType>()

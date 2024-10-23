@@ -47,7 +47,8 @@ public partial class EmptyOutput : Output
                 vm => vm.Model.HasDjCombinedOutput, vm => vm.Model.HasGh5CombinedOutput,
                 vm => vm.Model.HasUsbHostCombinedOutput))
             .Select(type => ControllerEnumConverter.GetTypes(type.Item1.Item1).Where(s2 =>
-                ((!type.First.Item1.IsFortnite()) || s2 is not SimpleType.Led) &&
+                (!type.First.Item1.IsFortnite() || s2 is not SimpleType.Led) &&
+                (type.Item1.Item1.IsProGuitar() || s2 is not SimpleType.ProGuitar) &&
                 (model.IsPico ||
                  s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.BluetoothTx or SimpleType.UsbHost
                      or SimpleType.Peripheral)) &&
@@ -231,6 +232,7 @@ public partial class EmptyOutput : Output
                     SimpleType.UsbHost => new UsbHostCombinedOutput(Model),
                     SimpleType.Bluetooth => new Combined.BluetoothCombinedOutput(Model),
                     SimpleType.Midi => new MidiCombinedOutput(Model, 0),
+                    SimpleType.ProGuitar => new ProGuitarCombinedOutput(Model),
                     _ => null
                 },
                 StandardAxisType.RightTrigger or StandardAxisType.LeftTrigger => new ControllerAxis(Model,true,

@@ -194,6 +194,8 @@ public class ControllerEnumConverter : IMultiValueConverter
             case DeviceControllerType.GuitarHeroDrums:
             case DeviceControllerType.RockBandDrums:
             case DeviceControllerType.ProKeys:
+            case DeviceControllerType.ProGuitarMustang:
+            case DeviceControllerType.ProGuitarSquire:
                 return SupportedButtonsNonGamepad.Contains(button);
             case DeviceControllerType.LiveGuitar:
             case DeviceControllerType.GuitarHeroGuitar:
@@ -228,6 +230,8 @@ public class ControllerEnumConverter : IMultiValueConverter
                     .GetTypeFor(deviceType)
                     .Cast<object>()
                     .Concat(InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>()),
+            DeviceControllerType.ProGuitarMustang
+                or DeviceControllerType.ProGuitarSquire => InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>(),
             DeviceControllerType.DancePad => Array.Empty<object>(),
             DeviceControllerType.ProKeys => Enum.GetValues<ProKeyType>().Cast<object>(),
             DeviceControllerType.KeyboardMouse => Array.Empty<object>(),

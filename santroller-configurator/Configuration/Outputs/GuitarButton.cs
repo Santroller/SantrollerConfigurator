@@ -74,17 +74,17 @@ public class GuitarButton : OutputButton
         // PS3 and 360 just set the standard buttons, and rely on the solo flag
         // XB1 however has things broken out
         // For the universal report, we only put standard frets on nav, not solo
-        var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal or ConfigField.Ps4 or ConfigField.Shared);
+        var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal or ConfigField.Ps4 or ConfigField.Shared) && !Model.DeviceControllerType.IsProGuitar();
         return Type switch
         {
             InstrumentButtonType.StrumUp => GetReportField(StandardButtonType.DpadUp),
             InstrumentButtonType.StrumDown => GetReportField(StandardButtonType.DpadDown),
 
-            InstrumentButtonType.Green when mode is ConfigField.Universal => GetReportField(StandardButtonType.A),
-            InstrumentButtonType.Red when mode is ConfigField.Universal => GetReportField(StandardButtonType.B),
-            InstrumentButtonType.Yellow when mode is ConfigField.Universal => GetReportField(StandardButtonType.Y),
-            InstrumentButtonType.Blue when mode is ConfigField.Universal => GetReportField(StandardButtonType.X),
-            InstrumentButtonType.Orange when mode is ConfigField.Universal => GetReportField(StandardButtonType
+            InstrumentButtonType.Green when mode is ConfigField.Universal && !Model.DeviceControllerType.IsProGuitar() => GetReportField(StandardButtonType.A),
+            InstrumentButtonType.Red when mode is ConfigField.Universal && !Model.DeviceControllerType.IsProGuitar() => GetReportField(StandardButtonType.B),
+            InstrumentButtonType.Yellow when mode is ConfigField.Universal && !Model.DeviceControllerType.IsProGuitar() => GetReportField(StandardButtonType.Y),
+            InstrumentButtonType.Blue when mode is ConfigField.Universal && !Model.DeviceControllerType.IsProGuitar() => GetReportField(StandardButtonType.X),
+            InstrumentButtonType.Orange when mode is ConfigField.Universal && !Model.DeviceControllerType.IsProGuitar() => GetReportField(StandardButtonType
                 .LeftShoulder),
 
             InstrumentButtonType.SoloGreen or InstrumentButtonType.Green when usesFaceButtons =>
@@ -134,6 +134,10 @@ public class GuitarButton : OutputButton
             or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Keyboard
             or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii or ConfigField.Ps2 or ConfigField.Festival)) return "";
+        if (mode is ConfigField.Ps2 or ConfigField.Wii or ConfigField.Xbox && Model.DeviceControllerType.IsProGuitar())
+        {
+            return "";
+        }
         // If combined debounce is on, then additionally generate extra logic to ignore this input if the opposite debounce flag is active
         if (Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp)
         {
@@ -163,7 +167,7 @@ public class GuitarButton : OutputButton
                 strumIndexes, combinedDebounce, macros, writer);
 
         // XB1 also needs to set the normal face buttons, which can conveniently be done using the PS3 format
-        if (mode is ConfigField.XboxOne or ConfigField.Ps4 && Type is not (InstrumentButtonType.StrumUp or InstrumentButtonType.StrumDown))
+        if (mode is ConfigField.XboxOne or ConfigField.Ps4 && Type is not (InstrumentButtonType.StrumUp or InstrumentButtonType.StrumDown) && !Model.DeviceControllerType.IsProGuitar())
             extra = $"{GenerateOutput(ConfigField.Ps3)}=true;";
         
         if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar} || mode is ConfigField.Wii or ConfigField.Ps2)

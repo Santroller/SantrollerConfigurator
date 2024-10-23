@@ -267,6 +267,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ProGuitarInputsTitle {
+            get {
+                return ResourceManager.GetString("ProGuitarInputsTitle", resourceCulture);
+            }
+        }
+        
         public static string MidiInputsTitle {
             get {
                 return ResourceManager.GetString("MidiInputsTitle", resourceCulture);
@@ -1752,6 +1758,78 @@ namespace GuitarConfigurator.NetCore {
         public static string UsbHostInputTypeProKey {
             get {
                 return ResourceManager.GetString("UsbHostInputTypeProKey", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeLowEFret {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeLowEFret", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeAFret {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeAFret", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeDFret {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeDFret", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGFret {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGFret", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeBFret {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeBFret", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeHighEFret {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeHighEFret", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeLowEFretVelocity {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeLowEFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeAFretVelocity {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeAFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeDFretVelocity {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeDFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeGFretVelocity {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeGFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeBFretVelocity {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeBFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeHighEFretVelocity {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeHighEFretVelocity", resourceCulture);
             }
         }
         
@@ -4992,6 +5070,12 @@ namespace GuitarConfigurator.NetCore {
         public static string SimpleTypeMidi {
             get {
                 return ResourceManager.GetString("SimpleTypeMidi", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeProGuitar {
+            get {
+                return ResourceManager.GetString("SimpleTypeProGuitar", resourceCulture);
             }
         }
         

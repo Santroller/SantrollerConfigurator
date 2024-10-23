@@ -27,7 +27,6 @@ public partial class ResetWindowViewModel : ReactiveObject
     [Reactive] private DeviceControllerType _deviceControllerType = DeviceControllerType.Gamepad;
 
     public List<DeviceControllerType> DeviceControllerTypes => Enum.GetValues<DeviceControllerType>().Where(s =>
-        s is not (DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire) &&
         !s.IsFortnite()).ToList();
     [Reactive] private AccelSensorTypeMain _accelSensorTypeMain;
     

@@ -1168,6 +1168,44 @@ Siéntete libre de remover esta opción si no usarás tu instrumento en iOS.
     <data name="UsbHostInputTypeMouseButton" xml:space="preserve">
         <value>Botón de Mouse</value>
     </data>
+
+
+    <data name="UsbHostInputTypeLowEFret" xml:space="preserve">
+        <value>Traste de Cuerda E Grave</value>
+    </data>
+    <data name="UsbHostInputTypeAFret" xml:space="preserve">
+        <value>Traste de Cuerda A</value>
+    </data>
+    <data name="UsbHostInputTypeDFret" xml:space="preserve">
+        <value>Traste de Cuerda D</value>
+    </data>
+    <data name="UsbHostInputTypeGFret" xml:space="preserve">
+        <value>Traste de Cuerda G</value>
+    </data>
+    <data name="UsbHostInputTypeBFret" xml:space="preserve">
+        <value>Traste de Cuerda B</value>
+    </data>
+    <data name="UsbHostInputTypeHighEFret" xml:space="preserve">
+        <value>Traste de Cuerda E Aguda</value>
+    </data>
+    <data name="UsbHostInputTypeLowEFretVelocity" xml:space="preserve">
+        <value>Velocidad de Cuerda E Grave</value>
+    </data>
+    <data name="UsbHostInputTypeAFretVelocity" xml:space="preserve">
+        <value>Velocidad de Cuerda A</value>
+    </data>
+    <data name="UsbHostInputTypeDFretVelocity" xml:space="preserve">
+        <value>Velocidad de Cuerda D</value>
+    </data>
+    <data name="UsbHostInputTypeGFretVelocity" xml:space="preserve">
+        <value>Velocidad de Cuerda G</value>
+    </data>
+    <data name="UsbHostInputTypeBFretVelocity" xml:space="preserve">
+        <value>Velocidad de Cuerda B</value>
+    </data>
+    <data name="UsbHostInputTypeHighEFretVelocity" xml:space="preserve">
+        <value>Velocidad de Cuerda E Aguda</value>
+    </data>
     <data name="WiiControllerTypeNunchuk" xml:space="preserve">
         <value>Control Nunchuk</value>
     </data>
@@ -3733,6 +3771,9 @@ Si te gustaría vender dispositivos usando la plataforma Santroller, haz click e
     <data name="InputTypeMidiInput" xml:space="preserve">
         <value>Entrada MIDI</value>
     </data>
+    <data name="SimpleTypeProGuitar" xml:space="preserve">
+        <value>Entradas de Guitarra Pro</value>
+    </data>
     <data name="LanguageEn" xml:space="preserve">
         <value>Inglés</value>
     </data>
@@ -3741,6 +3782,9 @@ Si te gustaría vender dispositivos usando la plataforma Santroller, haz click e
     </data>
     <data name="MidiInputsTitle" xml:space="preserve">
         <value>Entradas MIDI</value>
+    </data>
+    <data name="ProGuitarInputsTitle" xml:space="preserve">
+        <value>Entradas de Guitarra Pro</value>
     </data>
     <data name="MidiNote" xml:space="preserve">
         <value>Nota MIDI</value>

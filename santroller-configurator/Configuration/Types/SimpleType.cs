@@ -26,5 +26,6 @@ public enum SimpleType
     FestivalGamepad,
     FestivalLayer,
     FestivalIos,
-    Accel
+    Accel,
+    ProGuitar,
 }

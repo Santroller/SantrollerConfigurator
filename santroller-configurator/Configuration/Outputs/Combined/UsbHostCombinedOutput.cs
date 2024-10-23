@@ -1,15 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Avalonia.Media;
-using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
-using GuitarConfigurator.NetCore.Configuration.Other;
-using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
-using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
@@ -31,7 +23,7 @@ public partial class UsbHostCombinedOutput : HostCombinedOutput
     {
         return new UsbHostInput(type, Model, true);
     }
-    
+
 
     private readonly ObservableAsPropertyHelper<int> _usbHostDm;
     private readonly ObservableAsPropertyHelper<int> _usbHostDp;

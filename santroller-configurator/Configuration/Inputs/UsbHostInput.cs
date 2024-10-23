@@ -21,7 +21,6 @@ public partial class UsbHostInput : HostInput
         _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
         _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
     }
-
     public UsbHostInput(Key key, ConfigViewModel model, bool combined = false) : base(key, model, combined)
     {
         _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);

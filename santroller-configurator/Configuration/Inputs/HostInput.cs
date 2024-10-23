@@ -68,7 +68,7 @@ public abstract partial class HostInput : Input
         ProKeyType = proKeyType;
         Input = UsbHostInputType.ProKey;
         Combined = combined;
-        IsAnalog = proKeyType is ProKeyType.PedalAnalog or ProKeyType.TouchPad;
+        IsAnalog = proKeyType is ProKeyType.PedalAnalog or ProKeyType.TouchPad or <= ProKeyType.Key25;
     }
 
     public bool Combined { get; }
