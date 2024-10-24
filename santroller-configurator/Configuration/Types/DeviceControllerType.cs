@@ -14,9 +14,9 @@ public enum DeviceControllerType
     FortniteGuitar,
     FortniteGuitarStrum,
     FortniteDrums,
-    ProGuitarMustang = 14,
+    ProKeys = 16,
+    ProGuitarMustang,
     ProGuitarSquire,
-    ProKeys,
     FortniteProGuitar,
     FortniteProDrums,
     KeyboardMouse
