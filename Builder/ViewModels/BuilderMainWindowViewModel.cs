@@ -516,10 +516,13 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         }
 
         await TarFile.CreateFromDirectoryAsync(zipRoot, outputTar, false);
-        await using var originalFileStream = File.Open(outputTar, FileMode.Open);
-        await using var compressedFileStream = File.Create(outputTarGZip);
-        await using var compressor = new GZipStream(compressedFileStream, CompressionMode.Compress);
-        await originalFileStream.CopyToAsync(compressor);
+        await using (var originalFileStream = File.Open(outputTar, FileMode.Open))
+        {
+            await using var compressedFileStream = File.Create(outputTarGZip);
+            await using var compressor = new GZipStream(compressedFileStream, CompressionMode.Compress);
+            await originalFileStream.CopyToAsync(compressor);
+        }
+
         Directory.Delete(tempDir, true);
         Complete(100);
     }
