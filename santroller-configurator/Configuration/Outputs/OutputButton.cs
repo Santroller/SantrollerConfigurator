@@ -158,6 +158,16 @@ public abstract partial class OutputButton : Output
                           }
                           """;
             }
+
+            if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar && this is GuitarButton {IsStrum: true} && mode != ConfigField.Universal && mode != ConfigField.Xbox360)
+            {
+                
+                return  $$"""
+                          if ({{ifStatement}}) {
+                              {{extra}}
+                          }
+                          """;
+            }
             return  $$"""
                       if ({{ifStatement}}) {
                           {{outputVar}} = true;
