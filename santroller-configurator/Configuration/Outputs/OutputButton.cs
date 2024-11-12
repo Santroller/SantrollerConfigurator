@@ -164,6 +164,17 @@ public abstract class OutputButton : Output
                           }
                           """;
             }
+
+            // GHL strum is only sent via the strum bar (set in extra) on these consoles
+            if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar && this is GuitarButton {IsStrum: true} &&
+                mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4)
+            {
+                return  $$"""
+                          if ({{ifStatement}}) {
+                              {{extra}}
+                          }
+                          """;
+            }
             return  $$"""
                       if ({{ifStatement}}) {
                           {{outputVar}} = true;
