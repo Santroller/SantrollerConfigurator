@@ -10,14 +10,15 @@ using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public abstract partial class Input : ReactiveObject
+public interface IInput
 {
-    protected Input(ConfigViewModel model)
-    {
-        Model = model;
-    }
+    
+    public ConfigViewModel Model { get; }
+}
 
-    protected ConfigViewModel Model { get; }
+public abstract partial class Input(ConfigViewModel model) : ReactiveObject, IInput
+{
+    public ConfigViewModel Model { get; } = model;
 
     [Reactive] private bool _isAnalog;
     [Reactive] private int _rawValue;

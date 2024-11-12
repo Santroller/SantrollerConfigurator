@@ -6,24 +6,20 @@ public enum UsbHostInputType
     A,
     B,
     Y,
-
     LeftShoulder,
     RightShoulder,
-
     Kick1,
     Kick2,
 
     Back,
     Start,
-
     LeftThumbClick,
     RightThumbClick,
-
     Guide,
     Capture,
-
     LeftBlue,
     LeftRed,
+    
     LeftGreen,
     RightBlue,
     RightRed,
@@ -32,8 +28,8 @@ public enum UsbHostInputType
     SoloRed,
     SoloYellow,
     SoloBlue,
+    
     SoloOrange,
-
     Green,
     Red,
     Yellow,
@@ -41,8 +37,24 @@ public enum UsbHostInputType
     Orange,
     DpadUp,
     DpadDown,
+    
     DpadLeft,
     DpadRight,
+    YellowCymbal,
+    BlueCymbal,
+    GreenCymbal,
+    Overdrive,
+    White1,
+    White2,
+    
+    White3,
+    Black1,
+    Black2,
+    Black3,
+    GHTV,
+    Euphoria,
+    NunchukC,
+    NunchukZ,
 
     LeftTrigger,
     RightTrigger,
@@ -110,9 +122,6 @@ public enum UsbHostInputType
     MouseAxis,
     MouseButton,
     ProKey,
-    YellowCymbal,
-    BlueCymbal,
-    GreenCymbal,
     LowEFret,
     AFret,
     DFret,

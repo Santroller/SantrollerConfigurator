@@ -15,5 +15,6 @@ public enum XInputSubType
     ArcadePad = 19,
     Turntable = 23,
     GuitarHeroLive = 25,
-    GuitarHeroWt = 26
+    GuitarHeroWt = 26,
+    SkylandersPortal = 36
 }

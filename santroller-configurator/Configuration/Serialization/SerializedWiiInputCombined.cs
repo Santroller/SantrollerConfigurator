@@ -12,13 +12,13 @@ public class SerializedWiiInputCombined : SerializedInput
     {
         
     }
-    public SerializedWiiInputCombined(WiiInputType type, bool peripheral)
+    public SerializedWiiInputCombined(UsbHostInputType type, bool peripheral)
     {
         Type = type;
         Peripheral = peripheral;
     }
 
-    [ProtoMember(3)] private WiiInputType Type { get; }
+    [ProtoMember(3)] private UsbHostInputType Type { get; }
     [ProtoMember(4)] private bool Peripheral { get; }
 
     public override Input Generate(ConfigViewModel model)

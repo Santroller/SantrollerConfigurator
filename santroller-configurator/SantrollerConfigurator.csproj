@@ -104,7 +104,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview" />
-        <PackageReference Include="Nefarius.Drivers.WinUSB" Version="0.0.0-alpha.0.66" Condition="'$(OS)' == 'Windows_NT'" />
+        <PackageReference Include="Nefarius.Drivers.WinUSB" Version="5.1.0" Condition="'$(OS)' == 'Windows_NT'" />
         <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.23.0" Condition="'$(OS)' == 'Windows_NT'" />
         <PackageReference Include="protobuf-net" Version="3.2.30" />
         <PackageReference Include="ReactiveUI.SourceGenerators" Version="1.0.3" />

@@ -3207,6 +3207,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string XInputSubTypeSkylandersPortal {
+            get {
+                return ResourceManager.GetString("XInputSubTypeSkylandersPortal", resourceCulture);
+            }
+        }
+        
         public static string ConsoleTypeUniversal {
             get {
                 return ResourceManager.GetString("ConsoleTypeUniversal", resourceCulture);

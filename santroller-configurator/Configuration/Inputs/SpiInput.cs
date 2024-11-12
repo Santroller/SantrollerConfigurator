@@ -48,9 +48,9 @@ public abstract class SpiInput : Input, ISpi
         set => _spiConfig.Sck = value;
     }
 
-    public List<int> AvailableMosiPins => GetMosiPins();
-    public List<int> AvailableMisoPins => GetMisoPins();
-    public List<int> AvailableSckPins => GetSckPins();
+    public List<int> AvailableMosiPins => this.GetMosiPins();
+    public List<int> AvailableMisoPins => this.GetMisoPins();
+    public List<int> AvailableSckPins => this.GetSckPins();
 
     public override IList<PinConfig> PinConfigs => new List<PinConfig> {_spiConfig};
 
@@ -64,24 +64,4 @@ public abstract class SpiInput : Input, ISpi
         return [$"{_spiType.ToUpper()}_SPI_PORT {_spiConfig.Definition}"];
     }
 
-    private List<int> GetMosiPins()
-    {
-        return Model.Microcontroller.SpiPins(false)
-            .Where(s => s.Value is SpiPinType.Mosi)
-            .Select(s => s.Key).ToList();
-    }
-
-    private List<int> GetMisoPins()
-    {
-        return Model.Microcontroller.SpiPins(false)
-            .Where(s => s.Value is SpiPinType.Miso)
-            .Select(s => s.Key).ToList();
-    }
-
-    private List<int> GetSckPins()
-    {
-        return Model.Microcontroller.SpiPins(false)
-            .Where(s => s.Value is SpiPinType.Sck)
-            .Select(s => s.Key).ToList();
-    }
 }

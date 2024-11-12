@@ -42,15 +42,15 @@ public partial class MacroInput : Input
         set => SetInput(value, true, null, null, null, null, null, null);
     }
 
-    public WiiInputType WiiInputType1
+    public UsbHostInputType WiiInputType1
     {
-        get => (Child1.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
+        get => (Child1.InnermostInputs().First() as WiiInput)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType1, true, value, null, null, null, null, null);
     }
 
-    public Ps2InputType Ps2InputType1
+    public UsbHostInputType Ps2InputType1
     {
-        get => (Child1.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
+        get => (Child1.InnermostInputs().First() as Ps2Input)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType1, true, null, value, null, null, null, null);
     }
 
@@ -72,15 +72,15 @@ public partial class MacroInput : Input
         set => SetInput(value, false, null, null, null, null, null, null);
     }
 
-    public WiiInputType WiiInputType2
+    public UsbHostInputType WiiInputType2
     {
-        get => (Child2.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
+        get => (Child2.InnermostInputs().First() as WiiInput)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType2, false, value, null, null, null, null, null);
     }
 
-    public Ps2InputType Ps2InputType2
+    public UsbHostInputType Ps2InputType2
     {
-        get => (Child2.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
+        get => (Child2.InnermostInputs().First() as Ps2Input)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType2, false, null, value, null, null, null, null);
     }
 
@@ -103,7 +103,7 @@ public partial class MacroInput : Input
     [ObservableAsProperty] private bool _isUsb;
 
 
-    private void SetInput(InputType? inputType, bool isChild1, WiiInputType? wiiInput, Ps2InputType? ps2InputType,
+    private void SetInput(InputType? inputType, bool isChild1, UsbHostInputType? wiiInput, UsbHostInputType? ps2InputType,
         GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
         UsbHostInputType? usbInputType)
     {
@@ -181,21 +181,21 @@ public partial class MacroInput : Input
                 input = new GhWtTapInput(ghWtInputType.Value, Model, true, wt.Pin, wt.PinS0, wt.PinS1, wt.PinS2);
                 break;
             case Types.InputType.WiiInput when child is not WiiInput:
-                wiiInput ??= WiiInputType.ClassicA;
+                wiiInput ??= UsbHostInputType.A;
                 input = new WiiInput(wiiInput.Value, Model, false);
                 inputOther = new WiiInput(wiiInput.Value, Model, false);
                 break;
             case Types.InputType.WiiInput when child is WiiInput wii:
-                wiiInput ??= WiiInputType.ClassicA;
+                wiiInput ??= UsbHostInputType.A;
                 input = new WiiInput(wiiInput.Value, Model, false, wii.Sda, wii.Scl);
                 break;
             case Types.InputType.Ps2Input when child is not Ps2Input:
-                ps2InputType ??= Ps2InputType.Cross;
+                ps2InputType ??= UsbHostInputType.A;
                 input = new Ps2Input(ps2InputType.Value, Model, false);
                 inputOther = new Ps2Input(ps2InputType.Value, Model, false);
                 break;
             case Types.InputType.Ps2Input when child is Ps2Input ps2:
-                ps2InputType ??= Ps2InputType.Cross;
+                ps2InputType ??= UsbHostInputType.A;
                 input = new Ps2Input(ps2InputType.Value, Model, false, ps2.Miso, ps2.Mosi, ps2.Sck,
                     ps2.Att,
                     ps2.Ack);

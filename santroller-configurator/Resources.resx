@@ -1696,6 +1696,10 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="XInputSubTypeGuitarHeroLive" xml:space="preserve">
         <value>Guitar Hero Live</value>
     </data>
+    <data name="XInputSubTypeSkylandersPortal" xml:space="preserve">
+        <value>Skylanders Portal</value>
+    </data>
+    
     <data name="ConsoleTypeUniversal" xml:space="preserve">
         <value>Universal</value>
     </data>

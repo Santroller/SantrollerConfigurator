@@ -12,7 +12,7 @@ public class SerializedPs2Input : SerializedInput
     {
         
     }
-    public SerializedPs2Input(bool peripheral, int miso, int mosi, int sck, int att, int ack, Ps2InputType type)
+    public SerializedPs2Input(bool peripheral, int miso, int mosi, int sck, int att, int ack, UsbHostInputType type)
     {
         Miso = miso;
         Mosi = mosi;
@@ -28,7 +28,7 @@ public class SerializedPs2Input : SerializedInput
     [ProtoMember(3)] private int Sck { get; }
     [ProtoMember(4)] private int Att { get; }
     [ProtoMember(5)] private int Ack { get; }
-    [ProtoMember(6)] private Ps2InputType Type { get; }
+    [ProtoMember(6)] private UsbHostInputType Type { get; }
     [ProtoMember(7)] private bool Peripheral { get; }
 
     public override Input Generate(ConfigViewModel model)

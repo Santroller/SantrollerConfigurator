@@ -233,19 +233,13 @@ public abstract partial class HostInput : Input
     public struct UsbHostInputs
     {
         private readonly uint buttons;
-        private readonly byte buttons2;
+        private readonly UInt16 buttons2;
 
         private bool ButtonPressed(UsbHostInputType inputType)
         {
             // Annoyingly, we added these later so we can't just put them in the array where we want
             switch (inputType)
             {
-                case UsbHostInputType.YellowCymbal:
-                    return (buttons2 & (1 << 2)) != 0;
-                case UsbHostInputType.BlueCymbal:
-                    return (buttons2 & (1 << 3)) != 0;
-                case UsbHostInputType.GreenCymbal:
-                    return (buttons2 & (1 << 4)) != 0;
                 case >= UsbHostInputType.LeftTrigger
                     and (< UsbHostInputType.GenericButton1 or > UsbHostInputType.GenericButton16):
                     return false;

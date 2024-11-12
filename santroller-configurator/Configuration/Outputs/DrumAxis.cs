@@ -179,19 +179,8 @@ public partial class DrumAxis : OutputAxis
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         var input = Input;
-        if (Input is WiiInput
-            {
-                Input: >= WiiInputType.DrumGreenPressure and <= WiiInputType.DrumOrangePressure
-                or WiiInputType.DrumKickPedalPressure
-            } wii)
-        {
-            // For wii stuff, generate the debounce based on the digital signal from the controller
-            var type = wii.Input;
-            var typeButton = Enum.Parse<WiiInputType>(type.ToString().Replace("Pressure", ""));
-            input = new WiiInput(typeButton, Model, wii.Peripheral);
-        }
 
-        if (Input is UsbHostInput
+        if (Input is HostInput
             {
                 Input: >= UsbHostInputType.RedVelocity and <= UsbHostInputType.KickVelocity
             } usb)

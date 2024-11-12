@@ -500,15 +500,15 @@ public abstract partial class Output : ReactiveObject
         set => SetUsbHostProKeyType(value);
     }
 
-    public WiiInputType WiiInputType
+    public UsbHostInputType WiiInputType
     {
-        get => (Input.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
+        get => (Input.InnermostInputs().First() as WiiInput)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType, value, null, null, null, null, null, null, null);
     }
 
-    public Ps2InputType Ps2InputType
+    public UsbHostInputType Ps2InputType
     {
-        get => (Input.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
+        get => (Input.InnermostInputs().First() as Ps2Input)?.Input ?? UsbHostInputType.A;
         set => SetInput(SelectedInputType, null, value, null, null, null, null, null, null);
     }
 
@@ -1095,7 +1095,7 @@ public abstract partial class Output : ReactiveObject
         ButtonText = Resources.Assign;
     }
 
-    protected void SetInput(InputType? inputType, WiiInputType? wiiInput, Ps2InputType? ps2InputType,
+    protected void SetInput(InputType? inputType, UsbHostInputType? wiiInput, UsbHostInputType? ps2InputType,
         GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
         UsbHostInputType? usbInputType, AccelInputType? accelInputType, MidiType? midiType)
     {
@@ -1221,7 +1221,7 @@ public abstract partial class Output : ReactiveObject
                     wt.PinS2);
                 break;
             case InputType.WiiInput when Input.InnermostInputs().First() is not WiiInput:
-                wiiInput ??= WiiInputType.ClassicA;
+                wiiInput ??= UsbHostInputType.A;
                 input = new WiiInput(wiiInput.Value, Model, false);
                 break;
             case InputType.WiiInput when Input.InnermostInputs().First() is WiiInput wii:
@@ -1229,7 +1229,7 @@ public abstract partial class Output : ReactiveObject
                 input = new WiiInput(wiiInput.Value, Model, wii.Peripheral, wii.Sda, wii.Scl);
                 break;
             case InputType.Ps2Input when Input.InnermostInputs().First() is not Ps2Input:
-                ps2InputType ??= Ps2InputType.Cross;
+                ps2InputType ??= UsbHostInputType.A;
                 input = new Ps2Input(ps2InputType.Value, Model, false);
                 break;
             case InputType.Ps2Input when Input.InnermostInputs().First() is Ps2Input ps2:

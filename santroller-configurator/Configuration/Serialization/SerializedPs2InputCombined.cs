@@ -12,13 +12,13 @@ public class SerializedPs2InputCombined : SerializedInput
     {
         
     }
-    public SerializedPs2InputCombined(Ps2InputType type, bool peripheral)
+    public SerializedPs2InputCombined(UsbHostInputType type, bool peripheral)
     {
         Type = type;
         Peripheral = peripheral;
     }
 
-    [ProtoMember(6)] private Ps2InputType Type { get; }
+    [ProtoMember(6)] private UsbHostInputType Type { get; }
     [ProtoMember(8)] private bool Peripheral { get; }
 
     public override Input Generate(ConfigViewModel model)

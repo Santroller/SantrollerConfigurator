@@ -24,21 +24,6 @@ public class StartSelectHomeInput : FixedInput
 
 public class StartSelectHome : Output
 {
-    private static readonly List<WiiInputType> StartWii =
-    [
-        WiiInputType.ClassicPlus,
-        WiiInputType.GuitarPlus,
-        WiiInputType.DrumPlus,
-        WiiInputType.DjHeroPlus
-    ];
-
-    private static readonly List<WiiInputType> SelectWii =
-    [
-        WiiInputType.ClassicMinus,
-        WiiInputType.GuitarMinus,
-        WiiInputType.DrumMinus,
-        WiiInputType.DjHeroMinus
-    ];
 
     private readonly List<ControllerButton> _outputs = [];
 
@@ -53,20 +38,17 @@ public class StartSelectHome : Output
         Peripheral = peripheral;
         if (wii)
         {
-            for (var i = 0; i < StartWii.Count; i++)
-            {
-                _outputs.Add(new ControllerButton(Model, true,
-                    new MacroInput(new WiiInput(StartWii[i], model, peripheral),
-                        new WiiInput(SelectWii[i], model, peripheral), Model), Colors.Black, Colors.Black,
-                    [], [], [], 10, StandardButtonType.Guide, false,
-                    false, false, -1, true));
-            }
+            _outputs.Add(new ControllerButton(Model, true,
+                new MacroInput(new WiiInput(UsbHostInputType.Guide, model, peripheral),
+                    new WiiInput(UsbHostInputType.Back, model, peripheral), Model), Colors.Black, Colors.Black,
+                [], [], [], 10, StandardButtonType.Guide, false,
+                false, false, -1, true));
         }
         else
         {
             _outputs.Add(new ControllerButton(Model, true,
-                new MacroInput(new Ps2Input(Ps2InputType.Start, model, peripheral),
-                    new Ps2Input(Ps2InputType.Select, model, peripheral), Model), Colors.Black, Colors.Black,
+                new MacroInput(new Ps2Input(UsbHostInputType.Guide, model, peripheral),
+                    new Ps2Input(UsbHostInputType.Back, model, peripheral), Model), Colors.Black, Colors.Black,
                 [], [], [], 10, StandardButtonType.Guide, false,
                 false, false, -1, true));
         }
