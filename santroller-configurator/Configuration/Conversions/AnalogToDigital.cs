@@ -146,6 +146,8 @@ public partial class AnalogToDigital : Input
                 case AnalogToDigitalType.Drum:
                 case AnalogToDigitalType.Trigger:
                     return $"({Child.Generate(writer)}) > ({thresholdVal})";
+                case AnalogToDigitalType.TriggerInverted:
+                    return $"({Child.Generate(writer)}) < ({thresholdVal})";
                 case AnalogToDigitalType.JoyHigh:
                     return $"({Child.Generate(writer)}) > ({short.MaxValue} + ({thresholdVal}))";
                 case AnalogToDigitalType.JoyLow:
@@ -158,6 +160,8 @@ public partial class AnalogToDigital : Input
                 case AnalogToDigitalType.Trigger:
                 case AnalogToDigitalType.JoyHigh:
                     return $"({Child.Generate(writer)}) > ({thresholdVal})";
+                case AnalogToDigitalType.TriggerInverted:
+                    return $"({Child.Generate(writer)}) < ({thresholdVal})";
                 case AnalogToDigitalType.JoyLow:
                     return $"({Child.Generate(writer)}) < (-({thresholdVal}))";
             }
