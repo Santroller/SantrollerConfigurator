@@ -106,7 +106,7 @@ public partial class AnalogToDigital : Input
 
             Threshold = AnalogToDigitalType switch
             {
-                AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger => value,
+                AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger or AnalogToDigitalType.TriggerInverted => value,
                 AnalogToDigitalType.JoyLow => short.MaxValue - value,
                 _ => value - short.MaxValue
             };
