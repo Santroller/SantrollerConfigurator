@@ -27,7 +27,7 @@ public partial class AnalogToDigital : Input
         IsAnalog = false;
         this.WhenAnyValue(x => x.Child.RawValue, x => x.Threshold).ObserveOn(RxApp.MainThreadScheduler)
             .Subscribe(s => RawValue = Calculate(s));
-        _rawAnalogValueHelper =  this.WhenAnyValue(x => x.Child.RawValue).ObserveOn(RxApp.MainThreadScheduler)
+        _rawAnalogValueHelper = this.WhenAnyValue(x => x.Child.RawValue).ObserveOn(RxApp.MainThreadScheduler)
             .ToProperty(this, s => s.RawAnalogValue);
         _valueLowerHelper = this.WhenAnyValue(x => x.Child.RawValue)
             .Select(s => s < 0 ? -s : 0).ToProperty(this, x => x.ValueLower);
@@ -58,6 +58,7 @@ public partial class AnalogToDigital : Input
             {
                 AnalogToDigitalType.JoyLow => short.MaxValue / 2,
                 AnalogToDigitalType.JoyHigh => short.MaxValue / 2,
+                AnalogToDigitalType.TriggerInverted => ushort.MaxValue / 2,
                 AnalogToDigitalType.Trigger => ushort.MaxValue / 2,
                 _ => throw new ArgumentOutOfRangeException()
             };
@@ -77,9 +78,11 @@ public partial class AnalogToDigital : Input
         {
             return type.threshold;
         }
+
         switch (type.type)
         {
             case AnalogToDigitalType.Drum:
+            case AnalogToDigitalType.TriggerInverted:
             case AnalogToDigitalType.Trigger:
                 return type.threshold;
             case AnalogToDigitalType.JoyHigh:
@@ -90,6 +93,7 @@ public partial class AnalogToDigital : Input
 
         return 0;
     }
+
     public int DisplayThreshold
     {
         get => _displayThreshold.Value;
@@ -110,7 +114,9 @@ public partial class AnalogToDigital : Input
     }
 
     public override InputType? InputType => Child.InputType;
-    public IEnumerable<AnalogToDigitalType> AnalogToDigitalTypes => Enum.GetValues<AnalogToDigitalType>().Where(s => s != AnalogToDigitalType.Drum);
+
+    public IEnumerable<AnalogToDigitalType> AnalogToDigitalTypes =>
+        Enum.GetValues<AnalogToDigitalType>().Where(s => s != AnalogToDigitalType.Drum);
 
     public override IList<DevicePin> Pins => Child.Pins;
     public override IList<PinConfig> PinConfigs => Child.PinConfigs;
@@ -125,10 +131,12 @@ public partial class AnalogToDigital : Input
     public override string Generate(BinaryWriter? writer)
     {
         var threshold = Threshold;
-        if (Child.IsUint && AnalogToDigitalType is not (AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger))
+        if (Child.IsUint && AnalogToDigitalType is not (AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger
+                or AnalogToDigitalType.TriggerInverted))
         {
             threshold = Math.Abs(threshold);
         }
+
         var thresholdVal = $"{threshold}";
         if (writer != null)
         {
@@ -140,6 +148,7 @@ public partial class AnalogToDigital : Input
 
             thresholdVal = _tresholdBlob;
         }
+
         if (Child.IsUint)
             switch (AnalogToDigitalType)
             {
@@ -212,7 +221,8 @@ public partial class AnalogToDigital : Input
         ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
     {
         Child.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
-            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw);
+            ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral,
+            cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw);
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings,
