@@ -191,6 +191,7 @@ public partial class AnalogToDigital : Input
             return AnalogToDigitalType switch
             {
                 AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger => val.raw > val.threshold ? 1 : 0,
+                AnalogToDigitalType.TriggerInverted => val.raw < val.threshold ? 1 : 0,
                 AnalogToDigitalType.JoyHigh => val.raw > short.MaxValue + val.threshold ? 1 : 0,
                 AnalogToDigitalType.JoyLow => val.raw < short.MaxValue - val.threshold ? 1 : 0,
                 _ => 0
@@ -200,6 +201,7 @@ public partial class AnalogToDigital : Input
         return AnalogToDigitalType switch
         {
             AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger => val.raw > val.threshold ? 1 : 0,
+            AnalogToDigitalType.TriggerInverted => val.raw < val.threshold ? 1 : 0,
             AnalogToDigitalType.JoyHigh => val.raw > Math.Abs(val.threshold) ? 1 : 0,
             AnalogToDigitalType.JoyLow => val.raw < -Math.Abs(val.threshold) ? 1 : 0,
             _ => 0
