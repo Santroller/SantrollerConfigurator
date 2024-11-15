@@ -5133,6 +5133,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string AnalogToDigitalTypeTriggerInverted {
+            get {
+                return ResourceManager.GetString("AnalogToDigitalTypeTriggerInverted", resourceCulture);
+            }
+        }
+        
         public static string AnalogToDigitalTypeRapidTrigger {
             get {
                 return ResourceManager.GetString("AnalogToDigitalTypeRapidTrigger", resourceCulture);
@@ -6000,6 +6006,12 @@ namespace GuitarConfigurator.NetCore {
         public static string SelectedDeviceLabel {
             get {
                 return ResourceManager.GetString("SelectedDeviceLabel", resourceCulture);
+            }
+        }
+        
+        public static string SelectedDeviceBTLabel {
+            get {
+                return ResourceManager.GetString("SelectedDeviceBTLabel", resourceCulture);
             }
         }
         

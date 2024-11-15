@@ -2590,6 +2590,9 @@ Siéntete libre de remover esta opción si no usarás tu instrumento en iOS.
     <data name="AnalogToDigitalTypeTrigger" xml:space="preserve">
         <value>Gatillo / Botón</value>
     </data>
+    <data name="AnalogToDigitalTypeTriggerInverted" xml:space="preserve">
+        <value>Gatillo / Botón (Invertido)</value>
+    </data>
     <data name="AnalogToDigitalTypeRapidTrigger" xml:space="preserve">
         <value>GatilloRápido</value>
     </data>
@@ -3015,6 +3018,9 @@ Siéntete libre de remover esta opción si no usarás tu instrumento en iOS.
     </data>
     <data name="SelectedDeviceLabel" xml:space="preserve">
         <value>Dispositivo a programar</value>
+    </data>
+    <data name="SelectedDeviceBTLabel" xml:space="preserve">
+        <value>Dispositivo a emparejar</value>
     </data>
     <data name="DetectedLabel" xml:space="preserve">
         <value>Detectado</value>

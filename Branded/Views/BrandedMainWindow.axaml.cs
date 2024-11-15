@@ -21,7 +21,7 @@ public partial class BrandedMainWindow : ReactiveWindow<BrandedMainWindowViewMod
     }
 
     private async Task DoShowInformationDialogAsync(
-        InteractionContext<string, InformationWindowViewModel> interaction)
+        IInteractionContext<string, InformationWindowViewModel> interaction)
     {
         var model = new InformationWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input);
         var dialog = new InformationWindow

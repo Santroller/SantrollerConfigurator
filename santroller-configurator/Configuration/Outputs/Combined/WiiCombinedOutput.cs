@@ -566,7 +566,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
             }
         }
 
-        if (Model.DeviceControllerType.IsGuitar() && !Model.DeviceControllerType.IsFortnite())
+        if (Model.DeviceControllerType.IsGuitar())
         {
             if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Whammy}))
             {
@@ -584,7 +584,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         }
 
         // Map Slider on guitars to Slider, and to RightStickY on anything else
-        if (Model.DeviceControllerType.Is5FretGuitar() && !Model.DeviceControllerType.IsFortnite())
+        if (Model.DeviceControllerType.Is5FretGuitar())
         {
             if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Slider}))
             {
@@ -595,7 +595,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                     false, GuitarAxisType.Slider, false, false, false, -1, true));
             }
         }
-        else if (Model.DeviceControllerType == DeviceControllerType.Gamepad || Model.DeviceControllerType.IsFortnite())
+        else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
         {
             Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Slider}));
         }

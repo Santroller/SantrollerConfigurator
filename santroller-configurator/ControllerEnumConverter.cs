@@ -60,14 +60,6 @@ public class ControllerEnumConverter : IMultiValueConverter
                     Resources.ButtonLabelHeroPower
                 },
                 {
-                    (DeviceControllerType.FortniteGuitar, StandardButtonType.Back),
-                    Resources.ButtonLabelOverdrive
-                },
-                {
-                    (DeviceControllerType.FortniteGuitarStrum, StandardButtonType.Back),
-                    Resources.ButtonLabelOverdrive
-                },
-                {
                     (DeviceControllerType.LiveGuitar, StandardButtonType.LeftThumbClick),
                     Resources.ButtonLabelGHTV
                 },
@@ -201,10 +193,6 @@ public class ControllerEnumConverter : IMultiValueConverter
             case DeviceControllerType.GuitarHeroGuitar:
             case DeviceControllerType.RockBandGuitar:
                 return SupportedButtonsGuitar.Contains(button);
-            case DeviceControllerType.FortniteGuitar:
-            case DeviceControllerType.FortniteGuitarStrum:
-            case DeviceControllerType.FortniteDrums:
-                return SupportedButtonsFortnite.Contains(button);
             default:
                 return true;
         }
@@ -214,8 +202,7 @@ public class ControllerEnumConverter : IMultiValueConverter
     {
         var otherBindings = deviceType switch
         {
-            DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums
-                or DeviceControllerType.FortniteDrums =>
+            DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums =>
                 DrumAxisTypeMethods.GetTypeFor(deviceType).Cast<object>(),
             DeviceControllerType.Gamepad => Enum.GetValues<Ps3AxisType>().Cast<object>()
                 .Concat(Enum.GetValues<StandardAxisType>().Cast<object>()),
@@ -224,8 +211,6 @@ public class ControllerEnumConverter : IMultiValueConverter
                 .Cast<object>()
                 .Concat(Enum.GetValues<DjAxisType>().Cast<object>()),
             DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandGuitar
-                or DeviceControllerType.FortniteGuitar
-                or DeviceControllerType.FortniteGuitarStrum
                 or DeviceControllerType.LiveGuitar => GuitarAxisTypeMethods
                     .GetTypeFor(deviceType)
                     .Cast<object>()

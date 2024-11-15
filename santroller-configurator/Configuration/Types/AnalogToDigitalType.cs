@@ -5,5 +5,6 @@ public enum AnalogToDigitalType
     JoyLow,
     JoyHigh,
     Trigger,
-    Drum
+    Drum,
+    TriggerInverted
 }

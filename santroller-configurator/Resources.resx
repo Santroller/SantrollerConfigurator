@@ -2699,6 +2699,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="AnalogToDigitalTypeTrigger" xml:space="preserve">
         <value>Trigger / Button</value>
     </data>
+    <data name="AnalogToDigitalTypeTriggerInverted" xml:space="preserve">
+        <value>Trigger / Button (Inverted)</value>
+    </data>
     <data name="AnalogToDigitalTypeRapidTrigger" xml:space="preserve">
         <value>RapidTrigger</value>
     </data>
@@ -3139,6 +3142,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="SelectedDeviceLabel" xml:space="preserve">
         <value>Device to program</value>
+    </data>
+    <data name="SelectedDeviceBTLabel" xml:space="preserve">
+        <value>Device to pair with</value>
     </data>
     <data name="BluetoothMode" xml:space="preserve">
         <value>Bluetooth Mode</value>

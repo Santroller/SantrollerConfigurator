@@ -112,10 +112,6 @@ public class GuitarButton : OutputButton
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
-        if (deviceControllerType.IsFortnite())
-        {
-            return Resources.ResourceManager.GetString("Fortnite" + Type, Resources.Culture) ?? "";
-        }
 
         return EnumToStringConverter.Convert(Type);
     }
@@ -146,15 +142,6 @@ public class GuitarButton : OutputButton
             if (!string.IsNullOrEmpty(combinedExtra))
             {
                 combinedExtra = "((!COMBINED_DEBOUNCE) || (" + combinedExtra + "))";
-            }
-        }
-
-        if (mode is ConfigField.Shared && Model.DeviceControllerType is DeviceControllerType.FortniteGuitarStrum)
-        {
-            if (Type is InstrumentButtonType.Green or InstrumentButtonType.Red or InstrumentButtonType.Yellow
-                or InstrumentButtonType.Blue or InstrumentButtonType.Orange)
-            {
-                combinedExtra = string.Join(" || ", strumIndexes.Distinct().Select(x => $"debounce[{x}]"));
             }
         }
 

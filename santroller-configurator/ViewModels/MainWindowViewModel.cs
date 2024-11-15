@@ -274,8 +274,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     public List<AccelSensorTypeMain> AccelSensorTypeMains => Enum.GetValues<AccelSensorTypeMain>().ToList();
 
-    public List<DeviceControllerType> DeviceControllerTypes => Enum.GetValues<DeviceControllerType>().Where(s =>
-        !s.IsFortnite()).ToList();
+    public List<DeviceControllerType> DeviceControllerTypes => Enum.GetValues<DeviceControllerType>().ToList();
 
     public Interaction<(string yesText, string noText, string text), AreYouSureWindowViewModel>
         ShowYesNoDialog { get; } = new();
