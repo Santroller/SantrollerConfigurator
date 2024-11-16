@@ -85,13 +85,13 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         {0x0005, WiiControllerType.MotionPlus}
     };
 
-    private static readonly Dictionary<WiiInputType, StandardButtonType> Tap = new()
+    private static readonly Dictionary<WiiInputType, InstrumentButtonType> Tap = new()
     {
-        {WiiInputType.GuitarTapGreen, StandardButtonType.A},
-        {WiiInputType.GuitarTapRed, StandardButtonType.B},
-        {WiiInputType.GuitarTapYellow, StandardButtonType.Y},
-        {WiiInputType.GuitarTapBlue, StandardButtonType.X},
-        {WiiInputType.GuitarTapOrange, StandardButtonType.LeftShoulder}
+        {WiiInputType.GuitarTapGreen, InstrumentButtonType.Green},
+        {WiiInputType.GuitarTapRed, InstrumentButtonType.Red},
+        {WiiInputType.GuitarTapYellow, InstrumentButtonType.Yellow},
+        {WiiInputType.GuitarTapBlue, InstrumentButtonType.Blue},
+        {WiiInputType.GuitarTapOrange, InstrumentButtonType.Orange}
     };
 
     private static readonly Dictionary<WiiInputType, InstrumentButtonType> TapRb = new()
@@ -393,7 +393,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         if (tapFrets == null) return outputs;
         if (Model.DeviceControllerType.Is5FretGuitar())
         {
-            outputs.AddRange(Tap.Select(pair => new ControllerButton(Model,tapFrets.Enabled,
+            outputs.AddRange(Tap.Select(pair => new GuitarButton(Model,tapFrets.Enabled,
                 new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                 Colors.Black, Colors.Black, [], [], [], 5,
                 pair.Value, false, false, false, -1, true)));
