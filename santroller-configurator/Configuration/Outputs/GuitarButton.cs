@@ -126,6 +126,10 @@ public class GuitarButton : OutputButton
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        if (!Model.Branded && !Enabled)
+        {
+            return "";
+        }
         if (mode is not (ConfigField.Shared or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
             or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Keyboard

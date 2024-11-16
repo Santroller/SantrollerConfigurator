@@ -34,14 +34,15 @@ Normalmente, el modo de teclado funciona bien para la mayoría de personas y se 
         </value>
     </data>
     <data name="ModeBindingProModeToggle" xml:space="preserve">
-        <value>Presionar estos botones alternará el esquema de controles entre juego y navegación.
-Esto es particularmente útil para Android y Switch, ya que estos dispositivos tienen un esquema de controles totalmente diferente durante el juego. Siéntete libre de remover esta opción si no usarás tu instrumento en Android o Switch.
+        <value>Presionar estos botones hará que se alterne el esquema de control entre el de jugabilidad y el de navegación.
+Esto es útil para Android, Switch e iOS en particular, ya que estos dispositivos tienen esquemas de control totalmente diferentes mientras juegas.
+Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS, Android o Switch.
         </value>
     </data>
     <data name="ModeBindingProModeiOS" xml:space="preserve">
-        <value>Sostener este botón mientras conectas tu instrumento causará que el instrumento emule un teclado en vez de un control estándar, haciéndolo compatible con Fortnite Festival.
-Esto es usado específicamente en iOS ya que iOS no detecta los dispositivos Santroller normales o teclados, así que emulamos un modo especial para este.
-Siéntete libre de remover esta opción si no usarás tu instrumento en iOS.
+        <value>Mantener este botón mientras conectas tu instrumento causará que el instrumento emule un control compatible con Fortnite Festival.
+Esto se usa específicamente en iOS ya que este no detecta dispositivos o teclados que usen Santroller, así que emulamos un modo especial para este.
+Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
         </value>
     </data>
     <data name="TiltSensorLabel" xml:space="preserve">

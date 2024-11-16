@@ -70,6 +70,10 @@ public class Ps3Axis : OutputAxis
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        if (!Model.Branded && !Enabled)
+        {
+            return "";
+        }
         return mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.Universal or ConfigField.Ps2)
             ? ""
             : base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);

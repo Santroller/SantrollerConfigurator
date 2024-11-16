@@ -41,12 +41,12 @@ Normally, keyboard mode works fine for most people and is recommended over this 
     </data>
     <data name="ModeBindingProModeToggle" xml:space="preserve">
         <value>Pressing these buttons will toggle the control scheme between a gameplay and a navigation scheme.
-This is useful for Android and Switch in particular, as these devices have totally different control schemes during gameplay.
-Feel free to remove this option if you do not intend to use your instrument on Android or Switch.
+This is useful for Android and Switch and iOS in particular, as these devices have totally different control schemes during gameplay.
+Feel free to remove this option if you do not intend to use your instrument on iOS, Android or Switch.
         </value>
     </data>
     <data name="ModeBindingProModeiOS" xml:space="preserve">
-        <value>Holding this button while plugging your instrument in will cause the instrument to emulate a keyboard instead of a standard controller, making it compatible with Fortnite Festival.
+        <value>Holding this button while plugging your instrument in will cause the instrument to emulate a controller that is compatible with Fortnite Festival.
 This is specifically used on iOS as iOS doesn't detect normal Santroller devices or keyboards, so we emulate a special mode for it.
 Feel free to remove this option if you do not intend to use your instrument on iOS.
         </value>

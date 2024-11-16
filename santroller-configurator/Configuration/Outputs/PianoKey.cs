@@ -79,6 +79,10 @@ public partial class PianoKey : OutputAxis
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        if (!Model.Branded && !Enabled)
+        {
+            return "";
+        }
         if (mode == ConfigField.Shared)
         {
             return "";

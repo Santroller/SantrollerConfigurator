@@ -65,6 +65,10 @@ public abstract partial class OutputButton : Output
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        if (!Model.Branded && !Enabled)
+        {
+            return "";
+        }
         var ifStatement = $"debounce[{debounceIndex}]";
         var extraStatement = "";
         if (mode == ConfigField.Shared && combinedExtra.Length != 0) extraStatement = $" && ({combinedExtra})";
