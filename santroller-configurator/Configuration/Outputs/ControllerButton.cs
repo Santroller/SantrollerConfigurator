@@ -42,11 +42,6 @@ public class ControllerButton : OutputButton
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
-        if (deviceControllerType.IsFortnite() && !_fortniteKeys.ContainsKey(Type))
-        {
-            return "";
-        }
-
         return ControllerEnumConverter.Convert(Type, deviceControllerType, legendType, swapSwitchFaceButtons);
     }
 

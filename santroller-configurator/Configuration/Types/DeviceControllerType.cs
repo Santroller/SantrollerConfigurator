@@ -11,21 +11,16 @@ public enum DeviceControllerType
     LiveGuitar,
     Turntable,
     StageKit,
-    FortniteGuitar,
-    FortniteGuitarStrum,
-    FortniteDrums,
     ProKeys = 16,
     ProGuitarMustang,
     ProGuitarSquire,
-    FortniteProGuitar,
-    FortniteProDrums,
     KeyboardMouse
 }
 
 public static class DeviceControllerRhythmTypeExtensions {
     public static bool Is5FretGuitar(this DeviceControllerType type)
     {
-        return type is DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandGuitar or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum;
+        return type is DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandGuitar;
     }
     public static bool IsGuitar(this DeviceControllerType type)
     {
@@ -33,11 +28,7 @@ public static class DeviceControllerRhythmTypeExtensions {
     }
     public static bool IsDrum(this DeviceControllerType type)
     {
-        return type is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums or DeviceControllerType.FortniteDrums;
-    }
-    public static bool IsFortnite(this DeviceControllerType type)
-    {
-        return type is DeviceControllerType.FortniteDrums or DeviceControllerType.FortniteGuitar or DeviceControllerType.FortniteGuitarStrum or DeviceControllerType.FortniteProGuitar or DeviceControllerType.FortniteProDrums;
+        return type is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums;
     }
     public static bool IsProGuitar(this DeviceControllerType type)
     {

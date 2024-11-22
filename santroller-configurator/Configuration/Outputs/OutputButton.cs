@@ -65,6 +65,10 @@ public abstract partial class OutputButton : Output
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        if (!Model.Branded && !Enabled)
+        {
+            return "";
+        }
         var ifStatement = $"debounce[{debounceIndex}]";
         var extraStatement = "";
         if (mode == ConfigField.Shared && combinedExtra.Length != 0) extraStatement = $" && ({combinedExtra})";
@@ -155,6 +159,16 @@ public abstract partial class OutputButton : Output
                                   {{extra}}
                               }
                               tiltActive = true;
+                          }
+                          """;
+            }
+
+            if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar && this is GuitarButton {IsStrum: true} && mode != ConfigField.Universal && mode != ConfigField.Xbox360)
+            {
+                
+                return  $$"""
+                          if ({{ifStatement}}) {
+                              {{extra}}
                           }
                           """;
             }

@@ -44,11 +44,6 @@ public static class GuitarAxisTypeMethods
             case DeviceControllerType.LiveGuitar:
                 return GhlTypes();
         }
-
-        if (deviceControllerType.IsFortnite())
-        {
-            return Array.Empty<GuitarAxisType>();
-        }
         return deviceControllerType.IsGh()
             ? GhTypes()
             : RbTypes();

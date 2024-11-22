@@ -41,6 +41,10 @@ public class DjButton : OutputButton
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        if (!Model.Branded && !Enabled)
+        {
+            return "";
+        }
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.XboxOne
             or ConfigField.Xbox360 or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii))
             return "";

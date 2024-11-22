@@ -56,19 +56,11 @@ public static class DrumAxisTypeMethods
 
     public static IEnumerable<DrumAxisType> GetTypeFor(DeviceControllerType type)
     {
-        if (type.IsFortnite())
-        {
-            return FortniteTypes();
-        }
         return type.IsGh() ? GhTypes() : RbTypes();
     }
 
     public static IEnumerable<DrumAxisType> GetInvalidTypesFor(DeviceControllerType type)
     {
-        if (type.IsFortnite())
-        {
-            return RbTypes().Concat(GhTypes());
-        }
         return type.IsGh() ? RbTypes() : GhTypes();
     }
 

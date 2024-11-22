@@ -135,8 +135,6 @@ public static class InstrumentButtonTypeExtensions
         return deviceControllerType switch
         {
             DeviceControllerType.GuitarHeroGuitar => GuitarButtons,
-            DeviceControllerType.FortniteGuitar => GuitarButtons,
-            DeviceControllerType.FortniteGuitarStrum => GuitarButtons,
             DeviceControllerType.ProGuitarMustang => GuitarButtons,
             DeviceControllerType.ProGuitarSquire => GuitarButtons,
             DeviceControllerType.RockBandGuitar => RbButtons,
@@ -154,8 +152,6 @@ public static class InstrumentButtonTypeExtensions
                 break;
             case DeviceControllerType.GuitarHeroGuitar:
             case DeviceControllerType.RockBandGuitar:
-            case DeviceControllerType.FortniteGuitar:
-            case DeviceControllerType.FortniteGuitarStrum:
             {
                 outputs.RemoveMany(outputs.Items.Where(s => s is KeyboardButton));
                 foreach (var output in outputs.Items)

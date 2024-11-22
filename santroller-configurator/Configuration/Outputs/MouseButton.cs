@@ -53,6 +53,10 @@ public class MouseButton : OutputButton
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        if (!Model.Branded && !Enabled)
+        {
+            return "";
+        }
         return mode is not (ConfigField.Mouse or ConfigField.Shared or ConfigField.Reset)
             ? ""
             : base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);

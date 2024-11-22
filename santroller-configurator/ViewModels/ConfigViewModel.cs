@@ -309,8 +309,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Bindings.Connect().Bind(out _outputs).Subscribe();
         }
 
-        _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>().Where(s =>
-            !s.IsFortnite()));
+        _deviceControllerTypes.AddRange(Enum.GetValues<DeviceControllerType>());
         _deviceControllerTypes.Connect()
             .Bind(out var controllerTypes)
             .Subscribe();
@@ -1466,17 +1465,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public void SetDeviceTypeWithoutUpdating(DeviceControllerType type)
     {
-        // Remove legacy fortnite confiurations
-        if (type.IsFortnite() && type.IsGuitar())
-        {
-            type = DeviceControllerType.RockBandGuitar;
-        }
-
-        if (type.IsFortnite() && type.IsDrum())
-        {
-            type = DeviceControllerType.RockBandDrums;
-        }
-
         this.RaiseAndSetIfChanged(ref _deviceControllerType, type, nameof(DeviceControllerType));
     }
 
