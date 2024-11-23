@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public abstract class CombinedSpiOutput : CombinedOutput, ISpi
+public abstract class CombinedSpiOutput : HostCombinedOutput, ISpi
 {
     protected readonly SpiConfig SpiConfig;
 

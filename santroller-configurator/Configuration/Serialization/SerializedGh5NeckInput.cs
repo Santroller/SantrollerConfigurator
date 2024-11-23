@@ -12,7 +12,7 @@ public class SerializedGh5NeckInput : SerializedInput
     {
         
     }
-    public SerializedGh5NeckInput(bool peripheral, int sda, int scl, Gh5NeckInputType type)
+    public SerializedGh5NeckInput(bool peripheral, int sda, int scl, UsbHostInputType type)
     {
         Sda = sda;
         Scl = scl;
@@ -22,7 +22,7 @@ public class SerializedGh5NeckInput : SerializedInput
 
     [ProtoMember(1)] private int Sda { get; }
     [ProtoMember(2)] private int Scl { get; }
-    [ProtoMember(3)] private Gh5NeckInputType Type { get; }
+    [ProtoMember(3)] private UsbHostInputType Type { get; }
     [ProtoMember(4)] private bool Peripheral { get; }
 
     public override Input Generate(ConfigViewModel model)

@@ -60,23 +60,16 @@ public class CloneNeckInput : TwiInput
         Gh5NeckInputType.TapOrange
     ];
 
-    public CloneNeckInput(Gh5NeckInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
+    public CloneNeckInput(UsbHostInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
         int scl = -1, bool combined = false) : base(
-        CloneTwiType, CloneTwiFreq, peripheral, sda, scl, model)
+        input, CloneTwiType, CloneTwiFreq, peripheral, sda, scl, model)
     {
-        Combined = combined;
-        BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
-        Input = input;
-        IsAnalog = Input == Gh5NeckInputType.TapBar;
     }
 
     public override string Title => EnumToStringConverter.Convert(Input);
-    public bool Combined { get; }
-    public bool ShouldShowPins => !Combined && !Model.Branded; 
-    public bool BindableTwi { get; }
+    public override string Field => "lastSuccessfulClonePacket";
 
     public override InputType? InputType => Types.InputType.CloneNeckInput;
-    public Gh5NeckInputType Input { get; set; }
 
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
     public override bool IsUint => true;
@@ -85,10 +78,10 @@ public class CloneNeckInput : TwiInput
     {
         return $"clone_buttons[{MappingsIdx[inputType]}] & {MappingsBit[inputType]}";
     }
-    public override string Generate(BinaryWriter? writer)
-    {
-        return Input <= Gh5NeckInputType.TapOrange ? GetMapping(Input) : $"gh5_mappings[{string.Join(" | ", Taps.Select((type, i) => $"(({GetMapping(type)}) != 0) << {i}"))}]";
-    }
+    // public override string Generate(BinaryWriter? writer)
+    // {
+    //     return Input <= Gh5NeckInputType.TapOrange ? GetMapping(Input) : $"gh5_mappings[{string.Join(" | ", Taps.Select((type, i) => $"(({GetMapping(type)}) != 0) << {i}"))}]";
+    // }
 
     public override SerializedInput Serialise()
     {
@@ -96,35 +89,35 @@ public class CloneNeckInput : TwiInput
         return new SerializedCloneNeckInput(Peripheral, Sda, Scl, Input);
     }
 
-    public override void Update(Dictionary<int, int> analogRaw,
-        Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw,
-        ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw,
-        ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
-        ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
-        ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
-        ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
-    {
-        if (cloneRaw.IsEmpty) return;
-        switch (Input)
-        {
-            case <= Gh5NeckInputType.TapOrange:
-                RawValue = (cloneRaw[MappingsIdx[Input]] & MappingsBit[Input]) != 0 ? 1 : 0;
-                break;
-            case Gh5NeckInputType.TapBar:
-            case Gh5NeckInputType.TapAll:
-                BarButton output = 0;
-                foreach (var type in Taps)
-                {
-                    if ((cloneRaw[MappingsIdx[type]] & MappingsBit[type]) != 0)
-                    {
-                        output |= InputToButton[type];
-                    }
-                }
-                RawValue = Gh5NeckInput.Gh5MappingsReversed.TryGetValue(output, out var value) ? value : 0;
-                break;
-        }
-    }
+    // public override void Update(Dictionary<int, int> analogRaw,
+    //     Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw,
+    //     ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw,
+    //     ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
+    //     ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
+    //     ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
+    //     Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
+    //     ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
+    // {
+    //     if (cloneRaw.IsEmpty) return;
+    //     switch (Input)
+    //     {
+    //         case <= Gh5NeckInputType.TapOrange:
+    //             RawValue = (cloneRaw[MappingsIdx[Input]] & MappingsBit[Input]) != 0 ? 1 : 0;
+    //             break;
+    //         case Gh5NeckInputType.TapBar:
+    //         case Gh5NeckInputType.TapAll:
+    //             BarButton output = 0;
+    //             foreach (var type in Taps)
+    //             {
+    //                 if ((cloneRaw[MappingsIdx[type]] & MappingsBit[type]) != 0)
+    //                 {
+    //                     output |= InputToButton[type];
+    //                 }
+    //             }
+    //             RawValue = Gh5NeckInput.Gh5MappingsReversed.TryGetValue(output, out var value) ? value : 0;
+    //             break;
+    //     }
+    // }
     public override string GenerateAll(List<Tuple<Input, string>> bindings,
         ConfigField mode)
     {

@@ -17,7 +17,7 @@ using ReactiveUI.SourceGenerators;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public partial class Ps2CombinedOutput : HostCombinedOutput, ISpi
+public partial class Ps2CombinedOutput : CombinedSpiOutput, ISpi
 {
     private readonly DirectPinConfig _ackConfig;
     private readonly DirectPinConfig _attConfig;
@@ -81,55 +81,6 @@ public partial class Ps2CombinedOutput : HostCombinedOutput, ISpi
 
     [Reactive] private bool _controllerFound;
 
-    public override IEnumerable<Output> ValidOutputs()
-    {
-        var outputs = base.ValidOutputs().ToList();
-        var startSelectHome = outputs.FirstOrDefault(s => s is StartSelectHome);
-        if (startSelectHome?.Enabled == true)
-        {
-            outputs.Remove(startSelectHome);
-            outputs.Add(startSelectHome.ValidOutputs());
-        }
-
-        var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
-        if (joyToDpad?.Enabled == true)
-        {
-            outputs.Remove(joyToDpad);
-            outputs.Add(joyToDpad.ValidOutputs());
-        }
-
-        var tapAnalog =
-            Outputs.Items.FirstOrDefault(s => s is {Input: Ps2Input {Input: Ps2InputType.GuitarTapBar}});
-        var tapFrets =
-            Outputs.Items.FirstOrDefault(s => s is {Input: Ps2Input {Input: Ps2InputType.GuitarTapAll}});
-        if (tapAnalog == null && tapFrets == null) return outputs;
-        // Map Tap bar to Upper frets on RB guitars
-        if (tapAnalog != null && Model.DeviceControllerType is DeviceControllerType.RockBandGuitar)
-        {
-            outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model,tapAnalog.Enabled,
-                new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
-                Colors.Black, Colors.Black, [], [], [], 5,
-                pair.Value, false, false,
-                false, -1, true)));
-
-            outputs.Remove(tapAnalog);
-        }
-
-        if (tapFrets == null) return outputs;
-        if (Model.DeviceControllerType.Is5FretGuitar())
-        {
-            outputs.AddRange(Tap.Select(pair => new ControllerButton(Model,tapFrets.Enabled,
-                new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
-                Colors.Black, Colors.Black, [], [], [], 5,
-                pair.Value, false, false,
-                false, -1, true)));
-        }
-
-        outputs.Remove(tapFrets);
-
-        return outputs;
-    }
-
     public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
     {
         Outputs.Clear();
@@ -140,27 +91,39 @@ public partial class Ps2CombinedOutput : HostCombinedOutput, ISpi
         }
     }
 
+    public override HostInput MakeInput(UsbHostInputType type)
+    {
+        return new Ps2Input(type, Model, false, Miso, Mosi, Sck, Att, Ack, IsCombined);
+    }
+
+
+    public override HostInput? MakeInput(ProKeyType type)
+    {
+        return null;
+    }
+
     private static Func<Output, bool> CreateFilter(
         (bool controllerFound, Ps2ControllerType detectedType, Ps2ControllerType selectedType) tuple)
     {
-        if (tuple.selectedType == Ps2ControllerType.All)
-        {
+        // TODO: this?
+        // if (tuple.selectedType == Ps2ControllerType.All)
+        // {
             return _ => true;
-        }
-
-        var controllerType = tuple.selectedType;
-        if (controllerType == Ps2ControllerType.Selected)
-        {
-            controllerType = tuple.detectedType;
-            if (!tuple.controllerFound)
-            {
-                return _ => true;
-            }
-        }
-
-        return output => output is JoystickToDpad ||
-                         (output.Input.InnermostInputs().First() is Ps2Input ps2Input &&
-                          ps2Input.SupportsType(controllerType));
+        // }
+        //
+        // var controllerType = tuple.selectedType;
+        // if (controllerType == Ps2ControllerType.Selected)
+        // {
+        //     controllerType = tuple.detectedType;
+        //     if (!tuple.controllerFound)
+        //     {
+        //         return _ => true;
+        //     }
+        // }
+        //
+        // return output => output is JoystickToDpad ||
+        //                  (output.Input.InnermostInputs().First() is Ps2Input ps2Input &&
+        //                   ps2Input.SupportsType(controllerType));
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,

@@ -54,9 +54,9 @@ public partial class MacroInput : Input
         set => SetInput(SelectedInputType1, true, null, value, null, null, null, null);
     }
 
-    public DjInputType DjInputType1
+    public UsbHostInputType DjInputType1
     {
-        get => (Child1.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
+        get => (Child1.InnermostInputs().First() as DjInput)?.Input ?? UsbHostInputType.LeftGreen;
         set => SetInput(SelectedInputType1, true, null, null, null, null, value, null);
     }
 
@@ -84,9 +84,9 @@ public partial class MacroInput : Input
         set => SetInput(SelectedInputType2, false, null, value, null, null, null, null);
     }
 
-    public DjInputType DjInputType2
+    public UsbHostInputType DjInputType2
     {
-        get => (Child2.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
+        get => (Child2.InnermostInputs().First() as DjInput)?.Input ?? UsbHostInputType.LeftGreen;
         set => SetInput(SelectedInputType2, false, null, null, null, null, value, null);
     }
 
@@ -104,7 +104,7 @@ public partial class MacroInput : Input
 
 
     private void SetInput(InputType? inputType, bool isChild1, UsbHostInputType? wiiInput, UsbHostInputType? ps2InputType,
-        GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
+        GhWtInputType? ghWtInputType, UsbHostInputType? gh5NeckInputType, UsbHostInputType? djInputType,
         UsbHostInputType? usbInputType)
     {
         var child = (isChild1 ? Child1.InnermostInputs() : Child2.InnermostInputs()).First();
@@ -136,25 +136,25 @@ public partial class MacroInput : Input
                 inputOther = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
                 break;
             case Types.InputType.TurntableInput when child is not DjInput:
-                djInputType ??= DjInputType.LeftGreen;
+                djInputType ??= UsbHostInputType.LeftGreen;
                 input = new DjInput(djInputType.Value, Model, false);
                 inputOther = new DjInput(djInputType.Value, Model, false);
                 break;
             case Types.InputType.TurntableInput when child is DjInput dj:
-                djInputType ??= DjInputType.LeftGreen;
+                djInputType ??= UsbHostInputType.LeftGreen;
                 input = new DjInput(djInputType.Value, Model, dj.Smoothing,dj.Sda, dj.Scl);
                 break;
             case Types.InputType.Gh5NeckInput when child is not Gh5NeckInput:
-                gh5NeckInputType ??= Gh5NeckInputType.Green;
+                gh5NeckInputType ??= UsbHostInputType.Green;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, false);
                 inputOther = new Gh5NeckInput(gh5NeckInputType.Value, Model, false);
                 break;
             case Types.InputType.Gh5NeckInput when child is Gh5NeckInput gh5:
-                gh5NeckInputType ??= Gh5NeckInputType.Green;
+                gh5NeckInputType ??= UsbHostInputType.Green;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, false, gh5.Sda, gh5.Scl);
                 break;
             case Types.InputType.CloneNeckInput when child is not CloneNeckInput:
-                gh5NeckInputType ??= Gh5NeckInputType.Green;
+                gh5NeckInputType ??= UsbHostInputType.Green;
                 input = new CloneNeckInput(gh5NeckInputType.Value, Model, false);
                 inputOther = new CloneNeckInput(gh5NeckInputType.Value, Model, false);
                 break;

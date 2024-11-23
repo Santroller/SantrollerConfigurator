@@ -115,7 +115,7 @@ public partial class DjAxis : OutputAxis
 
     public override bool ShouldFlip(ConfigField mode)
     {
-        return mode is ConfigField.Xbox360 && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity;
+        return false;
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
@@ -167,73 +167,76 @@ public partial class DjAxis : OutputAxis
         {
             return "";
         }
-        if (mode == ConfigField.Shared)
-            return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+
+        return mode != ConfigField.Shared
+            ? ""
+            : base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
                 macros,
                 writer);
-        if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
-            or ConfigField.Universal or ConfigField.Xbox)) return "";
-
-        // The crossfader and effects knob on ps3 controllers are shoved into the accelerometer data
-        var accelerometer = mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture &&
-                            Type is DjAxisType.Crossfader or DjAxisType.EffectsKnob;
-        // PS3 needs uint, xb360 needs int
-        // So convert to the right method for that console, and then shift for ps3
-        var generated = $"({Input.Generate(writer)})";
-        var generatedPs3 = generated;
-
-        if (InputIsUint)
-        {
-            // xinput needs int, uint -> int
-            generated = $"({generated} - INT16_MAX)";
-        }
-        else
-        {
-            // ps3 needs int, int -> uint
-            generatedPs3 = $"({generated} + INT16_MAX)";
-        }
-
-        // Table just applies a multiplier to the value
-        // This is the one instance where even PS3 uses int values, because it makes the math easier
-        var generatedTable = $"handle_calibration_turntable_360({GenerateOutput(mode)},{generated}, {Multiplier})";
-        var generatedTablePs3 = $"handle_calibration_turntable_ps3({GenerateOutput(mode)},{generated}, {Multiplier})";
-        if (Type is DjAxisType.EffectsKnob)
-        {
-            var invert = (Invert ? -1 : 1).ToString();
-            if (writer != null)
-            {
-                invert = ConfigViewModel.WriteBlob(writer, Invert);
-            }
-            generated = $"(({generated}) * ({invert}))";
-        }
-
-        if (writer != null && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
-        {
-            var multiplierBlob = ConfigViewModel.WriteBlob(writer, Multiplier);
-            generatedTable = $"handle_calibration_turntable_360({GenerateOutput(mode)},{generated}, {multiplierBlob})";
-            generatedTablePs3 =
-                $"handle_calibration_turntable_ps3({GenerateOutput(mode)},{generated}, {multiplierBlob})";
-        }
-
-        var gen = Type switch
-        {
-            DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity when mode is ConfigField.Ps3
-                    or ConfigField.Ps3WithoutCapture or ConfigField.Universal
-                => generatedTablePs3,
-            DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
-                => generatedTable,
-            DjAxisType.EffectsKnob when mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
-                => $"(({generatedPs3} >> 6))",
-            DjAxisType.EffectsKnob when mode is ConfigField.Universal
-                => $"(({generatedPs3} >> 8))",
-            DjAxisType.EffectsKnob => generated,
-            _ => GenerateAssignment(GenerateOutput(mode), mode, accelerometer, false, false, false, writer)
-        };
-        return Type switch
-        {
-            DjAxisType.Crossfader => $"{GenerateOutput(mode)} = {gen};",
-            _ => $"if ({Input.Generate(writer)}){{{GenerateOutput(mode)} = {gen};}}"
-        };
+        // TODO: djh turntable
+        // if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
+        //     or ConfigField.Universal or ConfigField.Xbox)) return "";
+        //
+        // // The crossfader and effects knob on ps3 controllers are shoved into the accelerometer data
+        // var accelerometer = mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture &&
+        //                     Type is DjAxisType.Crossfader or DjAxisType.EffectsKnob;
+        // // PS3 needs uint, xb360 needs int
+        // // So convert to the right method for that console, and then shift for ps3
+        // var generated = $"({Input.Generate(writer)})";
+        // var generatedPs3 = generated;
+        //
+        // if (InputIsUint)
+        // {
+        //     // xinput needs int, uint -> int
+        //     generated = $"({generated} - INT16_MAX)";
+        // }
+        // else
+        // {
+        //     // ps3 needs int, int -> uint
+        //     generatedPs3 = $"({generated} + INT16_MAX)";
+        // }
+        //
+        // // Table just applies a multiplier to the value
+        // // This is the one instance where even PS3 uses int values, because it makes the math easier
+        // var generatedTable = $"handle_calibration_turntable_360({GenerateOutput(mode)},{generated}, {Multiplier})";
+        // var generatedTablePs3 = $"handle_calibration_turntable_ps3({GenerateOutput(mode)},{generated}, {Multiplier})";
+        // if (Type is DjAxisType.EffectsKnob)
+        // {
+        //     var invert = (Invert ? -1 : 1).ToString();
+        //     if (writer != null)
+        //     {
+        //         invert = ConfigViewModel.WriteBlob(writer, Invert);
+        //     }
+        //     generated = $"(({generated}) * ({invert}))";
+        // }
+        //
+        // if (writer != null && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
+        // {
+        //     var multiplierBlob = ConfigViewModel.WriteBlob(writer, Multiplier);
+        //     generatedTable = $"handle_calibration_turntable_360({GenerateOutput(mode)},{generated}, {multiplierBlob})";
+        //     generatedTablePs3 =
+        //         $"handle_calibration_turntable_ps3({GenerateOutput(mode)},{generated}, {multiplierBlob})";
+        // }
+        //
+        // var gen = Type switch
+        // {
+        //     DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity when mode is ConfigField.Ps3
+        //             or ConfigField.Ps3WithoutCapture or ConfigField.Universal
+        //         => generatedTablePs3,
+        //     DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
+        //         => generatedTable,
+        //     DjAxisType.EffectsKnob when mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
+        //         => $"(({generatedPs3} >> 6))",
+        //     DjAxisType.EffectsKnob when mode is ConfigField.Universal
+        //         => $"(({generatedPs3} >> 8))",
+        //     DjAxisType.EffectsKnob => generated,
+        //     _ => GenerateAssignment(GenerateOutput(mode), mode, accelerometer, false, false, false, writer)
+        // };
+        // return Type switch
+        // {
+        //     DjAxisType.Crossfader => $"{GenerateOutput(mode)} = {gen};",
+        //     _ => $"if ({Input.Generate(writer)}){{{GenerateOutput(mode)} = {gen};}}"
+        // };
     }
 
     protected override string MinCalibrationText()

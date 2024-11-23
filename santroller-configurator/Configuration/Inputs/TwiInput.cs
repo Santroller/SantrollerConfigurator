@@ -8,23 +8,25 @@ using ReactiveUI;
 
 namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
-public abstract class TwiInput : Input, ITwi
+public abstract class TwiInput : HostInput, ITwi
 {
     private readonly TwiConfig _twiConfig;
 
     private readonly string _twiType;
 
-    protected TwiInput(string twiType, int twiFreq, bool peripheral, int sda, int scl,
-        ConfigViewModel model) : base(model)
+    protected TwiInput(UsbHostInputType input, string twiType, int twiFreq, bool peripheral, int sda, int scl,
+        ConfigViewModel model,
+        bool combined = false) : base(input, model, combined)
     {
         _twiType = twiType;
         var config = Model.GetTwiForType(_twiType, peripheral);
         _twiConfig = config ?? Model.Microcontroller.AssignTwiPins(model, _twiType, peripheral, sda, scl, twiFreq, false);
-
+        BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
 
         this.WhenAnyValue(x => x._twiConfig.Scl).Subscribe(_ => this.RaisePropertyChanged(nameof(Scl)));
         this.WhenAnyValue(x => x._twiConfig.Sda).Subscribe(_ => this.RaisePropertyChanged(nameof(Sda)));
     }
+    public bool BindableTwi { get; }
 
     public int Sda
     {

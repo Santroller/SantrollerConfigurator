@@ -200,6 +200,19 @@ public class ControllerEnumConverter : IMultiValueConverter
 
     public static IEnumerable<object> GetTypes(DeviceControllerType deviceType)
     {
+        if (deviceType is DeviceControllerType.Automatic)
+        {
+            return Enum.GetValues<SimpleType>().Cast<object>()
+                .Concat(Enum.GetValues<Ps3AxisType>().Cast<object>())
+                .Concat(Enum.GetValues<DrumAxisType>().Cast<object>())
+                .Concat(Enum.GetValues<StandardAxisType>().Cast<object>())
+                .Concat(Enum.GetValues<DjInputType>().Cast<object>())
+                .Concat(Enum.GetValues<DjAxisType>().Cast<object>())
+                .Concat(Enum.GetValues<InstrumentButtonType>().Cast<object>())
+                .Concat(Enum.GetValues<ProKeyType>().Cast<object>())
+                .Concat(Enum.GetValues<StandardButtonType>()
+                    .Cast<object>());
+        }
         var otherBindings = deviceType switch
         {
             DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums =>

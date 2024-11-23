@@ -39,11 +39,6 @@ public class Ps3Axis : OutputAxis
         return Type;
     }
 
-    public override string GenerateOutput(ConfigField mode)
-    {
-        return mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Ps2 ? GetReportField(Type) : "";
-    }
-
     public override bool ShouldFlip(ConfigField mode)
     {
         return false;
@@ -64,21 +59,6 @@ public class Ps3Axis : OutputAxis
     {
         return true;
     }
-
-    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
-        string combinedExtra,
-        List<int> strumIndexes,
-        bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
-    {
-        if (!Model.Branded && !Enabled)
-        {
-            return "";
-        }
-        return mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.Universal or ConfigField.Ps2)
-            ? ""
-            : base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
-    }
-
     public override SerializedOutput Serialize()
     {
         return new SerializedPs3Axis(Input.Serialise(), Type, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Min, Max,

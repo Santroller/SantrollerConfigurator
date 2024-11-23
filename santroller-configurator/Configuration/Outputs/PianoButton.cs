@@ -39,14 +39,6 @@ public partial class PianoKeyButton : OutputButton
 
     public override bool IsStrum => false;
 
-    public override string GenerateOutput(ConfigField mode)
-    {
-        return mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.XboxOne
-            or ConfigField.Xbox360 or ConfigField.Universal or ConfigField.Xbox or ConfigField.Shared)
-            ? ""
-            : GetReportField(Key);
-    }
-
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {

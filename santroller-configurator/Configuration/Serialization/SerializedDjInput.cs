@@ -12,7 +12,7 @@ public class SerializedDjInput : SerializedInput
     {
         
     }
-    public SerializedDjInput(bool peripheral, int sda, int scl, DjInputType type)
+    public SerializedDjInput(bool peripheral, int sda, int scl, UsbHostInputType type)
     {
         Sda = sda;
         Scl = scl;
@@ -22,7 +22,7 @@ public class SerializedDjInput : SerializedInput
 
     [ProtoMember(1)] private int Sda { get; }
     [ProtoMember(2)] private int Scl { get; }
-    [ProtoMember(3)] private DjInputType Type { get; }
+    [ProtoMember(3)] private UsbHostInputType Type { get; }
     [ProtoMember(5)] private bool Peripheral { get; }
 
 

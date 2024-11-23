@@ -79,7 +79,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SelectedDeviceBTLabel}">
+                               Width="300" Content="{x:Static netCore:Resources.SelectedDeviceLabel}">
 
                         </Label>
                         <ComboBox HorizontalAlignment="Stretch" IsEnabled="false"

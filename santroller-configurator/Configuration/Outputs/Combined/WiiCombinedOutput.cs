@@ -81,41 +81,43 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
 
     [Reactive] private bool _controllerFound;
 
-    public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
+    public override HostInput MakeInput(UsbHostInputType type)
     {
-        Outputs.Clear();
-        Outputs.AddRange(outputs);
-        if (Outputs.Count == 0)
-        {
-            CreateDefaults();
-        }
+        return new WiiInput(type, Model, Peripheral, Sda, Scl, IsCombined);
+    }
+
+
+    public override HostInput? MakeInput(ProKeyType type)
+    {
+        return null;
     }
 
     private static Func<Output, bool> CreateFilter(
         (bool controllerFound, WiiControllerType currentType, WiiControllerType selectedType) tuple)
     {
-        if (tuple.selectedType == WiiControllerType.All)
-        {
+        // TODO: this?
+        // if (tuple.selectedType == WiiControllerType.All)
+        // {
             return _ => true;
-        }
-
-        var controllerType = tuple.selectedType;
-        if (controllerType == WiiControllerType.Selected)
-        {
-            controllerType = tuple.currentType;
-            if (!tuple.controllerFound)
-            {
-                return _ => true;
-            }
-
-            if (controllerType is WiiControllerType.ClassicControllerPro)
-            {
-                controllerType = WiiControllerType.ClassicController;
-            }
-        }
-
-        return output => output is JoystickToDpad or StartSelectHome || output.Input.InnermostInputs().First() is WiiInput wiiInput &&
-            wiiInput.WiiControllerType == controllerType;
+        // }
+        //
+        // var controllerType = tuple.selectedType;
+        // if (controllerType == WiiControllerType.Selected)
+        // {
+        //     controllerType = tuple.currentType;
+        //     if (!tuple.controllerFound)
+        //     {
+        //         return _ => true;
+        //     }
+        //
+        //     if (controllerType is WiiControllerType.ClassicControllerPro)
+        //     {
+        //         controllerType = WiiControllerType.ClassicController;
+        //     }
+        // }
+        //
+        // return output => output is JoystickToDpad or StartSelectHome || output.Input.InnermostInputs().First() is WiiInput wiiInput &&
+            // wiiInput.WiiControllerType == controllerType;
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
@@ -124,112 +126,112 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         return Resources.WiiCombinedTitle;
     }
 
-    public void CreateDefaults()
-    {
-        Outputs.Clear();
-        foreach (var pair in Buttons)
-        {
-            var output = new ControllerButton(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                Colors.Black,
-                Colors.Black, [], [], [], 10,
-                pair.Value, false, false, false, -1, true);
-            Outputs.Add(output);
-        }
+    // public void CreateDefaults()
+    // {
+    //     Outputs.Clear();
+    //     foreach (var pair in Buttons)
+    //     {
+    //         var output = new ControllerButton(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+    //             Colors.Black,
+    //             Colors.Black, [], [], [], 10,
+    //             pair.Value, false, false, false, -1, true);
+    //         Outputs.Add(output);
+    //     }
+    //
+    //     foreach (var pair in Axis)
+    //     {
+    //         if (UIntInputs.Contains(pair.Key))
+    //         {
+    //             var threshold = ushort.MaxValue;
+    //             if (pair.Key is WiiInputType.ClassicLeftTrigger or WiiInputType.ClassicRightTrigger)
+    //             {
+    //                 threshold = 50000;
+    //             }
+    //             Outputs.Add(new ControllerAxis(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], 0, ushort.MaxValue,
+    //                 ushort.MaxValue/2,8000, threshold,
+    //                 pair.Value, false, false, false, -1, true));
+    //         }
+    //         else
+    //         {
+    //             Outputs.Add(new ControllerAxis(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], -30000, 30000, 0,4000,
+    //                 ushort.MaxValue,
+    //                 pair.Value, false, false, false, -1, true));
+    //         }
+    //     }
+    //
+    //     Outputs.Add(new ControllerAxis(Model,true,
+    //         new WiiInput(WiiInputType.GuitarTapBar, Model, Peripheral, Sda, Scl, true),
+    //         Colors.Black,
+    //         Colors.Black, [], [], [], short.MinValue, short.MaxValue,
+    //         0,0,
+    //         ushort.MaxValue, StandardAxisType.RightStickY, false, false, false, -1, true));
+    //     foreach (var pair in AxisAcceleration)
+    //         Outputs.Add(new ControllerAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+    //             Colors.Black,
+    //             Colors.Black, [], [], [], short.MinValue,
+    //             short.MaxValue, 0,0,
+    //             ushort.MaxValue, pair.Value, false, false, false, -1,
+    //             true));
+    //     var dpad = new JoystickToDpad(Model, true,Peripheral, short.MaxValue / 2, true)
+    //     {
+    //         Enabled = false
+    //     };
+    //     Outputs.Add(dpad);
+    //     Outputs.Add(new StartSelectHome(Model, true,Peripheral, true) {Enabled = false});
+    //     UpdateBindings();
+    // }
 
-        foreach (var pair in Axis)
-        {
-            if (UIntInputs.Contains(pair.Key))
-            {
-                var threshold = ushort.MaxValue;
-                if (pair.Key is WiiInputType.ClassicLeftTrigger or WiiInputType.ClassicRightTrigger)
-                {
-                    threshold = 50000;
-                }
-                Outputs.Add(new ControllerAxis(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                    Colors.Black,
-                    Colors.Black, [], [], [], 0, ushort.MaxValue,
-                    ushort.MaxValue/2,8000, threshold,
-                    pair.Value, false, false, false, -1, true));
-            }
-            else
-            {
-                Outputs.Add(new ControllerAxis(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                    Colors.Black,
-                    Colors.Black, [], [], [], -30000, 30000, 0,4000,
-                    ushort.MaxValue,
-                    pair.Value, false, false, false, -1, true));
-            }
-        }
-
-        Outputs.Add(new ControllerAxis(Model,true,
-            new WiiInput(WiiInputType.GuitarTapBar, Model, Peripheral, Sda, Scl, true),
-            Colors.Black,
-            Colors.Black, [], [], [], short.MinValue, short.MaxValue,
-            0,0,
-            ushort.MaxValue, StandardAxisType.RightStickY, false, false, false, -1, true));
-        foreach (var pair in AxisAcceleration)
-            Outputs.Add(new ControllerAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                Colors.Black,
-                Colors.Black, [], [], [], short.MinValue,
-                short.MaxValue, 0,0,
-                ushort.MaxValue, pair.Value, false, false, false, -1,
-                true));
-        var dpad = new JoystickToDpad(Model, true,Peripheral, short.MaxValue / 2, true)
-        {
-            Enabled = false
-        };
-        Outputs.Add(dpad);
-        Outputs.Add(new StartSelectHome(Model, true,Peripheral, true) {Enabled = false});
-        UpdateBindings();
-    }
-
-    public override IEnumerable<Output> ValidOutputs()
-    {
-        var outputs = new List<Output>(base.ValidOutputs());
-
-        var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
-        if (joyToDpad?.Enabled == true)
-        {
-            outputs.Remove(joyToDpad);
-            outputs.Add(joyToDpad.ValidOutputs());
-        }
-
-        var startSelectHome = outputs.FirstOrDefault(s => s is StartSelectHome);
-        if (startSelectHome?.Enabled == true)
-        {
-            outputs.Remove(startSelectHome);
-            outputs.Add(startSelectHome.ValidOutputs());
-        }
-
-        var tapAnalog =
-            Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarTapBar}});
-        var tapFrets =
-            Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarTapAll}});
-        if (tapAnalog == null && tapFrets == null) return outputs;
-        // Map Tap bar to Upper frets on RB guitars
-        if (tapAnalog != null && Model.DeviceControllerType is DeviceControllerType.RockBandGuitar)
-        {
-            outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model,tapAnalog.Enabled,
-                new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                Colors.Black, Colors.Black, [], [], [], 5,
-                pair.Value, false, false, false, -1, true)));
-
-            outputs.Remove(tapAnalog);
-        }
-
-        if (tapFrets == null) return outputs;
-        if (Model.DeviceControllerType.Is5FretGuitar())
-        {
-            outputs.AddRange(Tap.Select(pair => new GuitarButton(Model,tapFrets.Enabled,
-                new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                Colors.Black, Colors.Black, [], [], [], 5,
-                pair.Value, false, false, false, -1, true)));
-        }
-
-        outputs.Remove(tapFrets);
-
-        return outputs;
-    }
+    // public override IEnumerable<Output> ValidOutputs()
+    // {
+    //     var outputs = new List<Output>(base.ValidOutputs());
+    //
+    //     var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
+    //     if (joyToDpad?.Enabled == true)
+    //     {
+    //         outputs.Remove(joyToDpad);
+    //         outputs.Add(joyToDpad.ValidOutputs());
+    //     }
+    //
+    //     var startSelectHome = outputs.FirstOrDefault(s => s is StartSelectHome);
+    //     if (startSelectHome?.Enabled == true)
+    //     {
+    //         outputs.Remove(startSelectHome);
+    //         outputs.Add(startSelectHome.ValidOutputs());
+    //     }
+    //
+    //     var tapAnalog =
+    //         Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarTapBar}});
+    //     var tapFrets =
+    //         Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarTapAll}});
+    //     if (tapAnalog == null && tapFrets == null) return outputs;
+    //     // Map Tap bar to Upper frets on RB guitars
+    //     if (tapAnalog != null && Model.DeviceControllerType is DeviceControllerType.RockBandGuitar)
+    //     {
+    //         outputs.AddRange(TapRb.Select(pair => new GuitarButton(Model,tapAnalog.Enabled,
+    //             new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+    //             Colors.Black, Colors.Black, [], [], [], 5,
+    //             pair.Value, false, false, false, -1, true)));
+    //
+    //         outputs.Remove(tapAnalog);
+    //     }
+    //
+    //     if (tapFrets == null) return outputs;
+    //     if (Model.DeviceControllerType.Is5FretGuitar())
+    //     {
+    //         outputs.AddRange(Tap.Select(pair => new GuitarButton(Model,tapFrets.Enabled,
+    //             new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+    //             Colors.Black, Colors.Black, [], [], [], 5,
+    //             pair.Value, false, false, false, -1, true)));
+    //     }
+    //
+    //     outputs.Remove(tapFrets);
+    //
+    //     return outputs;
+    // }
 
     public override SerializedOutput Serialize()
     {
@@ -264,240 +266,240 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         DetectedType = newType;
     }
 
-    public override void UpdateBindings()
-    {
-        if (Model.DeviceControllerType is not DeviceControllerType.Gamepad)
-        {
-            Outputs.RemoveMany(Outputs.Items.Where(s => s is OutputAxis));
-        }
-        else
-        {
-            if (!Outputs.Items.Any(s => s is ControllerAxis))
-            {
-                foreach (var pair in Axis)
-                {
-                    if (UIntInputs.Contains(pair.Key))
-                    {
-                        Outputs.Add(new ControllerAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                            Colors.Black,
-                            Colors.Black, [], [], [], 0,
-                            ushort.MaxValue, 0,8000,
-                            ushort.MaxValue, pair.Value, false, false, false, -1, true));
-                    }
-                    else
-                    {
-                        Outputs.Add(new ControllerAxis(Model,true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                            Colors.Black,
-                            Colors.Black, [], [], [], -30000, 30000,
-                            0,4000,
-                            ushort.MaxValue, pair.Value, false, false, false, -1, true));
-                    }
-                }
-            }
-        }
-
-        // Drum Specific mappings
-        if (Model.DeviceControllerType.IsDrum())
-        {
-            var isGh = Model.DeviceControllerType is DeviceControllerType.GuitarHeroDrums;
-            // Drum Inputs to Drum Axis
-            if (!Outputs.Items.Any(s => s is DrumAxis))
-            {
-                foreach (var pair in isGh ? DrumAxisGh : DrumAxisRb)
-                    Outputs.Add(new DrumAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                        Colors.Black,
-                        Colors.Black, [], [], [], -30000, 30000, 10,
-                        10, pair.Value, false, false, false, -1,
-                        true));
-                Outputs.RemoveMany(Outputs.Items.Where(s => s is ControllerButton cb && cb.Input.InnermostInputs().Any(s2 => s2 is WiiInput w && (DrumAxisGh.ContainsKey(w.Input) || DrumAxisRb.ContainsKey(w.Input)))));
-            }
-            else
-            {
-                // We already have drum inputs mapped, but need to handle swapping between GH and RB 
-                var first = Outputs.Items.OfType<DrumAxis>().First(s => s.Input is WiiInput
-                {
-                    Input: WiiInputType.DrumOrange
-                });
-                Outputs.Remove(first);
-                // Rb maps orange to green, while gh maps orange to orange
-                if (isGh)
-                    Outputs.Add(new DrumAxis(Model,true,
-                        new WiiInput(WiiInputType.DrumOrange, Model, Peripheral, Sda, Scl, true),
-                        first.LedOn, first.LedOff, first.LedIndices.ToArray(), first.LedIndicesPeripheral.ToArray(),
-                        first.LedIndicesMpr121.ToArray(),
-                        first.Min, first.Max, first.DeadZone,
-                        10,
-                        DrumAxisType.Orange, false, false, false, -1, true));
-                else
-                    Outputs.Add(new DrumAxis(Model,true,
-                        new WiiInput(WiiInputType.DrumOrange, Model, Peripheral, Sda, Scl, true),
-                        first.LedOn, first.LedOff, first.LedIndices.ToArray(), first.LedIndicesPeripheral.ToArray(),
-                        first.LedIndicesMpr121.ToArray(),
-                        first.Min, first.Max, first.DeadZone,
-                        10,
-                        DrumAxisType.Green, false, false, false, -1, true));
-            }
-        }
-        else
-        {
-            var currentDrums = Outputs.Items.OfType<DrumAxis>();
-            foreach (var drumAxis in currentDrums)
-            {
-                Outputs.Add(new ControllerButton(Model, true,drumAxis.Input,
-                    drumAxis.LedOn, drumAxis.LedOff, drumAxis.LedIndices.ToArray(),
-                    drumAxis.LedIndicesPeripheral.ToArray(), drumAxis.LedIndicesMpr121.ToArray(), drumAxis.Debounce,
-                    Buttons[DrumToWii[drumAxis.Type]], false, false, false, -1, true));
-            }
-
-            // Remove all drum inputs if we aren't in Drum emulation mode
-            Outputs.RemoveMany(Outputs.Items.Where(s => s is DrumAxis));
-        }
-
-        var tapFrets =
-            Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarTapAll}});
-        var pedal =
-            Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarPedal}});
-
-        if (Model.DeviceControllerType.Is5FretGuitar())
-        {
-            if (tapFrets == null)
-            {
-                Outputs.Add(new GuitarButton(Model,true,
-                    new WiiInput(WiiInputType.GuitarTapAll, Model, Peripheral, Sda, Scl, true),
-                    Colors.Black,
-                    Colors.Black, [], [], [], 10,
-                    InstrumentButtonType.SliderToFrets, false, false, false, -1, true)
-                {
-                    Enabled = false
-                });
-            }
-
-            if (pedal == null)
-            {
-                Outputs.Add(new GuitarAxis(Model,true,
-                    new DigitalToAnalog(new WiiInput(WiiInputType.GuitarPedal, Model, Peripheral, Sda, Scl, true), short.MaxValue, Model, DigitalToAnalogType.Tilt),
-                    Colors.Black,
-                    Colors.Black, [], [], [], short.MinValue,
-                    short.MaxValue, 0, false, GuitarAxisType.Tilt, false, false, false, -1, true));
-            }
-        }
-        else
-        {
-            if (tapFrets != null)
-            {
-                Outputs.Remove(tapFrets);
-            }
-            if (pedal != null)
-            {
-                Outputs.Remove(pedal);
-            }
-        }
-
-        if (Model.DeviceControllerType.IsGuitar())
-        {
-            if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Whammy}))
-            {
-                Outputs.Add(new GuitarAxis(Model,true,
-                    new WiiInput(WiiInputType.GuitarWhammy, Model, Peripheral, Sda, Scl, true),
-                    Colors.Black,
-                    Colors.Black, [], [], [], 0, ushort.MaxValue,
-                    8000,
-                    false, GuitarAxisType.Whammy, false, false, false, -1, true));
-            }
-        }
-        else
-        {
-            Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Whammy}));
-        }
-
-        // Map Slider on guitars to Slider, and to RightStickY on anything else
-        if (Model.DeviceControllerType.Is5FretGuitar())
-        {
-            if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Slider}))
-            {
-                Outputs.Add(new GuitarAxis(Model,true,
-                    new WiiInput(WiiInputType.GuitarTapBar, Model, Peripheral, Sda, Scl, true),
-                    Colors.Black,
-                    Colors.Black, [], [], [], 0, ushort.MaxValue, 0,
-                    false, GuitarAxisType.Slider, false, false, false, -1, true));
-            }
-        }
-        else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
-        {
-            Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Slider}));
-        }
-
-        InstrumentButtonTypeExtensions.ConvertBindings(Outputs, Model, true);
-
-        // Map all DJ Hero axis and buttons
-        if (Model.DeviceControllerType is DeviceControllerType.Turntable)
-        {
-            var currentAxisStandard = Outputs.Items.OfType<ControllerAxis>().ToList();
-            var currentButtonStandard = Outputs.Items.OfType<ControllerButton>().ToList();
-            foreach (var (djInputType, wiiInputType) in DjToWiiButton)
-            {
-                var items = currentButtonStandard.Where(s => s.Input is WiiInput wii && wii.Input == wiiInputType)
-                    .ToList();
-                Outputs.RemoveMany(items);
-                Outputs.AddRange(items.Select(item => new DjButton(Model, true,item.Input,
-                    item.LedOn, item.LedOff, item.LedIndices.ToArray(), item.LedIndicesPeripheral.ToArray(),
-                    item.LedIndicesMpr121.ToArray(),
-                    item.Debounce, djInputType, false, false, false, -1, true)));
-            }
-
-            if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.Crossfader}))
-            {
-                Outputs.Add(new DjAxis(Model,true,
-                    new WiiInput(WiiInputType.DjCrossfadeSlider, Model, Peripheral, Sda, Scl, true),
-                    Colors.Black,
-                    Colors.Black, [], [], [], 0, ushort.MaxValue, 0,
-                    DjAxisType.Crossfader, false, false, false, -1, true));
-            }
-
-            if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.EffectsKnob}))
-            {
-                Outputs.Add(new DjAxis(Model,true,
-                    new WiiInput(WiiInputType.DjEffectDial, Model, Peripheral, Sda, Scl, true),
-                    Colors.Black,
-                    Colors.Black, [], [], [], 0, ushort.MaxValue, 0,
-                    DjAxisType.EffectsKnob, false, false, false, -1, true));
-            }
-
-            if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.LeftTableVelocity}))
-            {
-                Outputs.Add(new DjAxis(Model,true,
-                    new WiiInput(WiiInputType.DjTurntableLeft, Model, Peripheral, Sda, Scl, true),
-                    Colors.Black,
-                    Colors.Black, [], [], [], short.MinValue,
-                    short.MaxValue, 0,
-                    DjAxisType.LeftTableVelocity, false, false, false, -1, true));
-            }
-
-            if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.RightTableVelocity}))
-            {
-                Outputs.Add(new DjAxis(Model,true,
-                    new WiiInput(WiiInputType.DjTurntableRight, Model, Peripheral, Sda, Scl, true),
-                    Colors.Black,
-                    Colors.Black, [], [], [], short.MinValue,
-                    short.MaxValue, 0,
-                    DjAxisType.RightTableVelocity, false, false, false, -1, true));
-            }
-        }
-        else
-        {
-            var currentButtonDj = Outputs.Items.OfType<DjButton>();
-            foreach (var djButton in currentButtonDj)
-            {
-                Outputs.Remove(djButton);
-                Outputs.Add(new ControllerButton(Model, true,djButton.Input,
-                    djButton.LedOn, djButton.LedOff, djButton.LedIndices.ToArray(),
-                    djButton.LedIndicesPeripheral.ToArray(), djButton.LedIndicesMpr121.ToArray(), djButton.Debounce,
-                    Buttons[DjToWiiButton[djButton.Type]], false, false, false, -1, true));
-            }
-
-            Outputs.RemoveMany(Outputs.Items.Where(s => s is DjAxis));
-        }
-    }
+    // public override void UpdateBindings()
+    // {
+    //     if (Model.DeviceControllerType is not DeviceControllerType.Gamepad)
+    //     {
+    //         Outputs.RemoveMany(Outputs.Items.Where(s => s is OutputAxis));
+    //     }
+    //     else
+    //     {
+    //         if (!Outputs.Items.Any(s => s is ControllerAxis))
+    //         {
+    //             foreach (var pair in Axis)
+    //             {
+    //                 if (UIntInputs.Contains(pair.Key))
+    //                 {
+    //                     Outputs.Add(new ControllerAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+    //                         Colors.Black,
+    //                         Colors.Black, [], [], [], 0,
+    //                         ushort.MaxValue, 0,8000,
+    //                         ushort.MaxValue, pair.Value, false, false, false, -1, true));
+    //                 }
+    //                 else
+    //                 {
+    //                     Outputs.Add(new ControllerAxis(Model,true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+    //                         Colors.Black,
+    //                         Colors.Black, [], [], [], -30000, 30000,
+    //                         0,4000,
+    //                         ushort.MaxValue, pair.Value, false, false, false, -1, true));
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    //     // Drum Specific mappings
+    //     if (Model.DeviceControllerType.IsDrum())
+    //     {
+    //         var isGh = Model.DeviceControllerType is DeviceControllerType.GuitarHeroDrums;
+    //         // Drum Inputs to Drum Axis
+    //         if (!Outputs.Items.Any(s => s is DrumAxis))
+    //         {
+    //             foreach (var pair in isGh ? DrumAxisGh : DrumAxisRb)
+    //                 Outputs.Add(new DrumAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
+    //                     Colors.Black,
+    //                     Colors.Black, [], [], [], -30000, 30000, 10,
+    //                     10, pair.Value, false, false, false, -1,
+    //                     true));
+    //             Outputs.RemoveMany(Outputs.Items.Where(s => s is ControllerButton cb && cb.Input.InnermostInputs().Any(s2 => s2 is WiiInput w && (DrumAxisGh.ContainsKey(w.Input) || DrumAxisRb.ContainsKey(w.Input)))));
+    //         }
+    //         else
+    //         {
+    //             // We already have drum inputs mapped, but need to handle swapping between GH and RB 
+    //             var first = Outputs.Items.OfType<DrumAxis>().First(s => s.Input is WiiInput
+    //             {
+    //                 Input: WiiInputType.DrumOrange
+    //             });
+    //             Outputs.Remove(first);
+    //             // Rb maps orange to green, while gh maps orange to orange
+    //             if (isGh)
+    //                 Outputs.Add(new DrumAxis(Model,true,
+    //                     new WiiInput(WiiInputType.DrumOrange, Model, Peripheral, Sda, Scl, true),
+    //                     first.LedOn, first.LedOff, first.LedIndices.ToArray(), first.LedIndicesPeripheral.ToArray(),
+    //                     first.LedIndicesMpr121.ToArray(),
+    //                     first.Min, first.Max, first.DeadZone,
+    //                     10,
+    //                     DrumAxisType.Orange, false, false, false, -1, true));
+    //             else
+    //                 Outputs.Add(new DrumAxis(Model,true,
+    //                     new WiiInput(WiiInputType.DrumOrange, Model, Peripheral, Sda, Scl, true),
+    //                     first.LedOn, first.LedOff, first.LedIndices.ToArray(), first.LedIndicesPeripheral.ToArray(),
+    //                     first.LedIndicesMpr121.ToArray(),
+    //                     first.Min, first.Max, first.DeadZone,
+    //                     10,
+    //                     DrumAxisType.Green, false, false, false, -1, true));
+    //         }
+    //     }
+    //     else
+    //     {
+    //         var currentDrums = Outputs.Items.OfType<DrumAxis>();
+    //         foreach (var drumAxis in currentDrums)
+    //         {
+    //             Outputs.Add(new ControllerButton(Model, true,drumAxis.Input,
+    //                 drumAxis.LedOn, drumAxis.LedOff, drumAxis.LedIndices.ToArray(),
+    //                 drumAxis.LedIndicesPeripheral.ToArray(), drumAxis.LedIndicesMpr121.ToArray(), drumAxis.Debounce,
+    //                 Buttons[DrumToWii[drumAxis.Type]], false, false, false, -1, true));
+    //         }
+    //
+    //         // Remove all drum inputs if we aren't in Drum emulation mode
+    //         Outputs.RemoveMany(Outputs.Items.Where(s => s is DrumAxis));
+    //     }
+    //
+    //     var tapFrets =
+    //         Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarTapAll}});
+    //     var pedal =
+    //         Outputs.Items.FirstOrDefault(s => s is {Input: WiiInput {Input: WiiInputType.GuitarPedal}});
+    //
+    //     if (Model.DeviceControllerType.Is5FretGuitar())
+    //     {
+    //         if (tapFrets == null)
+    //         {
+    //             Outputs.Add(new GuitarButton(Model,true,
+    //                 new WiiInput(WiiInputType.GuitarTapAll, Model, Peripheral, Sda, Scl, true),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], 10,
+    //                 InstrumentButtonType.SliderToFrets, false, false, false, -1, true)
+    //             {
+    //                 Enabled = false
+    //             });
+    //         }
+    //
+    //         if (pedal == null)
+    //         {
+    //             Outputs.Add(new GuitarAxis(Model,true,
+    //                 new DigitalToAnalog(new WiiInput(WiiInputType.GuitarPedal, Model, Peripheral, Sda, Scl, true), short.MaxValue, Model, DigitalToAnalogType.Tilt),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], short.MinValue,
+    //                 short.MaxValue, 0, false, GuitarAxisType.Tilt, false, false, false, -1, true));
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if (tapFrets != null)
+    //         {
+    //             Outputs.Remove(tapFrets);
+    //         }
+    //         if (pedal != null)
+    //         {
+    //             Outputs.Remove(pedal);
+    //         }
+    //     }
+    //
+    //     if (Model.DeviceControllerType.IsGuitar())
+    //     {
+    //         if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Whammy}))
+    //         {
+    //             Outputs.Add(new GuitarAxis(Model,true,
+    //                 new WiiInput(WiiInputType.GuitarWhammy, Model, Peripheral, Sda, Scl, true),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], 0, ushort.MaxValue,
+    //                 8000,
+    //                 false, GuitarAxisType.Whammy, false, false, false, -1, true));
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Whammy}));
+    //     }
+    //
+    //     // Map Slider on guitars to Slider, and to RightStickY on anything else
+    //     if (Model.DeviceControllerType.Is5FretGuitar())
+    //     {
+    //         if (!Outputs.Items.Any(s => s is GuitarAxis {Type: GuitarAxisType.Slider}))
+    //         {
+    //             Outputs.Add(new GuitarAxis(Model,true,
+    //                 new WiiInput(WiiInputType.GuitarTapBar, Model, Peripheral, Sda, Scl, true),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], 0, ushort.MaxValue, 0,
+    //                 false, GuitarAxisType.Slider, false, false, false, -1, true));
+    //         }
+    //     }
+    //     else if (Model.DeviceControllerType == DeviceControllerType.Gamepad)
+    //     {
+    //         Outputs.RemoveMany(Outputs.Items.Where(s => s is GuitarAxis {Type: GuitarAxisType.Slider}));
+    //     }
+    //
+    //     InstrumentButtonTypeExtensions.ConvertBindings(Outputs, Model, true);
+    //
+    //     // Map all DJ Hero axis and buttons
+    //     if (Model.DeviceControllerType is DeviceControllerType.Turntable)
+    //     {
+    //         var currentAxisStandard = Outputs.Items.OfType<ControllerAxis>().ToList();
+    //         var currentButtonStandard = Outputs.Items.OfType<ControllerButton>().ToList();
+    //         foreach (var (djInputType, wiiInputType) in DjToWiiButton)
+    //         {
+    //             var items = currentButtonStandard.Where(s => s.Input is WiiInput wii && wii.Input == wiiInputType)
+    //                 .ToList();
+    //             Outputs.RemoveMany(items);
+    //             Outputs.AddRange(items.Select(item => new DjButton(Model, true,item.Input,
+    //                 item.LedOn, item.LedOff, item.LedIndices.ToArray(), item.LedIndicesPeripheral.ToArray(),
+    //                 item.LedIndicesMpr121.ToArray(),
+    //                 item.Debounce, djInputType, false, false, false, -1, true)));
+    //         }
+    //
+    //         if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.Crossfader}))
+    //         {
+    //             Outputs.Add(new DjAxis(Model,true,
+    //                 new WiiInput(WiiInputType.DjCrossfadeSlider, Model, Peripheral, Sda, Scl, true),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], 0, ushort.MaxValue, 0,
+    //                 DjAxisType.Crossfader, false, false, false, -1, true));
+    //         }
+    //
+    //         if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.EffectsKnob}))
+    //         {
+    //             Outputs.Add(new DjAxis(Model,true,
+    //                 new WiiInput(WiiInputType.DjEffectDial, Model, Peripheral, Sda, Scl, true),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], 0, ushort.MaxValue, 0,
+    //                 DjAxisType.EffectsKnob, false, false, false, -1, true));
+    //         }
+    //
+    //         if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.LeftTableVelocity}))
+    //         {
+    //             Outputs.Add(new DjAxis(Model,true,
+    //                 new WiiInput(WiiInputType.DjTurntableLeft, Model, Peripheral, Sda, Scl, true),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], short.MinValue,
+    //                 short.MaxValue, 0,
+    //                 DjAxisType.LeftTableVelocity, false, false, false, -1, true));
+    //         }
+    //
+    //         if (!Outputs.Items.Any(s => s is DjAxis {Type: DjAxisType.RightTableVelocity}))
+    //         {
+    //             Outputs.Add(new DjAxis(Model,true,
+    //                 new WiiInput(WiiInputType.DjTurntableRight, Model, Peripheral, Sda, Scl, true),
+    //                 Colors.Black,
+    //                 Colors.Black, [], [], [], short.MinValue,
+    //                 short.MaxValue, 0,
+    //                 DjAxisType.RightTableVelocity, false, false, false, -1, true));
+    //         }
+    //     }
+    //     else
+    //     {
+    //         var currentButtonDj = Outputs.Items.OfType<DjButton>();
+    //         foreach (var djButton in currentButtonDj)
+    //         {
+    //             Outputs.Remove(djButton);
+    //             Outputs.Add(new ControllerButton(Model, true,djButton.Input,
+    //                 djButton.LedOn, djButton.LedOff, djButton.LedIndices.ToArray(),
+    //                 djButton.LedIndicesPeripheral.ToArray(), djButton.LedIndicesMpr121.ToArray(), djButton.Debounce,
+    //                 Buttons[DjToWiiButton[djButton.Type]], false, false, false, -1, true));
+    //         }
+    //
+    //         Outputs.RemoveMany(Outputs.Items.Where(s => s is DjAxis));
+    //     }
+    // }
 
     public override Enum GetOutputType()
     {

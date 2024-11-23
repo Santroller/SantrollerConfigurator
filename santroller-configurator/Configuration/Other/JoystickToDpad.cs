@@ -25,23 +25,23 @@ public class JoystickToDpadInput : FixedInput
 
 public partial class JoystickToDpad : Output
 {
-    private static readonly List<WiiInputType> JoystickToDpadXWii =
-    [
-        WiiInputType.ClassicLeftStickX,
-        WiiInputType.NunchukStickX,
-        WiiInputType.GuitarJoystickX,
-        WiiInputType.DrumJoystickX,
-        WiiInputType.DjStickX
-    ];
-
-    private static readonly List<WiiInputType> JoystickToDpadYWii =
-    [
-        WiiInputType.ClassicLeftStickY,
-        WiiInputType.NunchukStickY,
-        WiiInputType.GuitarJoystickY,
-        WiiInputType.DrumJoystickY,
-        WiiInputType.DjStickY
-    ];
+    // private static readonly List<WiiInputType> JoystickToDpadXWii =
+    // [
+    //     WiiInputType.ClassicLeftStickX,
+    //     WiiInputType.NunchukStickX,
+    //     WiiInputType.GuitarJoystickX,
+    //     WiiInputType.DrumJoystickX,
+    //     WiiInputType.DjStickX
+    // ];
+    //
+    // private static readonly List<WiiInputType> JoystickToDpadYWii =
+    // [
+    //     WiiInputType.ClassicLeftStickY,
+    //     WiiInputType.NunchukStickY,
+    //     WiiInputType.GuitarJoystickY,
+    //     WiiInputType.DrumJoystickY,
+    //     WiiInputType.DjStickY
+    // ];
 
     private readonly List<ControllerButton> _outputs = [];
 
@@ -54,62 +54,63 @@ public partial class JoystickToDpad : Output
         Threshold = threshold;
         Wii = wii;
         Peripheral = peripheral;
-        if (wii)
-        {
-            foreach (var wiiInputType in JoystickToDpadXWii)
-            {
-                _outputs.Add(new ControllerButton(model,enabled,
-                    new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow,
-                        Threshold,
-                        model), Colors.Black, Colors.Black, [], [], [], 10,
-                    StandardButtonType.DpadLeft, false, false ,false, -1,
-                    true));
-                _outputs.Add(new ControllerButton(model,enabled,
-                    new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh,
-                        Threshold,
-                        model), Colors.Black, Colors.Black, [], [], [], 10,
-                    StandardButtonType.DpadRight, false, false ,false, -1,
-                    true));
-            }
-
-            foreach (var wiiInputType in JoystickToDpadYWii)
-            {
-                _outputs.Add(new ControllerButton(model,enabled,
-                    new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh,
-                        Threshold,
-                        model), Colors.Black, Colors.Black, [], [], [], 10,
-                    StandardButtonType.DpadUp, false, false ,false, -1, true));
-                _outputs.Add(new ControllerButton(model,enabled,
-                    new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow,
-                        Threshold,
-                        model), Colors.Black, Colors.Black, [], [], [], 10,
-                    StandardButtonType.DpadDown, false, false ,false, -1,
-                    true));
-            }
-        }
-        else
-        {
-            _outputs.Add(new ControllerButton(model,enabled,
-                new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral),
-                    AnalogToDigitalType.JoyLow, Threshold,
-                    model), Colors.Black, Colors.Black, [], [], [], 10,
-                StandardButtonType.DpadLeft, false, false ,false, -1, true));
-            _outputs.Add(new ControllerButton(model,enabled,
-                new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral),
-                    AnalogToDigitalType.JoyHigh, Threshold,
-                    model), Colors.Black, Colors.Black, [], [], [], 10,
-                StandardButtonType.DpadRight, false, false ,false, -1, true));
-            _outputs.Add(new ControllerButton(model,enabled,
-                new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral),
-                    AnalogToDigitalType.JoyHigh, Threshold,
-                    model), Colors.Black, Colors.Black, [], [], [], 10,
-                StandardButtonType.DpadUp, false, false ,false, -1, true));
-            _outputs.Add(new ControllerButton(model,enabled,
-                new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral),
-                    AnalogToDigitalType.JoyLow, Threshold,
-                    model), Colors.Black, Colors.Black, [], [], [], 10,
-                StandardButtonType.DpadDown, false, false ,false, -1, true));
-        }
+        // TODO: this can now just be the same implementation and part of HostInput
+        // if (wii)
+        // {
+        //     foreach (var wiiInputType in JoystickToDpadXWii)
+        //     {
+        //         _outputs.Add(new ControllerButton(model,enabled,
+        //             new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow,
+        //                 Threshold,
+        //                 model), Colors.Black, Colors.Black, [], [], [], 10,
+        //             StandardButtonType.DpadLeft, false, false ,false, -1,
+        //             true));
+        //         _outputs.Add(new ControllerButton(model,enabled,
+        //             new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh,
+        //                 Threshold,
+        //                 model), Colors.Black, Colors.Black, [], [], [], 10,
+        //             StandardButtonType.DpadRight, false, false ,false, -1,
+        //             true));
+        //     }
+        //
+        //     foreach (var wiiInputType in JoystickToDpadYWii)
+        //     {
+        //         _outputs.Add(new ControllerButton(model,enabled,
+        //             new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyHigh,
+        //                 Threshold,
+        //                 model), Colors.Black, Colors.Black, [], [], [], 10,
+        //             StandardButtonType.DpadUp, false, false ,false, -1, true));
+        //         _outputs.Add(new ControllerButton(model,enabled,
+        //             new AnalogToDigital(new WiiInput(wiiInputType, model, peripheral), AnalogToDigitalType.JoyLow,
+        //                 Threshold,
+        //                 model), Colors.Black, Colors.Black, [], [], [], 10,
+        //             StandardButtonType.DpadDown, false, false ,false, -1,
+        //             true));
+        //     }
+        // }
+        // else
+        // {
+        //     _outputs.Add(new ControllerButton(model,enabled,
+        //         new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral),
+        //             AnalogToDigitalType.JoyLow, Threshold,
+        //             model), Colors.Black, Colors.Black, [], [], [], 10,
+        //         StandardButtonType.DpadLeft, false, false ,false, -1, true));
+        //     _outputs.Add(new ControllerButton(model,enabled,
+        //         new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickX, model, peripheral),
+        //             AnalogToDigitalType.JoyHigh, Threshold,
+        //             model), Colors.Black, Colors.Black, [], [], [], 10,
+        //         StandardButtonType.DpadRight, false, false ,false, -1, true));
+        //     _outputs.Add(new ControllerButton(model,enabled,
+        //         new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral),
+        //             AnalogToDigitalType.JoyHigh, Threshold,
+        //             model), Colors.Black, Colors.Black, [], [], [], 10,
+        //         StandardButtonType.DpadUp, false, false ,false, -1, true));
+        //     _outputs.Add(new ControllerButton(model,enabled,
+        //         new AnalogToDigital(new Ps2Input(Ps2InputType.LeftStickY, model, peripheral),
+        //             AnalogToDigitalType.JoyLow, Threshold,
+        //             model), Colors.Black, Colors.Black, [], [], [], 10,
+        //         StandardButtonType.DpadDown, false, false ,false, -1, true));
+        // }
 
         UpdateDetails();
     }

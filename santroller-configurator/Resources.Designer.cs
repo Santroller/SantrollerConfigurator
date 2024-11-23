@@ -1485,6 +1485,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string DeviceControllerTypeAutomatic {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeAutomatic", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeAutomaticRb {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeAutomaticRb", resourceCulture);
+            }
+        }
+        
+        public static string DeviceControllerTypeAutomaticGh {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeAutomaticGh", resourceCulture);
+            }
+        }
+        
         public static string DeviceControllerTypeGuitarHeroGuitar {
             get {
                 return ResourceManager.GetString("DeviceControllerTypeGuitarHeroGuitar", resourceCulture);
@@ -2010,6 +2028,42 @@ namespace GuitarConfigurator.NetCore {
         public static string UsbHostInputTypeOrange {
             get {
                 return ResourceManager.GetString("UsbHostInputTypeOrange", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeBlack1 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeBlack1", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeBlack2 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeBlack2", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeBlack3 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeBlack3", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeWhite1 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeWhite1", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeWhite2 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeWhite2", resourceCulture);
+            }
+        }
+        
+        public static string UsbHostInputTypeWhite3 {
+            get {
+                return ResourceManager.GetString("UsbHostInputTypeWhite3", resourceCulture);
             }
         }
         

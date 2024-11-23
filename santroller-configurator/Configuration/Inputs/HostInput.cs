@@ -124,6 +124,8 @@ public abstract partial class HostInput : Input
         return ret;
     }
 
+    public static ushort HostInputLength => (ushort) Marshal.SizeOf<UsbHostInputs>();
+    
     public void Update(ReadOnlySpan<byte> usbHostInputsRaw)
     {
         if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;

@@ -19,11 +19,14 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 public abstract partial class OutputButton : Output
 {
     private readonly ObservableAsPropertyHelper<float> _debounceDisplay;
-    protected OutputButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+
+    protected OutputButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff,
+        byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,
         int debounce, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
-        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
+        ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Debounce = debounce;
         _debounceDisplay = this.WhenAnyValue(x => x.Debounce)
@@ -69,6 +72,7 @@ public abstract partial class OutputButton : Output
         {
             return "";
         }
+
         var ifStatement = $"debounce[{debounceIndex}]";
         var extraStatement = "";
         if (mode == ConfigField.Shared && combinedExtra.Length != 0) extraStatement = $" && ({combinedExtra})";
@@ -96,101 +100,22 @@ public abstract partial class OutputButton : Output
         {
             return debounce == 0 ? $"debounce[{debounceIndex}]=0;" : "";
         }
+
         debounce += 1;
-        
-        if (mode != ConfigField.Shared)
-        {
-            if (Model.Deque && this is GuitarButton {IsStrum: false})
-            {
-                ifStatement = $"{GenerateOutput(ConfigField.Ps3).Replace("report->", "current_queue_report.")}";
-            }
-            var outputVar = GenerateOutput(mode);
-            if (outputVar.Length == 0) return "";
-            var keyCode = KeyboardButton.KeyCodes.IndexOf(outputVar);
-            // Modifiers still go via the normal system, only standard keys go via 6kro mode.
-            if ((Model.IsKeyboard || Model.IsFortniteFestivalPro) && Model.RolloverMode == RolloverMode.SixKro && keyCode != -1 && mode == ConfigField.Keyboard)
-            {
-                if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown})
-                {
-                    return  $$"""
-                              if ({{ifStatement}} && !lastTilt) {
-                                lastTilt = millis();
-                              }
-                              if ({{ifStatement}}) {
-                                tiltActive = true;
-                              }
-                              if ({{ifStatement}} && ((millis() - lastTilt) < 1000)) {
-                                 setKey({{debounceIndex}},{{keyCode}},report,true);
-                                 {{extra}}
-                              } else {
-                                 setKey({{debounceIndex}},{{keyCode}},report,false);
-                              }
-                              """;
-                }
-                return  $$"""
-                          if ({{ifStatement}}) {
-                              setKey({{debounceIndex}},{{keyCode}},report,true);
-                              {{extra}}
-                          } else {
-                             setKey({{debounceIndex}},{{keyCode}},report,false);
-                          }
-                          """;
-            }
 
-            if (mode == ConfigField.Xbox && !outputVar.Contains("dpad") && !outputVar.Contains("start") && !outputVar.Contains("back") && !outputVar.Contains("Thumb"))
-            {
-                return  $$"""
-                          if ({{ifStatement}}) {
-                              {{outputVar}} = 0xFF;
-                              {{extra}}
-                          }
-                          """;
-            }
-            
-            if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} && mode == ConfigField.Keyboard)
-            {
-                return  $$"""
-                          if ({{ifStatement}}) {
-                              if (!lastTilt ) {
-                                lastTilt = millis();
-                              }
-                              if ((millis() - lastTilt) < 1000) {
-                                  {{outputVar}} = true;
-                                  {{extra}}
-                              }
-                              tiltActive = true;
-                          }
-                          """;
-            }
-
-            if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar && this is GuitarButton {IsStrum: true} && mode != ConfigField.Universal && mode != ConfigField.Xbox360)
-            {
-                
-                return  $$"""
-                          if ({{ifStatement}}) {
-                              {{extra}}
-                          }
-                          """;
-            }
-            return  $$"""
-                      if ({{ifStatement}}) {
-                          {{outputVar}} = true;
-                          {{extra}}
-                      }
-                      """;
-
-        }
-        
         var gen = Input.Generate(writer);
         var reset = $"debounce[{debounceIndex}]={debounce};";
-        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
+        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
+            Model.HasMpr121)
         {
             reset += $"ledDebounce[{ledIndex}]={debounce};";
         }
+
         if (writer != null)
         {
-            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
-            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
+            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
+            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
+                Model.HasMpr121)
             {
                 reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
             }
@@ -205,20 +130,92 @@ public abstract partial class OutputButton : Output
                 extra += string.Join("\n    ", inputs2.Select(s => $"debounce[{s.Item1}]=0;"));
             }
         }
+
         var ret = $$"""
-                 if (({{gen}} {{extraStatement}})) {
-                     {{reset}} {{extra}}
-                 }
-                 """;
-        if (Model.Deque && this is GuitarButton {IsStrum: false}) {
+                    if (({{gen}} {{extraStatement}})) {
+                        {{reset}} {{extra}}
+                    }
+                    """;
+        if (Model.Deque && this is GuitarButton {IsStrum: false})
+        {
             ret += $$"""
 
-                      if ({{ifStatement}}) {
-                          {{GenerateOutput(ConfigField.Ps3).Replace("report->", "current_queue_report.")}} = true;
-                      }
-                      """;
+                     if ({{ifStatement}}) {
+                         {{GenerateOutput(ConfigField.Shared).Replace("report->", "current_queue_report.")}} = true;
+                     }
+                     """;
         }
-        return ret;
+
+        if (Model.Deque && this is GuitarButton {IsStrum: false})
+        {
+            ifStatement = $"{GenerateOutput(ConfigField.Shared).Replace("report->", "current_queue_report.")}";
+        }
+
+        var outputVar = GenerateOutput(mode);
+        if (outputVar.Length == 0) return "";
+        var keyCode = KeyboardButton.KeyCodes.IndexOf(outputVar);
+        // Modifiers still go via the normal system, only standard keys go via 6kro mode.
+        if ((Model.IsKeyboard || Model.IsFortniteFestivalPro) && Model.RolloverMode == RolloverMode.SixKro &&
+            keyCode != -1 && mode == ConfigField.Keyboard)
+        {
+            if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown})
+            {
+                return ret + $$"""
+                         if ({{ifStatement}} && !lastTilt) {
+                           lastTilt = millis();
+                         }
+                         if ({{ifStatement}}) {
+                           tiltActive = true;
+                         }
+                         if ({{ifStatement}} && ((millis() - lastTilt) < 1000)) {
+                            setKey({{debounceIndex}},{{keyCode}},report,true);
+                            {{extra}}
+                         } else {
+                            setKey({{debounceIndex}},{{keyCode}},report,false);
+                         }
+                         """;
+            }
+
+            return ret + $$"""
+                           if ({{ifStatement}}) {
+                               setKey({{debounceIndex}},{{keyCode}},report,true);
+                               {{extra}}
+                           } else {
+                              setKey({{debounceIndex}},{{keyCode}},report,false);
+                           }
+                           """;
+        }
+
+
+        if (Model.IsFortniteFestivalPro && this is KeyboardButton {Key: Key.PageDown} && mode == ConfigField.Keyboard)
+        {
+            return ret + $$"""
+                           if ({{ifStatement}}) {
+                               if (!lastTilt ) {
+                                 lastTilt = millis();
+                               }
+                               if ((millis() - lastTilt) < 1000) {
+                                   {{outputVar}} = true;
+                                   {{extra}}
+                               }
+                               tiltActive = true;
+                           }
+                           """;
+        }
+
+        return ret + $$"""
+                       if ({{ifStatement}}) {
+                           {{outputVar}} = true;
+                           {{extra}}
+                       }
+                       """;
+    }
+
+    public override string GenerateOutput(ConfigField mode)
+    {
+        return mode is not ConfigField.Shared
+            ? ""
+            : GetReportField(GetOutputType());
     }
 
     public override void UpdateBindings()

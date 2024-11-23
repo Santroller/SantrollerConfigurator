@@ -4,12 +4,6 @@ public enum ConfigField
 {
     Shared,
     Reset,
-    Universal,
-    Xbox360,
-    XboxOne,
-    Ps3,
-    Ps3WithoutCapture,
-    Ps4,
     Consumer,
     Keyboard,
     Mouse,
@@ -23,10 +17,6 @@ public enum ConfigField
     LightBarLed,
     InitLed,
     Detection,
-    Xbox,
-    Wii,
-    Ps2,
-    Festival,
     BluetoothLed,
     DetectionFestival
 }

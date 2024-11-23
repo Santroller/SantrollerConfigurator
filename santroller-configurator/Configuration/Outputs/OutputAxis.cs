@@ -361,59 +361,24 @@ public abstract partial class OutputAxis : Output
         {
             // Don't use ps3 whammy hacks on PC, use a more normal whammy instead.
             // XB1 also uses a uint8 for whammy, so we can handle that here too
-            case ConfigField.Shared or ConfigField.Universal or ConfigField.XboxOne or ConfigField.Wii when whammy:
+            case ConfigField.Shared when whammy:
                 singleByte = true;
                 function = "handle_calibration_ps3_360_trigger";
                 break;
-            case ConfigField.XboxOne when trigger:
+            case ConfigField.Shared when trigger:
                 function = "handle_calibration_xbox_one_trigger";
                 break;
-            case ConfigField.XboxOne when forceAccel:
-                singleByte = true;
-                function = "handle_calibration_ps3_360_trigger";
-                break;
-            case ConfigField.XboxOne:
+            case ConfigField.Shared when forceAccel:
                 intBased = true;
                 function = "handle_calibration_xbox";
                 break;
-            case ConfigField.Xbox360 or ConfigField.Xbox when whammy:
-                function = "handle_calibration_xbox_whammy";
-                break;
-            case ConfigField.Xbox360 or ConfigField.Xbox when trigger:
-                singleByte = true;
-                function = "handle_calibration_ps3_360_trigger";
-                break;
-            case ConfigField.Xbox360 or ConfigField.Xbox:
+            case ConfigField.Shared:
                 intBased = true;
                 function = "handle_calibration_xbox";
                 break;
             case ConfigField.Mouse:
                 intBased = true;
                 function = "handle_calibration_mouse";
-                break;
-            // For LED stuff (Shared), we can use the standard handle_calibration_ps3 instead.
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture when forceAccel:
-                intBased = true;
-                function = "handle_calibration_ps3_accel";
-                break;
-            case ConfigField.Ps2 when whammy:
-                function = "-handle_calibration_ps3_whammy";
-                singleByte = true;
-                break;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Wii when whammy:
-                function = "handle_calibration_ps3_whammy";
-                singleByte = true;
-                break;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
-                or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2 when trigger:
-                singleByte = true;
-                function = "handle_calibration_ps3_360_trigger";
-                break;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Shared
-                or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2:
-                singleByte = true;
-                intBased = true;
-                function = "handle_calibration_ps3";
                 break;
             default:
                 return "";
@@ -482,24 +447,12 @@ public abstract partial class OutputAxis : Output
         var multiplier = 1f / (max - min) * ushort.MaxValue;
 
         var generated = "(" + Input.Generate(writer);
-        if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && mode is ConfigField.XboxOne)
+        generated += intBased switch
         {
-            // XB1 tilt is special. it centers at 0 but is a uint, so we need to strip away negative values
-            generated += ")";
-            if (!InputIsUint)
-            {
-                generated = $"abs({generated}) << 1";
-            }
-        }
-        else
-        {
-            generated += intBased switch
-            {
-                false when !InputIsUint => ") + INT16_MAX",
-                true when InputIsUint => ") - INT16_MAX",
-                _ => ")"
-            };
-        }
+            false when !InputIsUint => ") + INT16_MAX",
+            true when InputIsUint => ") - INT16_MAX",
+            _ => ")"
+        };
 
         if (ShouldFlip(mode))
         {
@@ -532,7 +485,7 @@ public abstract partial class OutputAxis : Output
         {
             return "";
         }
-        if (mode == ConfigField.Shared)
+        if (mode != ConfigField.Shared)
         {
             return "";
         }
@@ -542,73 +495,15 @@ public abstract partial class OutputAxis : Output
 
         if (Input is not DigitalToAnalog dta)
         {
-            var extraTrigger = "";
-            if (this is ControllerAxis axis)
-            {
-                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Ps2
-                        or ConfigField.Universal or ConfigField.Wii &&
-                    axis.Type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger)
-                {
-                    var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
-                    extraTrigger = $$"""
-                                     if ({{Input.Generate(writer)}} > {{axis.Threshold}}) {
-                                         report->{{trigger}} = true;
-                                     }
-                                     """;
-                }
-            }
 
             return $"""
+                    
                     {output} = {GenerateAssignment(output, mode, false, false, false, false, writer)};
-                    {extraTrigger}
                     """;
         }
 
         // Digital to Analog stores values based on uint16_t for trigger, and int16_t for sticks
         var val = dta.On;
-
-        switch (mode)
-        {
-            // x360 triggers are int16_t
-            case ConfigField.Xbox360 or ConfigField.Xbox when !Trigger:
-                break;
-            // xb1 triggers and axis are already of the above form
-            case ConfigField.XboxOne:
-                break;
-            // 360 triggers, and ps3 and ps4 triggers are uint8_t
-            case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
-                or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2
-                when Trigger:
-                val >>= 8;
-                break;
-            // ps3 and ps4 axis are uint8_t, so we both need to shift and add 128
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
-                or ConfigField.Wii or ConfigField.Ps2 when !Trigger:
-                val = (val >> 8) + 128;
-                break;
-            // Mouse is always not a trigger, and is int8_t
-            case ConfigField.Mouse:
-                val >>= 8;
-                break;
-            default:
-                return "";
-        }
-
-        // On the PS3, we need to convert triggers from analog to digital
-        if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Universal
-                or ConfigField.Wii && this is ControllerAxis
-            {
-                Type: StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger
-            })
-        {
-            var trigger = this is ControllerAxis {Type: StandardAxisType.LeftTrigger} ? "l2" : "r2";
-            return $$"""
-                     if ({{Input.Generate(writer)}}) {
-                         {{output}} = {{val}};
-                         report->{{trigger}} = true;
-                     }
-                     """;
-        }
 
         return $$"""
                  if ({{Input.Generate(writer)}}) {
@@ -616,6 +511,13 @@ public abstract partial class OutputAxis : Output
                  }
                  """;
     }
+
+    public override string GenerateOutput(ConfigField mode)
+    {
+        return mode is ConfigField.Shared ? GetReportField(GetOutputType()) : "";
+    }
+    
+    
 
     public override void UpdateBindings()
     {

@@ -154,17 +154,7 @@ public partial class DrumAxis : OutputAxis
 
     public override string GenerateOutput(ConfigField mode)
     {
-        if (mode is ConfigField.Shared && Type is DrumAxisType.Kick2)
-        {
-            return "kick2";
-        }
-
-        return mode switch
-        {
-            ConfigField.Universal or ConfigField.Shared => UniversalAxisMappings.GetValueOrDefault(Type, ""),
-            ConfigField.XboxOne => AxisMappingsXb1.GetValueOrDefault(Type, ""),
-            _ => AxisMappings.GetValueOrDefault(Type, "")
-        };
+        return UniversalAxisMappings.GetValueOrDefault(Type, "");
     }
 
     public override bool ShouldFlip(ConfigField mode)
@@ -182,239 +172,190 @@ public partial class DrumAxis : OutputAxis
         {
             return "";
         }
-        var input = Input;
 
-        if (Input is HostInput
-            {
-                Input: >= UsbHostInputType.RedVelocity and <= UsbHostInputType.KickVelocity
-            } usb)
-        {
-            // For usb host stuff, generate the debounce based on the digital signal from the controller
-            var type = usb.Input;
-            if (type is UsbHostInputType.KickVelocity)
-            {
-                type = UsbHostInputType.Kick1;
-            }
-
-            var typeButton = Enum.Parse<UsbHostInputType>(type.ToString().Replace("Velocity", ""));
-            input = new UsbHostInput(typeButton, Model);
-        }
-
-        if (mode == ConfigField.Shared)
-        {
-            if (Input is not WiiInput &&
-                (!Model.DeviceControllerType.IsRb() || Type is not (DrumAxisType.Kick or DrumAxisType.Kick2)) &&
-                Model is {IsKeyboard: false} && Input is not UsbHostInput) return "";
-
-            if (input.IsAnalog)
-            {
-                input = new AnalogToDigital(input, AnalogToDigitalType.Drum, Min, Model);
-            }
-
-            return new ControllerButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
-                    LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
-                    (byte) Debounce, StandardButtonType.A,
-                    false, false, false, -1, false)
-                .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
-                    macros, writer);
-        }
-
-        // Some drums never send a note off, so we fabricate one here.
-        if (Model.MidiDrumAutoOff && mode is ConfigField.Reset && Input is MidiInput midiInput)
-        {
-            return $"midiData.midiVelocities[{midiInput.Key}] = 0;";
-        }
-
-        if (mode is not (ConfigField.Ps3
-            or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
-            or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
-        if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
-        var debounce = Debounce;
-        if (!Model.LocalDebounceMode) debounce = Model.Debounce;
-        if (!Model.Deque)
-        {
-            // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
-            debounce /= 10;
-        }
-
-        debounce += 1;
-
-        var ifStatement = $"debounce[{debounceIndex}]";
-        var reset = $"debounce[{debounceIndex}]={debounce};";
-        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
-            Model.HasMpr121)
-        {
-            reset += $"ledDebounce[{ledIndex}]={debounce};";
-        }
-
-        if (writer != null)
-        {
-            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
-            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
-                Model.HasMpr121)
-            {
-                reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
-            }
-        }
-
-        var hasButtons = Model.DeviceControllerType.IsGh() || Type is DrumAxisType.Kick or DrumAxisType.Kick2;
-        var outputButtons = "";
-        switch (mode)
-        {
-            case ConfigField.Xbox360:
-                if (hasButtons && ButtonsXbox360.TryGetValue(Type, out var value))
-                    outputButtons += $"\n{GetReportField(value)} = true;";
-                break;
-            case ConfigField.Xbox:
-                if (hasButtons && ButtonsXbox360.TryGetValue(Type, out var value5))
-                    outputButtons += $"\n{GetReportField(value5)} = 0xff;";
-                break;
-            case ConfigField.XboxOne:
-                if (ButtonsXboxOne.TryGetValue(Type, out var value1))
-                    outputButtons += $"\n{GetReportField(value1)} = true;";
-                break;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture:
-                if (hasButtons && ButtonsPs3.TryGetValue(Type, out var value2))
-                    outputButtons += $"\n{GetReportField(value2)} = true;";
-                break;
-            case ConfigField.Universal:
-                if (ButtonsPs3.TryGetValue(Type, out var value3))
-                    outputButtons += $"\n{GetReportField(value3)} = true;";
-                break;
-            case ConfigField.Keyboard:
-                if (KeysFortnite.TryGetValue(Type, out var value4))
-                    outputButtons += $"\n{GetReportField(value4)} = true;";
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-        }
-
-        // XB1 is RB by definition
-        if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) &&
-             Type is DrumAxisType.Kick or DrumAxisType.Kick2))
-        {
-            return $$"""
-                     if ({{ifStatement}}) {
-                         {{outputButtons}}
-                     }
-                     """;
-        }
-
-        if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
-        {
-            outputButtons += $"{GetReportField(Type, "current_drum_report", false)} = true;";
-        }
-
-        // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
-        var dtaVal = 0;
-        if (input is DigitalToAnalog dta) dtaVal = dta.On;
-
-        var assignedVal = $"(lastDrum[{debounceIndex}])";
-        switch (mode)
-        {
-            // Xbox one uses 4 bit velocities
-            case ConfigField.XboxOne:
-                assignedVal = $"(lastDrum[{debounceIndex}]) >> 12";
-                dtaVal >>= 12;
-                break;
-            // PC HID uses 8 bit velocities
-            case ConfigField.Universal:
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture when Model.DeviceControllerType.IsGh():
-                assignedVal = $"(lastDrum[{debounceIndex}]) >> 8";
-                dtaVal >>= 8;
-                break;
-            // PS3 uses 8 bit velocities, but inverts
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture:
-                assignedVal = $"255-((lastDrum[{debounceIndex}]) >> 8)";
-                dtaVal >>= 8;
-                break;
-            // Xbox 360 GH use uint8_t velocities
-            default:
-            {
-                if (Model.DeviceControllerType.IsGh())
-                {
-                    assignedVal = $"(lastDrum[{debounceIndex}]) >> 8";
-                    dtaVal >>= 8;
-                }
-                // And then 360 RB use inverted int16_t values, though the first bit is specified based on the type
-                else
-                {
-                    switch (Type)
-                    {
-                        // Stuff mapped to the y axis is inverted
-                        case DrumAxisType.GreenCymbal:
-                        case DrumAxisType.Green:
-                        case DrumAxisType.Yellow:
-                        case DrumAxisType.YellowCymbal:
-                            assignedVal = $"-(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
-                            dtaVal = -(0x7fff - (dtaVal >> 1));
-                            break;
-                        case DrumAxisType.Red:
-                        case DrumAxisType.Blue:
-                        case DrumAxisType.BlueCymbal:
-                            assignedVal = $"(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
-                            dtaVal = 0x7fff - (dtaVal >> 1);
-                            break;
-                    }
-                }
-
-                break;
-            }
-        }
-
-        // If someone has mapped digital inputs to the drums, then we can shortcut a bunch of the tests, and just need to use the calculated value from above
-        if (input is DigitalToAnalog)
-        {
-            if (outputButtons.Length != 0)
-            {
-                outputButtons = $$"""
-                                  if ({{ifStatement}}) {
-                                      {{outputButtons}}
-                                  }
-                                  """;
-            }
-
-            return $$"""
-                     if ({{input.Generate(writer)}}) {
-                         {{reset}}
-                         {{GenerateOutput(mode)}} = {{dtaVal}};
-                     }
-                     {{outputButtons}}
-                     """;
-        }
-
-        if (!input.IsAnalog)
-        {
-            return $$"""
-                     if ({{ifStatement}}) {
-                         {{GenerateOutput(mode)}} = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
-                         {{outputButtons}}
-                     }
-                     """;
-        }
-
-        // For drums, we want to do things based on a peak.
-        // That means we ignore anything under Min, then when something peaks over Min, we capture that value and wait until we are back under Min before resetting.
-        var check = $"{input.Generate(writer)} > {Min}";
-        if (Min > Max)
-        {
-            check = $"({input.Generate(writer)} - {Min}) < {DeadZone}";
-        }
-
-        return $$"""
-                 if ({{check}}) {
-                     if (!{{ifStatement}}) {
-                         lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
-                     }
-                     {{reset}}
-                 }
-                 if ({{ifStatement}}) {
-                     {{outputButtons}}
-                     {{GenerateOutput(mode)}} = {{assignedVal}};
-                 } else {
-                   {{GenerateOutput(mode)}} = 0;
-                 }
-                 """;
+        return "";
+        //TODO: dru
+//         var input = Input;
+//
+//         if (Input is HostInput
+//             {
+//                 Input: >= UsbHostInputType.RedVelocity and <= UsbHostInputType.KickVelocity
+//             } usb)
+//         {
+//             // For usb host stuff, generate the debounce based on the digital signal from the controller
+//             var type = usb.Input;
+//             if (type is UsbHostInputType.KickVelocity)
+//             {
+//                 type = UsbHostInputType.Kick1;
+//             }
+//
+//             var typeButton = Enum.Parse<UsbHostInputType>(type.ToString().Replace("Velocity", ""));
+//             input = new UsbHostInput(typeButton, Model);
+//         }
+//
+//         if (mode == ConfigField.Shared)
+//         {
+//             if (Input is not WiiInput &&
+//                 (!Model.DeviceControllerType.IsRb() || Type is not (DrumAxisType.Kick or DrumAxisType.Kick2)) &&
+//                 Model is {IsKeyboard: false} && Input is not UsbHostInput) return "";
+//
+//             if (input.IsAnalog)
+//             {
+//                 input = new AnalogToDigital(input, AnalogToDigitalType.Drum, Min, Model);
+//             }
+//
+//             return new ControllerButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
+//                     LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
+//                     (byte) Debounce, StandardButtonType.A,
+//                     false, false, false, -1, false)
+//                 .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+//                     macros, writer);
+//         }
+//
+//         // Some drums never send a note off, so we fabricate one here.
+//         if (Model.MidiDrumAutoOff && mode is ConfigField.Reset && Input is MidiInput midiInput)
+//         {
+//             return $"midiData.midiVelocities[{midiInput.Key}] = 0;";
+//         }
+//
+//         if (mode is not ConfigField.Shared) return "";
+//         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
+//         var debounce = Debounce;
+//         if (!Model.LocalDebounceMode) debounce = Model.Debounce;
+//         if (!Model.Deque)
+//         {
+//             // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
+//             debounce /= 10;
+//         }
+//
+//         debounce += 1;
+//
+//         var ifStatement = $"debounce[{debounceIndex}]";
+//         var reset = $"debounce[{debounceIndex}]={debounce};";
+//         if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
+//             Model.HasMpr121)
+//         {
+//             reset += $"ledDebounce[{ledIndex}]={debounce};";
+//         }
+//
+//         if (writer != null)
+//         {
+//             reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
+//             if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
+//                 Model.HasMpr121)
+//             {
+//                 reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
+//             }
+//         }
+//
+//         var hasButtons = Model.DeviceControllerType.IsGh() || Type is DrumAxisType.Kick or DrumAxisType.Kick2;
+//         var outputButtons = "";
+//         switch (mode)
+//         {
+//             case ConfigField.Xbox360:
+//                 if (hasButtons && ButtonsXbox360.TryGetValue(Type, out var value))
+//                     outputButtons += $"\n{GetReportField(value)} = true;";
+//                 break;
+//             case ConfigField.Xbox:
+//                 if (hasButtons && ButtonsXbox360.TryGetValue(Type, out var value5))
+//                     outputButtons += $"\n{GetReportField(value5)} = 0xff;";
+//                 break;
+//             case ConfigField.XboxOne:
+//                 if (ButtonsXboxOne.TryGetValue(Type, out var value1))
+//                     outputButtons += $"\n{GetReportField(value1)} = true;";
+//                 break;
+//             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture:
+//                 if (hasButtons && ButtonsPs3.TryGetValue(Type, out var value2))
+//                     outputButtons += $"\n{GetReportField(value2)} = true;";
+//                 break;
+//             case ConfigField.Universal:
+//                 if (ButtonsPs3.TryGetValue(Type, out var value3))
+//                     outputButtons += $"\n{GetReportField(value3)} = true;";
+//                 break;
+//             case ConfigField.Keyboard:
+//                 if (KeysFortnite.TryGetValue(Type, out var value4))
+//                     outputButtons += $"\n{GetReportField(value4)} = true;";
+//                 break;
+//             default:
+//                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+//         }
+//
+//         // XB1 is RB by definition
+//         if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) &&
+//              Type is DrumAxisType.Kick or DrumAxisType.Kick2))
+//         {
+//             return $$"""
+//                      if ({{ifStatement}}) {
+//                          {{outputButtons}}
+//                      }
+//                      """;
+//         }
+//
+//         if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
+//         {
+//             outputButtons += $"{GetReportField(Type, "current_drum_report", false)} = true;";
+//         }
+//
+//         // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
+//         var dtaVal = 0;
+//         if (input is DigitalToAnalog dta) dtaVal = dta.On;
+//
+//         var assignedVal = $"(lastDrum[{debounceIndex}]) >> 8";
+//         dtaVal >>= 8;
+//         
+//         // If someone has mapped digital inputs to the drums, then we can shortcut a bunch of the tests, and just need to use the calculated value from above
+//         if (input is DigitalToAnalog)
+//         {
+//             if (outputButtons.Length != 0)
+//             {
+//                 outputButtons = $$"""
+//                                   if ({{ifStatement}}) {
+//                                       {{outputButtons}}
+//                                   }
+//                                   """;
+//             }
+//
+//             return $$"""
+//                      if ({{input.Generate(writer)}}) {
+//                          {{reset}}
+//                          {{GenerateOutput(mode)}} = {{dtaVal}};
+//                      }
+//                      {{outputButtons}}
+//                      """;
+//         }
+//
+//         if (!input.IsAnalog)
+//         {
+//             return $$"""
+//                      if ({{ifStatement}}) {
+//                          {{GenerateOutput(mode)}} = {{GenerateAssignment("0", ConfigField.Shared, false, false, false, true, writer)}};
+//                          {{outputButtons}}
+//                      }
+//                      """;
+//         }
+//
+//         // For drums, we want to do things based on a peak.
+//         // That means we ignore anything under Min, then when something peaks over Min, we capture that value and wait until we are back under Min before resetting.
+//         var check = $"{input.Generate(writer)} > {Min}";
+//         if (Min > Max)
+//         {
+//             check = $"({input.Generate(writer)} - {Min}) < {DeadZone}";
+//         }
+//
+//         return $$"""
+//                  if ({{check}}) {
+//                      if (!{{ifStatement}}) {
+//                          lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.Shared, false, false, false, true, writer)}};
+//                      }
+//                      {{reset}}
+//                  }
+//                  if ({{ifStatement}}) {
+//                      {{outputButtons}}
+//                      {{GenerateOutput(mode)}} = {{assignedVal}};
+//                  } else {
+//                    {{GenerateOutput(mode)}} = 0;
+//                  }
+//                  """;
     }
 
 

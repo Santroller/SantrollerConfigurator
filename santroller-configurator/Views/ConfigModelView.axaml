@@ -4199,7 +4199,7 @@
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       IsVisible="{Binding IsDj}"
-                                                      SelectedItem="{Binding DjInputType}"
+                                                      SelectedItem="{Binding DjInputType1}"
                                                       ItemsSource="{Binding DjInputTypes}"
                                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                                             <ComboBox VerticalAlignment="Center"

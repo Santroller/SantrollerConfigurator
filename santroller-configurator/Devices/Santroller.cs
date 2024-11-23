@@ -234,8 +234,8 @@ public class Santroller : ConfigurableUsbDevice
                     analogRaw[devicePin.Pin] = val;
                 }
 
-                var ps2Raw = await ReadDataAsync(0, (byte) Commands.CommandReadPs2, 32);
-                var wiiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadWii, 8);
+                var ps2Raw = await ReadDataAsync(0, (byte) Commands.CommandReadPs2, HostInput.HostInputLength);
+                var wiiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadWii, HostInput.HostInputLength);
                 var djLeftRaw = await ReadDataAsync(0, (byte) Commands.CommandReadDjLeft, 3);
                 var djRightRaw = await ReadDataAsync(0, (byte) Commands.CommandReadDjRight, 3);
                 var gh5Raw = await ReadDataAsync(0, (byte) Commands.CommandReadGh5, 2);
@@ -265,12 +265,12 @@ public class Santroller : ConfigurableUsbDevice
                 if (_model.UsbHostEnabled)
                 {
                     usbHostRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHost, 24);
-                    usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, 101);
+                    usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, HostInput.HostInputLength);
                     midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
                 }
                 if (_model.IsBluetoothRx)
                 {
-                    bluetoothInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadBluetoothInputs, 101);
+                    bluetoothInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadBluetoothInputs, HostInput.HostInputLength);
                 }
 
                 

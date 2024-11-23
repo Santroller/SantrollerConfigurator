@@ -518,9 +518,9 @@ public abstract partial class Output : ReactiveObject
         set => SetKey(value);
     }
 
-    public DjInputType DjInputType
+    public UsbHostInputType DjInputType1
     {
-        get => (Input.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
+        get => (Input.InnermostInputs().First() as DjInput)?.Input ?? UsbHostInputType.LeftGreen;
         set => SetInput(SelectedInputType, null, null, null, null, value, null, null, null);
     }
 
@@ -530,10 +530,10 @@ public abstract partial class Output : ReactiveObject
         set => SetInput(SelectedInputType, null, null, null, null, null, value, null, null);
     }
 
-    public Gh5NeckInputType Gh5NeckInputType
+    public UsbHostInputType Gh5NeckInputType
     {
         get => (Input.InnermostInputs().First() as Gh5NeckInput)?.Input ??
-               (Input.InnermostInputs().First() as CloneNeckInput)?.Input ?? Gh5NeckInputType.Green;
+               (Input.InnermostInputs().First() as CloneNeckInput)?.Input ?? UsbHostInputType.Green;
         set => SetInput(SelectedInputType, null, null, null, value, null, null, null, null);
     }
 
@@ -560,8 +560,8 @@ public abstract partial class Output : ReactiveObject
     public IEnumerable<GhWtInputType> GhWtInputTypes =>
         Enum.GetValues<GhWtInputType>().Where(s => s is not GhWtInputType.TapAll);
 
-    public IEnumerable<Gh5NeckInputType> Gh5NeckInputTypes =>
-        Enum.GetValues<Gh5NeckInputType>().Where(s => s is not Gh5NeckInputType.TapAll);
+    public IEnumerable<UsbHostInputType> Gh5NeckInputTypes =>
+        Enum.GetValues<UsbHostInputType>().Where(s => s.IsSoloFret() || s == UsbHostInputType.Slider);
 
     public IEnumerable<UsbHostInputType> UsbInputTypes => Enum.GetValues<UsbHostInputType>().Where(s => s is not (UsbHostInputType.YellowCymbal or UsbHostInputType.GreenCymbal or UsbHostInputType.BlueCymbal));
 
@@ -1096,7 +1096,7 @@ public abstract partial class Output : ReactiveObject
     }
 
     protected void SetInput(InputType? inputType, UsbHostInputType? wiiInput, UsbHostInputType? ps2InputType,
-        GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
+        GhWtInputType? ghWtInputType, UsbHostInputType? gh5NeckInputType, UsbHostInputType? djInputType,
         UsbHostInputType? usbInputType, AccelInputType? accelInputType, MidiType? midiType)
     {
         Input input;
@@ -1171,7 +1171,7 @@ public abstract partial class Output : ReactiveObject
                 input = new AccelInput(accelInputType.Value, Model, accel.Peripheral);
                 break;
             case InputType.TurntableInput when Input.InnermostInputs().First() is not DjInput:
-                djInputType ??= DjInputType.LeftGreen;
+                djInputType ??= UsbHostInputType.LeftGreen;
                 input = new DjInput(djInputType.Value, Model, false);
                 break;
             case InputType.TurntableInput when Input.InnermostInputs().First() is DjInput dj:
@@ -1179,23 +1179,23 @@ public abstract partial class Output : ReactiveObject
                 input = new DjInput(djInputType.Value, Model, dj.Peripheral, dj.Sda, dj.Scl);
                 break;
             case InputType.Gh5NeckInput when Input.InnermostInputs().First() is not Gh5NeckInput:
-                gh5NeckInputType ??= Gh5NeckInputType.Green;
-                if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
+                gh5NeckInputType ??= UsbHostInputType.SoloGreen;
+                if (this is OutputAxis) gh5NeckInputType = UsbHostInputType.Slider;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, false);
                 break;
             case InputType.Gh5NeckInput when Input.InnermostInputs().First() is Gh5NeckInput gh5:
                 gh5NeckInputType ??= gh5.Input;
-                if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
+                if (this is OutputAxis) gh5NeckInputType = UsbHostInputType.Slider;
                 input = new Gh5NeckInput(gh5NeckInputType.Value, Model, gh5.Peripheral, gh5.Sda, gh5.Scl);
                 break;
             case InputType.CloneNeckInput when Input.InnermostInputs().First() is not CloneNeckInput:
-                gh5NeckInputType ??= Gh5NeckInputType.Green;
-                if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
+                gh5NeckInputType ??= UsbHostInputType.SoloGreen;
+                if (this is OutputAxis) gh5NeckInputType = UsbHostInputType.Slider;
                 input = new CloneNeckInput(gh5NeckInputType.Value, Model, false);
                 break;
             case InputType.CloneNeckInput when Input.InnermostInputs().First() is CloneNeckInput gh5:
                 gh5NeckInputType ??= gh5.Input;
-                if (this is OutputAxis) gh5NeckInputType = Gh5NeckInputType.TapBar;
+                if (this is OutputAxis) gh5NeckInputType = UsbHostInputType.Slider;
                 input = new CloneNeckInput(gh5NeckInputType.Value, Model, gh5.Peripheral, gh5.Sda, gh5.Scl);
                 break;
             case InputType.WtNeckInput when Input.InnermostInputs().First() is not GhWtTapInput:

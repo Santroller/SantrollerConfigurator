@@ -12,13 +12,13 @@ public class SerializedDjInputCombined : SerializedInput
     {
         
     }
-    public SerializedDjInputCombined(DjInputType type, bool peripheral)
+    public SerializedDjInputCombined(UsbHostInputType type, bool peripheral)
     {
         Type = type;
         Peripheral = peripheral;
     }
 
-    [ProtoMember(3)] private DjInputType Type { get; }
+    [ProtoMember(3)] private UsbHostInputType Type { get; }
     [ProtoMember(8)] private bool Peripheral { get; }
 
     public override Input Generate(ConfigViewModel model)

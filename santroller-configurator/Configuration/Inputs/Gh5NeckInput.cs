@@ -86,43 +86,36 @@ public class Gh5NeckInput : TwiInput
             type => Gh5Mappings.Where(mapping => mapping.Value.HasFlag(InputToButton[type]))
                 .Select(mapping => mapping.Key).ToList().AsReadOnly());
 
-    public Gh5NeckInput(Gh5NeckInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
-        int scl = -1, bool combined = false) : base(
-        Gh5TwiType, Gh5TwiFreq, peripheral, sda, scl, model)
+    public Gh5NeckInput(UsbHostInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
+        int scl = -1, bool combined = false) : base(input, 
+        Gh5TwiType, Gh5TwiFreq, peripheral, sda, scl, model, combined)
     {
-        Combined = combined;
-        BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
-        Input = input;
-        IsAnalog = Input == Gh5NeckInputType.TapBar;
     }
 
     public override string Title => EnumToStringConverter.Convert(Input);
-    public bool Combined { get; }
-    public bool ShouldShowPins => !Combined && !Model.Branded;
-    public bool BindableTwi { get; }
+    public override string Field => "lastSuccessfulGh5Packet";
 
     public override InputType? InputType => Types.InputType.Gh5NeckInput;
-    public Gh5NeckInputType Input { get; set; }
 
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
     public override bool IsUint => true;
 
-    public override string Generate(BinaryWriter? writer)
-    {
-        switch (Input)
-        {
-            case <= Gh5NeckInputType.Orange:
-                return $"(fivetar_buttons[0] & {1 << Fret[Input]})";
-            case Gh5NeckInputType.TapBar or Gh5NeckInputType.TapAll:
-                return "(fivetar_buttons[1] ^ 0x80)";
-            default:
-            {
-                var mappings = MappingByInput[Input];
-                return "(gh5Valid && (" +
-                       string.Join(" || ", mappings.Select(mapping => $"(fivetar_buttons[1] == {mapping ^ 0x80})")) + "))";
-            }
-        }
-    }
+    // public override string Generate(BinaryWriter? writer)
+    // {
+    //     switch (Input)
+    //     {
+    //         case <= Gh5NeckInputType.Orange:
+    //             return $"(fivetar_buttons[0] & {1 << Fret[Input]})";
+    //         case Gh5NeckInputType.TapBar or Gh5NeckInputType.TapAll:
+    //             return "(fivetar_buttons[1] ^ 0x80)";
+    //         default:
+    //         {
+    //             var mappings = MappingByInput[Input];
+    //             return "(gh5Valid && (" +
+    //                    string.Join(" || ", mappings.Select(mapping => $"(fivetar_buttons[1] == {mapping ^ 0x80})")) + "))";
+    //         }
+    //     }
+    // }
 
     public override SerializedInput Serialise()
     {
@@ -130,41 +123,41 @@ public class Gh5NeckInput : TwiInput
         return new SerializedGh5NeckInput(Peripheral, Sda, Scl, Input);
     }
 
-    public override void Update(Dictionary<int, int> analogRaw,
-        Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw,
-        ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw,
-        ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
-        ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
-        ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
-        Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
-        ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
-    {
-        if (gh5Raw.IsEmpty) return;
-        switch (Input)
-        {
-            case <= Gh5NeckInputType.Orange:
-                RawValue = (gh5Raw[0] & (1 << Fret[Input])) != 0 ? 1 : 0;
-                break;
-            case Gh5NeckInputType.TapBar:
-                RawValue = (gh5Raw[1] + 0x80) & 0xFF;
-                break;
-            case Gh5NeckInputType.TapAll:
-                RawValue = (gh5Raw[1] + 0x80) & 0xFF;
-                break;
-            default:
-            {
-                var mappings = MappingByInput[Input];
-                RawValue = mappings.Contains(gh5Raw[1] ^ 0x80) ? 1 : 0;
-                break;
-            }
-        }
-    }
+    // public override void Update(Dictionary<int, int> analogRaw,
+    //     Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw,
+    //     ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw,
+    //     ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
+    //     ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
+    //     ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
+    //     Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
+    //     ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw)
+    // {
+    //     if (gh5Raw.IsEmpty) return;
+    //     switch (Input)
+    //     {
+    //         case <= Gh5NeckInputType.Orange:
+    //             RawValue = (gh5Raw[0] & (1 << Fret[Input])) != 0 ? 1 : 0;
+    //             break;
+    //         case Gh5NeckInputType.TapBar:
+    //             RawValue = (gh5Raw[1] + 0x80) & 0xFF;
+    //             break;
+    //         case Gh5NeckInputType.TapAll:
+    //             RawValue = (gh5Raw[1] + 0x80) & 0xFF;
+    //             break;
+    //         default:
+    //         {
+    //             var mappings = MappingByInput[Input];
+    //             RawValue = mappings.Contains(gh5Raw[1] ^ 0x80) ? 1 : 0;
+    //             break;
+    //         }
+    //     }
+    // }
 
-    public override string GenerateAll(List<Tuple<Input, string>> bindings,
-        ConfigField mode)
-    {
-        return string.Join("\n", bindings.Select(binding => binding.Item2));
-    }
+    // public override string GenerateAll(List<Tuple<Input, string>> bindings,
+    //     ConfigField mode)
+    // {
+    //     return string.Join("\n", bindings.Select(binding => binding.Item2));
+    // }
 
 
     public override IReadOnlyList<string> RequiredDefines()

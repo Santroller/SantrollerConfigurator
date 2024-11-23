@@ -14,7 +14,10 @@ public enum DeviceControllerType
     ProKeys = 16,
     ProGuitarMustang,
     ProGuitarSquire,
-    KeyboardMouse
+    KeyboardMouse,
+    AutomaticGh = 0xFD,
+    AutomaticRb = 0xFE,
+    Automatic = 0xFF
 }
 
 public static class DeviceControllerRhythmTypeExtensions {

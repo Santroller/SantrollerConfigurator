@@ -54,6 +54,17 @@ public partial class DjCombinedOutput : CombinedTwiOutput
         }
     }
 
+    public override HostInput MakeInput(UsbHostInputType type)
+    {
+        return new DjInput(type, Model, Peripheral, Sda, Scl, IsCombined);
+    }
+
+
+    public override HostInput? MakeInput(ProKeyType type)
+    {
+        return null;
+    }
+
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
@@ -65,25 +76,22 @@ public partial class DjCombinedOutput : CombinedTwiOutput
         return SimpleType.DjTurntableSimple;
     }
 
-    public void CreateDefaults()
+    public override void CreateDefaults()
     {
         Outputs.Clear();
 
-        Outputs.AddRange(DjInputTypes.Where(s => s is not (DjInputType.LeftTurntable or DjInputType.RightTurntable))
+        Outputs.AddRange(Enum.GetValues<DjInputType>().Where(s => s is not (DjInputType.LeftTurntable or DjInputType.RightTurntable))
             .Select(button => new DjButton(Model,true,
-                new DjInput(button, Model, Peripheral, combined: true),
+                new DjInput(Mappings[button], Model, Peripheral, combined: true),
                 Colors.Black, Colors.Black, [], [], [], 5, button, false, false ,false, -1, true)));
-        Outputs.Add(new DjAxis(Model,true, new DjInput(DjInputType.LeftTurntable, Model, Peripheral, combined: true),
+        Outputs.Add(new DjAxis(Model,true, new DjInput(UsbHostInputType.LeftTableVelocity, Model, Peripheral, combined: true),
             Colors.Black,
             Colors.Black, [], [], [], 1, 1,DjAxisType.LeftTableVelocity, false, false ,false, -1, true));
-        Outputs.Add(new DjAxis(Model, true,new DjInput(DjInputType.RightTurntable, Model, Peripheral, combined: true),
+        Outputs.Add(new DjAxis(Model, true,new DjInput(UsbHostInputType.RightTableVelocity, Model, Peripheral, combined: true),
             Colors.Black,
             Colors.Black, [], [], [], 1, 1,DjAxisType.RightTableVelocity, false, false ,false, -1, true));
     }
 
-    public override void UpdateBindings()
-    {
-    }
 
     public override SerializedOutput Serialize()
     {

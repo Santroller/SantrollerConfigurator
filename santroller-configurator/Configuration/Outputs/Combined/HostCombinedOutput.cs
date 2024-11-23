@@ -42,7 +42,7 @@ public abstract partial class HostCombinedOutput : CombinedOutput
         UpdateDetails();
     }
 
-    private static readonly Dictionary<object, UsbHostInputType> Mappings = new()
+    public static readonly Dictionary<object, UsbHostInputType> Mappings = new()
     {
         {StandardButtonType.X, UsbHostInputType.X},
         {StandardButtonType.A, UsbHostInputType.A},
@@ -88,12 +88,12 @@ public abstract partial class HostCombinedOutput : CombinedOutput
         {InstrumentButtonType.SoloOrange, UsbHostInputType.SoloOrange},
         {InstrumentButtonType.StrumUp, UsbHostInputType.DpadUp},
         {InstrumentButtonType.StrumDown, UsbHostInputType.DpadDown},
-        {InstrumentButtonType.Black1, UsbHostInputType.A},
-        {InstrumentButtonType.Black2, UsbHostInputType.B},
-        {InstrumentButtonType.Black3, UsbHostInputType.Y},
-        {InstrumentButtonType.White1, UsbHostInputType.X},
-        {InstrumentButtonType.White2, UsbHostInputType.LeftShoulder},
-        {InstrumentButtonType.White3, UsbHostInputType.RightShoulder},
+        {InstrumentButtonType.Black1, UsbHostInputType.Black1},
+        {InstrumentButtonType.Black2, UsbHostInputType.Black2},
+        {InstrumentButtonType.Black3, UsbHostInputType.Black3},
+        {InstrumentButtonType.White1, UsbHostInputType.White1},
+        {InstrumentButtonType.White2, UsbHostInputType.White2},
+        {InstrumentButtonType.White3, UsbHostInputType.White3},
         {DjInputType.LeftBlue, UsbHostInputType.LeftBlue},
         {DjInputType.LeftRed, UsbHostInputType.LeftRed},
         {DjInputType.LeftGreen, UsbHostInputType.LeftGreen},
@@ -165,7 +165,7 @@ public abstract partial class HostCombinedOutput : CombinedOutput
 
     public abstract HostInput MakeInput(UsbHostInputType type);
 
-    public abstract HostInput MakeInput(ProKeyType type);
+    public abstract HostInput? MakeInput(ProKeyType type);
 
     private void LoadMatchingFromDict(IReadOnlySet<object> valid, Dictionary<object, UsbHostInputType> dict)
     {
@@ -237,31 +237,35 @@ public abstract partial class HostCombinedOutput : CombinedOutput
         }
     }
 
-    public void CreateDefaults()
+    public virtual void CreateDefaults()
     {
         Outputs.Clear();
         var valid = ControllerEnumConverter.GetTypes(Model.DeviceControllerType).ToHashSet();
-        if (Model.DeviceControllerType == DeviceControllerType.Turntable)
+        if (Model.DeviceControllerType is DeviceControllerType.Turntable or DeviceControllerType.Automatic)
         {
             valid.UnionWith(Enum.GetValues<DjInputType>().Cast<object>());
         }
 
-        if (Model.DeviceControllerType == DeviceControllerType.ProKeys)
+        if (Model.DeviceControllerType is DeviceControllerType.ProKeys or DeviceControllerType.Automatic)
         {
             foreach (var proKeyType in ProKeyTypes)
             {
-                switch (proKeyType)
+                var input = MakeInput(proKeyType);
+                if (input != null)
                 {
-                    case ProKeyType.Overdrive or ProKeyType.PedalDigital:
-                        Outputs.Add(new PianoKeyButton(Model, true,MakeInput(proKeyType), Colors.Black,
-                            Colors.Black, [], [], [],
-                            proKeyType, false, false, false, -1, true));
-                        break;
-                    default:
-                        Outputs.Add(new PianoKey(Model, true,MakeInput(proKeyType), Colors.Black,
-                            Colors.Black, [], [], [],
-                            proKeyType, false, false, false, -1, true));
-                        break;
+                    switch (proKeyType)
+                    {
+                        case ProKeyType.Overdrive or ProKeyType.PedalDigital:
+                            Outputs.Add(new PianoKeyButton(Model, true, input, Colors.Black,
+                                Colors.Black, [], [], [],
+                                proKeyType, false, false, false, -1, true));
+                            break;
+                        default:
+                            Outputs.Add(new PianoKey(Model, true, input, Colors.Black,
+                                Colors.Black, [], [], [],
+                                proKeyType, false, false, false, -1, true));
+                            break;
+                    }
                 }
             }
         }

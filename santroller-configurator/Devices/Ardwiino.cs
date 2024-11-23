@@ -412,15 +412,16 @@ public class Ardwiino : ConfigurableUsbDevice
                 var wii = new WiiCombinedOutput(model, false, sda, scl);
                 model.Bindings.Add(wii);
                 wii.SetOutputsOrDefaults(Array.Empty<Output>());
-                if (config.all.main.mapNunchukAccelToRightJoy != 0)
-                    foreach (var output in wii.Outputs.Items.Where(output => output is
-                             {
-                                 Input: WiiInput
-                                 {
-                                     Input: WiiInputType.NunchukRotationRoll or WiiInputType.NunchukRotationPitch
-                                 }
-                             }))
-                        output.Enabled = false;
+                // TODO: pitch and yaw
+                // if (config.all.main.mapNunchukAccelToRightJoy != 0)
+                //     foreach (var output in wii.Outputs.Items.Where(output => output is
+                //              {
+                //                  Input: WiiInput
+                //                  {
+                //                      Input: WiiInputType.NunchukRotationRoll or WiiInputType.NunchukRotationPitch
+                //                  }
+                //              }))
+                //         output.Enabled = false;
 
                 bindings.Add(wii);
                 break;

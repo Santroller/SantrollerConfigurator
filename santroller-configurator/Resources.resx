@@ -753,6 +753,15 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="DeviceControllerTypeDancePad" xml:space="preserve">
         <value>Dance Pad</value>
     </data>
+    <data name="DeviceControllerTypeAutomatic" xml:space="preserve">
+        <value>Detect based on plugged in device</value>
+    </data>
+    <data name="DeviceControllerTypeAutomaticRb" xml:space="preserve">
+        <value>Detect based on plugged in device (Rock Band)</value>
+    </data>
+    <data name="DeviceControllerTypeAutomaticGh" xml:space="preserve">
+        <value>Detect based on plugged in device (Guitar Hero)</value>
+    </data>
     <data name="DeviceControllerTypeGuitarHeroGuitar" xml:space="preserve">
         <value>Guitar Hero Guitar</value>
     </data>
@@ -1024,6 +1033,24 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="UsbHostInputTypeOrange" xml:space="preserve">
         <value>Orange Fret</value>
+    </data>
+    <data name="UsbHostInputTypeBlack1" xml:space="preserve">
+        <value>Black 1</value>
+    </data>
+    <data name="UsbHostInputTypeBlack2" xml:space="preserve">
+        <value>Black 2</value>
+    </data>
+    <data name="UsbHostInputTypeBlack3" xml:space="preserve">
+        <value>Black 3</value>
+    </data>
+    <data name="UsbHostInputTypeWhite1" xml:space="preserve">
+        <value>White 1</value>
+    </data>
+    <data name="UsbHostInputTypeWhite2" xml:space="preserve">
+        <value>White 2</value>
+    </data>
+    <data name="UsbHostInputTypeWhite3" xml:space="preserve">
+        <value>White 3</value>
     </data>
     <data name="UsbHostInputTypeDpadUp" xml:space="preserve">
         <value>D-pad Up</value>

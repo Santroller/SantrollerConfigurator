@@ -8,11 +8,9 @@ using ReactiveUI;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 
-public abstract class CombinedTwiOutput : CombinedOutput, ITwi
+public abstract class CombinedTwiOutput : HostCombinedOutput, ITwi
 {
     private readonly TwiConfig _twiConfig;
-
-    private readonly string _twiType;
 
 
     protected CombinedTwiOutput(ConfigViewModel model, string twiType, bool peripheral, 
@@ -20,9 +18,8 @@ public abstract class CombinedTwiOutput : CombinedOutput, ITwi
 
     {
         BindableTwi = Model.Microcontroller.TwiAssignable && !model.Branded;
-        _twiType = twiType;
-        var config = Model.GetTwiForType(_twiType, peripheral);
-        _twiConfig = config ?? Model.Microcontroller.AssignTwiPins(model, _twiType, peripheral, sda, scl, twiFreq, false);
+        var config = Model.GetTwiForType(twiType, peripheral);
+        _twiConfig = config ?? Model.Microcontroller.AssignTwiPins(model, twiType, peripheral, sda, scl, twiFreq, false);
 
 
         this.WhenAnyValue(x => x._twiConfig.Scl).Subscribe(_ => this.RaisePropertyChanged(nameof(Scl)));

@@ -136,3 +136,15 @@ public enum UsbHostInputType
     HighEFretVelocity,
     
 }
+
+public static class UsbHostInputTypeExtensions
+{
+    public static bool IsTurntableButton(this UsbHostInputType input)
+    {
+        return input is >= UsbHostInputType.LeftBlue and <= UsbHostInputType.RightGreen;
+    }
+    public static bool IsSoloFret(this UsbHostInputType input)
+    {
+        return input is >= UsbHostInputType.SoloGreen and <= UsbHostInputType.SoloOrange;
+    }
+}

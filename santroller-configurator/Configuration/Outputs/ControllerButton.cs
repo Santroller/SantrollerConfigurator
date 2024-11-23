@@ -52,43 +52,6 @@ public class ControllerButton : OutputButton
 
     public override string GenerateOutput(ConfigField mode)
     {
-
-        // No guide button on og xbox or PS2
-        if (mode is ConfigField.Xbox or ConfigField.Ps2 && Type is StandardButtonType.Guide)
-        {
-            return "";
-        }
-
-        // No dpad left or right on ps2 guitars
-        if (mode is ConfigField.Ps2 && Type is StandardButtonType.DpadLeft or StandardButtonType.DpadRight &&
-            Model.DeviceControllerType.IsGuitar())
-        {
-            return "";
-        }
-        // No thumb click on wii
-        if (mode is ConfigField.Wii && Type is StandardButtonType.LeftThumbClick or StandardButtonType.RightThumbClick)
-        {
-            return "";
-        }
-
-        // capture button only exists on switch (which uses ps3 mappings)
-        if (mode is not (ConfigField.Ps3 or ConfigField.Ps4) && Type is StandardButtonType.Capture)
-        {
-            return "";
-        }
-
-        // RB / Festival on PS4 uses dpad left for star power activation
-        if (mode is ConfigField.Ps4 && Type is StandardButtonType.Back && Model.DeviceControllerType.Is5FretGuitar())
-        {
-            return GetReportField(StandardButtonType.DpadLeft);
-        }
-        
-        // RB / Festival can use dpad left for star power activation, which works better in some cases
-        if (Model.SelectDpadLeftXb1 && mode is ConfigField.XboxOne && Type is StandardButtonType.Back && Model.DeviceControllerType.Is5FretGuitar())
-        {
-            return GetReportField(StandardButtonType.DpadLeft);
-        }
-
         if (Model.IsFortniteFestivalPro && mode is ConfigField.Keyboard)
         {
             switch (Type)
@@ -104,23 +67,7 @@ public class ControllerButton : OutputButton
             }
         }
 
-        if (mode is ConfigField.Wii && Model.DeviceControllerType is DeviceControllerType.Turntable)
-        {
-            // wii doesn't have nav buttons, so map nav to left platter (y is euphoria so that is on the turntable.)
-            switch (Type)
-            {
-                case StandardButtonType.A:
-                    return GetReportField(DjInputType.LeftGreen);
-                case StandardButtonType.B:
-                    return GetReportField(DjInputType.LeftRed);
-                case StandardButtonType.X:
-                    return GetReportField(DjInputType.LeftBlue);
-            }
-        }
-
-        return mode is ConfigField.Ps3 or ConfigField.Xbox or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
-            or ConfigField.Shared or ConfigField.XboxOne
-            or ConfigField.Xbox360 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2
+        return mode is ConfigField.Shared
             ? GetReportField(Type)
             : "";
     }

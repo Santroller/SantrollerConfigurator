@@ -45,56 +45,53 @@ public class DjButton : OutputButton
         {
             return "";
         }
-        if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.XboxOne
-            or ConfigField.Xbox360 or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii))
+        if (mode is not ConfigField.Shared)
             return "";
 
-        if (mode is ConfigField.Shared)
-            return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
-                writer);
-        if (mode == ConfigField.Universal)
-        {
-            switch (Type)
-            {
-                case DjInputType.LeftGreen:
-                case DjInputType.RightGreen:
-                    extra = "if (DJ_NAV_BUTTONS) {report->a = true;}";
-                    break;
-                case DjInputType.LeftRed:
-                case DjInputType.RightRed:
-                    extra = "if (DJ_NAV_BUTTONS) {report->b = true;}";
-                    break;
-                case DjInputType.LeftBlue:
-                case DjInputType.RightBlue:
-                    extra = "if (DJ_NAV_BUTTONS) {report->x = true;}";
-                    break;
-                default:
-                    return "";
-            }
-        }
-        else if (mode is not ConfigField.Wii)
-        {
-            // Turntables also hit the standard buttons when you push each button
-            switch (Type)
-            {
-                case DjInputType.LeftGreen:
-                case DjInputType.RightGreen:
-                    extra = mode == ConfigField.Xbox ? "report->a = 0xFF;" : "report->a = true;";
-                    break;
-                case DjInputType.LeftRed:
-                case DjInputType.RightRed:
-                    extra = mode == ConfigField.Xbox ? "report->b = 0xFF;" : "report->b = true;";
-                    break;
-                case DjInputType.LeftBlue:
-                case DjInputType.RightBlue:
-                    extra = mode == ConfigField.Xbox ? "report->x = 0xFF;" : "report->x = true;";
-                    break;
-                default:
-                    return "";
-            }
-        }
-
-        return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+        return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
+            writer);
+        // TODO: djh frets on universal
+        // if (mode == ConfigField.Universal)
+        // {
+        //     switch (Type)
+        //     {
+        //         case DjInputType.LeftGreen:
+        //         case DjInputType.RightGreen:
+        //             extra = "if (DJ_NAV_BUTTONS) {report->a = true;}";
+        //             break;
+        //         case DjInputType.LeftRed:
+        //         case DjInputType.RightRed:
+        //             extra = "if (DJ_NAV_BUTTONS) {report->b = true;}";
+        //             break;
+        //         case DjInputType.LeftBlue:
+        //         case DjInputType.RightBlue:
+        //             extra = "if (DJ_NAV_BUTTONS) {report->x = true;}";
+        //             break;
+        //         default:
+        //             return "";
+        //     }
+        // }
+        // else if (mode is not ConfigField.Wii)
+        // {
+        //     // Turntables also hit the standard buttons when you push each button
+        //     switch (Type)
+        //     {
+        //         case DjInputType.LeftGreen:
+        //         case DjInputType.RightGreen:
+        //             extra = mode == ConfigField.Xbox ? "report->a = 0xFF;" : "report->a = true;";
+        //             break;
+        //         case DjInputType.LeftRed:
+        //         case DjInputType.RightRed:
+        //             extra = mode == ConfigField.Xbox ? "report->b = 0xFF;" : "report->b = true;";
+        //             break;
+        //         case DjInputType.LeftBlue:
+        //         case DjInputType.RightBlue:
+        //             extra = mode == ConfigField.Xbox ? "report->x = 0xFF;" : "report->x = true;";
+        //             break;
+        //         default:
+        //             return "";
+        //     }
+        // }
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,

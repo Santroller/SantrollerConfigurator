@@ -105,7 +105,7 @@ public class Ps2Input : HostInput, ISpi
         new List<PinConfig> {_spiConfig, _ackConfig, _attConfig};
 
     public override string Title => EnumToStringConverter.Convert(Input);
-    public override string Field => "lastPs2";
+    public override string Field => "lastSuccessfulPS2Packet";
 
     public override SerializedInput Serialise()
     {
