@@ -3503,7 +3503,7 @@
                                     <Binding Path="IsApa102Peripheral" />
                                 </MultiBinding>
                             </StackPanel.IsVisible>
-                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsApa102}">
+                            <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center" Width="300"
                                        Content="{x:Static netCore:Resources.LedBrightnessOnLabel}" />
                                 <NumericUpDown Height="30" Width="200" FormatString="{}{0:#,0}"
@@ -3516,7 +3516,7 @@
                                         IsSnapToTickEnabled="True"
                                         TickFrequency="1" Width="200" />
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" IsVisible="{Binding IsApa102}">
+                            <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center" Width="300"
                                        Content="{x:Static netCore:Resources.LedBrightnessOffLabel}" />
                                 <NumericUpDown Height="30" Width="200" FormatString="{}{0:#,0}"
