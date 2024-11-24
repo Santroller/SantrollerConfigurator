@@ -585,7 +585,7 @@ public class Santroller : ConfigurableUsbDevice
         {
             if (_model.LastLedTypePeripheral != _model.LedTypePeripheral)
             {
-                bytes = _model.LastLedType.TranslateLedBytes(bytes);
+                bytes = _model.LastLedTypePeripheral.TranslateLedBytes(bytes);
             }
         }
 
