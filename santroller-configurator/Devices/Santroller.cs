@@ -578,7 +578,7 @@ public class Santroller : ConfigurableUsbDevice
         if (_model == null) return;
         _ledTimersPeripheral[led] = _sw.Elapsed;
         
-        var bytes = _model.LedType.GetLedBytes(color, brightness);
+        var bytes = _model.LedTypePeripheral.GetLedBytes(color, brightness);
         
         // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
         if (_model.LedTypePeripheral != LedType.Ws2812 && _model.LedTypePeripheral != LedType.Ws2812W && !_model.Branded)
