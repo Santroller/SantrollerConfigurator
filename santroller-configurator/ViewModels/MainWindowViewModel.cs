@@ -28,17 +28,11 @@ using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using Velopack;
 using Velopack.Sources;
-#if Windows
-using Nefarius.Utilities.DeviceManagement.Drivers;
-using Microsoft.Win32;
-#endif
 
 namespace GuitarConfigurator.NetCore.ViewModels;
 
 public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 {
-    private const string UdevFile = "68-santroller.rules";
-    private const string UdevPath = $"/usr/lib/udev/rules.d/{UdevFile}";
     private static readonly Regex VersionRegex = new("v\\d+\\.\\d+\\.\\d+$");
     private readonly HashSet<string> _currentDrives = [];
     private readonly HashSet<string> _currentDrivesTemp = [];
@@ -362,16 +356,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         _timer.Elapsed += DevicePoller_Tick;
         _timer.AutoReset = false;
         StartWorking();
-#if Windows
-        RegistryKey? key =
- Registry.CurrentUser.OpenSubKey(@"System\CurrentControlSet\Control\MediaProperties\PrivateProperties\Joystick\OEM\VID_1209&PID_2882", true);
-        if (key != null) {
-            if (key.GetValue("OEMName") != null) {
-                key.DeleteValue("OEMName");
-            }
-            key.Close();
-        }
-#endif
         if (platformIo)
         {
             Pio.InitialisePlatformIo().Subscribe(UpdateProgress, ex =>
@@ -764,15 +748,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     }
 
 
-    private static async Task<bool> CheckDependencies()
+    private async Task<bool> CheckDependencies()
     {
-        // Call check dependencies on startup, and pop up a dialog saying drivers are missing would you like to install if they are missing
-#if Windows
-            return DriverStore.ExistingDrivers.Any(s => s.Contains("atmel_usb_dfu"));
-#else
-        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath) &&
-            await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile);
-#endif
+        return await _manager?.CheckDrivers()!;
     }
 
     [RelayCommand]
@@ -800,30 +778,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
                 Resources.RootRequiredMessage)).ToTask();
             if (!yesNo.Response) return;
-            // Just copy the file to install it, using pkexec for admin
-            var appdataFolder = AssetUtils.GetAppDataFolder();
-            var rules = Path.Combine(appdataFolder, UdevFile);
-            await AssetUtils.ExtractFileAsync(UdevFile, rules);
-            var info = new ProcessStartInfo("pkexec");
-            info.ArgumentList.AddRange(["cp", rules, UdevPath]);
-            info.UseShellExecute = true;
-            var process = Process.Start(info);
-            if (process == null) return;
-            await process.WaitForExitAsync();
-            // And then reload rules and trigger
-            info = new ProcessStartInfo("pkexec");
-            info.ArgumentList.AddRange(["udevadm", "control", "--reload-rules"]);
-            info.UseShellExecute = true;
-            process = Process.Start(info);
-            if (process == null) return;
-            await process.WaitForExitAsync();
-
-            info = new ProcessStartInfo("pkexec");
-            info.ArgumentList.AddRange(["udevadm", "trigger"]);
-            info.UseShellExecute = true;
-            process = Process.Start(info);
-            if (process == null) return;
-            await process.WaitForExitAsync();
+           
         }
 
         if (!await CheckDependencies())

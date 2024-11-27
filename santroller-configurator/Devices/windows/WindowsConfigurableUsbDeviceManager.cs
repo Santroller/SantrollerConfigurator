@@ -43,6 +43,15 @@ public partial class ConfigurableUsbDeviceManager
                 DeviceNotify(EventType.DeviceArrival, path, guid);
             }
         }
+        
+        RegistryKey? key =
+            Registry.CurrentUser.OpenSubKey(@"System\CurrentControlSet\Control\MediaProperties\PrivateProperties\Joystick\OEM\VID_1209&PID_2882", true);
+        if (key != null) {
+            if (key.GetValue("OEMName") != null) {
+                key.DeleteValue("OEMName");
+            }
+            key.Close();
+        }
     }
 
     private async void DeviceNotify(EventType eventType, string path, Guid guid)
@@ -116,6 +125,12 @@ public partial class ConfigurableUsbDeviceManager
         _deviceNotificationListener.DeviceRemoved -= DeviceRemoved;
 
         _deviceNotificationListener.StopListen(DeviceInterfaceIds.UsbDevice);
+    }
+    
+    
+    public static async Task<bool> CheckDrivers()
+    {
+        return DriverStore.ExistingDrivers.Any(s => s.Contains("atmel_usb_dfu"));
     }
 
     public async Task InvokeRescan()

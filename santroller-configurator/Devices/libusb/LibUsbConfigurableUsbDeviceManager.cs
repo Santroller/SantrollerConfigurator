@@ -1,6 +1,9 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DynamicData;
 using GuitarConfigurator.NetCore.ViewModels;
@@ -11,6 +14,8 @@ namespace GuitarConfigurator.NetCore.Devices;
 
 public class ConfigurableUsbDeviceManager
 {
+    private const string UdevFile = "68-santroller.rules";
+    private const string UdevPath = $"/usr/lib/udev/rules.d/{UdevFile}";
     private readonly MainWindowViewModel _model;
     private readonly UsbContext _context = new UsbContext();
     public ConfigurableUsbDeviceManager(MainWindowViewModel model)
@@ -97,6 +102,12 @@ public class ConfigurableUsbDeviceManager
         });
     }
 
+    public async Task<bool> CheckDrivers()
+    {
+        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath) &&
+            await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile);
+    }
+
     public static void Rescan()
     {
               
@@ -114,6 +125,29 @@ public class ConfigurableUsbDeviceManager
     
     public async Task InvokeDriverInstall()
     {   
-        
+        // Just copy the file to install it, using pkexec for admin
+        var appdataFolder = AssetUtils.GetAppDataFolder();
+        var rules = Path.Combine(appdataFolder, UdevFile);
+        await AssetUtils.ExtractFileAsync(UdevFile, rules);
+        var info = new ProcessStartInfo("pkexec");
+        info.ArgumentList.AddRange(["cp", rules, UdevPath]);
+        info.UseShellExecute = true;
+        var process = Process.Start(info);
+        if (process == null) return;
+        await process.WaitForExitAsync();
+        // And then reload rules and trigger
+        info = new ProcessStartInfo("pkexec");
+        info.ArgumentList.AddRange(["udevadm", "control", "--reload-rules"]);
+        info.UseShellExecute = true;
+        process = Process.Start(info);
+        if (process == null) return;
+        await process.WaitForExitAsync();
+
+        info = new ProcessStartInfo("pkexec");
+        info.ArgumentList.AddRange(["udevadm", "trigger"]);
+        info.UseShellExecute = true;
+        process = Process.Start(info);
+        if (process == null) return;
+        await process.WaitForExitAsync();
     }
 }
