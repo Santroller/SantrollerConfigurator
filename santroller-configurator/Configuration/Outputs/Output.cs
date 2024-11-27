@@ -779,7 +779,10 @@ public abstract partial class Output : ReactiveObject
             }
 
             var text = string.Join(", ", strings);
-            if (text.Contains("missing")) return Resources.ErrorPinConfigurationMissing;
+            if (text.Contains("missing"))
+            {
+                return Resources.ErrorPinConfigurationMissing;
+            }
             return string.IsNullOrEmpty(text) ? "" : text;
         }
     }

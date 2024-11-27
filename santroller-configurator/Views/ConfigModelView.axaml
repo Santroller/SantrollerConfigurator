@@ -479,7 +479,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SelectedDeviceLabel}" />
+                               Width="300" Content="{x:Static netCore:Resources.SelectedDeviceBTLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).BtRxAddr}"
                                   ItemsSource="{Binding Addresses}"
@@ -2973,9 +2973,18 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate DataType="output:Output" x:Key="CombinedOutputTemplate">
-            <ContentControl Content="{Binding}" Opacity="{Binding CombinedOpacity}"
+            <StackPanel Margin="0 5 10 5" Background="{Binding CombinedBackground}" Opacity="{Binding CombinedOpacity}">
+            <ContentControl Padding="10" Content="{Binding}" 
                             ContentTemplate="{StaticResource OutputTemplate}" Background="{Binding CombinedBackground}"
-                            Padding="10" Margin="0 5 10 5" Width="720" />
+                            Width="720" />
+            <Label Foreground="Red" Margin="45 0 0 0"
+                   Content="{Binding ErrorText}"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Center"
+                   HorizontalContentAlignment="Center"
+                   VerticalContentAlignment="Center"
+                   IsVisible="{Binding ErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            </StackPanel>
         </DataTemplate>
         <DataTemplate DataType="output:Output" x:Key="DigitalOutputTemplate">
             <StackPanel>

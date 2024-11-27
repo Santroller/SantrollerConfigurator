@@ -175,6 +175,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
         Router.Navigate.Execute(Selected.Model);
         Selected.Model.SetUpDiff();
+        Selected.Model.UpdateErrors();
     }
 
     [RelayCommand]
@@ -536,6 +537,12 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         {
             Progress = 100;
             Message = "Device is not programmed, hit write configuration to set device up";
+            ProgressbarColor = ProgressBarError;
+            return;
+        }
+        if (ShowError)
+        {
+            Message = "There is an error with your configuration";
             ProgressbarColor = ProgressBarError;
             return;
         }

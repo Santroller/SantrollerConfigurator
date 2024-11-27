@@ -3996,7 +3996,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void UpdateErrors()
     {
         var foundError = false;
-        foreach (var output in Bindings.Items)
+        foreach (var output in Bindings.Items.SelectMany(s => s.Outputs.Items))
         {
             output.UpdateErrors();
             if (!string.IsNullOrEmpty(output.ErrorText)) foundError = true;
@@ -4268,7 +4268,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Main.SetDifference(false);
             return;
         }
-
         if (_currentConfig == null || _lastConfig == null || _currentConfigData == null) return;
         _currentConfig.Update(this, Bindings.Items, false);
         using var outputStream = new MemoryStream(_currentConfigData);
