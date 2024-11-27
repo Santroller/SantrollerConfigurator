@@ -35,7 +35,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         interaction.SetOutput(result);
     }
 
-    private async void DoShowYesNoDialogAsync(
+    private async Task DoShowYesNoDialogAsync(
         IInteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
     {
         var model = new AreYouSureWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input.yesText,
