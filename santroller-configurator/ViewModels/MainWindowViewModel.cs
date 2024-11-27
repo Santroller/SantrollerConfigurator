@@ -346,7 +346,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         AvailableDevices.Add(device);
     }
 
-    public void Begin(bool platformIo)
+    public async Task Begin(bool platformIo)
     {
         if (!hasLibUsb)
         {
@@ -370,7 +370,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 _manager?.Register();
                 _timer.Start();
             });
-            _ = InstallDependenciesAsync();
+            await InstallDependenciesAsync();
         }
         else
         {
@@ -764,28 +764,34 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private async Task InstallDependenciesAsync()
     {
         if (await CheckDependencies()) return;
-
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        try
         {
-            var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
-                Resources.DriversMissingMessage)).ToTask();
-            if (!yesNo.Response) return;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                 var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
+                    Resources.DriversMissingMessage)).ToTask();
+                if (!yesNo.Response) return;
+                await _manager?.InvokeDriverInstall()!;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
+                    Resources.RootRequiredMessage)).ToTask();
+                if (!yesNo.Response) return;
 
-            await _manager?.InvokeDriverInstall()!;
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
-                Resources.RootRequiredMessage)).ToTask();
-            if (!yesNo.Response) return;
-           
-        }
+                await _manager?.InvokeDriverInstall()!;
+            }
 
-        if (!await CheckDependencies())
-        {
-            // Pop open a dialog that it failed and to try again
+            if (!await CheckDependencies())
+            {
+                // Pop open a dialog that it failed and to try again
+            }
+        } catch (Exception ex) {
+            Trace.WriteLine(ex);
+            Console.WriteLine(ex);
         }
     }
+        
 
 
     public void Dispose()

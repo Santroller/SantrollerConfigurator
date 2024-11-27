@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
@@ -12,10 +15,10 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         this.WhenActivated(disposables =>
         {
-            disposables(ViewModel!.ShowYesNoDialog.RegisterHandler(DoShowYesNoDialogAsync));
-            disposables(ViewModel!.ShowIssueDialog.RegisterHandler(DoShowIssueDialogAsync));
-            disposables(ViewModel!.ShowInformationDialog.RegisterHandler(DoShowInformationDialogAsync));
-            ViewModel!.Begin(true);
+            ViewModel!.ShowYesNoDialog.RegisterHandler(DoShowYesNoDialogAsync).DisposeWith(disposables);
+            ViewModel!.ShowIssueDialog.RegisterHandler(DoShowIssueDialogAsync).DisposeWith(disposables);
+            ViewModel!.ShowInformationDialog.RegisterHandler(DoShowInformationDialogAsync).DisposeWith(disposables);
+            ViewModel!.Begin(true).DisposeWith(disposables);
         });
         InitializeComponent();
     }
@@ -35,13 +38,14 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     private async void DoShowYesNoDialogAsync(
         IInteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)
     {
-        var model = new AreYouSureWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input.yesText, interaction.Input.noText,
+        var model = new AreYouSureWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input.yesText,
+            interaction.Input.noText,
             interaction.Input.text);
         var dialog = new AreYouSureWindow
         {
             DataContext = model
         };
-        await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window) VisualRoot!);
+        await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window)VisualRoot!);
         interaction.SetOutput(model);
     }
     private async Task DoShowInformationDialogAsync(

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Text.RegularExpressions;
@@ -8,7 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using DynamicData;
 using GuitarConfigurator.NetCore.ViewModels;
+using Microsoft.Win32;
 using Nefarius.Drivers.WinUSB;
+using Nefarius.Utilities.DeviceManagement.Drivers;
 using Nefarius.Utilities.DeviceManagement.PnP;
 using ReactiveUI;
 
@@ -44,7 +47,7 @@ public partial class ConfigurableUsbDeviceManager
             }
         }
         
-        RegistryKey? key =
+        var key =
             Registry.CurrentUser.OpenSubKey(@"System\CurrentControlSet\Control\MediaProperties\PrivateProperties\Joystick\OEM\VID_1209&PID_2882", true);
         if (key != null) {
             if (key.GetValue("OEMName") != null) {
@@ -128,7 +131,7 @@ public partial class ConfigurableUsbDeviceManager
     }
     
     
-    public static async Task<bool> CheckDrivers()
+    public async Task<bool> CheckDrivers()
     {
         return DriverStore.ExistingDrivers.Any(s => s.Contains("atmel_usb_dfu"));
     }
@@ -138,11 +141,11 @@ public partial class ConfigurableUsbDeviceManager
         // Start app as admin and then call rescan function and wait for it to exit
         try 
         {
-            var info2 = new ProcessStartInfo(Environment.ProcessPath!, "-Rescan");
-            info2.UseShellExecute = true;
-            info2.CreateNoWindow = true;
-            info2.WindowStyle = ProcessWindowStyle.Hidden;
-            info2.Verb = "runas";
+            var info2 = new ProcessStartInfo(Environment.ProcessPath!, "-Rescan")
+            {
+                UseShellExecute = true,
+                Verb = "runas"
+            };
             var process2 = Process.Start(info2);
             if (process2 == null) return;
             await process2.WaitForExitAsync();
@@ -155,15 +158,17 @@ public partial class ConfigurableUsbDeviceManager
         // Start app as admin and then call rescan function and wait for it to exit
         try 
         {
-            var info2 = new ProcessStartInfo(Environment.ProcessPath!, "-Rescan");
-            info2.UseShellExecute = true;
-            info2.CreateNoWindow = true;
-            info2.WindowStyle = ProcessWindowStyle.Hidden;
-            info2.Verb = "runas";
+            var info2 = new ProcessStartInfo(Environment.ProcessPath!, "-Drivers")
+            {
+                UseShellExecute = true,
+                Verb = "runas"
+            };
             var process2 = Process.Start(info2);
             if (process2 == null) return;
             await process2.WaitForExitAsync();
-        } catch (Win32Exception) {
+        } catch (Win32Exception e) {
+            Trace.WriteLine(e);
+            Console.WriteLine(e);
         }
     }
 
@@ -192,7 +197,8 @@ public partial class ConfigurableUsbDeviceManager
     }
     public static void InstallDrivers()
     {
-        var driverFolder = Path.Combine(assetDir, "platformio", "drivers");
-        Devcon.Install(Path.Combine(driverFolder, "atmel_usb_dfu.inf"), false);
+        var driverFolder = Path.Combine(PlatformIo.GetAssetDir(), "platformio", "drivers");
+        Devcon.Install(Path.Combine(driverFolder, "atmel_usb_dfu.inf"), out var rebootRequired);
+        Trace.WriteLine(driverFolder);
     }
 }

@@ -21,7 +21,8 @@ public class Dfu : IConfigurableDevice
     public Dfu(IUsbDevice device)
     {
         _device = device;
-        var pid = device.VendorId;
+        var pid = device.ProductId;
+        
         foreach (var board in Board.Boards)
         {
             if (board.ProductIDs.Contains((uint) pid) && board.HasUsbmcu)
@@ -32,7 +33,7 @@ public class Dfu : IConfigurableDevice
             }
         }
 
-        throw new InvalidOperationException("Not expected");
+        throw new InvalidOperationException($"Not expected {pid}");
     }
 
     public Board Board { get; }
