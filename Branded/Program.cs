@@ -15,6 +15,11 @@ public static class Program
             ConfigurableUsbDeviceManager.Rescan();
             return;
         }
+        if (args.FirstOrDefault() == "-Drivers")
+        {
+            ConfigurableUsbDeviceManager.InstallDrivers();
+            return;
+        }
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
     }
 

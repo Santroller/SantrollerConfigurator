@@ -778,9 +778,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [RelayCommand]
     private async Task RescanAsync()
     {
-#if Windows
-           await _manager?.RescanAsync()!;
-#endif
+        await _manager?.InvokeRescan()!;
 
         await ShowInformationDialog.Handle(Resources.UnplugReplugMessage);
     }
@@ -794,18 +792,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
                 Resources.DriversMissingMessage)).ToTask();
             if (!yesNo.Response) return;
-            var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.System);
-            var assetDir = PlatformIo.GetAssetDir();
-            var driverFolder = Path.Combine(assetDir, "platformio", "drivers");
-            var info = new ProcessStartInfo(Path.Combine(windowsDir, "pnputil.exe"));
-            info.ArgumentList.AddRange(["-i", "-a", Path.Combine(driverFolder, "atmel_usb_dfu.inf")]);
-            info.UseShellExecute = true;
-            info.CreateNoWindow = true;
-            info.WindowStyle = ProcessWindowStyle.Hidden;
-            info.Verb = "runas";
-            var process = Process.Start(info);
-            if (process == null) return;
-            await process.WaitForExitAsync();
+
+            await _manager?.InvokeDriverInstall()!;
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {

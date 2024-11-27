@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reactive.Concurrency;
+using System.Threading.Tasks;
 using DynamicData;
 using GuitarConfigurator.NetCore.ViewModels;
 using LibUsbDotNet.LibUsb;
@@ -99,5 +100,20 @@ public class ConfigurableUsbDeviceManager
     public static void Rescan()
     {
               
+    }
+
+    public static void InstallDrivers()
+    {
+              
+    }
+    
+    public async Task InvokeRescan()
+    {
+        
+    }
+    
+    public async Task InvokeDriverInstall()
+    {   
+        
     }
 }

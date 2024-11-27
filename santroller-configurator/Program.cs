@@ -26,11 +26,16 @@ public static class Program
 #else
     public static void Main(string[] args)
     {
-        if (args.FirstOrDefault() == "-Rescan")
+        switch (args.FirstOrDefault())
         {
-            ConfigurableUsbDeviceManager.Rescan();
-            return;
+            case "-Rescan":
+                ConfigurableUsbDeviceManager.Rescan();
+                return;
+            case "-Drivers":
+                ConfigurableUsbDeviceManager.InstallDrivers();
+                return;
         }
+
         VelopackApp.Build().Run();
         Directory.CreateDirectory(AssetUtils.GetAppDataFolder());
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);

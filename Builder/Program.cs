@@ -18,6 +18,11 @@ public static class Program
             ConfigurableUsbDeviceManager.Rescan();
             return;
         }
+        if (args.FirstOrDefault() == "-Drivers")
+        {
+            ConfigurableUsbDeviceManager.InstallDrivers();
+            return;
+        }
         VelopackApp.Build().Run();
         Directory.CreateDirectory(AssetUtils.GetAppDataFolder());
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);

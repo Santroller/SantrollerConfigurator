@@ -118,7 +118,24 @@ public partial class ConfigurableUsbDeviceManager
         _deviceNotificationListener.StopListen(DeviceInterfaceIds.UsbDevice);
     }
 
-    public async Task RescanAsync()
+    public async Task InvokeRescan()
+    {   
+        // Start app as admin and then call rescan function and wait for it to exit
+        try 
+        {
+            var info2 = new ProcessStartInfo(Environment.ProcessPath!, "-Rescan");
+            info2.UseShellExecute = true;
+            info2.CreateNoWindow = true;
+            info2.WindowStyle = ProcessWindowStyle.Hidden;
+            info2.Verb = "runas";
+            var process2 = Process.Start(info2);
+            if (process2 == null) return;
+            await process2.WaitForExitAsync();
+        } catch (Win32Exception) {
+        }
+    }
+    
+    public async Task InvokeDriverInstall()
     {   
         // Start app as admin and then call rescan function and wait for it to exit
         try 
@@ -157,5 +174,10 @@ public partial class ConfigurableUsbDeviceManager
                 }
             }
         }
+    }
+    public static void InstallDrivers()
+    {
+        var driverFolder = Path.Combine(assetDir, "platformio", "drivers");
+        Devcon.Install(Path.Combine(driverFolder, "atmel_usb_dfu.inf"), false);
     }
 }
