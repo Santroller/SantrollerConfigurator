@@ -1951,7 +1951,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (IsBluetoothRx)
             {
-                var addr = new byte[Santroller.BtAddressLength];
+                var addr = new byte[Santroller.BtAddressLength+1];
                 // If we have a valid bluetooth address, write it
                 if (BtRxAddr.Length != 0 && BtRxAddr.Contains("("))
                 {
@@ -1962,9 +1962,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     addr = Encoding.UTF8.GetBytes(BtRxAddr);
                 }
-                // Make sure last byte is null byte
-                addr[^1] = 0;
-
                 config += $"""
 
                            #define BT_ADDR {WriteBlob(writer, addr)}
