@@ -1962,6 +1962,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     addr = Encoding.UTF8.GetBytes(BtRxAddr);
                 }
+                // Make sure last byte is null byte
+                addr[^1] = 0;
 
                 config += $"""
 
