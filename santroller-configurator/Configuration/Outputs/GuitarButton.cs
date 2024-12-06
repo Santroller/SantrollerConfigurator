@@ -152,9 +152,15 @@ public class GuitarButton : OutputButton
         // GHL Guitars map strum up and strum down to dpad up and down, and also the stick
         if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar &&
             Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp &&
-            mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360 or ConfigField.Xbox)
+            mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox)
             return base.Generate(mode, debounceIndex, ledIndex,
                 $"report->strumBar={(Type is InstrumentButtonType.StrumDown ? "0xFF" : "0x00")};", combinedExtra,
+                strumIndexes, combinedDebounce, macros, writer);
+        if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar &&
+            Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp &&
+            mode is ConfigField.Xbox360 )
+            return base.Generate(mode, debounceIndex, ledIndex,
+                $"report->strumBar={(Type is InstrumentButtonType.StrumDown ? "INT16_MAX" : "INT16_MIN")};", combinedExtra,
                 strumIndexes, combinedDebounce, macros, writer);
 
         // XB1 also needs to set the normal face buttons, which can conveniently be done using the PS3 format

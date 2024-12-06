@@ -1951,6 +1951,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (IsBluetoothRx)
             {
+                // Add space for null terminator
                 var addr = new byte[Santroller.BtAddressLength+1];
                 // If we have a valid bluetooth address, write it
                 if (BtRxAddr.Length != 0 && BtRxAddr.Contains("("))

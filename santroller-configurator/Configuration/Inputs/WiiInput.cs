@@ -565,7 +565,8 @@ public class WiiInput : TwiInput
                 mappedBindings.Add(input.WiiControllerType, []);
             var m = binding.Item2;
             var mappingsDigital =  (m.Contains("wiiButtons") || m.Contains("debounce")) && !m.Contains("wiiData[0]") &&
-                !m.Contains("wiiData[1]");
+                !m.Contains("wiiData[1]") && !m.Contains("wiiData[2]") &&
+                !m.Contains("wiiData[3]") ;
             if (mappingsDigital && mode is not (ConfigField.Shared or ConfigField.Detection or ConfigField.DetectionFestival))
             {
                 digitalBindings.Add(binding.Item2);
@@ -585,8 +586,9 @@ public class WiiInput : TwiInput
             mappedBindings.Remove(WiiControllerType.ClassicController);
             var mappingsDigital = mappings.Where(m =>
                 (m.Contains("wiiButtons") || m.Contains("debounce")) && !m.Contains("wiiData[0]") &&
-                !m.Contains("wiiData[1]"));
-            mappings = mappings.Where(m => (!m.Contains("wiiButtons") && !m.Contains("debounce")) || m.Contains("wiiData[0]") || m.Contains("wiiData[1]"))
+                !m.Contains("wiiData[1]") && !m.Contains("wiiData[2]") &&
+                !m.Contains("wiiData[3]"));
+            mappings = mappings.Where(m => (!m.Contains("wiiButtons") && !m.Contains("debounce")) || m.Contains("wiiData[0]") || m.Contains("wiiData[1]") || m.Contains("wiiData[2]") || m.Contains("wiiData[3]"))
                 .Select(s => s.Replace("\n", "\n   ")).ToList().ToList();
             var mappings2 = mappings.Select(mapping =>
                 HiResMapOrder.Aggregate(mapping, (current, key) => current.Replace(key, HiResMap[key]))).ToList();
