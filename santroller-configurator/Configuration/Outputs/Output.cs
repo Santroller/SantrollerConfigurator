@@ -242,7 +242,7 @@ public abstract partial class Output : ReactiveObject
         AnalogOutputs = ReadOnlyObservableCollection<Output>.Empty;
         DigitalOutputs = ReadOnlyObservableCollection<Output>.Empty;
         AllDigitalOutputs = ReadOnlyObservableCollection<Output>.Empty;
-        if (this is OutputButton or {Input.IsAnalog: false})
+        if (this is OutputButton or {Input.IsAnalog: false} and not Led)
         {
             AllDigitalOutputs = new ReadOnlyObservableCollection<Output>(new ObservableCollection<Output>([this]));
         }

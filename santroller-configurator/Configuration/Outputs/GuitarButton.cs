@@ -156,6 +156,8 @@ public class GuitarButton : OutputButton
             return base.Generate(mode, debounceIndex, ledIndex,
                 $"report->strumBar={(Type is InstrumentButtonType.StrumDown ? "0xFF" : "0x00")};", combinedExtra,
                 strumIndexes, combinedDebounce, macros, writer);
+        
+        // 360 uses different stick values
         if (Model.DeviceControllerType is DeviceControllerType.LiveGuitar &&
             Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp &&
             mode is ConfigField.Xbox360 )

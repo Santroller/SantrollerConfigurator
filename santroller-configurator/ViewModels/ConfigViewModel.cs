@@ -1956,12 +1956,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 // If we have a valid bluetooth address, write it
                 if (BtRxAddr.Length != 0 && BtRxAddr.Contains("("))
                 {
-                    addr = Encoding.UTF8.GetBytes(BtRxAddr.Substring(BtRxAddr.Length - Santroller.BtAddressLength,
-                        Santroller.BtAddressLength - 1));
+                    Array.Copy(Encoding.UTF8.GetBytes(BtRxAddr.Substring(BtRxAddr.Length - Santroller.BtAddressLength,
+                        Santroller.BtAddressLength - 1)), addr, Santroller.BtAddressLength - 1);
                 }
                 else if (BtRxAddr.Length != 0 && BtRxAddr.Contains(":"))
                 {
-                    addr = Encoding.UTF8.GetBytes(BtRxAddr);
+                    Array.Copy(Encoding.UTF8.GetBytes(BtRxAddr), addr, Santroller.BtAddressLength - 1);
                 }
                 config += $"""
 

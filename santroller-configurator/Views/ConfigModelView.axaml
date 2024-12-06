@@ -654,7 +654,7 @@
                 </StackPanel>
             </DataTemplate>
             <DataTemplate DataType="{x:Type other:Led}">
-                <StackPanel>
+                <StackPanel IsVisible="{Binding !Model.Branded}">
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding IsLed}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
@@ -2888,7 +2888,15 @@
                                       OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="OutputEnabled" />
+                            <Binding
+                                Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
+                            </Binding>
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
                            VerticalContentAlignment="Center"
                            Width="300" Content="{x:Static netCore:Resources.InvertOutputLabel}" />
@@ -2939,15 +2947,6 @@
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <StackPanel Orientation="Horizontal">
-                        <StackPanel.IsVisible>
-                            <MultiBinding Converter="{x:Static BoolConverters.And}">
-                                <Binding Path="!UsesPwm" />
-                                <Binding Path="OutputEnabled" />
-                                <Binding
-                                    Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
-                                </Binding>
-                            </MultiBinding>
-                        </StackPanel.IsVisible>
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                Width="300" Content="{x:Static netCore:Resources.AnalogOutputPinLabel}" />
@@ -2958,7 +2957,16 @@
                                   ItemsSource="{Binding AvailablePwmPins}" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel IsVisible="{Binding !UsesPwm}">
+                <StackPanel>
+                    <StackPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!UsesPwm" />
+                            <Binding Path="OutputEnabled" />
+                            <Binding
+                                Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
+                            </Binding>
+                        </MultiBinding>
+                    </StackPanel.IsVisible>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
@@ -4159,6 +4167,7 @@
                                                     <Binding
                                                         Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                                     <Binding Path="!IsCombined" />
+                                                    <Binding Path="!IsLed" />
                                                 </MultiBinding>
                                             </StackPanel.IsVisible>
                                             <Label VerticalAlignment="Center"
