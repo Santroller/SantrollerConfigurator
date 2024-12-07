@@ -162,7 +162,7 @@ public class GuitarButton : OutputButton
             Type is InstrumentButtonType.StrumDown or InstrumentButtonType.StrumUp &&
             mode is ConfigField.Xbox360 )
             return base.Generate(mode, debounceIndex, ledIndex,
-                $"report->strumBar={(Type is InstrumentButtonType.StrumDown ? "INT16_MAX" : "INT16_MIN")};", combinedExtra,
+                $"report->strumBar={(Type is InstrumentButtonType.StrumDown ? "INT16_MIN" : "INT16_MAX")};", combinedExtra,
                 strumIndexes, combinedDebounce, macros, writer);
 
         // XB1 also needs to set the normal face buttons, which can conveniently be done using the PS3 format
