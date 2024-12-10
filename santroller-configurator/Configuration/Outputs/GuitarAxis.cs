@@ -318,7 +318,7 @@ public partial class GuitarAxis : OutputAxis
                         combinedExtra, strumIndexes, combinedDebounce, macros, writer);
                 case GuitarAxisType.Whammy:
                     return new KeyboardButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
-                        LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.RightCtrl,
+                        LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(), Model.Debounce, Key.OemQuestion,
                         OutputEnabled, PeripheralOutput, OutputInverted, OutputPin).Generate(mode, debounceIndex, ledIndex, extra,
                         combinedExtra, strumIndexes, combinedDebounce, macros, writer);
             }
