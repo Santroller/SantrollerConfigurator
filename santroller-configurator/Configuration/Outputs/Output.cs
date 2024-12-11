@@ -252,7 +252,7 @@ public abstract partial class Output : ReactiveObject
         _configured = true;
         IsVisible = !Model.Branded || LedIndices.Any() || this is Led || this is Combined.BluetoothCombinedOutput ||
                     this is CombinedOutput || this is OutputAxis ||
-                    this is {Input: AnalogToDigital} || this is JoystickToDpad;
+                    this is {Input: AnalogToDigital} || this is JoystickToDpad || this is {Input: WiiInput {Input: WiiInputType.GuitarTapAll}} || this is {Input: Ps2Input {Input: Ps2InputType.GuitarTapAll}};
     }
 
     private bool _outputPeripheral;

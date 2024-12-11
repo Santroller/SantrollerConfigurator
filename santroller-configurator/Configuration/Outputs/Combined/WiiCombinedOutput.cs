@@ -361,14 +361,14 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         var outputs = new List<Output>(base.ValidOutputs());
 
         var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
-        if (joyToDpad?.Enabled == true)
+        if (joyToDpad != null)
         {
             outputs.Remove(joyToDpad);
             outputs.Add(joyToDpad.ValidOutputs());
         }
 
         var startSelectHome = outputs.FirstOrDefault(s => s is StartSelectHome);
-        if (startSelectHome?.Enabled == true)
+        if (startSelectHome != null)
         {
             outputs.Remove(startSelectHome);
             outputs.Add(startSelectHome.ValidOutputs());

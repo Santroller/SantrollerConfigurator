@@ -169,18 +169,18 @@ public partial class Ps2CombinedOutput : CombinedSpiOutput
     public override IEnumerable<Output> ValidOutputs()
     {
         var outputs = base.ValidOutputs().ToList();
-        var startSelectHome = outputs.FirstOrDefault(s => s is StartSelectHome);
-        if (startSelectHome?.Enabled == true)
-        {
-            outputs.Remove(startSelectHome);
-            outputs.Add(startSelectHome.ValidOutputs());
-        }
-
         var joyToDpad = outputs.FirstOrDefault(s => s is JoystickToDpad);
-        if (joyToDpad?.Enabled == true)
+        if (joyToDpad != null)
         {
             outputs.Remove(joyToDpad);
             outputs.Add(joyToDpad.ValidOutputs());
+        }
+
+        var startSelectHome = outputs.FirstOrDefault(s => s is StartSelectHome);
+        if (startSelectHome != null)
+        {
+            outputs.Remove(startSelectHome);
+            outputs.Add(startSelectHome.ValidOutputs());
         }
 
         var tapAnalog =

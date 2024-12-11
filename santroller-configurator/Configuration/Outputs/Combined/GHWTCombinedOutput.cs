@@ -143,9 +143,9 @@ public partial class GhwtCombinedOutput : CombinedOutput
     public override IEnumerable<Output> ValidOutputs()
     {
         var tapAnalog =
-            Outputs.Items.FirstOrDefault(s => s is {Enabled: true, Input: GhWtTapInput {Input: GhWtInputType.TapBar}});
+            Outputs.Items.FirstOrDefault(s => s is {Input: GhWtTapInput {Input: GhWtInputType.TapBar}});
         var tapFrets =
-            Outputs.Items.FirstOrDefault(s => s is {Enabled: true, Input: GhWtTapInput {Input: GhWtInputType.TapAll}});
+            Outputs.Items.FirstOrDefault(s => s is {Input: GhWtTapInput {Input: GhWtInputType.TapAll}});
         if (tapAnalog == null && tapFrets == null) return Outputs.Items;
         var outputs = new List<Output>(Outputs.Items);
         // Map Tap bar to Upper frets on RB guitars

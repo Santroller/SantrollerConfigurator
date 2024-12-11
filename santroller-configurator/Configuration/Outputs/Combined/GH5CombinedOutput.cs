@@ -99,10 +99,10 @@ public partial class Gh5CombinedOutput : CombinedTwiOutput
     {
         var tapAnalog =
             Outputs.Items.FirstOrDefault(
-                s => s is {Enabled: true, Input: Gh5NeckInput {Input: Gh5NeckInputType.TapBar}});
+                s => s is {Input: Gh5NeckInput {Input: Gh5NeckInputType.TapBar}});
         var tapFrets =
             Outputs.Items.FirstOrDefault(
-                s => s is {Enabled: true, Input: Gh5NeckInput {Input: Gh5NeckInputType.TapAll}});
+                s => s is {Input: Gh5NeckInput {Input: Gh5NeckInputType.TapAll}});
         if (tapAnalog == null && tapFrets == null) return Outputs.Items;
         var outputs = new List<Output>(Outputs.Items);
 

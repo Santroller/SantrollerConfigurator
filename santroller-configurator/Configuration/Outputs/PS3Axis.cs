@@ -70,7 +70,7 @@ public class Ps3Axis : OutputAxis
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
-        if (!Model.Branded && !Enabled)
+        if (Model is {Branded: false, Builder: false} && !Enabled)
         {
             return "";
         }
