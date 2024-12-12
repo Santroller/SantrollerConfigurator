@@ -1053,7 +1053,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         UpdateErrors();
                         break;
                     case LedType.Stp16Cpc26:
-                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Stp16PeripheralSpiType, false,
+                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Stp16PeripheralSpiType, true,
                             true, false,
                             _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
                             _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, false,
@@ -1061,9 +1061,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             true,
                             Math.Min(Microcontroller.Board.CpuFreq / 2, 12000000), false);
                         _stp16LePeripheral =
-                            new DirectPinConfig(this, Stp16LePeripheralType, -1, false, DevicePinMode.Output);
+                            new DirectPinConfig(this, Stp16LePeripheralType, -1, true, DevicePinMode.Output);
                         _stp16OePeripheral =
-                            new DirectPinConfig(this, Stp16OePeripheralType, -1, false, DevicePinMode.Output);
+                            new DirectPinConfig(this, Stp16OePeripheralType, -1, true, DevicePinMode.Output);
                         this.RaisePropertyChanged(nameof(Stp16LePeripheral));
                         this.RaisePropertyChanged(nameof(Stp16OePeripheral));
                         this.RaisePropertyChanged(nameof(LedMosiPeripheral));
@@ -1072,7 +1072,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         break;
                     case LedType.Ws2812:
                     case LedType.Ws2812W:
-                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, WS2812PeripheralSpiType, false,
+                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, WS2812PeripheralSpiType, true,
                             false, false,
                             _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
                             _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
@@ -1088,7 +1088,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         break;
                     default:
                     {
-                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102PeripheralSpiType, false,
+                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102PeripheralSpiType, true,
                             true, false,
                             _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
                             _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
@@ -3932,7 +3932,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
 
             if (!pins.ContainsKey(binding.LocalisedName)) pins[binding.LocalisedName] = [];
-            pins[binding.LocalisedName].AddRange((pins2));
+            pins[binding.LocalisedName].AddRange(pins2);
         }
 
         if ((Main.IsUno || Main.IsMega) && !peripheral)

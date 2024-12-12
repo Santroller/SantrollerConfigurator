@@ -28,7 +28,7 @@ public class PicoSpiConfig : SpiConfig
             return Resources.DifferentSPIGroup;
         }
         var ret2 = Model.Bindings.Items
-            .Where(output => output.GetPinConfigs().OfType<PicoSpiConfig>().Any(s => s != this && s.Index == Index))
+            .Where(output => output.GetPinConfigs().OfType<PicoSpiConfig>().Any(s => s != this && s.Index == Index && s.Peripheral == Peripheral))
             .Select(output => string.Format(Resources.SPIGroup, output.LocalisedName, Index)).ToList();
         return ret2.Count != 0 ? string.Join(", ", ret2) : null;
     }

@@ -16,7 +16,7 @@ public class PinToStringConverter : IMultiValueConverter
     {
         if (values[0] is not int || values[1] is not ConfigViewModel ||
             values[3] is not (Output or Input or ConfigViewModel)) return null;
-        var peripheral = values.Count >= 6 && values[5] == (object?) true;
+        var peripheral = values.Count >= 6 && (bool?)values[5] == true;
         var pin = (int) values[0]!;
         var selectedPin = -1;
         if (values[2] is not null) selectedPin = (int) values[2]!;
