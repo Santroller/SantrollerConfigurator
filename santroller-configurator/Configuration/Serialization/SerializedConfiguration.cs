@@ -285,6 +285,7 @@ public class SerializedConfiguration
             model.LedMosi = LedMosi;
             model.LedSck = LedSck;
         }
+        
 
         if (model.IsApa102Peripheral || model.IsStp16Peripheral || model.IsWs2812Peripheral)
         {

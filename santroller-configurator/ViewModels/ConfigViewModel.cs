@@ -1042,7 +1042,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _ledTypePeripheral;
         set
         {
-            if (value != _ledType)
+            if (value != _ledTypePeripheral || _ledSpiConfigPeripheral == null)
             {
                 switch (value)
                 {
@@ -2829,6 +2829,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
         if (!outputs.Any(s => s.LedIndicesPeripheral.Any())) return "";
         if (LedTypePeripheral == LedType.None) return "";
+        var strings = LedType.GetLedStrings("brightness", "r", "g", "b").ToArray();
         var ret = "";
         var ledMax = LedCountPeripheral;
         ret +=
@@ -2844,13 +2845,21 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ret +=
                 $"""
 
-                 slaveWriteLED(ledStatePeripheral[{i}].brightness | 0xE0);
-                 slaveWriteLED(ledStatePeripheral[{i}].r);
-                 slaveWriteLED(ledStatePeripheral[{i}].g);
-                 slaveWriteLED(ledStatePeripheral[{i}].b);
+                 slaveWriteLED(ledStatePeripheral[{i}].{strings[0]} | 0xE0);
+                 slaveWriteLED(ledStatePeripheral[{i}].{strings[1]});
+                 slaveWriteLED(ledStatePeripheral[{i}].{strings[2]});
+                 slaveWriteLED(ledStatePeripheral[{i}].{strings[3]});
                  """;
         }
+        
+        ret +=
+            """
 
+            slaveWriteLED(0x00);
+            slaveWriteLED(0x00);
+            slaveWriteLED(0x00);
+            slaveWriteLED(0x00);
+            """;
         for (var i = 0; i <= ledMax; i += 16)
         {
             ret += """
