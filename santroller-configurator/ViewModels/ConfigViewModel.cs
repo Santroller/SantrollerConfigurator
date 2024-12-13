@@ -2829,7 +2829,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
         if (!outputs.Any(s => s.LedIndicesPeripheral.Any())) return "";
         if (LedTypePeripheral == LedType.None) return "";
-        var strings = LedType.GetLedStrings("brightness", "r", "g", "b").ToArray();
+        var strings = LedTypePeripheral.GetLedStrings("brightness", "r", "g", "b").ToArray();
         var ret = "";
         var ledMax = LedCountPeripheral;
         ret +=
