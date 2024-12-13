@@ -105,14 +105,14 @@ public class Builder : Task
         {
             file = new[] {".", "artifacts"}.Concat(file).ToArray();
             Start("scp",
-                    $"sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(dir, "Binaries", file.Last())}")
+                    $"actions-runner@192.168.0.79:{Path.Combine(file)} {Path.Combine(dir, "Binaries", file.Last())}")
                 .WaitForExit();
         }
         else
         {
             file = new[] {".", "artifacts"}.Concat(file).ToArray();
             Start("rsync",
-                    $"-avPr sanjay@192.168.0.79:{Path.Combine(file)} {Path.Combine(dir, "Binaries", file.Last())}")
+                    $"-avPr actions-runner@192.168.0.79:{Path.Combine(file)} {Path.Combine(dir, "Binaries", file.Last())}")
                 .WaitForExit();
         }
     }
