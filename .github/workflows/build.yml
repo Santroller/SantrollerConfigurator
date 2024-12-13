@@ -50,7 +50,7 @@ jobs:
           mkdir $RUN_ID
           cp -rf santroller-configurator/Releases $RUN_ID
           mv out $RUN_ID/macos 
-          rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
+          rsync -avPr $RUN_ID actions-runner@192.168.0.79:./artifacts
   build-linux:
     if: contains(github.ref, 'tags/v')
     name: Build (Linux)
@@ -125,7 +125,7 @@ jobs:
           mkdir $Env:RUN_ID
           mv out $Env:RUN_ID/windows 
           cp -force -recurse santroller-configurator/Releases $Env:RUN_ID/Releases
-          scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
+          scp -r $Env:RUN_ID actions-runner@192.168.0.79:./artifacts
   build-linux-builder:
     if: contains(github.ref, 'tags/v')
     name: Build Builder (Linux)
@@ -172,7 +172,7 @@ jobs:
         env:
           RUN_ID: ${{ github.run_id }}
         run: |
-          scp -r sanjay@192.168.0.79:./artifacts/$Env:RUN_ID .
+          scp -r actions-runner@192.168.0.79:./artifacts/$Env:RUN_ID .
           cp $Env:RUN_ID/windows/SantrollerConfiguratorBranded-win-64.exe Builder/Assets
           cp $Env:RUN_ID/linux/SantrollerConfiguratorBranded-linux-64 Builder/Assets
           cp $Env:RUN_ID/macos/SantrollerConfiguratorBranded-macOS.zip Builder/Assets
@@ -195,7 +195,7 @@ jobs:
         run: |
           mkdir -Force $Env:RUN_ID
           cp -force -recurse Builder/Releases $Env:RUN_ID/BuilderReleases
-          scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts  
+          scp -r $Env:RUN_ID actions-runner@192.168.0.79:./artifacts  
   build-mac-builder:
     if: contains(github.ref, 'tags/v')
     name: Build Builder (macOS)
@@ -210,7 +210,7 @@ jobs:
         env:
           RUN_ID: ${{ github.run_id }}
         run: |
-          scp -r sanjay@192.168.0.79:./artifacts/$RUN_ID .
+          scp -r actions-runner@192.168.0.79:./artifacts/$RUN_ID .
           cp $RUN_ID/windows/SantrollerConfiguratorBranded-win-64.exe Builder/Assets
           cp $RUN_ID/linux/SantrollerConfiguratorBranded-linux-64 Builder/Assets
           cp $RUN_ID/macos/SantrollerConfiguratorBranded-macOS.zip Builder/Assets
@@ -235,7 +235,7 @@ jobs:
         run: |
           mkdir -p $RUN_ID
           cp -rf Builder/Releases $RUN_ID/BuilderReleases
-          rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
+          rsync -avPr $RUN_ID actions-runner@192.168.0.79:./artifacts
   release:
     if: contains(github.ref, 'tags/v')
     name: Release Linux Build
