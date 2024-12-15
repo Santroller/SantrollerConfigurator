@@ -18,7 +18,7 @@ public partial class DjAxis : OutputAxis
         int deadZone, DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
         ledIndicesMpr121,
-        min, max, 0,
+        min, max, input.IsUint ? short.MaxValue : 0,
         deadZone,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
@@ -32,11 +32,11 @@ public partial class DjAxis : OutputAxis
         DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
         ledIndicesMpr121, 0,
-        0, 0,
+        0, input.IsUint ? short.MaxValue : 0,
         0,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
-        if (type == DjAxisType.Crossfader)
+        if (type == DjAxisType.EffectsKnob)
         {
             Invert = multiplier == -1;
         }
