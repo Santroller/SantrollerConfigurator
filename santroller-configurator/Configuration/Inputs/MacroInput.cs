@@ -33,6 +33,9 @@ public partial class MacroInput : Input
             .ToProperty(this, x => x.IsPs2);
         _isUsbHelper = this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is UsbHostInput)
             .ToProperty(this, x => x.IsUsb);
+        this.WhenAnyValue(x => x.Model.HasPeripheral).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
+        this.WhenAnyValue(x => x.Model.HasAccel).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
+        this.WhenAnyValue(x => x.Model.IsBluetoothRx).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
     }
     public override bool Peripheral => Child1.Peripheral;
 
@@ -255,26 +258,16 @@ public partial class MacroInput : Input
     public IEnumerable<DjInputType> DjInputTypes => Enum.GetValues<DjInputType>();
     public IEnumerable<UsbHostInputType> UsbInputTypes => Enum.GetValues<UsbHostInputType>();
 
-    public IEnumerable<InputType> InputTypes
-    {
-        get
-        {
-            if (Model.IsPico)
-            {
-                return
-                [
-                    Types.InputType.AnalogPinInput, Types.InputType.DigitalPinInput, Types.InputType.WiiInput,
-                    Types.InputType.Ps2Input, Types.InputType.TurntableInput, Types.InputType.UsbHostInput
-                ];
-            }
-
-            return
-            [
-                Types.InputType.AnalogPinInput, Types.InputType.DigitalPinInput, Types.InputType.WiiInput,
-                Types.InputType.Ps2Input, Types.InputType.TurntableInput
-            ];
-        }
-    }
+    public IEnumerable<InputType> InputTypes =>
+        Enum.GetValues<InputType>().Where(s =>
+            s is not Types.InputType.MacroInput && 
+            (s is not Types.InputType.WtNeckPeripheralInput || Model.HasPeripheral) &&
+            (s is not Types.InputType.MultiplexerInput || Model.IsPico) &&
+            (s is not Types.InputType.DigitalPeripheralInput || Model.HasPeripheral) &&
+            (s is not Types.InputType.Mpr121Input || Model.HasMpr121) &&
+            (s is not Types.InputType.BluetoothInput || Model.IsBluetoothRx) &&
+            (s is not Types.InputType.UsbHostInput || Model.IsPico) &&
+            (s is not Types.InputType.AccelInput || Model.HasAccel));
 
 
     [Reactive] private Input _child1;
@@ -301,7 +294,7 @@ public partial class MacroInput : Input
 
     public override IEnumerable<Input> InnermostInputs()
     {
-        return [Child1, Child2];
+        return Child1.InnermostInputs().Concat(Child2.InnermostInputs());
     }
 
     public override IList<Input> Inputs()

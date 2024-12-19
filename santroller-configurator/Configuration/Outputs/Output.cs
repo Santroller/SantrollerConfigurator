@@ -1155,12 +1155,9 @@ public abstract partial class Output : ReactiveObject
             case InputType.Mpr121Input:
                 input = new Mpr121Input(0, Model, false);
                 break;
-            case InputType.MacroInput when Input.InputType is InputType.MacroInput:
+            case InputType.MacroInput:
                 input = new MacroInput(new DirectInput(-1, false, false, DevicePinMode.PullUp, Model),
                     new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), Model);
-                break;
-            case InputType.MacroInput:
-                input = new MacroInput(Input, Input.Serialise().Generate(Model), Model);
                 break;
             case InputType.DigitalPeripheralInput:
                 input = new DirectInput(-1, false, true, DevicePinMode.PullUp, Model);
