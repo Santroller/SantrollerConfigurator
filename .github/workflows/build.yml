@@ -245,9 +245,9 @@ jobs:
       - name: Release
         run: |
           cd santroller-configurator
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge --timeout 30
           cd ../Builder
-          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge --timeout 30
   release-mac:
     if: contains(github.ref, 'tags/v')
     name: Release macOS Build
@@ -257,9 +257,9 @@ jobs:
       - name: Release
         run: |
           cd santroller-configurator
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge --timeout 30
           cd ../Builder
-          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge --timeout 30
   release-win:
     if: contains(github.ref, 'tags/v')
     name: Release windows Build
@@ -269,9 +269,9 @@ jobs:
       - name: Release
         run: |
           cd santroller-configurator
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge --timeout 30
           cd ../Builder
-          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge --timeout 30
   cleanup:
     name: Remove temp files
     runs-on: [self-hosted, linux]
