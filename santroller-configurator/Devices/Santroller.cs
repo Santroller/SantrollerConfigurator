@@ -265,7 +265,7 @@ public class Santroller : ConfigurableUsbDevice
                 if (_model.UsbHostEnabled)
                 {
                     usbHostRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHost, 24);
-                    usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, 101);
+                    usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, 134);
                     midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
                 }
                 if (_model.IsBluetoothRx)
