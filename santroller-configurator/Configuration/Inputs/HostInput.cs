@@ -112,7 +112,8 @@ public abstract partial class HostInput : Input
             UsbHostInputType.KeyboardInput => Output.GetReportField(Key, $"{Field}.keyboard", false),
             UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, $"{Field}.mouse", false),
             UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, $"{Field}.mouse", false),
-            UsbHostInputType.ProKey => Output.GetReportField(ProKeyType, Field, false),
+            UsbHostInputType.ProKey when ProKeyType is ProKeyType.TouchPad or ProKeyType.PedalAnalog or ProKeyType.PedalDigital or ProKeyType.Overdrive => Output.GetReportField(ProKeyType, Field, false),
+            UsbHostInputType.ProKey => Output.GetReportField($"proKeyVelocities[{(int) ProKeyType}]", Field, false),
             _ => Output.GetReportField(Input, Field, false)
         });
 
@@ -319,8 +320,23 @@ public abstract partial class HostInput : Input
         private readonly sbyte mouseY;
         private readonly sbyte scrollY;
         private readonly sbyte scrollX;
+        private unsafe fixed byte proKeys[25];
+        private readonly byte pedal;
+        private readonly byte touchPad;
+        private readonly byte lowEFret;
+        private readonly byte aFret;
+        private readonly byte dFret;
+        private readonly byte gFret;
+        private readonly byte bFret;
+        private readonly byte highEFret;
+        private readonly byte lowEFretVelocity;
+        private readonly byte aFretVelocity;
+        private readonly byte dFretVelocity;
+        private readonly byte gFretVelocity;
+        private readonly byte bFretVelocity;
+        private readonly byte highEFretVelocity;
 
-        public int RawValue(UsbHostInputType inputType, Key key, MouseAxisType mouseAxisType,
+        public unsafe int RawValue(UsbHostInputType inputType, Key key, MouseAxisType mouseAxisType,
             MouseButtonType mouseButtonType, ProKeyType proKeyType)
         {
             var val = inputType switch
@@ -369,6 +385,9 @@ public abstract partial class HostInput : Input
                 UsbHostInputType.GenericAxisRy => genericRY,
                 UsbHostInputType.GenericAxisRz => genericRZ,
                 UsbHostInputType.GenericAxisSlider => genericSlider,
+                UsbHostInputType.ProKey when proKeyType is ProKeyType.PedalAnalog => pedal,
+                UsbHostInputType.ProKey when proKeyType is ProKeyType.TouchPad => touchPad,
+                UsbHostInputType.ProKey => proKeys[(int) proKeyType],
                 UsbHostInputType.KeyboardInput when key is Key.LeftAlt or Key.LeftCtrl or Key.LeftShift or Key.RightAlt
                     or Key.RightCtrl
                     or Key.RightShift => (keys &

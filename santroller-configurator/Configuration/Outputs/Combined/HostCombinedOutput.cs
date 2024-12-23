@@ -245,26 +245,25 @@ public abstract partial class HostCombinedOutput : CombinedOutput
         {
             valid.UnionWith(Enum.GetValues<DjInputType>().Cast<object>());
         }
-        // This is currently being handled in firmware, so we dont handle this here.
-        // if (Model.DeviceControllerType == DeviceControllerType.ProKeys)
-        // {
-        //     foreach (var proKeyType in ProKeyTypes)
-        //     {
-        //         switch (proKeyType)
-        //         {
-        //             case ProKeyType.Overdrive or ProKeyType.PedalDigital:
-        //                 Outputs.Add(new PianoKeyButton(Model, true,MakeInput(proKeyType), Colors.Black,
-        //                     Colors.Black, [], [], [],
-        //                     proKeyType, false, false, false, -1, true));
-        //                 break;
-        //             default:
-        //                 Outputs.Add(new PianoKey(Model, true,MakeInput(proKeyType), Colors.Black,
-        //                     Colors.Black, [], [], [],
-        //                     proKeyType, false, false, false, -1, true));
-        //                 break;
-        //         }
-        //     }
-        // }
+        if (Model.DeviceControllerType == DeviceControllerType.ProKeys)
+        {
+            foreach (var proKeyType in ProKeyTypes)
+            {
+                switch (proKeyType)
+                {
+                    case ProKeyType.Overdrive or ProKeyType.PedalDigital:
+                        Outputs.Add(new PianoKeyButton(Model, true,MakeInput(proKeyType), Colors.Black,
+                            Colors.Black, [], [], [],
+                            proKeyType, false, false, false, -1, true));
+                        break;
+                    default:
+                        Outputs.Add(new PianoKey(Model, true,MakeInput(proKeyType), Colors.Black,
+                            Colors.Black, [], [], [],
+                            proKeyType, false, false, false, -1, true));
+                        break;
+                }
+            }
+        }
 
         LoadMatchingFromDict(valid, Mappings);
         switch (Model.DeviceControllerType)
