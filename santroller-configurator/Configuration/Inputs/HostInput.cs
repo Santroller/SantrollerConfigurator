@@ -319,9 +319,6 @@ public abstract partial class HostInput : Input
         private readonly sbyte mouseY;
         private readonly sbyte scrollY;
         private readonly sbyte scrollX;
-        private readonly UInt32 proKeys;
-        private readonly byte pedal;
-        private readonly byte touchPad;
 
         public int RawValue(UsbHostInputType inputType, Key key, MouseAxisType mouseAxisType,
             MouseButtonType mouseButtonType, ProKeyType proKeyType)
@@ -372,13 +369,6 @@ public abstract partial class HostInput : Input
                 UsbHostInputType.GenericAxisRy => genericRY,
                 UsbHostInputType.GenericAxisRz => genericRZ,
                 UsbHostInputType.GenericAxisSlider => genericSlider,
-                UsbHostInputType.ProKey when proKeyType is ProKeyType.PedalAnalog => pedal,
-                UsbHostInputType.ProKey when proKeyType is ProKeyType.TouchPad => touchPad,
-                UsbHostInputType.ProKey => (proKeys &
-                                            ((uint) 1 <<
-                                             (int) proKeyType)) != 0
-                    ? 1
-                    : 0,
                 UsbHostInputType.KeyboardInput when key is Key.LeftAlt or Key.LeftCtrl or Key.LeftShift or Key.RightAlt
                     or Key.RightCtrl
                     or Key.RightShift => (keys &
