@@ -385,6 +385,8 @@ public abstract partial class HostInput : Input
                 UsbHostInputType.GenericAxisRy => genericRY,
                 UsbHostInputType.GenericAxisRz => genericRZ,
                 UsbHostInputType.GenericAxisSlider => genericSlider,
+                UsbHostInputType.ProKey when proKeyType is ProKeyType.Overdrive => (buttons2 & (1 << 5)) != 0 ? 1 : 0,
+                UsbHostInputType.ProKey when proKeyType is ProKeyType.PedalDigital => (buttons2 & (1 << 6)) != 0 ? 1 : 0,
                 UsbHostInputType.ProKey when proKeyType is ProKeyType.PedalAnalog => pedal,
                 UsbHostInputType.ProKey when proKeyType is ProKeyType.TouchPad => touchPad,
                 UsbHostInputType.ProKey => proKeys[(int) proKeyType],
