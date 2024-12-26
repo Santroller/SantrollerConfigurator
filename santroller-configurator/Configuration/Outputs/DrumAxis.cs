@@ -268,16 +268,15 @@ public partial class DrumAxis : OutputAxis
             }
         }
 
-        var hasButtons = Model.DeviceControllerType.IsGh() || Type is DrumAxisType.Kick or DrumAxisType.Kick2;
         var outputButtons = "";
         switch (mode)
         {
             case ConfigField.Xbox360:
-                if (hasButtons && ButtonsXbox360.TryGetValue(Type, out var value))
+                if (ButtonsXbox360.TryGetValue(Type, out var value))
                     outputButtons += $"\n{GetReportField(value)} = true;";
                 break;
             case ConfigField.Xbox:
-                if (hasButtons && ButtonsXbox360.TryGetValue(Type, out var value5))
+                if (ButtonsXbox360.TryGetValue(Type, out var value5))
                     outputButtons += $"\n{GetReportField(value5)} = 0xff;";
                 break;
             case ConfigField.XboxOne:
@@ -285,7 +284,7 @@ public partial class DrumAxis : OutputAxis
                     outputButtons += $"\n{GetReportField(value1)} = true;";
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture:
-                if (hasButtons && ButtonsPs3.TryGetValue(Type, out var value2))
+                if (ButtonsPs3.TryGetValue(Type, out var value2))
                     outputButtons += $"\n{GetReportField(value2)} = true;";
                 break;
             case ConfigField.Universal:
@@ -313,7 +312,25 @@ public partial class DrumAxis : OutputAxis
 
         if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
         {
-            outputButtons += $"{GetReportField(Type, "current_drum_report", false)} = true;";
+            switch (Type)
+            {
+                case DrumAxisType.BlueCymbal or DrumAxisType.GreenCymbal or DrumAxisType.YellowCymbal:
+                    outputButtons += "report->cymbalFlag = true;";
+                    break;
+                case DrumAxisType.Blue or DrumAxisType.Green or DrumAxisType.Red or DrumAxisType.Yellow:
+                    outputButtons += "report->padFlag = true;";
+                    break;
+            }
+
+            switch (Type)
+            {
+                case DrumAxisType.YellowCymbal:
+                    outputButtons += "report->dpadUp = true;";
+                    break;
+                case DrumAxisType.BlueCymbal:
+                    outputButtons += "report->dpadDown = true;";
+                    break;
+            }
         }
 
         // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
@@ -412,6 +429,28 @@ public partial class DrumAxis : OutputAxis
             check = $"({input.Generate(writer)} - {Min}) < {DeadZone}";
         }
 
+        if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
+        {
+            return $$"""
+                     if ({{check}}) {
+                         if (!{{ifStatement}}) {
+                             lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
+                         }
+                         {{reset}}
+                     }
+                     if ({{ifStatement}}) {
+                         if (drumHit) {
+                             debounce[11]++;
+                         } else {
+                             drumHit = true; 
+                             {{outputButtons}}
+                             {{GenerateOutput(mode)}} = {{assignedVal}};
+                         }
+                     } else {
+                       {{GenerateOutput(mode)}} = 0;
+                     }
+                     """;
+        }
         return $$"""
                  if ({{check}}) {
                      if (!{{ifStatement}}) {
