@@ -236,7 +236,7 @@ public partial class DrumAxis : OutputAxis
             return $"midiData.midiVelocities[{midiInput.Key}] = 0;";
         }
 
-        if (mode is not (ConfigField.Ps3
+        if (mode is not (ConfigField.Ps3 or ConfigField.Ps4
             or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
@@ -283,7 +283,7 @@ public partial class DrumAxis : OutputAxis
                 if (ButtonsXboxOne.TryGetValue(Type, out var value1))
                     outputButtons += $"\n{GetReportField(value1)} = true;";
                 break;
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture:
+            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4:
                 if (ButtonsPs3.TryGetValue(Type, out var value2))
                     outputButtons += $"\n{GetReportField(value2)} = true;";
                 break;
@@ -310,7 +310,7 @@ public partial class DrumAxis : OutputAxis
                      """;
         }
 
-        if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
+        if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne && mode != ConfigField.Ps4)
         {
             switch (Type)
             {
