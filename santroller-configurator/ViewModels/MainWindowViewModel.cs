@@ -535,7 +535,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         var configFile = Path.Combine(Pio.FirmwareDir, "include", "config_data.h");
         File.WriteAllText(configFile, extra + config.Generate(extra.Length != 0 ? new MemoryStream() : null));
         var environment = config.Microcontroller.Board.Environment;
-        if (config.IsBluetooth) environment = "picow";
+        if (config.IsBluetooth)
+        {
+            environment = environment.Contains("pico2") ? "pico2w" : "picow";
+        }
         if (DeviceInputType is DeviceInputType.Peripheral)
         {
             environment += "_slave";
