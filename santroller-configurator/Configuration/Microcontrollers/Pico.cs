@@ -147,7 +147,7 @@ public class Pico : Microcontroller
         // Invert on pullup
         if (peripheral)
         {
-            return invert ? $"(slave_digital & (1 << {pin})) == 0" : $"slave_digital & (1 << {pin})";
+            return invert ? $"(((slave_digital & (1 << {pin})) == 0) && slave_initted)" : $"((slave_digital & (1 << {pin})) && slave_initted)";
         }
 
         return invert ? $"(sio_hw->gpio_in & (1 << {pin})) == 0" : $"sio_hw->gpio_in & (1 << {pin})";

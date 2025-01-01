@@ -52,7 +52,7 @@ public abstract partial class Input : ReactiveObject
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw,
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
         ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
-        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw);
+        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw, bool peripheralConnected);
 
     public abstract string GenerateAll(List<Tuple<Input, string>> bindings,
         ConfigField mode);

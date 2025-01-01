@@ -303,7 +303,7 @@ public class Santroller : ConfigurableUsbDevice
                     output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                         djRightRaw, gh5Raw,
                         ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
-                        peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw);
+                        peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected);
             }
             catch (Exception ex)
             {
