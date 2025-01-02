@@ -48,6 +48,7 @@ public partial class EmptyOutput : Output
                 vm => vm.Model.HasUsbHostCombinedOutput))
             .Select(type => ControllerEnumConverter.GetTypes(type.Item1.Item1).Where(s2 =>
                 (type.Item1.Item1.IsProGuitar() || s2 is not SimpleType.ProGuitar) &&
+                (type.Item1.Item1.IsDrum() || type.Item1.Item1.IsGuitar() || s2 is not (SimpleType.FestivalGamepad or SimpleType.FestivalIos or SimpleType.FestivalKeyboard or SimpleType.FestivalLayer)) &&
                 (model.IsPico ||
                  s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.BluetoothTx or SimpleType.UsbHost
                      or SimpleType.Peripheral)) &&

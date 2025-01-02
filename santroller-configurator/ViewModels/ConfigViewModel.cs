@@ -1471,6 +1471,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void UpdateBindings(bool defaults)
     {
         foreach (var binding in Bindings.Items) binding.UpdateBindings();
+        if (!DeviceControllerType.Is5FretGuitar() && !IsDrum)
+        {
+            Bindings.RemoveMany(Bindings.Items.Where(s => s is EmulationMode {Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfIos or EmulationModeType.FnfLayer}));
+        }
         InstrumentButtonTypeExtensions.ConvertBindings(Bindings, this, false);
         if (!IsGuitar)
         {

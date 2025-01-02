@@ -91,7 +91,11 @@ public partial class EmulationMode : Output
         (DeviceControllerType deviceControllerType, bool isPico) data)
     {
         return mode => (mode != EmulationModeType.Wii || data.deviceControllerType is DeviceControllerType.RockBandDrums
-            or DeviceControllerType.RockBandGuitar) && (mode != EmulationModeType.XboxOne || data.isPico);
+                           or DeviceControllerType.RockBandGuitar) &&
+                       (mode != EmulationModeType.XboxOne || data.isPico) &&
+                       (mode is not (EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfIos
+                            or EmulationModeType.FnfLayer) || data.deviceControllerType.Is5FretGuitar() ||
+                        data.deviceControllerType.IsDrum());
     }
 
     private string GetDefinition()
