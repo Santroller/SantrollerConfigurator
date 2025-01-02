@@ -1679,7 +1679,7 @@ Feel free to remove this option if you do not intend to use your instrument on i
         <value>Guitar Bass</value>
     </data>
     <data name="XInputSubTypeGuitarHeroWt" xml:space="preserve">
-        <value>Guitar Alternate</value>
+        <value>Pro Guitar</value>
     </data>
     <data name="XInputSubTypeDrums" xml:space="preserve">
         <value>Drums</value>
