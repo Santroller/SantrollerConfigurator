@@ -14,6 +14,7 @@ public enum XInputSubType
     GuitarBass = 11,
     ArcadePad = 19,
     Turntable = 23,
-    GuitarHeroLive = 25,
+    GuitarHeroLive = 24,
+    ProGuitar = 25,
     GuitarHeroWt = 26
 }

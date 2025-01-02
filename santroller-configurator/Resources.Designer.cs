@@ -3207,6 +3207,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string XInputSubTypeProGuitar {
+            get {
+                return ResourceManager.GetString("XInputSubTypeProGuitar", resourceCulture);
+            }
+        }
+        
         public static string ConsoleTypeUniversal {
             get {
                 return ResourceManager.GetString("ConsoleTypeUniversal", resourceCulture);
