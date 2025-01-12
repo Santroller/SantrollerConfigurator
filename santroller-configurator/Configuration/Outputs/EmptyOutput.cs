@@ -279,7 +279,7 @@ public partial class EmptyOutput : Output
                 GuitarAxisType.Tilt => new GuitarAxis(Model,true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
-                    short.MinValue, short.MaxValue, 0, false, GuitarAxisType.Tilt, false, false, false, -1, false),
+                    ushort.MinValue, ushort.MaxValue, 0, false, GuitarAxisType.Tilt, false, false, false, -1, false),
                 GuitarAxisType guitarAxisType => new GuitarAxis(Model,true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],

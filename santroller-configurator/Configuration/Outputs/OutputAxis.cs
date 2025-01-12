@@ -150,7 +150,6 @@ public abstract partial class OutputAxis : Output
         var left = Math.Min(min / ushort.MaxValue * ProgressWidth, ProgressWidth);
 
         var right = ProgressWidth - Math.Min(max / ushort.MaxValue * ProgressWidth, ProgressWidth);
-        ;
         return new Thickness(left, 0, right, 0);
     }
 
