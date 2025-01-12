@@ -82,7 +82,7 @@ public partial class GuitarAxis : OutputAxis
         GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model,enabled,
         input, ledOn,
-        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, false,deadZone,
+        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, false,type == GuitarAxisType.Tilt ? 0 : deadZone,
         type is GuitarAxisType.Slider or GuitarAxisType.Whammy, outputEnabled, outputInverted, outputPeripheral,
         outputPin, childOfCombined)
     {
@@ -112,11 +112,15 @@ public partial class GuitarAxis : OutputAxis
         UpdateDetails();
         _namedAxisInfoHelper = this.WhenAnyValue(x => x.Value).Select(GetNamedAxisInfo).ToProperty(this, x => x.NamedAxisInfo);
     }
+    
+    protected override OutputAxisCalibrationState MaxState => Type is GuitarAxisType.Tilt ? OutputAxisCalibrationState.Max : OutputAxisCalibrationState.DeadZone;
 
     // ReSharper disable once UnassignedGetOnlyAutoProperty
     [ObservableAsProperty] private string _namedAxisInfo = "";
 
     [Reactive] private bool _inverted;
+
+    public bool HasDeadZone => !IsDigitalToAnalog && Type is not GuitarAxisType.Tilt;
 
     public GuitarAxisType Type { get; }
     public bool HasNamedAxis => Type is GuitarAxisType.Slider or GuitarAxisType.Pickup;
@@ -248,6 +252,7 @@ public partial class GuitarAxis : OutputAxis
     {
         return Type;
     }
+    
 
     public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,

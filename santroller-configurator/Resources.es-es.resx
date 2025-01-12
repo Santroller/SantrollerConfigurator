@@ -348,14 +348,8 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="AxisCalibrationNext" xml:space="preserve">
         <value>Siguiente</value>
     </data>
-    <data name="AxisCalibrationMinStatus" xml:space="preserve">
-        <value>Paso 1/3</value>
-    </data>
-    <data name="AxisCalibrationMaxStatus" xml:space="preserve">
-        <value>Paso 2/3</value>
-    </data>
-    <data name="AxisCalibrationDeadzoneStatus" xml:space="preserve">
-        <value>Paso 3/3</value>
+    <data name="AxisCalibrationStep" xml:space="preserve">
+        <value>Paso {0}/{1}</value>
     </data>
     <data name="LowPassFilterLabel" xml:space="preserve">
         <value>Filtro de Paso Bajo</value>

@@ -61,9 +61,9 @@ public abstract partial class OutputAxis : Output
         // Most things don't require manual centering, so for most things we just set center to the center of max and min.
         if (!overrideCenter)
         {
-            this.WhenAnyValue(x => x.Min, x => x.Max, (cMin, cMax) => (cMin + cMax) / 2).Subscribe(s => Center=s);
+            this.WhenAnyValue(x => x.Min, x => x.Max, (cMin, cMax) => (cMin + cMax) / 2).Subscribe(s => Center = s);
         }
-        
+
         _valueHelper = this
             .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.Center, x => x.DeadZone,
                 x => x.Trigger,
@@ -73,7 +73,7 @@ public abstract partial class OutputAxis : Output
         _valueUpperHelper = this.WhenAnyValue(x => x.Value).Select(s => s > 0 ? s : 0)
             .ToProperty(this, x => x.ValueUpper);
         _computedDeadZoneMarginHelper = this
-            .WhenAnyValue(x => x.Min, x => x.Max, x=>x.Center, x => x.Trigger, x => x.InputIsUint, x => x.DeadZone)
+            .WhenAnyValue(x => x.Min, x => x.Max, x => x.Center, x => x.Trigger, x => x.InputIsUint, x => x.DeadZone)
             .Select(ComputeDeadZoneMargin).ToProperty(this, x => x.ComputedDeadZoneMargin);
         _calibrationMinMaxMarginHelper = this.WhenAnyValue(x => x.Min, x => x.Max, x => x.InputIsUint)
             .Select(ComputeMinMaxMargin).ToProperty(this, x => x.CalibrationMinMaxMargin);
@@ -125,7 +125,8 @@ public abstract partial class OutputAxis : Output
     public string? CalibrationText => GetCalibrationText();
     public string? CalibrationStatus => GetCalibrationStatus();
 
-    private Thickness ComputeDeadZoneMargin((int min, int max, int center, bool trigger, bool inputIsUint, int deadZone) s)
+    private Thickness ComputeDeadZoneMargin(
+        (int min, int max, int center, bool trigger, bool inputIsUint, int deadZone) s)
     {
         float min = Math.Min(s.min, s.max);
         float max = Math.Max(s.min, s.max);
@@ -174,15 +175,23 @@ public abstract partial class OutputAxis : Output
         right = Math.Max(0, right);
         return new Thickness(left, 0, right, 0);
     }
+
+    private int _tempMin;
+
     protected virtual void ApplyCalibration(int rawValue)
     {
         switch (CalibrationState)
         {
             case OutputAxisCalibrationState.Min:
-                Min = rawValue;
+                Min = _tempMin = rawValue;
                 break;
             case OutputAxisCalibrationState.Max:
                 Max = rawValue;
+                if (this is GuitarAxis {Type: GuitarAxisType.Tilt})
+                {
+                    Min = Math.Max(SliderMin, _tempMin - Max);
+                }
+
                 break;
             case OutputAxisCalibrationState.DeadZone:
                 var min = Math.Min(Min, Max);
@@ -212,6 +221,11 @@ public abstract partial class OutputAxis : Output
         if (!SupportsCalibration()) return;
 
         CalibrationState++;
+        if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && CalibrationState == OutputAxisCalibrationState.DeadZone)
+        {
+            CalibrationState = OutputAxisCalibrationState.None;
+        }
+
         if (CalibrationState == OutputAxisCalibrationState.Last) CalibrationState = OutputAxisCalibrationState.None;
 
         ApplyCalibration(ValueRaw);
@@ -220,8 +234,9 @@ public abstract partial class OutputAxis : Output
         this.RaisePropertyChanged(nameof(CalibrationText));
         this.RaisePropertyChanged(nameof(CalibrationStatus));
     }
-    
-    private static float Map(float x, float inMin, float inMax, float outMin, float outMax) {
+
+    private static float Map(float x, float inMin, float inMax, float outMin, float outMax)
+    {
         return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 
@@ -258,6 +273,7 @@ public abstract partial class OutputAxis : Output
                 if (val < fmin) return 0;
                 if (val > fmax) val = fmax;
             }
+
             val = Map(val, fmin, fmax, 0, ushort.MaxValue);
             if (val > ushort.MaxValue) val = ushort.MaxValue;
             if (val < 0) val = 0;
@@ -272,13 +288,15 @@ public abstract partial class OutputAxis : Output
                 fmin -= short.MaxValue;
                 fcenter -= short.MaxValue;
             }
+
             if (val < fcenter)
             {
                 if (fcenter - val < deadZone)
                 {
                     return 0;
                 }
-                val = Map(val, fmin, fcenter-deadZone, short.MinValue, 0);
+
+                val = Map(val, fmin, fcenter - deadZone, short.MinValue, 0);
             }
             else
             {
@@ -286,8 +304,10 @@ public abstract partial class OutputAxis : Output
                 {
                     return 0;
                 }
-                val = Map(val, fcenter+deadZone, fmax, 0, short.MaxValue);
+
+                val = Map(val, fcenter + deadZone, fmax, 0, short.MaxValue);
             }
+
             if (val > short.MaxValue) val = short.MaxValue;
             if (val < short.MinValue) val = short.MinValue;
         }
@@ -301,6 +321,8 @@ public abstract partial class OutputAxis : Output
     protected abstract string MinCalibrationText();
     protected abstract string MaxCalibrationText();
     protected abstract bool SupportsCalibration();
+
+    protected virtual OutputAxisCalibrationState MaxState => OutputAxisCalibrationState.DeadZone;
 
     private string? GetCalibrationText()
     {
@@ -322,13 +344,9 @@ public abstract partial class OutputAxis : Output
 
     private string? GetCalibrationStatus()
     {
-        return CalibrationState switch
-        {
-            OutputAxisCalibrationState.Min => Resources.AxisCalibrationMinStatus,
-            OutputAxisCalibrationState.Max => Resources.AxisCalibrationMaxStatus,
-            OutputAxisCalibrationState.DeadZone => Resources.AxisCalibrationDeadzoneStatus,
-            _ => null
-        };
+        return CalibrationState == OutputAxisCalibrationState.None
+            ? null
+            : string.Format(Resources.AxisCalibrationStep, (int) CalibrationState, (int) MaxState);
     }
 
     public string GenerateAssignment(string prev, ConfigField mode, bool forceAccel, bool forceTrigger, bool whammy,
@@ -467,6 +485,7 @@ public abstract partial class OutputAxis : Output
                 max = ushort.MaxValue;
             }
         }
+
         var multiplier = 1f / (max - min) * ushort.MaxValue;
 
         var generated = "(" + Input.Generate(writer);
@@ -520,6 +539,7 @@ public abstract partial class OutputAxis : Output
         {
             return "";
         }
+
         if (mode == ConfigField.Shared)
         {
             return "";

@@ -1559,7 +1559,7 @@
                             </StackPanel>
                         </StackPanel>
 
-                        <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
+                        <StackPanel IsVisible="{Binding HasDeadZone}" Orientation="Horizontal" Height="100">
                             <Label VerticalAlignment="Center" Width="300"
                                    Content="{x:Static netCore:Resources.DeadzoneLabel}" />
                             <StackPanel Orientation="Vertical">

@@ -687,21 +687,9 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string AxisCalibrationMinStatus {
+        public static string AxisCalibrationStep {
             get {
-                return ResourceManager.GetString("AxisCalibrationMinStatus", resourceCulture);
-            }
-        }
-        
-        public static string AxisCalibrationMaxStatus {
-            get {
-                return ResourceManager.GetString("AxisCalibrationMaxStatus", resourceCulture);
-            }
-        }
-        
-        public static string AxisCalibrationDeadzoneStatus {
-            get {
-                return ResourceManager.GetString("AxisCalibrationDeadzoneStatus", resourceCulture);
+                return ResourceManager.GetString("AxisCalibrationStep", resourceCulture);
             }
         }
         
