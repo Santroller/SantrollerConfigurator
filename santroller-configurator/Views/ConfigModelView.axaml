@@ -1369,11 +1369,11 @@
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding SliderMin, Mode=OneTime}"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding Min}" />
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding Min}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
-                                           Minimum="{Binding SliderMin, Mode=OneTime}"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Minimum="{Binding SliderMin}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding Min}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
@@ -1386,11 +1386,11 @@
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding SliderMin, Mode=OneTime}"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding Max}" />
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding Max}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
-                                           Minimum="{Binding SliderMin, Mode=OneTime}"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Minimum="{Binding SliderMin}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding Max}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
@@ -1406,10 +1406,10 @@
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
                                     Minimum="0"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding DeadZone}" />
+                                    Maximum="{Binding SliderMax}" Value="{Binding DeadZone}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
                                            Minimum="0"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding DeadZone}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
@@ -1530,11 +1530,11 @@
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                        Minimum="{Binding SliderMin, Mode=OneTime}"
-                                        Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding Min}" />
+                                        Minimum="{Binding SliderMin}"
+                                        Maximum="{Binding SliderMax}" Value="{Binding Min}" />
                                 <NumericUpDown FormatString="{}{0:#,0}"
-                                               Minimum="{Binding SliderMin, Mode=OneTime}"
-                                               Maximum="{Binding SliderMax, Mode=OneTime}"
+                                               Minimum="{Binding SliderMin}"
+                                               Maximum="{Binding SliderMax}"
                                                Value="{Binding Min}"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Left"
@@ -1547,11 +1547,11 @@
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                        Minimum="{Binding SliderMin, Mode=OneTime}"
-                                        Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding Max}" />
+                                        Minimum="{Binding SliderMin}"
+                                        Maximum="{Binding SliderMax}" Value="{Binding Max}" />
                                 <NumericUpDown FormatString="{}{0:#,0}"
-                                               Minimum="{Binding SliderMin, Mode=OneTime}"
-                                               Maximum="{Binding SliderMax, Mode=OneTime}"
+                                               Minimum="{Binding SliderMin}"
+                                               Maximum="{Binding SliderMax}"
                                                Value="{Binding Max}"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Left"
@@ -1566,10 +1566,10 @@
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
                                         Minimum="0"
-                                        Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding DeadZone}" />
+                                        Maximum="{Binding SliderMax}" Value="{Binding DeadZone}" />
                                 <NumericUpDown FormatString="{}{0:#,0}"
                                                Minimum="0"
-                                               Maximum="{Binding SliderMax, Mode=OneTime}"
+                                               Maximum="{Binding SliderMax}"
                                                Value="{Binding DeadZone}"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Left"
@@ -1630,8 +1630,8 @@
                             <Label VerticalAlignment="Center" Width="300" Content="Notch 2 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding SliderMin, Mode=OneTime}"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding PickupSelectorNotch2}" />
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding PickupSelectorNotch2}" />
                         </StackPanel>
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
@@ -1639,8 +1639,8 @@
                             <Label VerticalAlignment="Center" Width="300" Content="Notch 3 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding SliderMin, Mode=OneTime}"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding PickupSelectorNotch3}" />
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding PickupSelectorNotch3}" />
                         </StackPanel>
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
@@ -1648,8 +1648,8 @@
                             <Label VerticalAlignment="Center" Width="300" Content="Notch 4 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding SliderMin, Mode=OneTime}"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding PickupSelectorNotch4}" />
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding PickupSelectorNotch4}" />
                         </StackPanel>
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
@@ -1657,8 +1657,8 @@
                             <Label VerticalAlignment="Center" Width="300" Content="Notch 5 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding SliderMin, Mode=OneTime}"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding PickupSelectorNotch5}" />
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding PickupSelectorNotch5}" />
                         </StackPanel>
 
 
@@ -1731,11 +1731,11 @@
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                        Minimum="{Binding SliderMin, Mode=OneTime}"
-                                        Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding Min}" />
+                                        Minimum="{Binding SliderMin}"
+                                        Maximum="{Binding SliderMax}" Value="{Binding Min}" />
                                 <NumericUpDown FormatString="{}{0:#,0}"
-                                               Minimum="{Binding SliderMin, Mode=OneTime}"
-                                               Maximum="{Binding SliderMax, Mode=OneTime}"
+                                               Minimum="{Binding SliderMin}"
+                                               Maximum="{Binding SliderMax}"
                                                Value="{Binding Min}"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Left"
@@ -1750,11 +1750,11 @@
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                        Minimum="{Binding SliderMin, Mode=OneTime}"
-                                        Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding Max}" />
+                                        Minimum="{Binding SliderMin}"
+                                        Maximum="{Binding SliderMax}" Value="{Binding Max}" />
                                 <NumericUpDown FormatString="{}{0:#,0}"
-                                               Minimum="{Binding SliderMin, Mode=OneTime}"
-                                               Maximum="{Binding SliderMax, Mode=OneTime}"
+                                               Minimum="{Binding SliderMin}"
+                                               Maximum="{Binding SliderMax}"
                                                Value="{Binding Max}"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Left"
@@ -1769,10 +1769,10 @@
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
                                         Minimum="0"
-                                        Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding DeadZone}" />
+                                        Maximum="{Binding SliderMax}" Value="{Binding DeadZone}" />
                                 <NumericUpDown FormatString="{}{0:#,0}"
                                                Minimum="0"
-                                               Maximum="{Binding SliderMax, Mode=OneTime}"
+                                               Maximum="{Binding SliderMax}"
                                                Value="{Binding DeadZone}"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Left"
@@ -1916,11 +1916,11 @@
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding SliderMin, Mode=OneTime}"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding Min}" />
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding Min}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
-                                           Minimum="{Binding SliderMin, Mode=OneTime}"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Minimum="{Binding SliderMin}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding Min}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
@@ -1933,11 +1933,11 @@
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding SliderMin, Mode=OneTime}"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding Max}" />
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding Max}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
-                                           Minimum="{Binding SliderMin, Mode=OneTime}"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Minimum="{Binding SliderMin}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding Max}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
@@ -1957,11 +1957,11 @@
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                    Minimum="{Binding SliderMin, Mode=OneTime}"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding Center}" />
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding Center}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
-                                           Minimum="{Binding SliderMin, Mode=OneTime}"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Minimum="{Binding SliderMin}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding Center}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
@@ -1975,10 +1975,10 @@
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
                                     Minimum="0"
-                                    Maximum="{Binding SliderMax, Mode=OneTime}" Value="{Binding DeadZone}" />
+                                    Maximum="{Binding SliderMax}" Value="{Binding DeadZone}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
                                            Minimum="0"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding DeadZone}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
@@ -2087,8 +2087,8 @@
                                     Minimum="{Binding SliderMin}"
                                     Maximum="{Binding SliderMax}" Value="{Binding Min}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
-                                           Minimum="{Binding SliderMin, Mode=OneTime}"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Minimum="{Binding SliderMin}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding Min}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
@@ -2104,8 +2104,8 @@
                                     Minimum="{Binding SliderMin}"
                                     Maximum="{Binding SliderMax}" Value="{Binding Max}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
-                                           Minimum="{Binding SliderMin, Mode=OneTime}"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Minimum="{Binding SliderMin}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding Max}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
@@ -2123,7 +2123,7 @@
                                     Maximum="{Binding SliderMax}" Value="{Binding DeadZone}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
                                            Minimum="0"
-                                           Maximum="{Binding SliderMax, Mode=OneTime}"
+                                           Maximum="{Binding SliderMax}"
                                            Value="{Binding DeadZone}"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"

@@ -1292,13 +1292,11 @@ public abstract partial class Output : ReactiveObject
             {
                 axis2.Min = ushort.MinValue;
                 axis2.Max = ushort.MaxValue;
-                axis2.Center = short.MaxValue;
             }
             else
             {
                 axis2.Min = short.MinValue;
                 axis2.Max = short.MaxValue;
-                axis2.Center = 0;
             }
         }
 

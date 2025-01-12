@@ -20,10 +20,12 @@ public partial class ControllerAxis : OutputAxis
         bool outputInverted, int outputPin, bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices,
         ledIndicesPeripheral, ledIndicesMpr121, min,
         max,
-        center, deadZone, IsTrigger(type), outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        true, deadZone, IsTrigger(type), outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
+        Center = center;
         Type = type;
         Threshold = threshold;
+        
         UpdateDetails();
     }
 
@@ -73,6 +75,18 @@ public partial class ControllerAxis : OutputAxis
             }
         }
     }
+
+    protected override void ApplyCalibration(int rawValue)
+    {
+        if (CalibrationState == OutputAxisCalibrationState.Max)
+        {
+            ControllerCenter = (Max + Min) / 2;
+        }
+        base.ApplyCalibration(rawValue);
+    }
+
+
+    [Reactive] private int _controllerCenter;
 
     public override bool IsKeyboard => false;
 

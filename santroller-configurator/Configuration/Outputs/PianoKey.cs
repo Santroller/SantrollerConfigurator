@@ -20,7 +20,7 @@ public partial class PianoKey : OutputAxis
         bool outputInverted,
         int outputPin, bool childOfCombined) : base(model, enabled, input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
-        0, ushort.MaxValue, input.IsUint ? short.MaxValue : 0, 0, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        0, ushort.MaxValue, false, 0, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Key = key;
         UpdateDetails();

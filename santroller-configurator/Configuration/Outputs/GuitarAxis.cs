@@ -82,7 +82,7 @@ public partial class GuitarAxis : OutputAxis
         GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model,enabled,
         input, ledOn,
-        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, input.IsUint ? short.MaxValue : 0,deadZone,
+        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, false,deadZone,
         type is GuitarAxisType.Slider or GuitarAxisType.Whammy, outputEnabled, outputInverted, outputPeripheral,
         outputPin, childOfCombined)
     {
@@ -99,7 +99,7 @@ public partial class GuitarAxis : OutputAxis
         GuitarAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model, enabled,
         input, ledOn,
-        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max,input.IsUint ? short.MaxValue : 0, deadZone,
+        ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max,false, deadZone,
         true, outputEnabled, outputInverted, outputPeripheral,
         outputPin, childOfCombined)
     {

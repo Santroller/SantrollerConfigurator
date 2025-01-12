@@ -14,7 +14,7 @@ public class Ps3Axis : OutputAxis
 {
     public Ps3Axis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min,
         int max,
-        int deadZone, Ps3AxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined=false) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, input.IsUint ? short.MaxValue : 0, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        int deadZone, Ps3AxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined=false) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, min, max, false, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
         UpdateDetails();

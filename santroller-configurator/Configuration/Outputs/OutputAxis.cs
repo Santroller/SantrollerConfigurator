@@ -28,18 +28,17 @@ public abstract partial class OutputAxis : Output
 {
     protected internal const float ProgressWidth = 400;
 
-    private OutputAxisCalibrationState _calibrationState = OutputAxisCalibrationState.None;
+    protected OutputAxisCalibrationState CalibrationState = OutputAxisCalibrationState.None;
 
     protected OutputAxis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,
-        int min, int max, int center,
+        int min, int max, bool overrideCenter,
         int deadZone, bool trigger, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
         bool childOfCombined) : base(model, enabled, input, ledOn, ledOff,
         ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin,
         childOfCombined)
     {
-        Center = center;
         Trigger = trigger;
         LedOn = ledOn;
         LedOff = ledOff;
@@ -59,7 +58,12 @@ public abstract partial class OutputAxis : Output
             .ToProperty(this, x => x.SliderMax);
         _sliderMinHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int) ushort.MinValue : short.MinValue)
             .ToProperty(this, x => x.SliderMin);
-
+        // Most things don't require manual centering, so for most things we just set center to the center of max and min.
+        if (!overrideCenter)
+        {
+            this.WhenAnyValue(x => x.Min, x => x.Max, (cMin, cMax) => (cMin + cMax) / 2).Subscribe(s => Center=s);
+        }
+        
         _valueHelper = this
             .WhenAnyValue(x => x.Enabled, x => x.ValueRaw, x => x.Min, x => x.Max, x => x.Center, x => x.DeadZone,
                 x => x.Trigger,
@@ -93,6 +97,7 @@ public abstract partial class OutputAxis : Output
     [ObservableAsProperty] private int _valueLower;
 
     [ObservableAsProperty] private int _valueUpper;
+    [Reactive] private int _center;
 
     [ObservableAsProperty] private bool _inputIsUint;
     [ObservableAsProperty] private bool _isDigitalToAnalog;
@@ -111,8 +116,6 @@ public abstract partial class OutputAxis : Output
 
     [Reactive] private int _deadZone;
 
-    [Reactive] private int _center;
-
 
     public bool Trigger { get; }
     public override bool IsCombined => false;
@@ -122,7 +125,7 @@ public abstract partial class OutputAxis : Output
     public string? CalibrationText => GetCalibrationText();
     public string? CalibrationStatus => GetCalibrationStatus();
 
-    private static Thickness ComputeDeadZoneMargin((int min, int max, int center, bool trigger, bool inputIsUint, int deadZone) s)
+    private Thickness ComputeDeadZoneMargin((int min, int max, int center, bool trigger, bool inputIsUint, int deadZone) s)
     {
         float min = Math.Min(s.min, s.max);
         float max = Math.Max(s.min, s.max);
@@ -136,9 +139,8 @@ public abstract partial class OutputAxis : Output
         }
         else
         {
-            var mid = s.center;
-            min = mid - s.deadZone;
-            max = mid + s.deadZone;
+            min = s.center - s.deadZone;
+            max = s.center + s.deadZone;
         }
 
         if (!s.inputIsUint)
@@ -172,24 +174,15 @@ public abstract partial class OutputAxis : Output
         right = Math.Max(0, right);
         return new Thickness(left, 0, right, 0);
     }
-
-    private int _tempMin;
-
-    private void ApplyCalibration(int rawValue)
+    protected virtual void ApplyCalibration(int rawValue)
     {
-        switch (_calibrationState)
+        switch (CalibrationState)
         {
             case OutputAxisCalibrationState.Min:
                 Min = rawValue;
-                _tempMin = rawValue;
                 break;
             case OutputAxisCalibrationState.Max:
                 Max = rawValue;
-                if (this is GuitarAxis {Type: GuitarAxisType.Tilt})
-                {
-                    Min = _tempMin - Max;
-                }
-                Center = (Max + Min) / 2;
                 break;
             case OutputAxisCalibrationState.DeadZone:
                 var min = Math.Min(Min, Max);
@@ -218,8 +211,8 @@ public abstract partial class OutputAxis : Output
     {
         if (!SupportsCalibration()) return;
 
-        _calibrationState++;
-        if (_calibrationState == OutputAxisCalibrationState.Last) _calibrationState = OutputAxisCalibrationState.None;
+        CalibrationState++;
+        if (CalibrationState == OutputAxisCalibrationState.Last) CalibrationState = OutputAxisCalibrationState.None;
 
         ApplyCalibration(ValueRaw);
 
@@ -311,7 +304,7 @@ public abstract partial class OutputAxis : Output
 
     private string? GetCalibrationText()
     {
-        return _calibrationState switch
+        return CalibrationState switch
         {
             OutputAxisCalibrationState.Min => MinCalibrationText(),
             OutputAxisCalibrationState.Max => MaxCalibrationText(),
@@ -322,14 +315,14 @@ public abstract partial class OutputAxis : Output
 
     private string GetCalibrationButtonText()
     {
-        return _calibrationState == OutputAxisCalibrationState.None
+        return CalibrationState == OutputAxisCalibrationState.None
             ? Resources.AxisCalibrationCalibrate
             : Resources.AxisCalibrationNext;
     }
 
     private string? GetCalibrationStatus()
     {
-        return _calibrationState switch
+        return CalibrationState switch
         {
             OutputAxisCalibrationState.Min => Resources.AxisCalibrationMinStatus,
             OutputAxisCalibrationState.Max => Resources.AxisCalibrationMaxStatus,
