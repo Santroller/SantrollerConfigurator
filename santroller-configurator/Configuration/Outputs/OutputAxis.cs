@@ -474,10 +474,6 @@ public abstract partial class OutputAxis : Output
                 max = ushort.MaxValue;
             }
         }
-        if (this is not ControllerAxis)
-        {
-            center = 0;
-        }
         var multiplier = 1f / (max - min) * ushort.MaxValue;
 
         var generated = "(" + Input.Generate(writer);

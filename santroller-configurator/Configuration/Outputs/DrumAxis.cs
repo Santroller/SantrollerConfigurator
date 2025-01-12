@@ -115,7 +115,7 @@ public partial class DrumAxis : OutputAxis
         int deadZone, int debounce, DrumAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted,
         int outputPin, bool childOfCombined) : base(model, enabled, input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
-        min, max, 0, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        min, max, input.IsUint ? short.MaxValue : 0, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Type = type;
         Debounce = debounce;
