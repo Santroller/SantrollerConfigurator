@@ -50,7 +50,8 @@ public partial class DjAxis : OutputAxis
         Type = type;
         UpdateDetails();
     }
-
+    protected override OutputAxisCalibrationState MaxState => Type is DjAxisType.EffectsKnob ? OutputAxisCalibrationState.Max : OutputAxisCalibrationState.DeadZone;
+    
     [Reactive] private int _multiplier;
     [Reactive] private int _ledMultiplier;
 
@@ -66,8 +67,6 @@ public partial class DjAxis : OutputAxis
                 short.MaxValue) * Multiplier,
             DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity => value * Multiplier,
 
-            DjAxisType.EffectsKnob when Input.IsUint => (value - short.MaxValue) * (Invert ? -1 : 1),
-            DjAxisType.EffectsKnob => value * (Invert ? -1 : 1),
             _ => base.Calculate(enabled, value, min, max, center, deadZone, trigger, deviceControllerType)
         };
     }
@@ -108,7 +107,9 @@ public partial class DjAxis : OutputAxis
 
     public bool IsVelocity => Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity;
 
-    public bool SupportsMinMax => !IsDigitalToAnalog && !IsVelocity && !IsEffectsKnob;
+    public bool SupportsMinMax => !IsDigitalToAnalog && !IsVelocity;
+
+    public bool SupportsDeadzone => SupportsMinMax && !IsEffectsKnob;
 
     public bool IsFader => Type is DjAxisType.Crossfader;
     public bool IsEffectsKnob => Type is DjAxisType.EffectsKnob;
@@ -180,32 +181,17 @@ public partial class DjAxis : OutputAxis
         // PS3 needs uint, xb360 needs int
         // So convert to the right method for that console, and then shift for ps3
         var generated = $"({Input.Generate(writer)})";
-        var generatedPs3 = generated;
 
         if (InputIsUint)
         {
             // xinput needs int, uint -> int
             generated = $"({generated} - INT16_MAX)";
         }
-        else
-        {
-            // ps3 needs int, int -> uint
-            generatedPs3 = $"({generated} + INT16_MAX)";
-        }
 
         // Table just applies a multiplier to the value
         // This is the one instance where even PS3 uses int values, because it makes the math easier
         var generatedTable = $"handle_calibration_turntable_360({GenerateOutput(mode)},{generated}, {Multiplier})";
         var generatedTablePs3 = $"handle_calibration_turntable_ps3({GenerateOutput(mode)},{generated}, {Multiplier})";
-        if (Type is DjAxisType.EffectsKnob)
-        {
-            var invert = (Invert ? -1 : 1).ToString();
-            if (writer != null)
-            {
-                invert = ConfigViewModel.WriteBlob(writer, Invert);
-            }
-            generated = $"(({generated}) * ({invert}))";
-        }
 
         if (writer != null && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
         {
@@ -222,11 +208,6 @@ public partial class DjAxis : OutputAxis
                 => generatedTablePs3,
             DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
                 => generatedTable,
-            DjAxisType.EffectsKnob when mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
-                => $"(({generatedPs3} >> 6))",
-            DjAxisType.EffectsKnob when mode is ConfigField.Universal
-                => $"(({generatedPs3} >> 8))",
-            DjAxisType.EffectsKnob => generated,
             _ => GenerateAssignment(GenerateOutput(mode), mode, accelerometer, false, false, false, writer)
         };
         return Type switch
@@ -263,6 +244,6 @@ public partial class DjAxis : OutputAxis
 
     protected override bool SupportsCalibration()
     {
-        return Type is DjAxisType.Crossfader;
+        return Type is DjAxisType.Crossfader or DjAxisType.EffectsKnob;
     }
 }

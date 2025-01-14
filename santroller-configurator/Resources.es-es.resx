@@ -220,7 +220,7 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
         <value>Mueve el 'fader' lo más que puedas hacia la izquierda</value>
     </data>
     <data name="AxisCalibrationMinEffectsKnob" xml:space="preserve">
-        <value>Gira la perilla hasta que la barra esté hacia la izquierda</value>
+        <value>Gira la perilla de efectos al valor más pequeño antes de que se invierta</value>
     </data>
     <data name="AxisCalibrationMinDjVelocityLeft" xml:space="preserve">
         <value>Gira el plato izquierdo lo más rápido que puedas hacia la izquierda</value>
@@ -232,7 +232,7 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
         <value>Mueve el 'fader' lo más que puedas hacia la derecha</value>
     </data>
     <data name="AxisCalibrationMaxDjEffectsKnob" xml:space="preserve">
-        <value>Gira la perilla hasta que la barra esté hacia la derecha</value>
+        <value>Gira la perilla de efectos al valor más grande antes de que se invierta</value>
     </data>
     <data name="AxisCalibrationMaxDjVelocityLeft" xml:space="preserve">
         <value>Gira el plato izquierdo lo más rápido que puedas hacia la derecha</value>

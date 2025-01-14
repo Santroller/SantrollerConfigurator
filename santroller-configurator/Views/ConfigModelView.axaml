@@ -1185,40 +1185,6 @@
             <DataTemplate DataType="{x:Type output:DjAxis}">
                 <StackPanel Orientation="Vertical">
                     <Panel>
-                        <StackPanel Orientation="Vertical" VerticalAlignment="Center"
-                                    IsVisible="{Binding IsEffectsKnob}">
-                            <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
-                                       Content="{x:Static netCore:Resources.CurrentValueLabel}" />
-                                <Grid>
-                                    <StackPanel Orientation="Horizontal"
-                                                Width="{Binding FullProgressWidth, Mode=OneTime}">
-                                        <ProgressBar CornerRadius="0 3 3 0"
-                                                     Value="{Binding ValueLower}"
-                                                     IsIndeterminate="False" Minimum="0" Maximum="32768"
-                                                     Height="30"
-                                                     Width="{Binding HalfProgressWidth, Mode=OneTime}">
-                                            <ProgressBar.RenderTransform>
-                                                <ScaleTransform ScaleX="-1" />
-                                            </ProgressBar.RenderTransform>
-                                        </ProgressBar>
-                                        <ProgressBar CornerRadius="0 3 3 0"
-                                                     Value="{Binding ValueUpper}"
-                                                     IsIndeterminate="False" Minimum="0" Maximum="32768"
-                                                     Height="30"
-                                                     Width="{Binding HalfProgressWidth, Mode=OneTime}" />
-                                    </StackPanel>
-                                    <Label VerticalAlignment="Center" HorizontalContentAlignment="Center"
-                                           Content="{Binding Value}" />
-                                </Grid>
-
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Height="50">
-                                <Label VerticalAlignment="Center" Width="300" Content="Invert" />
-
-                                <ToggleSwitch IsChecked="{Binding Invert}" />
-                            </StackPanel>
-                        </StackPanel>
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" IsVisible="{Binding IsVelocity}">
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center" Width="300"
@@ -1267,7 +1233,7 @@
                                                Maximum="10" Width="150" Height="30" Margin="10 0 0 0 " />
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsFader}">
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding SupportsMinMax}">
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
                                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal">
@@ -1398,7 +1364,7 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <StackPanel IsVisible="{Binding SupportsMinMax}" Orientation="Horizontal" Height="100">
+                    <StackPanel IsVisible="{Binding SupportsDeadzone}" Orientation="Horizontal" Height="100">
                         <Label VerticalAlignment="Center" Width="300"
                                Content="{x:Static netCore:Resources.DeadzoneLabel}" />
 

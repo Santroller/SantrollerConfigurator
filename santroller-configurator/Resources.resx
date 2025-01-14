@@ -223,7 +223,7 @@ Feel free to remove this option if you do not intend to use your instrument on i
         <value>Move fader to the leftmost position</value>
     </data>
     <data name="AxisCalibrationMinEffectsKnob" xml:space="preserve">
-        <value>Turn knob until the bar is at the leftmost position</value>
+        <value>Turn the effects knob to the smallest value before it wraps around</value>
     </data>
     <data name="AxisCalibrationMinDjVelocityLeft" xml:space="preserve">
         <value>Spin the left table the fastest you can to the left</value>
@@ -235,7 +235,7 @@ Feel free to remove this option if you do not intend to use your instrument on i
         <value>Move fader to the rightmost position</value>
     </data>
     <data name="AxisCalibrationMaxDjEffectsKnob" xml:space="preserve">
-        <value>Turn knob until the bar is at the rightmost position</value>
+        <value>Turn the effects knob to the largest value before it wraps around</value>
     </data>
     <data name="AxisCalibrationMaxDjVelocityLeft" xml:space="preserve">
         <value>Spin the left table the fastest you can to the right</value>

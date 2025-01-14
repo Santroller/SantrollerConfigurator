@@ -220,13 +220,12 @@ public abstract partial class OutputAxis : Output
     {
         if (!SupportsCalibration()) return;
 
-        CalibrationState++;
-        if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && CalibrationState == OutputAxisCalibrationState.DeadZone)
+        if (CalibrationState == MaxState)
         {
             CalibrationState = OutputAxisCalibrationState.None;
+        } else {
+            CalibrationState++;
         }
-
-        if (CalibrationState == OutputAxisCalibrationState.Last) CalibrationState = OutputAxisCalibrationState.None;
 
         ApplyCalibration(ValueRaw);
 
