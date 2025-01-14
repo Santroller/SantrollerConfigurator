@@ -370,7 +370,7 @@ public partial class Ps2CombinedOutput : CombinedSpiOutput
         }
 
         var type = ps2ControllerType[0];
-        if (!Enum.IsDefined(typeof(Ps2ControllerType), type))
+        if (!Enum.IsDefined(typeof(Ps2ControllerType), type) || (Ps2ControllerType) type == Ps2ControllerType.None)
         {
             ControllerFound = false;
             return;

@@ -6,11 +6,12 @@ public enum Ps2ControllerType : byte
     Dualshock,
     Dualshock2,
     Guitar,
-    FlightStick,
     NegCon,
-    GunCon,
     JogCon,
+    GunCon,
+    FlightStick,
     Mouse,
+    None,
     Selected,
     All
 }
