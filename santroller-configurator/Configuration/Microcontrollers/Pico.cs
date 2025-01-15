@@ -221,7 +221,7 @@ public class Pico : Microcontroller
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
         foreach (var devicePin in pins)
         {
-            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral || devicePin.Type == "led_output") continue;
+            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral || devicePin.Type == "led_output" || devicePin.Type.Contains("Ps2 Output")) continue;
             switch (devicePin.PinMode)
             {
                 case DevicePinMode.Analog:
@@ -249,7 +249,7 @@ public class Pico : Microcontroller
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
         foreach (var devicePin in pins)
         {
-            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral) continue;
+            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral || devicePin.Type.Contains("Ps2 Output")) continue;
             switch (devicePin.PinMode)
             {
                 case DevicePinMode.Analog:

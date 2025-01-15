@@ -399,7 +399,7 @@ public partial class GuitarAxis : OutputAxis
                 // PS2 tilt is digital
                 return
                     $$"""
-                      uint8_t tilt_test = {{GenerateAssignment("0", mode, false, false, false, false, writer)}};
+                      uint8_t tilt_test = {{GenerateAssignment("PS3_STICK_CENTER", mode, false, false, false, false, writer)}};
                       if (tilt_test > 0xF0) {
                           report->tilt = true;
                       }

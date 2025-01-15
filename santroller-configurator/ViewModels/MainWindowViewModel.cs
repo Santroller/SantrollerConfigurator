@@ -216,7 +216,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             this.RaisePropertyChanged(nameof(DeviceInputType));
         });
     }
-    
+
     public void Close()
     {
         Environment.Exit(0);
@@ -534,11 +534,45 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         StartWorking();
         var configFile = Path.Combine(Pio.FirmwareDir, "include", "config_data.h");
         File.WriteAllText(configFile, extra + config.Generate(extra.Length != 0 ? new MemoryStream() : null));
+        if (config is {IsPico: true, HasPs2Output: true})
+        {
+            // Set PS2 Output pins for the pico, they have to live in another file for now
+            var text = File.ReadAllLines(Path.Combine(Pio.FirmwareDir, "src", "pico", "psxSPI.pio"));
+            for (var i = 0; i < text.Length; i++)
+            {
+                var line = text[i];
+                if (line.Contains(".define PUBLIC PIN_DAT"))
+                {
+                    line = $".define PUBLIC PIN_DAT {config.Ps2OutputMiso}";
+                }
+                else if (line.Contains(".define PUBLIC PIN_CMD"))
+                {
+                    line = $".define PUBLIC PIN_CMD {config.Ps2OutputMosi}";
+                }
+                else if (line.Contains(".define PUBLIC PIN_SEL"))
+                {
+                    line = $".define PUBLIC PIN_SEL {config.Ps2OutputAtt}";
+                }
+                else if (line.Contains(".define PUBLIC PIN_ACK"))
+                {
+                    line = $".define PUBLIC PIN_ACK {config.Ps2OutputAck}";
+                }
+                else if (line.Contains(".define PUBLIC PIN_CLK"))
+                {
+                    line = $".define PUBLIC PIN_CLK {config.Ps2OutputSck}";
+                }
+
+                text[i] = line;
+            }
+            File.WriteAllLines(Path.Combine(Pio.FirmwareDir, "src", "pico", "psxSPI.pio"), text);
+        }
+
         var environment = config.Microcontroller.Board.Environment;
         if (config.IsBluetooth)
         {
             environment = environment.Contains("pico2") ? "pico2w" : "picow";
         }
+
         if (DeviceInputType is DeviceInputType.Peripheral)
         {
             environment += "_slave";
@@ -771,7 +805,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                 var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
+                var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
                     Resources.DriversMissingMessage)).ToTask();
                 if (!yesNo.Response) return;
                 await _manager?.InvokeDriverInstall()!;
@@ -789,12 +823,13 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             {
                 // Pop open a dialog that it failed and to try again
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Trace.WriteLine(ex);
             Console.WriteLine(ex);
         }
     }
-        
 
 
     public void Dispose()

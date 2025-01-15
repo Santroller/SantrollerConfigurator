@@ -406,7 +406,7 @@ public abstract partial class OutputAxis : Output
                 function = "handle_calibration_ps3_accel";
                 break;
             case ConfigField.Ps2 when whammy:
-                function = "-handle_calibration_ps3_whammy";
+                function = "handle_calibration_ps2_whammy";
                 singleByte = true;
                 break;
             case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Wii when whammy:

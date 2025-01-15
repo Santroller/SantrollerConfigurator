@@ -20,7 +20,8 @@ public abstract class SpiConfig : PinConfig
 
     public bool Output { get; }
 
-    protected SpiConfig(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso, int mosi, int miso, int sck, bool cpol, bool cpha,
+    protected SpiConfig(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso,
+        int mosi, int miso, int sck, bool cpol, bool cpha,
         bool msbfirst, uint clock, bool output) : base(model, peripheral)
     {
         IncludesMiso = includesMiso;
@@ -37,7 +38,7 @@ public abstract class SpiConfig : PinConfig
     }
 
     public override string Type { get; }
-    
+
     public bool IncludesMiso { get; }
     public bool IncludesSck { get; }
 
@@ -84,6 +85,7 @@ public abstract class SpiConfig : PinConfig
             {
                 pins.Add(_miso);
             }
+
             if (IncludesSck)
             {
                 pins.Add(_sck);
@@ -95,6 +97,12 @@ public abstract class SpiConfig : PinConfig
 
     public override string Generate()
     {
+        if (Type == ConfigViewModel.Ps2OutputTwiType && this is PicoSpiConfig)
+        {
+            // Pi Pico sets up ps2 output on its own
+            return "";
+        }
+
         // On apa102, miso isn't used.
         var miso = IncludesMiso ? $"#define {Definition}_MISO {_miso}" : "";
         // On ws2812, sck isn't used.
@@ -104,6 +112,7 @@ public abstract class SpiConfig : PinConfig
         {
             output += $"\n#define PS2_SPI_MOSI {_mosi}";
         }
+
         return $"""
 
                 {miso}

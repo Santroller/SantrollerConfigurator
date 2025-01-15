@@ -2156,6 +2156,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                            
                            #define TICK_PS2 \
                              {GenerateTick(ConfigField.Ps2, writer)}
+                           """;
+            }
+            if (HasPs2Output && !IsPico)
+            {
+                config += $"""
 
                            #define PS2_ATT {Ps2OutputAtt}
                            #define PS2_OUTPUT_ACK_SET() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, true, false)}
