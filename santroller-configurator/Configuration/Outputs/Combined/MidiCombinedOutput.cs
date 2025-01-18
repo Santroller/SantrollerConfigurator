@@ -42,44 +42,53 @@ public class MidiCombinedOutput : CombinedOutput
         UpdateDetails();
     }
 
-    public static readonly Dictionary<int, DrumAxisType> MappingsDrumGh = new()
-    {
-        {36, DrumAxisType.Kick},
-        {38, DrumAxisType.Red},
-        {40, DrumAxisType.Red},
-        {43, DrumAxisType.Green},
-        {45, DrumAxisType.Blue},
-        {48, DrumAxisType.Yellow},
-        {22, DrumAxisType.Yellow},
-        {42, DrumAxisType.Yellow},
-        {49, DrumAxisType.Orange},
-        {52, DrumAxisType.Orange},
-        {55, DrumAxisType.Orange},
-        {57, DrumAxisType.Orange},
-    };
-
     public static readonly Dictionary<int, DrumAxisType> MappingsDrumRb = new()
     {
-        {35, DrumAxisType.Kick2},
-        {36, DrumAxisType.Kick},
         {38, DrumAxisType.Red},
+        {31, DrumAxisType.Red},
+        {34, DrumAxisType.Red},
+        {37, DrumAxisType.Red},
+        {39, DrumAxisType.Red},
         {40, DrumAxisType.Red},
-        {43, DrumAxisType.Green},
-        {45, DrumAxisType.Blue},
         {48, DrumAxisType.Yellow},
-        {26, DrumAxisType.BlueCymbal},
-        {46, DrumAxisType.BlueCymbal},
+        {50, DrumAxisType.Yellow},
+        {45, DrumAxisType.Blue},
+        {47, DrumAxisType.Blue},
+        {41, DrumAxisType.Green},
+        {43, DrumAxisType.Green},
         {22, DrumAxisType.YellowCymbal},
+        {26, DrumAxisType.YellowCymbal},
         {42, DrumAxisType.YellowCymbal},
+        {46, DrumAxisType.YellowCymbal},
+        {54, DrumAxisType.YellowCymbal},
+        {51, DrumAxisType.BlueCymbal},
+        {53, DrumAxisType.BlueCymbal},
+        {56, DrumAxisType.BlueCymbal},
+        {59, DrumAxisType.BlueCymbal},
         {49, DrumAxisType.GreenCymbal},
         {52, DrumAxisType.GreenCymbal},
         {55, DrumAxisType.GreenCymbal},
         {57, DrumAxisType.GreenCymbal},
-        {51, DrumAxisType.BlueCymbal},
-        {53, DrumAxisType.BlueCymbal},
-        {59, DrumAxisType.BlueCymbal},
+        {33, DrumAxisType.Kick},
+        {35, DrumAxisType.Kick},
+        {36, DrumAxisType.Kick},
+        {44, DrumAxisType.Kick2}, // Hi-Hat Pedal
     };
+    
+    public static readonly Dictionary<int, DrumAxisType> MappingsDrumGh = MappingsDrumRb.Select(RbToGh).ToDictionary();
 
+    private static KeyValuePair<int, DrumAxisType> RbToGh(KeyValuePair<int, DrumAxisType> mapping)
+    {
+        return mapping.Value switch
+        {
+            DrumAxisType.Green or DrumAxisType.Red or DrumAxisType.Blue or DrumAxisType.Kick
+                or DrumAxisType.Kick2 => mapping,
+            DrumAxisType.Yellow or DrumAxisType.YellowCymbal => new KeyValuePair<int, DrumAxisType>(mapping.Key,
+                DrumAxisType.Yellow),
+            DrumAxisType.GreenCymbal => new KeyValuePair<int, DrumAxisType>(mapping.Key, DrumAxisType.Orange),
+            _ => mapping
+        };
+    }
     public override SerializedOutput Serialize()
     {
         return new SerializedCombinedMidiOutput(Outputs.Items.ToList(), (byte) FirstNote);
