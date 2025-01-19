@@ -36,14 +36,7 @@ public partial class DjAxis : OutputAxis
         0,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
-        if (type == DjAxisType.EffectsKnob)
-        {
-            Invert = multiplier == -1;
-        }
-        else
-        {
-            Multiplier = multiplier;
-        }
+        Multiplier = multiplier;
 
         LedMultiplier = ledMultiplier;
 
@@ -54,8 +47,6 @@ public partial class DjAxis : OutputAxis
     
     [Reactive] private int _multiplier;
     [Reactive] private int _ledMultiplier;
-
-    [Reactive] private bool _invert;
 
     protected override int Calculate(bool enabled, int value, int min, int max, int center, int deadZone, bool trigger,
         DeviceControllerType
@@ -137,14 +128,6 @@ public partial class DjAxis : OutputAxis
             return new SerializedDjAxis(Input.Serialise(), Enabled, Type, LedOn, LedOff, LedIndices.ToArray(),
                 LedIndicesPeripheral.ToArray(), Multiplier, LedMultiplier, OutputEnabled, OutputPin, OutputInverted,
                 PeripheralOutput,
-                ChildOfCombined, LedIndicesMpr121.ToArray());
-        }
-
-        if (IsEffectsKnob)
-        {
-            return new SerializedDjAxis(Input.Serialise(), Enabled, Type, LedOn, LedOff, LedIndices.ToArray(),
-                LedIndicesPeripheral.ToArray(), Invert ? -1 : 1, LedMultiplier, OutputEnabled, OutputPin,
-                OutputInverted, PeripheralOutput,
                 ChildOfCombined, LedIndicesMpr121.ToArray());
         }
 

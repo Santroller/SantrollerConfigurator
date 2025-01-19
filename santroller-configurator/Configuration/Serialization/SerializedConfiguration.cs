@@ -351,7 +351,6 @@ public class SerializedConfiguration
                 {
                     case DjAxis djToMerge when output is DjAxis outputDj:
                         outputDj.Multiplier = djToMerge.Multiplier;
-                        outputDj.Invert = djToMerge.Invert;
                         break;
                     case DrumAxis drumToMerge when output is DrumAxis outputDrum:
                         outputDrum.Debounce = drumToMerge.Debounce;

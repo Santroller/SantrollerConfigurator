@@ -80,7 +80,7 @@ public class SerializedDjAxis : SerializedOutput
             throw new NotImplementedException("Null child unexpected!");
         }
         DjAxis combined;
-        if (Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity or DjAxisType.EffectsKnob)
+        if (Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
         {
             combined = new DjAxis(model, Enabled, Input.Generate(model), Color.FromUInt32(LedOn),
                 Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121, DeadzoneOrMultiplier, LedMultiplier,
