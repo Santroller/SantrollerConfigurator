@@ -440,7 +440,7 @@ public partial class DrumAxis : OutputAxis
                      }
                      if ({{ifStatement}}) {
                          if (drumHit) {
-                             debounce[11]++;
+                             debounce[{{debounceIndex}}]++;
                          } else {
                              drumHit = true; 
                              {{outputButtons}}
