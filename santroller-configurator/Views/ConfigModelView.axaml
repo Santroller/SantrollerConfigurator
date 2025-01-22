@@ -2281,6 +2281,7 @@
                                 <Binding Path="IsDj" />
                                 <Binding Path="IsPs2" />
                                 <Binding Path="IsUsb" />
+                                <Binding Path="IsMidi" />
                             </MultiBinding>
                         </StackPanel.IsVisible>
                         <Label VerticalAlignment="Center"
@@ -2306,6 +2307,20 @@
                                   SelectedItem="{Binding UsbInputType1}"
                                   ItemsSource="{Binding UsbInputTypes}"
                                   ItemTemplate="{StaticResource ImageWithTextTemplate}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  IsVisible="{Binding IsMidi}"
+                                  SelectedItem="{Binding MidiType1}"
+                                  ItemsSource="{Binding MidiTypes}"
+                                  ItemTemplate="{StaticResource ImageWithTextTemplate}" />
+                        
+                        <ComboBox VerticalAlignment="Center"
+                                  IsVisible="{Binding IsMidiNote1}"
+                                  SelectedItem="{Binding MidiNote1}"
+                                  ItemsSource="{Binding MidiNotes}"
+                                  ItemTemplate="{StaticResource MidiNoteTemplate}" />
+                        <!-- <Button Command="{Binding FindAndAssignMidiNoteCommand}" -->
+                        <!--         IsEnabled="{Binding ConfigurableInput}" -->
+                        <!--         Content="{Binding ButtonTextMidiNote}" /> -->
                     </StackPanel>
                     <ContentControl Content="{Binding Child1}"
                                     ContentTemplate="{StaticResource OutputTemplates}">
@@ -2328,6 +2343,7 @@
                                 <Binding Path="IsDj" />
                                 <Binding Path="IsPs2" />
                                 <Binding Path="IsUsb" />
+                                <Binding Path="IsMidi" />
                             </MultiBinding>
                         </StackPanel.IsVisible>
                         <Label VerticalAlignment="Center"
@@ -2353,6 +2369,17 @@
                                   SelectedItem="{Binding UsbInputType2}"
                                   ItemsSource="{Binding UsbInputTypes}"
                                   ItemTemplate="{StaticResource ImageWithTextTemplate}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  IsVisible="{Binding IsMidi}"
+                                  SelectedItem="{Binding MidiType2}"
+                                  ItemsSource="{Binding MidiTypes}"
+                                  ItemTemplate="{StaticResource ImageWithTextTemplate}" />
+                        
+                        <ComboBox VerticalAlignment="Center"
+                                  IsVisible="{Binding IsMidiNote2}"
+                                  SelectedItem="{Binding MidiNote2}"
+                                  ItemsSource="{Binding MidiNotes}"
+                                  ItemTemplate="{StaticResource MidiNoteTemplate}" />
                     </StackPanel>
                     <ContentControl Content="{Binding Child2}"
                                     ContentTemplate="{StaticResource OutputTemplates}" />

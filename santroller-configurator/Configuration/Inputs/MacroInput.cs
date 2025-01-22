@@ -33,6 +33,12 @@ public partial class MacroInput : Input
             .ToProperty(this, x => x.IsPs2);
         _isUsbHelper = this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is UsbHostInput)
             .ToProperty(this, x => x.IsUsb);
+        _isMidiHelper = this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is MidiInput)
+            .ToProperty(this, x => x.IsMidi);
+        _isMidiNote1Helper = this.WhenAnyValue(x => x.Child1).Select(x => x.InnermostInputs().First() is (MidiInput {Input: MidiType.Note}))
+            .ToProperty(this, x => x.IsMidiNote1);
+        _isMidiNote2Helper = this.WhenAnyValue(x => x.Child2).Select(x => x.InnermostInputs().First() is (MidiInput {Input: MidiType.Note}))
+            .ToProperty(this, x => x.IsMidiNote2);
         this.WhenAnyValue(x => x.Model.HasPeripheral).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.Model.HasAccel).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.Model.IsBluetoothRx).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
@@ -42,61 +48,85 @@ public partial class MacroInput : Input
     public InputType? SelectedInputType1
     {
         get => Child1.InputType;
-        set => SetInput(value, true, null, null, null, null, null, null);
+        set => SetInput(value, true, null, null, null, null, null, null, null, null);
     }
 
     public WiiInputType WiiInputType1
     {
         get => (Child1.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
-        set => SetInput(SelectedInputType1, true, value, null, null, null, null, null);
+        set => SetInput(SelectedInputType1, true, value, null, null, null, null, null, null, null);
     }
 
     public Ps2InputType Ps2InputType1
     {
         get => (Child1.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
-        set => SetInput(SelectedInputType1, true, null, value, null, null, null, null);
+        set => SetInput(SelectedInputType1, true, null, value, null, null, null, null, null, null);
     }
 
     public DjInputType DjInputType1
     {
         get => (Child1.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
-        set => SetInput(SelectedInputType1, true, null, null, null, null, value, null);
+        set => SetInput(SelectedInputType1, true, null, null, null, null, value, null, null, null);
     }
 
     public UsbHostInputType UsbInputType1
     {
         get => (Child1.InnermostInputs().First() as UsbHostInput)?.Input ?? UsbHostInputType.A;
-        set => SetInput(SelectedInputType1, true, null, null, null, null, null, value);
+        set => SetInput(SelectedInputType1, true, null, null, null, null, null, value, null, null);
     }
 
     public InputType? SelectedInputType2
     {
         get => Child2.InputType;
-        set => SetInput(value, false, null, null, null, null, null, null);
+        set => SetInput(value, false, null, null, null, null, null, null, null, null);
+    }
+
+    public MidiType MidiType1
+    {
+        get => (Child1.InnermostInputs().First() as MidiInput)?.Input ?? MidiType.Note;
+        set => SetInput(SelectedInputType1, true, null, null, null, null, null, null, value, null);
+    }
+
+    public int MidiNote1
+    {
+        get => (Child1.InnermostInputs().First() as MidiInput)?.Key ?? 0;
+        set => SetInput(SelectedInputType1, true, null, null, null, null, null, null, MidiType.Note, value);
     }
 
     public WiiInputType WiiInputType2
     {
         get => (Child2.InnermostInputs().First() as WiiInput)?.Input ?? WiiInputType.ClassicA;
-        set => SetInput(SelectedInputType2, false, value, null, null, null, null, null);
+        set => SetInput(SelectedInputType2, false, value, null, null, null, null, null, null, null);
     }
 
     public Ps2InputType Ps2InputType2
     {
         get => (Child2.InnermostInputs().First() as Ps2Input)?.Input ?? Ps2InputType.Cross;
-        set => SetInput(SelectedInputType2, false, null, value, null, null, null, null);
+        set => SetInput(SelectedInputType2, false, null, value, null, null, null, null, null, null);
     }
 
     public DjInputType DjInputType2
     {
         get => (Child2.InnermostInputs().First() as DjInput)?.Input ?? DjInputType.LeftGreen;
-        set => SetInput(SelectedInputType2, false, null, null, null, null, value, null);
+        set => SetInput(SelectedInputType2, false, null, null, null, null, value, null, null, null);
     }
 
     public UsbHostInputType UsbInputType2
     {
         get => (Child2.InnermostInputs().First() as UsbHostInput)?.Input ?? UsbHostInputType.A;
-        set => SetInput(SelectedInputType2, false, null, null, null, null, null, value);
+        set => SetInput(SelectedInputType2, false, null, null, null, null, null, value, null, null);
+    }
+
+    public MidiType MidiType2
+    {
+        get => (Child2.InnermostInputs().First() as MidiInput)?.Input ?? MidiType.Note;
+        set => SetInput(SelectedInputType2, false, null, null, null, null, null, null, value, null);
+    }
+
+    public int MidiNote2
+    {
+        get => (Child2.InnermostInputs().First() as MidiInput)?.Key ?? 0;
+        set => SetInput(SelectedInputType2, false, null, null, null, null, null, null, MidiType.Note, value);
     }
 
     [ObservableAsProperty] private bool _isDj;
@@ -104,11 +134,14 @@ public partial class MacroInput : Input
 
     [ObservableAsProperty] private bool _isPs2;
     [ObservableAsProperty] private bool _isUsb;
+    [ObservableAsProperty] private bool _isMidi;
+    [ObservableAsProperty] private bool _isMidiNote1;
+    [ObservableAsProperty] private bool _isMidiNote2;
 
 
     private void SetInput(InputType? inputType, bool isChild1, WiiInputType? wiiInput, Ps2InputType? ps2InputType,
         GhWtInputType? ghWtInputType, Gh5NeckInputType? gh5NeckInputType, DjInputType? djInputType,
-        UsbHostInputType? usbInputType)
+        UsbHostInputType? usbInputType, MidiType? midiType, int? key)
     {
         var child = (isChild1 ? Child1.InnermostInputs() : Child2.InnermostInputs()).First();
 
@@ -212,6 +245,17 @@ public partial class MacroInput : Input
                 usbInputType ??= UsbHostInputType.A;
                 input = new UsbHostInput(usbInputType.Value, Model);
                 break;
+            case Types.InputType.MidiInput when child is not MidiInput:
+                midiType ??= MidiType.Note;
+                key ??= 0;
+                input = new MidiInput(midiType.Value, key.Value, Model);
+                inputOther = new MidiInput(midiType.Value, key.Value, Model);
+                break;
+            case Types.InputType.MidiInput when child is MidiInput:
+                midiType ??= MidiType.Note;
+                key ??= 0;
+                input = new MidiInput(midiType.Value, key.Value, Model);
+                break;
             default:
                 return;
         }
@@ -242,6 +286,7 @@ public partial class MacroInput : Input
         Model.UpdateErrors();
     }
 
+    public IEnumerable<int> MidiNotes => Enumerable.Range(0, 129);
 
     public IEnumerable<GhWtInputType> GhWtInputTypes => Enum.GetValues<GhWtInputType>();
 
@@ -257,6 +302,7 @@ public partial class MacroInput : Input
 
     public IEnumerable<DjInputType> DjInputTypes => Enum.GetValues<DjInputType>();
     public IEnumerable<UsbHostInputType> UsbInputTypes => Enum.GetValues<UsbHostInputType>();
+    public IEnumerable<MidiType> MidiTypes => Enum.GetValues<MidiType>();
 
     public IEnumerable<InputType> InputTypes =>
         Enum.GetValues<InputType>().Where(s =>
