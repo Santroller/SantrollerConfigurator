@@ -150,7 +150,7 @@ public partial class BrandedConfiguration : ReactiveObject
         {
             env = "picow";
         }
-        return Path.Combine(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", env,
+        return Path.Join(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", env,
             "firmware.uf2");
     }
 

@@ -28,9 +28,9 @@ public class PlatformIo
     public static string GetAssetDir()
     {
         return RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
-            ? Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(Environment.ProcessPath!)!)!, "Resources",
+            ? Path.Join(Path.GetDirectoryName(Path.GetDirectoryName(Environment.ProcessPath!)!)!, "Resources",
                 "Binaries")
-            : Path.Combine(Path.GetDirectoryName(Environment.ProcessPath!)!, "Binaries");
+            : Path.Join(Path.GetDirectoryName(Environment.ProcessPath!)!, "Binaries");
     }
 
     private async Task InitialisePlatformIoAsync(IObserver<PlatformIoState> platformIoOutput)
@@ -44,16 +44,16 @@ public class PlatformIo
             }
 
             var assetDir = GetAssetDir();
-            AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
-            AssetUtils.CopyDirectory(Path.Combine(assetDir, "platformio", ".cache"),
-                Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", ".cache"), true);
+            AssetUtils.CopyDirectory(Path.Join(assetDir, "Santroller"), FirmwareDir, true);
+            AssetUtils.CopyDirectory(Path.Join(assetDir, "platformio", ".cache"),
+                Path.Join(AssetUtils.GetAppDataFolder(), "platformio", ".cache"), true);
             // Swap programming command from avrdude to dfu-programmer on windows
 #if Windows
-            File.Copy(Path.Combine(assetDir, "platformio", "dfu-programmer.exe"),
-                Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "dfu-programmer.exe"), true);
-            File.Copy(Path.Combine(assetDir, "platformio", "libusb0.dll"),
-                Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "libusb0.dll"), true);
-            var iniFile = Path.Combine(FirmwareDir, "platformio.ini");
+            File.Copy(Path.Join(assetDir, "platformio", "dfu-programmer.exe"),
+                Path.Join(AssetUtils.GetAppDataFolder(), "platformio", "dfu-programmer.exe"), true);
+            File.Copy(Path.Join(assetDir, "platformio", "libusb0.dll"),
+                Path.Join(AssetUtils.GetAppDataFolder(), "platformio", "libusb0.dll"), true);
+            var iniFile = Path.Join(FirmwareDir, "platformio.ini");
             File.WriteAllText(iniFile, File.ReadAllText(iniFile).Replace("\"${platformio.packages_dir}/tool-avrdude/avrdude\" $UPLOAD_FLAGS -U flash:w:$SOURCE:i", "\"${platformio.core_dir}/dfu-programmer\" ${BOARD_MCU} flash $SOURCE"));
 #endif
             platformIoOutput.OnCompleted();
@@ -74,21 +74,21 @@ public class PlatformIo
         var appdataFolder = AssetUtils.GetAppDataFolder();
         if (!File.Exists(appdataFolder)) Directory.CreateDirectory(appdataFolder);
 
-        var pioFolder = Path.Combine(appdataFolder, "platformio");
-        _pythonExecutable = Path.Combine(assetDir, "python", "bin", "python3.11");
+        var pioFolder = Path.Join(appdataFolder, "platformio");
+        _pythonExecutable = Path.Join(assetDir, "python", "bin", "python3.11");
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            _pythonExecutable = Path.Combine(assetDir, "python", "python.exe");
+            _pythonExecutable = Path.Join(assetDir, "python", "python.exe");
 
-        FirmwareDir = Path.Combine(appdataFolder, "Santroller");
+        FirmwareDir = Path.Join(appdataFolder, "Santroller");
         _portProcess = new Process();
         _portProcess.EnableRaisingEvents = true;
         _portProcess.StartInfo.FileName = _pythonExecutable;
         _portProcess.StartInfo.WorkingDirectory = FirmwareDir;
         _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_CORE_DIR"] = pioFolder;
         _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PLATFORMS_DIR"] =
-            Path.Combine(assetDir, "platformio", "platforms");
+            Path.Join(assetDir, "platformio", "platforms");
         _portProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PACKAGES_DIR"] =
-            Path.Combine(assetDir, "platformio", "packages");
+            Path.Join(assetDir, "platformio", "packages");
 
         _portProcess.StartInfo.Arguments = "-m platformio device list --json-output";
         _portProcess.StartInfo.UseShellExecute = false;
@@ -149,13 +149,13 @@ public class PlatformIo
 
         async Task Process()
         {
-            var uf2File = Path.Combine(FirmwareDir, ".pio", "build", environment,
+            var uf2File = Path.Join(FirmwareDir, ".pio", "build", environment,
                 "firmware.uf2");
             var percentageStep = progressEndingPercentage - progressStartingPercentage;
             var currentProgress = progressStartingPercentage;
             var uploading = command.Length > 1;
             var appdataFolder = AssetUtils.GetAppDataFolder();
-            var pioFolder = Path.Combine(appdataFolder, "platformio");
+            var pioFolder = Path.Join(appdataFolder, "platformio");
 
             var args = new List<string>(command);
             args.Insert(0, _pythonExecutable);
@@ -299,9 +299,9 @@ public class PlatformIo
             _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_CORE_DIR"] = pioFolder;
             _currentProcess.StartInfo.EnvironmentVariables["PYTHONUNBUFFERED"] = "1";
             _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PLATFORMS_DIR"] =
-                Path.Combine(assetDir, "platformio", "platforms");
+                Path.Join(assetDir, "platformio", "platforms");
             _currentProcess.StartInfo.EnvironmentVariables["PLATFORMIO_PACKAGES_DIR"] =
-                Path.Combine(assetDir, "platformio", "packages");
+                Path.Join(assetDir, "platformio", "packages");
             if (extraEnvs != null)
             {
                 _currentProcess.StartInfo.EnvironmentVariables[extraEnvs] = "1";

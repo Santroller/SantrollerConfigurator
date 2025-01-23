@@ -17,7 +17,7 @@ public class BuilderConfig
 
     public BuilderConfig(MainWindowViewModel screen)
     {
-        var path = Path.Combine(AssetUtils.GetAppDataFolder(), "Builder", "config.bin");
+        var path = Path.Join(AssetUtils.GetAppDataFolder(), "Builder", "config.bin");
         if (!Path.Exists(path)) return;
         using var stream = File.OpenRead(path);
         Configurations.AddRange(Serializer.Deserialize<SerialisedBuilderConfig>(stream).Configurations.Select(s => new BrandedConfigurationStore(s, false, screen)));
@@ -26,7 +26,7 @@ public class BuilderConfig
 
     public void Save()
     {
-        var path = Path.Combine(AssetUtils.GetAppDataFolder(), "Builder", "config.bin");
+        var path = Path.Join(AssetUtils.GetAppDataFolder(), "Builder", "config.bin");
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         File.Delete(path);
         using var stream = File.OpenWrite(path);

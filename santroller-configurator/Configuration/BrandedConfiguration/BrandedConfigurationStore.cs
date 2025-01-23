@@ -89,10 +89,10 @@ public partial class BrandedConfigurationStore : ReactiveObject
         var offset = reader.ReadInt32();
         stream.Seek(offset, SeekOrigin.Begin);
 #else
-        var path = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, "branding.bin");
+        var path = Path.Join(Path.GetDirectoryName(Environment.ProcessPath)!, "branding.bin");
         if (!File.Exists(path))
         {
-            path = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(Environment.ProcessPath)!)!, "Resources", "branding.bin");
+            path = Path.Join(Path.GetDirectoryName(Path.GetDirectoryName(Environment.ProcessPath)!)!, "Resources", "branding.bin");
         }
         var stream = File.OpenRead(path);
 #endif

@@ -132,7 +132,7 @@ public class Dfu : IConfigurableDevice
         var mcu = _device.ProductId == 0x2FF7 ? "at90usb82" : "atmega16u2";
         
         var appdataFolder = AssetUtils.GetAppDataFolder();
-        var dfuExecutable = Path.Combine(appdataFolder, "platformio", "dfu-programmer.exe");
+        var dfuExecutable = Path.Join(appdataFolder, "platformio", "dfu-programmer.exe");
         var process = new Process();
         process.StartInfo.FileName = dfuExecutable;
         process.StartInfo.Arguments = $"{mcu} launch --no-reset";

@@ -171,7 +171,7 @@ public partial class BrandedMainWindowViewModel : MainWindowViewModel
 
         Progress = 50;
         Message = "Writing";
-        await SelectedConfig.BuildUf2(Model, Path.Combine(path, "firmware.uf2"));
+        await SelectedConfig.BuildUf2(Model, Path.Join(path, "firmware.uf2"));
         Progress = 80;
         return new PlatformIo.PlatformIoState(90,
             Windows ? "Waiting for device (Stuck here? Try clicking refresh devices)" : "Waiting for device", false,

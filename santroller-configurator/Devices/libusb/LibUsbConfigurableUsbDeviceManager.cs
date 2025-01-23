@@ -127,7 +127,7 @@ public class ConfigurableUsbDeviceManager
     {   
         // Just copy the file to install it, using pkexec for admin
         var appdataFolder = AssetUtils.GetAppDataFolder();
-        var rules = Path.Combine(appdataFolder, UdevFile);
+        var rules = Path.Join(appdataFolder, UdevFile);
         await AssetUtils.ExtractFileAsync(UdevFile, rules);
         var info = new ProcessStartInfo("pkexec");
         info.ArgumentList.AddRange(["cp", rules, UdevPath]);

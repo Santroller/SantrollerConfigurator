@@ -41,14 +41,14 @@ public class AssetUtils
             folder = "/Users/Shared/Library/Application Support";
         }
 
-        var path = Path.Combine(folder, "SantrollerConfigurator");
+        var path = Path.Join(folder, "SantrollerConfigurator");
 
         return path;
     }
 
     public static ToolConfig GetConfig()
     {
-        var configFile = Path.Combine(GetAppDataFolder(), "config.bin");
+        var configFile = Path.Join(GetAppDataFolder(), "config.bin");
         if (!File.Exists(configFile))
         {
             return new ToolConfig();
@@ -69,7 +69,7 @@ public class AssetUtils
 
     public static void SaveConfig(ToolConfig config)
     {
-        var configFile = Path.Combine(GetAppDataFolder(), "config.bin");
+        var configFile = Path.Join(GetAppDataFolder(), "config.bin");
         using var outputStream = new FileStream(configFile, FileMode.OpenOrCreate);
         outputStream.SetLength(0);
         Serializer.Serialize(outputStream, config);
@@ -92,7 +92,7 @@ public class AssetUtils
         // Get the files in the source directory and copy to the destination directory
         foreach (FileInfo file in dir.GetFiles())
         {
-            string targetFilePath = Path.Combine(destinationDir, file.Name);
+            string targetFilePath = Path.Join(destinationDir, file.Name);
             file.CopyTo(targetFilePath, true);
         }
 
@@ -101,7 +101,7 @@ public class AssetUtils
         {
             foreach (DirectoryInfo subDir in dirs)
             {
-                string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+                string newDestinationDir = Path.Join(destinationDir, subDir.Name);
                 CopyDirectory(subDir.FullName, newDestinationDir, true);
             }
         }

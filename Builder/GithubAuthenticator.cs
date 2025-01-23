@@ -89,7 +89,7 @@ public class GithubAuthenticator
         var content = new FormUrlEncodedContent(args);
         var resp = await Client.PostAsync(url, content);
         var respString = await resp.Content.ReadAsStringAsync();
-        var file = Path.Combine(AssetUtils.GetAppDataFolder(), "auth");
+        var file = Path.Join(AssetUtils.GetAppDataFolder(), "auth");
         await File.WriteAllTextAsync(file, respString);
         var accessToken = HttpUtility.ParseQueryString(respString).Get("access_token")!;
         var client2 = new GitHubClient(new ProductHeaderValue("santroller-builder"));
@@ -99,7 +99,7 @@ public class GithubAuthenticator
 
     public static async Task<bool> RefreshToken()
     {
-        var file = Path.Combine(AssetUtils.GetAppDataFolder(), "auth");
+        var file = Path.Join(AssetUtils.GetAppDataFolder(), "auth");
         if (!Path.Exists(file))
         {
             return false;
@@ -137,7 +137,7 @@ public class GithubAuthenticator
 
     public static async Task<bool> CheckAccess()
     {
-        var file = Path.Combine(AssetUtils.GetAppDataFolder(), "auth");
+        var file = Path.Join(AssetUtils.GetAppDataFolder(), "auth");
         if (!Path.Exists(file))
         {
             return false;
@@ -162,7 +162,7 @@ public class GithubAuthenticator
 
     public static void SignOut()
     {
-        var file = Path.Combine(AssetUtils.GetAppDataFolder(), "auth");
+        var file = Path.Join(AssetUtils.GetAppDataFolder(), "auth");
         File.Delete(file);
     }
 }

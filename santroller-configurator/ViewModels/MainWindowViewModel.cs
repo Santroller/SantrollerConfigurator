@@ -227,7 +227,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         GithubSource source;
         if (Builder)
         {
-            var file = Path.Combine(AssetUtils.GetAppDataFolder(), "auth");
+            var file = Path.Join(AssetUtils.GetAppDataFolder(), "auth");
             if (!File.Exists(file))
             {
                 return;
@@ -532,12 +532,12 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         int startingPercentage = 0, int endingPercentage = 100)
     {
         StartWorking();
-        var configFile = Path.Combine(Pio.FirmwareDir, "include", "config_data.h");
+        var configFile = Path.Join(Pio.FirmwareDir, "include", "config_data.h");
         File.WriteAllText(configFile, extra + config.Generate(extra.Length != 0 ? new MemoryStream() : null));
         if (config is {IsPico: true, HasPs2Output: true})
         {
             // Set PS2 Output pins for the pico, they have to live in another file for now
-            var text = File.ReadAllLines(Path.Combine(Pio.FirmwareDir, "src", "pico", "psxSPI.pio"));
+            var text = File.ReadAllLines(Path.Join(Pio.FirmwareDir, "src", "pico", "psxSPI.pio"));
             for (var i = 0; i < text.Length; i++)
             {
                 var line = text[i];
@@ -564,7 +564,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
                 text[i] = line;
             }
-            File.WriteAllLines(Path.Combine(Pio.FirmwareDir, "src", "pico", "psxSPI.pio"), text);
+            File.WriteAllLines(Path.Join(Pio.FirmwareDir, "src", "pico", "psxSPI.pio"), text);
         }
 
         var environment = config.Microcontroller.Board.Environment;
@@ -730,7 +730,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
             try
             {
-                var uf2 = Path.Combine(drive.RootDirectory.FullName, "INFO_UF2.txt");
+                var uf2 = Path.Join(drive.RootDirectory.FullName, "INFO_UF2.txt");
                 if (drive.IsReady)
                     if (File.Exists(uf2))
                     {
