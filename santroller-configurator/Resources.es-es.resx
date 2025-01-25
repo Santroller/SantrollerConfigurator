@@ -201,6 +201,18 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="AxisCalibrationMaxY" xml:space="preserve">
         <value>Mueve el eje a la posición más alta que puedas</value>
     </data>
+    <data name="LEDSleepLabel" xml:space="preserve">
+        <value>Apaga los LEDs al estar inactivo (segundos)</value>
+    </data>
+    <data name="SleepLabel" xml:space="preserve">
+        <value>Suspensión inalámbrica por inactividad</value>
+    </data>
+    <data name="SleepWakeupLabel" xml:space="preserve">
+        <value>Pin para Reactivar de Suspensión</value>
+    </data>
+    <data name="SleepTimeoutLabel" xml:space="preserve">
+        <value>Temporizador de Suspensión (segundos)</value>
+    </data>
     <data name="AxisCalibraitonMaxTrigger" xml:space="preserve">
         <value>Presiona el gatillo hasta el fondo</value>
     </data>

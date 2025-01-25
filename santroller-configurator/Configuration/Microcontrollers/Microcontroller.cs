@@ -18,7 +18,7 @@ public abstract class Microcontroller
     public abstract List<int> PwmPins { get; }
     public abstract string GenerateDigitalRead(int pin, bool invert, bool peripheral);
 
-    public abstract string GenerateDigitalWrite(int pin, bool val, bool peripheral);
+    public abstract string GenerateDigitalWrite(int pin, bool val, bool peripheral, bool picow);
 
     public abstract string GenerateAnalogWrite(int pin, string val, bool peripheral);
 

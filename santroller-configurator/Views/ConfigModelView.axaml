@@ -3158,6 +3158,40 @@
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
+
+                        <StackPanel Orientation="Vertical" IsVisible="{Binding IsBluetooth}">
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SleepLabel}" />
+                                <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                              HorizontalContentAlignment="Center"
+                                              IsChecked="{Binding SleepEnabled}"
+                                              OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                              OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding SleepEnabled}">
+                                <Label VerticalAlignment="Center" Width="300"
+                                       Content="{x:Static netCore:Resources.SleepWakeupLabel}" />
+                                <ComboBox Width="200"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          SelectedItem="{Binding SleepWakeUpPin}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}" />
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" IsVisible="{Binding SleepEnabled}">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="300" Content="{x:Static netCore:Resources.SleepTimeoutLabel}" />
+                                <NumericUpDown FormatString="{}{0:#,0}"
+                                               Value="{Binding DeviceSleep}"
+                                               Minimum="5"
+                                               Increment="1"
+                                               Width="200"
+                                               Maximum="65535" HorizontalAlignment="Stretch" />
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
                 </Expander>
                 <Expander HorizontalAlignment="Stretch" Header="{Binding}" IsExpanded="{Binding PollExpanded}">
@@ -3561,6 +3595,17 @@
                                    IsVisible="{Binding !Apa102IsFullSize}" />
                             <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote3}"
                                    IsVisible="{Binding !Apa102IsFullSize}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="300" Content="{x:Static netCore:Resources.LEDSleepLabel}" />
+                            <NumericUpDown FormatString="{}{0:#,0}"
+                                           Value="{Binding LedSleep}"
+                                           Minimum="5"
+                                           Increment="1"
+                                           Width="200"
+                                           Maximum="65535" HorizontalAlignment="Stretch" />
                         </StackPanel>
                     </StackPanel>
                 </Expander>

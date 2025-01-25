@@ -1328,6 +1328,18 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="GuitarTapBarEnabled" xml:space="preserve">
         <value>Slider Bar</value>
     </data>
+    <data name="LEDSleepLabel" xml:space="preserve">
+        <value>Turn off LEDs after inactivity (seconds)</value>
+    </data>
+    <data name="SleepLabel" xml:space="preserve">
+        <value>Sleep when wireless after inactivity</value>
+    </data>
+    <data name="SleepWakeupLabel" xml:space="preserve">
+        <value>Pin to wake up from sleep mode</value>
+    </data>
+    <data name="SleepTimeoutLabel" xml:space="preserve">
+        <value>Sleep Mode Timeout (seconds)</value>
+    </data>
     <data name="SelectDpadLeftXb1" xml:space="preserve">
         <value>Map Select to D-Pad Left on Xbox One/Series</value>
     </data>

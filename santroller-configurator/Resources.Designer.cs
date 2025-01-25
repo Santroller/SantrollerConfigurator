@@ -2583,6 +2583,30 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string LEDSleepLabel {
+            get {
+                return ResourceManager.GetString("LEDSleepLabel", resourceCulture);
+            }
+        }
+        
+        public static string SleepLabel {
+            get {
+                return ResourceManager.GetString("SleepLabel", resourceCulture);
+            }
+        }
+        
+        public static string SleepWakeupLabel {
+            get {
+                return ResourceManager.GetString("SleepWakeupLabel", resourceCulture);
+            }
+        }
+        
+        public static string SleepTimeoutLabel {
+            get {
+                return ResourceManager.GetString("SleepTimeoutLabel", resourceCulture);
+            }
+        }
+        
         public static string SelectDpadLeftXb1 {
             get {
                 return ResourceManager.GetString("SelectDpadLeftXb1", resourceCulture);

@@ -51,6 +51,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly string Stp16PeripheralSpiType = "Peripheral STP16CPC26";
     public static readonly string Apa102PeripheralSpiType = "Peripheral APA102";
     public static readonly string WS2812PeripheralSpiType = "Peripheral WS2812";
+    public static readonly string WakeupPinType = "Pico Wakeup Pin";
     public static readonly string Stp16LeType = "STP16CPC26 Latch Enable";
     public static readonly string Stp16LePeripheralType = "Peripheral STP16CPC26 Latch Enable";
     public static readonly string Stp16OeType = "STP16CPC26 Output Enable";
@@ -88,6 +89,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private DirectPinConfig? _stp16OePeripheral;
     private DirectPinConfig? _stp16LePeripheral;
     private DirectPinConfig? _adaFruitHostPin;
+    private DirectPinConfig? _sleepPin;
 
     [Reactive] private AccelSensorType _accelSensorType;
 
@@ -208,7 +210,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Select(x =>
                 x is DeviceControllerType.Turntable or DeviceControllerType.RockBandDrums
                     or DeviceControllerType.RockBandGuitar or DeviceControllerType.LiveGuitar
-                    or DeviceControllerType.StageKit or DeviceControllerType.ProKeys or DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire)
+                    or DeviceControllerType.StageKit or DeviceControllerType.ProKeys
+                    or DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire)
             .ToProperty(this, x => x.IsRpcs3CompatibleController);
         _isKeyboardHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.KeyboardMouse)
@@ -574,16 +577,32 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
         }
     }
+    
+    private bool _sleepEnabled = false;
+
+    public bool SleepEnabled
+    {
+        get => _sleepEnabled;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _sleepEnabled, value);
+            _sleepPin = value ? new DirectPinConfig(this, WakeupPinType, -1, false, DevicePinMode.PullUp) : null;
+        }
+    }
+
+    [Reactive] private int _ledSleep;
+
+    [Reactive] private int _deviceSleep;
 
     [Reactive] private int _strumDebounce;
 
     [Reactive] private int _pollRate;
+
     [Reactive] private int _djPollRate;
 
     [Reactive] private bool _djFullRange;
 
     [Reactive] private bool _djNavButtons;
-
     private double _accelFilter;
 
     public double AccelFilter
@@ -661,7 +680,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
         }
     }
-
 
     private byte _ledBrightnessOff;
 
@@ -898,6 +916,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] private bool _apa102IsFullSize;
 
+    public int SleepWakeUpPin
+    {
+        get => _sleepPin?.Pin ?? 0;
+        set
+        {
+            if (_sleepPin == null) return;
+            _sleepPin.Pin = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
     public int Stp16LePeripheral
     {
         get => _stp16LePeripheral?.Pin ?? 0;
@@ -932,12 +961,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [Reactive] public bool _connected;
-    [Reactive] public bool _peripheralConnected;
-    [Reactive] public bool _mpr121Connected;
-    [Reactive] public bool _max1704XConnected;
-    [Reactive] public int _max1704XStatus;
-    [Reactive] public bool _accelConnected;
 
+    [Reactive] public bool _peripheralConnected;
+
+    [Reactive] public bool _mpr121Connected;
+
+    [Reactive] public bool _max1704XConnected;
+
+    [Reactive] public int _max1704XStatus;
+
+    [Reactive] public bool _accelConnected;
 
     public int UsbHostDm
     {
@@ -966,6 +999,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [Reactive] private byte _ledCount;
+
     [Reactive] private byte _ledCountPeripheral;
 
     [Reactive] private int _wtSensitivity;
@@ -975,6 +1009,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public LedType LedType
     {
         get => _ledType;
+
         set
         {
             if (value != _ledType)
@@ -1040,6 +1075,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public LedType LedTypePeripheral
     {
         get => _ledTypePeripheral;
+
         set
         {
             if (value != _ledTypePeripheral || _ledSpiConfigPeripheral == null)
@@ -1115,12 +1151,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] private bool _ps3OnRpcs3;
 
     [Reactive] private bool _ps4Instruments;
-
-
     private bool _hasPeripheral;
     private bool _hasWiiOutput;
     private bool _hasPs2Output;
-
     private bool _hasMpr121;
 
     public bool HasMpr121
@@ -1262,13 +1295,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private readonly ToolConfig _toolConfig = AssetUtils.GetConfig();
 
-    [Reactive] private string _presetName = "";
+    [Reactive] private string _presetName =
+        "";
 
     private LegendType _legendType;
 
     public LegendType LegendType
     {
         get => _legendType;
+
         set
         {
             this.RaiseAndSetIfChanged(ref _legendType, value);
@@ -1277,10 +1312,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-
     public DeviceControllerType DeviceControllerType
     {
         get => _deviceControllerType;
+
         set
         {
             this.RaiseAndSetIfChanged(ref _deviceControllerType, value);
@@ -1289,11 +1324,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     public Microcontroller Microcontroller { get; private set; }
-
     public SourceList<Output> Bindings { get; } = new();
 
     [Reactive] private Tuple<string, SerializedConfiguration>? _currentPreset;
-
     public ObservableCollection<Tuple<string, SerializedConfiguration>> Presets { get; } = [];
     public bool BindableSpi => IsPico;
 
@@ -1318,7 +1351,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [ObservableAsProperty] private string? _loadPresetLabel;
+
     [ObservableAsProperty] private string? _deletePresetLabel;
+
     [ObservableAsProperty] private string? _savePresetLabel;
     private bool _localDebounceMode;
 
@@ -1338,7 +1373,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] private bool _isGuitar;
 
     [ObservableAsProperty] private bool _isDrum;
+
     [ObservableAsProperty] private bool _isTurntable;
+
     [ObservableAsProperty] private bool _isProKeys;
 
     [ObservableAsProperty] private bool _supportsPS4Instrument;
@@ -1364,42 +1401,68 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [ObservableAsProperty] private bool _isGuitarHeroGuitar;
+
     [ObservableAsProperty] private bool _isStageKit;
+
     [ObservableAsProperty] private bool _isController;
+
     [ObservableAsProperty] private bool _isStandardController;
 
     [ObservableAsProperty] private bool _isRpcs3CompatibleController;
+
     [ObservableAsProperty] private bool _isFortniteFestivalPro;
+
     [ObservableAsProperty] private bool _isKeyboard;
+
     [ObservableAsProperty] private bool _isApa102;
+
     [ObservableAsProperty] private bool _isWs2812;
+
     [ObservableAsProperty] private bool _isWs2812Peripheral;
+
     [ObservableAsProperty] private bool _isApa102Peripheral;
 
     [ObservableAsProperty] private bool _isIndexedLed;
+
     [ObservableAsProperty] private bool _isIndexedLedPeripheral;
+
     [ObservableAsProperty] private bool _isStp16;
+
     [ObservableAsProperty] private bool _isStp16Peripheral;
+
     [Reactive] private bool _isBluetoothTx;
+
     [ObservableAsProperty] private bool _supportsDeque;
+
     [ObservableAsProperty] private string? _pollRateLabel;
+
     [ObservableAsProperty] private bool _isBluetooth;
+
     [ObservableAsProperty] private bool _isOrWasBluetooth;
+
     [ObservableAsProperty] private bool _isBluetoothRx;
+
     [ObservableAsProperty] private bool _hasWiiCombinedOutput;
+
     [ObservableAsProperty] private bool _hasPs2CombinedOutput;
+
     [ObservableAsProperty] private bool _hasGhwtCombinedOutput;
+
     [ObservableAsProperty] private bool _hasCloneCombinedOutput;
+
     [ObservableAsProperty] private bool _hasDjCombinedOutput;
+
     [ObservableAsProperty] private bool _hasGh5CombinedOutput;
+
     [ObservableAsProperty] private bool _hasUsbHostCombinedOutput;
 
     [ObservableAsProperty] private bool _usbHostEnabled;
+
     [ObservableAsProperty] private bool _hasMidi;
+
     [ObservableAsProperty] private int _minPollRate;
 
-    // ReSharper enable UnassignedGetOnlyAutoProperty
-
+// ReSharper enable UnassignedGetOnlyAutoProperty
     private static readonly Dictionary<object, int> TypeOrder =
         Enum.GetValues<InstrumentButtonType>().Cast<object>()
             .Concat(Enum.GetValues<DjInputType>().Cast<object>())
@@ -1411,15 +1474,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Concat(Enum.GetValues<StandardAxisType>().Cast<object>()).Select((s, index) => new {s, index})
             .ToDictionary(x => x.s, x => x.index);
 
-
     public ReadOnlyObservableCollection<int> AvailablePinsDigital { get; private set; }
     public ReadOnlyObservableCollection<int> AvailablePinsInterrupt { get; private set; }
     public ReadOnlyObservableCollection<int> AvailablePinsAnalog { get; private set; }
 
-    // Since DM and DP need to be next to eachother, you cannot use pins at the far ends
+// Since DM and DP need to be next to eachother, you cannot use pins at the far ends
     public List<int> AvailablePinsDm => AvailablePinsDigital.Skip(1).ToList();
     public List<int> AvailablePinsDp => AvailablePinsDigital.SkipLast(1).ToList();
-
     public bool BindableAtt => Microcontroller is not (Uno or Mega);
     public List<int> AvailableMosiPinsInput => GetMosiPins(false);
     public List<int> AvailableMisoPinsInput => GetMisoPins(false);
@@ -1459,7 +1520,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .Cast<PinConfig>();
 
     public string UrlPathSegment { get; } = Guid.NewGuid().ToString()[..5];
-
     public IScreen HostScreen { get; }
     public bool IsPico => Device.IsPico;
 
@@ -1473,8 +1533,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         foreach (var binding in Bindings.Items) binding.UpdateBindings();
         if (!DeviceControllerType.Is5FretGuitar() && !IsDrum)
         {
-            Bindings.RemoveMany(Bindings.Items.Where(s => s is EmulationMode {Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfIos or EmulationModeType.FnfLayer}));
+            Bindings.RemoveMany(Bindings.Items.Where(s => s is EmulationMode
+            {
+                Type: EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfIos
+                or EmulationModeType.FnfLayer
+            }));
         }
+
         InstrumentButtonTypeExtensions.ConvertBindings(Bindings, this, false);
         if (!IsGuitar)
         {
@@ -1502,6 +1567,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             Bindings.RemoveMany(Bindings.Items.Where(s => s is ProGuitarCombinedOutput));
         }
+
         // If the user has a ps2 or wii combined output mapped, they don't need the default bindings
         if (Bindings.Items.Any(s =>
                 s is WiiCombinedOutput or Ps2CombinedOutput or UsbHostCombinedOutput
@@ -1588,7 +1654,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 case GuitarAxisType.Tilt when defaults:
                     Input input = Main.AccelSensorTypeMain switch
                     {
-                        AccelSensorTypeMain.Digital => new DigitalToAnalog(new DirectInput(-1, false, false, DevicePinMode.PullUp, this), short.MaxValue, this, DigitalToAnalogType.Tilt),
+                        AccelSensorTypeMain.Digital => new DigitalToAnalog(
+                            new DirectInput(-1, false, false, DevicePinMode.PullUp, this), short.MaxValue, this,
+                            DigitalToAnalogType.Tilt),
                         AccelSensorTypeMain.Adxl345 or AccelSensorTypeMain.Lis3dh or AccelSensorTypeMain.Mpu6050 =>
                             new AccelInput(AccelInputType.AccelX, this),
                         _ => new DirectInput(-1, false, false, DevicePinMode.Analog, this)
@@ -1934,6 +2002,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         if (blobStream != null)
         {
+            // TODO: make it posible to do pullup + wakeup
             writer = new BinaryWriter(blobStream);
             config += $$"""
                         #define CONFIGURABLE_BLOBS
@@ -1951,12 +2020,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define LOW_PASS_ALPHA {{WriteBlob(writer, AccelFilter)}}
                         #define DJ_NAV_BUTTONS {{WriteBlob(writer, DjNavButtons)}}
                         #define COMBINED_DEBOUNCE {{WriteBlob(writer, CombinedStrumDebounce)}}
+                        #define SLEEP_PIN {{WriteBlob(writer, SleepEnabled ? SleepWakeUpPin : -1)}}
+                        #define SLEEP_INACTIVITY_TIMEOUT_MS {{WriteBlob(writer, DeviceSleep * 1000)}}
+                        #define SLEEP_ACTIVE_HIGH {{WriteBlob(writer, false)}}
+                        #define RGB_INACTIVITY_TIMEOUT_MS {{WriteBlob(writer, LedSleep * 1000)}}
                         """;
 
             if (IsBluetoothRx)
             {
                 // Add space for null terminator
-                var addr = new byte[Santroller.BtAddressLength+1];
+                var addr = new byte[Santroller.BtAddressLength + 1];
                 // If we have a valid bluetooth address, write it
                 if (BtRxAddr.Length != 0 && BtRxAddr.Contains("("))
                 {
@@ -1967,6 +2040,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     Array.Copy(Encoding.UTF8.GetBytes(BtRxAddr), addr, Santroller.BtAddressLength - 1);
                 }
+
                 config += $"""
 
                            #define BT_ADDR {WriteBlob(writer, addr)}
@@ -2004,6 +2078,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define LOW_PASS_ALPHA {{AccelFilter.ToString(CultureInfo.GetCultureInfo("en"))}}
                         #define DJ_NAV_BUTTONS {{DjNavButtons.ToString().ToLower()}}
                         #define COMBINED_DEBOUNCE {{CombinedStrumDebounce.ToString().ToLower()}}
+                        #define SLEEP_PIN {{(SleepEnabled ? SleepWakeUpPin : -1)}}
+                        #define SLEEP_INACTIVITY_TIMEOUT_MS {{DeviceSleep * 1000}}
+                        #define SLEEP_ACTIVE_HIGH {{false.ToString().ToLower()}}
+                        #define RGB_INACTIVITY_TIMEOUT_MS {{LedSleep * 1000}}
                         """;
             if (IsBluetoothRx)
             {
@@ -2012,7 +2090,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     config += $"""
 
                                #define BT_ADDR "{BtRxAddr.Substring(BtRxAddr.Length - Santroller.BtAddressLength,
-                                   Santroller.BtAddressLength - 1)}"
+                               Santroller.BtAddressLength - 1)}"
                                """;
                 }
                 else if (BtRxAddr.Contains(':'))
@@ -2041,7 +2119,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
 
         config += $"""
-                   
+
                    #define ABSOLUTE_MOUSE_COORDS {(MouseMovementType == MouseMovementType.Absolute).ToString().ToLower()}
                    #define ARDWIINO_BOARD "{Microcontroller.Board.ArdwiinoName}"
                    #define DEVICE_TYPE {(byte) DeviceControllerType}
@@ -2068,8 +2146,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 ledInit += $"""
 
-                            {Microcontroller.GenerateDigitalWrite(Stp16Le, false, false)};
-                            {Microcontroller.GenerateDigitalWrite(Stp16Oe, false, false)};
+                            {Microcontroller.GenerateDigitalWrite(Stp16Le, false, false, IsBluetooth)};
+                            {Microcontroller.GenerateDigitalWrite(Stp16Oe, false, false, IsBluetooth)};
                             """;
             }
 
@@ -2077,8 +2155,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 ledInit += $"""
 
-                            {Microcontroller.GenerateDigitalWrite(Stp16LePeripheral, false, true)};
-                            {Microcontroller.GenerateDigitalWrite(Stp16OePeripheral, false, true)};
+                            {Microcontroller.GenerateDigitalWrite(Stp16LePeripheral, false, true, IsBluetooth)};
+                            {Microcontroller.GenerateDigitalWrite(Stp16OePeripheral, false, true, IsBluetooth)};
                             """;
             }
 
@@ -2158,13 +2236,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                              {GenerateTick(ConfigField.Ps2, writer)}
                            """;
             }
+
             if (HasPs2Output && !IsPico)
             {
                 config += $"""
 
                            #define PS2_ATT {Ps2OutputAtt}
-                           #define PS2_OUTPUT_ACK_SET() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, true, false)}
-                           #define PS2_OUTPUT_ACK_CLEAR() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, false, false)}
+                           #define PS2_OUTPUT_ACK_SET() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, true, false, IsBluetooth)}
+                           #define PS2_OUTPUT_ACK_CLEAR() {Microcontroller.GenerateDigitalWrite(Ps2OutputAck, false, false, IsBluetooth)}
                            #define PS2_OUTPUT_ATT_READ() {Microcontroller.GenerateDigitalRead(Ps2OutputAtt, false, false)}
                            #define PS2_OUTPUT_SPI_PORT {_ps2OutputSpiConfig!.Definition}
                            """;
@@ -2474,7 +2553,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             ret += $"""
 
-                    {Microcontroller.GenerateDigitalWrite(_adaFruitHostPin.Pin, true, false)};
+                    {Microcontroller.GenerateDigitalWrite(_adaFruitHostPin.Pin, true, false, IsBluetooth)};
                     """;
         }
 
@@ -2488,7 +2567,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             ret += $"""
 
-                    {Microcontroller.GenerateDigitalWrite(_adaFruitHostPin.Pin, true, false)};
+                    {Microcontroller.GenerateDigitalWrite(_adaFruitHostPin.Pin, true, false, IsBluetooth)};
                     """;
         }
 
@@ -2860,7 +2939,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                  slaveWriteLED(ledStatePeripheral[{i}].{strings[3]});
                  """;
         }
-        
+
         ret +=
             """
 
@@ -2899,9 +2978,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         ret +=
             $"""
 
-             {Microcontroller.GenerateDigitalWrite(Stp16Le, true, false)};
+             {Microcontroller.GenerateDigitalWrite(Stp16Le, true, false, IsBluetooth)};
              delayMicroseconds(10);
-             {Microcontroller.GenerateDigitalWrite(Stp16Le, false, false)};
+             {Microcontroller.GenerateDigitalWrite(Stp16Le, false, false, IsBluetooth)};
              """;
 
 
@@ -2926,9 +3005,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         ret +=
             $"""
 
-             {Microcontroller.GenerateDigitalWrite(Stp16LePeripheral, true, true)};
+             {Microcontroller.GenerateDigitalWrite(Stp16LePeripheral, true, true, IsBluetooth)};
              delayMicroseconds(10);
-             {Microcontroller.GenerateDigitalWrite(Stp16LePeripheral, false, true)};
+             {Microcontroller.GenerateDigitalWrite(Stp16LePeripheral, false, true, IsBluetooth)};
              """;
 
         return FixNewlines(ret);
@@ -3477,13 +3556,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     return $$"""
 
                              if ({{ifStatement}}) {
-                                 {{Microcontroller.GenerateDigitalWrite(pin, !tuple.Item1.OutputInverted, peripheral)}};
+                                 {{Microcontroller.GenerateDigitalWrite(pin, !tuple.Item1.OutputInverted, peripheral, IsBluetooth)}};
                              }
                              """;
                 }));
                 ret += $$"""
                          else {
-                             {{Microcontroller.GenerateDigitalWrite(pin, relatedOutputs.First().Item1.OutputInverted, peripheral)}};
+                             {{Microcontroller.GenerateDigitalWrite(pin, relatedOutputs.First().Item1.OutputInverted, peripheral, IsBluetooth)}};
                          }
                          """;
             }
@@ -4241,7 +4320,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         Bindings.Move(index, index + 1);
     }
 
-    // Capture any input events (such as pointer or keyboard) - used for detecting the last input
+// Capture any input events (such as pointer or keyboard) - used for detecting the last input
     public readonly Subject<object> KeyOrPointerEvent = new();
 
     public void OnKeyEvent(KeyEventArgs args)
@@ -4286,6 +4365,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             Main.SetDifference(false);
             return;
         }
+
         if (_currentConfig == null || _lastConfig == null || _currentConfigData == null) return;
         _currentConfig.Update(this, Bindings.Items, false);
         using var outputStream = new MemoryStream(_currentConfigData);

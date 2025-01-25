@@ -126,7 +126,7 @@ public class Pico : Microcontroller
     public override Board Board { get; }
 
     public override List<int> AnalogPins => [26, 27, 28, 29];
-    public List<int> BluetoothPins => [23, 24, 25, 29];
+    public List<int> BluetoothPins => [23, 24, 29];
 
     // All pins support pwm
     public override List<int> PwmPins { get; } =
@@ -153,11 +153,16 @@ public class Pico : Microcontroller
         return invert ? $"(sio_hw->gpio_in & (1 << {pin})) == 0" : $"sio_hw->gpio_in & (1 << {pin})";
     }
 
-    public override string GenerateDigitalWrite(int pin, bool val, bool peripheral)
+    public override string GenerateDigitalWrite(int pin, bool val, bool peripheral, bool picow)
     {
         if (peripheral)
         {
             return $"slaveWriteDigital({pin}, {val.ToString().ToLower()})";
+        }
+
+        if (picow && pin == 25)
+        {
+            return $"cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, {val.ToString().ToLower()});";
         }
 
         return val ? $"sio_hw->gpio_set = {1 << pin}" : $"sio_hw->gpio_clr = {1 << pin}";
@@ -221,6 +226,10 @@ public class Pico : Microcontroller
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
         foreach (var devicePin in pins)
         {
+            if (devicePin.Pin == 25 && configViewModel.IsBluetooth)
+            {
+                continue;
+            }
             if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral || devicePin.Type == "led_output" || devicePin.Type.Contains("Ps2 Output")) continue;
             switch (devicePin.PinMode)
             {
@@ -249,6 +258,10 @@ public class Pico : Microcontroller
         var pins = configViewModel.GetPinConfigs().OfType<DirectPinConfig>();
         foreach (var devicePin in pins)
         {
+            if (devicePin.Pin == 25 && configViewModel.IsBluetooth)
+            {
+                continue;
+            }
             if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral || devicePin.Type.Contains("Ps2 Output")) continue;
             switch (devicePin.PinMode)
             {
@@ -309,7 +322,7 @@ public class Pico : Microcontroller
                 ret += " VBUS sense";
                 break;
             case 25:
-                ret += " Pico Onboard LED / Pico W Wireless module chip-select";
+                ret += " Pico Onboard LED";
                 break;
         }
 

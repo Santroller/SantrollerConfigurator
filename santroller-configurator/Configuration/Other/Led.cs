@@ -564,9 +564,9 @@ public partial class Led : Output
         if (OutputPinConfig != null)
         {
             on =
-                $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, !OutputInverted, PeripheralOutput)};";
+                $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, !OutputInverted, PeripheralOutput, Model.IsBluetooth)};";
             off =
-                $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, OutputInverted, PeripheralOutput)};";
+                $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, OutputInverted, PeripheralOutput, Model.IsBluetooth)};";
             between =
                 $"{Model.Microcontroller.GenerateAnalogWrite(OutputPinConfig.Pin, $"{(OutputInverted ? "(255-" : "(")}rumble_left)", PeripheralOutput)};";
             starPowerBetween =

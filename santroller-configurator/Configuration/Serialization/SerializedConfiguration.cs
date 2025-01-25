@@ -28,6 +28,9 @@ public class SerializedConfiguration
     public void Update(ConfigViewModel model, IEnumerable<Output> bindings, bool allowErrors = true)
     {
         if (!allowErrors && model.HasError) return;
+        SleepPin = model.SleepWakeUpPin;
+        SleepTimer = model.DeviceSleep;
+        LedTimer = model.LedSleep;
         RolloverMode = model.RolloverMode;
         Bindings = bindings.Select(s => s.Serialize()).ToList();
         DeviceType = model.DeviceControllerType;
@@ -169,9 +172,17 @@ public class SerializedConfiguration
     [ProtoMember(84)] public bool ClassicMode { get; private set; }
     [ProtoMember(85)] public bool IsBluetoothTx { get; private set; }
     [ProtoMember(86)] public bool LocalDebounceMode { get; private set; }
+    [ProtoMember(87)] public bool SleepEnabled { get; private set; } = false;
+    [ProtoMember(88)] public int SleepPin { get; private set; } = -1;
+    [ProtoMember(89)] public int SleepTimer { get; private set; } = 5;
+    [ProtoMember(90)] public int LedTimer { get; private set; } = 5;
 
     public void LoadConfiguration(ConfigViewModel model)
     {
+        model.SleepEnabled = SleepEnabled;
+        model.SleepWakeUpPin = SleepPin;
+        model.DeviceSleep = SleepTimer;
+        model.LedSleep = LedTimer;
         model.Classic = ClassicMode;
         model.SelectDpadLeftXb1 = SelectDpadLeftXb1;
         model.DjNavButtons = DjNavButtons;
@@ -310,6 +321,10 @@ public class SerializedConfiguration
 
     public void Merge(ConfigViewModel model)
     {
+        model.SleepEnabled = SleepEnabled;
+        model.SleepWakeUpPin = SleepPin;
+        model.DeviceSleep = SleepTimer;
+        model.LedSleep = LedTimer;
         model.XInputOnWindows = XInputOnWindows;
         model.PollRate = PollRate;
         model.Debounce = Debounce;

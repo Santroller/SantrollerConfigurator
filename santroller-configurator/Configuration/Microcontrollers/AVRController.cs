@@ -39,7 +39,7 @@ public abstract class AvrController : Microcontroller
         return invert ? $"(PIN{GetPort(pin)} & (1 << {GetIndex(pin)})) == 0" : $"PIN{GetPort(pin)} & ({1 << GetIndex(pin)})";
     }
 
-    public override string GenerateDigitalWrite(int pin, bool val, bool peripheral)
+    public override string GenerateDigitalWrite(int pin, bool val, bool peripheral, bool picow)
     {
         return val ? $"PORT{GetPort(pin)} |= {1 << GetIndex(pin)}" : $"PORT{GetPort(pin)} &= ~{(1 << GetIndex(pin))}";
     }
@@ -131,7 +131,7 @@ public abstract class AvrController : Microcontroller
             pins.Add(new DirectPinConfig(configViewModel, "miso", SpiMiso, false, DevicePinMode.PullUp));
             pins.Add(new DirectPinConfig(configViewModel, "sck", SpiSck, false, DevicePinMode.Output));
             pins.Add(new DirectPinConfig(configViewModel, "ss", SpiCSn, false, DevicePinMode.Output));
-            write = GenerateDigitalWrite(SpiCSn, true, false);
+            write = GenerateDigitalWrite(SpiCSn, true, false, configViewModel.IsBluetooth);
         }
         foreach (var pin in pins)
         {
@@ -200,7 +200,7 @@ public abstract class AvrController : Microcontroller
             pins.Add(new DirectPinConfig(configViewModel, "miso", SpiMiso, false, DevicePinMode.PullUp));
             pins.Add(new DirectPinConfig(configViewModel, "sck", SpiSck, false, DevicePinMode.Output));
             pins.Add(new DirectPinConfig(configViewModel, "ss", SpiCSn, false, DevicePinMode.Output));
-            write = GenerateDigitalWrite(SpiCSn, true, false);
+            write = GenerateDigitalWrite(SpiCSn, true, false, configViewModel.IsBluetooth);
         }
         foreach (var pin in pins)
         {

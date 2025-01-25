@@ -569,8 +569,8 @@ public class Ps2Input : SpiInput
         var defines = base.RequiredDefines().ToList();
         defines.Add("INPUT_PS2");
         defines.Add($"PS2_ACK {Ack}");
-        defines.Add($"INPUT_PS2_ATT_SET() {Model.Microcontroller.GenerateDigitalWrite(Att, true, Peripheral)}");
-        defines.Add($"INPUT_PS2_ATT_CLEAR() {Model.Microcontroller.GenerateDigitalWrite(Att, false, Peripheral)}");
+        defines.Add($"INPUT_PS2_ATT_SET() {Model.Microcontroller.GenerateDigitalWrite(Att, true, Peripheral, Model.IsBluetooth)}");
+        defines.Add($"INPUT_PS2_ATT_CLEAR() {Model.Microcontroller.GenerateDigitalWrite(Att, false, Peripheral, Model.IsBluetooth)}");
         defines.AddRange(Model.Microcontroller.GeneratePs2Defines(Ack, "INTERRUPT_PS2_ACK"));
 
         return defines;
