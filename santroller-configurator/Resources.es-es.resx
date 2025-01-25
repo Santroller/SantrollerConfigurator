@@ -1883,6 +1883,9 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="EmulationModeTypeFnfLayer" xml:space="preserve">
         <value>Fortnite Festival (Alternar entre Menú / Gameplay)</value>
     </data>
+    <data name="EmulationTypePs2OnPs3" xml:space="preserve">
+        <value>Guitar Hero por emulador de PS2 en PS3</value>
+    </data>
     <data name="LedCommandTypeBluetoothConnected" xml:space="preserve">
         <value>Bluetooth Connected</value>
     </data>
