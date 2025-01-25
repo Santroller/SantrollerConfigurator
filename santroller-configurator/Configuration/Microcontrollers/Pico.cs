@@ -162,7 +162,7 @@ public class Pico : Microcontroller
 
         if (picow && pin == 25)
         {
-            return $"cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, {val.ToString().ToLower()});";
+            return $"cyw43_arch_gpio_put(0, {val.ToString().ToLower()});";
         }
 
         return val ? $"sio_hw->gpio_set = {1 << pin}" : $"sio_hw->gpio_clr = {1 << pin}";

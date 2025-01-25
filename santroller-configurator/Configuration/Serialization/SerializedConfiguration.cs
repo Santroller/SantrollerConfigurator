@@ -28,6 +28,7 @@ public class SerializedConfiguration
     public void Update(ConfigViewModel model, IEnumerable<Output> bindings, bool allowErrors = true)
     {
         if (!allowErrors && model.HasError) return;
+        SleepEnabled = model.SleepEnabled;
         SleepPin = model.SleepWakeUpPin;
         SleepTimer = model.DeviceSleep;
         LedTimer = model.LedSleep;
