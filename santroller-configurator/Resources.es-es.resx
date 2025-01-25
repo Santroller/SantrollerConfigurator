@@ -202,7 +202,7 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
         <value>Mueve el eje a la posición más alta que puedas</value>
     </data>
     <data name="LEDSleepLabel" xml:space="preserve">
-        <value>Apaga los LEDs al estar inactivo (segundos)</value>
+        <value>Apaga los LEDs por inactividad(segundos, 0 para desactivar)</value>
     </data>
     <data name="SleepLabel" xml:space="preserve">
         <value>Suspensión inalámbrica por inactividad</value>

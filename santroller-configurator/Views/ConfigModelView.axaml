@@ -217,7 +217,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.EmulationModeLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.EmulationModeLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Type}"
                                   ItemsSource="{Binding EmulationModes}"
@@ -429,21 +429,21 @@
                             <Label VerticalAlignment="Center" Content="{Binding LocalisedName}" />
                         </WrapPanel>
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Center">
-                            <ComboBox Width="300" VerticalAlignment="Center" IsVisible="{Binding IsController}"
+                            <ComboBox Width="350"  VerticalAlignment="Center" IsVisible="{Binding IsController}"
                                       PlaceholderText="Pick a Setting"
                                       SelectedItem="{Binding CombinedType}"
                                       ItemsSource="{Binding CombinedTypes}"
                                       ItemTemplate="{StaticResource ImageWithTextTemplate}" />
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsKeyboard}">
-                                <ComboBox Width="300" VerticalAlignment="Center"
+                                <ComboBox Width="350"  VerticalAlignment="Center"
                                           SelectedItem="{Binding MouseAxisType}"
                                           ItemsSource="{Binding MouseAxisTypes}"
                                           ItemTemplate="{StaticResource ControllerEnumTemplate}" />
-                                <ComboBox Width="300" VerticalAlignment="Center"
+                                <ComboBox Width="350"  VerticalAlignment="Center"
                                           SelectedItem="{Binding MouseButtonType}"
                                           ItemsSource="{Binding MouseButtonTypes}"
                                           ItemTemplate="{StaticResource ControllerEnumTemplate}" />
-                                <ComboBox Width="300" VerticalAlignment="Center" SelectedItem="{Binding Key}"
+                                <ComboBox Width="350"  VerticalAlignment="Center" SelectedItem="{Binding Key}"
                                           ItemsSource="{Binding Keys}"
                                           ItemTemplate="{StaticResource ControllerEnumTemplate}" />
                             </StackPanel>
@@ -467,7 +467,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.BluetoothMode}" />
+                               Width="350"  Content="{x:Static netCore:Resources.BluetoothMode}" />
 
                         <ComboBox VerticalAlignment="Center"
                                   SelectedIndex="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).Classic}"
@@ -479,7 +479,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SelectedDeviceBTLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SelectedDeviceBTLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).BtRxAddr}"
                                   ItemsSource="{Binding Addresses}"
@@ -492,16 +492,16 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ConnectedDevicesLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ConnectedDevicesLabel}" />
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="400" Content="{Binding UsbHostInfo}" />
+                               Width="350"  Content="{Binding UsbHostInfo}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.DPlusLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.DPlusLabel}" />
                         <ComboBox HorizontalAlignment="Stretch"
                                   DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding UsbHostDp}"
@@ -512,7 +512,7 @@
                                 IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.DMinusLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.DMinusLabel}" />
                         <ComboBox HorizontalAlignment="Stretch"
                                   IsEnabled="False"
                                   DropDownOpened="ReloadPinTemplates"
@@ -524,7 +524,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding Model.SupportsPS4Instrument}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.PS4ModeLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.PS4ModeLabel}" />
 
                         <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                       HorizontalContentAlignment="Center"
@@ -540,7 +540,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Combined}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SliderBarSensitivityLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SliderBarSensitivityLabel}" />
                             <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Sensitivity}" Maximum="1000"
                                            VerticalAlignment="Center"
                                            Width="200" />
@@ -548,7 +548,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Model.Branded}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SliderAnalogInputPin}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SliderAnalogInputPin}" />
                             <ComboBox VerticalAlignment="Center"
                                       DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding Pin}"
@@ -559,7 +559,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Model.Branded}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SliderS0Pin}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SliderS0Pin}" />
                             <ComboBox VerticalAlignment="Center"
                                       DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding PinS0}"
@@ -570,7 +570,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Model.Branded}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SliderS1Pin}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SliderS1Pin}" />
                             <ComboBox VerticalAlignment="Center"
                                       DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding PinS1}"
@@ -581,7 +581,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Model.Branded}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SliderS2Pin}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SliderS2Pin}" />
                             <ComboBox VerticalAlignment="Center"
                                       DropDownOpened="ReloadPinTemplates"
                                       SelectedItem="{Binding PinS2}"
@@ -592,10 +592,10 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Model.Branded}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="Raw Value" />
+                                   Width="350"  Content="Raw Value" />
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{Binding RawTap}" />
+                                   Width="350"  Content="{Binding RawTap}" />
                         </StackPanel>
 
                     </StackPanel>
@@ -606,7 +606,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SclGh5Label}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SclGh5Label}" />
                         <ComboBox VerticalAlignment="Center"
                                   DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding Scl}"
@@ -617,7 +617,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SdaGh5Label}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SdaGh5Label}" />
                         <ComboBox VerticalAlignment="Center"
                                   DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding Sda}"
@@ -632,7 +632,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SclGh5Label}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SclGh5Label}" />
                         <ComboBox VerticalAlignment="Center"
                                   DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding Scl}"
@@ -643,7 +643,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SdaGh5Label}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SdaGh5Label}" />
                         <ComboBox VerticalAlignment="Center"
                                   DropDownOpened="ReloadPinTemplates"
                                   SelectedItem="{Binding Sda}"
@@ -658,7 +658,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding IsLed}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="LED" />
+                               Width="350"  Content="LED" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Command}"
                                   ItemsSource="{Binding RumbleCommands}"
@@ -667,7 +667,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding StageKitMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.StageKitCommandTitle}" />
+                               Width="350"  Content="{x:Static netCore:Resources.StageKitCommandTitle}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding StageKitCommand}"
                                   ItemTemplate="{StaticResource EnumToStringTemplate}"
@@ -676,14 +676,14 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding StageKitLedMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.LEDTitle}" />
+                               Width="350"  Content="{x:Static netCore:Resources.LEDTitle}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding StageKitLed}" Minimum="1"
                                        Maximum="8" Width="200" Height="30" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding FiveFretMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.GuitarInputLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.GuitarInputLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding FiveFretGuitar}"
                                   ItemTemplate="{StaticResource EnumToStringTemplate}"
@@ -692,7 +692,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding SixFretMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.LiveGuitarInputLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.LiveGuitarInputLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding SixFretGuitar}"
                                   ItemTemplate="{StaticResource EnumToStringTemplate}"
@@ -701,7 +701,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding RockBandDrumsMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.DrumInputLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.DrumInputLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding RockBandDrum}"
                                   ItemTemplate="{StaticResource EnumToStringTemplate}"
@@ -710,7 +710,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding GuitarHeroDrumsMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.DrumInputLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.DrumInputLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding GuitarHeroDrum}"
                                   ItemTemplate="{StaticResource EnumToStringTemplate}"
@@ -719,7 +719,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding TurntableMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.TurntableInputLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.TurntableInputLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Turntable}"
                                   ItemTemplate="{StaticResource EnumToStringTemplate}"
@@ -728,14 +728,14 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding PlayerMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.PlayerTitle}" />
+                               Width="350"  Content="{x:Static netCore:Resources.PlayerTitle}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Player}" Minimum="1"
                                        Maximum="4" Width="200" Height="30" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding ComboMode}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ComboTitle}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ComboTitle}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Combo}" Minimum="1"
                                        Maximum="244" Width="200" Height="30" />
                     </StackPanel>
@@ -746,7 +746,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.MotorLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.MotorLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding RumbleMotorType}"
                                   ItemsSource="{Binding RumbleMotorTypes}"
@@ -760,7 +760,7 @@
                         <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Scl}"
                                       ItemsSource="{Binding AvailableSclPins}"
@@ -771,7 +771,7 @@
                         <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Sda}"
                                       ItemsSource="{Binding AvailableSdaPins}"
@@ -782,7 +782,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsAnalog}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.TurntableSmoothingLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.TurntableSmoothingLabel}" />
                             <ToggleSwitch IsChecked="{Binding Smoothing}"
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
@@ -791,7 +791,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !Combined}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.TurntablePollRateLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.TurntablePollRateLabel}" />
                             <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding PollRate}" Minimum="1"
                                            Maximum="10" Width="200" Height="30" />
                         </StackPanel>
@@ -804,15 +804,15 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ConnectedDevicesLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ConnectedDevicesLabel}" />
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="400" Content="{Binding UsbHostInfo}" />
+                               Width="350"  Content="{Binding UsbHostInfo}" />
                     </StackPanel>
                     <StackPanel IsVisible="{Binding ShouldShowPins}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.DPlusLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.DPlusLabel}" />
                         <ComboBox HorizontalAlignment="Stretch"
                                   SelectedItem="{Binding UsbHostDp}"
                                   ItemsSource="{Binding AvailablePinsDp}"
@@ -822,7 +822,7 @@
                     <StackPanel IsVisible="{Binding ShouldShowPins}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.DMinusLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.DMinusLabel}" />
                         <ComboBox HorizontalAlignment="Stretch"
                                   IsEnabled="False"
                                   SelectedItem="{Binding UsbHostDm}"
@@ -837,7 +837,7 @@
                     <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.MosiLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.MosiLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Mosi}"
                                   ItemsSource="{Binding AvailableMosiPins}"
@@ -849,7 +849,7 @@
                     <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.MisoLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.MisoLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Miso}"
                                   ItemsSource="{Binding AvailableMisoPins}"
@@ -861,7 +861,7 @@
                     <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SckLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SckLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sck}"
                                   ItemsSource="{Binding AvailableSckPins}"
@@ -873,7 +873,7 @@
                     <StackPanel IsVisible="{Binding ShouldShowPins}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.AckLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.AckLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Ack}"
                                   ItemsSource="{Binding AvailablePinsInterrupt}"
@@ -885,7 +885,7 @@
                     <StackPanel IsVisible="{Binding BindableAtt}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.AttentionLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.AttentionLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Att}"
                                   ItemsSource="{Binding AvailablePins}"
@@ -899,7 +899,7 @@
             <DataTemplate DataType="{x:Type other:JoystickToDpad}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.ThresholdLabel}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Threshold}" Minimum="1"
                                        Maximum="32767" Width="200" Height="30" />
@@ -917,7 +917,7 @@
                     <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.Mpr121ChannelLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.Mpr121ChannelLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Input}"
                                   ItemsSource="{Binding AvailableInputs}"
@@ -946,7 +946,7 @@
                     <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.Mpr121GreenChannelLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.Mpr121GreenChannelLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding InputGreen}"
                                   ItemsSource="{Binding AvailableInputs}"
@@ -971,7 +971,7 @@
                     <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.Mpr121RedChannelLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.Mpr121RedChannelLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding InputRed}"
                                   ItemsSource="{Binding AvailableInputs}"
@@ -996,7 +996,7 @@
                     <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.Mpr121YellowChannelLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.Mpr121YellowChannelLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding InputYellow}"
                                   ItemsSource="{Binding AvailableInputs}"
@@ -1021,7 +1021,7 @@
                     <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.Mpr121BlueChannelLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.Mpr121BlueChannelLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding InputBlue}"
                                   ItemsSource="{Binding AvailableInputs}"
@@ -1046,7 +1046,7 @@
                     <StackPanel IsVisible="{Binding !Model.Branded}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.Mpr121OrangeChannelLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.Mpr121OrangeChannelLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding InputOrange}"
                                   ItemsSource="{Binding AvailableInputs}"
@@ -1075,7 +1075,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Scl}"
                                   ItemsSource="{Binding AvailableSclPins}"
@@ -1086,7 +1086,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sda}"
                                   ItemsSource="{Binding AvailableSdaPins}"
@@ -1099,7 +1099,7 @@
             <DataTemplate DataType="{x:Type inputs:MultiplexerInput}">
                 <StackPanel Orientation="Vertical" IsVisible="{Binding !Model.Branded}">
                     <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.AnalogPinLabel}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding Pin}"
                                   ItemsSource="{Binding AvailablePins}"
@@ -1107,47 +1107,47 @@
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding IsSixteenChannel}">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.ChannelLabel}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Channel}" Minimum="0"
                                        Maximum="15" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsSixteenChannel}">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.ChannelLabel}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Channel}" Minimum="0"
                                        Maximum="7" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.MultiplexerTypeLabel}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding MultiplexerType}"
                                   ItemsSource="{Binding MultiplexerTypes}"
                                   ItemTemplate="{StaticResource EnumToStringTemplate}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.S0Pin}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.S0Pin}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinS0}"
                                   ItemsSource="{Binding AvailableDigitalPins}"
                                   DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.S1Pin}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.S1Pin}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinS1}"
                                   ItemsSource="{Binding AvailableDigitalPins}"
                                   DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.S2Pin}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.S2Pin}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinS2}"
                                   ItemsSource="{Binding AvailableDigitalPins}"
                                   DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding IsSixteenChannel}">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.S3Pin}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.S3Pin}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinS3}"
                                   ItemsSource="{Binding AvailableDigitalPins}"
                                   DropDownOpened="ReloadPinTemplates"
@@ -1159,7 +1159,7 @@
                 <StackPanel Orientation="Vertical"
                             IsVisible="{Binding !$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Branded}">
                     <StackPanel Orientation="Horizontal">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.PinLabel}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.PinLabel}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding Pin}"
                                   ItemsSource="{Binding AvailablePins}"
                                   DropDownOpened="ReloadPinTemplates"
@@ -1170,11 +1170,11 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsAnalog}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.InvertLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.InvertLabel}" />
                         <ToggleSwitch IsChecked="{Binding Inverted}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsAnalog}">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.PinModeText}" />
                         <ComboBox VerticalAlignment="Center" SelectedItem="{Binding PinMode}"
                                   ItemsSource="{Binding DevicePinModes}"
@@ -1187,7 +1187,7 @@
                     <Panel>
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" IsVisible="{Binding IsVelocity}">
                             <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.CurrentValueLabel}" />
                                 <Grid>
                                     <StackPanel Orientation="Horizontal"
@@ -1213,7 +1213,7 @@
 
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Height="50">
-                                <Label VerticalAlignment="Center" Width="300" Content="Multiplier" />
+                                <Label VerticalAlignment="Center" Width="350"  Content="Multiplier" />
                                 <Slider Value="{Binding Multiplier}"
                                         Minimum="1"
                                         Maximum="10"
@@ -1223,7 +1223,7 @@
                                                Maximum="10" Width="150" Height="30" Margin="10 0 0 0 " />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Height="50" IsVisible="{Binding AreLedsEnabled}">
-                                <Label VerticalAlignment="Center" Width="300" Content="LED Multiplier" />
+                                <Label VerticalAlignment="Center" Width="350"  Content="LED Multiplier" />
                                 <Slider Value="{Binding LedMultiplier}"
                                         Minimum="1"
                                         Maximum="10"
@@ -1237,7 +1237,7 @@
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
                                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal">
-                                        <Label VerticalAlignment="Center" Width="300"
+                                        <Label VerticalAlignment="Center" Width="350"  
                                                Content="{x:Static netCore:Resources.CalibratedValueLabel}" />
                                         <Grid>
                                             <StackPanel Orientation="Horizontal" IsVisible="{Binding Trigger}">
@@ -1270,7 +1270,7 @@
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
-                                        <Label VerticalAlignment="Center" Width="300"
+                                        <Label VerticalAlignment="Center" Width="350"  
                                                Content="{x:Static netCore:Resources.OriginalValueLabel}" />
                                         <Grid>
                                             <Rectangle Margin="{Binding CalibrationMinMaxMargin}"
@@ -1322,7 +1322,7 @@
                     </Panel>
 
                     <StackPanel IsVisible="{Binding SupportsMinMax}" Orientation="Horizontal" Height="50">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.CalibrateLabel}" />
                         <Button Command="{Binding CalibrateCommand}"
                                 HorizontalContentAlignment="Center" VerticalAlignment="Center" Width="100"
@@ -1331,7 +1331,7 @@
                     </StackPanel>
 
                     <StackPanel IsVisible="{Binding SupportsMinMax}" Orientation="Horizontal" Height="100">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.MinLabel}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.MinLabel}" />
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1348,7 +1348,7 @@
                     </StackPanel>
 
                     <StackPanel IsVisible="{Binding SupportsMinMax}" Orientation="Horizontal" Height="100">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.MaxLabel}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.MaxLabel}" />
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1365,7 +1365,7 @@
                     </StackPanel>
 
                     <StackPanel IsVisible="{Binding SupportsDeadzone}" Orientation="Horizontal" Height="100">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.DeadzoneLabel}" />
 
                         <StackPanel Orientation="Vertical">
@@ -1393,7 +1393,7 @@
                                 <Binding Path="HasNamedAxis" />
                             </MultiBinding>
                         </StackPanel.IsVisible>
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.CurrentFretsLabel}" />
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
                                    Text="{Binding NamedAxisInfo}" />
@@ -1402,7 +1402,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
                             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label VerticalAlignment="Center" Width="300"
+                                    <Label VerticalAlignment="Center" Width="350"  
                                            Content="{x:Static netCore:Resources.CalibratedValueLabel}" />
                                     <Grid>
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding Trigger}">
@@ -1435,7 +1435,7 @@
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal">
-                                    <Label VerticalAlignment="Center" Width="300"
+                                    <Label VerticalAlignment="Center" Width="350"  
                                            Content="{x:Static netCore:Resources.OriginalValueLabel}" />
                                     <Grid>
                                         <Rectangle Margin="{Binding CalibrationMinMaxMargin}"
@@ -1483,7 +1483,7 @@
 
                         </StackPanel>
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="50">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.CalibrateLabel}" />
                             <Button Command="{Binding CalibrateCommand}"
                                     HorizontalContentAlignment="Center" VerticalAlignment="Center" Width="100"
@@ -1492,7 +1492,7 @@
                         </StackPanel>
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                            <Label VerticalAlignment="Center" Width="300" Content="Min" />
+                            <Label VerticalAlignment="Center" Width="350"  Content="Min" />
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1509,7 +1509,7 @@
                         </StackPanel>
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                            <Label VerticalAlignment="Center" Width="300" Content="Max" />
+                            <Label VerticalAlignment="Center" Width="350"  Content="Max" />
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1526,7 +1526,7 @@
                         </StackPanel>
 
                         <StackPanel IsVisible="{Binding HasDeadZone}" Orientation="Horizontal" Height="100">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.DeadzoneLabel}" />
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
@@ -1548,7 +1548,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalogOrConstant}">
                             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label VerticalAlignment="Center" Width="300"
+                                    <Label VerticalAlignment="Center" Width="350"  
                                            Content="{x:Static netCore:Resources.OriginalValueLabel}" />
                                     <Grid>
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding InputIsUint}">
@@ -1593,7 +1593,7 @@
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
                                     Height="50">
-                            <Label VerticalAlignment="Center" Width="300" Content="Notch 2 Value" />
+                            <Label VerticalAlignment="Center" Width="350"  Content="Notch 2 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
                                     Minimum="{Binding SliderMin}"
@@ -1602,7 +1602,7 @@
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
                                     Height="50">
-                            <Label VerticalAlignment="Center" Width="300" Content="Notch 3 Value" />
+                            <Label VerticalAlignment="Center" Width="350"  Content="Notch 3 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
                                     Minimum="{Binding SliderMin}"
@@ -1611,7 +1611,7 @@
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
                                     Height="50">
-                            <Label VerticalAlignment="Center" Width="300" Content="Notch 4 Value" />
+                            <Label VerticalAlignment="Center" Width="350"  Content="Notch 4 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
                                     Minimum="{Binding SliderMin}"
@@ -1620,7 +1620,7 @@
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalogOrConstant}" Orientation="Horizontal"
                                     Height="50">
-                            <Label VerticalAlignment="Center" Width="300" Content="Notch 5 Value" />
+                            <Label VerticalAlignment="Center" Width="350"  Content="Notch 5 Value" />
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
                                     Minimum="{Binding SliderMin}"
@@ -1633,7 +1633,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding AllowInvert}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.InvertLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.InvertLabel}" />
                         <ToggleSwitch IsChecked="{Binding Inverted}" />
                     </StackPanel>
                 </StackPanel>
@@ -1645,7 +1645,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
                             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label VerticalAlignment="Center" Width="300"
+                                    <Label VerticalAlignment="Center" Width="350"  
                                            Content="{x:Static netCore:Resources.ValueLabel}" />
                                     <Grid>
                                         <Rectangle Margin="{Binding CalibrationMinMaxMargin}"
@@ -1692,7 +1692,7 @@
 
                         </StackPanel>
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.MinLabel}" />
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
@@ -1710,7 +1710,7 @@
                         </StackPanel>
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.MaxLabel}" />
 
                             <StackPanel Orientation="Vertical">
@@ -1729,7 +1729,7 @@
                         </StackPanel>
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.DeadzoneLabel}" />
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
@@ -1753,7 +1753,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.ValueLabel}" />
                                 <Grid>
                                     <StackPanel Orientation="Horizontal">
@@ -1775,7 +1775,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.CalibratedValueLabel}" />
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" IsVisible="{Binding Trigger}">
@@ -1807,7 +1807,7 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.OriginalValueLabel}" />
                                 <Grid>
                                     <Rectangle Margin="{Binding CalibrationMinMaxMargin}"
@@ -1853,7 +1853,7 @@
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding Trigger}">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.DigitalThresholdLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.DigitalThresholdLabel}" />
 
                                 <Grid>
                                     <Label VerticalAlignment="Center" HorizontalContentAlignment="Center"
@@ -1869,7 +1869,7 @@
 
                     </StackPanel>
                     <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="50">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.CalibrateLabel}" />
                         <Button Command="{Binding CalibrateCommand}"
                                 HorizontalContentAlignment="Center" VerticalAlignment="Center" Width="100"
@@ -1878,7 +1878,7 @@
                     </StackPanel>
 
                     <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.MinLabel}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.MinLabel}" />
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1895,7 +1895,7 @@
                     </StackPanel>
 
                     <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.MaxLabel}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.MaxLabel}" />
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1918,7 +1918,7 @@
                                 <Binding Path="!Trigger" />
                             </MultiBinding>
                         </StackPanel.IsVisible>
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.CenterLabel}" />
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
@@ -1935,7 +1935,7 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.DeadzoneLabel}" />
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
@@ -1958,7 +1958,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.CalibratedValueLabel}" />
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" IsVisible="{Binding Trigger}">
@@ -1990,7 +1990,7 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.OriginalValueLabel}" />
                                 <Grid>
                                     <Rectangle Margin="{Binding CalibrationMinMaxMargin}"
@@ -2037,7 +2037,7 @@
 
                     </StackPanel>
                     <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="50">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.CalibrateLabel}" />
                         <Button Command="{Binding CalibrateCommand}"
                                 HorizontalContentAlignment="Center" VerticalAlignment="Center" Width="100"
@@ -2046,7 +2046,7 @@
                     </StackPanel>
 
                     <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.MinLabel}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.MinLabel}" />
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -2063,7 +2063,7 @@
                     </StackPanel>
 
                     <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                        <Label VerticalAlignment="Center" Width="300" Content="{x:Static netCore:Resources.MaxLabel}" />
+                        <Label VerticalAlignment="Center" Width="350"  Content="{x:Static netCore:Resources.MaxLabel}" />
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
                                     Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -2080,7 +2080,7 @@
                     </StackPanel>
 
                     <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                        <Label VerticalAlignment="Center" Width="300"
+                        <Label VerticalAlignment="Center" Width="350"  
                                Content="{x:Static netCore:Resources.DeadzoneLabel}" />
                         <StackPanel Orientation="Vertical">
                             <Slider Foreground="White" VerticalAlignment="Center"
@@ -2103,7 +2103,7 @@
                             IsVisible="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).LocalDebounceMode}">
                     <Label VerticalAlignment="Center"
                            VerticalContentAlignment="Center"
-                           Width="300" Content="{x:Static netCore:Resources.DebounceLabel}" />
+                           Width="350"  Content="{x:Static netCore:Resources.DebounceLabel}" />
                     <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding DebounceDisplay}"
                                    IsVisible="{Binding !$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Deque}"
                                    VerticalAlignment="Center"
@@ -2121,7 +2121,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding Normal}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ValueLabel}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Value}" Minimum="{Binding Min}"
                                        Maximum="{Binding Max}"
                                        VerticalAlignment="Center"
@@ -2130,14 +2130,14 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsAnalog}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ValueLabel}" />
                         <ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ValueBool}" OnContent="On"
                                       OffContent="Off" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding RbPickup}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="Selected Notch" />
+                               Width="350"  Content="Selected Notch" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding PickupSelectorType}" Minimum="1"
                                        Maximum="5"
                                        VerticalAlignment="Center"
@@ -2146,7 +2146,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding TapBar}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ValueLabel}" />
                         <CheckBox IsChecked="{Binding Green}" VerticalAlignment="Center"
                                   Content="{x:Static netCore:Resources.TapBarCurrentFretsGreen}" />
                         <CheckBox IsChecked="{Binding Red}" VerticalAlignment="Center"
@@ -2166,7 +2166,7 @@
                                 IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.TypeLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.TypeLabel}" />
                         <ComboBox HorizontalAlignment="Stretch" ItemTemplate="{StaticResource EnumToStringTemplate}"
                                   SelectedItem="{Binding AnalogToDigitalType}"
                                   ItemsSource="{Binding AnalogToDigitalTypes}" />
@@ -2174,7 +2174,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ThresholdLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ThresholdLabel}" />
 
                         <StackPanel Orientation="Vertical">
                             <Grid>
@@ -2230,7 +2230,7 @@
                     <StackPanel IsVisible="{Binding Normal}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ValueLabel}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding On}" Minimum="{Binding Minimum}"
                                        Maximum="{Binding Maximum}"
                                        VerticalAlignment="Center"
@@ -2239,7 +2239,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding RbPickup}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ValueLabel}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding PickupSelectorType}" Minimum="1"
                                        Maximum="5"
                                        VerticalAlignment="Center"
@@ -2248,7 +2248,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding TapBar}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.ValueLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.ValueLabel}" />
                         <CheckBox IsChecked="{Binding Green}" VerticalAlignment="Center"
                                   Content="{x:Static netCore:Resources.TapBarCurrentFretsGreen}" />
                         <CheckBox IsChecked="{Binding Red}" VerticalAlignment="Center"
@@ -2268,7 +2268,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.InputTypeLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.InputTypeLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding SelectedInputType1}"
                                   ItemsSource="{Binding InputTypes}"
@@ -2286,7 +2286,7 @@
                         </StackPanel.IsVisible>
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.Input1InputLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.Input1InputLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   IsVisible="{Binding IsWii}"
                                   SelectedItem="{Binding WiiInputType1}"
@@ -2348,7 +2348,7 @@
                         </StackPanel.IsVisible>
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.Input2InputLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.Input2InputLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   IsVisible="{Binding IsWii}"
                                   SelectedItem="{Binding WiiInputType2}"
@@ -2391,7 +2391,7 @@
                         <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Scl}"
                                       ItemsSource="{Binding AvailableSclPins}"
@@ -2402,7 +2402,7 @@
                         <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                             <ComboBox VerticalAlignment="Center"
                                       SelectedItem="{Binding Sda}"
                                       ItemsSource="{Binding AvailableSdaPins}"
@@ -2414,7 +2414,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.TurntablePollRateLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.TurntablePollRateLabel}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding PollRate}" Minimum="1"
                                        Maximum="10" Width="200" Height="30" />
                     </StackPanel>
@@ -2425,7 +2425,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Scl}"
                                   ItemsSource="{Binding AvailableSclPins}"
@@ -2436,7 +2436,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sda}"
                                   ItemsSource="{Binding AvailableSdaPins}"
@@ -2447,7 +2447,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.WiiInputFilterLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.WiiInputFilterLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding SelectedType}"
                                   ItemsSource="{Binding WiiControllerTypes}"
@@ -2469,7 +2469,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Scl}"
                                   ItemsSource="{Binding AvailableSclPins}"
@@ -2480,7 +2480,7 @@
                     <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sda}"
                                   ItemsSource="{Binding AvailableSdaPins}"
@@ -2495,7 +2495,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SliderBarSensitivityLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SliderBarSensitivityLabel}" />
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Sensitivity}" Maximum="1000"
                                        VerticalAlignment="Center"
                                        Width="200" />
@@ -2503,15 +2503,15 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="Raw Values" />
+                               Width="350"  Content="Raw Values" />
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{Binding RawTaps}" />
+                               Width="350"  Content="{Binding RawTaps}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SliderAnalogInputPin}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SliderAnalogInputPin}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Pin}"
                                   ItemsSource="{Binding AvailablePinsDigital}"
@@ -2522,7 +2522,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SliderS0Pin}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SliderS0Pin}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding PinS0}"
                                   ItemsSource="{Binding AvailablePinsDigital}"
@@ -2533,7 +2533,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SliderS1Pin}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SliderS1Pin}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding PinS1}"
                                   ItemsSource="{Binding AvailablePinsDigital}"
@@ -2544,7 +2544,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SliderS2Pin}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SliderS2Pin}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding PinS2}"
                                   ItemsSource="{Binding AvailablePinsDigital}"
@@ -2561,7 +2561,7 @@
                             IsVisible="{Binding $parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).IsProKeys}">
                     <Label VerticalAlignment="Center"
                            VerticalContentAlignment="Center"
-                           Width="300" Content="{x:Static netCore:Resources.ProKeysInitialNoteLabel}" />
+                           Width="350"  Content="{x:Static netCore:Resources.ProKeysInitialNoteLabel}" />
                     <ComboBox VerticalAlignment="Center"
                               SelectedItem="{Binding MidiNote}"
                               ItemsSource="{Binding MidiNotesFirst}"
@@ -2575,7 +2575,7 @@
                     <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.MosiLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.MosiLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Mosi}"
                                   ItemsSource="{Binding AvailableMosiPins}"
@@ -2587,7 +2587,7 @@
                     <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.MisoLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.MisoLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Miso}"
                                   ItemsSource="{Binding AvailableMisoPins}"
@@ -2598,7 +2598,7 @@
                     <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.SckLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.SckLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Sck}"
                                   ItemsSource="{Binding AvailableSckPins}"
@@ -2611,7 +2611,7 @@
                                 IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.AckLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.AckLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Ack}"
                                   ItemsSource="{Binding AvailablePinsInterrupt}"
@@ -2624,7 +2624,7 @@
                                 IsVisible="{Binding BindableAtt}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.AttentionLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.AttentionLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding Att}"
                                   ItemsSource="{Binding AvailablePins}"
@@ -2635,7 +2635,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.PS2InputFilterLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.PS2InputFilterLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding SelectedType}"
                                   ItemsSource="{Binding Ps2ControllerTypes}"
@@ -2682,13 +2682,13 @@
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsApa102 }"
+                           VerticalContentAlignment="Center" Width="350"  IsVisible="{Binding IsApa102 }"
                            Content="{x:Static netCore:Resources.SelectedLEDsApa102Label}" />
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsWs2812 }"
+                           VerticalContentAlignment="Center" Width="350"  IsVisible="{Binding IsWs2812 }"
                            Content="{x:Static netCore:Resources.SelectedLEDsWS2812Label}" />
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsStp }"
+                           VerticalContentAlignment="Center" Width="350"  IsVisible="{Binding IsStp }"
                            Content="{x:Static netCore:Resources.SelectedLEDsStpLabel}" />
                     <ItemsControl ItemsSource="{Binding AvailableIndices}">
                         <ItemsControl.ItemsPanel>
@@ -2712,13 +2712,13 @@
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsApa102Peripheral }"
+                           VerticalContentAlignment="Center" Width="350"  IsVisible="{Binding IsApa102Peripheral }"
                            Content="{x:Static netCore:Resources.SelectedLEDsPeripheralApa102Label}" />
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsWs2812Peripheral }"
+                           VerticalContentAlignment="Center" Width="350"  IsVisible="{Binding IsWs2812Peripheral }"
                            Content="{x:Static netCore:Resources.SelectedLEDsPeripheralWS2812Label}" />
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300" IsVisible="{Binding IsStpPeripheral }"
+                           VerticalContentAlignment="Center" Width="350"  IsVisible="{Binding IsStpPeripheral }"
                            Content="{x:Static netCore:Resources.SelectedLEDsPeripheralStpLabel}" />
                     <ItemsControl ItemsSource="{Binding AvailableIndicesPeripheral}">
                         <ItemsControl.ItemsPanel>
@@ -2742,7 +2742,7 @@
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300"
+                           VerticalContentAlignment="Center" Width="350"  
                            Content="{x:Static netCore:Resources.SelectedLEDsMpr121Label}" />
                     <ItemsControl ItemsSource="{Binding AvailableIndicesMpr121}">
                         <ItemsControl.ItemsPanel>
@@ -2779,7 +2779,7 @@
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300"
+                           VerticalContentAlignment="Center" Width="350"  
                            Content="{x:Static netCore:Resources.TestLEDLabel}" />
                     <Button HorizontalAlignment="Center"
                             Width="200"
@@ -2804,7 +2804,7 @@
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300"
+                           VerticalContentAlignment="Center" Width="350"  
                            Content="{Binding LedOnLabel}" />
 
                     <StackPanel Orientation="Horizontal">
@@ -2812,7 +2812,7 @@
                                      Color="{Binding LedOn}" />
 
                         <Button Command="{Binding CopyOff}"
-                                HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                HorizontalAlignment="Stretch" Width="350"  HorizontalContentAlignment="Center"
                                 Content="{x:Static netCore:Resources.CopyOtherLedLabel}" />
                     </StackPanel>
                 </StackPanel>
@@ -2834,12 +2834,12 @@
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
-                           VerticalContentAlignment="Center" Width="300"
+                           VerticalContentAlignment="Center" Width="350"  
                            Content="{Binding LedOffLabel}" />
                     <ColorPicker IsAlphaEnabled="False" IsAlphaVisible="False" ColorSpectrumShape="Ring"
                                  Color="{Binding LedOff}" />
                     <Button Command="{Binding CopyOn}"
-                            HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                            HorizontalAlignment="Stretch" Width="350"  HorizontalContentAlignment="Center"
                             Content="{x:Static netCore:Resources.CopyOtherLedLabel}" />
                 </StackPanel>
                 <StackPanel>
@@ -2856,7 +2856,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.EnableDigitalOutputTitle}" />
+                               Width="350"  Content="{x:Static netCore:Resources.EnableDigitalOutputTitle}" />
                         <ToggleSwitch IsChecked="{Binding OutputEnabled}"
                                       OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                       OffContent="{x:Static netCore:Resources.DisabledLabel}" />
@@ -2875,7 +2875,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.EnableAnalogOutputTitle}" />
+                               Width="350"  Content="{x:Static netCore:Resources.EnableAnalogOutputTitle}" />
                         <ToggleSwitch IsChecked="{Binding OutputEnabled}"
                                       OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                       OffContent="{x:Static netCore:Resources.DisabledLabel}" />
@@ -2892,7 +2892,7 @@
                     </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
                            VerticalContentAlignment="Center"
-                           Width="300" Content="{x:Static netCore:Resources.InvertOutputLabel}" />
+                           Width="350"  Content="{x:Static netCore:Resources.InvertOutputLabel}" />
                     <ToggleSwitch IsChecked="{Binding OutputInverted}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -2904,7 +2904,7 @@
                     </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
                            VerticalContentAlignment="Center"
-                           Width="300" Content="{x:Static netCore:Resources.PeripheralOutputLabel}" />
+                           Width="350"  Content="{x:Static netCore:Resources.PeripheralOutputLabel}" />
                     <ToggleSwitch IsChecked="{Binding PeripheralOutput}" />
                 </StackPanel>
                 <StackPanel IsVisible="{Binding UsesPwm}">
@@ -2912,7 +2912,7 @@
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                IsVisible="{Binding UsesPwm}"
-                               Width="300" Content="{x:Static netCore:Resources.TestLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.TestLabel}" />
                         <Slider Value="{Binding Test}"
                                 Minimum="1"
                                 Maximum="255"
@@ -2925,7 +2925,7 @@
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
                                IsVisible="{Binding !UsesPwm}"
-                               Width="300" Content="{x:Static netCore:Resources.TestLabelDigital}" />
+                               Width="350"  Content="{x:Static netCore:Resources.TestLabelDigital}" />
                         <ToggleSwitch IsChecked="{Binding TestDigital}" />
                     </StackPanel>
                 </StackPanel>
@@ -2942,7 +2942,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.AnalogOutputPinLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.AnalogOutputPinLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding OutputPin}"
                                   DropDownOpened="ReloadPinTemplates"
@@ -2963,7 +2963,7 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding OutputEnabled}">
                         <Label VerticalAlignment="Center"
                                VerticalContentAlignment="Center"
-                               Width="300" Content="{x:Static netCore:Resources.DigitalOutputPinLabel}" />
+                               Width="350"  Content="{x:Static netCore:Resources.DigitalOutputPinLabel}" />
                         <ComboBox VerticalAlignment="Center"
                                   SelectedItem="{Binding OutputPin}"
                                   DropDownOpened="ReloadPinTemplates"
@@ -2977,7 +2977,7 @@
             <StackPanel Margin="0 5 10 5" Background="{Binding CombinedBackground}" Opacity="{Binding CombinedOpacity}">
             <ContentControl Padding="10" Content="{Binding}" 
                             ContentTemplate="{StaticResource OutputTemplate}" Background="{Binding CombinedBackground}"
-                            Width="720" />
+                            Width="775" />
             <Label Foreground="Red" Margin="45 0 0 0"
                    Content="{Binding ErrorText}"
                    VerticalAlignment="Bottom"
@@ -3025,7 +3025,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.ControllerTypeLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.ControllerTypeLabel}" />
                                 <ComboBox HorizontalAlignment="Stretch" Width="200"
                                           SelectedItem="{Binding DeviceControllerType}"
                                           ItemTemplate="{StaticResource EnumToStringTemplate}"
@@ -3034,7 +3034,7 @@
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsKeyboard}">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.MouseMovementTypeLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.MouseMovementTypeLabel}" />
                                 <ComboBox HorizontalAlignment="Stretch" Width="200"
                                           SelectedItem="{Binding MouseMovementType}"
                                           ItemTemplate="{StaticResource EnumToStringTemplate}"
@@ -3049,7 +3049,7 @@
                                 </StackPanel.IsVisible>
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.RolloverModeLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.RolloverModeLabel}" />
                                 <ComboBox HorizontalAlignment="Stretch" Width="200"
                                           SelectedItem="{Binding RolloverMode}"
                                           ItemTemplate="{StaticResource EnumToStringTemplate}"
@@ -3060,7 +3060,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStandardController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SwapSwitchFaceButtonLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SwapSwitchFaceButtonLabel}" />
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding SwapSwitchFaceButtons}"
@@ -3071,7 +3071,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStandardController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.WindowsControllerModeLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.WindowsControllerModeLabel}" />
                             <ComboBox HorizontalAlignment="Stretch" Width="200"
                                       SelectedIndex="{Binding XInputOnWindows}">
                                 <ComboBoxItem Content="{x:Static netCore:Resources.HIDGameControllerLabel}" />
@@ -3084,7 +3084,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsTurntable}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.TurntableNavButtons}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.TurntableNavButtons}" />
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding DjNavButtons}"
@@ -3096,7 +3096,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsTurntable}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.TurntableRange}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.TurntableRange}" />
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding DjFullRange}"
@@ -3107,7 +3107,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsRpcs3CompatibleController}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.RPCS3CompatLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.RPCS3CompatLabel}" />
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding Ps3OnRpcs3}"
@@ -3118,7 +3118,7 @@
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsGuitar}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.SelectDpadLeftXb1}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.SelectDpadLeftXb1}" />
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding SelectDpadLeftXb1}"
@@ -3135,7 +3135,7 @@
                             </StackPanel.IsVisible>
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.MidiNoteOffFixLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.MidiNoteOffFixLabel}" />
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding MidiDrumAutoOff}"
@@ -3151,7 +3151,7 @@
                             </StackPanel.IsVisible>
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.AdafruitUsbHost}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.AdafruitUsbHost}" />
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding AdafruitHost}"
@@ -3163,7 +3163,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SleepLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SleepLabel}" />
                                 <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                               HorizontalContentAlignment="Center"
                                               IsChecked="{Binding SleepEnabled}"
@@ -3171,7 +3171,7 @@
                                               OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding SleepEnabled}">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.SleepWakeupLabel}" />
                                 <ComboBox Width="200"
                                           DropDownOpened="ReloadPinTemplates"
@@ -3183,7 +3183,7 @@
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding SleepEnabled}">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SleepTimeoutLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SleepTimeoutLabel}" />
                                 <NumericUpDown FormatString="{}{0:#,0}"
                                                Value="{Binding DeviceSleep}"
                                                Minimum="5"
@@ -3213,7 +3213,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{Binding PollRateLabel }" />
+                                   Width="350"  Content="{Binding PollRateLabel }" />
                             <NumericUpDown FormatString="{}{0:#,0}"
                                            Value="{Binding PollRate}"
                                            Width="200"
@@ -3224,7 +3224,7 @@
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding Deque}">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.DebounceLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.DebounceLabel}" />
                                 <NumericUpDown Value="{Binding DebounceDisplay}"
                                                Minimum="0.5"
                                                Increment="0.1"
@@ -3234,7 +3234,7 @@
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding !Deque}">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.DebounceExtraLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.DebounceExtraLabel}" />
                                 <NumericUpDown FormatString="{}{0:#,0}"
                                                Value="{Binding DebounceDisplay}"
                                                Minimum="0"
@@ -3246,7 +3246,7 @@
                         <StackPanel IsVisible="{Binding IsGuitar}" Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.StrumDebounceLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.StrumDebounceLabel}" />
                             <NumericUpDown Width="200" FormatString="{}{0:#,0}"
                                            Value="{Binding StrumDebounceDisplay}"
                                            Minimum="0"
@@ -3255,7 +3255,7 @@
                         <StackPanel IsVisible="{Binding IsGuitar}" Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300"
+                                   Width="350"  
                                    Content="{x:Static netCore:Resources.CombinedStrumDebounceLabel}" />
                             <ToggleSwitch HorizontalAlignment="Right"
                                           HorizontalContentAlignment="Right"
@@ -3266,7 +3266,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.DebouceModeLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.DebouceModeLabel}" />
                             <ComboBox HorizontalAlignment="Stretch" Width="200"
                                       SelectedIndex="{Binding LocalDebounceMode}">
                                 <ComboBoxItem Content="{x:Static netCore:Resources.DebouceModeGlobalLabel}" />
@@ -3277,7 +3277,7 @@
                             <StackPanel IsVisible="{Binding IsGuitar}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.QueueBasedInputsLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.QueueBasedInputsLabel}" />
                                 <ToggleSwitch HorizontalAlignment="Center"
                                               Width="200"
                                               HorizontalContentAlignment="Center" IsChecked="{Binding Deque}"
@@ -3305,32 +3305,32 @@
                     </Expander.HeaderTemplate>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.ImportConfigLabel}" />
                             <Button Command="{Binding LoadConfigCommand}"
-                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    HorizontalAlignment="Stretch" Width="350"  HorizontalContentAlignment="Center"
                                     Content="{x:Static netCore:Resources.ImportConfigLabel}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.ExportConfigLabel}" />
                             <Button Command="{Binding SaveConfigCommand}"
-                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    HorizontalAlignment="Stretch" Width="350"  HorizontalContentAlignment="Center"
                                     Content="{x:Static netCore:Resources.ExportConfigLabel}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.SavePresetLabel}" />
-                            <TextBox Width="300" Text="{Binding PresetName}"></TextBox>
+                            <TextBox Width="350"  Text="{Binding PresetName}"></TextBox>
                             <Button Command="{Binding SavePresetCommand}"
                                     IsEnabled="{Binding PresetName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    HorizontalAlignment="Stretch" Width="350"  HorizontalContentAlignment="Center"
                                     Content="{Binding SavePresetLabel}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.PresetLabel}" />
-                            <ComboBox Width="300"
+                            <ComboBox Width="350"  
                                       IsEnabled="{Binding Presets.Count}"
                                       SelectedItem="{Binding CurrentPreset}"
                                       ItemsSource="{Binding Presets}">
@@ -3342,19 +3342,19 @@
                             </ComboBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.LoadPresetSimple}" />
                             <Button Command="{Binding LoadPresetCommand}"
                                     IsEnabled="{Binding Presets.Count}"
-                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    HorizontalAlignment="Stretch" Width="350"  HorizontalContentAlignment="Center"
                                     Content="{Binding LoadPresetLabel}" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center" Width="300"
+                            <Label VerticalAlignment="Center" Width="350"  
                                    Content="{x:Static netCore:Resources.DeletePresetLabel}" />
                             <Button Command="{Binding DeletePresetCommand}"
                                     IsEnabled="{Binding Presets.Count}"
-                                    HorizontalAlignment="Stretch" Width="300" HorizontalContentAlignment="Center"
+                                    HorizontalAlignment="Stretch" Width="350"  HorizontalContentAlignment="Center"
                                     Content="{Binding DeletePresetLabel}" />
                         </StackPanel>
                     </StackPanel>
@@ -3394,7 +3394,7 @@
                     <StackPanel>
                         <StackPanel IsVisible="{Binding !Branded}">
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding !Branded}">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.LEDTypeLabel}" />
                                 <ComboBox Width="200"
                                           SelectedItem="{Binding LedType}"
@@ -3402,7 +3402,7 @@
                                           ItemsSource="{Binding LedTypes}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsIndexedLed}">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.LEDTypeCountLabel}" />
                                 <NumericUpDown Width="200" FormatString="{}{0:#,0}"
                                                Value="{Binding LedCount}"
@@ -3419,9 +3419,9 @@
                                         <Binding Path="!IsWs2812" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
-                                <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsApa102}"
+                                <Label VerticalAlignment="Center" Width="350"  IsVisible="{Binding IsApa102}"
                                        Content="{x:Static netCore:Resources.APA102SCKLabel}" />
-                                <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
+                                <Label VerticalAlignment="Center" Width="350"  IsVisible="{Binding IsStp16}"
                                        Content="{x:Static netCore:Resources.STP16CPC26SCKLabel}" />
                                 <ComboBox Width="200"
                                           SelectedItem="{Binding LedSck}"
@@ -3436,11 +3436,11 @@
                                         <Binding Path="IsIndexedLed" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
-                                <Label IsVisible="{Binding IsWs2812}" VerticalAlignment="Center" Width="300"
+                                <Label IsVisible="{Binding IsWs2812}" VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.WS2812MOSILabel}" />
-                                <Label IsVisible="{Binding IsApa102}" VerticalAlignment="Center" Width="300"
+                                <Label IsVisible="{Binding IsApa102}" VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.APA102MOSILabel}" />
-                                <Label VerticalAlignment="Center" Width="300" IsVisible="{Binding IsStp16}"
+                                <Label VerticalAlignment="Center" Width="350"  IsVisible="{Binding IsStp16}"
                                        Content="{x:Static netCore:Resources.STP16CPC26MOSILabel}" />
                                 <ComboBox Width="200"
                                           SelectedItem="{Binding LedMosi}"
@@ -3449,7 +3449,7 @@
                                           ItemTemplate="{StaticResource PinToStringTemplateSpi}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.STP16CPC26OELabel}" />
                                 <ComboBox Width="200"
                                           DropDownOpened="ReloadPinTemplates"
@@ -3458,7 +3458,7 @@
                                           ItemTemplate="{StaticResource PinToStringTemplate}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.STP16CPC26LELabel}" />
                                 <ComboBox Width="200"
                                           DropDownOpened="ReloadPinTemplates"
@@ -3467,7 +3467,7 @@
                                           ItemTemplate="{StaticResource PinToStringTemplate}" />
                             </StackPanel>
                             <StackPanel IsVisible="{Binding HasPeripheral}" Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.LEDTypePeripheralLabel}" />
 
                                 <ComboBox VerticalAlignment="Center" Width="200"
@@ -3476,7 +3476,7 @@
                                           ItemsSource="{Binding LedTypes}" />
                             </StackPanel>
                             <StackPanel IsVisible="{Binding IsIndexedLedPeripheral}" Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.LEDTypePeripheralCountLabel}" />
                                 <NumericUpDown VerticalAlignment="Center" Width="200" FormatString="{}{0:#,0}"
                                                Value="{Binding LedCountPeripheral}"
@@ -3491,9 +3491,9 @@
                                         <Binding Path="!IsWs2812Peripheral" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
-                                <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
+                                <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.APA102SCKPeripheralLabel}" />
-                                <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
+                                <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.STP16CPC26SCKPeripheralLabel}" />
                                 <ComboBox VerticalAlignment="Center" Width="200"
                                           SelectedItem="{Binding LedSckPeripheral}"
@@ -3508,11 +3508,11 @@
                                         <Binding Path="IsIndexedLedPeripheral" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
-                                <Label IsVisible="{Binding IsWs2812Peripheral}" VerticalAlignment="Center" Width="300"
+                                <Label IsVisible="{Binding IsWs2812Peripheral}" VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.WS2812MOSIPeripheralLabel}" />
-                                <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="300"
+                                <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.APA102MOSIPeripheralLabel}" />
-                                <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="300"
+                                <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.STP16CPC26MOSIPeripheralLabel}" />
                                 <ComboBox VerticalAlignment="Center" Width="200"
                                           SelectedItem="{Binding LedMosiPeripheral}"
@@ -3521,7 +3521,7 @@
                                           ItemTemplate="{StaticResource PinToStringTemplatePeripheralSpi}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.STP16CPC26OEPeripheralLabel}" />
                                 <ComboBox Width="200"
                                           DropDownOpened="ReloadPinTemplates"
@@ -3530,7 +3530,7 @@
                                           ItemTemplate="{StaticResource PinToStringTemplate}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.STP16CPC26LEPeripheralLabel}" />
                                 <ComboBox Width="200"
                                           SelectedItem="{Binding Stp16LePeripheral}"
@@ -3548,7 +3548,7 @@
                                 </MultiBinding>
                             </StackPanel.IsVisible>
                             <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.LedBrightnessOnLabel}" />
                                 <NumericUpDown Height="30" Width="200" FormatString="{}{0:#,0}"
                                                Value="{Binding LedBrightnessOn}"
@@ -3561,7 +3561,7 @@
                                         TickFrequency="1" Width="200" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.LedBrightnessOffLabel}" />
                                 <NumericUpDown Height="30" Width="200" FormatString="{}{0:#,0}"
                                                Value="{Binding LedBrightnessOff}"
@@ -3574,7 +3574,7 @@
                                         TickFrequency="1" Width="200" />
                             </StackPanel>
                             <StackPanel IsVisible="{Binding Builder}" Orientation="Horizontal">
-                                <Label VerticalAlignment="Center" Width="300"
+                                <Label VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.Apa1022020Label}" />
                                 <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                               HorizontalContentAlignment="Center"
@@ -3599,10 +3599,10 @@
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.LEDSleepLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.LEDSleepLabel}" />
                             <NumericUpDown FormatString="{}{0:#,0}"
                                            Value="{Binding LedSleep}"
-                                           Minimum="5"
+                                           Minimum="0"
                                            Increment="1"
                                            Width="200"
                                            Maximum="65535" HorizontalAlignment="Stretch" />
@@ -3639,7 +3639,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.LocalAddressLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.LocalAddressLabel}" />
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    Width="200" Content="{Binding LocalAddress}" />
@@ -3693,7 +3693,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding PeripheralScl}"
                                           ItemsSource="{Binding AvailableSclPinsInput}"
@@ -3704,7 +3704,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding PeripheralSda}"
                                           ItemsSource="{Binding AvailableSdaPinsInput}"
@@ -3755,7 +3755,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding WiiOutputScl}"
                                           ItemsSource="{Binding AvailableSclPinsOutput}"
@@ -3766,7 +3766,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding WiiOutputSda}"
                                           ItemsSource="{Binding AvailableSdaPinsOutput}"
@@ -3817,7 +3817,7 @@
                             <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.MosiLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.MosiLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Ps2OutputMosi}"
                                           ItemsSource="{Binding AvailableMosiPinsOutput}"
@@ -3829,7 +3829,7 @@
                             <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.MisoLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.MisoLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Ps2OutputMiso}"
                                           ItemsSource="{Binding AvailableMisoPinsOutput}"
@@ -3841,7 +3841,7 @@
                             <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SckLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SckLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Ps2OutputSck}"
                                           ItemsSource="{Binding AvailableSckPins}"
@@ -3853,7 +3853,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.AckLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.AckLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Ps2OutputAck}"
                                           ItemsSource="{Binding AvailablePinsDigital}"
@@ -3865,7 +3865,7 @@
                             <StackPanel IsVisible="{Binding BindableAtt}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.AttentionLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.AttentionLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Ps2OutputAtt}"
                                           ItemsSource="{Binding AvailablePinsInterrupt}"
@@ -3923,7 +3923,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Mpr121Scl}"
                                           ItemsSource="{Binding AvailableSclPinsInput}"
@@ -3934,7 +3934,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Mpr121Sda}"
                                           ItemsSource="{Binding AvailableSdaPinsInput}"
@@ -3945,7 +3945,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.Mpr121CapacativeCountLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.Mpr121CapacativeCountLabel}" />
 
                                 <NumericUpDown VerticalAlignment="Center" Width="200" FormatString="{}{0:#,0}"
                                                Value="{Binding Mpr121CapacitiveCount}"
@@ -4008,7 +4008,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Max1704XScl}"
                                           ItemsSource="{Binding AvailableSclPinsInput}"
@@ -4019,7 +4019,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Max1704XSda}"
                                           ItemsSource="{Binding AvailableSdaPinsInput}"
@@ -4070,7 +4070,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SclLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SclLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding AccelScl}"
                                           ItemsSource="{Binding AvailableSclPinsInput}"
@@ -4081,7 +4081,7 @@
                             <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.SdaLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding AccelSda}"
                                           ItemsSource="{Binding AvailableSdaPinsInput}"
@@ -4093,7 +4093,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center"
                                        VerticalContentAlignment="Center"
-                                       Width="300" Content="{x:Static netCore:Resources.AccelerometerType}" />
+                                       Width="350"  Content="{x:Static netCore:Resources.AccelerometerType}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding AccelSensorType}"
                                           ItemsSource="{Binding AccelSensorTypes}"
@@ -4105,7 +4105,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="300" Content="{x:Static netCore:Resources.LowPassFilterLabel}" />
+                                   Width="350"  Content="{x:Static netCore:Resources.LowPassFilterLabel}" />
                             <NumericUpDown Value="{Binding AccelFilter}" Minimum="0"
                                            Maximum="1" Width="200" Height="30" ShowButtonSpinner="False"
                                            AllowSpin="False" />
@@ -4187,7 +4187,7 @@
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsKeyboard}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300" Content="{x:Static netCore:Resources.OutputTypeLabel}" />
+                                                   Width="350"  Content="{x:Static netCore:Resources.OutputTypeLabel}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       SelectedItem="{Binding KeyOrMouse}"
                                                       ItemsSource="{Binding KeyOrMouseInputs}"
@@ -4210,7 +4210,7 @@
                                             </StackPanel.IsVisible>
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300" Content="{x:Static netCore:Resources.InputTypeLabel}" />
+                                                   Width="350"  Content="{x:Static netCore:Resources.InputTypeLabel}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       SelectedItem="{Binding SelectedInputType}"
                                                       ItemsSource="{Binding InputTypes}"
@@ -4237,7 +4237,7 @@
                                             </StackPanel.IsVisible>
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300" Content="{x:Static netCore:Resources.InputLabel}" />
+                                                   Width="350"  Content="{x:Static netCore:Resources.InputLabel}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       IsVisible="{Binding IsWii}"
                                                       SelectedItem="{Binding WiiInputType}"
@@ -4283,7 +4283,7 @@
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsMidiNote}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300" Content="{x:Static netCore:Resources.MidiNote}" />
+                                                   Width="350"  Content="{x:Static netCore:Resources.MidiNote}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       SelectedItem="{Binding MidiNote}"
                                                       ItemsSource="{Binding MidiNotes}"
@@ -4295,7 +4295,7 @@
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostKeyboard}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300" Content="{x:Static netCore:Resources.KeyTypeLabel}" />
+                                                   Width="350"  Content="{x:Static netCore:Resources.KeyTypeLabel}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       SelectedItem="{Binding UsbHostKey}"
                                                       ItemsSource="{Binding KeyboardButtons}"
@@ -4309,7 +4309,7 @@
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostMouseAxis}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300"
+                                                   Width="350"  
                                                    Content="{x:Static netCore:Resources.MouseAxisTypeLabel}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       SelectedItem="{Binding UsbHostKeyMouseAxisType}"
@@ -4323,7 +4323,7 @@
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostMouseButton}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300"
+                                                   Width="350"  
                                                    Content="{x:Static netCore:Resources.MouseButtonTypeLabel}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       SelectedItem="{Binding UsbHostKeyMouseButtonType}"
@@ -4336,7 +4336,7 @@
                                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostProKey}">
                                             <Label VerticalAlignment="Center"
                                                    VerticalContentAlignment="Center"
-                                                   Width="300"
+                                                   Width="350"  
                                                    Content="{x:Static netCore:Resources.InputLabel}" />
                                             <ComboBox VerticalAlignment="Center"
                                                       SelectedItem="{Binding UsbHostKeyProKeyType}"

@@ -175,7 +175,7 @@ public class SerializedConfiguration
     [ProtoMember(87)] public bool SleepEnabled { get; private set; } = false;
     [ProtoMember(88)] public int SleepPin { get; private set; } = -1;
     [ProtoMember(89)] public int SleepTimer { get; private set; } = 5;
-    [ProtoMember(90)] public int LedTimer { get; private set; } = 5;
+    [ProtoMember(90)] public int LedTimer { get; private set; } = 0;
 
     public void LoadConfiguration(ConfigViewModel model)
     {
