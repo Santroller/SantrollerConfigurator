@@ -798,6 +798,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="DeviceControllerTypeProKeys" xml:space="preserve">
         <value>Pro Keys</value>
     </data>
+    <data name="DeviceControllerTypeTaiko" xml:space="preserve">
+        <value>Taiko no Tatsujin Drum</value>
+    </data>
     <data name="TwiPinTypeSda" xml:space="preserve">
         <value>SDA</value>
     </data>
@@ -3004,6 +3007,18 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="ButtonLabelEuphoria" xml:space="preserve">
         <value>/ Euphoria Button</value>
+    </data>
+    <data name="ButtonLabelTaikoRimLeft" xml:space="preserve">
+        <value>Taiko Left Rim Hit</value>
+    </data>
+    <data name="ButtonLabelTaikoRimRight" xml:space="preserve">
+        <value>Taiko Right Rim Hit</value>
+    </data>
+    <data name="ButtonLabelTaikoCenterLeft" xml:space="preserve">
+        <value>Taiko Left Center Hit</value>
+    </data>
+    <data name="ButtonLabelTaikoCenterRight" xml:space="preserve">
+        <value>Taiko Right Center Hit</value>
     </data>
     <data name="RawValueLabel" xml:space="preserve">
         <value>Raw Value</value>

@@ -2891,6 +2891,18 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="ButtonLabelEuphoria" xml:space="preserve">
         <value>/ Botón Euphoria</value>
     </data>
+    <data name="ButtonLabelTaikoRimLeft" xml:space="preserve">
+        <value>Golpe de Borde Izquierdo</value>
+    </data>
+    <data name="ButtonLabelTaikoRimRight" xml:space="preserve">
+        <value>Golpe de Borde Derecho</value>
+    </data>
+    <data name="ButtonLabelTaikoCenterLeft" xml:space="preserve">
+        <value>Golpe Central Izquierdo</value>
+    </data>
+    <data name="ButtonLabelTaikoCenterRight" xml:space="preserve">
+        <value>Golpe Central Derecho</value>
+    </data>
     <data name="RawValueLabel" xml:space="preserve">
         <value>Valor Puro</value>
     </data>
@@ -3780,6 +3792,9 @@ Si te gustaría vender dispositivos usando la plataforma Santroller, haz click e
     </data>
     <data name="DeviceControllerTypeProKeys" xml:space="preserve">
         <value>Teclado Pro</value>
+    </data>
+    <data name="DeviceControllerTypeTaiko" xml:space="preserve">
+        <value>Tambor de Taiko no Tatsujin</value>
     </data>
     <data name="UsbHostInputTypeProKey" xml:space="preserve">
         <value>Teclado Pro</value>

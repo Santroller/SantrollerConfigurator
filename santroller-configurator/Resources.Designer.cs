@@ -1575,6 +1575,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string DeviceControllerTypeTaiko {
+            get {
+                return ResourceManager.GetString("DeviceControllerTypeTaiko", resourceCulture);
+            }
+        }
+        
         public static string TwiPinTypeSda {
             get {
                 return ResourceManager.GetString("TwiPinTypeSda", resourceCulture);
@@ -5730,6 +5736,30 @@ namespace GuitarConfigurator.NetCore {
         public static string ButtonLabelEuphoria {
             get {
                 return ResourceManager.GetString("ButtonLabelEuphoria", resourceCulture);
+            }
+        }
+        
+        public static string ButtonLabelTaikoRimLeft {
+            get {
+                return ResourceManager.GetString("ButtonLabelTaikoRimLeft", resourceCulture);
+            }
+        }
+        
+        public static string ButtonLabelTaikoRimRight {
+            get {
+                return ResourceManager.GetString("ButtonLabelTaikoRimRight", resourceCulture);
+            }
+        }
+        
+        public static string ButtonLabelTaikoCenterLeft {
+            get {
+                return ResourceManager.GetString("ButtonLabelTaikoCenterLeft", resourceCulture);
+            }
+        }
+        
+        public static string ButtonLabelTaikoCenterRight {
+            get {
+                return ResourceManager.GetString("ButtonLabelTaikoCenterRight", resourceCulture);
             }
         }
         

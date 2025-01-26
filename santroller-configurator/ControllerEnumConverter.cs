@@ -35,6 +35,24 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.Back,
         StandardButtonType.Guide
     ];
+    private static readonly List<StandardButtonType> SupportedButtonsTaiko =
+    [
+        StandardButtonType.A,
+        StandardButtonType.B,
+        StandardButtonType.X,
+        StandardButtonType.Y,
+        StandardButtonType.DpadUp,
+        StandardButtonType.DpadDown,
+        StandardButtonType.DpadLeft,
+        StandardButtonType.DpadRight,
+        StandardButtonType.LeftShoulder,
+        StandardButtonType.RightShoulder,
+        StandardButtonType.LeftThumbClick,
+        StandardButtonType.RightThumbClick,
+        StandardButtonType.Start,
+        StandardButtonType.Back,
+        StandardButtonType.Guide
+    ];
 
     private static readonly Dictionary<StandardButtonType, string> PlaystationLabels = new()
     {
@@ -70,6 +88,22 @@ public class ControllerEnumConverter : IMultiValueConverter
                 {
                     (DeviceControllerType.Turntable, StandardButtonType.Y),
                     Resources.ButtonLabelEuphoria
+                },
+                {
+                    (DeviceControllerType.Taiko, StandardButtonType.LeftShoulder),
+                    Resources.ButtonLabelTaikoRimLeft
+                },
+                {
+                    (DeviceControllerType.Taiko, StandardButtonType.RightShoulder),
+                    Resources.ButtonLabelTaikoRimRight
+                },
+                {
+                    (DeviceControllerType.Taiko, StandardButtonType.LeftThumbClick),
+                    Resources.ButtonLabelTaikoCenterLeft
+                },
+                {
+                    (DeviceControllerType.Taiko, StandardButtonType.RightThumbClick),
+                    Resources.ButtonLabelTaikoCenterRight
                 },
             };
 
@@ -189,6 +223,8 @@ public class ControllerEnumConverter : IMultiValueConverter
             case DeviceControllerType.ProGuitarMustang:
             case DeviceControllerType.ProGuitarSquire:
                 return SupportedButtonsNonGamepad.Contains(button);
+            case DeviceControllerType.Taiko:
+                return SupportedButtonsTaiko.Contains(button);
             case DeviceControllerType.LiveGuitar:
             case DeviceControllerType.GuitarHeroGuitar:
             case DeviceControllerType.RockBandGuitar:
@@ -220,6 +256,7 @@ public class ControllerEnumConverter : IMultiValueConverter
             DeviceControllerType.DancePad => Array.Empty<object>(),
             DeviceControllerType.ProKeys => Enum.GetValues<ProKeyType>().Cast<object>(),
             DeviceControllerType.KeyboardMouse => Array.Empty<object>(),
+            DeviceControllerType.Taiko => [StandardAxisType.LeftTrigger, StandardAxisType.RightTrigger],
             _ => Enum.GetValues<StandardAxisType>().Cast<object>()
         };
         return Enum.GetValues<SimpleType>().Cast<object>()
