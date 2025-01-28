@@ -1931,7 +1931,7 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="EmulationModeTypePs4Or5" xml:space="preserve">
         <value>PS4 / PS5</value>
     </data>
-    <data name="EmulationTypePs2OnPs3" xml:space="preserve">
+    <data name="EmulationModeTypePs2OnPs3" xml:space="preserve">
         <value>Guitar Hero via PS2 emulator on PS3</value>
     </data>
     <data name="EmulationModeTypeSwitch" xml:space="preserve">

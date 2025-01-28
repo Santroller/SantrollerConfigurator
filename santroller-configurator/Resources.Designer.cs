@@ -3663,9 +3663,9 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string EmulationTypePs2OnPs3 {
+        public static string EmulationModeTypePs2OnPs3 {
             get {
-                return ResourceManager.GetString("EmulationTypePs2OnPs3", resourceCulture);
+                return ResourceManager.GetString("EmulationModeTypePs2OnPs3", resourceCulture);
             }
         }
         
