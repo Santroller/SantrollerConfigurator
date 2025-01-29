@@ -577,7 +577,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
         }
     }
-    
+
     private bool _sleepEnabled = false;
 
     public bool SleepEnabled
@@ -1484,8 +1484,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public bool BindableAtt => Microcontroller is not (Uno or Mega);
     public List<int> AvailableMosiPinsInput => GetMosiPins(false);
     public List<int> AvailableMisoPinsInput => GetMisoPins(false);
-    public List<int> AvailableMosiPinsOutput => GetMosiPins(true);
-    public List<int> AvailableMisoPinsOutput => GetMisoPins(true);
+    public List<int> AvailableMosiPinsPs2Output => Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetMosiPins(true);
+    public List<int> AvailableMisoPinsPs2Output => Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetMisoPins(true);
+    public List<int> AvailableSckPinsPs2Output => Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetSckPins();
     public List<int> AvailableSckPins => GetSckPins();
 
     private List<int> GetMosiPins(bool output)
@@ -2090,7 +2091,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     config += $"""
 
                                #define BT_ADDR "{BtRxAddr.Substring(BtRxAddr.Length - Santroller.BtAddressLength,
-                               Santroller.BtAddressLength - 1)}"
+                                   Santroller.BtAddressLength - 1)}"
                                """;
                 }
                 else if (BtRxAddr.Contains(':'))
