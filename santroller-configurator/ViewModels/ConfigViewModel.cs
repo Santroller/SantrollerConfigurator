@@ -82,6 +82,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private TwiConfig? _max170XTwiConfig;
     private TwiConfig? _accelTwiConfig;
     private TwiConfig? _wiiOutputTwiConfig;
+    private DirectPinConfig? _ws2812Config;
+    private DirectPinConfig? _ws2812ConfigPeripheral;
     private DirectPinConfig? _ps2OutputAtt;
     private DirectPinConfig? _ps2OutputAck;
     private DirectPinConfig? _stp16Oe;
@@ -526,7 +528,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public string LocalAddress { get; set; } = "Write config to retrieve address";
 
-    public IEnumerable<LedType> LedTypes => Enum.GetValues<LedType>();
+    public IEnumerable<LedType> LedTypes => Enum.GetValues<LedType>().Where(s => Microcontroller is Pico || s is not (LedType.Ws2812 or LedType.Ws2812W));
 
     public bool BindableTwi { get; }
     [Reactive] private bool _pollExpanded;
@@ -623,7 +625,27 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] private string _btRxAddr;
 
     [Reactive] private bool _classic;
-
+    public int Ws2812Data
+    {
+        get => _ws2812Config?.Pin ?? 0;
+        set
+        {
+            if (_ws2812Config == null) return;
+            _ws2812Config.Pin = value;
+            this.RaisePropertyChanged();
+        }
+    }
+    
+    public int Ws2812DataPeripheral
+    {
+        get => _ws2812ConfigPeripheral?.Pin ?? 0;
+        set
+        {
+            if (_ws2812ConfigPeripheral == null) return;
+            _ws2812ConfigPeripheral.Pin = value;
+            this.RaisePropertyChanged();
+        }
+    }
     public int LedMosi
     {
         get => _ledSpiConfig?.Mosi ?? 0;
@@ -1017,12 +1039,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 switch (value)
                 {
                     case LedType.None:
+                        _ws2812Config = null;
                         _ledSpiConfig = null;
                         _stp16Le = null;
                         _stp16Oe = null;
                         UpdateErrors();
                         break;
                     case LedType.Stp16Cpc26:
+                        _ws2812Config = null;
                         _ledSpiConfig = Microcontroller.AssignSpiPins(this, Stp16SpiType, false, true, false,
                             _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, false,
                             false,
@@ -1038,11 +1062,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         break;
                     case LedType.Ws2812:
                     case LedType.Ws2812W:
-                        _ledSpiConfig = Microcontroller.AssignSpiPins(this, WS2812SpiType, false, false, false,
-                            _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, true,
-                            true,
-                            true,
-                            3200000, false);
+                        _ledSpiConfig = null;
+                        _ws2812Config = new DirectPinConfig(this, WS2812SpiType, -1, false, DevicePinMode.Skip);
                         this.RaisePropertyChanged(nameof(LedMosi));
                         this.RaisePropertyChanged(nameof(LedSck));
 
@@ -1052,6 +1073,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         break;
                     default:
                     {
+                        _ws2812Config = null;
                         _ledSpiConfig = Microcontroller.AssignSpiPins(this, Apa102SpiType, false, true, false,
                             _ledSpiConfig != null ? LedMosi : -1, -1, _ledSpiConfig != null ? LedSck : -1, true,
                             true,
@@ -1084,11 +1106,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     case LedType.None:
                         _ledSpiConfigPeripheral = null;
+                        _ws2812ConfigPeripheral = null;
                         _stp16LePeripheral = null;
                         _stp16OePeripheral = null;
                         UpdateErrors();
                         break;
                     case LedType.Stp16Cpc26:
+                        _ws2812ConfigPeripheral = null;
                         _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Stp16PeripheralSpiType, true,
                             true, false,
                             _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
@@ -1108,13 +1132,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         break;
                     case LedType.Ws2812:
                     case LedType.Ws2812W:
-                        _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, WS2812PeripheralSpiType, true,
-                            false, false,
-                            _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
-                            _ledSpiConfigPeripheral != null ? LedSckPeripheral : -1, true,
-                            true,
-                            true,
-                            3200000, false);
+                        _ledSpiConfigPeripheral = null;
+                        _stp16OePeripheral =
+                            new DirectPinConfig(this, WS2812PeripheralSpiType, -1, true, DevicePinMode.Skip);
                         this.RaisePropertyChanged(nameof(LedMosiPeripheral));
                         this.RaisePropertyChanged(nameof(LedSckPeripheral));
 
@@ -1124,6 +1144,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         break;
                     default:
                     {
+                        _ws2812ConfigPeripheral = null;
                         _ledSpiConfigPeripheral = Microcontroller.AssignSpiPins(this, Apa102PeripheralSpiType, true,
                             true, false,
                             _ledSpiConfigPeripheral != null ? LedMosiPeripheral : -1, -1,
@@ -1513,7 +1534,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public IEnumerable<PinConfig> PinConfigs =>
         new PinConfig?[]
             {
-                _ledSpiConfig, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
+                _ledSpiConfig, _ws2812Config, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
                 _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
                 _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt,
                 _adaFruitHostPin, _accelTwiConfig
@@ -2499,6 +2520,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 config += $"\n#define APA102_SPI_PORT {_ledSpiConfig.Definition}";
             }
+            
+            if (_ws2812Config != null)
+            {
+                config += $"\n#define WS2812_PIN {_ws2812Config.Pin}";
+            }
 
             if (Outputs.Any(output => output.Input.InnermostInputs().Any(input => input is MultiplexerInput
                 {
@@ -2836,33 +2862,22 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         var ledMax = LedCount;
         for (var i = 0; i < ledMax; i++)
         {
-            ret +=
-                $"""
-
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g[0]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g[1]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g[2]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].g[3]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[0]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[1]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[2]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].r[3]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b[0]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b[1]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b[2]);
-                 spi_transfer(APA102_SPI_PORT, ledState[{i}].b[3]);
-                 """;
-            // Ignore w channel for now
             if (LedType is LedType.Ws2812W)
             {
                 ret +=
-                    """
+                    $"""
+                    
+                     putWs2812(ledState[{i}].r, ledState[{i}].g, ledState[{i}].b, ledState[{i}].w);
+                     """;
+            }
+            else
+            {
+                
+                ret +=
+                    $"""
 
-                    spi_transfer(APA102_SPI_PORT, 0x88);
-                    spi_transfer(APA102_SPI_PORT, 0x88);
-                    spi_transfer(APA102_SPI_PORT, 0x88);
-                    spi_transfer(APA102_SPI_PORT, 0x88);
-                    """;
+                     putWs2812(ledState[{i}].r, ledState[{i}].g, ledState[{i}].b);
+                     """;
             }
         }
 
@@ -2880,32 +2895,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             ret +=
                 $"""
-
-                 slaveWriteLED(ledState[{i}].g[0]);
-                 slaveWriteLED(ledState[{i}].g[1]);
-                 slaveWriteLED(ledState[{i}].g[2]);
-                 slaveWriteLED(ledState[{i}].g[3]);
-                 slaveWriteLED(ledState[{i}].r[0]);
-                 slaveWriteLED(ledState[{i}].r[1]);
-                 slaveWriteLED(ledState[{i}].r[2]);
-                 slaveWriteLED(ledState[{i}].r[3]);
-                 slaveWriteLED(ledState[{i}].b[0]);
-                 slaveWriteLED(ledState[{i}].b[1]);
-                 slaveWriteLED(ledState[{i}].b[2]);
-                 slaveWriteLED(ledState[{i}].b[3]);
+                 
+                 slaveWriteLED(ledState[{i}].r);
+                 slaveWriteLED(ledState[{i}].g);
+                 slaveWriteLED(ledState[{i}].b);
                  """;
-            // Ignore w channel for now
             if (LedTypePeripheral is LedType.Ws2812W)
             {
                 ret +=
                     $"""
 
-                     slaveWriteLED(0);
-                     slaveWriteLED(0);
-                     slaveWriteLED(0);
-                     slaveWriteLED(0);
-                     slaveWriteLED(0);
-                     slaveWriteLED(0);
+                     slaveWriteLED(ledState[{i}].w);
                      """;
             }
         }
@@ -4045,6 +4045,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (IsIndexedLedPeripheral && _ledSpiConfigPeripheral != null && type != LedSpiType(true) && peripheral)
         {
             pins[LedSpiType(true)] = _ledSpiConfigPeripheral.Pins.ToList();
+        }
+        
+        if (IsIndexedLed && _ws2812Config != null && type != LedSpiType(false) && !peripheral)
+            pins[LedSpiType(false)] = _ws2812Config.Pins.ToList();
+
+        if (IsIndexedLedPeripheral && _ws2812ConfigPeripheral != null && type != LedSpiType(true) && peripheral)
+        {
+            pins[LedSpiType(true)] = _ws2812ConfigPeripheral.Pins.ToList();
         }
 
         if (IsStp16 && _stp16Le != null && type != Stp16LeType && !peripheral)

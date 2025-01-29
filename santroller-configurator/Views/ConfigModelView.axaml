@@ -3434,10 +3434,9 @@
                                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                                         <Binding Path="BindableSpi" />
                                         <Binding Path="IsIndexedLed" />
+                                        <Binding Path="!IsWs2812" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
-                                <Label IsVisible="{Binding IsWs2812}" VerticalAlignment="Center" Width="350"  
-                                       Content="{x:Static netCore:Resources.WS2812MOSILabel}" />
                                 <Label IsVisible="{Binding IsApa102}" VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.APA102MOSILabel}" />
                                 <Label VerticalAlignment="Center" Width="350"  IsVisible="{Binding IsStp16}"
@@ -3447,6 +3446,22 @@
                                           ItemsSource="{Binding AvailableMosiPinsInput}"
                                           DropDownOpened="ReloadPinTemplates"
                                           ItemTemplate="{StaticResource PinToStringTemplateSpi}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding Path="BindableSpi" />
+                                        <Binding Path="IsIndexedLed" />
+                                        <Binding Path="IsWs2812" />
+                                    </MultiBinding>
+                                </StackPanel.IsVisible>
+                                <Label IsVisible="{Binding IsWs2812}" VerticalAlignment="Center" Width="350"  
+                                       Content="{x:Static netCore:Resources.WS2812MOSILabel}" />
+                                <ComboBox Width="200"
+                                          SelectedItem="{Binding Ws2812Data}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16}">
                                 <Label VerticalAlignment="Center" Width="350"  
@@ -3506,10 +3521,9 @@
                                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                                         <Binding Path="BindableSpi" />
                                         <Binding Path="IsIndexedLedPeripheral" />
+                                        <Binding Path="!IsWs2812Peripheral" />
                                     </MultiBinding>
                                 </StackPanel.IsVisible>
-                                <Label IsVisible="{Binding IsWs2812Peripheral}" VerticalAlignment="Center" Width="350"  
-                                       Content="{x:Static netCore:Resources.WS2812MOSIPeripheralLabel}" />
                                 <Label IsVisible="{Binding IsApa102Peripheral}" VerticalAlignment="Center" Width="350"  
                                        Content="{x:Static netCore:Resources.APA102MOSIPeripheralLabel}" />
                                 <Label IsVisible="{Binding IsStp16Peripheral}" VerticalAlignment="Center" Width="350"  
@@ -3519,6 +3533,22 @@
                                           ItemsSource="{Binding AvailableMosiPinsInput}"
                                           DropDownOpened="ReloadPinTemplates"
                                           ItemTemplate="{StaticResource PinToStringTemplatePeripheralSpi}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding Path="BindableSpi" />
+                                        <Binding Path="IsIndexedLedPeripheral" />
+                                        <Binding Path="IsWs2812Peripheral" />
+                                    </MultiBinding>
+                                </StackPanel.IsVisible>
+                                <Label IsVisible="{Binding IsWs2812Peripheral}" VerticalAlignment="Center" Width="350"  
+                                       Content="{x:Static netCore:Resources.WS2812MOSIPeripheralLabel}" />
+                                <ComboBox VerticalAlignment="Center" Width="200"
+                                          SelectedItem="{Binding Ws2812DataPeripheral}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStp16Peripheral}">
                                 <Label VerticalAlignment="Center" Width="350"  
@@ -3844,7 +3874,7 @@
                                        Width="350"  Content="{x:Static netCore:Resources.SckLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Ps2OutputSck}"
-                                          ItemsSource="{Binding AvailableSckPinsPs2Output}"
+                                          ItemsSource="{Binding AvailableSckPins}"
                                           DropDownOpened="ReloadPinTemplates"
                                           ItemTemplate="{StaticResource PinToStringTemplateSpi}"
                                           Width="200" />

@@ -41,10 +41,7 @@ public static class LedTypeMethods
                 [brightness, color.R, color.G, color.B],
             LedType.Ws2812 or LedType.Ws2812W =>
             [
-                Ws2812Bits[(color.R >> 6) & 0x3], Ws2812Bits[(color.R >> 4) & 0x3], Ws2812Bits[(color.R >> 2) & 0x3],
-                Ws2812Bits[color.R & 0x3], Ws2812Bits[(color.G >> 6) & 0x3], Ws2812Bits[(color.G >> 4) & 0x3],
-                Ws2812Bits[(color.G >> 2) & 0x3], Ws2812Bits[color.G & 0x3], Ws2812Bits[(color.B >> 6) & 0x3],
-                Ws2812Bits[(color.B >> 4) & 0x3], Ws2812Bits[(color.B >> 2) & 0x3], Ws2812Bits[color.B & 0x3]
+                color.R, color.G, color.B
             ],
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
@@ -91,37 +88,15 @@ public static class LedTypeMethods
         var variable = peripheral ? "ledStatePeripheral" : "ledState";
         if (type is LedType.Ws2812 or LedType.Ws2812W)
         {
-            return writer == null
-                ? $"""
-                        {variable}[{index - 1}].r[0] = {Ws2812Bits[(color.R >> 6) & 0x3]};
-                        {variable}[{index - 1}].r[1] = {Ws2812Bits[(color.R >> 4) & 0x3]};
-                        {variable}[{index - 1}].r[2] = {Ws2812Bits[(color.R >> 2) & 0x3]};
-                        {variable}[{index - 1}].r[3] = {Ws2812Bits[color.R & 0x3]};
-                        {variable}[{index - 1}].g[0] = {Ws2812Bits[(color.G >> 6) & 0x3]};
-                        {variable}[{index - 1}].g[1] = {Ws2812Bits[(color.G >> 4) & 0x3]};
-                        {variable}[{index - 1}].g[2] = {Ws2812Bits[(color.G >> 2) & 0x3]};
-                        {variable}[{index - 1}].g[3] = {Ws2812Bits[color.G & 0x3]};
-                        {variable}[{index - 1}].b[0] = {Ws2812Bits[(color.B >> 6) & 0x3]};
-                        {variable}[{index - 1}].b[1] = {Ws2812Bits[(color.B >> 4) & 0x3]};
-                        {variable}[{index - 1}].b[2] = {Ws2812Bits[(color.B >> 2) & 0x3]};
-                        {variable}[{index - 1}].b[3] = {Ws2812Bits[color.B & 0x3]};
-
-                   """
-                : $"""
-                        {variable}[{index - 1}].r[0] = {WriteBlob(writer, Ws2812Bits[(color.R >> 6) & 0x3])};
-                        {variable}[{index - 1}].r[1] = {WriteBlob(writer, Ws2812Bits[(color.R >> 4) & 0x3])};
-                        {variable}[{index - 1}].r[2] = {WriteBlob(writer, Ws2812Bits[(color.R >> 2) & 0x3])};
-                        {variable}[{index - 1}].r[3] = {WriteBlob(writer, Ws2812Bits[color.R & 0x3])};
-                        {variable}[{index - 1}].g[0] = {WriteBlob(writer, Ws2812Bits[(color.G >> 6) & 0x3])};
-                        {variable}[{index - 1}].g[1] = {WriteBlob(writer, Ws2812Bits[(color.G >> 4) & 0x3])};
-                        {variable}[{index - 1}].g[2] = {WriteBlob(writer, Ws2812Bits[(color.G >> 2) & 0x3])};
-                        {variable}[{index - 1}].g[3] = {WriteBlob(writer, Ws2812Bits[color.G & 0x3])};
-                        {variable}[{index - 1}].b[0] = {WriteBlob(writer, Ws2812Bits[(color.B >> 6) & 0x3])};
-                        {variable}[{index - 1}].b[1] = {WriteBlob(writer, Ws2812Bits[(color.B >> 4) & 0x3])};
-                        {variable}[{index - 1}].b[2] = {WriteBlob(writer, Ws2812Bits[(color.B >> 2) & 0x3])};
-                        {variable}[{index - 1}].b[3] = {WriteBlob(writer, Ws2812Bits[color.B & 0x3])};
-
-                   """;
+            return writer != null ? $"""
+                                          {variable}[{index - 1}].r = {WriteBlob(writer, color.R)};
+                                          {variable}[{index - 1}].g = {WriteBlob(writer, color.G)};
+                                          {variable}[{index - 1}].b = {WriteBlob(writer, color.B)};
+                                     """ : $"""
+                                                 {variable}[{index - 1}].r = {color.R};
+                                                 {variable}[{index - 1}].g = {color.G};
+                                                 {variable}[{index - 1}].b = {color.B};
+                                            """;
         }
 
         return writer != null ? $"""
@@ -144,18 +119,9 @@ public static class LedTypeMethods
         if (type is LedType.Ws2812 or LedType.Ws2812W)
         {
             return $"""
-                         {variable}[{index - 1}].r[0] = ws2812_bits[({r} >> 6) & 0x3];
-                         {variable}[{index - 1}].r[1] = ws2812_bits[({r} >> 4) & 0x3];
-                         {variable}[{index - 1}].r[2] = ws2812_bits[({r} >> 2) & 0x3];
-                         {variable}[{index - 1}].r[3] = ws2812_bits[{r} & 0x3];
-                         {variable}[{index - 1}].g[0] = ws2812_bits[({g} >> 6) & 0x3];
-                         {variable}[{index - 1}].g[1] = ws2812_bits[({g} >> 4) & 0x3];
-                         {variable}[{index - 1}].g[2] = ws2812_bits[({g} >> 2) & 0x3];
-                         {variable}[{index - 1}].g[3] = ws2812_bits[{g} & 0x3];
-                         {variable}[{index - 1}].b[0] = ws2812_bits[({b} >> 6) & 0x3];
-                         {variable}[{index - 1}].b[1] = ws2812_bits[({b} >> 4) & 0x3];
-                         {variable}[{index - 1}].b[2] = ws2812_bits[({b} >> 2) & 0x3];
-                         {variable}[{index - 1}].b[3] = ws2812_bits[({b} & 0x3];
+                         {variable}[{index - 1}].r = {r};
+                         {variable}[{index - 1}].g = {g};
+                         {variable}[{index - 1}].b = {b};
 
                     """;
         }
@@ -212,18 +178,9 @@ public static class LedTypeMethods
         if (type is LedType.Ws2812 or LedType.Ws2812W)
         {
             return $"""
-                         {variable}[{index - 1}].r[0] = ws2812_bits[(({r}) >> 6) & 0x3];
-                         {variable}[{index - 1}].r[1] = ws2812_bits[(({r}) >> 4) & 0x3];
-                         {variable}[{index - 1}].r[2] = ws2812_bits[(({r}) >> 2) & 0x3];
-                         {variable}[{index - 1}].r[3] = ws2812_bits[({r}) & 0x3];
-                         {variable}[{index - 1}].g[0] = ws2812_bits[(({g}) >> 6) & 0x3];
-                         {variable}[{index - 1}].g[1] = ws2812_bits[(({g}) >> 4) & 0x3];
-                         {variable}[{index - 1}].g[2] = ws2812_bits[(({g}) >> 2) & 0x3];
-                         {variable}[{index - 1}].g[3] = ws2812_bits[({g}) & 0x3];
-                         {variable}[{index - 1}].b[0] = ws2812_bits[(({b}) >> 6) & 0x3];
-                         {variable}[{index - 1}].b[1] = ws2812_bits[(({b}) >> 4) & 0x3];
-                         {variable}[{index - 1}].b[2] = ws2812_bits[(({b}) >> 2) & 0x3];
-                         {variable}[{index - 1}].b[3] = ws2812_bits[({b}) & 0x3];
+                         {variable}[{index - 1}].r = {r};
+                         {variable}[{index - 1}].g = {g};
+                         {variable}[{index - 1}].b = {b};
 
                     """;
         }

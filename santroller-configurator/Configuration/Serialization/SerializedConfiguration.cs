@@ -38,6 +38,10 @@ public class SerializedConfiguration
         XInputOnWindows = model.XInputOnWindows;
         LedType = model.LedType;
         LedMosi = model.LedMosi;
+        if (LedType is LedType.Ws2812 or LedType.Ws2812W)
+        {
+            LedMosi = model.Ws2812Data;
+        }
         LedSck = model.LedSck;
         LedCount = model.LedCount;
         LedBrightnessOn = model.LedBrightnessOn;
@@ -58,6 +62,10 @@ public class SerializedConfiguration
         BtRxMacAddress = model.BtRxAddr;
         LedTypePeripheral = model.LedTypePeripheral;
         LedMosiPeripheral = model.LedMosiPeripheral;
+        if (LedTypePeripheral is LedType.Ws2812 or LedType.Ws2812W)
+        {
+            LedMosiPeripheral = model.Ws2812DataPeripheral;
+        }
         LedSckPeripheral = model.LedSckPeripheral;
         LedCountPeripheral = model.LedCountPeripheral;
         HasPeripheral = model.HasPeripheral;
@@ -292,17 +300,25 @@ public class SerializedConfiguration
         model.WtSensitivity = WtSensitivity;
         model.MouseMovementType = MouseMovementType;
         model.CombinedStrumDebounce = CombinedStrumDebounce;
-        if (model.IsApa102 || model.IsStp16 || model.IsWs2812)
+        if (model.IsApa102 || model.IsStp16)
         {
             model.LedMosi = LedMosi;
             model.LedSck = LedSck;
         }
+        if (model.IsWs2812)
+        {
+            model.Ws2812Data = LedMosi;
+        }
         
 
-        if (model.IsApa102Peripheral || model.IsStp16Peripheral || model.IsWs2812Peripheral)
+        if (model.IsApa102Peripheral || model.IsStp16Peripheral)
         {
             model.LedMosiPeripheral = LedMosiPeripheral;
             model.LedSckPeripheral = LedSckPeripheral;
+        }
+        if (model.IsWs2812Peripheral)
+        {
+            model.Ws2812DataPeripheral = LedMosiPeripheral;
         }
 
         if (model.IsStp16)
