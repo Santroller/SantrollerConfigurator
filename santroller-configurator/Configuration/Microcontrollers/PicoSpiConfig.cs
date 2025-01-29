@@ -11,14 +11,14 @@ public class PicoSpiConfig : SpiConfig
     {
     }
 
-    public int Index => Mosi == -1 ? 0 : Pico.SpiIndexByPin[Mosi];
+    public int Index => Mosi == -1 || Output ? 0 : Pico.SpiIndexByPin[Mosi];
     protected override bool Reassignable => true;
     public override string Definition => Peripheral ? $"SPI_SLAVE_{Index}": $"SPI_{Index}";
 
     protected override string? CalculateError()
     {
         var ret = base.CalculateError();
-        if (ret != null) return ret;
+        if (ret != null || Output) return ret;
         if (IncludesMiso && Pico.SpiIndexByPin[Mosi] != Pico.SpiIndexByPin[Miso])
         {
             return Resources.DifferentSPIGroup;
