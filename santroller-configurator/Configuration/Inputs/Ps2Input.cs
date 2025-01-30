@@ -121,7 +121,7 @@ public class Ps2Input : SpiInput
         {Ps2InputType.GunConVSync, "(ps2Data[8] << 8) | ps2Data[7]"},
         {Ps2InputType.JogConWheel, "(ps2Data[6] << 8) | ps2Data[5]"},
         {Ps2InputType.GuitarTapBar, "lastTapPS2GH5"},
-        {Ps2InputType.GuitarWhammy, "-(ps2Data[8] - 127) << 9"},
+        {Ps2InputType.GuitarWhammy, "-(ps2Data[8] - 0x80) << 9"},
         {Ps2InputType.Dualshock2RightButton, "ps2Data[9]"},
         {Ps2InputType.Dualshock2LeftButton, "ps2Data[10]"},
         {Ps2InputType.Dualshock2UpButton, "ps2Data[11]"},
