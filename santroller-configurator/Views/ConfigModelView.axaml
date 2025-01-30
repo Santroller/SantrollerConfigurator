@@ -3874,7 +3874,7 @@
                                        Width="350"  Content="{x:Static netCore:Resources.SckLabel}" />
                                 <ComboBox VerticalAlignment="Center"
                                           SelectedItem="{Binding Ps2OutputSck}"
-                                          ItemsSource="{Binding AvailableSckPins}"
+                                          ItemsSource="{Binding AvailableSckPinsPs2Output}"
                                           DropDownOpened="ReloadPinTemplates"
                                           ItemTemplate="{StaticResource PinToStringTemplateSpi}"
                                           Width="200" />
