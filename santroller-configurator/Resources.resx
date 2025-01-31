@@ -3448,7 +3448,7 @@ Feel free to remove this option if you do not intend to use your instrument on i
         <value>Unfortunately an error has occurred while programming your microcontroller.</value>
     </data>
     <data name="RaiseIssueDesc2">
-        <value>Feel free to use the below button to raise this issue and we will try to fix this problem.</value>
+        <value>Feel free to use the below button to raise this issue and we will try to fix this problem. Please attach the error log to your issue.</value>
     </data>
     <data name="RaiseIssueDesc3">
         <value>Included Information</value>
