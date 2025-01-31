@@ -23,6 +23,7 @@ public class RaiseIssueWindowViewModel : ReactiveObject
         CloseWindowCommand = ReactiveCommand.CreateFromObservable(() => CloseWindowInteraction.Handle(new Unit()));
         var os = Environment.OSVersion;
         IncludedInfo = $"""
+                        Santroller Version: {GitVersionInformation.SemVer}
                         OS Version: {os.Version}
                         OS Platform: {os.Platform}
                         OS Service Pack: {os.ServicePack}
@@ -44,12 +45,9 @@ public class RaiseIssueWindowViewModel : ReactiveObject
 
     private async Task RaiseIssueAsync()
     {
-        const string uri = "https://hastebin.com/documents";
-        using var wc = new HttpClient();
-        var postResponse = await wc.PostAsync(uri, new StringContent(Text));
-        var paste = JsonNode.Parse(await postResponse.Content.ReadAsStreamAsync())?.AsObject()["key"];
         var os = Environment.OSVersion;
         var body = $"""
+                    Santroller Version: {GitVersionInformation.SemVer}
                     OS Version: {os.Version}
                     OS Platform: {os.Platform}
                     OS Service Pack: {os.ServicePack}
@@ -61,8 +59,6 @@ public class RaiseIssueWindowViewModel : ReactiveObject
 
                     Microcontroller Type: {_model.Microcontroller.Board.Name}
                     Microcontroller Frequency: {_model.Microcontroller.Board.CpuFreq / 1000}mhz
-
-                    Compilation Log: https://hastebin.com/{paste}
                     """;
         var title = "Error building";
         body = HttpUtility.UrlEncode(body);
