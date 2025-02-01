@@ -74,7 +74,8 @@ public class GuitarButton : OutputButton
         // PS3 and 360 just set the standard buttons, and rely on the solo flag
         // XB1 however has things broken out
         // For the universal report, we only put standard frets on nav, not solo
-        var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal or ConfigField.Ps4 or ConfigField.Shared) && !Model.DeviceControllerType.IsProGuitar();
+        // XB1 pro guitars don't exist so map to face buttons for that
+        var usesFaceButtons = mode is not (ConfigField.XboxOne or ConfigField.Universal or ConfigField.Ps4 or ConfigField.Shared) && !Model.DeviceControllerType.IsProGuitar() || mode is ConfigField.XboxOne && Model.DeviceControllerType.IsProGuitar();
         return Type switch
         {
             InstrumentButtonType.StrumUp => GetReportField(StandardButtonType.DpadUp),
