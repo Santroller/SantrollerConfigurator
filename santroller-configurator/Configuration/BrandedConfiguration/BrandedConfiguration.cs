@@ -44,8 +44,8 @@ public partial class BrandedConfiguration : ReactiveObject
     public string ExtraConfig()
     {
         return $"""
-                #define DEVICE_VENDOR {string.Join(", ", VendorName.Select(s => s == '\''?"'\\''":$"'{s}'"))}
-                #define DEVICE_PRODUCT {string.Join(", ", ProductName.Select(s => s == '\''?"'\\''":$"'{s}'"))}
+                #define DEVICE_VENDOR "{VendorName}"
+                #define DEVICE_PRODUCT "{ProductName}"
 
 
                 """;
