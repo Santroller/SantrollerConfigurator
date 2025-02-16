@@ -230,12 +230,6 @@ public partial class DrumAxis : OutputAxis
                     macros, writer);
         }
 
-        // Some drums never send a note off, so we fabricate one here.
-        if (Model.MidiDrumAutoOff && mode is ConfigField.Reset && Input is MidiInput midiInput)
-        {
-            return $"midiData.midiVelocities[{midiInput.Key}] = 0;";
-        }
-
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps4
             or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
@@ -266,6 +260,11 @@ public partial class DrumAxis : OutputAxis
             {
                 reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
             }
+        }
+        
+        if (Input is MidiInput midiInput)
+        {
+            reset += $"midiData.midiVelocitiesTemp[{midiInput.Key}] = 0;";
         }
 
         var outputButtons = "";
@@ -446,6 +445,7 @@ public partial class DrumAxis : OutputAxis
                              }
                          } else {
                              drumHit = true; 
+                             drumSeen[{{debounceIndex}}] = true;
                              {{outputButtons}}
                              {{GenerateOutput(mode)}} = {{assignedVal}};
                          }
@@ -459,7 +459,6 @@ public partial class DrumAxis : OutputAxis
                      if (!{{ifStatement}}) {
                          lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
                      }
-                     {{reset}}
                  }
                  if ({{ifStatement}}) {
                      {{outputButtons}}

@@ -100,7 +100,6 @@ public class SerializedConfiguration
         DjNavButtons = model.DjNavButtons;
         SelectDpadLeftXb1 = model.SelectDpadLeftXb1;
         AdafruitHost = model.AdafruitHost;
-        MidiDrumAutoOff = model.MidiDrumAutoOff;
         AccelSensorType = model.AccelSensorType;
         AccelScl = model.AccelScl;
         AccelSda = model.AccelSda;
@@ -172,7 +171,6 @@ public class SerializedConfiguration
     [ProtoMember(75)] [DefaultValue(true)] public bool DjFullRange { get; private set; } = true;
     [ProtoMember(76)] public bool SelectDpadLeftXb1 { get; private set; } = false;
     [ProtoMember(77)] public bool AdafruitHost { get; private set; } = false;
-    [ProtoMember(78)] public bool MidiDrumAutoOff { get; private set; } = false;
     [ProtoMember(80)] public bool HasAccel { get; private set; }
     [ProtoMember(81)] public int AccelSda { get; private set; }
     [ProtoMember(82)] public int AccelScl { get; private set; }
@@ -225,7 +223,6 @@ public class SerializedConfiguration
         model.Apa102IsFullSize = Apa102IsFullSize;
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
         model.AdafruitHost = AdafruitHost;
-        model.MidiDrumAutoOff = MidiDrumAutoOff;
         model.HasAccel = HasAccel;
         model.IsBluetoothTx = IsBluetoothTx ||
                               EmulationType is EmulationType.Bluetooth or EmulationType.BluetoothKeyboardMouse;
@@ -359,7 +356,6 @@ public class SerializedConfiguration
         model.DjNavButtons = DjNavButtons;
         model.SelectDpadLeftXb1 = SelectDpadLeftXb1;
         model.AccelFilter = AdxlFilter;
-        model.MidiDrumAutoOff = MidiDrumAutoOff;
         var clone = new List<Output>(model.Bindings.Items);
         var generated = Bindings.Select(s => s.Generate(model)).SelectMany(s => s.Outputs.Items)
             .GroupBy(s => s.GetOutputType()).ToDictionary(s => s.Key, s => s);

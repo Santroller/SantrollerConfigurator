@@ -555,8 +555,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] private bool _selectDpadLeftXb1;
 
-    [Reactive] private bool _midiDrumAutoOff;
-
     private bool _deque;
 
     public bool Deque
