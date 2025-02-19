@@ -261,7 +261,13 @@ public partial class DrumAxis : OutputAxis
                 reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
             }
         }
-        
+
+        if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) &&
+             Type is DrumAxisType.Kick or DrumAxisType.Kick2))
+        {
+            reset = "";
+        }
+
         if (Input is MidiInput midiInput)
         {
             reset += $"midiData.midiVelocitiesTemp[{midiInput.Key}] = 0;";
@@ -305,6 +311,7 @@ public partial class DrumAxis : OutputAxis
             return $$"""
                      if ({{ifStatement}}) {
                          {{outputButtons}}
+                         {{reset}}
                      }
                      """;
         }
