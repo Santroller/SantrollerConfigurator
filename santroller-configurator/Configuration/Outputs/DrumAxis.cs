@@ -227,7 +227,7 @@ public partial class DrumAxis : OutputAxis
                     (byte) Debounce, StandardButtonType.A,
                     false, false, false, -1, false)
                 .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
-                    macros, writer);
+                    macros, writer).Replace("midiVelocities","midiVelocitiesTemp");
         }
 
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps4
@@ -428,12 +428,14 @@ public partial class DrumAxis : OutputAxis
             check = $"({input.Generate(writer)} - {Min}) < {DeadZone}";
         }
 
+        check = check.Replace("midiVelocities", "midiVelocitiesTemp");
+
         if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
         {
             return $$"""
                      if ({{check}}) {
                          if (!{{ifStatement}}) {
-                             lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
+                             lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};
                          }
                          {{reset}}
                      }
@@ -457,8 +459,9 @@ public partial class DrumAxis : OutputAxis
         return $$"""
                  if ({{check}}) {
                      if (!{{ifStatement}}) {
-                         lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
+                         lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};
                      }
+                     {{reset}}
                  }
                  if ({{ifStatement}}) {
                      {{outputButtons}}
