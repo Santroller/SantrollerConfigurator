@@ -341,7 +341,7 @@ public partial class DrumAxis : OutputAxis
 
         // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
         var dtaVal = 0;
-        if (input is DigitalToAnalog dta) dtaVal = dta.On;
+        if (Input is DigitalToAnalog dta) dtaVal = dta.On;
 
         var assignedVal = $"(lastDrum[{debounceIndex}])";
         switch (mode)
@@ -397,7 +397,7 @@ public partial class DrumAxis : OutputAxis
         }
 
         // If someone has mapped digital inputs to the drums, then we can shortcut a bunch of the tests, and just need to use the calculated value from above
-        if (input is DigitalToAnalog)
+        if (Input is DigitalToAnalog)
         {
             if (outputButtons.Length != 0)
             {
@@ -409,7 +409,7 @@ public partial class DrumAxis : OutputAxis
             }
 
             return $$"""
-                     if ({{input.Generate(writer)}}) {
+                     if ({{Input.Generate(writer)}}) {
                          {{reset}}
                          {{GenerateOutput(mode)}} = {{dtaVal}};
                      }
@@ -417,7 +417,7 @@ public partial class DrumAxis : OutputAxis
                      """;
         }
 
-        if (!input.IsAnalog)
+        if (!Input.IsAnalog)
         {
             return $$"""
                      if ({{ifStatement}}) {
@@ -429,10 +429,10 @@ public partial class DrumAxis : OutputAxis
 
         // For drums, we want to do things based on a peak.
         // That means we ignore anything under Min, then when something peaks over Min, we capture that value and wait until we are back under Min before resetting.
-        var check = $"{input.Generate(writer)} > {Min}";
+        var check = $"{Input.Generate(writer)} > {Min}";
         if (Min > Max)
         {
-            check = $"({input.Generate(writer)} - {Min}) < {DeadZone}";
+            check = $"({Input.Generate(writer)} - {Min}) < {DeadZone}";
         }
 
         check = check.Replace("midiVelocities", "midiVelocitiesTemp");
