@@ -5355,6 +5355,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string LedCommandTypeMode {
+            get {
+                return ResourceManager.GetString("LedCommandTypeMode", resourceCulture);
+            }
+        }
+        
         public static string LedCommandTypeStarPowerInactive {
             get {
                 return ResourceManager.GetString("LedCommandTypeStarPowerInactive", resourceCulture);

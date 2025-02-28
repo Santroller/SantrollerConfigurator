@@ -1889,6 +1889,9 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="LedCommandTypeBluetoothConnected" xml:space="preserve">
         <value>Bluetooth Connected</value>
     </data>
+    <data name="LedCommandTypeMode" xml:space="preserve">
+        <value>Indicador de Modo Consola Actual</value>
+    </data>
     <data name="EmulationModeTypeXbox360" xml:space="preserve">
         <value>Xbox 360</value>
     </data>

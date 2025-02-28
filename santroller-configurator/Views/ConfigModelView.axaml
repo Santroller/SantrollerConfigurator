@@ -739,6 +739,15 @@
                         <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding Combo}" Minimum="1"
                                        Maximum="244" Width="200" Height="30" />
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding Mode}">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="350"  Content="{x:Static netCore:Resources.EmulationModeLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding EmulationModeType}"
+                                  ItemTemplate="{StaticResource EnumToStringTemplate}"
+                                  ItemsSource="{Binding EmulationModeTypes}" />
+                    </StackPanel>
                 </StackPanel>
             </DataTemplate>
             <DataTemplate DataType="{x:Type other:Rumble}">

@@ -106,7 +106,8 @@ public enum LedCommandType
     DjEuphoria,
     StageKitLed,
     Ps4LightBar,
-    BluetoothConnected
+    BluetoothConnected,
+    Mode
 }
 
 public enum RumbleCommand
@@ -218,6 +219,9 @@ public partial class Led : Output
 
         _playerModeHelper = this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Player)
             .ToProperty(this, x => x.PlayerMode);
+        
+        _modeHelper = this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Mode)
+            .ToProperty(this, x => x.Mode);
 
         _comboModeHelper = this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Combo)
             .ToProperty(this, x => x.ComboMode);
@@ -269,6 +273,7 @@ public partial class Led : Output
     [ObservableAsProperty] private bool _turntableMode;
     [ObservableAsProperty] private bool _playerMode;
     [ObservableAsProperty] private bool _comboMode;
+    [ObservableAsProperty] private bool _mode;
     [ObservableAsProperty] private bool _stageKitStrobeSpeedMode;
     [ObservableAsProperty] private bool _stageKitLedMode;
     [ObservableAsProperty] private bool _stageKitMode;
@@ -278,6 +283,8 @@ public partial class Led : Output
     public SixFretGuitar[] SixFretGuitars { get; } = Enum.GetValues<SixFretGuitar>();
     public RockBandDrum[] RockBandDrums { get; } = Enum.GetValues<RockBandDrum>();
     public GuitarHeroDrum[] GuitarHeroDrums { get; } = Enum.GetValues<GuitarHeroDrum>();
+    
+    public EmulationModeType[] EmulationModeTypes { get; } = Enum.GetValues<EmulationModeType>();
     public Turntable[] Turntables { get; } = Enum.GetValues<Turntable>();
 
     private LedCommandType _command;
@@ -301,6 +308,7 @@ public partial class Led : Output
     private Turntable _turntable;
     private FiveFretGuitar _fiveFretGuitar;
     private SixFretGuitar _sixFretGuitar;
+    private EmulationModeType _emulationModeType;
 
     public int Player
     {
@@ -331,7 +339,15 @@ public partial class Led : Output
             UpdateDetails();
         }
     }
-
+    public EmulationModeType EmulationModeType
+    {
+        get => _emulationModeType;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _emulationModeType, value);
+            UpdateDetails();
+        }
+    }
     public GuitarHeroDrum GuitarHeroDrum
     {
         get => _guitarHeroDrum;
@@ -397,7 +413,6 @@ public partial class Led : Output
     public override string LedOnLabel => Command switch
     {
         LedCommandType.StageKitLed when StageKitCommand is StageKitCommand.Fog => Resources.LEDColourActiveFog,
-        LedCommandType.Player or LedCommandType.Auth => Resources.LedColourActive,
         LedCommandType.StarPowerActive or LedCommandType.StarPowerInactive => Resources.LedColourActiveStarPower,
         LedCommandType.DjEuphoria => Resources.LedColourActiveDjEuphoria,
         _ => Resources.LedColourActive
@@ -406,13 +421,12 @@ public partial class Led : Output
     public override string LedOffLabel => Command switch
     {
         LedCommandType.StageKitLed when StageKitCommand is StageKitCommand.Fog => Resources.LedColourInactiveFog,
-        LedCommandType.Player or LedCommandType.Auth => Resources.LedColourInactive,
         LedCommandType.StarPowerActive or LedCommandType.StarPowerInactive => Resources.LedColourInactiveStarPower,
         LedCommandType.DjEuphoria => Resources.LedColourInactiveDjEuphoria,
         _ => Resources.LedColourInactive
     };
 
-    public override bool SupportsLedOff => Command is not (LedCommandType.Auth or LedCommandType.Player);
+    public override bool SupportsLedOff => Command is not (LedCommandType.Auth or LedCommandType.Player or LedCommandType.Mode);
 
     public override bool IsKeyboard => false;
     public virtual bool IsController => false;
@@ -471,7 +485,7 @@ public partial class Led : Output
                     or LedCommandType.KeyboardNumLock,
                 _ => command switch
                 {
-                    LedCommandType.Auth or LedCommandType.Player => true,
+                    LedCommandType.Auth or LedCommandType.Player or LedCommandType.Mode => true,
                     LedCommandType.Combo or LedCommandType.StarPowerActive or LedCommandType.StarPowerInactive
                         or LedCommandType.StageKitLed when
                         type.controllerType is DeviceControllerType.RockBandDrums
@@ -526,6 +540,9 @@ public partial class Led : Output
                 }
 
                 break;
+            case LedCommandType.Mode:
+                param1 = (int) EmulationModeType;
+                break;
             case LedCommandType.StageKitLed:
                 param1 = (int) StageKitCommand;
                 param2 = StageKitCommand switch
@@ -553,7 +570,7 @@ public partial class Led : Output
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
         if (mode is not (ConfigField.StrobeLed or ConfigField.AuthLed or ConfigField.PlayerLed or ConfigField.RumbleLed
-            or ConfigField.RumbleLedExpanded
+            or ConfigField.RumbleLedExpanded or ConfigField.DetectionFestival
             or ConfigField.KeyboardLed or ConfigField.LightBarLed or ConfigField.OffLed
             or ConfigField.InitLed or ConfigField.BluetoothLed)) return "";
         var on = "";
@@ -829,6 +846,18 @@ public partial class Led : Output
             // Auth commands are a set and forget type thing, they are never switched off after being turned on
             case LedCommandType.Auth when mode is ConfigField.AuthLed:
                 return on;
+            case LedCommandType.Mode when mode is ConfigField.DetectionFestival && EmulationModeType is EmulationModeType.FnfLayer:
+                return $$"""
+                         if (festival_gameplay_mode) {
+                            {{on}}
+                         }
+                         """;
+            case LedCommandType.Mode when mode is ConfigField.InitLed && EmulationModeType is not EmulationModeType.FnfLayer:
+                return $$"""
+                         if (consoleType == {{EmulationMode.GetDefinitionFor(EmulationModeType)}}) {
+                            {{on}}
+                         }
+                         """;
             case LedCommandType.BluetoothConnected when mode is ConfigField.BluetoothLed:
                 return $$"""
                          if (check_bluetooth_ready()) {

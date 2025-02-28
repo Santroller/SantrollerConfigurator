@@ -2811,6 +2811,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="LedCommandTypeNoteHit" xml:space="preserve">
         <value>Note Hit LEDs</value>
     </data>
+    <data name="LedCommandTypeMode" xml:space="preserve">
+        <value>Current Console Mode Indicator</value>
+    </data>
 
     <data name="LedCommandTypeStarPowerInactive" xml:space="preserve">
         <value>Star Power Percentage (When not active) LED</value>

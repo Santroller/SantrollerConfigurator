@@ -101,7 +101,12 @@ public partial class EmulationMode : Output
 
     private string GetDefinition()
     {
-        return Type switch
+        return GetDefinitionFor(Type);
+    }
+
+    public static string GetDefinitionFor(EmulationModeType type)
+    {
+        return type switch
         {
             EmulationModeType.Xbox360 => "XBOX360",
             EmulationModeType.XboxOne => "XBOXONE",
