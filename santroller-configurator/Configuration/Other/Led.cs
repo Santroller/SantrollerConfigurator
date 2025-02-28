@@ -188,6 +188,10 @@ public partial class Led : Output
                 }
 
                 break;
+            case LedCommandType.Mode:
+                EmulationModeType = (EmulationModeType) param;
+
+                break;
             case LedCommandType.StageKitLed:
                 StageKitCommand = (StageKitCommand) param;
                 switch (StageKitCommand)
