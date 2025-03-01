@@ -2840,6 +2840,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="LedCommandTypeBluetoothConnected" xml:space="preserve">
         <value>Bluetooth Connected</value>
     </data>
+    <data name="LedCommandTypeAlwaysOn" xml:space="preserve">
+        <value>Always Active</value>
+    </data>
     <data name="StageKitCommandFog" xml:space="preserve">
         <value>Fog</value>
     </data>

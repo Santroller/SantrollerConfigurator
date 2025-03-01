@@ -84,6 +84,7 @@ public partial class EmulationMode : Output
 
     public override bool IsKeyboard => false;
     public virtual bool IsController => false;
+    public override bool SupportsLeds => false;
     public override string LedOnLabel => "";
     public override string LedOffLabel => "";
 

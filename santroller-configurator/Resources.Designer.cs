@@ -5403,6 +5403,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string LedCommandTypeAlwaysOn {
+            get {
+                return ResourceManager.GetString("LedCommandTypeAlwaysOn", resourceCulture);
+            }
+        }
+        
         public static string StageKitCommandFog {
             get {
                 return ResourceManager.GetString("StageKitCommandFog", resourceCulture);

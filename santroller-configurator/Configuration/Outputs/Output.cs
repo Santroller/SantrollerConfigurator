@@ -793,6 +793,7 @@ public abstract partial class Output : ReactiveObject
     public abstract string LedOffLabel { get; }
 
     public virtual bool SupportsLedOff => true;
+    public virtual bool SupportsLeds => true;
     public bool ConfigurableInput => Input is not (FixedInput or MacroInput);
     public bool IsVisible { get; }
 

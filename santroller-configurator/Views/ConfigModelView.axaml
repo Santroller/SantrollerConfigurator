@@ -2681,6 +2681,7 @@
                     <WrapPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="AreLedsEnabled" />
+                            <Binding Path="SupportsLeds" />
                             <Binding Path="!IsCombined" />
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                 <Binding
@@ -2717,6 +2718,7 @@
                     <WrapPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="AreLedsEnabledPeripheral" />
+                            <Binding Path="SupportsLeds" />
                             <Binding Path="!IsCombined" />
                         </MultiBinding>
                     </WrapPanel.IsVisible>
@@ -2747,6 +2749,7 @@
                     <WrapPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="Model.HasMpr121" />
+                            <Binding Path="SupportsLeds" />
                             <Binding Path="!IsCombined" />
                         </MultiBinding>
                     </WrapPanel.IsVisible>
@@ -2781,6 +2784,7 @@
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
                             <Binding Path="!IsCombined" />
+                            <Binding Path="SupportsLeds" />
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                 <Binding Path="AreLedsEnabled" />
                                 <Binding Path="AreLedsEnabledPeripheral" />
@@ -2798,6 +2802,7 @@
                 <StackPanel Orientation="Horizontal">
                     <StackPanel.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="SupportsLeds" />
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                 <Binding Path="LedsUseColours" />
                                 <Binding Path="LedsUseColoursPeripheral" />
@@ -2839,7 +2844,9 @@
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
                             <Binding Path="!IsCombined" />
+                            <Binding Path="SupportsLeds" />
                             <Binding Path="LedsHaveColours" />
+                            <Binding Path="SupportsLedOff" />
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
@@ -2857,6 +2864,7 @@
                             <Binding Path="!IsCombined" />
                             <Binding Path="!UsesPwm" />
                             <Binding Path="LedsHaveColours" />
+                            <Binding Path="SupportsLeds" />
                             <Binding
                                 Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
                             </Binding>
@@ -2876,6 +2884,7 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="UsesPwm" />
                             <Binding Path="LedsHaveColours" />
+                            <Binding Path="SupportsLeds" />
                             <Binding
                                 Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
                             </Binding>
@@ -2909,6 +2918,7 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="Model.HasPeripheral" />
                             <Binding Path="OutputEnabled" />
+                            <Binding Path="SupportsLeds" />
                         </MultiBinding>
                     </StackPanel.IsVisible>
                     <Label VerticalAlignment="Center"
@@ -2943,6 +2953,7 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="UsesPwm" />
                             <Binding Path="OutputEnabled" />
+                            <Binding Path="SupportsLeds" />
                             <Binding
                                 Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
                             </Binding>
@@ -2964,6 +2975,7 @@
                         <MultiBinding Converter="{x:Static BoolConverters.And}">
                             <Binding Path="!UsesPwm" />
                             <Binding Path="OutputEnabled" />
+                            <Binding Path="SupportsLeds" />
                             <Binding
                                 Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded">
                             </Binding>

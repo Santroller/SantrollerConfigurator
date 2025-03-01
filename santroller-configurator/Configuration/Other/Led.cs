@@ -107,7 +107,8 @@ public enum LedCommandType
     StageKitLed,
     Ps4LightBar,
     BluetoothConnected,
-    Mode
+    Mode,
+    AlwaysOn
 }
 
 public enum RumbleCommand
@@ -299,6 +300,7 @@ public partial class Led : Output
         set
         {
             this.RaiseAndSetIfChanged(ref _command, value);
+            this.RaisePropertyChanged(nameof(SupportsLedOff));
             UpdateDetails();
         }
     }
@@ -430,7 +432,7 @@ public partial class Led : Output
         _ => Resources.LedColourInactive
     };
 
-    public override bool SupportsLedOff => Command is not (LedCommandType.Auth or LedCommandType.Player or LedCommandType.Mode);
+    public override bool SupportsLedOff => Command is not (LedCommandType.Auth or LedCommandType.Player or LedCommandType.Mode or LedCommandType.AlwaysOn);
 
     public override bool IsKeyboard => false;
     public virtual bool IsController => false;
@@ -489,7 +491,7 @@ public partial class Led : Output
                     or LedCommandType.KeyboardNumLock,
                 _ => command switch
                 {
-                    LedCommandType.Auth or LedCommandType.Player or LedCommandType.Mode => true,
+                    LedCommandType.Auth or LedCommandType.Player or LedCommandType.Mode or LedCommandType.AlwaysOn => true,
                     LedCommandType.Combo or LedCommandType.StarPowerActive or LedCommandType.StarPowerInactive
                         or LedCommandType.StageKitLed when
                         type.controllerType is DeviceControllerType.RockBandDrums
@@ -829,6 +831,8 @@ public partial class Led : Output
 
         switch (Command)
         {
+            case LedCommandType.AlwaysOn when mode is ConfigField.InitLed:
+                return on;
             case LedCommandType.Ps4LightBar when mode is ConfigField.LightBarLed:
                 return $$"""
                          if (red || green || blue) {
