@@ -1887,7 +1887,10 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
         <value>Guitar Hero por emulador de PS2 en PS3</value>
     </data>
     <data name="LedCommandTypeBluetoothConnected" xml:space="preserve">
-        <value>Bluetooth Connected</value>
+        <value>Bluetooth Conectado</value>
+    </data>
+    <data name="LedCommandTypeAlwaysOn" xml:space="preserve">
+        <value>Siempre Activo</value>
     </data>
     <data name="LedCommandTypeMode" xml:space="preserve">
         <value>Indicador de Modo Consola Actual</value>
