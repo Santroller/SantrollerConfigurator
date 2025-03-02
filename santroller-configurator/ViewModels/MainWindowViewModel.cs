@@ -370,7 +370,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 _manager?.Register();
                 _timer.Start();
             });
-            await InstallDependenciesAsync();
         }
         else
         {
@@ -379,6 +378,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             _manager?.Register();
             _timer.Start();
         }
+        await InstallDependenciesAsync(platformIo);
     }
 
     [ObservableAsProperty] private bool _migrationSupported;
@@ -798,12 +798,12 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         await ShowInformationDialog.Handle(Resources.UnplugReplugMessage);
     }
 
-    private async Task InstallDependenciesAsync()
+    private async Task InstallDependenciesAsync(bool platformio)
     {
         if (await CheckDependencies()) return;
         try
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && platformio)
             {
                 var yesNo = await ShowYesNoDialog.Handle(("Install", "Skip",
                     Resources.DriversMissingMessage)).ToTask();
