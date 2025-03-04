@@ -569,7 +569,7 @@ public partial class GuitarAxis : OutputAxis
                      Type == GuitarAxisType.Tilt && Input is not DigitalToAnalog:
                 // PS3 RB expects tilt as a digital bit, so map that here.
                 return $"""
-                        {GenerateOutput(mode)} |= abs({GenerateAssignment("0", ConfigField.Xbox360, false, false, false, false, writer)}) > 0x70;
+                        {GenerateOutput(mode)} |= abs({GenerateAssignment("0", ConfigField.Xbox360, false, false, false, false, writer)}) > 0x7F70;
                         """;
             case ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
