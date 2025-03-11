@@ -318,6 +318,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _deviceControllerTypes.Connect()
             .Bind(out var controllerTypes)
             .Subscribe();
+        _keys.Connect()
+            .Bind(out var keys)
+            .Subscribe();
+        Keys = keys;
         DeviceControllerRhythmTypes = controllerTypes;
         AllPins = new SourceList<int>();
         AllPins.AddRange(Microcontroller.GetAllPins());
@@ -471,6 +475,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public Interaction<ConfigViewModel, Unit> SaveConfig { get; } = new();
     public Interaction<ConfigViewModel, Unit> LoadConfig { get; } = new();
+    public Interaction<ConfigViewModel, SerializedConsoleKey?> LoadNand { get; } = new();
 
     public Interaction<(ConfigViewModel model, Output output),
             BindAllWindowViewModel>
@@ -503,6 +508,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public ReadOnlyObservableCollection<DeviceControllerType> DeviceControllerRhythmTypes { get; }
 
+    internal SourceList<SerializedConsoleKey> _keys { get; } = new();
+    public ReadOnlyObservableCollection<SerializedConsoleKey> Keys { get; }
+
     public IEnumerable<ModeType> ModeTypes => Enum.GetValues<ModeType>();
 
     // Only Pico supports bluetooth
@@ -528,7 +536,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public string LocalAddress { get; set; } = "Write config to retrieve address";
 
-    public IEnumerable<LedType> LedTypes => Enum.GetValues<LedType>().Where(s => Microcontroller is Pico || s is not (LedType.Ws2812 or LedType.Ws2812W));
+    public IEnumerable<LedType> LedTypes => Enum.GetValues<LedType>()
+        .Where(s => Microcontroller is Pico || s is not (LedType.Ws2812 or LedType.Ws2812W));
 
     public bool BindableTwi { get; }
     [Reactive] private bool _pollExpanded;
@@ -623,6 +632,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] private string _btRxAddr;
 
     [Reactive] private bool _classic;
+
     public int Ws2812Data
     {
         get => _ws2812Config?.Pin ?? 0;
@@ -633,7 +643,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.RaisePropertyChanged();
         }
     }
-    
+
     public int Ws2812DataPeripheral
     {
         get => _ws2812ConfigPeripheral?.Pin ?? 0;
@@ -644,6 +654,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.RaisePropertyChanged();
         }
     }
+
     public int LedMosi
     {
         get => _ledSpiConfig?.Mosi ?? 0;
@@ -1503,9 +1514,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public bool BindableAtt => Microcontroller is not (Uno or Mega);
     public List<int> AvailableMosiPinsInput => GetMosiPins(false);
     public List<int> AvailableMisoPinsInput => GetMisoPins(false);
-    public List<int> AvailableMosiPinsPs2Output => Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetMosiPins(true);
-    public List<int> AvailableMisoPinsPs2Output => Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetMisoPins(true);
-    public List<int> AvailableSckPinsPs2Output => Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetSckPins();
+
+    public List<int> AvailableMosiPinsPs2Output =>
+        Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetMosiPins(true);
+
+    public List<int> AvailableMisoPinsPs2Output =>
+        Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetMisoPins(true);
+
+    public List<int> AvailableSckPinsPs2Output =>
+        Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetSckPins();
+
     public List<int> AvailableSckPins => GetSckPins();
 
     private List<int> GetMosiPins(bool output)
@@ -1546,6 +1564,21 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void SetDeviceTypeWithoutUpdating(DeviceControllerType type)
     {
         this.RaiseAndSetIfChanged(ref _deviceControllerType, type, nameof(DeviceControllerType));
+    }
+
+    [ReactiveCommand]
+    public async Task ImportKey()
+    {
+        var key = await LoadNand.Handle(this);
+        if (key != null)
+        {
+            var old = _keys.Items.FirstOrDefault(s => s.ConsoleId == key.ConsoleId);
+            if (old != null)
+            {
+                _keys.Remove(old);
+            }
+            _keys.Add(key);
+        }
     }
 
     public void UpdateBindings(bool defaults)
@@ -2080,6 +2113,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                               """;
                 }
             }
+
+            if (Keys.Count != 0)
+            {
+                
+                config += $$"""
+                            
+                            #define KV_KEY_ARRAY {{WriteBlob(writer,Keys.SelectMany(s => s.Combined).ToArray())}}
+                            #define KV_KEY_SIZE {{WriteBlob(writer,(byte)Keys.Count)}}
+                            """;
+            }
         }
         else
         {
@@ -2135,6 +2178,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                               #define BLUETOOTH_RX_BLE
                               """;
                 }
+            }
+            
+            if (Keys.Count != 0)
+            {
+                config += $$"""
+                          
+                          #define KV_KEY_ARRAY {{{string.Join(",",Keys.Select(s => s.Format()))}}}
+                          #define KV_KEY_SIZE {{Keys.Count}}
+                          """;
             }
         }
 
@@ -2518,7 +2570,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 config += $"\n#define APA102_SPI_PORT {_ledSpiConfig.Definition}";
             }
-            
+
             if (_ws2812Config != null)
             {
                 config += $"\n#define WS2812_PIN {_ws2812Config.Pin}";
@@ -2864,13 +2916,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 ret +=
                     $"""
-                    
+
                      putWs2812(ledState[{i}].r, ledState[{i}].g, ledState[{i}].b, ledState[{i}].w);
                      """;
             }
             else
             {
-                
                 ret +=
                     $"""
 
@@ -2893,7 +2944,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             ret +=
                 $"""
-                 
+
                  slaveWriteLED(ledState[{i}].r);
                  slaveWriteLED(ledState[{i}].g);
                  slaveWriteLED(ledState[{i}].b);
@@ -4044,7 +4095,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             pins[LedSpiType(true)] = _ledSpiConfigPeripheral.Pins.ToList();
         }
-        
+
         if (IsIndexedLed && _ws2812Config != null && type != LedSpiType(false) && !peripheral)
             pins[LedSpiType(false)] = _ws2812Config.Pins.ToList();
 

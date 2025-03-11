@@ -34,6 +34,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
             disposables(ViewModel!.ShowBindAllDialog.RegisterHandler(DoShowBindAllDialogAsync));
             disposables(ViewModel!.SaveConfig.RegisterHandler(DoSaveConfigAsync));
             disposables(ViewModel!.LoadConfig.RegisterHandler(DoLoadConfigAsync));
+            disposables(ViewModel!.LoadNand.RegisterHandler(DoLoadNandAsync));
             disposables(ViewModel!.RegisterConnections());
             disposables(
                 ViewModel!.WhenAnyValue(x => x.Device).OfType<Santroller>()
@@ -63,7 +64,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
 
     public ConfigViewModel Model => ViewModel!;
 
-    private async void DoSaveConfigAsync(IInteractionContext<ConfigViewModel, Unit> obj)
+    private async Task DoSaveConfigAsync(IInteractionContext<ConfigViewModel, Unit> obj)
     {
         obj.SetOutput(new Unit());
         var extension = "." + obj.Input.Microcontroller.Board.ArdwiinoName + "config";
@@ -77,7 +78,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         Serializer.Serialize(stream, new SerializedConfiguration(obj.Input));
     }
 
-    private async void DoLoadConfigAsync(IInteractionContext<ConfigViewModel, Unit> obj)
+    private async Task DoLoadConfigAsync(IInteractionContext<ConfigViewModel, Unit> obj)
     {
         obj.SetOutput(new Unit());
         var extension = "." + obj.Input.Microcontroller.Board.ArdwiinoName + "config";
@@ -89,6 +90,43 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         if (file.Count == 0) return;
         await using var stream = await file[0].OpenReadAsync();
         Serializer.Deserialize<SerializedConfiguration>(stream).LoadConfiguration(obj.Input);
+    }
+
+    private async Task DoLoadNandAsync(IInteractionContext<ConfigViewModel, SerializedConsoleKey?> obj)
+    {
+        var extension = ".bin";
+        var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            AllowMultiple = false,
+            FileTypeFilter = [new FilePickerFileType("NAND image (flashdmp.bin)") {Patterns = ["*" + extension]}]
+        });
+        if (file.Count == 0)
+        {
+            obj.SetOutput(null);
+            return;
+        }
+        await using var nandStream = await file[0].OpenReadAsync();
+        extension = ".txt";
+        file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            AllowMultiple = false,
+            FileTypeFilter = [new FilePickerFileType("CPU Key (cpukey.txt)") {Patterns = ["*" + extension]}]
+        });
+        if (file.Count == 0)
+        {
+            obj.SetOutput(null);
+            return;
+        }
+        await using var cpuKeyStream = await file[0].OpenReadAsync();
+        try
+        {
+            obj.SetOutput(ExCrypt.LoadKeys(nandStream, cpuKeyStream));
+
+        }
+        catch (Exception)
+        {
+            obj.SetOutput(null);
+        }
     }
 
     public async Task DoShowUnpluggedDialogAsync(

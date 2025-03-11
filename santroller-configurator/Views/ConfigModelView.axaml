@@ -3196,6 +3196,24 @@
                                                Width="200"
                                                Maximum="65535" HorizontalAlignment="Stretch" />
                             </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350"  Content="{x:Static netCore:Resources.AuthKeysLabel}" />
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="200"  Content="{Binding Keys.Count}" />
+                            </StackPanel>
+                            <ItemsControl HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding Keys}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Id}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button Command="{Binding ImportKeyCommand}"
+                                    Content="{x:Static netCore:Resources.AddKeyLabel}" />
                         </StackPanel>
                     </StackPanel>
                 </Expander>

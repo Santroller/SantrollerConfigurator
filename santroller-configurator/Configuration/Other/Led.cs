@@ -829,6 +829,11 @@ public partial class Led : Output
             }
         }
 
+        if (!SupportsLedOff)
+        {
+            off = "";
+        }
+
         switch (Command)
         {
             case LedCommandType.AlwaysOn when mode is ConfigField.InitLed:

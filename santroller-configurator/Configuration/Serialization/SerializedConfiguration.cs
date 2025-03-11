@@ -106,6 +106,7 @@ public class SerializedConfiguration
         HasAccel = model.HasAccel;
         ClassicMode = model.Classic;
         IsBluetoothTx = model.IsBluetoothTx;
+        Keys = model.Keys.ToList();
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -183,9 +184,12 @@ public class SerializedConfiguration
     [ProtoMember(88)] public int SleepPin { get; private set; } = -1;
     [ProtoMember(89)] public int SleepTimer { get; private set; } = 5;
     [ProtoMember(90)] public int LedTimer { get; private set; } = 0;
+    [ProtoMember(91)] public List<SerializedConsoleKey> Keys { get; private set; } = [];
 
     public void LoadConfiguration(ConfigViewModel model)
     {
+        model._keys.Clear();
+        model._keys.AddRange(Keys);
         model.SleepEnabled = SleepEnabled;
         model.SleepWakeUpPin = SleepPin;
         model.DeviceSleep = SleepTimer;
@@ -356,6 +360,8 @@ public class SerializedConfiguration
         model.DjNavButtons = DjNavButtons;
         model.SelectDpadLeftXb1 = SelectDpadLeftXb1;
         model.AccelFilter = AdxlFilter;
+        model._keys.Clear();
+        model._keys.AddRange(Keys);
         var clone = new List<Output>(model.Bindings.Items);
         var generated = Bindings.Select(s => s.Generate(model)).SelectMany(s => s.Outputs.Items)
             .GroupBy(s => s.GetOutputType()).ToDictionary(s => s.Key, s => s);

@@ -36,7 +36,6 @@ public static class Program
                 ConfigurableUsbDeviceManager.InstallDrivers();
                 return;
         }
-
         VelopackApp.Build().Run();
         Directory.CreateDirectory(AssetUtils.GetAppDataFolder());
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);

@@ -2613,6 +2613,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string AuthKeysLabel {
+            get {
+                return ResourceManager.GetString("AuthKeysLabel", resourceCulture);
+            }
+        }
+        
+        public static string AddKeyLabel {
+            get {
+                return ResourceManager.GetString("AddKeyLabel", resourceCulture);
+            }
+        }
+        
         public static string SelectDpadLeftXb1 {
             get {
                 return ResourceManager.GetString("SelectDpadLeftXb1", resourceCulture);
