@@ -411,6 +411,7 @@ public class ExCrypt
         input.CopyTo(ms);
         return ms.ToArray();
     }
+    
     public static SerializedConsoleKey LoadKeys(Stream nandPath, Stream cpukeyPath)
     {
         var image = ReadFully(nandPath);

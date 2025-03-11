@@ -29,7 +29,15 @@ public class SerializedConsoleKey
         Date = Encoding.UTF8.GetString(date);
     }
 
-    public string Id => $"{ExCrypt.ByteArrayToString(ConsoleId)} ({Date})";
+    private string GetConsoleId()
+    {
+        long counter = 0;
+        for (var i = 0; i < 5; i++)
+            counter = ConsoleId[i] + counter * 0x100;
+        return $"{counter >> 4:D11}{counter & 0xF:X}";
+    }
+
+    public string Id => $"{GetConsoleId()} ({Date})";
 
     [ProtoMember(1)] public byte[] ConsoleId { get; }
     [ProtoMember(2)] public byte[] Key1 { get; }

@@ -1892,6 +1892,12 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="LedCommandTypeAlwaysOn" xml:space="preserve">
         <value>Siempre Activo</value>
     </data>
+    <data name="AuthKeysLabel" xml:space="preserve">
+        <value>Clave de Autenticación de 360</value>
+    </data>
+    <data name="AddKeyLabel" xml:space="preserve">
+        <value>Importar Claves</value>
+    </data>
     <data name="LedCommandTypeMode" xml:space="preserve">
         <value>Indicador de Modo Consola Actual</value>
     </data>
