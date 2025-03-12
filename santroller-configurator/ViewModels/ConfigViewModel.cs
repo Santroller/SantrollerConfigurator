@@ -476,6 +476,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public Interaction<ConfigViewModel, Unit> SaveConfig { get; } = new();
     public Interaction<ConfigViewModel, Unit> LoadConfig { get; } = new();
     public Interaction<ConfigViewModel, SerializedConsoleKey?> LoadNand { get; } = new();
+    public Interaction<ConfigViewModel, SerializedConsoleKey[]> LoadBackup { get; } = new();
+    public Interaction<ConfigViewModel, Unit> ExportBackup { get; } = new();
 
     public Interaction<(ConfigViewModel model, Output output),
             BindAllWindowViewModel>
@@ -509,6 +511,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public ReadOnlyObservableCollection<DeviceControllerType> DeviceControllerRhythmTypes { get; }
 
     internal SourceList<SerializedConsoleKey> _keys { get; } = new();
+    [Reactive] public SerializedConsoleKey? _selectedKey;
     public ReadOnlyObservableCollection<SerializedConsoleKey> Keys { get; }
 
     public IEnumerable<ModeType> ModeTypes => Enum.GetValues<ModeType>();
@@ -1577,8 +1580,30 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 _keys.Remove(old);
             }
+
             _keys.Add(key);
         }
+    }
+
+    [ReactiveCommand]
+    public void DeleteKey()
+    {
+        if (SelectedKey != null)
+        {
+            _keys.Remove(SelectedKey);
+        }
+    }
+    [ReactiveCommand]
+    public async Task ImportKeyBackup()
+    {
+        var keys = await LoadBackup.Handle(this);
+        _keys.AddRange(keys);
+    }
+
+    [ReactiveCommand]
+    public async Task ExportKeyBackup()
+    {
+        await ExportBackup.Handle(this);
     }
 
     public void UpdateBindings(bool defaults)
@@ -2116,11 +2141,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (Keys.Count != 0)
             {
-                
                 config += $$"""
-                            
-                            #define KV_KEY_ARRAY {{WriteBlob(writer,Keys.SelectMany(s => s.Combined).ToArray())}}
-                            #define KV_KEY_SIZE {{WriteBlob(writer,(byte)Keys.Count)}}
+
+                            #define KV_KEY_ARRAY {{WriteBlob(writer, Keys.SelectMany(s => s.Combined).ToArray())}}
+                            #define KV_KEY_SIZE {{WriteBlob(writer, (byte) Keys.Count)}}
                             """;
             }
         }
@@ -2179,14 +2203,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                               """;
                 }
             }
-            
+
             if (Keys.Count != 0)
             {
                 config += $$"""
-                          
-                          #define KV_KEY_ARRAY {{{string.Join(",",Keys.Select(s => s.Format()))}}}
-                          #define KV_KEY_SIZE {{Keys.Count}}
-                          """;
+
+                            #define KV_KEY_ARRAY {{{string.Join(",", Keys.Select(s => s.Format()))}}}
+                            #define KV_KEY_SIZE {{Keys.Count}}
+                            """;
             }
         }
 

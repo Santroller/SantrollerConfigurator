@@ -3205,16 +3205,22 @@
                                    VerticalContentAlignment="Center"
                                    Width="200"  Content="{Binding Keys.Count}" />
                         </StackPanel>
-                        <ItemsControl HorizontalAlignment="Stretch"
-                                      ItemsSource="{Binding Keys}">
-                            <ItemsControl.ItemTemplate>
+                        <ListBox HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedKey}"
+                                 ItemsSource="{Binding Keys}" SelectionMode="Single">
+                            <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Id}"/>
                                 </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                         <Button Command="{Binding ImportKeyCommand}"
                                 Content="{x:Static netCore:Resources.AddKeyLabel}" />
+                        <Button Command="{Binding ImportKeyBackupCommand}"
+                                Content="{x:Static netCore:Resources.ImportKeyLabel}" />
+                        <Button Command="{Binding ExportKeyBackupCommand}"
+                                Content="{x:Static netCore:Resources.ExportKeyLabel}" IsEnabled="{Binding !!Keys}" />
+                        <Button Command="{Binding DeleteKeyCommand}" IsEnabled="{Binding SelectedKey, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                Content="{x:Static netCore:Resources.DeleteKeyLabel}" />
                     </StackPanel>
                 </Expander>
                 <Expander HorizontalAlignment="Stretch" Header="{Binding}" IsExpanded="{Binding PollExpanded}">

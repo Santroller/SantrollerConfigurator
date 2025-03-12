@@ -1347,7 +1347,16 @@ Feel free to remove this option if you do not intend to use your instrument on i
         <value>360 Auth Keys</value>
     </data>
     <data name="AddKeyLabel" xml:space="preserve">
-        <value>Import Keys</value>
+        <value>Import keys from NAND Image</value>
+    </data>
+    <data name="ImportKeyLabel" xml:space="preserve">
+        <value>Import Keys from Backup</value>
+    </data>
+    <data name="ExportKeyLabel" xml:space="preserve">
+        <value>Export Keys to Backup</value>
+    </data>
+    <data name="DeleteKeyLabel" xml:space="preserve">
+        <value>Delete Selected Key</value>
     </data>
     <data name="SelectDpadLeftXb1" xml:space="preserve">
         <value>Map Select to D-Pad Left on Xbox One/Series</value>

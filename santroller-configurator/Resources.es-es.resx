@@ -1896,7 +1896,16 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
         <value>Clave de Autenticación de 360</value>
     </data>
     <data name="AddKeyLabel" xml:space="preserve">
-        <value>Importar Claves</value>
+        <value>Importar Claves de imagen NAND</value>
+    </data>
+    <data name="ImportKeyLabel" xml:space="preserve">
+        <value>Importar Claves de respaldo</value>
+    </data>
+    <data name="ExportKeyLabel" xml:space="preserve">
+        <value>Exportar Claves a respaldo</value>
+    </data>
+    <data name="DeleteKeyLabel" xml:space="preserve">
+        <value>Eliminar Clave Seleccionada</value>
     </data>
     <data name="LedCommandTypeMode" xml:space="preserve">
         <value>Indicador de Modo Consola Actual</value>

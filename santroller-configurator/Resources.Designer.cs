@@ -2625,6 +2625,24 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ImportKeyLabel {
+            get {
+                return ResourceManager.GetString("ImportKeyLabel", resourceCulture);
+            }
+        }
+        
+        public static string ExportKeyLabel {
+            get {
+                return ResourceManager.GetString("ExportKeyLabel", resourceCulture);
+            }
+        }
+        
+        public static string DeleteKeyLabel {
+            get {
+                return ResourceManager.GetString("DeleteKeyLabel", resourceCulture);
+            }
+        }
+        
         public static string SelectDpadLeftXb1 {
             get {
                 return ResourceManager.GetString("SelectDpadLeftXb1", resourceCulture);

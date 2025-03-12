@@ -35,6 +35,8 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
             disposables(ViewModel!.SaveConfig.RegisterHandler(DoSaveConfigAsync));
             disposables(ViewModel!.LoadConfig.RegisterHandler(DoLoadConfigAsync));
             disposables(ViewModel!.LoadNand.RegisterHandler(DoLoadNandAsync));
+            disposables(ViewModel!.LoadBackup.RegisterHandler(DoLoadBackupAsync));
+            disposables(ViewModel!.ExportBackup.RegisterHandler(DoExportBackupAsync));
             disposables(ViewModel!.RegisterConnections());
             disposables(
                 ViewModel!.WhenAnyValue(x => x.Device).OfType<Santroller>()
@@ -88,8 +90,15 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
             FileTypeFilter = [new FilePickerFileType(extension) {Patterns = ["*" + extension]}]
         });
         if (file.Count == 0) return;
-        await using var stream = await file[0].OpenReadAsync();
-        Serializer.Deserialize<SerializedConfiguration>(stream).LoadConfiguration(obj.Input);
+        try
+        {
+            await using var stream = await file[0].OpenReadAsync();
+            Serializer.Deserialize<SerializedConfiguration>(stream).LoadConfiguration(obj.Input);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
 
     private async Task DoLoadNandAsync(IInteractionContext<ConfigViewModel, SerializedConsoleKey?> obj)
@@ -127,6 +136,46 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         {
             obj.SetOutput(null);
         }
+    }
+    
+    private async Task DoLoadBackupAsync(IInteractionContext<ConfigViewModel, SerializedConsoleKey[]> obj)
+    {
+        var extension = ".bin";
+        var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            AllowMultiple = false,
+            FileTypeFilter = [new FilePickerFileType("Key Backup (keys.bin)") {Patterns = ["*" + extension]}]
+        });
+        if (file.Count == 0)
+        {
+            obj.SetOutput([]);
+            return;
+        }
+        try {
+            await using var stream = await file[0].OpenReadAsync();
+            obj.SetOutput(Serializer.Deserialize<SerializedConsoleKey[]>(stream));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+    
+    private async Task DoExportBackupAsync(IInteractionContext<ConfigViewModel, Unit> obj)
+    {
+        obj.SetOutput(new Unit());
+        var file = await ((Window) VisualRoot!).StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            SuggestedFileName = "key.bin",
+            FileTypeChoices = [new FilePickerFileType("Key backup (keys.bin)") {Patterns = ["*.bin"]}]
+        });
+        if (file == null)
+        {
+            return;
+        }
+        
+        await using var stream = await file.OpenWriteAsync();
+        Serializer.Serialize(stream, obj.Input._keys.Items.ToArray());
     }
 
     public async Task DoShowUnpluggedDialogAsync(
