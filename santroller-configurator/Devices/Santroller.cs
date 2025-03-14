@@ -309,6 +309,11 @@ public class Santroller : ConfigurableUsbDevice
             {
                 Console.WriteLine(ex);
             }
+
+            if (IsAvr)
+            {
+                await Task.Delay(100);
+            }
         }
     }
 
