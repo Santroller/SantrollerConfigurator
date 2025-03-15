@@ -1038,7 +1038,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             if (value != _ledType)
             {
-                switch (LedType)
+                switch (value)
                 {
                     case LedType.None:
                         _ws2812Config = null;
@@ -1062,7 +1062,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         break;
                     default:
                     {
-                        if (LedType.IsWs2812())
+                        if (value.IsWs2812())
                         {
                             _ledSpiConfig = null;
                             _ws2812Config = new DirectPinConfig(this, WS2812SpiType, -1, false, DevicePinMode.Skip);
