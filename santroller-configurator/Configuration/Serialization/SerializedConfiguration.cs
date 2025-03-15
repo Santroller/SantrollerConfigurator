@@ -38,7 +38,7 @@ public class SerializedConfiguration
         XInputOnWindows = model.XInputOnWindows;
         LedType = model.LedType;
         LedMosi = model.LedMosi;
-        if (LedType is LedType.Ws2812 or LedType.Ws2812W)
+        if (LedType.IsWs2812())
         {
             LedMosi = model.Ws2812Data;
         }
@@ -62,7 +62,7 @@ public class SerializedConfiguration
         BtRxMacAddress = model.BtRxAddr;
         LedTypePeripheral = model.LedTypePeripheral;
         LedMosiPeripheral = model.LedMosiPeripheral;
-        if (LedTypePeripheral is LedType.Ws2812 or LedType.Ws2812W)
+        if (LedTypePeripheral.IsWs2812() || LedTypePeripheral.IsWs2812W())
         {
             LedMosiPeripheral = model.Ws2812DataPeripheral;
         }

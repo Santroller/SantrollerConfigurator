@@ -492,10 +492,14 @@ public abstract partial class OutputAxis : Output
         {
             // XB1 tilt is special. it centers at 0 but is a uint, so we need to strip away negative values
             generated += ")";
-            if (!InputIsUint)
+            // Convert to int
+            if (InputIsUint)
             {
-                generated = $"abs({generated}) << 1";
+                generated = $"({generated} - INT16_MAX)";
             }
+            // instead of the value going negative and positive it centers at zero and both directions map to the same range
+            generated = $"(abs({generated}) << 1)";
+            
         }
         else
         {

@@ -4263,15 +4263,75 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
-        public static string LedTypeWs2812 {
+        public static string LedTypeWs2812Rgb {
             get {
-                return ResourceManager.GetString("LedTypeWs2812", resourceCulture);
+                return ResourceManager.GetString("LedTypeWs2812Rgb", resourceCulture);
             }
         }
         
-        public static string LedTypeWs2812W {
+        public static string LedTypeWs2812Rbg {
             get {
-                return ResourceManager.GetString("LedTypeWs2812W", resourceCulture);
+                return ResourceManager.GetString("LedTypeWs2812Rbg", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Grb {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Grb", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Gbr {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Gbr", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Brg {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Brg", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Bgr {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Bgr", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Rgbw {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Rgbw", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Rbgw {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Rbgw", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Grbw {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Grbw", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Gbrw {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Gbrw", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Brgw {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Brgw", resourceCulture);
+            }
+        }
+        
+        public static string LedTypeWs2812Bgrw {
+            get {
+                return ResourceManager.GetString("LedTypeWs2812Bgrw", resourceCulture);
             }
         }
         

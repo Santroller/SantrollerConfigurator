@@ -2231,12 +2231,41 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="LedTypeNone" xml:space="preserve">
         <value>None</value>
     </data>
-
-    <data name="LedTypeWs2812" xml:space="preserve">
-        <value>WS2812 RGB</value>
+    <data name="LedTypeWs2812Rgb" xml:space="preserve">
+        <value>WS2812 - RGB</value>
     </data>
-    <data name="LedTypeWs2812W" xml:space="preserve">
-        <value>WS2812 RGBW</value>
+    <data name="LedTypeWs2812Rbg" xml:space="preserve">
+        <value>WS2812 - RBG</value>
+    </data>
+    <data name="LedTypeWs2812Grb" xml:space="preserve">
+        <value>WS2812 - GRB</value>
+    </data>
+    <data name="LedTypeWs2812Gbr" xml:space="preserve">
+        <value>WS2812 - GBR</value>
+    </data>
+    <data name="LedTypeWs2812Brg" xml:space="preserve">
+        <value>WS2812 - BRG</value>
+    </data>
+    <data name="LedTypeWs2812Bgr" xml:space="preserve">
+        <value>WS2812 - BGR</value>
+    </data>
+    <data name="LedTypeWs2812Rgbw" xml:space="preserve">
+        <value>WS2812 - RGBW</value>
+    </data>
+    <data name="LedTypeWs2812Rbgw" xml:space="preserve">
+        <value>WS2812 - RBGW</value>
+    </data>
+    <data name="LedTypeWs2812Grbw" xml:space="preserve">
+        <value>WS2812 - GRBW</value>
+    </data>
+    <data name="LedTypeWs2812Gbrw" xml:space="preserve">
+        <value>WS2812 - GBRW</value>
+    </data>
+    <data name="LedTypeWs2812Brgw" xml:space="preserve">
+        <value>WS2812 - BRGW</value>
+    </data>
+    <data name="LedTypeWs2812Bgrw" xml:space="preserve">
+        <value>WS2812 - BGRW</value>
     </data>
     <data name="LedTypeApa102Rgb" xml:space="preserve">
         <value>APA102 - RGB</value>

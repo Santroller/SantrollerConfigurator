@@ -182,18 +182,18 @@ public abstract partial class Output : ReactiveObject
         _areLedsEnabledPeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not LedType.None)
             .ToProperty(this, x => x.AreLedsEnabledPeripheral);
         _isApa102Helper = this.WhenAnyValue(x => x.Model.LedType)
-            .Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812 or LedType.Ws2812W))
+            .Select(x => x.IsApa102())
             .ToProperty(this, x => x.IsApa102);
         _isApa102PeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral)
-            .Select(x => x is not (LedType.None or LedType.Stp16Cpc26 or LedType.Ws2812 or LedType.Ws2812W))
+            .Select(x => x.IsApa102())
             .ToProperty(this, x => x.IsApa102Peripheral);
         _ledsUseColoursHelper = this.WhenAnyValue(x => x.Model.LedType).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
             .ToProperty(this, x => x.LedsUseColours);
         _ledsUseColoursPeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is not (LedType.None or LedType.Stp16Cpc26))
             .ToProperty(this, x => x.LedsUseColoursPeripheral);
-        _isWs2812Helper = this.WhenAnyValue(x => x.Model.LedType).Select(x => x is LedType.Ws2812 or LedType.Ws2812W)
+        _isWs2812Helper = this.WhenAnyValue(x => x.Model.LedType).Select(x => x.IsWs2812())
             .ToProperty(this, x => x.IsWs2812);
-        _isWs2812PeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x is LedType.Ws2812 or LedType.Ws2812W)
+        _isWs2812PeripheralHelper = this.WhenAnyValue(x => x.Model.LedTypePeripheral).Select(x => x.IsWs2812())
             .ToProperty(this, x => x.IsWs2812Peripheral);
         _isStpHelper = this.WhenAnyValue(x => x.Model.LedType).Select(x => x is LedType.Stp16Cpc26)
             .ToProperty(this, x => x.IsStp);

@@ -17,41 +17,63 @@ public enum LedType
     Apa102Brg,
     Apa102Bgr,
     Stp16Cpc26,
-    Ws2812,
-    Ws2812W
+    Ws2812Rgb,
+    Ws2812Rbg,
+    Ws2812Grb,
+    Ws2812Gbr,
+    Ws2812Brg,
+    Ws2812Bgr,
+    Ws2812Rgbw,
+    Ws2812Rbgw,
+    Ws2812Grbw,
+    Ws2812Gbrw,
+    Ws2812Brgw,
+    Ws2812Bgrw
 }
 
 public static class LedTypeMethods
 {
     public static bool IsWs2812(this LedType type)
     {
-        return type is LedType.Ws2812 or LedType.Ws2812W;
+        return type.IsWs2812W() || type is LedType.Ws2812Rgb or LedType.Ws2812Rbg or LedType.Ws2812Grb or LedType.Ws2812Gbr
+            or LedType.Ws2812Brg or LedType.Ws2812Bgr;
     }
+    public static bool IsWs2812W(this LedType type)
+    {
+        return type is LedType.Ws2812Rgbw or LedType.Ws2812Rbgw or LedType.Ws2812Grbw or LedType.Ws2812Gbrw
+            or LedType.Ws2812Brgw or LedType.Ws2812Bgrw;
+    }
+
     public static bool IsApa102(this LedType type)
     {
-        return type is LedType.Apa102Rgb or LedType.Apa102Rbg or LedType.Apa102Grb or LedType.Apa102Gbr or LedType.Apa102Brg or LedType.Apa102Bgr;
+        return type is LedType.Apa102Rgb or LedType.Apa102Rbg or LedType.Apa102Grb or LedType.Apa102Gbr
+            or LedType.Apa102Brg or LedType.Apa102Bgr;
     }
+
+    public static bool IsIndexed(this LedType type)
+    {
+        return type.IsWs2812() || type.IsApa102() || type == LedType.Stp16Cpc26;
+    }
+
     private static readonly byte[] Ws2812Bits = [0x88, 0x8C, 0xC8, 0xCC];
 
     public static byte[] GetLedBytes(this LedType type, Color color, byte brightness)
     {
-        return type switch
+        if (type.IsApa102())
         {
-            LedType.Apa102Rgb or LedType.Apa102Rbg or LedType.Apa102Grb or LedType.Apa102Gbr or LedType.Apa102Brg or LedType.Apa102Bgr =>
-                [brightness, color.R, color.G, color.B],
-            LedType.Ws2812 or LedType.Ws2812W =>
-            [
-                color.R, color.G, color.B
-            ],
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-        };
+            return [brightness, color.R, color.G, color.B];
+        }
+
+        if (type.IsWs2812())
+        {
+            return [color.R, color.G, color.B];
+        }
+
+        throw new ArgumentOutOfRangeException(nameof(type), type, null);
     }
+
     public static byte[] TranslateLedBytes(this LedType type, byte[] led)
     {
-        if (type is LedType.Ws2812 or LedType.Ws2812W)
-        {
-            return led;
-        }
         var brightness = led[0];
         var r = led[1];
         var g = led[2];
@@ -64,6 +86,12 @@ public static class LedTypeMethods
             LedType.Apa102Gbr => [brightness, g, b, r],
             LedType.Apa102Brg => [brightness, b, r, g],
             LedType.Apa102Bgr => [brightness, b, g, r],
+            LedType.Ws2812Rgb or LedType.Ws2812Rgbw => [r, g, b],
+            LedType.Ws2812Rbg or LedType.Ws2812Rbgw => [r, b, g],
+            LedType.Ws2812Grb or LedType.Ws2812Grbw => [g, r, b],
+            LedType.Ws2812Gbr or LedType.Ws2812Gbrw => [g, b, r],
+            LedType.Ws2812Brg or LedType.Ws2812Brgw => [b, r, g],
+            LedType.Ws2812Bgr or LedType.Ws2812Bgrw => [b, g, r],
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
@@ -77,7 +105,13 @@ public static class LedTypeMethods
             LedType.Apa102Grb => [brightness, g, r, b],
             LedType.Apa102Gbr => [brightness, g, b, r],
             LedType.Apa102Brg => [brightness, b, r, g],
-            LedType.Apa102Bgr => new[] {brightness, b, g, r},
+            LedType.Apa102Bgr => [brightness, b, g, r],
+            LedType.Ws2812Rgb or LedType.Ws2812Rgbw => [r, g, b],
+            LedType.Ws2812Rbg or LedType.Ws2812Rbgw => [r, b, g],
+            LedType.Ws2812Grb or LedType.Ws2812Grbw => [g, r, b],
+            LedType.Ws2812Gbr or LedType.Ws2812Gbrw => [g, b, r],
+            LedType.Ws2812Brg or LedType.Ws2812Brgw => [b, r, g],
+            LedType.Ws2812Bgr or LedType.Ws2812Bgrw => [b, g, r],
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }
@@ -86,37 +120,41 @@ public static class LedTypeMethods
         BinaryWriter? writer)
     {
         var variable = peripheral ? "ledStatePeripheral" : "ledState";
-        if (type is LedType.Ws2812 or LedType.Ws2812W)
+        if (type.IsWs2812())
         {
-            return writer != null ? $"""
-                                          {variable}[{index - 1}].r = {WriteBlob(writer, color.R)};
-                                          {variable}[{index - 1}].g = {WriteBlob(writer, color.G)};
-                                          {variable}[{index - 1}].b = {WriteBlob(writer, color.B)};
-                                     """ : $"""
-                                                 {variable}[{index - 1}].r = {color.R};
-                                                 {variable}[{index - 1}].g = {color.G};
-                                                 {variable}[{index - 1}].b = {color.B};
-                                            """;
+            return writer != null
+                ? $"""
+                        {variable}[{index - 1}].r = {WriteBlob(writer, color.R)};
+                        {variable}[{index - 1}].g = {WriteBlob(writer, color.G)};
+                        {variable}[{index - 1}].b = {WriteBlob(writer, color.B)};
+                   """
+                : $"""
+                        {variable}[{index - 1}].r = {color.R};
+                        {variable}[{index - 1}].g = {color.G};
+                        {variable}[{index - 1}].b = {color.B};
+                   """;
         }
 
-        return writer != null ? $"""
-                                      {variable}[{index - 1}].brightness = {WriteBlob(writer, brightness)};
-                                      {variable}[{index - 1}].r = {WriteBlob(writer, color.R)};
-                                      {variable}[{index - 1}].g = {WriteBlob(writer, color.G)};
-                                      {variable}[{index - 1}].b = {WriteBlob(writer, color.B)};
-                                 """ : $"""
-                                             {variable}[{index - 1}].brightness = {brightness};
-                                             {variable}[{index - 1}].r = {color.R};
-                                             {variable}[{index - 1}].g = {color.G};
-                                             {variable}[{index - 1}].b = {color.B};
-                                        """;
+        return writer != null
+            ? $"""
+                    {variable}[{index - 1}].brightness = {WriteBlob(writer, brightness)};
+                    {variable}[{index - 1}].r = {WriteBlob(writer, color.R)};
+                    {variable}[{index - 1}].g = {WriteBlob(writer, color.G)};
+                    {variable}[{index - 1}].b = {WriteBlob(writer, color.B)};
+               """
+            : $"""
+                    {variable}[{index - 1}].brightness = {brightness};
+                    {variable}[{index - 1}].r = {color.R};
+                    {variable}[{index - 1}].g = {color.G};
+                    {variable}[{index - 1}].b = {color.B};
+               """;
     }
 
     public static string GetLedAssignment(this LedType type, bool peripheral, string brightness, string r, string g,
         string b, byte index)
     {
         var variable = peripheral ? "ledStatePeripheral" : "ledState";
-        if (type is LedType.Ws2812 or LedType.Ws2812W)
+        if (type.IsWs2812())
         {
             return $"""
                          {variable}[{index - 1}].r = {r};
@@ -175,7 +213,7 @@ public static class LedTypeMethods
             }
         }
 
-        if (type is LedType.Ws2812 or LedType.Ws2812W)
+        if (type.IsWs2812())
         {
             return $"""
                          {variable}[{index - 1}].r = {r};

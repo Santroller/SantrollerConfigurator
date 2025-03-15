@@ -3438,8 +3438,7 @@
                                                Minimum="1"
                                                Maximum="180" />
                             </StackPanel>
-
-
+                            
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.IsVisible>
                                     <MultiBinding Converter="{x:Static BoolConverters.And}">
@@ -3527,6 +3526,7 @@
                                                Minimum="1"
                                                Maximum="180" HorizontalAlignment="Stretch" />
                             </StackPanel>
+                            
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel.IsVisible>
                                     <MultiBinding Converter="{x:Static BoolConverters.And}">
