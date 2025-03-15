@@ -2085,13 +2085,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define WINDOWS_TURNTABLE_FULLRANGE {{WriteBlob(writer, XInputOnWindows && DjFullRange)}}
                         #define RPCS3_COMPAT {{WriteBlob(writer, Ps3OnRpcs3 && IsRpcs3CompatibleController)}}
                         #define INPUT_QUEUE {{WriteBlob(writer, Deque)}}
+                        #define WS2812W {{LedType.IsWs2812W().ToString().ToLower()}}
+                        #define WS2812W_PERIPHERAL {{LedTypePeripheral.IsWs2812W().ToString().ToLower()}}
                         #define POLL_RATE {{WriteBlob(writer, (byte) PollRate)}}
                         #define INPUT_DJ_TURNTABLE_POLL_RATE {{WriteBlob(writer, (byte) DjPollRate)}}
                         #define INPUT_DJ_TURNTABLE_SMOOTHING {{WriteBlob(writer, DjSmoothing)}}
                         #define WT_SENSITIVITY {{WriteBlob(writer, WtSensitivity)}}
                         #define LED_BRIGHTNESS {{WriteBlob(writer, LedBrightnessOn)}}
-                        #define WS2812W {{WriteBlob(writer, LedType.IsWs2812W())}}
-                        #define WS2812W_PERIPHERAL {{WriteBlob(writer, LedTypePeripheral.IsWs2812W())}}
                         #define LOW_PASS_ALPHA {{WriteBlob(writer, AccelFilter)}}
                         #define DJ_NAV_BUTTONS {{WriteBlob(writer, DjNavButtons)}}
                         #define COMBINED_DEBOUNCE {{WriteBlob(writer, CombinedStrumDebounce)}}
