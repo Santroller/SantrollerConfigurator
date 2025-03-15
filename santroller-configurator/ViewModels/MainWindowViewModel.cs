@@ -126,7 +126,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                 }
             }
             if (AvailableDevices.Items.Any() && SelectedDevice == null) SelectedDevice = AvailableDevices.Items.First();
-            Console.WriteLine(SelectedDevice);
         });
         Devices = devices;
         Router.Navigate.Execute(new MainViewModel(this));
