@@ -112,16 +112,12 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         AvailableDevices.Connect().Bind(out var devices).Subscribe();
         AvailableDevices.Connect().Subscribe(s =>
         {
-            IConfigurableDevice? item = null;
-            if (AvailableDevices.Items.Any()) item = AvailableDevices.Items.First();
-
             foreach (var change in s)
             {
                 SelectedDevice = change.Reason switch
                 {
                     ListChangeReason.Add when SelectedDevice == null => change.Item.Current,
-                    ListChangeReason.Remove when SelectedDevice == change.Item.Current => item,
-                    ListChangeReason.Remove when SelectedDevice == null => item,
+                    ListChangeReason.Remove when SelectedDevice == change.Item.Current => null,
                     _ => SelectedDevice
                 };
                 if (change.Reason == ListChangeReason.Remove)
@@ -129,6 +125,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                     change.Item.Current.Disconnect();
                 }
             }
+            if (AvailableDevices.Items.Any() && SelectedDevice == null) SelectedDevice = AvailableDevices.Items.First();
+            Console.WriteLine(SelectedDevice);
         });
         Devices = devices;
         Router.Navigate.Execute(new MainViewModel(this));
