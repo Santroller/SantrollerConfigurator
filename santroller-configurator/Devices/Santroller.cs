@@ -234,15 +234,15 @@ public class Santroller : ConfigurableUsbDevice
                     analogRaw[devicePin.Pin] = val;
                 }
 
-                var ps2Raw = await ReadDataAsync(0, (byte) Commands.CommandReadPs2, 32);
-                var wiiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadWii, 8);
-                var djLeftRaw = await ReadDataAsync(0, (byte) Commands.CommandReadDjLeft, 3);
-                var djRightRaw = await ReadDataAsync(0, (byte) Commands.CommandReadDjRight, 3);
-                var gh5Raw = await ReadDataAsync(0, (byte) Commands.CommandReadGh5, 2);
-                var ghWtRaw = await ReadDataAsync(0, (byte) Commands.CommandReadGhWt, 5 * sizeof(int));
-                var ps2ControllerType = await ReadDataAsync(0, (byte) Commands.CommandGetExtensionPs2, 1);
-                var wiiControllerType = await ReadDataAsync(0, (byte) Commands.CommandGetExtensionWii, sizeof(short));
-                var cloneRaw = await ReadDataAsync(0, (byte) Commands.CommandReadClone, 4);
+                var ps2Raw = Array.Empty<byte>();
+                var wiiRaw = Array.Empty<byte>();
+                var djLeftRaw = Array.Empty<byte>();
+                var djRightRaw = Array.Empty<byte>();
+                var gh5Raw = Array.Empty<byte>();
+                var ghWtRaw = Array.Empty<byte>();
+                var ps2ControllerType = Array.Empty<byte>();
+                var wiiControllerType = Array.Empty<byte>();
+                var cloneRaw = Array.Empty<byte>();
                 var usbHostRaw = Array.Empty<byte>();
                 var usbHostInputsRaw = Array.Empty<byte>();
                 var bluetoothInputsRaw = Array.Empty<byte>();
@@ -255,6 +255,36 @@ public class Santroller : ConfigurableUsbDevice
                 var max1270XRaw = Array.Empty<byte>();
                 var max1270XConnected = false;
                 var midiRaw = Array.Empty<byte>();
+
+                if (_model.GetTwiForType(WiiInput.WiiTwiType, false) != null)
+                {
+                    wiiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadWii, 8);
+                    wiiControllerType = await ReadDataAsync(0, (byte) Commands.CommandGetExtensionWii, sizeof(short));
+                }
+                if (_model.GetSpiForType(Ps2Input.Ps2SpiType, false) != null)
+                {
+                    ps2Raw = await ReadDataAsync(0, (byte) Commands.CommandReadPs2, 32);
+                    ps2ControllerType = await ReadDataAsync(0, (byte) Commands.CommandGetExtensionPs2, 1);
+                }
+                if (_model.GetTwiForType(DjInput.DjTwiType, false) != null)
+                {
+                    djLeftRaw = await ReadDataAsync(0, (byte) Commands.CommandReadDjLeft, 3);
+                    djRightRaw = await ReadDataAsync(0, (byte) Commands.CommandReadDjRight, 3);
+                }
+                if (_model.GetTwiForType(Gh5NeckInput.Gh5TwiType, false) != null)
+                {
+                    gh5Raw = await ReadDataAsync(0, (byte) Commands.CommandReadGh5, 2);
+                }
+                if (_model.GetTwiForType(CloneNeckInput.CloneTwiType, false) != null)
+                {
+                    cloneRaw = await ReadDataAsync(0, (byte) Commands.CommandReadClone, 4);
+                }
+
+                if (_model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(x => x is GhWtTapInput)))
+                {
+                    ghWtRaw = await ReadDataAsync(0, (byte) Commands.CommandReadGhWt, 5 * sizeof(int));
+                }
+
                 if (_model.HasPeripheral)
                 {
                     peripheralWtRaw = await ReadDataAsync(0, (byte) Commands.CommandReadPeripheralWt, 5 * sizeof(int));
@@ -304,15 +334,11 @@ public class Santroller : ConfigurableUsbDevice
                         djRightRaw, gh5Raw,
                         ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
                         peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected);
+                await Task.Delay(100);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-            }
-
-            if (IsAvr)
-            {
-                await Task.Delay(100);
             }
         }
     }
