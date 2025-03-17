@@ -3303,6 +3303,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ConsoleTypeStadia {
+            get {
+                return ResourceManager.GetString("ConsoleTypeStadia", resourceCulture);
+            }
+        }
+        
         public static string ConsoleTypeLTekId {
             get {
                 return ResourceManager.GetString("ConsoleTypeLTekId", resourceCulture);
