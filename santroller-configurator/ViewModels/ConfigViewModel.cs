@@ -2135,15 +2135,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                               """;
                 }
             }
-
-            if (Keys.Count != 0)
-            {
-                config += $$"""
-
-                            #define KV_KEY_ARRAY {{WriteBlob(writer, Keys.SelectMany(s => s.Combined).ToArray())}}
-                            #define KV_KEY_SIZE {{WriteBlob(writer, (byte) Keys.Count)}}
-                            """;
-            }
         }
         else
         {
@@ -2201,15 +2192,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                               #define BLUETOOTH_RX_BLE
                               """;
                 }
-            }
-
-            if (Keys.Count != 0)
-            {
-                config += $$"""
-
-                            #define KV_KEY_ARRAY {{{string.Join(",", Keys.Select(s => s.Format()))}}}
-                            #define KV_KEY_SIZE {{Keys.Count}}
-                            """;
             }
         }
 
@@ -2603,6 +2585,24 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 })))
             {
                 config += "\n#define CD4051BE";
+            }
+
+            if (Keys.Count == 0) return config;
+            if (writer != null)
+            {
+                config += $$"""
+
+                            #define KV_KEY_ARRAY {{WriteBlob(writer, Keys.SelectMany(s => s.Combined).ToArray())}}
+                            #define KV_KEY_SIZE {{WriteBlob(writer, (byte) Keys.Count)}}
+                            """;
+            }
+            else
+            {
+                config += $$"""
+
+                            #define KV_KEY_ARRAY {{{string.Join(",", Keys.Select(s => s.Format()))}}}
+                            #define KV_KEY_SIZE {{Keys.Count}}
+                            """;
             }
         }
         else
