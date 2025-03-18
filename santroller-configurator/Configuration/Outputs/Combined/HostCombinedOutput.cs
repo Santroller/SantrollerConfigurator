@@ -305,9 +305,17 @@ public abstract partial class HostCombinedOutput : CombinedOutput
         }
 
         var devices = 0;
+        bool seen360W = false;
         for (var i = 0; i < usbHostRaw.Length; i += 2)
         {
             var consoleType = (ConsoleType) usbHostRaw[i];
+            
+            if (consoleType == ConsoleType.Xbox360W && !seen360W)
+            {
+                seen360W = true;
+                devices += 1;
+                buffer += $"{Resources.Xbox360W}\n";
+            }
             string subType;
             switch (consoleType)
             {

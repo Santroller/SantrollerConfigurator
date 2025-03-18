@@ -1679,6 +1679,10 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="ConsoleTypeXbox360W" xml:space="preserve">
         <value>Xbox 360 Inalámbrico</value>
     </data>
+
+    <data name="Xbox360W" xml:space="preserve">
+        <value>Adaptador Inalámbrico para Xbox 360</value>
+    </data>
     <data name="ConsoleTypeXbox360BigButton" xml:space="preserve">
         <value>Control de Botones Grandes para Xbox 360</value>
     </data>

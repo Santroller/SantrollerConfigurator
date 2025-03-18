@@ -147,10 +147,19 @@ public abstract partial class HostInput : Input
         // When combined, the combined output renders this, so we don't need to calculate it
         if (!Combined && !usbHostRaw.IsEmpty)
         {
+            var devices = 0;
+            bool seen360W = false;
             for (var i = 0; i < usbHostRaw.Length; i += 2)
             {
                 var consoleType = (ConsoleType) usbHostRaw[i];
                 string subType;
+            
+                if (consoleType == ConsoleType.Xbox360W && !seen360W)
+                {
+                    seen360W = true;
+                    devices += 1;
+                    buffer += $"{Resources.Xbox360W}\n";
+                }
                 switch (consoleType)
                 {
                     case ConsoleType.Xbox360W when usbHostRaw[i + 1] == 0xFF:
@@ -190,9 +199,10 @@ public abstract partial class HostInput : Input
                         $"{EnumToStringConverter.Convert(consoleType)}\n",
                     _ => $"{EnumToStringConverter.Convert(consoleType)} {subType}\n"
                 };
+                devices += 1;
             }
 
-            ConnectedDevices = usbHostRaw.Length / 2;
+            ConnectedDevices = devices;
             UsbHostInfo = buffer.Trim();
         }
         Update(usbHostInputsRaw);
