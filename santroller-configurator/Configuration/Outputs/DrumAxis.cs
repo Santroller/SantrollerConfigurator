@@ -162,7 +162,8 @@ public partial class DrumAxis : OutputAxis
         return mode switch
         {
             ConfigField.Universal or ConfigField.Shared => UniversalAxisMappings.GetValueOrDefault(Type, ""),
-            ConfigField.XboxOne => AxisMappingsXb1.GetValueOrDefault(Type, ""),
+            // XB1 and PS4 use similar mappings
+            ConfigField.XboxOne or ConfigField.Ps4 => AxisMappingsXb1.GetValueOrDefault(Type, ""),
             _ => AxisMappings.GetValueOrDefault(Type, "")
         };
     }
@@ -304,8 +305,8 @@ public partial class DrumAxis : OutputAxis
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
 
-        // XB1 is RB by definition
-        if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) &&
+        // XB1 and PS4 are RB by definition
+        if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne || mode == ConfigField.Ps4) &&
              Type is DrumAxisType.Kick or DrumAxisType.Kick2))
         {
             return $$"""
