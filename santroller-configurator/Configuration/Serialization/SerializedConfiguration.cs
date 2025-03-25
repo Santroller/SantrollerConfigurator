@@ -100,7 +100,6 @@ public class SerializedConfiguration
         DjNavButtons = model.DjNavButtons;
         SelectDpadLeftXb1 = model.SelectDpadLeftXb1;
         AdafruitHost = model.AdafruitHost;
-        AccelSensorType = model.AccelSensorType;
         AccelScl = model.AccelScl;
         AccelSda = model.AccelSda;
         HasAccel = model.HasAccel;
@@ -175,8 +174,6 @@ public class SerializedConfiguration
     [ProtoMember(80)] public bool HasAccel { get; private set; }
     [ProtoMember(81)] public int AccelSda { get; private set; }
     [ProtoMember(82)] public int AccelScl { get; private set; }
-
-    [ProtoMember(83)] public AccelSensorType AccelSensorType { get; private set; }
     [ProtoMember(84)] public bool ClassicMode { get; private set; }
     [ProtoMember(85)] public bool IsBluetoothTx { get; private set; }
     [ProtoMember(86)] public bool LocalDebounceMode { get; private set; }
@@ -234,11 +231,6 @@ public class SerializedConfiguration
         {
             model.AccelScl = AccelScl;
             model.AccelSda = AccelSda;
-            model.AccelSensorType = AccelSensorType;
-        }
-        else
-        {
-            model.AccelSensorType = AccelSensorType.Adxl345;
         }
 
         if (HasPeripheral)

@@ -4148,17 +4148,6 @@
                                           ItemTemplate="{StaticResource PinToStringTemplateTwi}"
                                           Width="200" />
                             </StackPanel>
-
-                            <StackPanel Orientation="Horizontal">
-                                <Label VerticalAlignment="Center"
-                                       VerticalContentAlignment="Center"
-                                       Width="350"  Content="{x:Static netCore:Resources.AccelerometerType}" />
-                                <ComboBox VerticalAlignment="Center"
-                                          SelectedItem="{Binding AccelSensorType}"
-                                          ItemsSource="{Binding AccelSensorTypes}"
-                                          ItemTemplate="{StaticResource EnumToStringTemplate}"
-                                          Width="200" />
-                            </StackPanel>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">

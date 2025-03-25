@@ -221,8 +221,6 @@ public abstract partial class Output : ReactiveObject
         this.WhenAnyValue(x => x.Model.HasPeripheral).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.Model.HasAccel).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
         this.WhenAnyValue(x => x.Model.IsBluetoothRx).Subscribe(s => this.RaisePropertyChanged(nameof(InputTypes)));
-        this.WhenAnyValue(x => x.Model.AccelSensorType).Subscribe(s => this.RaisePropertyChanged(nameof(AdxlInputTypes)));
-        this.WhenAnyValue(x => x.Model.AccelSensorType).Subscribe(s => this.RaisePropertyChanged(nameof(AccelInputType)));
         this.WhenAnyValue(x => x.AdxlInputTypes).Subscribe(s =>
         {
             if (!s.Contains(AccelInputType))
@@ -580,7 +578,7 @@ public abstract partial class Output : ReactiveObject
         Enum.GetValues<WiiInputType>().OrderBy(s => EnumToStringConverter.Convert(s));
 
     public IEnumerable<DjInputType> DjInputTypes => Enum.GetValues<DjInputType>();
-    public IEnumerable<AccelInputType> AdxlInputTypes => Enum.GetValues<AccelInputType>().Where(s => Model.AccelSensorType is AccelSensorType.Lis3dh || !s.IsAdc());
+    public IEnumerable<AccelInputType> AdxlInputTypes => Enum.GetValues<AccelInputType>();
 
     public IEnumerable<InputType> InputTypes =>
         Enum.GetValues<InputType>().Where(s =>

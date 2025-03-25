@@ -93,10 +93,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private DirectPinConfig? _adaFruitHostPin;
     private DirectPinConfig? _sleepPin;
 
-    [Reactive] private AccelSensorType _accelSensorType;
-
-    public IEnumerable<AccelSensorType> AccelSensorTypes => Enum.GetValues<AccelSensorType>();
-
     private LedType _ledType;
     private LedType _ledTypePeripheral;
 
@@ -1737,13 +1733,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     if (Main.AccelSensorTypeMain is AccelSensorTypeMain.Adxl345 or AccelSensorTypeMain.Lis3dh
                         or AccelSensorTypeMain.Mpu6050)
                     {
-                        AccelSensorType = Main.AccelSensorTypeMain switch
-                        {
-                            AccelSensorTypeMain.Adxl345 => AccelSensorType.Adxl345,
-                            AccelSensorTypeMain.Lis3dh => AccelSensorType.Lis3dh,
-                            AccelSensorTypeMain.Mpu6050 => AccelSensorType.Mpu6050,
-                            _ => AccelSensorType
-                        };
                         HasAccel = true;
                     }
 
@@ -1803,7 +1792,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         AccelFilter = 0.05;
         Mpr121CapacitiveCount = 0;
         Deque = false;
-        AccelSensorType = AccelSensorType.Adxl345;
         LedType = LedType.None;
         LedTypePeripheral = LedType.None;
         LedCount = 1;
@@ -2339,22 +2327,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            #define ACCEL_TWI_PORT {_accelTwiConfig.Definition}
                            """;
             }
-
-            if (_hasAccel)
-            {
-                config += $"""
-
-                           #define ACCEL_TYPE {(int) _accelSensorType}
-                           """;
-            }
-            else
-            {
-                config += """
-
-                          #define ACCEL_TYPE 0
-                          """;
-            }
-
             var keyboardTick = GenerateTick(ConfigField.Keyboard, writer);
             if (IsKeyboard || IsFortniteFestivalPro)
             {

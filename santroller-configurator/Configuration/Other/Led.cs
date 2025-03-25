@@ -142,7 +142,8 @@ public partial class Led : Output
 
     private readonly ObservableAsPropertyHelper<bool> _usesPwm;
 
-    public Led(ConfigViewModel model, bool enabled, bool outputEnabled, bool outputInverted, int outputPin, bool peripheral,
+    public Led(ConfigViewModel model, bool enabled, bool outputEnabled, bool outputInverted, int outputPin,
+        bool peripheral,
         Color ledOn,
         Color ledOff, byte[] ledIndices, byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, LedCommandType command,
         int param,
@@ -214,8 +215,8 @@ public partial class Led : Output
                 or LedCommandType.StarPowerInactive).ToProperty(this, x => x.UsesPwm);
         _rumbleCommands.AddRange(Enum.GetValues<LedCommandType>());
         _rumbleCommands.Connect()
-            .Filter(this.WhenAnyValue(x => x.Model.DeviceControllerType, 
-                x => x.Model.IsApa102, x=>x.Model.IsBluetooth).Select(FilterLeds))
+            .Filter(this.WhenAnyValue(x => x.Model.DeviceControllerType,
+                x => x.Model.IsApa102, x => x.Model.IsBluetooth).Select(FilterLeds))
             .Bind(out var rumbleCommands)
             .Subscribe();
         RumbleCommands = rumbleCommands;
@@ -224,7 +225,7 @@ public partial class Led : Output
 
         _playerModeHelper = this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Player)
             .ToProperty(this, x => x.PlayerMode);
-        
+
         _modeHelper = this.WhenAnyValue(x => x.Command).Select(s => s is LedCommandType.Mode)
             .ToProperty(this, x => x.Mode);
 
@@ -288,7 +289,7 @@ public partial class Led : Output
     public SixFretGuitar[] SixFretGuitars { get; } = Enum.GetValues<SixFretGuitar>();
     public RockBandDrum[] RockBandDrums { get; } = Enum.GetValues<RockBandDrum>();
     public GuitarHeroDrum[] GuitarHeroDrums { get; } = Enum.GetValues<GuitarHeroDrum>();
-    
+
     public EmulationModeType[] EmulationModeTypes { get; } = Enum.GetValues<EmulationModeType>();
     public Turntable[] Turntables { get; } = Enum.GetValues<Turntable>();
 
@@ -345,6 +346,7 @@ public partial class Led : Output
             UpdateDetails();
         }
     }
+
     public EmulationModeType EmulationModeType
     {
         get => _emulationModeType;
@@ -354,6 +356,7 @@ public partial class Led : Output
             UpdateDetails();
         }
     }
+
     public GuitarHeroDrum GuitarHeroDrum
     {
         get => _guitarHeroDrum;
@@ -363,6 +366,7 @@ public partial class Led : Output
             UpdateDetails();
         }
     }
+
     public RockBandDrum RockBandDrum
     {
         get => _rockBandDrum;
@@ -372,6 +376,7 @@ public partial class Led : Output
             UpdateDetails();
         }
     }
+
     public Turntable Turntable
     {
         get => _turntable;
@@ -381,6 +386,7 @@ public partial class Led : Output
             UpdateDetails();
         }
     }
+
     public FiveFretGuitar FiveFretGuitar
     {
         get => _fiveFretGuitar;
@@ -390,6 +396,7 @@ public partial class Led : Output
             UpdateDetails();
         }
     }
+
     public SixFretGuitar SixFretGuitar
     {
         get => _sixFretGuitar;
@@ -432,7 +439,8 @@ public partial class Led : Output
         _ => Resources.LedColourInactive
     };
 
-    public override bool SupportsLedOff => Command is not (LedCommandType.Auth or LedCommandType.Player or LedCommandType.Mode or LedCommandType.AlwaysOn);
+    public override bool SupportsLedOff =>
+        Command is not (LedCommandType.Auth or LedCommandType.Mode or LedCommandType.AlwaysOn or LedCommandType.Player);
 
     public override bool IsKeyboard => false;
     public virtual bool IsController => false;
@@ -462,6 +470,7 @@ public partial class Led : Output
                         EnumToStringConverter.Convert(SixFretGuitar));
             }
         }
+
         if (Command != LedCommandType.StageKitLed)
             return string.Format(Resources.LedCommandTitle, EnumToStringConverter.Convert(Command));
 
@@ -484,6 +493,7 @@ public partial class Led : Output
             {
                 return true;
             }
+
             return type.controllerType switch
             {
                 DeviceControllerType.KeyboardMouse => command is
@@ -491,7 +501,8 @@ public partial class Led : Output
                     or LedCommandType.KeyboardNumLock,
                 _ => command switch
                 {
-                    LedCommandType.Auth or LedCommandType.Player or LedCommandType.Mode or LedCommandType.AlwaysOn => true,
+                    LedCommandType.Auth or LedCommandType.Player or LedCommandType.Mode
+                        or LedCommandType.AlwaysOn => true,
                     LedCommandType.Combo or LedCommandType.StarPowerActive or LedCommandType.StarPowerInactive
                         or LedCommandType.StageKitLed when
                         type.controllerType is DeviceControllerType.RockBandDrums
@@ -559,7 +570,8 @@ public partial class Led : Output
                 break;
         }
 
-        return new SerializedLed(Enabled, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Command, param1,
+        return new SerializedLed(Enabled, LedOn, LedOff, LedIndices.ToArray(), LedIndicesPeripheral.ToArray(), Command,
+            param1,
             param2, OutputEnabled,
             PeripheralOutput, OutputInverted,
             OutputPin, LedIndicesMpr121.ToArray());
@@ -605,11 +617,17 @@ public partial class Led : Output
                        ledState[{index - 1}].select = 1;
                        {Model.LedType.GetLedAssignment(false, LedOn, index, Model.LedBrightnessOn, writer)}
                        """;
-                off += $"""
 
-                        ledState[{index - 1}].select = 0;
-                        {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
-                        """;
+
+                if (SupportsLedOff)
+                {
+                    off += $"""
+
+                            ledState[{index - 1}].select = 0;
+                            {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
+                            """;
+                }
+
                 between +=
                     $"""
 
@@ -639,11 +657,15 @@ public partial class Led : Output
                        ledStatePeripheral[{index - 1}].select = 1;
                        {Model.LedTypePeripheral.GetLedAssignment(true, LedOn, index, Model.LedBrightnessOn, writer)}
                        """;
-                off += $"""
+                if (SupportsLedOff)
+                {
+                    off += $"""
 
-                        ledStatePeripheral[{index - 1}].select = 0;
-                        {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
-                        """;
+                            ledStatePeripheral[{index - 1}].select = 0;
+                            {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
+                            """;
+                }
+
                 between +=
                     $"""
 
@@ -663,7 +685,7 @@ public partial class Led : Output
                         """;
             }
         }
-        
+
         if (Model.IsApa102 || Model.IsWs2812)
         {
             foreach (var index in LedIndices)
@@ -673,11 +695,16 @@ public partial class Led : Output
                        ledState[{index - 1}].select = 1;
                        {Model.LedType.GetLedAssignment(false, LedOn, index, Model.LedBrightnessOn, writer)}
                        """;
-                off += $"""
 
-                        ledState[{index - 1}].select = 0;
-                        {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
-                        """;
+                if (SupportsLedOff)
+                {
+                    off += $"""
+
+                            ledState[{index - 1}].select = 0;
+                            {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
+                            """;
+                }
+
                 between +=
                     $"""
 
@@ -707,11 +734,16 @@ public partial class Led : Output
                        ledStatePeripheral[{index - 1}].select = 1;
                        {Model.LedTypePeripheral.GetLedAssignment(true, LedOn, index, Model.LedBrightnessOn, writer)}
                        """;
-                off += $"""
 
-                        ledStatePeripheral[{index - 1}].select = 0;
-                        {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
-                        """;
+                if (SupportsLedOff)
+                {
+                    off += $"""
+
+                            ledStatePeripheral[{index - 1}].select = 0;
+                            {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
+                            """;
+                }
+
                 between +=
                     $"""
 
@@ -829,11 +861,6 @@ public partial class Led : Output
             }
         }
 
-        if (!SupportsLedOff)
-        {
-            off = "";
-        }
-
         switch (Command)
         {
             case LedCommandType.AlwaysOn when mode is ConfigField.InitLed:
@@ -859,13 +886,15 @@ public partial class Led : Output
             // Auth commands are a set and forget type thing, they are never switched off after being turned on
             case LedCommandType.Auth when mode is ConfigField.AuthLed:
                 return on;
-            case LedCommandType.Mode when mode is ConfigField.DetectionFestival && EmulationModeType is EmulationModeType.FnfLayer:
+            case LedCommandType.Mode
+                when mode is ConfigField.DetectionFestival && EmulationModeType is EmulationModeType.FnfLayer:
                 return $$"""
                          if (festival_gameplay_mode) {
                             {{on}}
                          }
                          """;
-            case LedCommandType.Mode when mode is ConfigField.InitLed && EmulationModeType is not EmulationModeType.FnfLayer:
+            case LedCommandType.Mode
+                when mode is ConfigField.InitLed && EmulationModeType is not EmulationModeType.FnfLayer:
                 return $$"""
                          if (consoleType == {{EmulationMode.GetDefinitionFor(EmulationModeType)}}) {
                             {{on}}
@@ -1179,6 +1208,7 @@ public partial class Led : Output
                 return "";
         }
     }
+
     public override string GenerateOutput(ConfigField mode)
     {
         return "";

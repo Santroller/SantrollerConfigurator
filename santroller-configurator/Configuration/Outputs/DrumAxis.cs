@@ -441,10 +441,7 @@ public partial class DrumAxis : OutputAxis
         {
             return $$"""
                      if ({{check}}) {
-                         if (!{{ifStatement}}) {
-                             lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};
-                         }
-                         {{reset}}
+                        lastDrum[{{debounceIndex}}] = {{GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};
                      }
                      if ({{ifStatement}}) {
                          if (drumHit) {
@@ -460,14 +457,13 @@ public partial class DrumAxis : OutputAxis
                          }
                      } else {
                        {{GenerateOutput(mode)}} = 0;
+                       lastDrum[{{debounceIndex}}] = 0;
                      }
                      """;
         }
         return $$"""
                  if ({{check}}) {
-                     if (!{{ifStatement}}) {
-                         lastDrum[{{debounceIndex}}] = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};
-                     }
+                     lastDrum[{{debounceIndex}}] = {{GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};
                      {{reset}}
                  }
                  if ({{ifStatement}}) {
@@ -475,6 +471,7 @@ public partial class DrumAxis : OutputAxis
                      {{GenerateOutput(mode)}} = {{assignedVal}};
                  } else {
                    {{GenerateOutput(mode)}} = 0;
+                   lastDrum[{{debounceIndex}}] = 0;
                  }
                  """;
     }

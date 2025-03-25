@@ -83,7 +83,6 @@ public class InputImageConverter : IMultiValueConverter
             InputType.WiiInput => "Combined/Wii",
             InputType.Ps2Input => "Combined/PS2",
             InputType.AccelInput => "Combined/Tilt",
-            AccelSensorType => "Combined/Tilt",
             AccelInputType => "Combined/Tilt",
             InputType.BluetoothInput => "Combined/Bluetooth",
             InputType.TurntableInput => "Combined/DJ",
