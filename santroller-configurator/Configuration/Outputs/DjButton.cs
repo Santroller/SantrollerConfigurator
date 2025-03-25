@@ -17,7 +17,8 @@ public class DjButton : OutputButton
     public DjButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int debounce,
         DjInputType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
-        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, debounce,
+        bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
+        ledIndicesMpr121, debounce,
         outputEnabled, outputInverted, outputPeripheral, outputPin,
         childOfCombined)
     {
@@ -45,13 +46,34 @@ public class DjButton : OutputButton
         {
             return "";
         }
+
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Shared or ConfigField.XboxOne
-            or ConfigField.Xbox360 or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii))
+            or ConfigField.Xbox360 or ConfigField.Ps4 or ConfigField.Universal or ConfigField.Reset or ConfigField.Xbox
+            or ConfigField.Wii))
             return "";
 
         if (mode is ConfigField.Shared)
-            return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
+        {
+            var gen = base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+                macros,
                 writer);
+            if (Model.GetTwiForType(DjInput.DjTwiType, false) == null || !Input.InnermostInputs().Any(x => x.Peripheral)) return gen;
+            return Type switch
+            {
+                DjInputType.LeftBlue or DjInputType.LeftGreen or DjInputType.LeftRed => $$"""
+                      if (djLeftValid) {
+                          {{gen}}
+                      }
+                      """,
+                DjInputType.RightBlue or DjInputType.RightGreen or DjInputType.RightRed => $$"""
+                      if (djRightValid) {
+                          {{gen}}
+                      }
+                      """,
+                _ => gen
+            };
+        }
+
         if (mode == ConfigField.Universal)
         {
             switch (Type)
@@ -94,7 +116,8 @@ public class DjButton : OutputButton
             }
         }
 
-        return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
+        return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+            macros, writer);
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
@@ -110,7 +133,7 @@ public class DjButton : OutputButton
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedDjButton(Input.Serialise(),Enabled,  LedOn, LedOff, LedIndices.ToArray(),
+        return new SerializedDjButton(Input.Serialise(), Enabled, LedOn, LedOff, LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Debounce, Type, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput,
             ChildOfCombined, LedIndicesMpr121.ToArray());
     }
