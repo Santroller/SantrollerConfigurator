@@ -73,6 +73,7 @@ public class MidiCombinedOutput : CombinedOutput
         {35, DrumAxisType.Kick},
         {36, DrumAxisType.Kick},
         {44, DrumAxisType.Kick2}, // Hi-Hat Pedal
+        {100, DrumAxisType.Kick2}, // Hi-Hat Pedal
     };
     
     public static readonly Dictionary<int, DrumAxisType> MappingsDrumGh = MappingsDrumRb.Select(RbToGh).ToDictionary();

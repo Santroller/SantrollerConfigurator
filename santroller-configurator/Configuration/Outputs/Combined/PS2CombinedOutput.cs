@@ -389,7 +389,7 @@ public partial class Ps2CombinedOutput : CombinedSpiOutput
         }
         else
         {
-            if (!Outputs.Items.Any(s => s is OutputAxis))
+            if (!Outputs.Items.Any(s => s is ControllerAxis))
             {
                 foreach (var pair in Axis)
                     if (pair.Value is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger ||
