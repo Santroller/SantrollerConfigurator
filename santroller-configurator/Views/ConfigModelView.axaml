@@ -2579,28 +2579,32 @@
                         <Button Command="{Binding FindAndAssignMidiNoteCommand}"
                                 Content="{Binding ButtonTextMidiNote}" />
                     </StackPanel>
-                    <StackPanel Orientation="Vertical"
-                                IsVisible="{Binding $parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).IsPico}">
-                        <StackPanel Orientation="Horizontal">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="350" Content="{x:Static netCore:Resources.MidiSerialEnabled}" />
-                            
-                            <ToggleSwitch HorizontalAlignment="Right" 
-                                          IsChecked="{Binding MidiSerialEnabled}" OnContent="{x:Static netCore:Resources.EnabledLabel}"
-                                          OffContent="{x:Static netCore:Resources.DisabledLabel}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal"
-                                    IsVisible="{Binding MidiSerialEnabled}">
-                            <Label VerticalAlignment="Center"
-                                   VerticalContentAlignment="Center"
-                                   Width="350" Content="{x:Static netCore:Resources.MidiSerialEnabled}" />
-                            <ComboBox VerticalAlignment="Center"
-                                      SelectedItem="{Binding MidiSerialPin}"
-                                      ItemsSource="{Binding ValidSerialPins}"
-                                      DropDownOpened="ReloadPinTemplates"
-                                      ItemTemplate="{StaticResource PinToStringTemplate}"
-                                      Width="200" />
+                    <StackPanel
+                        IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                        <StackPanel Orientation="Vertical"
+                                    IsVisible="{Binding $parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).IsPico}">
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.MidiSerialEnabled}" />
+
+                                <ToggleSwitch HorizontalAlignment="Right"
+                                              IsChecked="{Binding MidiSerialEnabled}"
+                                              OnContent="{x:Static netCore:Resources.EnabledLabel}"
+                                              OffContent="{x:Static netCore:Resources.DisabledLabel}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        IsVisible="{Binding MidiSerialEnabled}">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.MidiSerialEnabled}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding MidiSerialPin}"
+                                          ItemsSource="{Binding ValidSerialPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}"
+                                          Width="200" />
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
