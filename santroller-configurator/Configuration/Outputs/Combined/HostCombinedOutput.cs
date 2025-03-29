@@ -100,14 +100,6 @@ public abstract partial class HostCombinedOutput : CombinedOutput
         {DjInputType.RightBlue, UsbHostInputType.RightBlue},
         {DjInputType.RightRed, UsbHostInputType.RightRed},
         {DjInputType.RightGreen, UsbHostInputType.RightGreen},
-        {DrumAxisType.YellowCymbal, UsbHostInputType.YellowCymbalVelocity},
-        {DrumAxisType.BlueCymbal, UsbHostInputType.BlueCymbalVelocity},
-        {DrumAxisType.GreenCymbal, UsbHostInputType.GreenCymbalVelocity},
-        {DrumAxisType.Green, UsbHostInputType.GreenVelocity},
-        {DrumAxisType.Red, UsbHostInputType.RedVelocity},
-        {DrumAxisType.Yellow, UsbHostInputType.YellowVelocity},
-        {DrumAxisType.Blue, UsbHostInputType.BlueVelocity},
-        {DrumAxisType.Orange, UsbHostInputType.OrangeVelocity},
         {GuitarAxisType.Pickup, UsbHostInputType.Pickup},
         {GuitarAxisType.Tilt, UsbHostInputType.Tilt},
         {GuitarAxisType.Whammy, UsbHostInputType.Whammy},
@@ -118,16 +110,6 @@ public abstract partial class HostCombinedOutput : CombinedOutput
         {DjAxisType.Crossfader, UsbHostInputType.Crossfader},
     };
 
-    private static readonly Dictionary<object, UsbHostInputType> MappingsDrumGh = new()
-    {
-        {DrumAxisType.Kick, UsbHostInputType.KickVelocity},
-    };
-
-    private static readonly Dictionary<object, UsbHostInputType> MappingsDrumRb = new()
-    {
-        {DrumAxisType.Kick, UsbHostInputType.Kick1},
-        {DrumAxisType.Kick2, UsbHostInputType.Kick2},
-    };
 
     [Reactive] private string _usbHostInfo = "";
 
@@ -156,7 +138,7 @@ public abstract partial class HostCombinedOutput : CombinedOutput
     public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
     {
         Outputs.Clear();
-        Outputs.AddRange(outputs);
+        Outputs.AddRange(outputs.Where(s => s.Input.InnermostInputs().Any(hiss => hiss is HostInput hi && Enum.IsDefined(typeof(UsbHostInputTypeReal), hi.Input.ToString()))));
         if (Outputs.Count == 0)
         {
             CreateDefaults();
@@ -266,15 +248,6 @@ public abstract partial class HostCombinedOutput : CombinedOutput
         }
 
         LoadMatchingFromDict(valid, Mappings);
-        switch (Model.DeviceControllerType)
-        {
-            case DeviceControllerType.GuitarHeroDrums:
-                LoadMatchingFromDict(valid, MappingsDrumGh);
-                break;
-            case DeviceControllerType.RockBandDrums:
-                LoadMatchingFromDict(valid, MappingsDrumRb);
-                break;
-        }
     }
 
     public override void UpdateBindings()

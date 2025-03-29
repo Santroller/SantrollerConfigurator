@@ -295,7 +295,7 @@ public class Santroller : ConfigurableUsbDevice
                 if (_model.UsbHostEnabled)
                 {
                     usbHostRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHost, 24);
-                    usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, 134);
+                    usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, 97);
                     midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
                 }
                 if (_model.IsBluetoothRx)
@@ -334,7 +334,11 @@ public class Santroller : ConfigurableUsbDevice
                         djRightRaw, gh5Raw,
                         ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
                         peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected);
-                await Task.Delay(100);
+                // If nothing is being ticked, then give the UI some time to process data instead of polling at max speed
+                if (analogRaw.Count == 0 && digitalRaw.Count == 0 && digitalRawPeripheral.Count == 0)
+                {
+                    await Task.Delay(100);
+                }
             }
             catch (Exception ex)
             {

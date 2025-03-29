@@ -59,12 +59,6 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         {WiiInputType.TaTaConLeftDrumRim, StandardButtonType.B},
         {WiiInputType.TaTaConRightDrumCenter, StandardButtonType.X},
         {WiiInputType.TaTaConRightDrumRim, StandardButtonType.Y},
-        {WiiInputType.DrumGreen, StandardButtonType.A},
-        {WiiInputType.DrumRed, StandardButtonType.B},
-        {WiiInputType.DrumYellow, StandardButtonType.Y},
-        {WiiInputType.DrumBlue, StandardButtonType.X},
-        {WiiInputType.DrumOrange, StandardButtonType.LeftShoulder},
-        {WiiInputType.DrumKickPedal, StandardButtonType.RightShoulder},
         {WiiInputType.DrumMinus, StandardButtonType.Back},
         {WiiInputType.DrumPlus, StandardButtonType.Start},
     };
@@ -134,12 +128,6 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
     [
         WiiInputType.ClassicLeftTrigger,
         WiiInputType.ClassicRightTrigger,
-        WiiInputType.DrumGreenPressure,
-        WiiInputType.DrumRedPressure,
-        WiiInputType.DrumYellowPressure,
-        WiiInputType.DrumBluePressure,
-        WiiInputType.DrumOrangePressure,
-        WiiInputType.DrumKickPedalPressure,
         WiiInputType.GuitarWhammy,
         WiiInputType.GuitarTapBar,
         WiiInputType.UDrawPenPressure,
@@ -166,38 +154,6 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         {DjInputType.RightBlue, WiiInputType.DjHeroRightBlue}
     };
 
-    private static readonly Dictionary<WiiInputType, DrumAxisType> DrumAxisGh = new()
-    {
-        {WiiInputType.DrumGreen, DrumAxisType.Green},
-        {WiiInputType.DrumRed, DrumAxisType.Red},
-        {WiiInputType.DrumYellow, DrumAxisType.Yellow},
-        {WiiInputType.DrumBlue, DrumAxisType.Blue},
-        {WiiInputType.DrumOrange, DrumAxisType.Orange},
-        {WiiInputType.DrumKickPedal, DrumAxisType.Kick}
-        // {WiiInputType.DrumHiHatPedal, DrumAxisType.Kick2},
-    };
-    
-    private static readonly Dictionary<DrumAxisType, WiiInputType> DrumToWii = new()
-    {
-        {DrumAxisType.Green, WiiInputType.DrumGreen},
-        {DrumAxisType.Red, WiiInputType.DrumRed},
-        {DrumAxisType.Yellow, WiiInputType.DrumYellow},
-        {DrumAxisType.Blue, WiiInputType.DrumBlue},
-        {DrumAxisType.Orange, WiiInputType.DrumOrange},
-        {DrumAxisType.Kick, WiiInputType.DrumKickPedal}
-        // {DrumAxisType.Kick2, WiiInputType.DrumHiHatPedal},
-    };
-
-    private static readonly Dictionary<WiiInputType, DrumAxisType> DrumAxisRb = new()
-    {
-        {WiiInputType.DrumGreen, DrumAxisType.Green},
-        {WiiInputType.DrumRed, DrumAxisType.Red},
-        {WiiInputType.DrumYellow, DrumAxisType.Yellow},
-        {WiiInputType.DrumBlue, DrumAxisType.Blue},
-        {WiiInputType.DrumOrange, DrumAxisType.Green},
-        {WiiInputType.DrumKickPedal, DrumAxisType.Kick}
-        // {WiiInputType.DrumHiHatPedal, DrumAxisType.Kick2},
-    };
 
     public static readonly Dictionary<WiiInputType, StandardAxisType> AxisAcceleration = new()
     {
@@ -257,7 +213,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
     public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
     {
         Outputs.Clear();
-        Outputs.AddRange(outputs);
+        Outputs.AddRange(outputs.Where(s => s.Input.InnermostInputs().Any(s2 => s2 is WiiInput wiiInput && Enum.IsDefined(wiiInput.Input))));
         if (Outputs.Count == 0)
         {
             CreateDefaults();
@@ -467,63 +423,6 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                     }
                 }
             }
-        }
-
-        // Drum Specific mappings
-        if (Model.DeviceControllerType.IsDrum())
-        {
-            var isGh = Model.DeviceControllerType is DeviceControllerType.GuitarHeroDrums;
-            // Drum Inputs to Drum Axis
-            if (!Outputs.Items.Any(s => s is DrumAxis))
-            {
-                foreach (var pair in isGh ? DrumAxisGh : DrumAxisRb)
-                    Outputs.Add(new DrumAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
-                        Colors.Black,
-                        Colors.Black, [], [], [], -30000, 30000, 10,
-                        10, pair.Value, false, false, false, -1,
-                        true));
-                Outputs.RemoveMany(Outputs.Items.Where(s => s is ControllerButton cb && cb.Input.InnermostInputs().Any(s2 => s2 is WiiInput w && (DrumAxisGh.ContainsKey(w.Input) || DrumAxisRb.ContainsKey(w.Input)))));
-            }
-            else
-            {
-                // We already have drum inputs mapped, but need to handle swapping between GH and RB 
-                var first = Outputs.Items.OfType<DrumAxis>().First(s => s.Input is WiiInput
-                {
-                    Input: WiiInputType.DrumOrange
-                });
-                Outputs.Remove(first);
-                // Rb maps orange to green, while gh maps orange to orange
-                if (isGh)
-                    Outputs.Add(new DrumAxis(Model,true,
-                        new WiiInput(WiiInputType.DrumOrange, Model, Peripheral, Sda, Scl, true),
-                        first.LedOn, first.LedOff, first.LedIndices.ToArray(), first.LedIndicesPeripheral.ToArray(),
-                        first.LedIndicesMpr121.ToArray(),
-                        first.Min, first.Max, first.DeadZone,
-                        10,
-                        DrumAxisType.Orange, false, false, false, -1, true));
-                else
-                    Outputs.Add(new DrumAxis(Model,true,
-                        new WiiInput(WiiInputType.DrumOrange, Model, Peripheral, Sda, Scl, true),
-                        first.LedOn, first.LedOff, first.LedIndices.ToArray(), first.LedIndicesPeripheral.ToArray(),
-                        first.LedIndicesMpr121.ToArray(),
-                        first.Min, first.Max, first.DeadZone,
-                        10,
-                        DrumAxisType.Green, false, false, false, -1, true));
-            }
-        }
-        else
-        {
-            var currentDrums = Outputs.Items.OfType<DrumAxis>();
-            foreach (var drumAxis in currentDrums)
-            {
-                Outputs.Add(new ControllerButton(Model, true,drumAxis.Input,
-                    drumAxis.LedOn, drumAxis.LedOff, drumAxis.LedIndices.ToArray(),
-                    drumAxis.LedIndicesPeripheral.ToArray(), drumAxis.LedIndicesMpr121.ToArray(), drumAxis.Debounce,
-                    Buttons[DrumToWii[drumAxis.Type]], false, false, false, -1, true));
-            }
-
-            // Remove all drum inputs if we aren't in Drum emulation mode
-            Outputs.RemoveMany(Outputs.Items.Where(s => s is DrumAxis));
         }
 
         var tapFrets =

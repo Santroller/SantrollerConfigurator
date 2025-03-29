@@ -76,20 +76,17 @@ public class MidiCombinedOutput : CombinedOutput
         {100, DrumAxisType.Kick2}, // Hi-Hat Pedal
     };
     
-    public static readonly Dictionary<int, DrumAxisType> MappingsDrumGh = MappingsDrumRb.Select(RbToGh).ToDictionary();
-
-    private static KeyValuePair<int, DrumAxisType> RbToGh(KeyValuePair<int, DrumAxisType> mapping)
+    // TODO: do we want to map some of the other drums across in some form?
+    public static readonly Dictionary<int, DrumAxisType> MappingsDrumGh = new()
     {
-        return mapping.Value switch
-        {
-            DrumAxisType.Green or DrumAxisType.Red or DrumAxisType.Blue or DrumAxisType.Kick
-                or DrumAxisType.Kick2 => mapping,
-            DrumAxisType.Yellow or DrumAxisType.YellowCymbal => new KeyValuePair<int, DrumAxisType>(mapping.Key,
-                DrumAxisType.Yellow),
-            DrumAxisType.GreenCymbal => new KeyValuePair<int, DrumAxisType>(mapping.Key, DrumAxisType.Orange),
-            _ => mapping
-        };
-    }
+        {38, DrumAxisType.Red},
+        {46, DrumAxisType.Yellow},
+        {48, DrumAxisType.Blue},
+        {45, DrumAxisType.Green},
+        {49, DrumAxisType.Orange},
+        {36, DrumAxisType.Kick},
+        {100, DrumAxisType.Kick2}, // Hi-Hat Pedal
+    };
     public override SerializedOutput Serialize()
     {
         return new SerializedCombinedMidiOutput(Outputs.Items.ToList(), (byte) FirstNote);
@@ -131,14 +128,11 @@ public class MidiCombinedOutput : CombinedOutput
 
     public void UpdateDefaults()
     {
-        if (Model.DeviceControllerType is not DeviceControllerType.ProKeys) return;
-        var outputs = Outputs.Items.OfType<PianoKey>().Where(s => s.Key is not (ProKeyType.PedalAnalog or ProKeyType.PedalDigital or ProKeyType.TouchPad or ProKeyType.Overdrive)).Select(s => new PianoKey(Model, true,
-            new MidiInput(MidiType.Note, FirstNote + (int) s.Key, Model), s.LedOn,
-            s.LedOff, s.LedIndices.ToArray(), s.LedIndicesPeripheral.ToArray(), s.LedIndicesMpr121.ToArray(), s.Key,
-            s.OutputEnabled, false,
-            s.OutputInverted, s.OutputPin, true) {Expanded = s.Expanded}).ToList();
-        Outputs.Clear();
-        Outputs.AddRange(outputs);
+        CreateDefaults();
+        if (Model.DeviceControllerType == DeviceControllerType.ProKeys)
+        {
+            FirstNote = 24;
+        }
     }
 
     public void CreateDefaults()

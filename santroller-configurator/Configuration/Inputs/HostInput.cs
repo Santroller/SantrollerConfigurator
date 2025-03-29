@@ -25,7 +25,7 @@ public abstract partial class HostInput : Input
         Input = input;
         IsAnalog = input is (>= UsbHostInputType.LeftTrigger and < UsbHostInputType.GenericButton1
             or >= UsbHostInputType.GenericAxisX) and not UsbHostInputType.KeyboardInput
-            and not UsbHostInputType.MouseButton and not UsbHostInputType.YellowCymbal and not UsbHostInputType.BlueCymbal and not UsbHostInputType.GreenCymbal;
+            and not UsbHostInputType.MouseButton;
     }
 
     public HostInput(Key key, ConfigViewModel model, bool combined = false) : base(model)
@@ -127,6 +127,7 @@ public abstract partial class HostInput : Input
 
     public void Update(ReadOnlySpan<byte> usbHostInputsRaw)
     {
+        Console.WriteLine(Marshal.SizeOf<UsbHostInputs>());
         if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;
         var inputs = StructTools.RawDeserialize<UsbHostInputs>(usbHostInputsRaw, 0);
         RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType, ProKeyType);
@@ -225,15 +226,6 @@ public abstract partial class HostInput : Input
         UsbHostInputType.PressureCircle,
         UsbHostInputType.PressureCross,
         UsbHostInputType.PressureSquare,
-        UsbHostInputType.RedVelocity,
-        UsbHostInputType.YellowVelocity,
-        UsbHostInputType.BlueVelocity,
-        UsbHostInputType.GreenVelocity,
-        UsbHostInputType.OrangeVelocity,
-        UsbHostInputType.BlueCymbalVelocity,
-        UsbHostInputType.YellowCymbalVelocity,
-        UsbHostInputType.GreenCymbalVelocity,
-        UsbHostInputType.KickVelocity,
         UsbHostInputType.Whammy,
         UsbHostInputType.Pickup,
         UsbHostInputType.MouseAxis,
@@ -245,33 +237,22 @@ public abstract partial class HostInput : Input
     public struct UsbHostInputs
     {
         private readonly uint buttons;
-        private readonly byte buttons2;
 
-        private bool ButtonPressed(UsbHostInputType inputType)
+        private bool ButtonPressed(UsbHostInputTypeReal inputType)
         {
-            // Annoyingly, we added these later so we can't just put them in the array where we want
             switch (inputType)
             {
-                case UsbHostInputType.YellowCymbal:
-                    return (buttons2 & (1 << 2)) != 0;
-                case UsbHostInputType.BlueCymbal:
-                    return (buttons2 & (1 << 3)) != 0;
-                case UsbHostInputType.GreenCymbal:
-                    return (buttons2 & (1 << 4)) != 0;
-                case >= UsbHostInputType.LeftTrigger
-                    and (< UsbHostInputType.GenericButton1 or > UsbHostInputType.GenericButton16):
+                case >= UsbHostInputTypeReal.LeftTrigger
+                    and (< UsbHostInputTypeReal.GenericButton1 or > UsbHostInputTypeReal.GenericButton16):
                     return false;
                 default:
                 {
                     var val = (uint) inputType;
                     switch (val)
                     {
-                        case >= (uint) UsbHostInputType.GenericButton1:
-                            val -= (uint) UsbHostInputType.GenericButton1;
+                        case >= (uint) UsbHostInputTypeReal.GenericButton1:
+                            val -= (uint) UsbHostInputTypeReal.GenericButton1;
                             return (genericButtons & (1 << (int) val)) != 0;
-                        case >= 32:
-                            val -= 32;
-                            return (buttons2 & (1 << (int) val)) != 0;
                         default:
                             return (buttons & (1 << (int) val)) != 0;
                     }
@@ -295,15 +276,6 @@ public abstract partial class HostInput : Input
         private readonly byte pressureCircle;
         private readonly byte pressureCross;
         private readonly byte pressureSquare;
-        private readonly byte redVelocity;
-        private readonly byte yellowVelocity;
-        private readonly byte blueVelocity;
-        private readonly byte greenVelocity;
-        private readonly byte orangeVelocity;
-        private readonly byte blueCymbalVelocity;
-        private readonly byte yellowCymbalVelocity;
-        private readonly byte greenCymbalVelocity;
-        private readonly byte kickVelocity;
         private readonly byte whammy;
         private readonly byte pickup;
         private readonly short tilt;
@@ -331,9 +303,6 @@ public abstract partial class HostInput : Input
         private readonly sbyte mouseY;
         private readonly sbyte scrollY;
         private readonly sbyte scrollX;
-        private unsafe fixed byte proKeys[25];
-        private readonly byte pedal;
-        private readonly byte touchPad;
         private readonly byte lowEFret;
         private readonly byte aFret;
         private readonly byte dFret;
@@ -350,71 +319,58 @@ public abstract partial class HostInput : Input
         public unsafe int RawValue(UsbHostInputType inputType, Key key, MouseAxisType mouseAxisType,
             MouseButtonType mouseButtonType, ProKeyType proKeyType)
         {
-            var val = inputType switch
+            UsbHostInputTypeReal real = Enum.Parse<UsbHostInputTypeReal>(inputType.ToString());
+            var val = real switch
             {
-                UsbHostInputType.LeftTrigger => leftTrigger,
-                UsbHostInputType.RightTrigger => rightTrigger,
-                UsbHostInputType.LeftStickX => leftStickX,
-                UsbHostInputType.LeftStickY => leftStickY,
-                UsbHostInputType.RightStickX => rightStickX,
-                UsbHostInputType.RightStickY => rightStickY,
-                UsbHostInputType.PressureDpadUp => pressureDpadUp,
-                UsbHostInputType.PressureDpadRight => pressureDpadRight,
-                UsbHostInputType.PressureDpadLeft => pressureDpadLeft,
-                UsbHostInputType.PressureDpadDown => pressureDpadDown,
-                UsbHostInputType.PressureL1 => pressureL1,
-                UsbHostInputType.PressureR1 => pressureR1,
-                UsbHostInputType.PressureTriangle => pressureTriangle,
-                UsbHostInputType.PressureCircle => pressureCircle,
-                UsbHostInputType.PressureCross => pressureCross,
-                UsbHostInputType.PressureSquare => pressureSquare,
-                UsbHostInputType.RedVelocity => redVelocity,
-                UsbHostInputType.YellowVelocity => yellowVelocity,
-                UsbHostInputType.BlueVelocity => blueVelocity,
-                UsbHostInputType.GreenVelocity => greenVelocity,
-                UsbHostInputType.OrangeVelocity => orangeVelocity,
-                UsbHostInputType.BlueCymbalVelocity => blueCymbalVelocity,
-                UsbHostInputType.YellowCymbalVelocity => yellowCymbalVelocity,
-                UsbHostInputType.GreenCymbalVelocity => greenCymbalVelocity,
-                UsbHostInputType.KickVelocity => kickVelocity,
-                UsbHostInputType.Whammy => whammy,
-                UsbHostInputType.Tilt => tilt,
-                UsbHostInputType.Pickup => pickup,
-                UsbHostInputType.Slider => slider,
-                UsbHostInputType.LeftTableVelocity => leftTableVelocity,
-                UsbHostInputType.RightTableVelocity => rightTableVelocity,
-                UsbHostInputType.EffectsKnob => effectsKnob,
-                UsbHostInputType.Crossfader => crossfader,
-                UsbHostInputType.AccelX => accelX,
-                UsbHostInputType.AccelZ => accelZ,
-                UsbHostInputType.AccelY => accelY,
-                UsbHostInputType.Gyro => gyro,
-                UsbHostInputType.GenericAxisX => genericX,
-                UsbHostInputType.GenericAxisY => genericY,
-                UsbHostInputType.GenericAxisZ => genericZ,
-                UsbHostInputType.GenericAxisRx => genericRX,
-                UsbHostInputType.GenericAxisRy => genericRY,
-                UsbHostInputType.GenericAxisRz => genericRZ,
-                UsbHostInputType.GenericAxisSlider => genericSlider,
-                UsbHostInputType.ProKey when proKeyType is ProKeyType.Overdrive => (buttons2 & (1 << 5)) != 0 ? 1 : 0,
-                UsbHostInputType.ProKey when proKeyType is ProKeyType.PedalDigital => (buttons2 & (1 << 6)) != 0 ? 1 : 0,
-                UsbHostInputType.ProKey when proKeyType is ProKeyType.PedalAnalog => pedal,
-                UsbHostInputType.ProKey when proKeyType is ProKeyType.TouchPad => touchPad,
-                UsbHostInputType.ProKey => proKeys[(int) proKeyType],
-                UsbHostInputType.KeyboardInput when key is Key.LeftAlt or Key.LeftCtrl or Key.LeftShift or Key.RightAlt
+                UsbHostInputTypeReal.LeftTrigger => leftTrigger,
+                UsbHostInputTypeReal.RightTrigger => rightTrigger,
+                UsbHostInputTypeReal.LeftStickX => leftStickX,
+                UsbHostInputTypeReal.LeftStickY => leftStickY,
+                UsbHostInputTypeReal.RightStickX => rightStickX,
+                UsbHostInputTypeReal.RightStickY => rightStickY,
+                UsbHostInputTypeReal.PressureDpadUp => pressureDpadUp,
+                UsbHostInputTypeReal.PressureDpadRight => pressureDpadRight,
+                UsbHostInputTypeReal.PressureDpadLeft => pressureDpadLeft,
+                UsbHostInputTypeReal.PressureDpadDown => pressureDpadDown,
+                UsbHostInputTypeReal.PressureL1 => pressureL1,
+                UsbHostInputTypeReal.PressureR1 => pressureR1,
+                UsbHostInputTypeReal.PressureTriangle => pressureTriangle,
+                UsbHostInputTypeReal.PressureCircle => pressureCircle,
+                UsbHostInputTypeReal.PressureCross => pressureCross,
+                UsbHostInputTypeReal.PressureSquare => pressureSquare,
+                UsbHostInputTypeReal.Whammy => whammy,
+                UsbHostInputTypeReal.Tilt => tilt,
+                UsbHostInputTypeReal.Pickup => pickup,
+                UsbHostInputTypeReal.Slider => slider,
+                UsbHostInputTypeReal.LeftTableVelocity => leftTableVelocity,
+                UsbHostInputTypeReal.RightTableVelocity => rightTableVelocity,
+                UsbHostInputTypeReal.EffectsKnob => effectsKnob,
+                UsbHostInputTypeReal.Crossfader => crossfader,
+                UsbHostInputTypeReal.AccelX => accelX,
+                UsbHostInputTypeReal.AccelZ => accelZ,
+                UsbHostInputTypeReal.AccelY => accelY,
+                UsbHostInputTypeReal.Gyro => gyro,
+                UsbHostInputTypeReal.GenericAxisX => genericX,
+                UsbHostInputTypeReal.GenericAxisY => genericY,
+                UsbHostInputTypeReal.GenericAxisZ => genericZ,
+                UsbHostInputTypeReal.GenericAxisRx => genericRX,
+                UsbHostInputTypeReal.GenericAxisRy => genericRY,
+                UsbHostInputTypeReal.GenericAxisRz => genericRZ,
+                UsbHostInputTypeReal.GenericAxisSlider => genericSlider,
+                UsbHostInputTypeReal.KeyboardInput when key is Key.LeftAlt or Key.LeftCtrl or Key.LeftShift or Key.RightAlt
                     or Key.RightCtrl
                     or Key.RightShift => (keys &
                                           ((UInt128) 1 <<
                                            KeyboardButton.Keys.IndexOf(key))) != 0
                     ? 1
                     : 0,
-                UsbHostInputType.KeyboardInput => (keys &
-                                                   ((UInt128) 1 <<
-                                                    (KeyboardButton.KeyCodes.IndexOf(Output.GetReportField(key)) +
-                                                     8))) != 0
+                UsbHostInputTypeReal.KeyboardInput => (keys &
+                                                       ((UInt128) 1 <<
+                                                        (KeyboardButton.KeyCodes.IndexOf(Output.GetReportField(key)) +
+                                                         8))) != 0
                     ? 1
                     : 0,
-                UsbHostInputType.MouseAxis => mouseAxisType switch
+                UsbHostInputTypeReal.MouseAxis => mouseAxisType switch
                 {
                     MouseAxisType.X => mouseX,
                     MouseAxisType.Y => mouseY,
@@ -422,14 +378,14 @@ public abstract partial class HostInput : Input
                     MouseAxisType.ScrollX => scrollX,
                     _ => 0
                 },
-                UsbHostInputType.MouseButton => mouseButtonType switch
+                UsbHostInputTypeReal.MouseButton => mouseButtonType switch
                 {
                     MouseButtonType.Left => (mouseButtons & 1 << 1) != 0 ? 1 : 0,
                     MouseButtonType.Right => (mouseButtons & 1 << 2) != 0 ? 1 : 0,
                     MouseButtonType.Middle => (mouseButtons & 1 << 3) != 0 ? 1 : 0,
                     _ => 0
                 },
-                _ => ButtonPressed(inputType) ? 1 : 0
+                _ => ButtonPressed(real) ? 1 : 0
             };
             if (ByteBased.Contains(inputType))
             {

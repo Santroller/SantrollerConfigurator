@@ -301,7 +301,7 @@ public partial class MacroInput : Input
         Enum.GetValues<WiiInputType>().OrderBy(s => EnumToStringConverter.Convert(s));
 
     public IEnumerable<DjInputType> DjInputTypes => Enum.GetValues<DjInputType>();
-    public IEnumerable<UsbHostInputType> UsbInputTypes => Enum.GetValues<UsbHostInputType>();
+    public IEnumerable<UsbHostInputType> UsbInputTypes => Enum.GetValues<UsbHostInputType>().Where(type => Enum.IsDefined(typeof(UsbHostInputTypeReal), type.ToString()));
     public IEnumerable<MidiType> MidiTypes => Enum.GetValues<MidiType>();
 
     public IEnumerable<InputType> InputTypes =>

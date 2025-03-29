@@ -561,7 +561,7 @@ public abstract partial class Output : ReactiveObject
     public IEnumerable<Gh5NeckInputType> Gh5NeckInputTypes =>
         Enum.GetValues<Gh5NeckInputType>().Where(s => s is not Gh5NeckInputType.TapAll);
 
-    public IEnumerable<UsbHostInputType> UsbInputTypes => Enum.GetValues<UsbHostInputType>().Where(s => s is not (UsbHostInputType.YellowCymbal or UsbHostInputType.GreenCymbal or UsbHostInputType.BlueCymbal));
+    public IEnumerable<UsbHostInputType> UsbInputTypes => Enum.GetValues<UsbHostInputType>().Where(type => Enum.IsDefined(typeof(UsbHostInputTypeReal), type.ToString()));
 
     public IEnumerable<object> KeyOrMouseInputs => Enum.GetValues<MouseButtonType>().Cast<object>()
         .Concat(Enum.GetValues<MouseAxisType>().Cast<object>()).Concat(KeyboardButton.Keys.Cast<object>());

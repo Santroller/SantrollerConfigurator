@@ -36,12 +36,6 @@ public class WiiInput : TwiInput
             {WiiInputType.UDrawPenPressure, WiiControllerType.UDraw},
             {WiiInputType.UDrawPenX, WiiControllerType.UDraw},
             {WiiInputType.UDrawPenY, WiiControllerType.UDraw},
-            {WiiInputType.DrumGreenPressure, WiiControllerType.Drum},
-            {WiiInputType.DrumRedPressure, WiiControllerType.Drum},
-            {WiiInputType.DrumYellowPressure, WiiControllerType.Drum},
-            {WiiInputType.DrumBluePressure, WiiControllerType.Drum},
-            {WiiInputType.DrumOrangePressure, WiiControllerType.Drum},
-            {WiiInputType.DrumKickPedalPressure, WiiControllerType.Drum},
             {WiiInputType.DrumJoystickX, WiiControllerType.Drum},
             {WiiInputType.DrumJoystickY, WiiControllerType.Drum},
             {WiiInputType.GuitarJoystickX, WiiControllerType.Guitar},
@@ -81,12 +75,6 @@ public class WiiInput : TwiInput
             {WiiInputType.DjHeroLeftBlue, WiiControllerType.Dj},
             {WiiInputType.DrumPlus, WiiControllerType.Drum},
             {WiiInputType.DrumMinus, WiiControllerType.Drum},
-            {WiiInputType.DrumKickPedal, WiiControllerType.Drum},
-            {WiiInputType.DrumBlue, WiiControllerType.Drum},
-            {WiiInputType.DrumGreen, WiiControllerType.Drum},
-            {WiiInputType.DrumYellow, WiiControllerType.Drum},
-            {WiiInputType.DrumRed, WiiControllerType.Drum},
-            {WiiInputType.DrumOrange, WiiControllerType.Drum},
             {WiiInputType.GuitarPlus, WiiControllerType.Guitar},
             {WiiInputType.GuitarMinus, WiiControllerType.Guitar},
             {WiiInputType.GuitarStrumDown, WiiControllerType.Guitar},
@@ -140,12 +128,6 @@ public class WiiInput : TwiInput
         {WiiInputType.UDrawPenPressure, "(wiiData[3])"},
         {WiiInputType.UDrawPenX, "((wiiData[2] & 0x0f) << 8) | wiiData[0]"},
         {WiiInputType.UDrawPenY, "((wiiData[2] & 0xf0) << 4) | wiiData[1]"},
-        {WiiInputType.DrumGreenPressure, "drumVelocity[DRUM_GREEN] << 8"},
-        {WiiInputType.DrumRedPressure, "drumVelocity[DRUM_RED] << 8"},
-        {WiiInputType.DrumYellowPressure, "drumVelocity[DRUM_YELLOW] << 8"},
-        {WiiInputType.DrumBluePressure, "drumVelocity[DRUM_BLUE] << 8"},
-        {WiiInputType.DrumOrangePressure, "drumVelocity[DRUM_ORANGE] << 8"},
-        {WiiInputType.DrumKickPedalPressure, "drumVelocity[DRUM_KICK] << 8"},
         {WiiInputType.GuitarJoystickX, "((wiiData[0] & 0x3f) - 32) << 10"},
         {WiiInputType.GuitarJoystickY, "((wiiData[1] & 0x3f) - 32) << 10"},
         {WiiInputType.DrumJoystickX, "((wiiData[0] & 0x3f) - 32) << 10"},
@@ -185,12 +167,6 @@ public class WiiInput : TwiInput
         {WiiInputType.DjHeroEuphoria, "((wiiButtonsHigh) & (1 << 4))"},
         {WiiInputType.DrumPlus, "((wiiButtonsLow) & (1 << 2))"},
         {WiiInputType.DrumMinus, "((wiiButtonsLow) & (1 << 4))"},
-        {WiiInputType.DrumKickPedal, "((wiiButtonsHigh) & (1 << 2))"},
-        {WiiInputType.DrumBlue, "((wiiButtonsHigh) & (1 << 3))"},
-        {WiiInputType.DrumGreen, "((wiiButtonsHigh) & (1 << 4))"},
-        {WiiInputType.DrumYellow, "((wiiButtonsHigh) & (1 << 5))"},
-        {WiiInputType.DrumRed, "((wiiButtonsHigh) & (1 << 6))"},
-        {WiiInputType.DrumOrange, "((wiiButtonsHigh) & (1 << 7))"},
         {WiiInputType.GuitarPlus, "((wiiButtonsLow) & (1 << 2))"},
         {WiiInputType.GuitarMinus, "((wiiButtonsLow) & (1 << 4))"},
         {WiiInputType.GuitarStrumDown, "((wiiButtonsLow) & (1 << 6))"},
@@ -249,8 +225,6 @@ public class WiiInput : TwiInput
         {WiiControllerType.Taiko, "WII_TAIKO_NO_TATSUJIN_CONTROLLER"},
         {WiiControllerType.MotionPlus, "WII_MOTION_PLUS"}
     };
-
-    private readonly int[] _drumVelocity = new int[8];
 
     public WiiInput(WiiInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
         int scl = -1,
@@ -473,40 +447,10 @@ public class WiiInput : TwiInput
                 };
                 break;
             case WiiControllerType.Drum:
-                var vel = (7 - (wiiData[3] >> 5)) << 5;
-                var which = (wiiData[2] & 0b01111100) >> 1;
-                switch (which)
-                {
-                    case 0x1B:
-                        _drumVelocity[(int) DrumType.DrumKick] = vel;
-                        break;
-                    case 0x12:
-                        _drumVelocity[(int) DrumType.DrumGreen] = vel;
-                        break;
-                    case 0x19:
-                        _drumVelocity[(int) DrumType.DrumRed] = vel;
-                        break;
-                    case 0x11:
-                        _drumVelocity[(int) DrumType.DrumYellow] = vel;
-                        break;
-                    case 0x0F:
-                        _drumVelocity[(int) DrumType.DrumBlue] = vel;
-                        break;
-                    case 0x0E:
-                        _drumVelocity[(int) DrumType.DrumOrange] = vel;
-                        break;
-                }
-
                 RawValue = Input switch
                 {
                     WiiInputType.DrumPlus => wiiButtonsLow & (1 << 2),
                     WiiInputType.DrumMinus => wiiButtonsLow & (1 << 4),
-                    WiiInputType.DrumKickPedal => wiiButtonsHigh & (1 << 2),
-                    WiiInputType.DrumBlue => wiiButtonsHigh & (1 << 3),
-                    WiiInputType.DrumGreen => wiiButtonsHigh & (1 << 4),
-                    WiiInputType.DrumYellow => wiiButtonsHigh & (1 << 5),
-                    WiiInputType.DrumRed => wiiButtonsHigh & (1 << 6),
-                    WiiInputType.DrumOrange => wiiButtonsHigh & (1 << 7),
                     WiiInputType.DrumJoystickX => ((wiiData[0] & 0x3F) - 0x20) << 10,
                     WiiInputType.DrumJoystickY => ((wiiData[1] & 0x3F) - 0x20) << 10,
                     _ => RawValue

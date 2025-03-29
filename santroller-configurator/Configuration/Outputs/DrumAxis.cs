@@ -184,33 +184,6 @@ public partial class DrumAxis : OutputAxis
             return "";
         }
         var input = Input;
-        if (Input is WiiInput
-            {
-                Input: >= WiiInputType.DrumGreenPressure and <= WiiInputType.DrumOrangePressure
-                or WiiInputType.DrumKickPedalPressure
-            } wii)
-        {
-            // For wii stuff, generate the debounce based on the digital signal from the controller
-            var type = wii.Input;
-            var typeButton = Enum.Parse<WiiInputType>(type.ToString().Replace("Pressure", ""));
-            input = new WiiInput(typeButton, Model, wii.Peripheral);
-        }
-
-        if (Input is UsbHostInput
-            {
-                Input: >= UsbHostInputType.RedVelocity and <= UsbHostInputType.KickVelocity
-            } usb)
-        {
-            // For usb host stuff, generate the debounce based on the digital signal from the controller
-            var type = usb.Input;
-            if (type is UsbHostInputType.KickVelocity)
-            {
-                type = UsbHostInputType.Kick1;
-            }
-
-            var typeButton = Enum.Parse<UsbHostInputType>(type.ToString().Replace("Velocity", ""));
-            input = new UsbHostInput(typeButton, Model);
-        }
 
         if (mode == ConfigField.Shared)
         {
@@ -443,6 +416,7 @@ public partial class DrumAxis : OutputAxis
             return $$"""
                      if ({{check}}) {
                         lastDrum[{{debounceIndex}}] = {{GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};
+                        {{reset}}
                      }
                      if ({{ifStatement}}) {
                          if (drumHit) {

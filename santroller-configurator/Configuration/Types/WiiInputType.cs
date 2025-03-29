@@ -10,15 +10,8 @@ public enum WiiInputType
     ClassicRightTrigger,
     DrumJoystickX,
     DrumJoystickY,
-
-    DrumGreenPressure,
-    DrumRedPressure,
-    DrumYellowPressure,
-    DrumBluePressure,
-    DrumOrangePressure,
-    DrumKickPedalPressure,
     
-    GuitarJoystickX,
+    GuitarJoystickX = 14,
     GuitarJoystickY,
     GuitarWhammy,
     GuitarTapBar,
@@ -62,16 +55,10 @@ public enum WiiInputType
     GuitarStrumUp,
     GuitarStrumDown,
     
-    DrumGreen,
-    DrumRed,
-    DrumYellow,
-    DrumBlue,
-    DrumOrange,
-    DrumMinus,
+    DrumMinus = 57,
     DrumPlus,
-    DrumKickPedal,
     
-    NunchukC,
+    NunchukC = 60,
     NunchukZ,
     
     UDrawPenClick,
