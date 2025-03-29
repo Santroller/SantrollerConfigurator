@@ -64,6 +64,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly int Max170XTwiFreq = 400000;
     public static readonly string AccelTwiType = "adxl";
     public static readonly int AccelTwiFreq = 400000;
+    public static readonly string MidiSerialPinType = "MIDI RX";
     public static readonly string UsbHostPinTypeDm = "USB D-";
     public static readonly string UsbHostPinTypeDp = "USB D+";
     public static readonly string UnoPinTypeTx = "Uno Serial Tx Pin";
@@ -102,6 +103,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private readonly DirectPinConfig? _unoTx;
 
     private readonly DirectPinConfig _usbHostDm;
+    private readonly DirectPinConfig _midiSerialPin;
     private readonly DirectPinConfig _usbHostDp;
 
     public string WarningColor => Main.ProgressBarWarning;
@@ -326,6 +328,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         AvailablePinsAnalog = analogPins;
         AvailablePinsDigital = digitalPins;
         AvailablePinsInterrupt = interruptPins;
+        _midiSerialPin = new DirectPinConfig(this, MidiSerialPinType, 1, false, DevicePinMode.Skip);
         _usbHostDm = new DirectPinConfig(this, UsbHostPinTypeDm, -1, false, DevicePinMode.Skip);
         _usbHostDp = new DirectPinConfig(this, UsbHostPinTypeDp, -1, false, DevicePinMode.Skip);
         if (!device.LoadConfiguration(this, false))
@@ -935,6 +938,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     [Reactive] private bool _apa102IsFullSize;
+    [Reactive] private bool _midiSerialEnabled;
 
     public int SleepWakeUpPin
     {
@@ -992,6 +996,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [Reactive] public bool _accelConnected;
 
+    public int MidiSerialPin
+    {
+        get => _midiSerialPin.Pin;
+        set
+        {
+            _midiSerialPin.Pin = value;
+            this.RaisePropertyChanged();
+            this.RaisePropertyChanged(nameof(MidiSerialPin));
+            UpdateErrors();
+        }
+    }
     public int UsbHostDm
     {
         get => _usbHostDm.Pin;
@@ -1787,6 +1802,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public void SetDefaults()
     {
         ClearOutputs();
+        MidiSerialEnabled = false;
+        MidiSerialPin = 1;
         HasWiiOutput = false;
         HasPs2Output = false;
         AccelFilter = 0.05;
@@ -2191,7 +2208,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                    #define PS4_INSTRUMENT {(Ps4Instruments && UsbHostEnabled && DeviceControllerType is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.RockBandDrums or DeviceControllerType.RockBandGuitar).ToString().ToLower()}
                    #define PRO_GUITAR {Outputs.Any(s => s is ProGuitarCombinedOutput).ToString().ToLower()}
                    """;
+        if (MidiSerialEnabled)
+        {
+            
+            config += $"""
 
+                       #define INPUT_SERIAL_MIDI
+                       #define SERIAL_MIDI_PIN {MidiSerialPin}
+                       """;
+        }
         if (IsBluetoothTx)
         {
             config += $"""
@@ -4102,6 +4127,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (UsbHostEnabled && type != UsbHostPinTypeDm && type != UsbHostPinTypeDp && !peripheral)
             pins["USB Host"] = [UsbHostDm, UsbHostDp];
 
+        if (MidiSerialEnabled && type != MidiSerialPinType && !peripheral)
+        {
+            pins["MIDI Serial RX"] = [MidiSerialPin];
+        }
+        
         if (_adaFruitHostPin != null && type != AdafruitHostType && !peripheral)
             pins["Adafruit USB Host Enable"] = [_adaFruitHostPin.Pin];
 

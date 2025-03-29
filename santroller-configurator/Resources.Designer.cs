@@ -279,6 +279,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string MidiSerialEnabled {
+            get {
+                return ResourceManager.GetString("MidiSerialEnabled", resourceCulture);
+            }
+        }
+        
+        public static string MidiRXPin {
+            get {
+                return ResourceManager.GetString("MidiRXPin", resourceCulture);
+            }
+        }
+        
         public static string WiiCombinedTitle {
             get {
                 return ResourceManager.GetString("WiiCombinedTitle", resourceCulture);

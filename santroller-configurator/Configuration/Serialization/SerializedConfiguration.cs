@@ -28,6 +28,8 @@ public class SerializedConfiguration
     public void Update(ConfigViewModel model, IEnumerable<Output> bindings, bool allowErrors = true)
     {
         if (!allowErrors && model.HasError) return;
+        MidiSerialEnabled = model.MidiSerialEnabled;
+        MidiSerialPin = model.MidiSerialPin;
         SleepEnabled = model.SleepEnabled;
         SleepPin = model.SleepWakeUpPin;
         SleepTimer = model.DeviceSleep;
@@ -182,11 +184,15 @@ public class SerializedConfiguration
     [ProtoMember(89)] public int SleepTimer { get; private set; } = 5;
     [ProtoMember(90)] public int LedTimer { get; private set; } = 0;
     [ProtoMember(91)] public List<SerializedConsoleKey> Keys { get; private set; } = [];
+    [ProtoMember(92)] public bool MidiSerialEnabled { get; private set; } = false;
+    [ProtoMember(93)] public int MidiSerialPin { get; private set; } = 1;
 
     public void LoadConfiguration(ConfigViewModel model)
     {
         model._keys.Clear();
         model._keys.AddRange(Keys);
+        model.MidiSerialEnabled = MidiSerialEnabled;
+        model.MidiSerialPin = MidiSerialPin;
         model.SleepEnabled = SleepEnabled;
         model.SleepWakeUpPin = SleepPin;
         model.DeviceSleep = SleepTimer;

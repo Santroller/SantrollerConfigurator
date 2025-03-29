@@ -127,7 +127,6 @@ public abstract partial class HostInput : Input
 
     public void Update(ReadOnlySpan<byte> usbHostInputsRaw)
     {
-        Console.WriteLine(Marshal.SizeOf<UsbHostInputs>());
         if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;
         var inputs = StructTools.RawDeserialize<UsbHostInputs>(usbHostInputsRaw, 0);
         RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType, ProKeyType);
