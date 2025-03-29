@@ -280,8 +280,8 @@
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding ControllerFound}">
                         <Label VerticalAlignment="Center" VerticalContentAlignment="Center"
                                Content="{x:Static netCore:Resources.CurrentControllerTypeLabel}" />
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   Text="{Binding DetectedType}" />
+                        <Label VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Content="{Binding DetectedType}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !ControllerFound}">
                         <Label VerticalAlignment="Center" VerticalContentAlignment="Center"
