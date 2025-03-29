@@ -113,7 +113,7 @@ public partial class EmulationMode : Output
             EmulationModeType.XboxOne => "XBOXONE",
             EmulationModeType.Xbox => "OG_XBOX",
             EmulationModeType.Wii => "WII_RB",
-            EmulationModeType.Ps3 => "REAL_PS3",
+            EmulationModeType.Ps3 => "PS3",
             EmulationModeType.Ps4Or5 => "PS4",
             EmulationModeType.Switch => "SWITCH",
             EmulationModeType.Fnf => "KEYBOARD_MOUSE",
