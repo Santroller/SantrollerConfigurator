@@ -239,7 +239,7 @@ public partial class EmptyOutput : Output
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MinValue, ushort.MaxValue, ushort.MaxValue / 2, 0,
-                    50000, (StandardAxisType) value, false, false, false, -1, false),
+                    0, (StandardAxisType) value, false, false, false, -1, false),
                 StandardAxisType standardAxisType => new ControllerAxis(Model,true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],

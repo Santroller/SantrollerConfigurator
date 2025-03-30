@@ -554,18 +554,32 @@ public abstract partial class OutputAxis : Output
         if (Input is not DigitalToAnalog dta)
         {
             var extraTrigger = "";
-            if (this is ControllerAxis axis)
+            if (this is ControllerAxis {Type: StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger} axis)
             {
-                if (mode is ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Ps2
-                        or ConfigField.Universal or ConfigField.Wii &&
-                    axis.Type is StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger)
+                switch (mode)
                 {
-                    var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
-                    extraTrigger = $$"""
-                                     if ({{Input.Generate(writer)}} > {{axis.Threshold}}) {
-                                         report->{{trigger}} = true;
-                                     }
-                                     """;
+                    // the ps3 expects the digital signal if there is any value at all, so a threshold doesnt make sense
+                    case ConfigField.Ps3WithoutCapture:
+                    {
+                        var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
+                        extraTrigger = $$"""
+                                         if ({{Input.Generate(writer)}} > 0) {
+                                             report->{{trigger}} = true;
+                                         }
+                                         """;
+                        break;
+                    }
+                    case ConfigField.Ps3 or ConfigField.Ps4 or ConfigField.Ps2
+                        or ConfigField.Universal or ConfigField.Wii:
+                    {
+                        var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
+                        extraTrigger = $$"""
+                                         if ({{Input.Generate(writer)}} > {{axis.Threshold}}) {
+                                             report->{{trigger}} = true;
+                                         }
+                                         """;
+                        break;
+                    }
                 }
             }
 

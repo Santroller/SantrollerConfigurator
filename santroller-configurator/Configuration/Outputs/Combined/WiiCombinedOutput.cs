@@ -269,15 +269,10 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
         {
             if (UIntInputs.Contains(pair.Key))
             {
-                var threshold = ushort.MaxValue;
-                if (pair.Key is WiiInputType.ClassicLeftTrigger or WiiInputType.ClassicRightTrigger)
-                {
-                    threshold = 50000;
-                }
                 Outputs.Add(new ControllerAxis(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, [], [], [], 0, ushort.MaxValue,
-                    ushort.MaxValue/2,8000, threshold,
+                    ushort.MaxValue/2,8000, 0,
                     pair.Value, false, false, false, -1, true));
             }
             else
