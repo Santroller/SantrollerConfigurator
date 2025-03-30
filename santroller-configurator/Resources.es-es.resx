@@ -402,6 +402,12 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="KeyRWin" xml:space="preserve">
         <value>Tecla Windows Derecha</value>
     </data>
+    <data name="MidiSerialEnabled" xml:space="preserve">
+        <value>Serial MIDI Habilitada</value>
+    </data>
+    <data name="MidiRXPin" xml:space="preserve">
+        <value>Pin de Serial RX MIDI</value>
+    </data>
     <data name="KeyA" xml:space="preserve">
         <value>Tecla A</value>
     </data>
