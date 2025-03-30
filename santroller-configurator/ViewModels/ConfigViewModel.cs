@@ -1638,6 +1638,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             PollRate = 5;
         }
 
+        if (UsbHostEnabled && (_deviceControllerType.IsDrum() || _deviceControllerType == DeviceControllerType.ProKeys))
+        {
+            if (!Bindings.Items.Any(s => s is MidiCombinedOutput))
+            {
+                var dj = new MidiCombinedOutput(this, 24) {Expanded = defaults};
+                Bindings.Add(dj);
+                dj.SetOutputsOrDefaults(Array.Empty<Output>());
+            }
+        }
+
         if (_deviceControllerType.IsProGuitar())
         {
             if (!Bindings.Items.Any(s => s is ProGuitarCombinedOutput))
