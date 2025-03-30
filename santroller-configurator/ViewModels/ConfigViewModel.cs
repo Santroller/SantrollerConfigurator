@@ -1638,7 +1638,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             PollRate = 5;
         }
 
-        if (UsbHostEnabled && (_deviceControllerType.IsDrum() || _deviceControllerType == DeviceControllerType.ProKeys))
+        if (_deviceControllerType.IsDrum() || _deviceControllerType == DeviceControllerType.ProKeys)
         {
             if (!Bindings.Items.Any(s => s is MidiCombinedOutput))
             {
