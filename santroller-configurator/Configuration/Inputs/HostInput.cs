@@ -236,13 +236,13 @@ public abstract partial class HostInput : Input
     public struct UsbHostInputs
     {
         private readonly uint buttons;
+        private readonly ushort genericButtons;
 
         private bool ButtonPressed(UsbHostInputTypeReal inputType)
         {
             switch (inputType)
             {
-                case >= UsbHostInputTypeReal.LeftTrigger
-                    and (< UsbHostInputTypeReal.GenericButton1 or > UsbHostInputTypeReal.GenericButton16):
+                case > UsbHostInputTypeReal.GenericButton16:
                     return false;
                 default:
                 {
@@ -258,7 +258,7 @@ public abstract partial class HostInput : Input
                 }
             }
         }
-
+        
         private readonly ushort leftTrigger;
         private readonly ushort rightTrigger;
         private readonly short leftStickX;
@@ -287,7 +287,6 @@ public abstract partial class HostInput : Input
         private readonly ushort accelZ;
         private readonly ushort accelY;
         private readonly ushort gyro;
-        private readonly ushort genericButtons;
         private readonly ushort genericX;
         private readonly ushort genericY;
         private readonly ushort genericZ;
