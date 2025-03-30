@@ -145,6 +145,11 @@ public partial class EmptyOutput : Output
                 Model.Bindings.Remove(this);
                 Model.UpdateErrors();
                 return;
+            case SimpleType.WtDrumInput:
+                Model.HasWtDrumInput = true;
+                Model.Bindings.Remove(this);
+                Model.UpdateErrors();
+                return;
             case SimpleType.Peripheral:
                 Model.HasPeripheral = true;
                 Model.Bindings.Remove(this);

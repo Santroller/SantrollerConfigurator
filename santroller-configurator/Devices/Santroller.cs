@@ -73,7 +73,8 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadMidi,
         CommandSetAccelFilter,
         CommandReadAccelValid,
-        CommandReadBluetoothInputs
+        CommandReadBluetoothInputs,
+        CommandReadWtDrumConnected
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -252,6 +253,7 @@ public class Santroller : ConfigurableUsbDevice
                 var peripheralConnected = false;
                 var mpr121Connected = false;
                 var accelConnected = false;
+                var wtDrumConnected = false;
                 var max1270XRaw = Array.Empty<byte>();
                 var max1270XConnected = false;
                 var midiRaw = Array.Empty<byte>();
@@ -296,7 +298,6 @@ public class Santroller : ConfigurableUsbDevice
                 {
                     usbHostRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHost, 24);
                     usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, 97);
-                    midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
                 }
                 if (_model.IsBluetoothRx)
                 {
@@ -322,20 +323,26 @@ public class Santroller : ConfigurableUsbDevice
                     max1270XConnected = (await ReadDataAsync(0, (byte) Commands.CommandReadMax1270XValid, 1)).Any(x => x != 0);
                 }
 
+                if (_model.HasWtDrumInput)
+                {
+                    wtDrumConnected = (await ReadDataAsync(0, (byte) Commands.CommandReadWtDrumConnected, 1)).Any(x => x != 0);
+                }
+
                 var bluetoothRaw = Array.Empty<byte>();
                 if (IsPico) bluetoothRaw = await ReadDataAsync(0, (byte) Commands.CommandGetBtState, 1);
                 if (!UsbDevice.IsOpen || _model.Main.Working)
                 {
                     return;
                 }
-                _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw, accelConnected);
+                midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
+                _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw, accelConnected, wtDrumConnected);
                 foreach (var output in _bindings)
                     output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                         djRightRaw, gh5Raw,
                         ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
                         peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected);
                 // If nothing is being ticked, then give the UI some time to process data instead of polling at max speed
-                if (analogRaw.Count == 0 && digitalRaw.Count == 0 && digitalRawPeripheral.Count == 0)
+                if (analogRaw.Count == 0 && digitalRaw.Count == 0 && digitalRawPeripheral.Count == 0 && midiRaw.Length == 0)
                 {
                     await Task.Delay(100);
                 }

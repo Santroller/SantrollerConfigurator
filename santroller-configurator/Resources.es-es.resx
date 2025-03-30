@@ -405,6 +405,24 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="MidiSerialEnabled" xml:space="preserve">
         <value>Serial MIDI Habilitada</value>
     </data>
+    <data name="SimpleTypeWtDrumInput" xml:space="preserve">
+        <value>Batería de Guitar Hero WT</value>
+    </data>
+    <data name="WtDrumInputSettingsLabel" xml:space="preserve">
+        <value>Ajustes de Batería de Guitar Hero W</value>
+    </data>
+    <data name="SckWtLabel" xml:space="preserve">
+        <value>Pin Sck</value>
+    </data>
+    <data name="MisoWtLabel" xml:space="preserve">
+        <value>Pin MISO</value>
+    </data>
+    <data name="MosiWtLabel" xml:space="preserve">
+        <value>Pin MOSI</value>
+    </data>
+    <data name="CsWtLabel" xml:space="preserve">
+        <value>Pin CS</value>
+    </data>
     <data name="MidiRXPin" xml:space="preserve">
         <value>Pin de Serial RX MIDI</value>
     </data>

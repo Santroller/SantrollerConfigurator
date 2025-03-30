@@ -5145,6 +5145,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SimpleTypeWtDrumInput {
+            get {
+                return ResourceManager.GetString("SimpleTypeWtDrumInput", resourceCulture);
+            }
+        }
+        
+        public static string WtDrumInputSettingsLabel {
+            get {
+                return ResourceManager.GetString("WtDrumInputSettingsLabel", resourceCulture);
+            }
+        }
+        
         public static string SimpleTypePeripheral {
             get {
                 return ResourceManager.GetString("SimpleTypePeripheral", resourceCulture);
@@ -6162,6 +6174,30 @@ namespace GuitarConfigurator.NetCore {
         public static string MosiLabel {
             get {
                 return ResourceManager.GetString("MosiLabel", resourceCulture);
+            }
+        }
+        
+        public static string SckWtLabel {
+            get {
+                return ResourceManager.GetString("SckWtLabel", resourceCulture);
+            }
+        }
+        
+        public static string MisoWtLabel {
+            get {
+                return ResourceManager.GetString("MisoWtLabel", resourceCulture);
+            }
+        }
+        
+        public static string MosiWtLabel {
+            get {
+                return ResourceManager.GetString("MosiWtLabel", resourceCulture);
+            }
+        }
+        
+        public static string CsWtLabel {
+            get {
+                return ResourceManager.GetString("CsWtLabel", resourceCulture);
             }
         }
         

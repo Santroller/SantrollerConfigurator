@@ -2703,6 +2703,13 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="SimpleTypePs2Outputs" xml:space="preserve">
         <value>PS2 Controller Emulation</value>
     </data>
+    <data name="SimpleTypeWtDrumInput" xml:space="preserve">
+        <value>Guitar Hero WT Drum Kit</value>
+    </data>
+    <data name="WtDrumInputSettingsLabel" xml:space="preserve">
+        <value>Guitar Hero WT Drum Kit Settings</value>
+    </data>
+    
     <data name="SimpleTypePeripheral" xml:space="preserve">
         <value>Peripheral</value>
     </data>
@@ -3219,6 +3226,18 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="MosiLabel" xml:space="preserve">
         <value>MOSI / Command (Orange) Pin</value>
+    </data>
+    <data name="SckWtLabel" xml:space="preserve">
+        <value>Sck Pin</value>
+    </data>
+    <data name="MisoWtLabel" xml:space="preserve">
+        <value>MISO Pin</value>
+    </data>
+    <data name="MosiWtLabel" xml:space="preserve">
+        <value>MOSI Pin</value>
+    </data>
+    <data name="CsWtLabel" xml:space="preserve">
+        <value>CS Pin</value>
     </data>
     <data name="SelectLanguage" xml:space="preserve">
         <value>Select Language</value>

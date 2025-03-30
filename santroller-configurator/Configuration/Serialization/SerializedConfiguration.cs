@@ -98,6 +98,11 @@ public class SerializedConfiguration
         Ps2OutputSck = model.Ps2OutputSck;
         Ps2OutputAck = model.Ps2OutputAck;
         Ps2OutputAtt = model.Ps2OutputAtt;
+        HasWtDrumInput = model.HasWtDrumInput;
+        WtDrumMiso = model.WtDrumMiso;
+        WtDrumMosi = model.WtDrumMosi;
+        WtDrumSck = model.WtDrumSck;
+        WtDrumCs = model.WtDrumCs;
         DjFullRange = model.DjFullRange;
         DjNavButtons = model.DjNavButtons;
         SelectDpadLeftXb1 = model.SelectDpadLeftXb1;
@@ -186,6 +191,11 @@ public class SerializedConfiguration
     [ProtoMember(91)] public List<SerializedConsoleKey> Keys { get; private set; } = [];
     [ProtoMember(92)] public bool MidiSerialEnabled { get; private set; } = false;
     [ProtoMember(93)] public int MidiSerialPin { get; private set; } = 1;
+    [ProtoMember(94)] public bool HasWtDrumInput { get; private set; }
+    [ProtoMember(95)] public int WtDrumMosi { get; private set; }
+    [ProtoMember(96)] public int WtDrumMiso { get; private set; }
+    [ProtoMember(97)] public int WtDrumSck { get; private set; }
+    [ProtoMember(98)] public int WtDrumCs { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -222,6 +232,7 @@ public class SerializedConfiguration
         model.HasPeripheral = HasPeripheral;
         model.HasWiiOutput = HasWiiOutput;
         model.HasPs2Output = HasPs2Output;
+        model.HasWtDrumInput = HasWtDrumInput;
         model.HasMpr121 = HasMpr121;
         model.HasMax1704X = HasMax1704X;
         model.RolloverMode = RolloverMode;
@@ -252,6 +263,13 @@ public class SerializedConfiguration
             model.Ps2OutputSck = Ps2OutputSck;
             model.Ps2OutputAck = Ps2OutputAck;
             model.Ps2OutputAtt = Ps2OutputAtt;
+        }
+        if (HasWtDrumInput)
+        {
+            model.WtDrumMiso = WtDrumMiso;
+            model.WtDrumMosi = WtDrumMosi;
+            model.WtDrumSck =  WtDrumSck;
+            model.WtDrumCs =  WtDrumCs;
         }
 
         if (HasWiiOutput)

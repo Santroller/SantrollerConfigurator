@@ -3978,6 +3978,99 @@
                     </StackPanel>
                 </Expander>
                 <Expander HorizontalAlignment="Stretch" Header="{Binding}"
+                          IsExpanded="{Binding WtDrumInputExpanded}">
+                    <Expander.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!Branded" />
+                            <Binding Path="HasWtDrumInput" />
+                        </MultiBinding>
+                    </Expander.IsVisible>
+                    <Expander.HeaderTemplate>
+                        <DataTemplate DataType="viewModels:ConfigViewModel">
+                            <Panel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="75"
+                                           Source="avares://SantrollerConfigurator/Assets/Icons/Combined/GHWT.png">
+                                    </Image>
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.WtDrumInputSettingsLabel}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="45 0 0 0" HorizontalAlignment="Center"
+                                            IsVisible="{Binding HasWtDrumInput}">
+                                    <CheckBox IsChecked="{Binding WtDrumConnected}" VerticalAlignment="Center"
+                                              IsEnabled="False"
+                                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                                </StackPanel>
+                                <Label Foreground="Red" Margin="45 0 0 0"
+                                       Content="{Binding WtDrumErrorText}"
+                                       VerticalAlignment="Bottom"
+                                       HorizontalAlignment="Center"
+                                       HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       IsVisible="{Binding WtDrumErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                            IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                    <Button
+                                        Command="{Binding RemoveWtDrumInputCommand}"
+                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                </StackPanel>
+                            </Panel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <StackPanel>
+                        <StackPanel IsVisible="{Binding HasWtDrumInput}">
+                            <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.MosiWtLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding WtDrumMosi}"
+                                          ItemsSource="{Binding AvailableMosiPinsInput}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}"
+                                          Width="200" />
+                            </StackPanel>
+
+                            <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.MisoWtLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding WtDrumMiso}"
+                                          ItemsSource="{Binding AvailableMisoPinsInput}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}"
+                                          Width="200" />
+                            </StackPanel>
+
+                            <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.SckWtLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding WtDrumSck}"
+                                          ItemsSource="{Binding AvailableSckPinsPs2Output}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}"
+                                          Width="200" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.CsWtLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding WtDrumCs}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}"
+                                          Width="200" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}"
                           IsExpanded="{Binding Mpr121Expanded}">
 
                     <Expander.IsVisible>

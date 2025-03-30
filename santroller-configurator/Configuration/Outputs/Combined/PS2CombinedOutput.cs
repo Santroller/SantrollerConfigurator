@@ -103,6 +103,20 @@ public partial class Ps2CombinedOutput : CombinedSpiOutput
         {Ps2InputType.Dualshock2Cross, Ps3AxisType.PressureCross},
         {Ps2InputType.Dualshock2Square, Ps3AxisType.PressureSquare}
     };
+    
+    public static readonly Dictionary<Ps2InputType, Ps2InputType> PS2Axis = new()
+    {
+        {Ps2InputType.Dualshock2UpButton, Ps2InputType.DpadUp},
+        {Ps2InputType.Dualshock2RightButton, Ps2InputType.DpadRight},
+        {Ps2InputType.Dualshock2LeftButton, Ps2InputType.DpadLeft},
+        {Ps2InputType.Dualshock2DownButton, Ps2InputType.DpadDown},
+        {Ps2InputType.Dualshock2L1, Ps2InputType.L1},
+        {Ps2InputType.Dualshock2R1, Ps2InputType.R1},
+        {Ps2InputType.Dualshock2Triangle, Ps2InputType.Triangle},
+        {Ps2InputType.Dualshock2Circle, Ps2InputType.Circle},
+        {Ps2InputType.Dualshock2Cross, Ps2InputType.Cross},
+        {Ps2InputType.Dualshock2Square, Ps2InputType.Square}
+    };
 
     private readonly DirectPinConfig _ackConfig;
     private readonly DirectPinConfig _attConfig;
@@ -337,7 +351,6 @@ public partial class Ps2CombinedOutput : CombinedSpiOutput
                     short.MaxValue, 0,0,
                     ushort.MaxValue, pair.Value, false, false, false, -1,
                     true));
-
         Outputs.Add(new JoystickToDpad(Model, true,Peripheral, short.MaxValue / 2, false) {Enabled = false});
         Outputs.Add(new StartSelectHome(Model, true,Peripheral, false) {Enabled = false});
         UpdateBindings();
@@ -584,10 +597,21 @@ public partial class Ps2CombinedOutput : CombinedSpiOutput
                 Outputs.Add(new Ps3Axis(Model,true,
                     new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
                     Colors.Black,
-                    Colors.Black, [], [], [], short.MinValue,
-                    short.MaxValue, 0,
+                    Colors.Black, [], [], [], ushort.MinValue,
+                    ushort.MaxValue, 0,
                     pair.Value, false, false, false, -1, true));
 
+            
+            // foreach (var pair in PS2Axis)
+            // {
+            //     Outputs.Add(new ControllerButton(Model,true,
+            //         new AnalogToDigital(
+            //             new Ps2Input(pair.Key, Model, Peripheral, Miso, Mosi, Sck, Att, Ack, true),
+            //             AnalogToDigitalType.Trigger, 0, Model),
+            //         Colors.Black, Colors.Black, [], [], [], 10,
+            //         Buttons[pair.Value],
+            //         false, false, false, -1, true));
+            // }
             return;
         }
 
