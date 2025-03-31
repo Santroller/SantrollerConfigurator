@@ -213,7 +213,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
     public override void SetOutputsOrDefaults(IEnumerable<Output> outputs)
     {
         Outputs.Clear();
-        Outputs.AddRange(outputs.Where(s => s.Input.InnermostInputs().Any(s2 => s2 is WiiInput wiiInput && Enum.IsDefined(wiiInput.Input))));
+        Outputs.AddRange(outputs.Where(s => s is JoystickToDpad or StartSelectHome || s.Input.InnermostInputs().Any(s2 => s2 is WiiInput wiiInput && Enum.IsDefined(wiiInput.Input))));
         if (Outputs.Count == 0)
         {
             CreateDefaults();
