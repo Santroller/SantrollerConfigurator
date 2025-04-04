@@ -1006,6 +1006,21 @@ public abstract partial class Output : ReactiveObject
         ButtonTextMidiNote = Resources.Assign;
         this.RaisePropertyChanged(nameof(MidiNote));
     }
+    
+    
+    [RelayCommand]
+    private void CopyCalibration()
+    {
+        if (this is not OutputAxis axis) return;
+        foreach (var output in Model.Bindings.Items.SelectMany(x => x.Outputs.Items))
+        {
+            if (!output.Input.InnermostInputs().Any(s => s is MidiInput) ||
+                output is not OutputAxis otherAxis) continue;
+            otherAxis.Min = axis.Min;
+            otherAxis.Max = axis.Max;
+            otherAxis.DeadZone = axis.DeadZone;
+        }
+    }
 
     [RelayCommand]
     private async Task FindAndAssignUsbHostMouseAxisAsync()

@@ -1754,6 +1754,10 @@
                                                Width="200" />
                             </StackPanel>
                         </StackPanel>
+                        
+                        <Button Command="{Binding CopyCalibrationCommand}"
+                                IsEnabled="{Binding ConfigurableInput}"
+                                Content="{x:Static netCore:Resources.ButtonLabelCopyCalibration}" />
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>

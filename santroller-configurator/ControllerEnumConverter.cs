@@ -16,10 +16,9 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.DpadRight,
         StandardButtonType.Start,
         StandardButtonType.Back,
-        StandardButtonType.Guide
+        StandardButtonType.Guide,
+        StandardButtonType.Capture // Used on PS4/5 for some of the menus even if the guitars never exposed it
     ];
-
-    private static readonly List<StandardButtonType> SupportedButtonsFortnite = [StandardButtonType.Back];
 
     private static readonly List<StandardButtonType> SupportedButtonsNonGamepad =
     [
@@ -60,7 +59,8 @@ public class ControllerEnumConverter : IMultiValueConverter
         {StandardButtonType.B, Resources.ButtonLabelCircle},
         {StandardButtonType.X, Resources.ButtonLabelSquare},
         {StandardButtonType.Y, Resources.ButtonLabelTriangle},
-        {StandardButtonType.Guide, Resources.ButtonLabelPlayStation}
+        {StandardButtonType.Guide, Resources.ButtonLabelPlayStation},
+        {StandardButtonType.Capture, Resources.ButtonLabelTouchpadClick}
     };
 
     private static readonly Dictionary<StandardButtonType, string> XboxLabels = new()
@@ -225,9 +225,9 @@ public class ControllerEnumConverter : IMultiValueConverter
                 return SupportedButtonsNonGamepad.Contains(button);
             case DeviceControllerType.Taiko:
                 return SupportedButtonsTaiko.Contains(button);
+            case DeviceControllerType.RockBandGuitar:
             case DeviceControllerType.LiveGuitar:
             case DeviceControllerType.GuitarHeroGuitar:
-            case DeviceControllerType.RockBandGuitar:
                 return SupportedButtonsGuitar.Contains(button);
             default:
                 return true;

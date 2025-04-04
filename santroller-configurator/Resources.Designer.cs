@@ -5841,6 +5841,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ButtonLabelTouchpadClick {
+            get {
+                return ResourceManager.GetString("ButtonLabelTouchpadClick", resourceCulture);
+            }
+        }
+        
+        public static string ButtonLabelCopyCalibration {
+            get {
+                return ResourceManager.GetString("ButtonLabelCopyCalibration", resourceCulture);
+            }
+        }
+        
         public static string ButtonLabelGuide {
             get {
                 return ResourceManager.GetString("ButtonLabelGuide", resourceCulture);

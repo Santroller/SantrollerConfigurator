@@ -2922,6 +2922,12 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="ButtonLabelPlayStation" xml:space="preserve">
         <value>Botón PlayStation</value>
     </data>
+    <data name="ButtonLabelTouchpadClick" xml:space="preserve">
+        <value>Click del Touchpad</value>
+    </data>
+    <data name="ButtonLabelCopyCalibration" xml:space="preserve">
+        <value>Copiar calibración a otras entradas MIDI</value>
+    </data>
     <data name="ButtonLabelGuide" xml:space="preserve">
         <value>Botón Guía</value>
     </data>

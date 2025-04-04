@@ -71,7 +71,7 @@ public class ControllerButton : OutputButton
             return "";
         }
 
-        // capture button only exists on switch (which uses ps3 mappings)
+        // capture button only exists on switch (which uses ps3 mappings) and ps4/5
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps4) && Type is StandardButtonType.Capture)
         {
             return "";
