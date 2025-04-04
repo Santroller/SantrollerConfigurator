@@ -2661,6 +2661,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SelectDpadLeftXb1PS4 {
+            get {
+                return ResourceManager.GetString("SelectDpadLeftXb1PS4", resourceCulture);
+            }
+        }
+        
         public static string MidiNoteOffFixLabel {
             get {
                 return ResourceManager.GetString("MidiNoteOffFixLabel", resourceCulture);

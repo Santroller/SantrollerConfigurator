@@ -3176,11 +3176,13 @@
                                           OnContent="{x:Static netCore:Resources.EnabledLabel}"
                                           OffContent="{x:Static netCore:Resources.DisabledLabel}" />
                         </StackPanel>
-
                         <StackPanel Orientation="Horizontal" IsVisible="{Binding IsGuitar}">
                             <Label VerticalAlignment="Center"
                                    VerticalContentAlignment="Center"
-                                   Width="350" Content="{x:Static netCore:Resources.SelectDpadLeftXb1}" />
+                                   Width="350" IsVisible="{Binding Ps4Instruments}" Content="{x:Static netCore:Resources.SelectDpadLeftXb1PS4}" />
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="350" IsVisible="{Binding !Ps4Instruments}" Content="{x:Static netCore:Resources.SelectDpadLeftXb1}" />
                             <ToggleSwitch HorizontalAlignment="Center" Width="200"
                                           HorizontalContentAlignment="Center"
                                           IsChecked="{Binding SelectDpadLeftXb1}"

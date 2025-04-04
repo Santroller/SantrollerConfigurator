@@ -1881,6 +1881,9 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="SelectDpadLeftXb1" xml:space="preserve">
         <value>Mapear Select al D-Pad Izquierdo en Xbox One/Series</value>
     </data>
+    <data name="SelectDpadLeftXb1PS4" xml:space="preserve">
+        <value>Mapear Select al D-Pad Izquierdo en Xbox One/Series y PS4/5</value>
+    </data>
     <data name="MidiNoteOffFixLabel" xml:space="preserve">
         <value>Arreglo de nota apagada de Batería MIDI</value>
     </data>

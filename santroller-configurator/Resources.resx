@@ -1367,6 +1367,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="SelectDpadLeftXb1" xml:space="preserve">
         <value>Map Select to D-Pad Left on Xbox One/Series</value>
     </data>
+    <data name="SelectDpadLeftXb1PS4" xml:space="preserve">
+        <value>Map Select to D-Pad Left on Xbox One/Series and PS4/5</value>
+    </data>
     <data name="MidiNoteOffFixLabel" xml:space="preserve">
         <value>MIDI drum note off fix</value>
     </data>
