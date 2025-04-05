@@ -4522,16 +4522,6 @@
                                                     IsEnabled="{Binding ConfigurableInput}"
                                                     Content="{Binding ButtonTextUsbHostKey}" />
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsUsbHostProKey}">
-                                            <Label VerticalAlignment="Center"
-                                                   VerticalContentAlignment="Center"
-                                                   Width="350"
-                                                   Content="{x:Static netCore:Resources.InputLabel}" />
-                                            <ComboBox VerticalAlignment="Center"
-                                                      SelectedItem="{Binding UsbHostKeyProKeyType}"
-                                                      ItemsSource="{Binding ProKeyTypes}"
-                                                      ItemTemplate="{StaticResource EnumToStringTemplate}" />
-                                        </StackPanel>
                                         <ContentControl ContentTemplate="{StaticResource OutputTemplate}"
                                                         Content="{Binding}" />
 

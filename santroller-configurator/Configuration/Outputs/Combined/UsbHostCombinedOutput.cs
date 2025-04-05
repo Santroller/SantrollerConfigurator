@@ -19,10 +19,6 @@ public partial class UsbHostCombinedOutput : HostCombinedOutput
     {
         return new UsbHostInput(type, Model, true);
     }
-    public override HostInput MakeInput(ProKeyType type)
-    {
-        return new UsbHostInput(type, Model, true);
-    }
 
 
     private readonly ObservableAsPropertyHelper<int> _usbHostDm;

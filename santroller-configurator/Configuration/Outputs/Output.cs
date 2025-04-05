@@ -159,10 +159,6 @@ public abstract partial class Output : ReactiveObject
             .Select(x =>
                 x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.MouseButton})
             .ToProperty(this, x => x.IsUsbHostMouseButton);
-        _isUsbHostProKeyHelper = this.WhenAnyValue(x => x.Input)
-            .Select(x =>
-                x.InnermostInputs().First() is UsbHostInput {Input: UsbHostInputType.ProKey})
-            .ToProperty(this, x => x.IsUsbHostProKey);
         _isPs2Helper = this.WhenAnyValue(x => x.Input).Select(x => x.InnermostInputs().First() is Ps2Input)
             .ToProperty(this, x => x.IsPs2);
         _isWtHelper = this.WhenAnyValue(x => x.Input)
@@ -492,11 +488,6 @@ public abstract partial class Output : ReactiveObject
         get => GetUsbHostMouseButton() ?? MouseButtonType.Left;
         set => SetUsbHostMouseButton(value);
     }
-    public ProKeyType UsbHostKeyProKeyType
-    {
-        get => GetUsbHostProKeyType() ?? ProKeyType.Key1;
-        set => SetUsbHostProKeyType(value);
-    }
 
     public WiiInputType WiiInputType
     {
@@ -683,7 +674,6 @@ public abstract partial class Output : ReactiveObject
     [ObservableAsProperty] private bool _isMidiNote;
     [ObservableAsProperty] private bool _isUsbHostMouseAxis;
     [ObservableAsProperty] private bool _isUsbHostMouseButton;
-    [ObservableAsProperty] private bool _isUsbHostProKey;
     [ObservableAsProperty] private bool _isWt;
     [ObservableAsProperty] private bool _areLedsEnabled;
     [ObservableAsProperty] private bool _areLedsSet;
@@ -850,23 +840,6 @@ public abstract partial class Output : ReactiveObject
     private MouseButtonType? GetUsbHostMouseButton()
     {
         return (Input.InnermostInputs().First() as UsbHostInput)?.MouseButtonType;
-    }
-    private ProKeyType? GetUsbHostProKeyType()
-    {
-        return (Input.InnermostInputs().First() as UsbHostInput)?.ProKeyType;
-    }
-    private void SetUsbHostProKeyType(ProKeyType value)
-    {
-        var current = GetUsbHostProKeyType();
-        if (current == null) return;
-        if (current == value) return;
-        if (Input is DigitalToAnalog dta)
-        {
-            Input = new DigitalToAnalog(new UsbHostInput(value, Model), dta.On, Model, dta.Type);
-            return;
-        }
-
-        Input = new UsbHostInput(value, Model);
     }
 
     private void SetUsbHostKey(Key value)

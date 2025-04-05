@@ -90,7 +90,9 @@ public partial class MidiInput : Input
             }
 
             key -= 21;
-            return $"{Notes[key % Notes.Length]}{(key / Notes.Length)} ({key + 21})";
+            // Start at A0, but the octaves goes up at C
+            var note = (key+9) / Notes.Length;
+            return $"{Notes[key % Notes.Length]}{note} ({key + 21})";
         }
 
         if (deviceControllerType is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums)

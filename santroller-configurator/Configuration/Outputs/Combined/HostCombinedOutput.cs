@@ -147,8 +147,6 @@ public abstract partial class HostCombinedOutput : CombinedOutput
 
     public abstract HostInput MakeInput(UsbHostInputType type);
 
-    public abstract HostInput MakeInput(ProKeyType type);
-
     private void LoadMatchingFromDict(IReadOnlySet<object> valid, Dictionary<object, UsbHostInputType> dict)
     {
         foreach (var (key, value) in dict)
@@ -226,25 +224,6 @@ public abstract partial class HostCombinedOutput : CombinedOutput
         if (Model.DeviceControllerType == DeviceControllerType.Turntable)
         {
             valid.UnionWith(Enum.GetValues<DjInputType>().Cast<object>());
-        }
-        if (Model.DeviceControllerType == DeviceControllerType.ProKeys)
-        {
-            foreach (var proKeyType in ProKeyTypes)
-            {
-                switch (proKeyType)
-                {
-                    case ProKeyType.Overdrive or ProKeyType.PedalDigital:
-                        Outputs.Add(new PianoKeyButton(Model, true,MakeInput(proKeyType), Colors.Black,
-                            Colors.Black, [], [], [],
-                            proKeyType, false, false, false, -1, true));
-                        break;
-                    default:
-                        Outputs.Add(new PianoKey(Model, true,MakeInput(proKeyType), Colors.Black,
-                            Colors.Black, [], [], [],
-                            proKeyType, false, false, false, -1, true));
-                        break;
-                }
-            }
         }
 
         LoadMatchingFromDict(valid, Mappings);

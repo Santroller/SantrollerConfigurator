@@ -31,10 +31,6 @@ public partial class BluetoothInput : HostInput
     public BluetoothInput(MouseAxisType mouseAxisType, ConfigViewModel model, bool combined = false) : base(mouseAxisType, model, combined)
     {
     }
-
-    public BluetoothInput(ProKeyType proKeyType, ConfigViewModel model, bool combined = false) : base(proKeyType, model, combined)
-    {
-    }
     public override string Field => "bt_data";
     public override InputType? InputType => Types.InputType.BluetoothInput;
 
@@ -47,7 +43,7 @@ public partial class BluetoothInput : HostInput
     }
     public override SerializedInput Serialise()
     {
-        return new SerializedBluetoothInput(Input, Key, MouseButtonType, MouseAxisType, ProKeyType, Combined);
+        return new SerializedBluetoothInput(Input, Key, MouseButtonType, MouseAxisType, Combined);
     }
 
     public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw,

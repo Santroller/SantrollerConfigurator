@@ -149,10 +149,6 @@ public partial class MidiCombinedOutput : CombinedOutput
     public void UpdateDefaults()
     {
         CreateDefaults();
-        if (Model.DeviceControllerType == DeviceControllerType.ProKeys)
-        {
-            FirstNote = 24;
-        }
     }
 
     public void CreateDefaults()

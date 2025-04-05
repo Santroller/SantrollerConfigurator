@@ -35,7 +35,6 @@ public abstract partial class HostInput : Input
         MouseAxisType = MouseAxisType.X;
         Combined = combined;
         Input = UsbHostInputType.KeyboardInput;
-        ProKeyType = ProKeyType.Key1;
         IsAnalog = false;
     }
 
@@ -46,7 +45,6 @@ public abstract partial class HostInput : Input
         MouseAxisType = MouseAxisType.X;
         Combined = combined;
         Input = UsbHostInputType.MouseButton;
-        ProKeyType = ProKeyType.Key1;
         IsAnalog = false;
     }
 
@@ -56,19 +54,8 @@ public abstract partial class HostInput : Input
         MouseButtonType = MouseButtonType.Left;
         MouseAxisType = mouseAxisType;
         Input = UsbHostInputType.MouseAxis;
-        ProKeyType = ProKeyType.Key1;
         Combined = combined;
         IsAnalog = true;
-    }
-    public HostInput(ProKeyType proKeyType, ConfigViewModel model, bool combined = false) : base(model)
-    {
-        Key = Key.A;
-        MouseButtonType = MouseButtonType.Left;
-        MouseAxisType = MouseAxisType.X;
-        ProKeyType = proKeyType;
-        Input = UsbHostInputType.ProKey;
-        Combined = combined;
-        IsAnalog = proKeyType is ProKeyType.PedalAnalog or ProKeyType.TouchPad or <= ProKeyType.Key25;
     }
 
     public bool Combined { get; }
@@ -83,8 +70,6 @@ public abstract partial class HostInput : Input
 
     public MouseButtonType MouseButtonType { get; }
 
-    public ProKeyType ProKeyType { get; }
-
     public override bool IsUint => Input is not (UsbHostInputType.LeftStickX or UsbHostInputType.LeftStickY
         or UsbHostInputType.RightStickX or UsbHostInputType.RightStickY or UsbHostInputType.Crossfader
         or UsbHostInputType.LeftTableVelocity or UsbHostInputType.RightTableVelocity
@@ -96,7 +81,6 @@ public abstract partial class HostInput : Input
             UsbHostInputType.KeyboardInput => EnumToStringConverter.Convert(Key),
             UsbHostInputType.MouseAxis => EnumToStringConverter.Convert(MouseAxisType),
             UsbHostInputType.MouseButton => EnumToStringConverter.Convert(MouseButtonType),
-            UsbHostInputType.ProKey => EnumToStringConverter.Convert(ProKeyType),
             _ => EnumToStringConverter.Convert(Input)
         };
 
@@ -104,7 +88,7 @@ public abstract partial class HostInput : Input
     [Reactive] private int _connectedDevices;
 
     public abstract string Field { get; }
-    
+
     public override string Generate(BinaryWriter? writer)
     {
         var ret = (Input switch
@@ -112,8 +96,6 @@ public abstract partial class HostInput : Input
             UsbHostInputType.KeyboardInput => Output.GetReportField(Key, $"{Field}.keyboard", false),
             UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, $"{Field}.mouse", false),
             UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, $"{Field}.mouse", false),
-            UsbHostInputType.ProKey when ProKeyType is ProKeyType.TouchPad or ProKeyType.PedalAnalog or ProKeyType.PedalDigital or ProKeyType.Overdrive => Output.GetReportField(ProKeyType, Field, false),
-            UsbHostInputType.ProKey => Output.GetReportField($"proKeyVelocities[{(int) ProKeyType}]", Field, false),
             _ => Output.GetReportField(Input, Field, false)
         });
 
@@ -129,7 +111,7 @@ public abstract partial class HostInput : Input
     {
         if (usbHostInputsRaw.Length < Marshal.SizeOf<UsbHostInputs>()) return;
         var inputs = StructTools.RawDeserialize<UsbHostInputs>(usbHostInputsRaw, 0);
-        RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType, ProKeyType);
+        RawValue = inputs.RawValue(Input, Key, MouseAxisType, MouseButtonType);
     }
 
     public override void Update(Dictionary<int, int> analogRaw, Dictionary<int, bool> digitalRaw,
@@ -142,7 +124,6 @@ public abstract partial class HostInput : Input
         ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw,
         bool peripheralConnected)
     {
-        
         var buffer = "";
         // When combined, the combined output renders this, so we don't need to calculate it
         if (!Combined && !usbHostRaw.IsEmpty)
@@ -153,13 +134,14 @@ public abstract partial class HostInput : Input
             {
                 var consoleType = (ConsoleType) usbHostRaw[i];
                 string subType;
-            
+
                 if (consoleType == ConsoleType.Xbox360W && !seen360W)
                 {
                     seen360W = true;
                     devices += 1;
                     buffer += $"{Resources.Xbox360W}\n";
                 }
+
                 switch (consoleType)
                 {
                     case ConsoleType.Xbox360W when usbHostRaw[i + 1] == 0xFF:
@@ -205,6 +187,7 @@ public abstract partial class HostInput : Input
             ConnectedDevices = devices;
             UsbHostInfo = buffer.Trim();
         }
+
         Update(usbHostInputsRaw);
     }
 
@@ -227,8 +210,7 @@ public abstract partial class HostInput : Input
         UsbHostInputType.PressureSquare,
         UsbHostInputType.Whammy,
         UsbHostInputType.Pickup,
-        UsbHostInputType.MouseAxis,
-        UsbHostInputType.ProKey
+        UsbHostInputType.MouseAxis
     ];
 
 
@@ -258,7 +240,7 @@ public abstract partial class HostInput : Input
                 }
             }
         }
-        
+
         private readonly ushort leftTrigger;
         private readonly ushort rightTrigger;
         private readonly short leftStickX;
@@ -315,9 +297,9 @@ public abstract partial class HostInput : Input
         private readonly byte highEFretVelocity;
 
         public unsafe int RawValue(UsbHostInputType inputType, Key key, MouseAxisType mouseAxisType,
-            MouseButtonType mouseButtonType, ProKeyType proKeyType)
+            MouseButtonType mouseButtonType)
         {
-            UsbHostInputTypeReal real = Enum.Parse<UsbHostInputTypeReal>(inputType.ToString());
+            if (!Enum.TryParse<UsbHostInputTypeReal>(inputType.ToString(), out var real)) return 0;
             var val = real switch
             {
                 UsbHostInputTypeReal.LeftTrigger => leftTrigger,
@@ -355,7 +337,8 @@ public abstract partial class HostInput : Input
                 UsbHostInputTypeReal.GenericAxisRy => genericRY,
                 UsbHostInputTypeReal.GenericAxisRz => genericRZ,
                 UsbHostInputTypeReal.GenericAxisSlider => genericSlider,
-                UsbHostInputTypeReal.KeyboardInput when key is Key.LeftAlt or Key.LeftCtrl or Key.LeftShift or Key.RightAlt
+                UsbHostInputTypeReal.KeyboardInput when key is Key.LeftAlt or Key.LeftCtrl or Key.LeftShift
+                    or Key.RightAlt
                     or Key.RightCtrl
                     or Key.RightShift => (keys &
                                           ((UInt128) 1 <<
@@ -364,7 +347,8 @@ public abstract partial class HostInput : Input
                     : 0,
                 UsbHostInputTypeReal.KeyboardInput => (keys &
                                                        ((UInt128) 1 <<
-                                                        (KeyboardButton.KeyCodes.IndexOf(Output.GetReportField(key)) +
+                                                        (KeyboardButton.KeyCodes.IndexOf(
+                                                             Output.GetReportField(key)) +
                                                          8))) != 0
                     ? 1
                     : 0,
@@ -391,6 +375,7 @@ public abstract partial class HostInput : Input
             }
 
             return val;
+
         }
     }
 }

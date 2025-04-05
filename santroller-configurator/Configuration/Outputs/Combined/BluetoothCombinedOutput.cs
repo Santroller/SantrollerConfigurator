@@ -100,10 +100,6 @@ public partial class BluetoothCombinedOutput : HostCombinedOutput
     {
         return new BluetoothInput(type, Model, true);
     }
-    public override HostInput MakeInput(ProKeyType type)
-    {
-        return new BluetoothInput(type, Model, true);
-    }
 
     [RelayCommand]
     public void Scan()

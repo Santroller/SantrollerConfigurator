@@ -1723,7 +1723,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             PollRate = 5;
         }
-
+        
         if (_deviceControllerType.IsDrum() || _deviceControllerType == DeviceControllerType.ProKeys)
         {
             if (!Bindings.Items.Any(s => s is MidiCombinedOutput))

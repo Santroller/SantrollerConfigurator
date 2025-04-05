@@ -38,11 +38,6 @@ public partial class UsbHostInput : HostInput
         _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
         _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
     }
-    public UsbHostInput(ProKeyType proKeyType, ConfigViewModel model, bool combined = false) : base(proKeyType, model, combined)
-    {
-        _usbHostDm = model.WhenAnyValue(x => x.UsbHostDm).ToProperty(this, x => x.UsbHostDm);
-        _usbHostDp = model.WhenAnyValue(x => x.UsbHostDp).ToProperty(this, x => x.UsbHostDp);
-    }
 
     // Since DM and DP need to be next to eachother, you cannot use pins at the far ends
     public List<int> AvailablePinsDm => Model.AvailablePinsDigital.Skip(1).ToList();
@@ -73,6 +68,6 @@ public partial class UsbHostInput : HostInput
 
     public override SerializedInput Serialise()
     {
-        return new SerializedUsbHostInput(Input, Key, MouseButtonType, MouseAxisType, ProKeyType, Combined);
+        return new SerializedUsbHostInput(Input, Key, MouseButtonType, MouseAxisType, Combined);
     }
 }

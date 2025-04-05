@@ -236,7 +236,7 @@ public partial class EmptyOutput : Output
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, Model)),
                     SimpleType.UsbHost => new UsbHostCombinedOutput(Model),
                     SimpleType.Bluetooth => new Combined.BluetoothCombinedOutput(Model),
-                    SimpleType.Midi => new MidiCombinedOutput(Model, 0),
+                    SimpleType.Midi => new MidiCombinedOutput(Model, 24),
                     SimpleType.ProGuitar => new ProGuitarCombinedOutput(Model),
                     _ => null
                 },
