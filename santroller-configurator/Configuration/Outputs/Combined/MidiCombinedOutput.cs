@@ -160,7 +160,7 @@ public partial class MidiCombinedOutput : CombinedOutput
                 foreach (var (key, drumAxisType) in MappingsDrumGh)
                 {
                     Outputs.Add(new DrumAxis(Model, true, new MidiInput(MidiType.Note, key, Model), Colors.Black,
-                        Colors.Black, [], [], [], ushort.MaxValue / 2, ushort.MaxValue, 0, 0,
+                        Colors.Black, [], [], [], 0, ushort.MaxValue, 0, 0,
                         drumAxisType, false, false, false, -1, true));
                 }
 
@@ -169,7 +169,7 @@ public partial class MidiCombinedOutput : CombinedOutput
                 foreach (var (key, drumAxisType) in MappingsDrumRb)
                 {
                     Outputs.Add(new DrumAxis(Model, true, new MidiInput(MidiType.Note, key, Model), Colors.Black,
-                        Colors.Black, [], [], [], ushort.MaxValue / 2, ushort.MaxValue, 0, 0,
+                        Colors.Black, [], [], [], 0, ushort.MaxValue, 0, 0,
                         drumAxisType, false, false, false, -1, true));
                 }
 
@@ -194,14 +194,14 @@ public partial class MidiCombinedOutput : CombinedOutput
                         case ProKeyType.Overdrive:
                             Outputs.Add(new PianoKeyButton(Model, true,
                                 new AnalogToDigital(new MidiInput(MidiType.ModWheel, 0, Model),
-                                    AnalogToDigitalType.Trigger, ushort.MaxValue / 2, Model), Colors.Black,
+                                    AnalogToDigitalType.Trigger, 0, Model), Colors.Black,
                                 Colors.Black, [], [], [], key, false, false,
                                 false, -1, true));
                             break;
                         case ProKeyType.PedalDigital:
                             Outputs.Add(new PianoKeyButton(Model, true,
                                 new AnalogToDigital(new MidiInput(MidiType.SustainPedal, 0, Model),
-                                    AnalogToDigitalType.Trigger, ushort.MaxValue / 2, Model), Colors.Black,
+                                    AnalogToDigitalType.Trigger, 0, Model), Colors.Black,
                                 Colors.Black, [], [], [], key, false, false,
                                 false, -1, true));
                             break;
