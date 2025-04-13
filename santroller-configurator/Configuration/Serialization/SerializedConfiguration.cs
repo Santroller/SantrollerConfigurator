@@ -35,7 +35,8 @@ public class SerializedConfiguration
         SleepTimer = model.DeviceSleep;
         LedTimer = model.LedSleep;
         RolloverMode = model.RolloverMode;
-        Bindings = bindings.Select(s => s.Serialize()).ToList();
+        // do NOT serialise empty outputs!
+        Bindings = bindings.Where(s => s is not EmptyOutput).Select(s => s.Serialize()).ToList();
         DeviceType = model.DeviceControllerType;
         XInputOnWindows = model.XInputOnWindows;
         LedType = model.LedType;
