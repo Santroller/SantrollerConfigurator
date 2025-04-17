@@ -190,6 +190,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _isDrumHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x.IsDrum())
             .ToProperty(this, x => x.IsDrum);
+        _isRbDrumKitHelper = this.WhenAnyValue(x => x.DeviceControllerType)
+            .Select(x => x is DeviceControllerType.RockBandDrums)
+            .ToProperty(this, x => x.IsRbDrumKit);
         _isProKeysHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x => x is DeviceControllerType.ProKeys)
             .ToProperty(this, x => x.IsProKeys);
@@ -1502,6 +1505,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     [ObservableAsProperty] private bool _isProKeys;
 
+    [Reactive] private bool _cymbalGlitchFix;
+
     [ObservableAsProperty] private bool _supportsPS4Instrument;
 
     public bool AdafruitHost
@@ -1533,6 +1538,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] private bool _isStandardController;
 
     [ObservableAsProperty] private bool _isRpcs3CompatibleController;
+    [ObservableAsProperty] private bool _isRbDrumKit;
 
     [ObservableAsProperty] private bool _isFortniteFestivalPro;
 

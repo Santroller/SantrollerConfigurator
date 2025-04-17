@@ -2913,6 +2913,9 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="ButtonLabelCircle" xml:space="preserve">
         <value>Botón Círculo</value>
     </data>
+    <data name="Rb3CymbalFix" xml:space="preserve">
+        <value>Arreglo de Fallo de Platillo en RB3</value>
+    </data>
     <data name="ButtonLabelSquare" xml:space="preserve">
         <value>Botón Cuadrado</value>
     </data>

@@ -165,6 +165,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string Rb3CymbalFix {
+            get {
+                return ResourceManager.GetString("Rb3CymbalFix", resourceCulture);
+            }
+        }
+        
         public static string LedColourActiveDjEuphoria {
             get {
                 return ResourceManager.GetString("LedColourActiveDjEuphoria", resourceCulture);

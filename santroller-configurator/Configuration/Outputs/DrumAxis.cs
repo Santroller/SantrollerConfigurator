@@ -411,31 +411,50 @@ public partial class DrumAxis : OutputAxis
 
         check = check.Replace("midiVelocities", "midiVelocitiesTemp");
 
-        if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne)
-        {
-            return $$"""
-                     if ({{check}}) {
-                        lastDrum[{{debounceIndex}}] = {{GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};
-                        {{reset}}
-                     }
-                     if ({{ifStatement}}) {
-                         if (drumHit) {
-                             if (!drumSeen[{{debounceIndex}}]) {
-                                debounce[{{debounceIndex}}]++;
-                                drumSeen[{{debounceIndex}}] = true;
-                             }
-                         } else {
-                             drumHit = true; 
-                             drumSeen[{{debounceIndex}}] = true;
-                             {{outputButtons}}
-                             {{GenerateOutput(mode)}} = {{assignedVal}};
-                         }
-                     } else {
-                       {{GenerateOutput(mode)}} = 0;
-                       lastDrum[{{debounceIndex}}] = 0;
-                     }
-                     """;
-        }
+         if (Model.DeviceControllerType.IsRb() && Model.CymbalGlitchFix && mode is ConfigField.Xbox360 or ConfigField.Ps3 && Type is DrumAxisType.GreenCymbal or DrumAxisType.BlueCymbal or DrumAxisType.YellowCymbal or DrumAxisType.Green)
+         {
+             var test = "";
+             var test2 = "";
+             switch (Type)
+             {
+                 // Green Pad + Green Cymbal need to be staggered
+                 case DrumAxisType.Green:
+                     test = "!greenCymbal";
+                     test2 = "greenPad";
+                     break;
+                 // Any two cymbals need to be staggered
+                 case DrumAxisType.GreenCymbal:
+                     test = "!yellowCymbal && !blueCymbal && !greenPad";
+                     test2 = "greenCymbal";
+                     break;
+                 case DrumAxisType.BlueCymbal:
+                     test = "!greenCymbal && !yellowCymbal";
+                     test2 = "blueCymbal";
+                     break;
+                 case DrumAxisType.YellowCymbal:
+                     test = "!greenCymbal && !blueCymbal";
+                     test2 = "yellowCymbal";
+                     break;
+             }
+             return $$"""
+                      if ({{check}}) {
+                         lastDrum[{{debounceIndex}}] = {{GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};
+                         {{reset}}
+                      }
+                      if ({{ifStatement}}) {
+                              if ({{test}}) {
+                                  {{outputButtons}}
+                                  {{GenerateOutput(mode)}} = {{assignedVal}};
+                                  {{test2}} = true;
+                              } else {
+                                  {{reset}}
+                              }
+                      } else {
+                        {{GenerateOutput(mode)}} = 0;
+                        lastDrum[{{debounceIndex}}] = 0;
+                      }
+                      """;
+         }
         return $$"""
                  if ({{check}}) {
                      lastDrum[{{debounceIndex}}] = {{GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer).Replace("midiVelocities","midiVelocitiesTemp")}};

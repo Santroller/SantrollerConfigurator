@@ -28,6 +28,7 @@ public class SerializedConfiguration
     public void Update(ConfigViewModel model, IEnumerable<Output> bindings, bool allowErrors = true)
     {
         if (!allowErrors && model.HasError) return;
+        Rb3CymbalGlitchFix = model.CymbalGlitchFix;
         MidiSerialEnabled = model.MidiSerialEnabled;
         MidiSerialPin = model.MidiSerialPin;
         SleepEnabled = model.SleepEnabled;
@@ -197,11 +198,13 @@ public class SerializedConfiguration
     [ProtoMember(96)] public int WtDrumMiso { get; private set; }
     [ProtoMember(97)] public int WtDrumSck { get; private set; }
     [ProtoMember(98)] public int WtDrumCs { get; private set; }
+    [ProtoMember(99)] public bool Rb3CymbalGlitchFix { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
         model._keys.Clear();
         model._keys.AddRange(Keys);
+        model.CymbalGlitchFix = Rb3CymbalGlitchFix;
         model.MidiSerialEnabled = MidiSerialEnabled;
         model.MidiSerialPin = MidiSerialPin;
         model.SleepEnabled = SleepEnabled;
