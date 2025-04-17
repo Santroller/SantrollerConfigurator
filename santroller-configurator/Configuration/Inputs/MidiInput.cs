@@ -132,7 +132,7 @@ public partial class MidiInput : Input
     {
         return Input switch
         {
-            MidiType.Note => $"(midiData.midiVelocities[{Key}] << 8)",
+            MidiType.Note => $"(midiData.midiVelocitiesTemp[{Key}] << 8)",
             MidiType.PitchWheel => "midiData.midiPitchWheel",
             MidiType.ModWheel => "(midiData.midiModWheel << 8)",
             MidiType.SustainPedal => "(midiData.midiSustainPedal << 8)",

@@ -183,6 +183,11 @@ public abstract partial class OutputButton : Output
         
         var gen = Input.Generate(writer);
         var reset = $"debounce[{debounceIndex}]={debounce};";
+
+        if (Input is MidiInput midiInput)
+        {
+            reset += $"midiData.midiVelocitiesTemp[{midiInput.Key}] = 0;";
+        }
         if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
         {
             reset += $"ledDebounce[{ledIndex}]={debounce};";
