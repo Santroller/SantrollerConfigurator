@@ -32,7 +32,9 @@ public class Pico : Microcontroller
         {12, SpiPinType.Miso},
         {13, SpiPinType.CSn},
         {14, SpiPinType.Sck},
-        {15, SpiPinType.Mosi}
+        {15, SpiPinType.Mosi},
+        {26, SpiPinType.Sck},
+        {27, SpiPinType.Mosi},
     };
 
     public static readonly Dictionary<int, int> SpiIndexByPin = new()
@@ -56,7 +58,9 @@ public class Pico : Microcontroller
         {12, 1},
         {13, 1},
         {14, 1},
-        {15, 1}
+        {15, 1},
+        {26, 1},
+        {27, 1}
     };
 
     public static readonly Dictionary<int, int> TwiIndexByPin = new()
@@ -147,7 +151,9 @@ public class Pico : Microcontroller
         // Invert on pullup
         if (peripheral)
         {
-            return invert ? $"(((slave_digital & (1 << {pin})) == 0) && slave_initted)" : $"((slave_digital & (1 << {pin})) && slave_initted)";
+            return invert
+                ? $"(((slave_digital & (1 << {pin})) == 0) && slave_initted)"
+                : $"((slave_digital & (1 << {pin})) && slave_initted)";
         }
 
         return invert ? $"(sio_hw->gpio_in & (1 << {pin})) == 0" : $"sio_hw->gpio_in & (1 << {pin})";
@@ -174,14 +180,16 @@ public class Pico : Microcontroller
     }
 
 
-    public override SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso,
+    public override SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesSck,
+        bool includesMiso,
         int mosi, int miso,
         int sck, bool cpol,
         bool cpha,
         bool msbfirst,
         uint clock, bool output)
     {
-        return new PicoSpiConfig(model, type, peripheral, includesSck, includesMiso, mosi, miso, sck, cpol, cpha, msbfirst, clock, output);
+        return new PicoSpiConfig(model, type, peripheral, includesSck, includesMiso, mosi, miso, sck, cpol, cpha,
+            msbfirst, clock, output);
     }
 
     public override TwiConfig AssignTwiPins(ConfigViewModel model, string type, bool peripheral, int sda, int scl,
@@ -212,6 +220,7 @@ public class Pico : Microcontroller
                 _ => s.Value
             })).ToList();
         }
+
         return SpiTypesByPin.ToList();
     }
 
@@ -230,7 +239,9 @@ public class Pico : Microcontroller
             {
                 continue;
             }
-            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral || devicePin.Type == "led_output" || devicePin.Type.Contains("Ps2 Output")) continue;
+
+            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral || devicePin.Type == "led_output" ||
+                devicePin.Type.Contains("Ps2 Output")) continue;
             switch (devicePin.PinMode)
             {
                 case DevicePinMode.Analog:
@@ -251,7 +262,7 @@ public class Pico : Microcontroller
 
         return ret;
     }
-    
+
     public override string GenerateLedInit(ConfigViewModel configViewModel)
     {
         var ret = "";
@@ -262,7 +273,9 @@ public class Pico : Microcontroller
             {
                 continue;
             }
-            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral || devicePin.Type.Contains("Ps2 Output")) continue;
+
+            if (devicePin.PinMode == DevicePinMode.Skip || devicePin.Peripheral ||
+                devicePin.Type.Contains("Ps2 Output")) continue;
             switch (devicePin.PinMode)
             {
                 case DevicePinMode.Analog:
