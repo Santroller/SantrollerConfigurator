@@ -352,6 +352,19 @@ public partial class GuitarAxis : OutputAxis
             return "";
         }
 
+        if (Type == GuitarAxisType.Pickup && Input is ConstantInput constantInput)
+        {
+            if (mode == ConfigField.XboxOne)
+            {
+                
+                return $"""
+                        {GenerateOutput(mode)} = {PickupSelectorRangesXb1[constantInput.PickupSelectorType]};
+                        """;
+            }
+            return $"""
+                    {GenerateOutput(mode)} = {PickupSelectorRangesPS[constantInput.PickupSelectorType]};
+                    """;
+        }
         switch (mode)
         {
             case ConfigField.Xbox360 or ConfigField.Xbox
