@@ -2206,6 +2206,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public string Generate(MemoryStream? blobStream)
     {
+        var prevCulture = CultureInfo.CurrentCulture;
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
         if (Device is Santroller santroller)
         {
             santroller.StopTicking();
@@ -2309,7 +2311,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define INPUT_DJ_TURNTABLE_POLL_RATE {{DjPollRate * 1000}}
                         #define INPUT_DJ_TURNTABLE_SMOOTHING {{DjSmoothing.ToString().ToLower()}}
                         #define LED_BRIGHTNESS {{LedBrightnessOn}}
-                        #define LOW_PASS_ALPHA {{AccelFilter.ToString(CultureInfo.GetCultureInfo("en"))}}
+                        #define LOW_PASS_ALPHA {{AccelFilter}}
                         #define DJ_NAV_BUTTONS {{DjNavButtons.ToString().ToLower()}}
                         #define COMBINED_DEBOUNCE {{CombinedStrumDebounce.ToString().ToLower()}}
                         #define SLEEP_PIN {{(SleepEnabled ? SleepWakeUpPin : -1)}}
@@ -2371,10 +2373,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
         if (IsBluetoothTx)
         {
-            config += $"""
+            config += """
 
-                       #define BLUETOOTH_TX true
-                       """;
+                      #define BLUETOOTH_TX true
+                      """;
         }
 
         // Actually write the config as configured
@@ -2560,10 +2562,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 }
                 else
                 {
-                    config += $"""
+                    config += """
 
-                               #define TICK_NKRO
-                               """;
+                              #define TICK_NKRO
+                              """;
                 }
             }
 
@@ -2821,6 +2823,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                       """;
         }
 
+        CultureInfo.CurrentCulture = prevCulture;
         return config;
     }
 
