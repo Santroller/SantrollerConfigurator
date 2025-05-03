@@ -117,6 +117,7 @@ public class Santroller : ConfigurableUsbDevice
             InvalidDevice = true;
             return;
         }
+
         Load();
         if (Board.Name == Board.Generic.Name)
         {
@@ -165,7 +166,6 @@ public class Santroller : ConfigurableUsbDevice
         _running = true;
         while (UsbDevice.IsOpen && !_model.Main.Working && _running)
         {
-
             foreach (var (led, elapsed) in _ledTimers)
             {
                 if (_sw.Elapsed - elapsed <= TimeSpan.FromSeconds(2)) continue;
@@ -205,6 +205,7 @@ public class Santroller : ConfigurableUsbDevice
                 Dictionary<int, int> analogRaw = new();
                 Dictionary<int, bool> digitalRaw = new();
                 Dictionary<int, bool> digitalRawPeripheral = new();
+                Dictionary<(int, int), bool> matrixRaw = new();
 
                 foreach (var (port, mask) in ports)
                 {
@@ -256,27 +257,30 @@ public class Santroller : ConfigurableUsbDevice
                 var wtDrumConnected = false;
                 var max1270XRaw = Array.Empty<byte>();
                 var max1270XConnected = false;
-                var midiRaw = Array.Empty<byte>();
 
                 if (_model.GetTwiForType(WiiInput.WiiTwiType, false) != null)
                 {
                     wiiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadWii, 8);
                     wiiControllerType = await ReadDataAsync(0, (byte) Commands.CommandGetExtensionWii, sizeof(short));
                 }
+
                 if (_model.GetSpiForType(Ps2Input.Ps2SpiType, false) != null)
                 {
                     ps2Raw = await ReadDataAsync(0, (byte) Commands.CommandReadPs2, 32);
                     ps2ControllerType = await ReadDataAsync(0, (byte) Commands.CommandGetExtensionPs2, 1);
                 }
+
                 if (_model.GetTwiForType(DjInput.DjTwiType, false) != null)
                 {
                     djLeftRaw = await ReadDataAsync(0, (byte) Commands.CommandReadDjLeft, 3);
                     djRightRaw = await ReadDataAsync(0, (byte) Commands.CommandReadDjRight, 3);
                 }
+
                 if (_model.GetTwiForType(Gh5NeckInput.Gh5TwiType, false) != null)
                 {
                     gh5Raw = await ReadDataAsync(0, (byte) Commands.CommandReadGh5, 2);
                 }
+
                 if (_model.GetTwiForType(CloneNeckInput.CloneTwiType, false) != null)
                 {
                     cloneRaw = await ReadDataAsync(0, (byte) Commands.CommandReadClone, 4);
@@ -299,33 +303,38 @@ public class Santroller : ConfigurableUsbDevice
                     usbHostRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHost, 24);
                     usbHostInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadUsbHostInputs, 97);
                 }
+
                 if (_model.IsBluetoothRx)
                 {
                     bluetoothInputsRaw = await ReadDataAsync(0, (byte) Commands.CommandReadBluetoothInputs, 101);
                 }
 
-                
+
                 if (_model.HasAccel)
                 {
-                    accelConnected = (await ReadDataAsync(0, (byte) Commands.CommandReadAccelValid, 1)).Any(x => x != 0);
+                    accelConnected =
+                        (await ReadDataAsync(0, (byte) Commands.CommandReadAccelValid, 1)).Any(x => x != 0);
                     adxlRaw = await ReadDataAsync(0, (byte) Commands.CommandReadAdxl, 6 * sizeof(short));
                 }
 
                 if (_model.HasMpr121)
                 {
                     mpr121Raw = await ReadDataAsync(0, (byte) Commands.CommandReadMpr121, sizeof(short));
-                    mpr121Connected = (await ReadDataAsync(0, (byte) Commands.CommandReadMpr121Valid, 1)).Any(x => x != 0);
+                    mpr121Connected =
+                        (await ReadDataAsync(0, (byte) Commands.CommandReadMpr121Valid, 1)).Any(x => x != 0);
                 }
 
                 if (_model.HasMax1704X)
                 {
                     max1270XRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMax1270X, sizeof(byte));
-                    max1270XConnected = (await ReadDataAsync(0, (byte) Commands.CommandReadMax1270XValid, 1)).Any(x => x != 0);
+                    max1270XConnected =
+                        (await ReadDataAsync(0, (byte) Commands.CommandReadMax1270XValid, 1)).Any(x => x != 0);
                 }
 
                 if (_model.HasWtDrumInput)
                 {
-                    wtDrumConnected = (await ReadDataAsync(0, (byte) Commands.CommandReadWtDrumConnected, 1)).Any(x => x != 0);
+                    wtDrumConnected =
+                        (await ReadDataAsync(0, (byte) Commands.CommandReadWtDrumConnected, 1)).Any(x => x != 0);
                 }
 
                 var bluetoothRaw = Array.Empty<byte>();
@@ -334,15 +343,19 @@ public class Santroller : ConfigurableUsbDevice
                 {
                     return;
                 }
-                midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
-                _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw, accelConnected, wtDrumConnected);
+
+                var midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
+                _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw,
+                    accelConnected, wtDrumConnected);
                 foreach (var output in _bindings)
                     output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                         djRightRaw, gh5Raw,
                         ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
-                        peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected);
+                        peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw,
+                        bluetoothInputsRaw, peripheralConnected);
                 // If nothing is being ticked, then give the UI some time to process data instead of polling at max speed
-                if (analogRaw.Count == 0 && digitalRaw.Count == 0 && digitalRawPeripheral.Count == 0 && midiRaw.Length == 0)
+                if (analogRaw.Count == 0 && digitalRaw.Count == 0 && digitalRawPeripheral.Count == 0 &&
+                    midiRaw.Length == 0)
                 {
                     await Task.Delay(100);
                 }
@@ -499,7 +512,8 @@ public class Santroller : ConfigurableUsbDevice
         foreach (var (port, mask) in ports)
         {
             var wValue = (ushort) (port | (mask << 8));
-            await ReadDataAsync(wValue, (byte) (peripheral ? Commands.CommandReadPeripheralDigital : Commands.CommandReadDigital),
+            await ReadDataAsync(wValue,
+                (byte) (peripheral ? Commands.CommandReadPeripheralDigital : Commands.CommandReadDigital),
                 sizeof(byte));
         }
 
@@ -546,7 +560,7 @@ public class Santroller : ConfigurableUsbDevice
             {
                 type = Resources.ConsoleTypeKeyboardMouse;
             }
-            
+
             return IsSantroller
                 ? $"{Product} - {Board.Name} - {type}"
                 : Product;
@@ -565,7 +579,7 @@ public class Santroller : ConfigurableUsbDevice
     {
         WriteData(0, (byte) Commands.CommandSetLeds, [led, 0, 0, 0]);
     }
-    
+
     public void ClearLedMpr121(byte led)
     {
         WriteData(0, (byte) Commands.CommandSetLedsMpr121, [led, 0, 0, 0]);
@@ -590,11 +604,21 @@ public class Santroller : ConfigurableUsbDevice
                 [(byte) port, (byte) mask, (byte) (value ? mask : 0), 0]);
         }
     }
-    
+
+    public async Task DigitalWriteAsync(int pin, bool value)
+    {
+        var ports = _microcontroller.GetPortsForTicking([new DevicePin(pin, DevicePinMode.Output)]);
+        foreach (var (port, mask) in ports)
+        {
+            await WriteDataAsync(0, (byte) Commands.CommandWriteDigital,
+                [(byte) port, (byte) mask, (byte) (value ? mask : 0), 0]);
+        }
+    }
+
     public void SetBrightness(int brightness)
     {
         WriteData(0, (byte) Commands.CommandSetBrightness,
-            [(byte)brightness]);
+            [(byte) brightness]);
     }
 
     public void SetLed(byte led, Color color, byte brightness)
@@ -602,7 +626,7 @@ public class Santroller : ConfigurableUsbDevice
         if (_model == null) return;
         _ledTimers[led] = _sw.Elapsed;
         var bytes = _model.LedType.GetLedBytes(color, brightness);
-        
+
         // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
         if (!_model.Branded && _model.LastLedType != LedType.None)
         {
@@ -619,9 +643,9 @@ public class Santroller : ConfigurableUsbDevice
     {
         if (_model == null) return;
         _ledTimersPeripheral[led] = _sw.Elapsed;
-        
+
         var bytes = _model.LedTypePeripheral.GetLedBytes(color, brightness);
-        
+
         // If the user changes led colour order, translate the colours so that they can see the effects of the led type being changed live
         if (!_model.Branded && _model.LastLedTypePeripheral != LedType.None)
         {
@@ -644,7 +668,7 @@ public class Santroller : ConfigurableUsbDevice
         _ledTimers[led] = _sw.Elapsed;
         WriteData(0, (byte) Commands.CommandSetLeds, [led, (byte) (state ? 1 : 0)]);
     }
-    
+
     public void SetLedMpr121(byte led, bool state)
     {
         _ledTimersMpr121[led] = _sw.Elapsed;
@@ -710,8 +734,36 @@ public class Santroller : ConfigurableUsbDevice
         {
             DigitalWrite(pinS3, (channel & (1 << 3)) != 0);
         }
+
         var ret = AnalogRead(pin);
         // Enable them again
+        WriteData(0, (byte) Commands.CommandDisableMultiplexer,
+            [0]);
+        return ret;
+    }
+
+    public bool MatrixRead(int pin, int outPin)
+    {
+        if (_model == null) return false;
+        WriteData(0, (byte) Commands.CommandDisableMultiplexer,
+            [1]);
+
+        DigitalWrite(outPin, false);
+        var ports2 = _model.Microcontroller.GetPortsForTicking([
+            new DevicePin(pin, DevicePinMode.PullUp)
+        ]);
+        Dictionary<int, bool> mRaw = new();
+        foreach (var (port, mask) in ports2)
+        {
+            var wValue = (ushort) (port | (mask << 8));
+            var data = ReadData(wValue, (byte) Commands.CommandReadDigital, sizeof(byte));
+            if (data.Length == 0) return false;
+            var pins = data[0];
+            _model.Microcontroller.PinsFromPortMask(port, mask, pins, mRaw);
+        }
+
+        var ret = mRaw[pin];
+        DigitalWrite(outPin, true);
         WriteData(0, (byte) Commands.CommandDisableMultiplexer,
             [0]);
         return ret;

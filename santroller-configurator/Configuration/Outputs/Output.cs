@@ -579,6 +579,7 @@ public abstract partial class Output : ReactiveObject
              (s is InputType.Mpr121Input && Model.HasMpr121)) &&
             (s is not InputType.WtNeckPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.MultiplexerInput || Model.IsPico) &&
+            (s is not InputType.MatrixInput || Model.IsPico) &&
             (s is not InputType.DigitalPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.Mpr121Input || Model.HasMpr121) &&
             (s is not InputType.BluetoothInput || Model.IsBluetoothRx) &&
@@ -1132,6 +1133,9 @@ public abstract partial class Output : ReactiveObject
                 break;
             case InputType.MultiplexerInput:
                 input = new MultiplexerInput(-1, false, 0, -1, -1, -1, -1, MultiplexerType.EightChannel, Model);
+                break;
+            case InputType.MatrixInput:
+                input = new MatrixInput(-1, -1, false, Model);
                 break;
             case InputType.DigitalPinInput:
                 input = new DirectInput(-1, false, false, DevicePinMode.PullUp, Model);

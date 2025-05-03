@@ -2919,6 +2919,12 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="ButtonLabelSquare" xml:space="preserve">
         <value>Botón Cuadrado</value>
     </data>
+    <data name="OutPin" xml:space="preserve">
+        <value>Pin de Salida de Matriz</value>
+    </data>
+    <data name="InputTypeMatrixInput" xml:space="preserve">
+        <value>Entrada de Matriz</value>
+    </data>
     <data name="ButtonLabelTriangle" xml:space="preserve">
         <value>Botón Triángulo</value>
     </data>

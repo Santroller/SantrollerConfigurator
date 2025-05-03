@@ -4035,6 +4035,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string InputTypeMatrixInput {
+            get {
+                return ResourceManager.GetString("InputTypeMatrixInput", resourceCulture);
+            }
+        }
+        
         public static string InputTypeMidiInput {
             get {
                 return ResourceManager.GetString("InputTypeMidiInput", resourceCulture);
@@ -6552,6 +6558,12 @@ namespace GuitarConfigurator.NetCore {
         public static string ChannelLabel {
             get {
                 return ResourceManager.GetString("ChannelLabel", resourceCulture);
+            }
+        }
+        
+        public static string OutPin {
+            get {
+                return ResourceManager.GetString("OutPin", resourceCulture);
             }
         }
         

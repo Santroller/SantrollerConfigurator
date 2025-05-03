@@ -1164,6 +1164,25 @@
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type inputs:MatrixInput}">
+                <StackPanel Orientation="Vertical" IsVisible="{Binding !Model.Branded}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center" Width="350"
+                               Content="{x:Static netCore:Resources.PinLabel}" />
+                        <ComboBox VerticalAlignment="Center" SelectedItem="{Binding Pin}"
+                                  ItemsSource="{Binding AvailablePins}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center" Width="350" Content="{x:Static netCore:Resources.OutPin}" />
+                        <ComboBox VerticalAlignment="Center" SelectedItem="{Binding OutPin}"
+                                  ItemsSource="{Binding AvailablePins}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type inputs:DirectInput}">
                 <StackPanel Orientation="Vertical"
                             IsVisible="{Binding !$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Branded}">
