@@ -101,10 +101,13 @@ public class SerializedConfiguration
         Ps2OutputAck = model.Ps2OutputAck;
         Ps2OutputAtt = model.Ps2OutputAtt;
         HasWtDrumInput = model.HasWtDrumInput;
+        HasBhDrumInput = model.HasBhDrumInput;
         WtDrumMiso = model.WtDrumMiso;
         WtDrumMosi = model.WtDrumMosi;
         WtDrumSck = model.WtDrumSck;
         WtDrumCs = model.WtDrumCs;
+        BhDrumScl = model.BhDrumScl;
+        BhDrumSda = model.BhDrumSda;
         DjFullRange = model.DjFullRange;
         DjNavButtons = model.DjNavButtons;
         SelectDpadLeftXb1 = model.SelectDpadLeftXb1;
@@ -199,6 +202,9 @@ public class SerializedConfiguration
     [ProtoMember(97)] public int WtDrumSck { get; private set; }
     [ProtoMember(98)] public int WtDrumCs { get; private set; }
     [ProtoMember(99)] public bool Rb3CymbalGlitchFix { get; private set; }
+    [ProtoMember(100)] public bool HasBhDrumInput { get; private set; }
+    [ProtoMember(101)] public int BhDrumSda { get; private set; }
+    [ProtoMember(102)] public int BhDrumScl { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -237,6 +243,7 @@ public class SerializedConfiguration
         model.HasWiiOutput = HasWiiOutput;
         model.HasPs2Output = HasPs2Output;
         model.HasWtDrumInput = HasWtDrumInput;
+        model.HasBhDrumInput = HasBhDrumInput;
         model.HasMpr121 = HasMpr121;
         model.HasMax1704X = HasMax1704X;
         model.RolloverMode = RolloverMode;
@@ -274,6 +281,12 @@ public class SerializedConfiguration
             model.WtDrumMosi = WtDrumMosi;
             model.WtDrumSck =  WtDrumSck;
             model.WtDrumCs =  WtDrumCs;
+        }
+
+        if (HasBhDrumInput)
+        {
+            model.BhDrumScl = BhDrumScl;
+            model.BhDrumSda = BhDrumSda;
         }
 
         if (HasWiiOutput)

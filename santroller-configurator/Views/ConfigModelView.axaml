@@ -4109,6 +4109,74 @@
                     </StackPanel>
                 </Expander>
                 <Expander HorizontalAlignment="Stretch" Header="{Binding}"
+                          IsExpanded="{Binding BhDrumInputExpanded}">
+                    <Expander.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!Branded" />
+                            <Binding Path="HasBhDrumInput" />
+                        </MultiBinding>
+                    </Expander.IsVisible>
+                    <Expander.HeaderTemplate>
+                        <DataTemplate DataType="viewModels:ConfigViewModel">
+                            <Panel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="75"
+                                           Source="avares://SantrollerConfigurator/Assets/Icons/Combined/GH5.png">
+                                    </Image>
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.BhDrumInputSettingsLabel}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="45 0 0 0" HorizontalAlignment="Center"
+                                            IsVisible="{Binding HasBhDrumInput}">
+                                    <CheckBox IsChecked="{Binding BhDrumConnected}" VerticalAlignment="Center"
+                                              IsEnabled="False"
+                                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                                </StackPanel>
+                                <Label Foreground="Red" Margin="45 0 0 0"
+                                       Content="{Binding BhDrumErrorText}"
+                                       VerticalAlignment="Bottom"
+                                       HorizontalAlignment="Center"
+                                       HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       IsVisible="{Binding BhDrumErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                            IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                    <Button
+                                        Command="{Binding RemoveBhDrumInputCommand}"
+                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                </StackPanel>
+                            </Panel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <StackPanel>
+                        <StackPanel IsVisible="{Binding HasBhDrumInput}">
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.SclLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding BhDrumScl}"
+                                          ItemsSource="{Binding AvailableSclPinsInput}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding BindableTwi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.SdaLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding BhDrumSda}"
+                                          ItemsSource="{Binding AvailableSdaPinsInput}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateTwi}"
+                                          Width="200" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}"
                           IsExpanded="{Binding Mpr121Expanded}">
 
                     <Expander.IsVisible>

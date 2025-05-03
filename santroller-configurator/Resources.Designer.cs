@@ -5175,6 +5175,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SimpleTypeBhDrumInput {
+            get {
+                return ResourceManager.GetString("SimpleTypeBhDrumInput", resourceCulture);
+            }
+        }
+        
+        public static string BhDrumInputSettingsLabel {
+            get {
+                return ResourceManager.GetString("BhDrumInputSettingsLabel", resourceCulture);
+            }
+        }
+        
         public static string SimpleTypePeripheral {
             get {
                 return ResourceManager.GetString("SimpleTypePeripheral", resourceCulture);

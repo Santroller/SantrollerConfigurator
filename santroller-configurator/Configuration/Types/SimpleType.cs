@@ -28,5 +28,6 @@ public enum SimpleType
     FestivalIos,
     Accel,
     ProGuitar,
-    WtDrumInput
+    WtDrumInput,
+    BhDrumInput
 }

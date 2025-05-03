@@ -77,6 +77,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly bool WtDrumSpiCpha = true;
     public static readonly bool WtDrumSpiMsbFirst = true;
     public static readonly string WtDrumSpiCsType = "wt_drum_cs";
+    public static readonly string BhDrumTwiType = "bh_drum";
+    public static readonly int BhDrumTwiFreq = 100000;
 
     private bool _allExpanded;
 
@@ -89,6 +91,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private TwiConfig? _mpr121TwiConfig;
     private TwiConfig? _max170XTwiConfig;
     private TwiConfig? _accelTwiConfig;
+    private TwiConfig? _bhDrumTwiConfig;
     private TwiConfig? _wiiOutputTwiConfig;
     private DirectPinConfig? _ws2812Config;
     private DirectPinConfig? _ws2812ConfigPeripheral;
@@ -408,6 +411,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] private string? _ps2OutputErrorText;
 
     [Reactive] private string? _wtDrumErrorText;
+    [Reactive] private string? _bhDrumErrorText;
 
     [Reactive] private string? _mpr121ErrorText;
 
@@ -559,6 +563,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] private bool _ps2OutputExpanded;
     [Reactive] private bool _mpr121Expanded;
     [Reactive] private bool _wtDrumInputExpanded;
+    [Reactive] private bool _bhDrumInputExpanded;
 
     [Reactive] private bool _max170XExpanded;
 
@@ -873,7 +878,27 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.RaisePropertyChanged();
         }
     }
+    public int BhDrumSda
+    {
+        get => _bhDrumTwiConfig?.Sda ?? 0;
+        set
+        {
+            if (_bhDrumTwiConfig == null) return;
+            _bhDrumTwiConfig.Sda = value;
+            this.RaisePropertyChanged();
+        }
+    }
 
+    public int BhDrumScl
+    {
+        get => _bhDrumTwiConfig?.Scl ?? 0;
+        set
+        {
+            if (_bhDrumTwiConfig == null) return;
+            _bhDrumTwiConfig.Scl = value;
+            this.RaisePropertyChanged();
+        }
+    }
     
     public int WtDrumCs
     {
@@ -1050,6 +1075,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool _mpr121Connected;
 
     [Reactive] public bool _wtDrumConnected;
+
+    [Reactive] public bool _bhDrumConnected;
 
     [Reactive] public bool _max1704XConnected;
 
@@ -1254,6 +1281,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private bool _hasWiiOutput;
     private bool _hasPs2Output;
     private bool _hasWtDrumInput;
+    private bool _hasBhDrumInput;
     private bool _hasMpr121;
 
     public bool HasMpr121
@@ -1416,6 +1444,28 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.RaisePropertyChanged(nameof(WtDrumMosi));
             this.RaisePropertyChanged(nameof(WtDrumSck));
             this.RaiseAndSetIfChanged(ref _hasWtDrumInput, value);
+            UpdateErrors();
+        }
+    }
+    
+    public bool HasBhDrumInput
+    {
+        get => _hasBhDrumInput;
+        set
+        {
+            if (value)
+            {
+                _bhDrumTwiConfig = Microcontroller.AssignTwiPins(this, BhDrumTwiType, false, -1, -1,
+                    BhDrumTwiFreq, false);
+            }
+            else
+            {
+                _wtDrumSpiConfig = null;
+            }
+
+            this.RaisePropertyChanged(nameof(BhDrumScl));
+            this.RaisePropertyChanged(nameof(BhDrumSda));
+            this.RaiseAndSetIfChanged(ref _hasBhDrumInput, value);
             UpdateErrors();
         }
     }
@@ -1653,7 +1703,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 _ledSpiConfig, _ws2812Config, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
                 _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
                 _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt,
-                _adaFruitHostPin, _accelTwiConfig, _wtDrumCsConfig, _wtDrumSpiConfig
+                _adaFruitHostPin, _accelTwiConfig, _wtDrumCsConfig, _wtDrumSpiConfig, _bhDrumTwiConfig
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -2469,6 +2519,15 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            """;
             }
 
+            if (_bhDrumTwiConfig != null)
+            {
+                config += $"""
+
+                           #define BH_DRUM_TWI_PORT {_bhDrumTwiConfig.Definition}
+                           """;
+                
+            }
+
             if (_accelTwiConfig != null)
             {
                 config += $"""
@@ -2875,6 +2934,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         HasWtDrumInput = false;
     }
+    [RelayCommand]
+    public void RemoveBhDrumInput()
+    {
+        HasBhDrumInput = false;
+    }
+
 
     [RelayCommand]
     public void LoadPreset()
@@ -2929,6 +2994,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         ControllerConfigExpanded = true;
         BluetoothConfigExpanded = true;
         WtDrumInputExpanded = true;
+        BhDrumInputExpanded = true;
         Ps2OutputExpanded = true;
         Mpr121Expanded = true;
         WiiOutputExpanded = true;
@@ -2949,6 +3015,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         ControllerConfigExpanded = false;
         BluetoothConfigExpanded = false;
         WtDrumInputExpanded = false;
+        BhDrumInputExpanded = false;
         Ps2OutputExpanded = false;
         Mpr121Expanded = false;
         WiiOutputExpanded = false;
@@ -4276,6 +4343,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             pins["MIDI Serial RX"] = [MidiSerialPin];
         }
 
+        if (HasBhDrumInput && type != BhDrumTwiType && _bhDrumTwiConfig != null)
+        {
+            pins["BH Drum"] = _bhDrumTwiConfig.Pins.ToList();
+        }
         if (HasWtDrumInput && type != WtDrumSpiType && _wtDrumSpiConfig != null)
         {
             pins["WT Drum"] = _wtDrumSpiConfig.Pins.ToList();
@@ -4409,6 +4480,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 break;
         }
 
+        if (HasBhDrumInput && _bhDrumTwiConfig?.ErrorText != null)
+        {
+            foundError = true;
+            BhDrumErrorText = _bhDrumTwiConfig.ErrorText;
+        }
+        else
+        {
+            BhDrumErrorText = null;
+        }
+
         if (HasMpr121 && _mpr121TwiConfig?.ErrorText != null)
         {
             foundError = true;
@@ -4495,7 +4576,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     public void Update(byte[] btRaw, bool peripheralConnected, bool mpr121Connected, bool max1270XConnected,
-        byte[] max1270XRaw, bool accelConnected, bool wtDrumConnected)
+        byte[] max1270XRaw, bool accelConnected, bool wtDrumConnected, bool bhDrumConnected)
     {
         if (IsBluetoothTx && btRaw.Length != 0)
         {
@@ -4513,6 +4594,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
 
         WtDrumConnected = wtDrumConnected;
+        BhDrumConnected = bhDrumConnected;
     }
 
     public TwiConfig? GetTwiForType(string twiType, bool peripheral)

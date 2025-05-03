@@ -36,33 +36,39 @@ public partial class EmptyOutput : Output
         Colors.Black,
         [], [], [], false, false, false, -1, false)
     {
-        _isControllerHelper = this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x is not DeviceControllerType.KeyboardMouse)
+        _isControllerHelper = this.WhenAnyValue(x => x.Model.DeviceControllerType,
+                x => x is not DeviceControllerType.KeyboardMouse)
             .ToProperty(this, x => x.IsController);
         _isKeyboard = this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x is DeviceControllerType.KeyboardMouse)
             .ToProperty(this, x => x.IsKeyboard);
         _combinedTypes = this.WhenAnyValue(vm => vm.Model.DeviceControllerType, vm => vm.Model.HasPeripheral,
                 vm => vm.Model.IsBluetoothTx, vm => vm.Model.HasWiiCombinedOutput, vm => vm.Model.HasPs2CombinedOutput,
-                vm => vm.Model.HasGhwtCombinedOutput).CombineLatest(this.WhenAnyValue(
-                vm => vm.Model.HasCloneCombinedOutput,
+                vm => vm.Model.HasGhwtCombinedOutput, vm => vm.Model.HasCloneCombinedOutput,
                 vm => vm.Model.HasDjCombinedOutput, vm => vm.Model.HasGh5CombinedOutput,
-                vm => vm.Model.HasUsbHostCombinedOutput))
-            .Select(type => ControllerEnumConverter.GetTypes(type.Item1.Item1).Where(s2 =>
-                (type.Item1.Item1.IsProGuitar() || s2 is not SimpleType.ProGuitar) &&
-                (type.Item1.Item1.IsDrum() || type.Item1.Item1.IsGuitar() || s2 is not (SimpleType.FestivalGamepad or SimpleType.FestivalIos or SimpleType.FestivalKeyboard or SimpleType.FestivalLayer)) &&
-                (model.IsPico ||
-                 s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.BluetoothTx or SimpleType.UsbHost
-                     or SimpleType.Peripheral)) &&
-                (type.Item1.Item2 || s2 is not SimpleType.WtNeckPeripheralSimple) &&
-                (!type.Item1.Item3 || s2 is not SimpleType.Bluetooth) &&
-                (type.Item1.Item3 || s2 is not SimpleType.Max1704X) &&
-                (!type.Item1.Item4 || s2 is not SimpleType.WiiInputSimple) &&
-                (!type.Item1.Item5 || s2 is not SimpleType.Ps2InputSimple) &&
-                (!type.Item1.Item6 || s2 is not SimpleType.WtNeckSimple) &&
-                (!type.Item2.Item1 || s2 is not SimpleType.CloneNeckSimple) &&
-                (!type.Item2.Item2 || s2 is not SimpleType.DjTurntableSimple) &&
-                (!type.Item2.Item3 || s2 is not SimpleType.Gh5NeckSimple) &&
-                (!type.Item2.Item4 || s2 is not SimpleType.UsbHost)
-            ))
+                vm => vm.Model.HasUsbHostCombinedOutput, vm => vm.Model.HasBhDrumInput, vm => vm.Model.HasWtDrumInput,
+                (type, hasPeripheral, isBluetooth, hasWii, hasPs2, hasGhwt, hasClone, hasDj, hasGh5, hasUsbHost, hasBhDrum, hasWtDrum) =>
+                    ControllerEnumConverter.GetTypes(type).Where(s2 =>
+                        (type.IsProGuitar() || s2 is not SimpleType.ProGuitar) &&
+                        (type.IsDrum() || type.IsGuitar() ||
+                         s2 is not (SimpleType.FestivalGamepad or SimpleType.FestivalIos or SimpleType.FestivalKeyboard
+                             or SimpleType.FestivalLayer)) &&
+                        (model.IsPico ||
+                         s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.BluetoothTx
+                             or SimpleType.UsbHost
+                             or SimpleType.Peripheral)) &&
+                        (hasPeripheral || s2 is not SimpleType.WtNeckPeripheralSimple) &&
+                        (!isBluetooth || s2 is not SimpleType.Bluetooth) &&
+                        (isBluetooth || s2 is not SimpleType.Max1704X) &&
+                        (!hasWii || s2 is not SimpleType.WiiInputSimple) &&
+                        (!hasPs2 || s2 is not SimpleType.Ps2InputSimple) &&
+                        (!hasGhwt || s2 is not SimpleType.WtNeckSimple) &&
+                        (!hasClone || s2 is not SimpleType.CloneNeckSimple) &&
+                        (!hasDj || s2 is not SimpleType.DjTurntableSimple) &&
+                        (!hasGh5 || s2 is not SimpleType.Gh5NeckSimple) &&
+                        (!hasUsbHost || s2 is not SimpleType.UsbHost) &&
+                        (!hasBhDrum || s2 is not SimpleType.BhDrumInput) &&
+                        (!hasWtDrum || s2 is not SimpleType.WtDrumInput)
+                    ))
             .ToProperty(this, x => x.CombinedTypes);
     }
 
@@ -145,6 +151,11 @@ public partial class EmptyOutput : Output
                 Model.Bindings.Remove(this);
                 Model.UpdateErrors();
                 return;
+            case SimpleType.BhDrumInput:
+                Model.HasBhDrumInput = true;
+                Model.Bindings.Remove(this);
+                Model.UpdateErrors();
+                return;
             case SimpleType.WtDrumInput:
                 Model.HasWtDrumInput = true;
                 Model.Bindings.Remove(this);
@@ -193,19 +204,18 @@ public partial class EmptyOutput : Output
 
         Output? output = Model.DeviceControllerType switch
         {
-            
-
             DeviceControllerType.KeyboardMouse => this switch
             {
-                {MouseAxisType: not null} => new MouseAxis(Model, true,new FixedInput(Model, 0, false), Colors.Black,
+                {MouseAxisType: not null} => new MouseAxis(Model, true, new FixedInput(Model, 0, false), Colors.Black,
                     Colors.Black,
                     [], [], [], short.MinValue, short.MaxValue, 0,
                     MouseAxisType.Value, false, false, false, -1),
-                {MouseButtonType: not null} => new MouseButton(Model, true,new FixedInput(Model, 0, false), Colors.Black,
+                {MouseButtonType: not null} => new MouseButton(Model, true, new FixedInput(Model, 0, false),
+                    Colors.Black,
                     Colors.Black,
                     [], [], [], 5,
                     MouseButtonType.Value, false, false, false, -1),
-                {Key: not null} => new KeyboardButton(Model, true,new FixedInput(Model, 0, false), Colors.Black,
+                {Key: not null} => new KeyboardButton(Model, true, new FixedInput(Model, 0, false), Colors.Black,
                     Colors.Black,
                     [], [], [], 5,
                     Key.Value, false, false, false, -1),
@@ -229,7 +239,7 @@ public partial class EmptyOutput : Output
                             Model.IsApa102, Model.IsBluetooth))).First(), 0, 0),
                     SimpleType.Rumble => new Rumble(Model, true, -1,
                         false, RumbleMotorType.Left),
-                    SimpleType.ConsoleMode => new EmulationMode(Model,true,
+                    SimpleType.ConsoleMode => new EmulationMode(Model, true,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, Model),
                         EmulationModeType.XboxOne),
                     SimpleType.Reset => new Reset(Model, true,
@@ -240,80 +250,81 @@ public partial class EmptyOutput : Output
                     SimpleType.ProGuitar => new ProGuitarCombinedOutput(Model),
                     _ => null
                 },
-                StandardAxisType.RightTrigger or StandardAxisType.LeftTrigger => new ControllerAxis(Model,true,
+                StandardAxisType.RightTrigger or StandardAxisType.LeftTrigger => new ControllerAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MinValue, ushort.MaxValue, ushort.MaxValue / 2, 0,
                     0, (StandardAxisType) value, false, false, false, -1, false),
-                StandardAxisType standardAxisType => new ControllerAxis(Model,true,
+                StandardAxisType standardAxisType => new ControllerAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MinValue, ushort.MaxValue, ushort.MaxValue / 2, 0,
                     ushort.MaxValue, standardAxisType, false, false, false, -1, false),
-                StandardButtonType standardButtonType => new ControllerButton(Model,true,
+                StandardButtonType standardButtonType => new ControllerButton(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.PullUp, Model),
                     Colors.Black,
                     Colors.Black, [], [], [], 5,
                     standardButtonType, false, false, false, -1, false),
-                InstrumentButtonType standardButtonType => new GuitarButton(Model,true,
+                InstrumentButtonType standardButtonType => new GuitarButton(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.PullUp, Model),
                     Colors.Black,
                     Colors.Black, [], [], [], 5,
                     standardButtonType, false, false, false, -1, false),
-                DrumAxisType drumAxisType => new DrumAxis(Model,true,
+                DrumAxisType drumAxisType => new DrumAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MaxValue / 2, ushort.MaxValue, 0, 10, drumAxisType, false, false, false, -1, false),
-                Ps3AxisType ps3AxisType => new Ps3Axis(Model,true,
+                Ps3AxisType ps3AxisType => new Ps3Axis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MinValue, ushort.MaxValue, 0,
                     ps3AxisType, false, false, false, -1),
-                GuitarAxisType.Slider => new GuitarAxis(Model,true,
+                GuitarAxisType.Slider => new GuitarAxis(Model, true,
                     new GhWtTapInput(GhWtInputType.TapBar, Model, false, -1,
                         -1, -1,
                         -1),
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MinValue, ushort.MaxValue, 0, false, GuitarAxisType.Slider, false, false, false, -1, false),
-                GuitarAxisType.Pickup => new GuitarAxis(Model,true,
+                GuitarAxisType.Pickup => new GuitarAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     (ushort.MaxValue / 5) * 1, (ushort.MaxValue / 5) * 2, (ushort.MaxValue / 5) * 3,
                     (ushort.MaxValue / 5) * 4,
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MinValue, ushort.MaxValue, 0, false, GuitarAxisType.Pickup, false, false, false, -1, false),
-                GuitarAxisType.Tilt => new GuitarAxis(Model,true,
+                GuitarAxisType.Tilt => new GuitarAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MinValue, ushort.MaxValue, 0, false, GuitarAxisType.Tilt, false, false, false, -1, false),
-                GuitarAxisType guitarAxisType => new GuitarAxis(Model,true,
+                GuitarAxisType guitarAxisType => new GuitarAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MinValue, ushort.MaxValue, 0, false, guitarAxisType, false, false, false, -1, false),
-                DjAxisType.LeftTableVelocity => new DjAxis(Model,true,
+                DjAxisType.LeftTableVelocity => new DjAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     1, 1, DjAxisType.LeftTableVelocity, false, false, false, -1, false),
-                DjAxisType.RightTableVelocity => new DjAxis(Model,true,
+                DjAxisType.RightTableVelocity => new DjAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     1, 1, DjAxisType.RightTableVelocity, false, false, false, -1, false),
-                DjAxisType.EffectsKnob => new DjAxis(Model,true,
+                DjAxisType.EffectsKnob => new DjAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     1, 1, DjAxisType.EffectsKnob, false, false, false, -1, false),
-                DjAxisType djAxisType => new DjAxis(Model,true,
+                DjAxisType djAxisType => new DjAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MinValue, ushort.MaxValue, 0, djAxisType, false, false, false, -1, false),
-                DjInputType djInputType => new DjButton(Model,true,
+                DjInputType djInputType => new DjButton(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [], 10,
                     djInputType, false, false, false, -1, false),
-                ProKeyType proKeyType and (ProKeyType.Overdrive or ProKeyType.PedalDigital) => new PianoKeyButton(Model,true,
+                ProKeyType proKeyType and (ProKeyType.Overdrive or ProKeyType.PedalDigital) => new PianoKeyButton(Model,
+                    true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     proKeyType, false, false, false, -1, false),
-                ProKeyType proKeyType => new PianoKey(Model,true,
+                ProKeyType proKeyType => new PianoKey(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     proKeyType, false, false, false, -1, false),

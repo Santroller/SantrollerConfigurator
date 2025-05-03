@@ -2718,6 +2718,12 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="WtDrumInputSettingsLabel" xml:space="preserve">
         <value>Guitar Hero WT Drum Kit Settings</value>
     </data>
+    <data name="SimpleTypeBhDrumInput" xml:space="preserve">
+        <value>Band Hero Drum Kit</value>
+    </data>
+    <data name="BhDrumInputSettingsLabel" xml:space="preserve">
+        <value>Band Hero Drum Kit Settings</value>
+    </data>
     
     <data name="SimpleTypePeripheral" xml:space="preserve">
         <value>Peripheral</value>

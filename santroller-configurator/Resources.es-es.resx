@@ -409,8 +409,16 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
         <value>Batería de Guitar Hero WT</value>
     </data>
     <data name="WtDrumInputSettingsLabel" xml:space="preserve">
-        <value>Ajustes de Batería de Guitar Hero W</value>
+        <value>Ajustes de Batería de Guitar Hero WT</value>
     </data>
+
+    <data name="SimpleTypeBhDrumInput" xml:space="preserve">
+        <value>Batería de Band Hero</value>
+    </data>
+    <data name="BhDrumInputSettingsLabel" xml:space="preserve">
+        <value>Ajustes de Batería de Band Hero</value>
+    </data>
+
     <data name="SckWtLabel" xml:space="preserve">
         <value>Pin Sck</value>
     </data>
