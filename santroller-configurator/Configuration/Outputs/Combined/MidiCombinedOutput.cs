@@ -131,7 +131,7 @@ public partial class MidiCombinedOutput : CombinedOutput
         set => Model.MidiSerialPin = value;
     }
 
-    public List<int> ValidSerialPins => [1, 5, 9, 13, 17, 20];
+    public List<int> ValidSerialPins => [1, 5, 9, 13, 17, 21];
 
     private int _firstNote;
 
