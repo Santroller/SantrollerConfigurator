@@ -34,9 +34,6 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
             disposables(ViewModel!.ShowBindAllDialog.RegisterHandler(DoShowBindAllDialogAsync));
             disposables(ViewModel!.SaveConfig.RegisterHandler(DoSaveConfigAsync));
             disposables(ViewModel!.LoadConfig.RegisterHandler(DoLoadConfigAsync));
-            disposables(ViewModel!.LoadNand.RegisterHandler(DoLoadNandAsync));
-            disposables(ViewModel!.LoadBackup.RegisterHandler(DoLoadBackupAsync));
-            disposables(ViewModel!.ExportBackup.RegisterHandler(DoExportBackupAsync));
             disposables(ViewModel!.RegisterConnections());
             disposables(
                 ViewModel!.WhenAnyValue(x => x.Device).OfType<Santroller>()
@@ -100,83 +97,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
             Console.WriteLine(ex);
         }
     }
-
-    private async Task DoLoadNandAsync(IInteractionContext<ConfigViewModel, SerializedConsoleKey?> obj)
-    {
-        var extension = ".bin";
-        var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            AllowMultiple = false,
-            FileTypeFilter = [new FilePickerFileType("NAND image (flashdmp.bin)") {Patterns = ["*" + extension]}]
-        });
-        if (file.Count == 0)
-        {
-            obj.SetOutput(null);
-            return;
-        }
-        await using var nandStream = await file[0].OpenReadAsync();
-        extension = ".txt";
-        file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            AllowMultiple = false,
-            FileTypeFilter = [new FilePickerFileType("CPU Key (cpukey.txt)") {Patterns = ["*" + extension]}]
-        });
-        if (file.Count == 0)
-        {
-            obj.SetOutput(null);
-            return;
-        }
-        await using var cpuKeyStream = await file[0].OpenReadAsync();
-        try
-        {
-            obj.SetOutput(ExCrypt.LoadKeys(nandStream, cpuKeyStream));
-
-        }
-        catch (Exception)
-        {
-            obj.SetOutput(null);
-        }
-    }
     
-    private async Task DoLoadBackupAsync(IInteractionContext<ConfigViewModel, SerializedConsoleKey[]> obj)
-    {
-        var extension = ".bin";
-        var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            AllowMultiple = false,
-            FileTypeFilter = [new FilePickerFileType("Key Backup (keys.bin)") {Patterns = ["*" + extension]}]
-        });
-        if (file.Count == 0)
-        {
-            obj.SetOutput([]);
-            return;
-        }
-        try {
-            await using var stream = await file[0].OpenReadAsync();
-            obj.SetOutput(Serializer.Deserialize<SerializedConsoleKey[]>(stream));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
-    }
-    
-    private async Task DoExportBackupAsync(IInteractionContext<ConfigViewModel, Unit> obj)
-    {
-        obj.SetOutput(new Unit());
-        var file = await ((Window) VisualRoot!).StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
-        {
-            SuggestedFileName = "key.bin",
-            FileTypeChoices = [new FilePickerFileType("Key backup (keys.bin)") {Patterns = ["*.bin"]}]
-        });
-        if (file == null)
-        {
-            return;
-        }
-        
-        await using var stream = await file.OpenWriteAsync();
-        Serializer.Serialize(stream, obj.Input._keys.Items.ToArray());
-    }
 
     public async Task DoShowUnpluggedDialogAsync(
         IInteractionContext<(string yesText, string noText, string text), AreYouSureWindowViewModel> interaction)

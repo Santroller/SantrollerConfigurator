@@ -320,10 +320,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _deviceControllerTypes.Connect()
             .Bind(out var controllerTypes)
             .Subscribe();
-        _keys.Connect()
-            .Bind(out var keys)
-            .Subscribe();
-        Keys = keys;
         DeviceControllerRhythmTypes = controllerTypes;
         AllPins = new SourceList<int>();
         AllPins.AddRange(Microcontroller.GetAllPins());
@@ -481,8 +477,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public Interaction<ConfigViewModel, Unit> SaveConfig { get; } = new();
     public Interaction<ConfigViewModel, Unit> LoadConfig { get; } = new();
-    public Interaction<ConfigViewModel, SerializedConsoleKey?> LoadNand { get; } = new();
-    public Interaction<ConfigViewModel, SerializedConsoleKey[]> LoadBackup { get; } = new();
     public Interaction<ConfigViewModel, Unit> ExportBackup { get; } = new();
 
     public Interaction<(ConfigViewModel model, Output output),
@@ -515,10 +509,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private SourceList<DeviceControllerType> _deviceControllerTypes = new SourceList<DeviceControllerType>();
 
     public ReadOnlyObservableCollection<DeviceControllerType> DeviceControllerRhythmTypes { get; }
-
-    internal SourceList<SerializedConsoleKey> _keys { get; } = new();
-    [Reactive] public SerializedConsoleKey? _selectedKey;
-    public ReadOnlyObservableCollection<SerializedConsoleKey> Keys { get; }
 
     public IEnumerable<ModeType> ModeTypes => Enum.GetValues<ModeType>();
 
@@ -1716,44 +1706,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         this.RaiseAndSetIfChanged(ref _deviceControllerType, type, nameof(DeviceControllerType));
     }
 
-    [ReactiveCommand]
-    public async Task ImportKey()
-    {
-        var key = await LoadNand.Handle(this);
-        if (key != null)
-        {
-            var old = _keys.Items.FirstOrDefault(s => s.ConsoleId == key.ConsoleId);
-            if (old != null)
-            {
-                _keys.Remove(old);
-            }
-
-            _keys.Add(key);
-        }
-    }
-
-    [ReactiveCommand]
-    public void DeleteKey()
-    {
-        if (SelectedKey != null)
-        {
-            _keys.Remove(SelectedKey);
-        }
-    }
-
-    [ReactiveCommand]
-    public async Task ImportKeyBackup()
-    {
-        var keys = await LoadBackup.Handle(this);
-        _keys.AddRange(keys);
-    }
-
-    [ReactiveCommand]
-    public async Task ExportKeyBackup()
-    {
-        await ExportBackup.Handle(this);
-    }
-
     public void UpdateBindings(bool defaults)
     {
         foreach (var binding in Bindings.Items) binding.UpdateBindings();
@@ -2769,23 +2721,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 config += "\n#define CD4051BE";
             }
 
-            if (Keys.Count == 0) return config;
-            if (writer != null)
-            {
-                config += $$"""
-
-                            #define KV_KEY_ARRAY {{WriteBlob(writer, Keys.SelectMany(s => s.Combined).ToArray())}}
-                            #define KV_KEY_SIZE {{WriteBlob(writer, (byte) Keys.Count)}}
-                            """;
-            }
-            else
-            {
-                config += $$"""
-
-                            #define KV_KEY_ARRAY {{{string.Join(",", Keys.Select(s => s.Format()))}}}
-                            #define KV_KEY_SIZE {{Keys.Count}}
-                            """;
-            }
+            return config;
         }
         else
         {
