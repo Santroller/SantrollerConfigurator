@@ -2758,6 +2758,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="SimpleTypeReset" xml:space="preserve">
         <value>Controller Reset</value>
     </data>
+    <data name="SimpleTypeWakeup360" xml:space="preserve">
+        <value>Xbox 360 Wakeup Trigger</value>
+    </data>
     <data name="SimpleTypeMidi" xml:space="preserve">
         <value>Midi Inputs</value>
     </data>

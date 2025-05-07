@@ -1236,10 +1236,10 @@ public abstract partial class Output : ReactiveObject
         switch (input.IsAnalog)
         {
             case true when this is OutputAxis:
-            case false when this is OutputButton:
+            case false when this is OutputButton or Reset or Wakeup360:
                 Input = input;
                 break;
-            case true when this is OutputButton:
+            case true when this is OutputButton or Reset or Wakeup360:
                 var oldType = input.IsUint ? AnalogToDigitalType.Trigger : AnalogToDigitalType.JoyHigh;
                 var oldThreshold = input.IsUint ? ushort.MaxValue / 2 : short.MaxValue / 2;
                 if (Input is AnalogToDigital atd)

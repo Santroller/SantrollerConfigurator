@@ -16,6 +16,7 @@ public enum SimpleType
     Rumble,
     ConsoleMode,
     Reset,
+    Wakeup360,
     Midi,
     WiiOutputs,
     Peripheral,

@@ -5253,6 +5253,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string SimpleTypeWakeup360 {
+            get {
+                return ResourceManager.GetString("SimpleTypeWakeup360", resourceCulture);
+            }
+        }
+        
         public static string SimpleTypeMidi {
             get {
                 return ResourceManager.GetString("SimpleTypeMidi", resourceCulture);

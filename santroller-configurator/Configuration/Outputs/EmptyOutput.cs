@@ -244,6 +244,8 @@ public partial class EmptyOutput : Output
                         EmulationModeType.XboxOne),
                     SimpleType.Reset => new Reset(Model, true,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, Model)),
+                    SimpleType.Wakeup360 => new Wakeup360(Model, true,
+                        new DirectInput(-1, false, false, DevicePinMode.PullUp, Model)),
                     SimpleType.UsbHost => new UsbHostCombinedOutput(Model),
                     SimpleType.Bluetooth => new Combined.BluetoothCombinedOutput(Model),
                     SimpleType.Midi => new MidiCombinedOutput(Model, 24),

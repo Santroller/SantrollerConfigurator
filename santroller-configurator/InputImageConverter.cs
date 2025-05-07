@@ -57,6 +57,7 @@ public class InputImageConverter : IMultiValueConverter
             EmptyType.Empty => "Generic",
             SimpleType type => "Combined/" + type switch
             {
+                SimpleType.Wakeup360 => "360",
                 SimpleType.WiiInputSimple or SimpleType.WiiOutputs => "Wii",
                 SimpleType.Ps2InputSimple or SimpleType.Ps2Outputs => "PS2",
                 SimpleType.WtNeckSimple or SimpleType.WtDrumInput => "GHWT",
@@ -111,7 +112,7 @@ public class InputImageConverter : IMultiValueConverter
             EmulationModeType type => type switch
             {
                 EmulationModeType.XboxOne => "Combined/XboxOne",
-                EmulationModeType.Xbox360 => "Combined/Xbox360",
+                EmulationModeType.Xbox360 => "Combined/360",
                 EmulationModeType.Wii => "Combined/Wii",
                 EmulationModeType.Ps3 or EmulationModeType.Ps2OnPs3 => "Combined/PS3",
                 EmulationModeType.Ps4Or5 => "Combined/PS4",
