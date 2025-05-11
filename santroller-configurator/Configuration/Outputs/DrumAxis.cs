@@ -34,13 +34,42 @@ public partial class DrumAxis : OutputAxis
         {DrumAxisType.Kick2, StandardButtonType.LeftThumbClick}
     };
 
-    private static readonly Dictionary<DrumAxisType, Key> KeysFortnite = new()
+    private static readonly Dictionary<DrumAxisType, Key> _fortniteKeysGh = new()
     {
-        {DrumAxisType.Green, Key.D},
         {DrumAxisType.Red, Key.F},
-        {DrumAxisType.Yellow, Key.J},
-        {DrumAxisType.Blue, Key.K},
-        {DrumAxisType.Orange, Key.L},
+        {DrumAxisType.Yellow, Key.G},
+        {DrumAxisType.Blue, Key.H},
+        {DrumAxisType.Orange, Key.J},
+        {DrumAxisType.Green, Key.K},
+        {DrumAxisType.Kick, Key.Space},
+    };
+
+    private static readonly Dictionary<DrumAxisType, Key> _fortniteProKeysGh = new()
+    {
+        {DrumAxisType.Red, Key.F},
+        {DrumAxisType.Yellow, Key.G},
+        {DrumAxisType.Blue, Key.H},
+        {DrumAxisType.Orange, Key.J},
+        {DrumAxisType.Green, Key.K},
+        {DrumAxisType.Kick, Key.Space},
+    };
+
+    private static readonly Dictionary<DrumAxisType, Key> _fortniteKeysRb = new()
+    {
+        {DrumAxisType.Red, Key.F},
+        {DrumAxisType.Yellow, Key.G},
+        {DrumAxisType.Blue, Key.H},
+        {DrumAxisType.Green, Key.J},
+        {DrumAxisType.Kick, Key.K},
+    };
+
+    private static readonly Dictionary<DrumAxisType, Key> _fortniteProKeysRb = new()
+    {
+        {DrumAxisType.Red, Key.F},
+        {DrumAxisType.Yellow, Key.G},
+        {DrumAxisType.Blue, Key.H},
+        {DrumAxisType.Green, Key.J},
+        {DrumAxisType.Kick, Key.K},
     };
 
     private static readonly Dictionary<DrumAxisType, StandardButtonType> ButtonsXboxOne = new()
@@ -154,13 +183,25 @@ public partial class DrumAxis : OutputAxis
 
     public override string GenerateOutput(ConfigField mode)
     {
-        if (mode is ConfigField.Shared && Type is DrumAxisType.Kick2)
-        {
-            return "kick2";
-        }
-
         return mode switch
         {
+            ConfigField.Shared when Type is DrumAxisType.Kick2 => "kick2",
+            ConfigField.Keyboard when Model is {IsRbDrumKit: true, IsFortniteFestivalPro: true} => _fortniteProKeysGh
+                .TryGetValue(Type,
+                    out var forniteKeyPro)
+                ? GetReportField(forniteKeyPro)
+                : "",
+            ConfigField.Keyboard when Model.IsRbDrumKit => _fortniteKeysGh.TryGetValue(Type, out var forniteKey)
+                ? GetReportField(forniteKey)
+                : "",
+            ConfigField.Keyboard when Model is {IsRbDrumKit: false, IsFortniteFestivalPro: true} => _fortniteProKeysRb
+                .TryGetValue(Type,
+                    out var forniteKeyPro)
+                ? GetReportField(forniteKeyPro)
+                : "",
+            ConfigField.Keyboard when !Model.IsRbDrumKit => _fortniteKeysRb.TryGetValue(Type, out var forniteKey)
+                ? GetReportField(forniteKey)
+                : "",
             ConfigField.Universal or ConfigField.Shared => UniversalAxisMappings.GetValueOrDefault(Type, ""),
             // XB1 and PS4 use similar mappings
             ConfigField.XboxOne or ConfigField.Ps4 => AxisMappingsXb1.GetValueOrDefault(Type, ""),
@@ -188,13 +229,10 @@ public partial class DrumAxis : OutputAxis
 
         if (mode == ConfigField.Shared)
         {
-            if (Input is not WiiInput &&
-                (!Model.DeviceControllerType.IsRb() || Type is not (DrumAxisType.Kick or DrumAxisType.Kick2)) &&
-                Model is {IsKeyboard: false} && Input is not UsbHostInput) return "";
-
             if (input.IsAnalog)
             {
-                input = new AnalogToDigital(input, AnalogToDigitalType.Drum, Min, Model);
+                extra +=
+                    $"lastDrum[{debounceIndex}] = {GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)};";
             }
 
             return new ControllerButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
@@ -207,7 +245,7 @@ public partial class DrumAxis : OutputAxis
 
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps4
             or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
-            or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
+            or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii or ConfigField.Keyboard)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;
         if (!Model.LocalDebounceMode) debounce = Model.Debounce;
@@ -243,9 +281,28 @@ public partial class DrumAxis : OutputAxis
             reset = "";
         }
 
-        if (Input is MidiInput midiInput)
+        if (mode == ConfigField.Keyboard)
         {
-            reset += $"midiData.midiVelocitiesTemp[{midiInput.Key}] = 0;";
+            var outputVar = GenerateOutput(mode);
+            var keyCode = KeyboardButton.KeyCodes.IndexOf(outputVar);
+            if (keyCode == -1)
+            {
+                return "";
+            }
+
+            return Model.RolloverMode == RolloverMode.SixKro
+                ? $$"""
+                    if ({{ifStatement}}) {
+                        setKey({{debounceIndex}},{{keyCode}},report);
+                        {{extra}}
+                    } 
+                    """
+                : $$"""
+                    if ({{ifStatement}}) {
+                        {{outputVar}} = true;
+                        {{extra}}
+                    }
+                    """;
         }
 
         var outputButtons = "";
@@ -270,10 +327,6 @@ public partial class DrumAxis : OutputAxis
             case ConfigField.Universal:
                 if (ButtonsPs3.TryGetValue(Type, out var value3))
                     outputButtons += $"\n{GetReportField(value3)} = true;";
-                break;
-            case ConfigField.Keyboard:
-                if (KeysFortnite.TryGetValue(Type, out var value4))
-                    outputButtons += $"\n{GetReportField(value4)} = true;";
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
@@ -402,14 +455,6 @@ public partial class DrumAxis : OutputAxis
                      """;
         }
 
-        // For drums, we want to do things based on a peak.
-        // That means we ignore anything under Min, then when something peaks over Min, we capture that value and wait until we are back under Min before resetting.
-        var check = $"{Input.Generate(writer)} > {Min}";
-        if (Min > Max)
-        {
-            check = $"({Input.Generate(writer)} - {Min}) < {DeadZone}";
-        }
-
         if (Model.DeviceControllerType.IsRb() && Model.CymbalGlitchFix &&
             mode is ConfigField.Xbox360 or ConfigField.Ps3 && Type is DrumAxisType.GreenCymbal
                 or DrumAxisType.BlueCymbal or DrumAxisType.YellowCymbal or DrumAxisType.Green)
@@ -439,10 +484,6 @@ public partial class DrumAxis : OutputAxis
             }
 
             return $$"""
-                     if ({{check}}) {
-                        lastDrum[{{debounceIndex}}] = {{GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)}};
-                        {{reset}}
-                     }
                      if ({{ifStatement}}) {
                              if ({{test}}) {
                                  {{outputButtons}}
@@ -459,10 +500,6 @@ public partial class DrumAxis : OutputAxis
         }
 
         return $$"""
-                 if ({{check}}) {
-                     lastDrum[{{debounceIndex}}] = {{GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)}};
-                     {{reset}}
-                 }
                  if ({{ifStatement}}) {
                      {{outputButtons}}
                      {{GenerateOutput(mode)}} = {{assignedVal}};

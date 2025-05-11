@@ -120,20 +120,16 @@ public abstract partial class OutputButton : Output
                                 tiltActive = true;
                               }
                               if ({{ifStatement}} && ((millis() - lastTilt) < 1000)) {
-                                 setKey({{debounceIndex}},{{keyCode}},report,true);
+                                 setKey({{debounceIndex}},{{keyCode}},report);
                                  {{extra}}
-                              } else {
-                                 setKey({{debounceIndex}},{{keyCode}},report,false);
                               }
                               """;
                 }
                 return  $$"""
                           if ({{ifStatement}}) {
-                              setKey({{debounceIndex}},{{keyCode}},report,true);
+                              setKey({{debounceIndex}},{{keyCode}},report);
                               {{extra}}
-                          } else {
-                             setKey({{debounceIndex}},{{keyCode}},report,false);
-                          }
+                          } 
                           """;
             }
 
