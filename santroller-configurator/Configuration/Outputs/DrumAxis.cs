@@ -186,20 +186,20 @@ public partial class DrumAxis : OutputAxis
         return mode switch
         {
             ConfigField.Shared when Type is DrumAxisType.Kick2 => "kick2",
-            ConfigField.Keyboard when Model is {IsRbDrumKit: true, IsFortniteFestivalPro: true} => _fortniteProKeysGh
+            ConfigField.Keyboard when Model is {IsRbDrumKit: true, IsFortniteFestivalPro: true} => _fortniteProKeysRb
                 .TryGetValue(Type,
                     out var forniteKeyPro)
                 ? GetReportField(forniteKeyPro)
                 : "",
-            ConfigField.Keyboard when Model.IsRbDrumKit => _fortniteKeysGh.TryGetValue(Type, out var forniteKey)
+            ConfigField.Keyboard when Model.IsRbDrumKit => _fortniteKeysRb.TryGetValue(Type, out var forniteKey)
                 ? GetReportField(forniteKey)
                 : "",
-            ConfigField.Keyboard when Model is {IsRbDrumKit: false, IsFortniteFestivalPro: true} => _fortniteProKeysRb
+            ConfigField.Keyboard when Model is {IsRbDrumKit: false, IsFortniteFestivalPro: true} => _fortniteProKeysGh
                 .TryGetValue(Type,
                     out var forniteKeyPro)
                 ? GetReportField(forniteKeyPro)
                 : "",
-            ConfigField.Keyboard when !Model.IsRbDrumKit => _fortniteKeysRb.TryGetValue(Type, out var forniteKey)
+            ConfigField.Keyboard when !Model.IsRbDrumKit => _fortniteKeysGh.TryGetValue(Type, out var forniteKey)
                 ? GetReportField(forniteKey)
                 : "",
             ConfigField.Universal or ConfigField.Shared => UniversalAxisMappings.GetValueOrDefault(Type, ""),
