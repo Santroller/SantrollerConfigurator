@@ -233,6 +233,7 @@ public partial class DrumAxis : OutputAxis
             {
                 extra +=
                     $"lastDrum[{debounceIndex}] = {GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)};";
+                input = new AnalogToDigital(input, AnalogToDigitalType.Drum, Min, Model);
             }
 
             return new ControllerButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),

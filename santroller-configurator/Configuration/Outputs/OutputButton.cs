@@ -204,7 +204,7 @@ public abstract partial class OutputButton : Output
         }
         foreach (var input in Input.InnermostInputs())
         {
-            if (input is MidiInput midiInput)
+            if (input is MidiInput midiInput && Model.IsDrum)
             {
                 reset += $"midiData.midiVelocitiesTemp[{midiInput.Key}] = 0;";
             }
