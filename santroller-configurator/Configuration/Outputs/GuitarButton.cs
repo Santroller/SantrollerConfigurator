@@ -33,6 +33,11 @@ public class GuitarButton : OutputButton
         {InstrumentButtonType.Yellow, Key.J},
         {InstrumentButtonType.Blue, Key.K},
         {InstrumentButtonType.Orange, Key.L},
+        {InstrumentButtonType.SoloGreen, Key.D},
+        {InstrumentButtonType.SoloRed, Key.F},
+        {InstrumentButtonType.SoloYellow, Key.J},
+        {InstrumentButtonType.SoloBlue, Key.K},
+        {InstrumentButtonType.SoloOrange, Key.L},
         {InstrumentButtonType.StrumUp, Key.Up},
         {InstrumentButtonType.StrumDown, Key.Down},
     };
@@ -44,6 +49,11 @@ public class GuitarButton : OutputButton
         {InstrumentButtonType.Yellow, Key.D3},
         {InstrumentButtonType.Blue, Key.D4},
         {InstrumentButtonType.Orange, Key.D5},
+        {InstrumentButtonType.SoloGreen, Key.D1},
+        {InstrumentButtonType.SoloRed, Key.D2},
+        {InstrumentButtonType.SoloYellow, Key.D3},
+        {InstrumentButtonType.SoloBlue, Key.D4},
+        {InstrumentButtonType.SoloOrange, Key.D5},
         {InstrumentButtonType.StrumUp, Key.RightShift},
         {InstrumentButtonType.StrumDown, Key.RightCtrl},
     };
