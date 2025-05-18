@@ -1774,6 +1774,21 @@
                             </StackPanel>
                         </StackPanel>
                         
+                        <StackPanel Orientation="Horizontal"
+                                    IsVisible="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).LocalDebounceMode}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="350" Content="{x:Static netCore:Resources.DebounceLabel}" />
+                            <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding DebounceDisplay}"
+                                           IsVisible="{Binding !$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Deque}"
+                                           VerticalAlignment="Center"
+                                           Width="200" />
+                            <NumericUpDown Increment="0.1" Value="{Binding DebounceDisplay}"
+                                           IsVisible="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).Deque}"
+                                           VerticalAlignment="Center"
+                                           Width="200" />
+                        </StackPanel>
+                        
                         <Button Command="{Binding CopyCalibrationCommand}"
                                 IsEnabled="{Binding ConfigurableInput}"
                                 Content="{x:Static netCore:Resources.ButtonLabelCopyCalibration}" />

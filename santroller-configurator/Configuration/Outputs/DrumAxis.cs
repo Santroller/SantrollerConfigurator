@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -10,6 +11,7 @@ using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
+using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
@@ -149,6 +151,9 @@ public partial class DrumAxis : OutputAxis
         Type = type;
         Debounce = debounce;
         UpdateDetails();
+        _debounceDisplay = this.WhenAnyValue(x => x.Debounce)
+            .Select(x => x / 10.0f)
+            .ToProperty(this, x => x.DebounceDisplay);
     }
 
     public DrumAxisType Type { get; }
@@ -161,6 +166,13 @@ public partial class DrumAxis : OutputAxis
     public override bool IsKeyboard => false;
 
     [Reactive] private int _debounce;
+    private readonly ObservableAsPropertyHelper<float> _debounceDisplay;
+
+    public float DebounceDisplay
+    {
+        get => _debounceDisplay.Value;
+        set => Debounce = (byte) (value * 10);
+    }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
