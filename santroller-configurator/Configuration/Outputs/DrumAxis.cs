@@ -151,9 +151,6 @@ public partial class DrumAxis : OutputAxis
         Type = type;
         Debounce = debounce;
         UpdateDetails();
-        _debounceDisplay = this.WhenAnyValue(x => x.Debounce)
-            .Select(x => x / 10.0f)
-            .ToProperty(this, x => x.DebounceDisplay);
     }
 
     public DrumAxisType Type { get; }
@@ -166,14 +163,6 @@ public partial class DrumAxis : OutputAxis
     public override bool IsKeyboard => false;
 
     [Reactive] private int _debounce;
-    private readonly ObservableAsPropertyHelper<float> _debounceDisplay;
-
-    public float DebounceDisplay
-    {
-        get => _debounceDisplay.Value;
-        set => Debounce = (byte) (value * 10);
-    }
-
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
@@ -262,12 +251,6 @@ public partial class DrumAxis : OutputAxis
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;
         if (!Model.LocalDebounceMode) debounce = Model.Debounce;
-        if (!Model.Deque)
-        {
-            // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
-            debounce /= 10;
-        }
-
         debounce += 1;
 
         var ifStatement = $"debounce[{debounceIndex}]";

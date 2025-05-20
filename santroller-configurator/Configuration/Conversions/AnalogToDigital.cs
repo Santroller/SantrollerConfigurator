@@ -123,11 +123,7 @@ public partial class AnalogToDigital : Input
     public override bool IsUint => Child.IsUint;
 
     public override string Title => Child.Title;
-
-    private string? _tresholdBlob;
-    private BinaryWriter? _writer;
-
-
+    
     public override string Generate(BinaryWriter? writer)
     {
         var threshold = Threshold;
@@ -140,13 +136,7 @@ public partial class AnalogToDigital : Input
         var thresholdVal = $"{threshold}";
         if (writer != null)
         {
-            if (_writer != writer)
-            {
-                _writer = writer;
-                _tresholdBlob = WriteBlob(writer, threshold);
-            }
-
-            thresholdVal = _tresholdBlob;
+            thresholdVal = WriteBlob(writer, threshold);
         }
 
         if (Child.IsUint)
