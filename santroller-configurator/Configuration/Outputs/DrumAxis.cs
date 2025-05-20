@@ -239,7 +239,7 @@ public partial class DrumAxis : OutputAxis
 
             return new ControllerButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
                     LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
-                    (byte) Debounce, StandardButtonType.A,
+                    Debounce*10, StandardButtonType.A,
                     false, false, false, -1, false)
                 .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
                     macros, writer);
