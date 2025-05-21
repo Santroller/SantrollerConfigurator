@@ -24,9 +24,22 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
             disposables(ViewModel!.LoadConfig.RegisterHandler(LoadImageAsync));
             disposables(ViewModel!.SaveUf2Handler.RegisterHandler(SaveUf2Async));
             disposables(ViewModel!.SaveBinaryHandler.RegisterHandler(SaveBinaryAsync));
+            disposables(ViewModel!.ShowInformationDialog.RegisterHandler(DoShowInformationDialogAsync));
             ViewModel!.Begin(true);
         });
         InitializeComponent();
+    }
+
+    private async Task DoShowInformationDialogAsync(
+        IInteractionContext<string, InformationWindowViewModel> interaction)
+    {
+        var model = new InformationWindowViewModel(ViewModel!.AccentedButtonTextColor, interaction.Input);
+        var dialog = new InformationWindow
+        {
+            DataContext = model
+        };
+        await dialog.ShowDialog<InformationWindowViewModel?>((Window) VisualRoot!);
+        interaction.SetOutput(model);
     }
     
     private async Task LoadImageAsync(IInteractionContext<BuilderMainWindowViewModel, IStorageFile?> obj)
