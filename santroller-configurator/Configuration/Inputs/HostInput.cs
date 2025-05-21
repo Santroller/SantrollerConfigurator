@@ -89,7 +89,7 @@ public abstract partial class HostInput : Input
 
     public abstract string Field { get; }
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         var ret = (Input switch
         {

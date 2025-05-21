@@ -144,9 +144,9 @@ public class DigitalToAnalog : Input
 
     public override string Title => Child.Title;
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
-        return Child.Generate(writer);
+        return Child.Generate();
     }
 
     public override SerializedInput Serialise()

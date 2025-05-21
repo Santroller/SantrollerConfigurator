@@ -3230,7 +3230,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 analog = analogLedOutputs.Aggregate(analog,
                     (current, analogLedOutput) =>
                         current +
-                        $"bit_write({analogLedOutput.Input.Generate(writer)}, {variable}[{index / 8}],{index % 8});");
+                        $"bit_write({analogLedOutput.Input.Generate()}, {variable}[{index / 8}],{index % 8});");
             }
 
             if (analog.Length == 0)
@@ -3271,7 +3271,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             ret = analogLedOutputs.Aggregate(ret,
                 (current, analogLedOutput) =>
                     current +
-                    $"bit_write({analogLedOutput.Input.Generate(writer)}, {variable}[{index / 8}],{index % 8});");
+                    $"bit_write({analogLedOutput.Input.Generate()}, {variable}[{index / 8}],{index % 8});");
 
             ret += "}";
         }
@@ -3307,12 +3307,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         } djAxis)
                     {
                         var multiplier = djAxis.LedMultiplier;
-                        var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                        var generated = $"({analogLedOutput.Input.Generate()})";
                         var isI2C = analogLedOutput.Input is DjInput
                         {
                             Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
                         };
-                        ledReadCheck = analogLedOutput.Input.Generate(writer);
+                        ledReadCheck = analogLedOutput.Input.Generate();
                         if (analogLedOutput.InputIsUint)
                         {
                             ledReadCheck = $"({generated} - INT16_MAX)";
@@ -3323,13 +3323,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         }
 
                         ledRead = isI2C
-                            ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate(writer)},{multiplier})"
+                            ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
                             : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
                     }
 
                     if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
                     {
-                        var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                        var generated = $"({analogLedOutput.Input.Generate()})";
                         if (!analogLedOutput.InputIsUint)
                         {
                             generated = $"({generated} + INT16_MAX)";
@@ -3409,7 +3409,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     } djAxis)
                 {
                     var multiplier = djAxis.LedMultiplier;
-                    var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                    var generated = $"({analogLedOutput.Input.Generate()})";
                     var isI2C = analogLedOutput.Input is DjInput
                     {
                         Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
@@ -3420,13 +3420,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     }
 
                     ledRead = isI2C
-                        ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate(writer)},{multiplier})"
+                        ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
                         : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
                 }
 
                 if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
                 {
-                    var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                    var generated = $"({analogLedOutput.Input.Generate()})";
                     if (!analogLedOutput.InputIsUint)
                     {
                         generated = $"({generated} + INT16_MAX)";
@@ -3498,12 +3498,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         } djAxis)
                     {
                         var multiplier = djAxis.LedMultiplier;
-                        var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                        var generated = $"({analogLedOutput.Input.Generate()})";
                         var isI2C = analogLedOutput.Input is DjInput
                         {
                             Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
                         };
-                        ledReadCheck = analogLedOutput.Input.Generate(writer);
+                        ledReadCheck = analogLedOutput.Input.Generate();
                         if (analogLedOutput.InputIsUint)
                         {
                             ledReadCheck = $"({generated} - INT16_MAX)";
@@ -3514,13 +3514,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         }
 
                         ledRead = isI2C
-                            ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate(writer)},{multiplier})"
+                            ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
                             : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
                     }
 
                     if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
                     {
-                        var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                        var generated = $"({analogLedOutput.Input.Generate()})";
                         if (!analogLedOutput.InputIsUint)
                         {
                             generated = $"({generated} + INT16_MAX)";
@@ -3601,7 +3601,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     } djAxis)
                 {
                     var multiplier = djAxis.LedMultiplier;
-                    var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                    var generated = $"({analogLedOutput.Input.Generate()})";
                     var isI2C = analogLedOutput.Input is DjInput
                     {
                         Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
@@ -3612,13 +3612,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     }
 
                     ledRead = isI2C
-                        ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate(writer)},{multiplier})"
+                        ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
                         : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
                 }
 
                 if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
                 {
-                    var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                    var generated = $"({analogLedOutput.Input.Generate()})";
                     if (!analogLedOutput.InputIsUint)
                     {
                         generated = $"({generated} + INT16_MAX)";
@@ -3674,12 +3674,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         } djAxis)
                     {
                         var multiplier = djAxis.LedMultiplier;
-                        var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                        var generated = $"({analogLedOutput.Input.Generate()})";
                         var isI2C = analogLedOutput.Input is DjInput
                         {
                             Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
                         };
-                        ledReadCheck = analogLedOutput.Input.Generate(writer);
+                        ledReadCheck = analogLedOutput.Input.Generate();
                         if (analogLedOutput.InputIsUint)
                         {
                             ledReadCheck = $"({generated} - INT16_MAX)";
@@ -3690,13 +3690,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         }
 
                         ledRead = isI2C
-                            ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate(writer)},{multiplier})"
+                            ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
                             : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
                     }
 
                     if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
                     {
-                        var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                        var generated = $"({analogLedOutput.Input.Generate()})";
                         if (!analogLedOutput.InputIsUint)
                         {
                             generated = $"({generated} + INT16_MAX)";
@@ -3782,7 +3782,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     } djAxis)
                 {
                     var multiplier = djAxis.LedMultiplier;
-                    var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                    var generated = $"({analogLedOutput.Input.Generate()})";
                     var isI2C = analogLedOutput.Input is DjInput
                     {
                         Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
@@ -3793,13 +3793,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     }
 
                     ledRead = isI2C
-                        ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate(writer)},{multiplier})"
+                        ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
                         : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
                 }
 
                 if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
                 {
-                    var generated = $"({analogLedOutput.Input.Generate(writer)})";
+                    var generated = $"({analogLedOutput.Input.Generate()})";
                     if (!analogLedOutput.InputIsUint)
                     {
                         generated = $"({generated} + INT16_MAX)";
@@ -3846,7 +3846,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 analog = analogLedOutputs.Aggregate(analog,
                     (current, analogLedOutput) =>
                         current +
-                        $"bit_write({analogLedOutput.Input.Generate(writer)}, {variable},{index % 8});");
+                        $"bit_write({analogLedOutput.Input.Generate()}, {variable},{index % 8});");
             }
 
             if (analog.Length == 0)
@@ -3886,7 +3886,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                      """;
             ret = analogLedOutputs.Aggregate(ret,
                 (current, analogLedOutput) =>
-                    current + $"bit_write({analogLedOutput.Input.Generate(writer)}, {variable},{index % 8});");
+                    current + $"bit_write({analogLedOutput.Input.Generate()}, {variable},{index % 8});");
 
             ret += "}";
         }
@@ -3897,6 +3897,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private string GenerateTick(ConfigField mode, BinaryWriter? writer)
     {
+        foreach (var input in Bindings.Items.SelectMany(x => x.ValidOutputs()).Select(x => x.Input))
+        {
+            input.SetWriter(writer);
+        }
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
 
         var outputsByType = outputs
@@ -3916,7 +3920,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             foreach (var output in outputByType)
             {
-                var generatedInput = output.Input.Generate(writer);
+                var generatedInput = output.Input.Generate();
                 var generatedOutput = output.GenerateOutput(generatedMode);
                 var pro = IsFortniteFestivalPro && output is GuitarAxis
                 {
@@ -3928,7 +3932,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 {
                     foreach (var input in output.Input.Inputs())
                     {
-                        var gen = input.Generate(writer);
+                        var gen = input.Generate();
                         macros.TryAdd(gen, []);
                         macros[gen].AddRange(output.Input.Inputs().Where(s => s != input).Select(s => (0, s)));
                     }
@@ -3949,7 +3953,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             var list2 = new List<(int, Input)>();
             foreach (var (_, input) in value)
             {
-                var gen = input.Generate(writer);
+                var gen = input.Generate();
                 if (debounces.TryGetValue(gen, out var debounce))
                 {
                     list2.Add((debounce, input));
@@ -3996,7 +4000,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         {
                             var input = s.Input;
                             var output = s;
-                            var generatedInput = input.Generate(writer);
+                            var generatedInput = input.Generate();
                             var generatedOutput = output.GenerateOutput(generatedMode);
                             var index = 0;
                             var ledIndex = 0;
@@ -4157,7 +4161,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             foreach (var output in outputByType)
             {
-                var generatedInput = output.Input.Generate(writer);
+                var generatedInput = output.Input.Generate();
                 var generatedOutput = output.GenerateOutput(generatedMode);
                 var pro = IsFortniteFestivalPro && output is GuitarAxis
                 {

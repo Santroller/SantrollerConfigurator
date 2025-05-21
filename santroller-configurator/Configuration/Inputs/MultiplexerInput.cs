@@ -111,7 +111,7 @@ public partial class MultiplexerInput : DirectInput
         ? [PinConfig, PinConfigS0, PinConfigS1, PinConfigS2, PinConfigS3]
         : [PinConfig, PinConfigS0, PinConfigS1, PinConfigS2];
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         // We put all bits at once, so generate a mask for the bits that are being modified
         // Then, get the bits representing a channel and if the bit is set, then set that pin in bits, so that it actually 

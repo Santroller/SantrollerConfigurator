@@ -132,7 +132,7 @@ public partial class Mpr121SliderInput : Input
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
     public override bool IsUint => true;
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         var inputs = new[] {InputGreen, InputRed, InputYellow, InputBlue, InputOrange};
         var mapping = string.Join(" | ", inputs.Select((t, i) => t > i

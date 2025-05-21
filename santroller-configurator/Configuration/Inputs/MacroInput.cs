@@ -326,9 +326,9 @@ public partial class MacroInput : Input
     public override bool IsUint => false;
 
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
-        return $"{Child1.Generate(writer)} && {Child2.Generate(writer)}";
+        return $"{Child1.Generate()} && {Child2.Generate()}";
     }
 
     public override string Title => "Macro";

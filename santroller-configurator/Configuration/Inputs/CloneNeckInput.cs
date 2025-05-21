@@ -85,7 +85,7 @@ public class CloneNeckInput : TwiInput
     {
         return $"clone_buttons[{MappingsIdx[inputType]}] & {MappingsBit[inputType]}";
     }
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         return Input <= Gh5NeckInputType.TapOrange ? GetMapping(Input) : $"gh5_mappings[{string.Join(" | ", Taps.Select((type, i) => $"(({GetMapping(type)}) != 0) << {i}"))}]";
     }

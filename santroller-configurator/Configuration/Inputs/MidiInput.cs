@@ -128,7 +128,7 @@ public partial class MidiInput : Input
         return ["INPUT_MIDI"];
     }
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         return Input switch
         {

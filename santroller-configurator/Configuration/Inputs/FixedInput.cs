@@ -32,7 +32,7 @@ public partial class FixedInput : Input
         return Array.Empty<string>();
     }
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         return Value.ToString();
     }

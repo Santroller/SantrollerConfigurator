@@ -31,7 +31,7 @@ public abstract partial class Input : ReactiveObject
     public abstract string Title { get; }
 
     public abstract IReadOnlyList<string> RequiredDefines();
-    public abstract string Generate(BinaryWriter? writer);
+    public abstract string Generate();
 
     public abstract SerializedInput Serialise();
 
@@ -56,4 +56,9 @@ public abstract partial class Input : ReactiveObject
 
     public abstract string GenerateAll(List<Tuple<Input, string>> bindings,
         ConfigField mode);
+
+    public virtual void SetWriter(BinaryWriter? writer)
+    {
+        
+    }
 }

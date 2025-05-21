@@ -157,7 +157,7 @@ public partial class EmulationMode : Output
         {
             return mode == ConfigField.DetectionFestival
                 ? $$"""
-                    if ((millis() - last_festival_toggle) > 1000 && {{Input.Generate(writer)}}) {
+                    if ((millis() - last_festival_toggle) > 1000 && {{Input.Generate()}}) {
                         last_festival_toggle = millis();
                         festival_gameplay_mode = !festival_gameplay_mode;
                     }
@@ -167,7 +167,7 @@ public partial class EmulationMode : Output
 
         return mode == ConfigField.Detection
             ? $$"""
-                if ({{Input.Generate(writer)}} && output_console_type != {{GetDefinition()}}) {
+                if ({{Input.Generate()}} && output_console_type != {{GetDefinition()}}) {
                     set_console_type({{GetDefinition()}});
                 }
                 """

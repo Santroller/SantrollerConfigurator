@@ -43,7 +43,7 @@ public class AccelInput : Input
         return [];
     }
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         return Input switch
         {

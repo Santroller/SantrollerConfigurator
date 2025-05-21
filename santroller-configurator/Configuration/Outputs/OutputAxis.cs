@@ -356,9 +356,9 @@ public abstract partial class OutputAxis : Output
         switch (Input)
         {
             case DigitalToAnalog:
-                return Input.Generate(writer);
+                return Input.Generate();
             case FixedInput when this is GuitarAxis {Type: GuitarAxisType.Pickup}:
-                return $"({Input.Generate(writer)} >> 8) & 0xff";
+                return $"({Input.Generate()} >> 8) & 0xff";
         }
 
         string function;
@@ -487,7 +487,7 @@ public abstract partial class OutputAxis : Output
 
         var multiplier = 1f / (max - min) * ushort.MaxValue;
 
-        var generated = "(" + Input.Generate(writer);
+        var generated = "(" + Input.Generate();
         if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && mode is ConfigField.XboxOne)
         {
             // XB1 tilt is special. it centers at 0 but is a uint, so we need to strip away negative values
@@ -563,7 +563,7 @@ public abstract partial class OutputAxis : Output
                     {
                         var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
                         extraTrigger = $$"""
-                                         if ({{Input.Generate(writer)}} > 0) {
+                                         if ({{Input.Generate()}} > 0) {
                                              report->{{trigger}} = true;
                                          }
                                          """;
@@ -574,7 +574,7 @@ public abstract partial class OutputAxis : Output
                     {
                         var trigger = axis.Type == StandardAxisType.LeftTrigger ? "l2" : "r2";
                         extraTrigger = $$"""
-                                         if ({{Input.Generate(writer)}} > {{axis.Threshold}}) {
+                                         if ({{Input.Generate()}} > {{axis.Threshold}}) {
                                              report->{{trigger}} = true;
                                          }
                                          """;
@@ -628,7 +628,7 @@ public abstract partial class OutputAxis : Output
         {
             var trigger = this is ControllerAxis {Type: StandardAxisType.LeftTrigger} ? "l2" : "r2";
             return $$"""
-                     if ({{Input.Generate(writer)}}) {
+                     if ({{Input.Generate()}}) {
                          {{output}} = {{val}};
                          report->{{trigger}} = true;
                      }
@@ -636,7 +636,7 @@ public abstract partial class OutputAxis : Output
         }
 
         return $$"""
-                 if ({{Input.Generate(writer)}}) {
+                 if ({{Input.Generate()}}) {
                     {{output}} = {{val}};
                  }
                  """;

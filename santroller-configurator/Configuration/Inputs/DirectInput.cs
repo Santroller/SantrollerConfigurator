@@ -51,7 +51,7 @@ public partial class DirectInput : InputWithPin
         return new SerializedDirectInput(PinConfig.Pin, PinConfig.Peripheral, Inverted, PinConfig.PinMode);
     }
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         var invert = PinMode == DevicePinMode.PullUp;
         if (Inverted) invert = !invert;

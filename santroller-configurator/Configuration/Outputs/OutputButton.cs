@@ -177,7 +177,7 @@ public abstract partial class OutputButton : Output
 
         }
         
-        var gen = Input.Generate(writer);
+        var gen = Input.Generate();
         var reset = $"debounce[{debounceIndex}]={debounce};";
 
         if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
@@ -197,7 +197,7 @@ public abstract partial class OutputButton : Output
         {
             foreach (var input in Input.Inputs())
             {
-                var gen2 = input.Generate(writer);
+                var gen2 = Input.Generate();
                 if (!macros.TryGetValue(gen2, out var inputs2)) continue;
                 extra += string.Join("\n    ", inputs2.Select(s => $"debounce[{s.Item1}]=0;"));
             }

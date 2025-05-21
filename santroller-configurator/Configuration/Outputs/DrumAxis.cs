@@ -433,7 +433,7 @@ public partial class DrumAxis : OutputAxis
             }
 
             return $$"""
-                     if ({{Input.Generate(writer)}}) {
+                     if ({{Input.Generate()}}) {
                          {{reset}}
                          {{GenerateOutput(mode)}} = {{dtaVal}};
                      }

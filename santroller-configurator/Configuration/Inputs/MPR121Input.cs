@@ -56,7 +56,7 @@ public partial class Mpr121Input : Input
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
     public override bool IsUint => true;
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         return Input < Model.Mpr121CapacitiveCount ? $"(mpr121_raw & {1 << Input})" : $"((mpr121_raw & {1 << Input}) == 0)";
     }

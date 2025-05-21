@@ -50,7 +50,7 @@ public class Wakeup360 : Output
     {
         return mode == ConfigField.Shared
             ? $$"""
-                if ({{Input.Generate(writer)}}) {
+                if ({{Input.Generate()}}) {
                     wakeup_360();
                 }
                 """

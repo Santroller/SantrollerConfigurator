@@ -42,6 +42,7 @@ public partial class AnalogToDigital : Input
     public float FullProgressWidth => OutputAxis.ProgressWidth;
     public float HalfProgressWidth => OutputAxis.ProgressWidth / 2;
     public Input Child { get; }
+    
 
     [ObservableAsProperty] private int _rawAnalogValue;
     [ObservableAsProperty] private int _valueLower;
@@ -123,8 +124,10 @@ public partial class AnalogToDigital : Input
     public override bool IsUint => Child.IsUint;
 
     public override string Title => Child.Title;
-    
-    public override string Generate(BinaryWriter? writer)
+
+    private string _thresholdBlob = "";
+
+    public override void SetWriter(BinaryWriter? writer)
     {
         var threshold = Threshold;
         if (Child.IsUint && AnalogToDigitalType is not (AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger
@@ -133,24 +136,29 @@ public partial class AnalogToDigital : Input
             threshold = Math.Abs(threshold);
         }
 
-        var thresholdVal = $"{threshold}";
+        _thresholdBlob = $"{threshold}";
         if (writer != null)
         {
-            thresholdVal = WriteBlob(writer, threshold);
+            _thresholdBlob = WriteBlob(writer, threshold);
         }
+    }
+
+    public override string Generate()
+    {
+        var thresholdVal = _thresholdBlob;
 
         if (Child.IsUint)
             switch (AnalogToDigitalType)
             {
                 case AnalogToDigitalType.Drum:
                 case AnalogToDigitalType.Trigger:
-                    return $"({Child.Generate(writer)}) > ({thresholdVal})";
+                    return $"({Child.Generate()}) > ({thresholdVal})";
                 case AnalogToDigitalType.TriggerInverted:
-                    return $"({Child.Generate(writer)}) < ({thresholdVal})";
+                    return $"({Child.Generate()}) < ({thresholdVal})";
                 case AnalogToDigitalType.JoyHigh:
-                    return $"({Child.Generate(writer)}) > ({short.MaxValue} + ({thresholdVal}))";
+                    return $"({Child.Generate()}) > ({short.MaxValue} + ({thresholdVal}))";
                 case AnalogToDigitalType.JoyLow:
-                    return $"({Child.Generate(writer)}) < ({short.MaxValue} - ({thresholdVal}))";
+                    return $"({Child.Generate()}) < ({short.MaxValue} - ({thresholdVal}))";
             }
         else
             switch (AnalogToDigitalType)
@@ -158,11 +166,11 @@ public partial class AnalogToDigital : Input
                 case AnalogToDigitalType.Drum:
                 case AnalogToDigitalType.Trigger:
                 case AnalogToDigitalType.JoyHigh:
-                    return $"({Child.Generate(writer)}) > ({thresholdVal})";
+                    return $"({Child.Generate()}) > ({thresholdVal})";
                 case AnalogToDigitalType.TriggerInverted:
-                    return $"({Child.Generate(writer)}) < ({thresholdVal})";
+                    return $"({Child.Generate()}) < ({thresholdVal})";
                 case AnalogToDigitalType.JoyLow:
-                    return $"({Child.Generate(writer)}) < (-({thresholdVal}))";
+                    return $"({Child.Generate()}) < (-({thresholdVal}))";
             }
 
         return "";

@@ -69,7 +69,7 @@ public partial class MatrixInput : InputWithPin
         return new SerializedMatrixInput(PinConfig.Pin, OutPinConfig.Pin, Inverted);
     }
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         return Inverted ? $"matrix_read({Pin}, {OutPin})" : $"!matrix_read({Pin}, {OutPin})";
     }

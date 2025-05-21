@@ -252,7 +252,7 @@ public class WiiInput : TwiInput
 
     public override string Title => EnumToStringConverter.Convert(Input);
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         return $"({Mappings[Input]})";
     }

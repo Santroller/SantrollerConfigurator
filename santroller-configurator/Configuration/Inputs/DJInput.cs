@@ -52,7 +52,7 @@ public partial class DjInput : TwiInput
     public override bool IsUint => false;
     public override string Title => EnumToStringConverter.Convert(Input);
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         switch (Input)
         {

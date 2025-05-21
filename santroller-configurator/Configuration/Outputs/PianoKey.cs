@@ -96,18 +96,18 @@ public partial class PianoKey : OutputAxis
             return Key switch
             {
                 ProKeyType.TouchPad => $$"""
-                                                if ({{Input.Generate(writer)}}) {
+                                                if ({{Input.Generate()}}) {
                                                     report->touchPad = ({{GenerateAssignment("report->touchPad", mode, false, false, false, false, writer)}}) >> 1;
                                                 }
                                                 """,
                 ProKeyType.PedalAnalog => $$"""
-                                      if ({{Input.Generate(writer)}}) {
+                                      if ({{Input.Generate()}}) {
                                           report->pedalAnalog = ({{GenerateAssignment("report->pedalAnalog", mode, false, false, false, false, writer)}}) >> 1;
                                       }
                                       """,
                 _ => $$"""
-                       if ({{Input.Generate(writer)}}) {
-                           proKeyVelocities[{{(int) Key}}] = ({{Input.Generate(writer)}}) >> 8;
+                       if ({{Input.Generate()}}) {
+                           proKeyVelocities[{{(int) Key}}] = ({{Input.Generate()}}) >> 8;
                            {{output}} = true;
                        }
                        """
@@ -117,17 +117,17 @@ public partial class PianoKey : OutputAxis
         return Key switch
         {
             ProKeyType.TouchPad => $$"""
-                                            if ({{Input.Generate(writer)}}) {
+                                            if ({{Input.Generate()}}) {
                                                 report->touchPad = {{dta.On >> 9}};
                                             }
                                             """,
             ProKeyType.PedalAnalog => $$"""
-                                  if ({{Input.Generate(writer)}}) {
+                                  if ({{Input.Generate()}}) {
                                       report->pedalAnalog = {{dta.On >> 9}};
                                   }
                                   """,
             _ => $$"""
-                   if ({{Input.Generate(writer)}}) {
+                   if ({{Input.Generate()}}) {
                        proKeyVelocities[{{(int) Key}}] = {{dta.On >> 8}};
                        {{output}} = true;
                    }

@@ -55,7 +55,7 @@ public class Reset : Output
         return mode != ConfigField.Detection
             ? ""
             : $$"""
-                if ({{Input.Generate(writer)}}) {
+                if ({{Input.Generate()}}) {
                     reset_usb();
                 }
                 """;

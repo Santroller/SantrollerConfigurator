@@ -107,7 +107,7 @@ public class Gh5NeckInput : TwiInput
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
     public override bool IsUint => true;
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         switch (Input)
         {

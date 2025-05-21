@@ -146,7 +146,7 @@ public partial class GhWtTapInput : Input
         new(PinConfigAnalog.Pin, DevicePinMode.Floating)
     };
 
-    public override string Generate(BinaryWriter? writer)
+    public override string Generate()
     {
         var var = "rawWt";
         if (Peripheral)
