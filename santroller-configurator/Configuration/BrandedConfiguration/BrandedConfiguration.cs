@@ -135,7 +135,7 @@ public partial class BrandedConfiguration : ReactiveObject
                     await StructTools.RawSerialiseAsync(uf2Block, stream);
                 }
             }
-            File.Copy(tempFile, outputFile);
+            File.Copy(tempFile, outputFile, overwrite:true);
         }
         finally
         {
