@@ -389,7 +389,6 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
 
                 config.Model.Variant = config.ProductName;
                 await Write(config.Model, false, config.ExtraConfig(), start, steps);
-                await config.BuildUf2(config.Model, Path.Join(sectionDir, SanitiseFile(config.ProductName)+".uf2"));
                 if (!config.LoadUf2())
                 {
                     ProgressbarColor = ProgressBarError;
@@ -397,6 +396,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
                     return;
                 }
 
+                await config.BuildUf2(config.Model, Path.Join(sectionDir, SanitiseFile(config.ProductName)+".uf2"));
                 start += steps;
                 Progress = start;
             }
