@@ -507,11 +507,12 @@ public partial class DrumAxis : OutputAxis
                      """;
         }
 
-        if (mode is ConfigField.XboxOne)
+        assignedVal = mode switch
         {
-            // assignedVal = $"({assignedVal}) & 0x0f";
-            assignedVal = $"0x0f";
-        }
+            ConfigField.XboxOne => "0x0f",
+            ConfigField.Ps4 => "0xFF",
+            _ => assignedVal
+        };
 
         return $$"""
                  if ({{ifStatement}}) {
