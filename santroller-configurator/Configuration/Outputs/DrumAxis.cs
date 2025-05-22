@@ -507,6 +507,12 @@ public partial class DrumAxis : OutputAxis
                      """;
         }
 
+        if (mode is ConfigField.XboxOne)
+        {
+            // assignedVal = $"({assignedVal}) & 0x0f";
+            assignedVal = $"0x0f";
+        }
+
         return $$"""
                  if ({{ifStatement}}) {
                      {{outputButtons}}
