@@ -206,7 +206,7 @@ public abstract partial class OutputButton : Output
         {
             if (input is MidiInput midiInput && Model.IsDrum)
             {
-                reset += $"midiData.midiVelocitiesTemp[{midiInput.Key}] = 0;";
+                extra += $"midiData.midiVelocitiesTemp[{midiInput.Key}] = 0;";
             }
         }
         

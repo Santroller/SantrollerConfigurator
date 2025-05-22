@@ -249,12 +249,18 @@ public partial class DrumAxis : OutputAxis
                     $"lastDrum[{debounceIndex}] = {GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)};";
             }
 
-            return new ControllerButton(Model, Enabled, DrumInput, LedOn, LedOff, LedIndices.ToArray(),
+            var ret =  new ControllerButton(Model, Enabled, DrumInput, LedOn, LedOff, LedIndices.ToArray(),
                     LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
                     Debounce*10, StandardButtonType.A,
                     false, false, false, -1, false)
                 .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
                     macros, writer);
+            ret += $$"""
+                   if (!debounce[{{debounceIndex}}]) {
+                       lastDrum[{{debounceIndex}}] = 0;
+                   }
+                   """;
+            return ret;
         }
 
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps4
@@ -500,28 +506,15 @@ public partial class DrumAxis : OutputAxis
                              } else {
                                  {{reset}}
                              }
-                     } else {
-                       {{GenerateOutput(mode)}} = 0;
-                       lastDrum[{{debounceIndex}}] = 0;
                      }
                      """;
         }
-
-        assignedVal = mode switch
-        {
-            ConfigField.XboxOne => "0x0f",
-            ConfigField.Ps4 => "0xFF",
-            _ => assignedVal
-        };
 
         return $$"""
                  if ({{ifStatement}}) {
                      {{outputButtons}}
                      {{GenerateOutput(mode)}} = {{assignedVal}};
-                 } else {
-                   {{GenerateOutput(mode)}} = 0;
-                   lastDrum[{{debounceIndex}}] = 0;
-                 }
+                 } 
                  """;
     }
 
