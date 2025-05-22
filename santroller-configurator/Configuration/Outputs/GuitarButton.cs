@@ -188,7 +188,7 @@ public class GuitarButton : OutputButton
         // Set solo flag (not relevant for universal)
         if (Type is InstrumentButtonType.SoloBlue or InstrumentButtonType.SoloGreen
                 or InstrumentButtonType.SoloOrange or InstrumentButtonType.SoloRed
-                or InstrumentButtonType.SoloYellow && mode is not (ConfigField.Shared or ConfigField.Universal or ConfigField.Ps2 or ConfigField.Festival))
+                or InstrumentButtonType.SoloYellow && mode is not (ConfigField.Shared or ConfigField.Universal or ConfigField.Ps2 or ConfigField.Festival or ConfigField.Keyboard))
             extra += "report->solo=true;";
         
         return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer);
