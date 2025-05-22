@@ -215,12 +215,25 @@ public partial class DrumAxis : OutputAxis
         return false;
     }
 
+    public Input? DrumInput;
+
+    public override void SetWriter(BinaryWriter? writer)
+    {
+        base.SetWriter(writer);
+        DrumInput = new AnalogToDigital(Input, AnalogToDigitalType.Drum, Min, Model);
+        DrumInput.SetWriter(writer);
+    }
+
 
     public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        if (DrumInput == null)
+        {
+            return "";
+        }
         if (Model is {Branded: false, Builder: false} && !Enabled)
         {
             return "";
@@ -234,10 +247,9 @@ public partial class DrumAxis : OutputAxis
             {
                 extra +=
                     $"lastDrum[{debounceIndex}] = {GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)};";
-                input = new AnalogToDigital(input, AnalogToDigitalType.Drum, Min, Model);
             }
 
-            return new ControllerButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
+            return new ControllerButton(Model, Enabled, DrumInput, LedOn, LedOff, LedIndices.ToArray(),
                     LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
                     Debounce*10, StandardButtonType.A,
                     false, false, false, -1, false)

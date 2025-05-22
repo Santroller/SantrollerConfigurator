@@ -3897,9 +3897,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private string GenerateTick(ConfigField mode, BinaryWriter? writer)
     {
-        foreach (var input in Bindings.Items.SelectMany(x => x.ValidOutputs()).Select(x => x.Input))
+        foreach (var output in Bindings.Items.SelectMany(x => x.ValidOutputs()))
         {
-            input.SetWriter(writer);
+            output.SetWriter(writer);
         }
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
 
