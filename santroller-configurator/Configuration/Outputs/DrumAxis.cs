@@ -390,8 +390,8 @@ public partial class DrumAxis : OutputAxis
         {
             // Xbox one uses 4 bit velocities
             case ConfigField.XboxOne:
-                assignedVal = $"(lastDrum[{debounceIndex}]) >> 12";
-                dtaVal >>= 12;
+                assignedVal = $"(lastDrum[{debounceIndex}]) >> 13";
+                dtaVal >>= 13;
                 break;
             // PC HID uses 8 bit velocities
             case ConfigField.Universal:
