@@ -158,6 +158,11 @@ public class DigitalToAnalog : Input
     {
         return Child.InnermostInputs();
     }
+    
+    public override IList<Input> Inputs()
+    {
+        return new List<Input> {this, Child};
+    }
 
     public override void Update(Dictionary<int, int> analogRaw,
         Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw,

@@ -197,7 +197,7 @@ public abstract partial class OutputButton : Output
         {
             foreach (var input in Input.Inputs())
             {
-                var gen2 = Input.Generate();
+                var gen2 = input.Generate();
                 if (!macros.TryGetValue(gen2, out var inputs2)) continue;
                 extra += string.Join("\n    ", inputs2.Select(s => $"debounce[{s.Item1}]=0;"));
             }

@@ -42,7 +42,7 @@ public partial class AnalogToDigital : Input
     public float FullProgressWidth => OutputAxis.ProgressWidth;
     public float HalfProgressWidth => OutputAxis.ProgressWidth / 2;
     public Input Child { get; }
-    
+
 
     [ObservableAsProperty] private int _rawAnalogValue;
     [ObservableAsProperty] private int _valueLower;
@@ -127,7 +127,9 @@ public partial class AnalogToDigital : Input
 
     private string _thresholdBlob = "";
 
-    public override void SetWriter(BinaryWriter? writer)
+    private BinaryWriter? _lastWriter;
+
+    public override string Generate()
     {
         var threshold = Threshold;
         if (Child.IsUint && AnalogToDigitalType is not (AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger
@@ -136,15 +138,19 @@ public partial class AnalogToDigital : Input
             threshold = Math.Abs(threshold);
         }
 
-        _thresholdBlob = $"{threshold}";
-        if (writer != null)
+        if (Model.Writer != null)
         {
-            _thresholdBlob = WriteBlob(writer, threshold);
+            if (_lastWriter != Model.Writer)
+            {
+                _lastWriter = Model.Writer;
+                _thresholdBlob = WriteBlob(_lastWriter, threshold);
+            }
         }
-    }
+        else
+        {
+            _thresholdBlob = $"{threshold}";
+        }
 
-    public override string Generate()
-    {
         var thresholdVal = _thresholdBlob;
 
         if (Child.IsUint)
@@ -209,6 +215,11 @@ public partial class AnalogToDigital : Input
     public override IEnumerable<Input> InnermostInputs()
     {
         return [Child];
+    }
+
+    public override IList<Input> Inputs()
+    {
+        return new List<Input> {this, Child};
     }
 
     public override void Update(Dictionary<int, int> analogRaw,

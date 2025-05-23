@@ -116,6 +116,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private readonly DirectPinConfig _usbHostDm;
     private readonly DirectPinConfig _midiSerialPin;
     private readonly DirectPinConfig _usbHostDp;
+    
+    public BinaryWriter? Writer { get; set; }
 
     public string WarningColor => Main.ProgressBarWarning;
 
@@ -3897,10 +3899,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     private string GenerateTick(ConfigField mode, BinaryWriter? writer)
     {
-        foreach (var output in Bindings.Items.SelectMany(x => x.ValidOutputs()))
-        {
-            output.SetWriter(writer);
-        }
+        Writer = writer;
         var outputs = Bindings.Items.SelectMany(binding => binding.ValidOutputs()).ToList();
 
         var outputsByType = outputs

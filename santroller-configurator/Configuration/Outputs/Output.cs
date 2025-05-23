@@ -1341,15 +1341,6 @@ public abstract partial class Output : ReactiveObject
             .Items.SelectMany(s => s.Outputs.Items).SelectMany(s => s.Input.Inputs()).SelectMany(s => s.PinConfigs)
             .Concat(GetOwnPinConfigs()).Distinct();
     }
-
-    public virtual void SetWriter(BinaryWriter? writer)
-    {
-        foreach (var input in ValidOutputs().SelectMany(x => x.Input.Inputs()))
-        {
-            input.SetWriter(writer);
-        }
-    }
-
     public virtual void Update(Dictionary<int, int> analogRaw,
         Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw,
         ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw, ReadOnlySpan<byte> djRightRaw,

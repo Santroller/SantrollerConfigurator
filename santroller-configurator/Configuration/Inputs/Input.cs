@@ -56,9 +56,4 @@ public abstract partial class Input : ReactiveObject
 
     public abstract string GenerateAll(List<Tuple<Input, string>> bindings,
         ConfigField mode);
-
-    public virtual void SetWriter(BinaryWriter? writer)
-    {
-        
-    }
 }
