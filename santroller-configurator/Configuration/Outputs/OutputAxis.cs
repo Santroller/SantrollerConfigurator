@@ -469,11 +469,6 @@ public abstract partial class OutputAxis : Output
                 min += short.MaxValue;
             }
 
-            if (inverted)
-                min -= DeadZone;
-            else
-                min += DeadZone;
-
             if (min < 0)
             {
                 min = 0;
