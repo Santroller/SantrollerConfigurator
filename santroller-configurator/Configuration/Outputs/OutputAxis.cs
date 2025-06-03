@@ -442,6 +442,7 @@ public abstract partial class OutputAxis : Output
         var min = Min;
         var max = Max;
         var inverted = Min > Max;
+        var deadzone = DeadZone;
         if (intBased)
         {
             if (InputIsUint)
@@ -468,6 +469,14 @@ public abstract partial class OutputAxis : Output
                 max += short.MaxValue;
                 min += short.MaxValue;
             }
+            
+
+            // There is no difference between a deadzone and a minimum in this scenario.
+            deadzone = 0;
+            if (inverted)
+                min -= DeadZone;
+            else
+                min += DeadZone;
 
             if (min < 0)
             {
@@ -519,12 +528,12 @@ public abstract partial class OutputAxis : Output
         var mulInt = (short) (multiplier * 512);
         if (writer == null)
             return intBased
-                ? $"{function}({prev}, {generated}, {min}, {max}, {center}, {DeadZone})"
-                : $"{function}({prev}, {generated}, {min}, {mulInt}, {DeadZone})";
+                ? $"{function}({prev}, {generated}, {min}, {max}, {center}, {deadzone})"
+                : $"{function}({prev}, {generated}, {min}, {mulInt}, {deadzone})";
 
         return intBased
-            ? $"{function}({prev}, {generated}, {WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, DeadZone)})"
-            : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) DeadZone)})";
+            ? $"{function}({prev}, {generated}, {WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, deadzone)})"
+            : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) deadzone)})";
     }
 
 
