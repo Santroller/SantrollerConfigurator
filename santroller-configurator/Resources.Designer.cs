@@ -3723,6 +3723,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string EmulationModeTypeArcade {
+            get {
+                return ResourceManager.GetString("EmulationModeTypeArcade", resourceCulture);
+            }
+        }
+        
         public static string EmulationModeTypePs4Or5 {
             get {
                 return ResourceManager.GetString("EmulationModeTypePs4Or5", resourceCulture);

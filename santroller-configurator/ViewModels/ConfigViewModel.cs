@@ -2378,6 +2378,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define ADC_COUNT {{analogPins.Count}}
                         #define TICK_SHARED \
                             {{GenerateTick(ConfigField.Shared, writer)}}
+                        #define TICK_ARCADE \
+                            {{GenerateTick(ConfigField.Arcade, writer)}}
                         #define TICK_DETECTION \
                             {{GenerateTick(ConfigField.Detection, writer)}}
                         #define TICK_RESET \

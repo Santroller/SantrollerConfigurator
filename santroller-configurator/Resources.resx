@@ -1961,6 +1961,10 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="EmulationModeTypePs3" xml:space="preserve">
         <value>PS3 (PS2 / Wii GH with optional modules)</value>
     </data>
+
+    <data name="EmulationModeTypeArcade" xml:space="preserve">
+        <value>Guitar Hero Arcade</value>
+    </data>
     <data name="EmulationModeTypePs4Or5" xml:space="preserve">
         <value>PS4 / PS5</value>
     </data>

@@ -1925,6 +1925,9 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="EmulationModeTypePs2OnPs3" xml:space="preserve">
         <value>Guitar Hero por emulador de PS2 en PS3</value>
     </data>
+    <data name="EmulationModeTypeArcade" xml:space="preserve">
+        <value>Guitar Hero Arcade</value>
+    </data>
     <data name="LedCommandTypeBluetoothConnected" xml:space="preserve">
         <value>Bluetooth Conectado</value>
     </data>

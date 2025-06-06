@@ -144,7 +144,7 @@ public class GuitarButton : OutputButton
         if (mode is not (ConfigField.Shared or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4
             or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Keyboard
-            or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii or ConfigField.Ps2 or ConfigField.Festival)) return "";
+            or ConfigField.XboxOne or ConfigField.Reset or ConfigField.Xbox or ConfigField.Wii or ConfigField.Ps2 or ConfigField.Festival or ConfigField.Arcade)) return "";
         if (mode is ConfigField.Ps2 or ConfigField.Wii or ConfigField.Xbox && Model.DeviceControllerType.IsProGuitar())
         {
             return "";
@@ -180,7 +180,7 @@ public class GuitarButton : OutputButton
         if (mode is ConfigField.XboxOne or ConfigField.Ps4 && Type is not (InstrumentButtonType.StrumUp or InstrumentButtonType.StrumDown) && !Model.DeviceControllerType.IsProGuitar())
             extra = $"{GenerateOutput(ConfigField.Ps3)}=true;";
         
-        if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar} || mode is ConfigField.Wii or ConfigField.Ps2)
+        if (Model is not {DeviceControllerType: DeviceControllerType.RockBandGuitar} || mode is ConfigField.Wii or ConfigField.Ps2 or ConfigField.Arcade)
             return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
 

@@ -334,6 +334,24 @@ public partial class GuitarAxis : OutputAxis
             return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros,
                 writer);
 
+        if (mode == ConfigField.Arcade && Type is GuitarAxisType.Tilt)
+        {
+            if (Input is DigitalToAnalog)
+            {
+                return $$"""
+                         if ({{Input.Generate()}}) {
+                             report->tilt = 0x7F;
+                         }
+                         """;
+            }
+            
+            return $$"""
+                     if ({{Input.Generate()}}) {
+                         {{GenerateOutput(mode)}} = {{GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)}};
+                     }
+                     """;
+        }
+        
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps2 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
             or ConfigField.XboxOne
             or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";

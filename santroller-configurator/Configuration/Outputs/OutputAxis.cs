@@ -405,6 +405,10 @@ public abstract partial class OutputAxis : Output
                 intBased = true;
                 function = "handle_calibration_ps3_accel";
                 break;
+            case ConfigField.Arcade when forceAccel:
+                intBased = true;
+                function = "handle_calibration_arcade_accel";
+                break;
             case ConfigField.Ps2 when whammy:
                 function = "handle_calibration_ps2_whammy";
                 singleByte = true;

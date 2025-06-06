@@ -94,6 +94,7 @@ public partial class EmulationMode : Output
         return mode => (mode != EmulationModeType.Wii || data.deviceControllerType is DeviceControllerType.RockBandDrums
                            or DeviceControllerType.RockBandGuitar) &&
                        (mode != EmulationModeType.Ps2OnPs3 || data.deviceControllerType is DeviceControllerType.GuitarHeroGuitar) &&
+                       (mode != EmulationModeType.Arcade || data.deviceControllerType is DeviceControllerType.GuitarHeroGuitar) &&
                        (mode != EmulationModeType.XboxOne || data.isPico) &&
                        (mode is not (EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfIos
                             or EmulationModeType.FnfLayer) || data.deviceControllerType.Is5FretGuitar() ||
@@ -118,6 +119,7 @@ public partial class EmulationMode : Output
             EmulationModeType.Switch => "SWITCH",
             EmulationModeType.Fnf => "KEYBOARD_MOUSE",
             EmulationModeType.FnfHid => "FNF",
+            EmulationModeType.Arcade => "ARCADE",
             EmulationModeType.FnfLayer => "",
             EmulationModeType.FnfIos => "IOS_FESTIVAL",
             EmulationModeType.Ps2OnPs3 => "PS2_ON_PS3",

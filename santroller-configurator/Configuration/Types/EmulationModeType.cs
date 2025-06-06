@@ -13,5 +13,6 @@ public enum EmulationModeType
     FnfHid,
     FnfLayer,
     FnfIos,
-    Ps2OnPs3
+    Ps2OnPs3,
+    Arcade
 }

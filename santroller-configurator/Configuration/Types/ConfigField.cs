@@ -29,5 +29,6 @@ public enum ConfigField
     Ps2,
     Festival,
     BluetoothLed,
-    DetectionFestival
+    DetectionFestival,
+    Arcade
 }

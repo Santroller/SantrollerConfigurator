@@ -114,6 +114,7 @@ public class InputImageConverter : IMultiValueConverter
                 EmulationModeType.XboxOne => "Combined/XboxOne",
                 EmulationModeType.Xbox360 => "Combined/360",
                 EmulationModeType.Wii => "Combined/Wii",
+                EmulationModeType.Arcade => "Generic",
                 EmulationModeType.Ps3 or EmulationModeType.Ps2OnPs3 => "Combined/PS3",
                 EmulationModeType.Ps4Or5 => "Combined/PS4",
                 EmulationModeType.Switch => "Combined/Switch",
