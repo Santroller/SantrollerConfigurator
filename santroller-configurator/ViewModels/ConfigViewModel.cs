@@ -2734,6 +2734,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
                       #define USB_HOST_STACK false
                       #define USB_HOST_DP_PIN 0
+                      #define TICK_ARCADE
                       #define TICK_SHARED
                       #define TICK_DETECTION
                       #define TICK_PC
