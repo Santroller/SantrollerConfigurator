@@ -1816,6 +1816,12 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="ConsoleTypeSwitch" xml:space="preserve">
         <value>Switch</value>
     </data>
+    <data name="ConsoleTypeArcade" xml:space="preserve">
+        <value>Arcade</value>
+    </data>
+    <data name="ConsoleTypeSwitch2" xml:space="preserve">
+        <value>Switch 2</value>
+    </data>
     <data name="ConsoleTypePs4" xml:space="preserve">
         <value>PS4</value>
     </data>

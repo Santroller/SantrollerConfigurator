@@ -3447,6 +3447,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ConsoleTypeArcade {
+            get {
+                return ResourceManager.GetString("ConsoleTypeArcade", resourceCulture);
+            }
+        }
+        
+        public static string ConsoleTypeSwitch2 {
+            get {
+                return ResourceManager.GetString("ConsoleTypeSwitch2", resourceCulture);
+            }
+        }
+        
         public static string ConsoleTypePs4 {
             get {
                 return ResourceManager.GetString("ConsoleTypePs4", resourceCulture);

@@ -27,5 +27,7 @@ public enum ConsoleType
     StepManiaX = 24,
     LTekId = 25,
     Stadia = 30,
+    Arcade = 31,
+    Switch2 = 32,
     Unknown = 0xFF
 }

@@ -79,7 +79,7 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.1" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.1" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.1" />
-        <PackageReference Include="LibUsbDotNet" Version="3.0.163-alpha" Condition="'$(OS)' != 'Windows_NT'" />
+        <PackageReference Include="LibUsbDotNet" Version="3.0.167-alpha" Condition="'$(OS)' != 'Windows_NT'" />
         <PackageReference Include="Microsoft.Build.Framework" Version="17.11.4">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
