@@ -264,13 +264,6 @@ public partial class DrumAxis : OutputAxis
             or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
             or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii or ConfigField.Keyboard)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
-        var debounce = Debounce;
-        if (!Model.LocalDebounceMode)
-        {
-            debounce = Model.Debounce / 10;
-        }
-
-        debounce += 1;
 
         var ifStatement = $"debounce[{debounceIndex}]";
 
