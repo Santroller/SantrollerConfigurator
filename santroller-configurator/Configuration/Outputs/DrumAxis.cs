@@ -24,121 +24,121 @@ public partial class DrumAxis : OutputAxis
 
     private static readonly Dictionary<DrumAxisType, StandardButtonType> ButtonsXbox360 = new()
     {
-        {DrumAxisType.Green, StandardButtonType.A},
-        {DrumAxisType.Red, StandardButtonType.B},
-        {DrumAxisType.Blue, StandardButtonType.X},
-        {DrumAxisType.Yellow, StandardButtonType.Y},
-        {DrumAxisType.GreenCymbal, StandardButtonType.A},
-        {DrumAxisType.BlueCymbal, StandardButtonType.X},
-        {DrumAxisType.YellowCymbal, StandardButtonType.Y},
-        {DrumAxisType.Orange, StandardButtonType.RightShoulder},
-        {DrumAxisType.Kick, StandardButtonType.LeftShoulder},
-        {DrumAxisType.Kick2, StandardButtonType.LeftThumbClick}
+        { DrumAxisType.Green, StandardButtonType.A },
+        { DrumAxisType.Red, StandardButtonType.B },
+        { DrumAxisType.Blue, StandardButtonType.X },
+        { DrumAxisType.Yellow, StandardButtonType.Y },
+        { DrumAxisType.GreenCymbal, StandardButtonType.A },
+        { DrumAxisType.BlueCymbal, StandardButtonType.X },
+        { DrumAxisType.YellowCymbal, StandardButtonType.Y },
+        { DrumAxisType.Orange, StandardButtonType.RightShoulder },
+        { DrumAxisType.Kick, StandardButtonType.LeftShoulder },
+        { DrumAxisType.Kick2, StandardButtonType.LeftThumbClick }
     };
 
     private static readonly Dictionary<DrumAxisType, Key> _fortniteKeysGh = new()
     {
-        {DrumAxisType.Red, Key.F},
-        {DrumAxisType.Yellow, Key.G},
-        {DrumAxisType.Blue, Key.H},
-        {DrumAxisType.Orange, Key.J},
-        {DrumAxisType.Green, Key.K},
-        {DrumAxisType.Kick, Key.Space},
+        { DrumAxisType.Red, Key.F },
+        { DrumAxisType.Yellow, Key.G },
+        { DrumAxisType.Blue, Key.H },
+        { DrumAxisType.Orange, Key.J },
+        { DrumAxisType.Green, Key.K },
+        { DrumAxisType.Kick, Key.Space },
     };
 
     private static readonly Dictionary<DrumAxisType, Key> _fortniteProKeysGh = new()
     {
-        {DrumAxisType.Red, Key.F},
-        {DrumAxisType.Yellow, Key.G},
-        {DrumAxisType.Blue, Key.H},
-        {DrumAxisType.Orange, Key.J},
-        {DrumAxisType.Green, Key.K},
-        {DrumAxisType.Kick, Key.Space},
+        { DrumAxisType.Red, Key.F },
+        { DrumAxisType.Yellow, Key.G },
+        { DrumAxisType.Blue, Key.H },
+        { DrumAxisType.Orange, Key.J },
+        { DrumAxisType.Green, Key.K },
+        { DrumAxisType.Kick, Key.Space },
     };
 
     private static readonly Dictionary<DrumAxisType, Key> _fortniteKeysRb = new()
     {
-        {DrumAxisType.Red, Key.F},
-        {DrumAxisType.Yellow, Key.G},
-        {DrumAxisType.Blue, Key.H},
-        {DrumAxisType.Green, Key.J},
-        {DrumAxisType.Kick, Key.K},
+        { DrumAxisType.Red, Key.F },
+        { DrumAxisType.Yellow, Key.G },
+        { DrumAxisType.Blue, Key.H },
+        { DrumAxisType.Green, Key.J },
+        { DrumAxisType.Kick, Key.K },
     };
 
     private static readonly Dictionary<DrumAxisType, Key> _fortniteProKeysRb = new()
     {
-        {DrumAxisType.Red, Key.F},
-        {DrumAxisType.Yellow, Key.G},
-        {DrumAxisType.Blue, Key.H},
-        {DrumAxisType.Green, Key.J},
-        {DrumAxisType.Kick, Key.K},
+        { DrumAxisType.Red, Key.F },
+        { DrumAxisType.Yellow, Key.G },
+        { DrumAxisType.Blue, Key.H },
+        { DrumAxisType.Green, Key.J },
+        { DrumAxisType.Kick, Key.K },
     };
 
     private static readonly Dictionary<DrumAxisType, StandardButtonType> ButtonsXboxOne = new()
     {
-        {DrumAxisType.Green, StandardButtonType.A},
-        {DrumAxisType.Red, StandardButtonType.B},
-        {DrumAxisType.Kick, StandardButtonType.LeftShoulder},
-        {DrumAxisType.Kick2, StandardButtonType.RightShoulder}
+        { DrumAxisType.Green, StandardButtonType.A },
+        { DrumAxisType.Red, StandardButtonType.B },
+        { DrumAxisType.Kick, StandardButtonType.LeftShoulder },
+        { DrumAxisType.Kick2, StandardButtonType.RightShoulder }
     };
 
     private static readonly Dictionary<DrumAxisType, StandardButtonType> ButtonsPs3 = new()
     {
-        {DrumAxisType.Green, StandardButtonType.A},
-        {DrumAxisType.Red, StandardButtonType.B},
-        {DrumAxisType.Blue, StandardButtonType.X},
-        {DrumAxisType.Yellow, StandardButtonType.Y},
-        {DrumAxisType.GreenCymbal, StandardButtonType.A},
-        {DrumAxisType.BlueCymbal, StandardButtonType.X},
-        {DrumAxisType.YellowCymbal, StandardButtonType.Y},
-        {DrumAxisType.Kick, StandardButtonType.LeftShoulder},
-        {DrumAxisType.Orange, StandardButtonType.RightShoulder},
-        {DrumAxisType.Kick2, StandardButtonType.RightShoulder}
+        { DrumAxisType.Green, StandardButtonType.A },
+        { DrumAxisType.Red, StandardButtonType.B },
+        { DrumAxisType.Blue, StandardButtonType.X },
+        { DrumAxisType.Yellow, StandardButtonType.Y },
+        { DrumAxisType.GreenCymbal, StandardButtonType.A },
+        { DrumAxisType.BlueCymbal, StandardButtonType.X },
+        { DrumAxisType.YellowCymbal, StandardButtonType.Y },
+        { DrumAxisType.Kick, StandardButtonType.LeftShoulder },
+        { DrumAxisType.Orange, StandardButtonType.RightShoulder },
+        { DrumAxisType.Kick2, StandardButtonType.RightShoulder }
     };
 
 
     private static readonly Dictionary<DrumAxisType, string> AxisMappings = new()
     {
-        {DrumAxisType.Green, "report->greenVelocity"},
-        {DrumAxisType.Red, "report->redVelocity"},
-        {DrumAxisType.Yellow, "report->yellowVelocity"},
-        {DrumAxisType.Blue, "report->blueVelocity"},
-        {DrumAxisType.Orange, "report->orangeVelocity"},
-        {DrumAxisType.GreenCymbal, "report->greenVelocity"},
-        {DrumAxisType.YellowCymbal, "report->yellowVelocity"},
-        {DrumAxisType.BlueCymbal, "report->blueVelocity"},
-        {DrumAxisType.Kick, "report->kickVelocity"},
-        {DrumAxisType.Kick2, "report->kickVelocity"}
+        { DrumAxisType.Green, "report->greenVelocity" },
+        { DrumAxisType.Red, "report->redVelocity" },
+        { DrumAxisType.Yellow, "report->yellowVelocity" },
+        { DrumAxisType.Blue, "report->blueVelocity" },
+        { DrumAxisType.Orange, "report->orangeVelocity" },
+        { DrumAxisType.GreenCymbal, "report->greenVelocity" },
+        { DrumAxisType.YellowCymbal, "report->yellowVelocity" },
+        { DrumAxisType.BlueCymbal, "report->blueVelocity" },
+        { DrumAxisType.Kick, "report->kickVelocity" },
+        { DrumAxisType.Kick2, "report->kickVelocity" }
     };
 
     private static readonly Dictionary<DrumAxisType, string> UniversalAxisMappings = new()
     {
-        {DrumAxisType.Green, "report->greenVelocity"},
-        {DrumAxisType.Red, "report->redVelocity"},
-        {DrumAxisType.Yellow, "report->yellowVelocity"},
-        {DrumAxisType.Blue, "report->blueVelocity"},
-        {DrumAxisType.Orange, "report->orangeVelocity"},
-        {DrumAxisType.GreenCymbal, "report->greenCymbalVelocity"},
-        {DrumAxisType.YellowCymbal, "report->yellowCymbalVelocity"},
-        {DrumAxisType.BlueCymbal, "report->blueCymbalVelocity"},
-        {DrumAxisType.Kick, "report->kickVelocity"},
-        {DrumAxisType.Kick2, "report->kickVelocity"}
+        { DrumAxisType.Green, "report->greenVelocity" },
+        { DrumAxisType.Red, "report->redVelocity" },
+        { DrumAxisType.Yellow, "report->yellowVelocity" },
+        { DrumAxisType.Blue, "report->blueVelocity" },
+        { DrumAxisType.Orange, "report->orangeVelocity" },
+        { DrumAxisType.GreenCymbal, "report->greenCymbalVelocity" },
+        { DrumAxisType.YellowCymbal, "report->yellowCymbalVelocity" },
+        { DrumAxisType.BlueCymbal, "report->blueCymbalVelocity" },
+        { DrumAxisType.Kick, "report->kickVelocity" },
+        { DrumAxisType.Kick2, "report->kickVelocity" }
     };
 
     private static readonly Dictionary<DrumAxisType, string> AxisMappingsXb1 = new()
     {
-        {DrumAxisType.Green, "report->greenVelocity"},
-        {DrumAxisType.Red, "report->redVelocity"},
-        {DrumAxisType.Yellow, "report->yellowVelocity"},
-        {DrumAxisType.Blue, "report->blueVelocity"},
+        { DrumAxisType.Green, "report->greenVelocity" },
+        { DrumAxisType.Red, "report->redVelocity" },
+        { DrumAxisType.Yellow, "report->yellowVelocity" },
+        { DrumAxisType.Blue, "report->blueVelocity" },
 
         // Map orange to green for rb
-        {DrumAxisType.Orange, "report->greenVelocity"},
-        {DrumAxisType.GreenCymbal, "report->greenCymbalVelocity"},
-        {DrumAxisType.YellowCymbal, "report->yellowCymbalVelocity"},
-        {DrumAxisType.BlueCymbal, "report->blueCymbalVelocity"},
-        {DrumAxisType.Kick, "digitalOnly"},
-        {DrumAxisType.Kick2, "digitalOnly"}
+        { DrumAxisType.Orange, "report->greenVelocity" },
+        { DrumAxisType.GreenCymbal, "report->greenCymbalVelocity" },
+        { DrumAxisType.YellowCymbal, "report->yellowCymbalVelocity" },
+        { DrumAxisType.BlueCymbal, "report->blueCymbalVelocity" },
+        { DrumAxisType.Kick, "digitalOnly" },
+        { DrumAxisType.Kick2, "digitalOnly" }
     };
 
     public DrumAxis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
@@ -163,6 +163,7 @@ public partial class DrumAxis : OutputAxis
     public override bool IsKeyboard => false;
 
     [Reactive] private int _debounce;
+
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
         bool swapSwitchFaceButtons)
     {
@@ -177,7 +178,7 @@ public partial class DrumAxis : OutputAxis
 
     private Thickness ComputeDrumMargin(int threshold)
     {
-        var val = (float) threshold / ushort.MaxValue * ProgressWidth;
+        var val = (float)threshold / ushort.MaxValue * ProgressWidth;
         return new Thickness(val - 5, 0, val - 5, 0);
     }
 
@@ -187,7 +188,7 @@ public partial class DrumAxis : OutputAxis
         return mode switch
         {
             ConfigField.Shared when Type is DrumAxisType.Kick2 => "kick2",
-            ConfigField.Keyboard when Model is {IsRbDrumKit: true, IsFortniteFestivalPro: true} => _fortniteProKeysRb
+            ConfigField.Keyboard when Model is { IsRbDrumKit: true, IsFortniteFestivalPro: true } => _fortniteProKeysRb
                 .TryGetValue(Type,
                     out var forniteKeyPro)
                 ? GetReportField(forniteKeyPro)
@@ -195,7 +196,7 @@ public partial class DrumAxis : OutputAxis
             ConfigField.Keyboard when Model.IsRbDrumKit => _fortniteKeysRb.TryGetValue(Type, out var forniteKey)
                 ? GetReportField(forniteKey)
                 : "",
-            ConfigField.Keyboard when Model is {IsRbDrumKit: false, IsFortniteFestivalPro: true} => _fortniteProKeysGh
+            ConfigField.Keyboard when Model is { IsRbDrumKit: false, IsFortniteFestivalPro: true } => _fortniteProKeysGh
                 .TryGetValue(Type,
                     out var forniteKeyPro)
                 ? GetReportField(forniteKeyPro)
@@ -226,7 +227,8 @@ public partial class DrumAxis : OutputAxis
         {
             _drumInput = new AnalogToDigital(Input, AnalogToDigitalType.Drum, Min, Model);
         }
-        if (Model is {Branded: false, Builder: false} && !Enabled)
+
+        if (Model is { Branded: false, Builder: false } && !Enabled)
         {
             return "";
         }
@@ -235,23 +237,26 @@ public partial class DrumAxis : OutputAxis
 
         if (mode == ConfigField.Shared)
         {
+            var drumInput = Input;
             if (input.IsAnalog)
             {
+                drumInput = _drumInput;
                 extra +=
                     $"lastDrum[{debounceIndex}] = {GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)};";
             }
 
-            var ret =  new ControllerButton(Model, Enabled, _drumInput, LedOn, LedOff, LedIndices.ToArray(),
+
+            var ret = new ControllerButton(Model, Enabled, drumInput, LedOn, LedOff, LedIndices.ToArray(),
                     LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
-                    Debounce*10, StandardButtonType.A,
+                    Debounce * 10, StandardButtonType.A,
                     false, false, false, -1, false)
                 .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
                     macros, writer);
             ret += $$"""
-                   if (!debounce[{{debounceIndex}}]) {
-                       lastDrum[{{debounceIndex}}] = 0;
-                   }
-                   """;
+                     if (!debounce[{{debounceIndex}}]) {
+                         lastDrum[{{debounceIndex}}] = 0;
+                     }
+                     """;
             return ret;
         }
 
@@ -260,32 +265,14 @@ public partial class DrumAxis : OutputAxis
             or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii or ConfigField.Keyboard)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
         var debounce = Debounce;
-        if (!Model.LocalDebounceMode) debounce = Model.Debounce;
+        if (!Model.LocalDebounceMode)
+        {
+            debounce = Model.Debounce / 10;
+        }
+
         debounce += 1;
 
         var ifStatement = $"debounce[{debounceIndex}]";
-        var reset = $"debounce[{debounceIndex}]={debounce};";
-        if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
-            Model.HasMpr121)
-        {
-            reset += $"ledDebounce[{ledIndex}]={debounce};";
-        }
-
-        if (writer != null)
-        {
-            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
-            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled ||
-                Model.HasMpr121)
-            {
-                reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
-            }
-        }
-
-        if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne) &&
-             Type is DrumAxisType.Kick or DrumAxisType.Kick2))
-        {
-            reset = "";
-        }
 
         if (mode == ConfigField.Keyboard)
         {
@@ -345,7 +332,6 @@ public partial class DrumAxis : OutputAxis
             return $$"""
                      if ({{ifStatement}}) {
                          {{outputButtons}}
-                         {{reset}}
                      }
                      """;
         }
@@ -444,7 +430,6 @@ public partial class DrumAxis : OutputAxis
 
             return $$"""
                      if ({{Input.Generate()}}) {
-                         {{reset}}
                          {{GenerateOutput(mode)}} = {{dtaVal}};
                      }
                      {{outputButtons}}
@@ -495,9 +480,7 @@ public partial class DrumAxis : OutputAxis
                                  {{outputButtons}}
                                  {{GenerateOutput(mode)}} = {{assignedVal}};
                                  {{test2}} = true;
-                             } else {
-                                 {{reset}}
-                             }
+                             } 
                      }
                      """;
         }
