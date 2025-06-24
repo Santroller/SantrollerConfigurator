@@ -237,16 +237,19 @@ public partial class DrumAxis : OutputAxis
 
         if (mode == ConfigField.Shared)
         {
-            var drumInput = Input;
             if (input.IsAnalog)
             {
-                drumInput = _drumInput;
+                input = _drumInput;
                 extra +=
                     $"lastDrum[{debounceIndex}] = {GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)};";
             }
+            else
+            {
+                extra += $"lastDrum[{debounceIndex}] = 0xFFFF;";
+            }
 
 
-            var ret = new ControllerButton(Model, Enabled, drumInput, LedOn, LedOff, LedIndices.ToArray(),
+            var ret = new ControllerButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
                     LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
                     Debounce * 10, StandardButtonType.A,
                     false, false, false, -1, false)
@@ -328,6 +331,8 @@ public partial class DrumAxis : OutputAxis
                      }
                      """;
         }
+        // RB has max velocity at 0 (its inverted)
+        var dtaVal = 0;
 
         if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne && mode != ConfigField.Ps4)
         {
@@ -351,10 +356,11 @@ public partial class DrumAxis : OutputAxis
                     break;
             }
         }
-
-        // If someone specified a digital input, then we need to take the value they have specified and convert it to the target consoles expected output
-        var dtaVal = 0;
-        if (Input is DigitalToAnalog dta) dtaVal = dta.On;
+        else
+        {
+            // GH uses max velocity 0x7F
+            dtaVal = 0x7F;
+        }
 
         var assignedVal = $"(lastDrum[{debounceIndex}])";
         switch (mode)
@@ -407,36 +413,6 @@ public partial class DrumAxis : OutputAxis
 
                 break;
             }
-        }
-
-        // If someone has mapped digital inputs to the drums, then we can shortcut a bunch of the tests, and just need to use the calculated value from above
-        if (Input is DigitalToAnalog)
-        {
-            if (outputButtons.Length != 0)
-            {
-                outputButtons = $$"""
-                                  if ({{ifStatement}}) {
-                                      {{outputButtons}}
-                                  }
-                                  """;
-            }
-
-            return $$"""
-                     if ({{Input.Generate()}}) {
-                         {{GenerateOutput(mode)}} = {{dtaVal}};
-                     }
-                     {{outputButtons}}
-                     """;
-        }
-
-        if (!Input.IsAnalog)
-        {
-            return $$"""
-                     if ({{ifStatement}}) {
-                         {{GenerateOutput(mode)}} = {{GenerateAssignment("0", ConfigField.XboxOne, false, false, false, true, writer)}};
-                         {{outputButtons}}
-                     }
-                     """;
         }
 
         if (Model.DeviceControllerType.IsRb() && Model.CymbalGlitchFix &&
