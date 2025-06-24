@@ -12,6 +12,12 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoContract]
 public class SerializedKeyboardButton : SerializedOutput
 {
+    private SerializedKeyboardButton()
+    {
+        LedIndex = [];
+        LedIndexPeripheral = [];
+        LedIndexMpr121 = [];
+    }
     public SerializedKeyboardButton(SerializedInput input, byte[] ledIndex, byte[] ledIndexPeripheral, byte[] ledIndexMpr121)
     {
         Input = input;
@@ -38,7 +44,7 @@ public class SerializedKeyboardButton : SerializedOutput
         Enabled = enabled;
     }
 
-    [ProtoMember(1)] public SerializedInput Input { get; }
+    [ProtoMember(1)] public SerializedInput? Input { get; }
     [ProtoMember(2)] public uint LedOn { get; }
     [ProtoMember(3)] public uint LedOff { get; }
 
@@ -56,6 +62,10 @@ public class SerializedKeyboardButton : SerializedOutput
 
     public override Output Generate(ConfigViewModel model)
     {
+        if (Input == null)
+        {
+            throw new NotImplementedException("Null child unexpected!");
+        }
         var combined = new KeyboardButton(model, Enabled, Input.Generate(model), Color.FromUInt32(LedOn),
             Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121, Debounce,
             Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin);
