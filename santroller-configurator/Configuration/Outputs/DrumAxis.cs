@@ -331,8 +331,6 @@ public partial class DrumAxis : OutputAxis
                      }
                      """;
         }
-        // RB has max velocity at 0 (its inverted)
-        var dtaVal = 0;
 
         if (Model.DeviceControllerType.IsRb() && mode != ConfigField.XboxOne && mode != ConfigField.Ps4)
         {
@@ -356,64 +354,31 @@ public partial class DrumAxis : OutputAxis
                     break;
             }
         }
-        else
-        {
-            // GH uses max velocity 0x7F
-            dtaVal = 0x7F;
-        }
 
         var assignedVal = $"(lastDrum[{debounceIndex}])";
-        switch (mode)
+        assignedVal = mode switch
         {
             // Xbox one uses 4 bit velocities
-            case ConfigField.XboxOne:
-                assignedVal = $"(lastDrum[{debounceIndex}]) >> 13";
-                dtaVal >>= 13;
-                break;
+            ConfigField.XboxOne => $"(lastDrum[{debounceIndex}]) >> 13",
             // PC HID uses 8 bit velocities
-            case ConfigField.Universal:
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture when Model.DeviceControllerType.IsGh():
-                assignedVal = $"(lastDrum[{debounceIndex}]) >> 8";
-                dtaVal >>= 8;
-                break;
-            // PS3 uses 8 bit velocities, but inverts
-            case ConfigField.Ps3 or ConfigField.Ps3WithoutCapture:
-                assignedVal = $"255-((lastDrum[{debounceIndex}]) >> 8)";
-                dtaVal >>= 8;
-                break;
-            // Xbox 360 GH use uint8_t velocities
-            default:
+            ConfigField.Universal => $"(lastDrum[{debounceIndex}]) >> 8",
+            // PS3 + Xbox360 GH uses 7 bit velocities (because midi)
+            ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Xbox360 when
+                Model.DeviceControllerType.IsGh() => $"(lastDrum[{debounceIndex}]) >> 9",
+            // PS3 RB uses 8 bit velocities, but inverts
+            ConfigField.Ps3 or ConfigField.Ps3WithoutCapture => $"255-((lastDrum[{debounceIndex}]) >> 8)",
+            // And then 360 RB use inverted int16_t values, though the first bit is specified based on the type
+            ConfigField.Xbox360 => Type switch
             {
-                if (Model.DeviceControllerType.IsGh())
-                {
-                    assignedVal = $"(lastDrum[{debounceIndex}]) >> 8";
-                    dtaVal >>= 8;
-                }
-                // And then 360 RB use inverted int16_t values, though the first bit is specified based on the type
-                else
-                {
-                    switch (Type)
-                    {
-                        // Stuff mapped to the y axis is inverted
-                        case DrumAxisType.GreenCymbal:
-                        case DrumAxisType.Green:
-                        case DrumAxisType.Yellow:
-                        case DrumAxisType.YellowCymbal:
-                            assignedVal = $"-(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
-                            dtaVal = -(0x7fff - (dtaVal >> 1));
-                            break;
-                        case DrumAxisType.Red:
-                        case DrumAxisType.Blue:
-                        case DrumAxisType.BlueCymbal:
-                            assignedVal = $"(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))";
-                            dtaVal = 0x7fff - (dtaVal >> 1);
-                            break;
-                    }
-                }
-
-                break;
-            }
-        }
+                // Stuff mapped to the y axis is inverted
+                DrumAxisType.GreenCymbal or DrumAxisType.Green or DrumAxisType.Yellow or DrumAxisType.YellowCymbal =>
+                    $"-(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))",
+                DrumAxisType.Red or DrumAxisType.Blue or DrumAxisType.BlueCymbal =>
+                    $"(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))",
+                _ => assignedVal
+            },
+            _ => assignedVal
+        };
 
         if (Model.DeviceControllerType.IsRb() && Model.CymbalGlitchFix &&
             mode is ConfigField.Xbox360 or ConfigField.Ps3 && Type is DrumAxisType.GreenCymbal
