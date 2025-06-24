@@ -32,7 +32,7 @@ public partial class MidiCombinedOutput : CombinedOutput
             .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var digitalOutputs)
             .Subscribe();
-        Outputs.Connect().Filter(x => x is OutputButton or {Input.IsAnalog: false})
+        Outputs.Connect().Filter(x => x is OutputButton or { Input.IsAnalog: false })
             .AutoRefresh(s => s.LocalisedName)
             .Filter(s => s.LocalisedName.Length != 0)
             .Bind(out var allDigitalOutputs)
@@ -47,53 +47,56 @@ public partial class MidiCombinedOutput : CombinedOutput
 
     public static readonly Dictionary<int, DrumAxisType> MappingsDrumRb = new()
     {
-        {38, DrumAxisType.Red},
-        {31, DrumAxisType.Red},
-        {34, DrumAxisType.Red},
-        {37, DrumAxisType.Red},
-        {39, DrumAxisType.Red},
-        {40, DrumAxisType.Red},
-        {48, DrumAxisType.Yellow},
-        {50, DrumAxisType.Yellow},
-        {45, DrumAxisType.Blue},
-        {47, DrumAxisType.Blue},
-        {41, DrumAxisType.Green},
-        {43, DrumAxisType.Green},
-        {22, DrumAxisType.YellowCymbal},
-        {26, DrumAxisType.YellowCymbal},
-        {42, DrumAxisType.YellowCymbal},
-        {46, DrumAxisType.YellowCymbal},
-        {54, DrumAxisType.YellowCymbal},
-        {51, DrumAxisType.BlueCymbal},
-        {53, DrumAxisType.BlueCymbal},
-        {56, DrumAxisType.BlueCymbal},
-        {59, DrumAxisType.BlueCymbal},
-        {49, DrumAxisType.GreenCymbal},
-        {52, DrumAxisType.GreenCymbal},
-        {55, DrumAxisType.GreenCymbal},
-        {57, DrumAxisType.GreenCymbal},
-        {33, DrumAxisType.Kick},
-        {35, DrumAxisType.Kick},
-        {36, DrumAxisType.Kick},
-        {44, DrumAxisType.Kick2}, // Hi-Hat Pedal
-        {100, DrumAxisType.Kick2}, // Hi-Hat Pedal
+        { 38, DrumAxisType.Red },
+        { 31, DrumAxisType.Red },
+        { 34, DrumAxisType.Red },
+        { 37, DrumAxisType.Red },
+        { 39, DrumAxisType.Red },
+        { 40, DrumAxisType.Red },
+        { 48, DrumAxisType.Yellow },
+        { 50, DrumAxisType.Yellow },
+        { 45, DrumAxisType.Blue },
+        { 47, DrumAxisType.Blue },
+        { 41, DrumAxisType.Green },
+        { 43, DrumAxisType.Green },
+        { 22, DrumAxisType.YellowCymbal },
+        { 26, DrumAxisType.YellowCymbal },
+        { 42, DrumAxisType.YellowCymbal },
+        { 46, DrumAxisType.YellowCymbal },
+        { 54, DrumAxisType.YellowCymbal },
+        { 51, DrumAxisType.BlueCymbal },
+        { 53, DrumAxisType.BlueCymbal },
+        { 56, DrumAxisType.BlueCymbal },
+        { 59, DrumAxisType.BlueCymbal },
+        { 49, DrumAxisType.GreenCymbal },
+        { 52, DrumAxisType.GreenCymbal },
+        { 55, DrumAxisType.GreenCymbal },
+        { 57, DrumAxisType.GreenCymbal },
+        { 33, DrumAxisType.Kick },
+        { 35, DrumAxisType.Kick },
+        { 36, DrumAxisType.Kick },
+        { 44, DrumAxisType.Kick2 }, // Hi-Hat Pedal
+        { 100, DrumAxisType.Kick2 }, // Hi-Hat Pedal
     };
 
-    // TODO: do we want to map some of the other drums across in some form?
-    public static readonly Dictionary<int, DrumAxisType> MappingsDrumGh = new()
+    public static readonly Dictionary<int, DrumAxisType> MappingsDrumGh =
+        MappingsDrumRb.Select(MapGhNote).ToDictionary();
+
+    public static KeyValuePair<int, DrumAxisType> MapGhNote(KeyValuePair<int, DrumAxisType> rb)
     {
-        {38, DrumAxisType.Red},
-        {46, DrumAxisType.Yellow},
-        {48, DrumAxisType.Blue},
-        {45, DrumAxisType.Green},
-        {49, DrumAxisType.Orange},
-        {36, DrumAxisType.Kick},
-        {100, DrumAxisType.Kick2}, // Hi-Hat Pedal
-    };
+        return rb.Value switch
+        {
+            DrumAxisType.Yellow or DrumAxisType.Blue => new KeyValuePair<int, DrumAxisType>(rb.Key, DrumAxisType.Blue),
+            DrumAxisType.GreenCymbal or DrumAxisType.YellowCymbal => new KeyValuePair<int, DrumAxisType>(rb.Key,
+                DrumAxisType.Yellow),
+            DrumAxisType.BlueCymbal => new KeyValuePair<int, DrumAxisType>(rb.Key, DrumAxisType.Orange),
+            _ => rb
+        };
+    }
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedCombinedMidiOutput(Outputs.Items.ToList(), (byte) FirstNote);
+        return new SerializedCombinedMidiOutput(Outputs.Items.ToList(), (byte)FirstNote);
     }
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
@@ -111,7 +114,7 @@ public partial class MidiCombinedOutput : CombinedOutput
     {
         Outputs.Clear();
         Outputs.AddRange(outputs);
-        if (Outputs.Count == 0)
+        if (Outputs.Count == 0 || (Model.DeviceControllerType == DeviceControllerType.GuitarHeroDrums && !MappingsDrumGh.Keys.All(x => Outputs.Items.Any(x2 => x2.Input is MidiInput midi && midi.Key == x))))
         {
             CreateDefaults();
         }
@@ -125,6 +128,7 @@ public partial class MidiCombinedOutput : CombinedOutput
         get => _midiSerialEnabled.Value;
         set => Model.MidiSerialEnabled = value;
     }
+
     public int MidiSerialPin
     {
         get => _midiSerialPin.Value;
@@ -207,7 +211,7 @@ public partial class MidiCombinedOutput : CombinedOutput
                             break;
                         default:
                             Outputs.Add(new PianoKey(Model, true,
-                                new MidiInput(MidiType.Note, FirstNote + (int) key, Model), Colors.Black,
+                                new MidiInput(MidiType.Note, FirstNote + (int)key, Model), Colors.Black,
                                 Colors.Black, [], [], [], key, false, false,
                                 false, -1, true));
                             break;
