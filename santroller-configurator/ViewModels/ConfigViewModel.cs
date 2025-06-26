@@ -1452,7 +1452,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             }
             else
             {
-                _wtDrumSpiConfig = null;
+                _bhDrumTwiConfig = null;
             }
 
             this.RaisePropertyChanged(nameof(BhDrumScl));
