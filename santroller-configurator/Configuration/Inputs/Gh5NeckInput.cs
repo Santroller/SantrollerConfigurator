@@ -147,10 +147,8 @@ public class Gh5NeckInput : TwiInput
                 RawValue = (gh5Raw[0] & (1 << Fret[Input])) != 0 ? 1 : 0;
                 break;
             case Gh5NeckInputType.TapBar:
-                RawValue = (gh5Raw[1] + 0x80) & 0xFF;
-                break;
             case Gh5NeckInputType.TapAll:
-                RawValue = (gh5Raw[1] + 0x80) & 0xFF;
+                RawValue = (gh5Raw[1] ^ 0x80) & 0xFF;
                 break;
             default:
             {
