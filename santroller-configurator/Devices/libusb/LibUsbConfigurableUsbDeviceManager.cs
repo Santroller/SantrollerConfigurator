@@ -16,6 +16,7 @@ public class ConfigurableUsbDeviceManager
 {
     private const string UdevFile = "68-santroller.rules";
     private const string UdevPath = $"/usr/lib/udev/rules.d/{UdevFile}";
+    private const string UdevPath2 = $"/etc/udev/rules.d/{UdevFile}";
     private readonly MainWindowViewModel _model;
     private readonly UsbContext _context = new UsbContext();
     public ConfigurableUsbDeviceManager(MainWindowViewModel model)
@@ -104,8 +105,9 @@ public class ConfigurableUsbDeviceManager
 
     public async Task<bool> CheckDrivers()
     {
-        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath) &&
-            await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile);
+        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || (File.Exists(UdevPath) &&
+            await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile)) || File.Exists(UdevPath2) &&
+            await File.ReadAllTextAsync(UdevPath2) == await AssetUtils.ReadFileAsync(UdevFile);
     }
 
     public static void Rescan()
@@ -135,6 +137,16 @@ public class ConfigurableUsbDeviceManager
         var process = Process.Start(info);
         if (process == null) return;
         await process.WaitForExitAsync();
+        if (!await CheckDrivers())
+        {
+            // usr lib udev didnt work, try etc udev
+            info = new ProcessStartInfo("pkexec");
+            info.ArgumentList.AddRange(["cp", rules, UdevPath2]);
+            info.UseShellExecute = true;
+            process = Process.Start(info);
+            if (process == null) return;
+            await process.WaitForExitAsync();
+        }
         // And then reload rules and trigger
         info = new ProcessStartInfo("pkexec");
         info.ArgumentList.AddRange(["udevadm", "control", "--reload-rules"]);
