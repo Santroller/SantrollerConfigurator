@@ -1379,6 +1379,18 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="AdafruitUsbHost" xml:space="preserve">
         <value>Adafruit Feather RP2040 USB Host</value>
     </data>
+    <data name="Ps2InputTypeTaikoRimLeft" xml:space="preserve">
+        <value>Taiko - Left Rim Hit</value>
+    </data>
+    <data name="Ps2InputTypeTaikoRimRight" xml:space="preserve">
+        <value>Taiko - Right Rim Hit</value>
+    </data>
+    <data name="Ps2InputTypeTaikoCenterLeft" xml:space="preserve">
+        <value>Taiko - Left Center Hit</value>
+    </data>
+    <data name="Ps2InputTypeTaikoCenterRight" xml:space="preserve">
+        <value>Taiko - Right Center Hit</value>
+    </data>
     <data name="WiiInputTypeGuitarTapBar" xml:space="preserve">
         <value>Guitar - Slider Axis</value>
     </data>
@@ -2440,6 +2452,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="AccelInputTypeAdc2" xml:space="preserve">
         <value>ADC 2</value>
+    </data>
+    <data name="Ps2ControllerTypeTaiko" xml:space="preserve">
+        <value>Taiko no Tatsujin Drum</value>
     </data>
     <data name="Ps2ControllerTypeDigital" xml:space="preserve">
         <value>PS1 Controller</value>

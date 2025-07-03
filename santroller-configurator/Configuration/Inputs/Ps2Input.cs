@@ -157,6 +157,10 @@ public class Ps2Input : SpiInput
         {Ps2InputType.R2, "(~ps2Data[4]) & (1 << 1)"},
         {Ps2InputType.L1, "(~ps2Data[4]) & (1 << 2)"},
         {Ps2InputType.R1, "(~ps2Data[4]) & (1 << 3)"},
+        {Ps2InputType.TaikoRimLeft, "(~ps2Data[4]) & (1 << 2)"},
+        {Ps2InputType.TaikoRimRight, "(~ps2Data[4]) & (1 << 3)"},
+        {Ps2InputType.TaikoCenterLeft, "(~ps2Data[3]) & (1 << 7)"},
+        {Ps2InputType.TaikoCenterRight, "(~ps2Data[4]) & (1 << 5)"},
         {Ps2InputType.Triangle, "(~ps2Data[4]) & (1 << 4)"},
         {Ps2InputType.Circle, "(~ps2Data[4]) & (1 << 5)"},
         {Ps2InputType.Cross, "(~ps2Data[4]) & (1 << 6)"},
@@ -192,6 +196,15 @@ public class Ps2Input : SpiInput
         Ps2InputType.RightStickX,
         Ps2InputType.RightStickY
     ];
+    private static readonly IReadOnlyList<Ps2InputType> Taiko =
+    [
+        Ps2InputType.Start,
+        Ps2InputType.Select,
+        Ps2InputType.TaikoCenterLeft,
+        Ps2InputType.TaikoCenterRight,
+        Ps2InputType.TaikoRimLeft,
+        Ps2InputType.TaikoRimRight
+    ];
 
     private static readonly Dictionary<Ps2ControllerType, string> CType = new()
     {
@@ -203,7 +216,8 @@ public class Ps2Input : SpiInput
         {Ps2ControllerType.JogCon, "PSX_JOGCON"},
         {Ps2ControllerType.GunCon, "PSX_GUNCON"},
         {Ps2ControllerType.Guitar, "PSX_GUITAR_HERO_CONTROLLER"},
-        {Ps2ControllerType.Mouse, "PSX_MOUSE"}
+        {Ps2ControllerType.Mouse, "PSX_MOUSE"},
+        {Ps2ControllerType.Taiko, "PSX_TAIKO"}
     };
 
     private static readonly Dictionary<Ps2InputType, Ps2ControllerType> ControllerTypes = Enum.GetValues<Ps2InputType>()
@@ -311,6 +325,7 @@ public class Ps2Input : SpiInput
             or Ps2ControllerType.FlightStick;
         var digital = realType is Ps2ControllerType.Dualshock or Ps2ControllerType.Dualshock2
             or Ps2ControllerType.FlightStick or Ps2ControllerType.Digital;
+        var taiko = realType is Ps2ControllerType.Taiko;
         var negcon = realType is Ps2ControllerType.NegCon;
         var jogcon = realType is Ps2ControllerType.JogCon;
         var guncon = realType is Ps2ControllerType.GunCon;
@@ -415,6 +430,12 @@ public class Ps2Input : SpiInput
             Ps2InputType.R2 when digital => ~ps2Data[4] & (1 << 1),
             Ps2InputType.L1 when digital => ~ps2Data[4] & (1 << 2),
             Ps2InputType.R1 when digital => ~ps2Data[4] & (1 << 3),
+            Ps2InputType.TaikoRimLeft when taiko => ~ps2Data[4] & (1 << 2),
+            Ps2InputType.TaikoRimRight when taiko => ~ps2Data[4] & (1 << 3),
+            Ps2InputType.TaikoCenterLeft when taiko => ~ps2Data[3] & (1 << 7),
+            Ps2InputType.TaikoCenterRight when taiko => ~ps2Data[4] & (1 << 5),
+            Ps2InputType.Start when taiko => ~ps2Data[3] & (1 << 3),
+            Ps2InputType.Select when taiko => ~ps2Data[3] & (1 << 0),
             Ps2InputType.Triangle when digital => ~ps2Data[4] & (1 << 4),
             Ps2InputType.Circle when digital => ~ps2Data[4] & (1 << 5),
             Ps2InputType.Cross when digital => ~ps2Data[4] & (1 << 6),
@@ -444,6 +465,11 @@ public class Ps2Input : SpiInput
         else
         {
             types.Add(ControllerTypes[Input]);
+        }
+
+        if (Taiko.Contains(Input))
+        {
+            types.Add(Ps2ControllerType.Taiko);
         }
 
         if (Dualshock.Contains(Input))
@@ -486,6 +512,11 @@ public class Ps2Input : SpiInput
                     types.Add(Ps2ControllerType.Dualshock);
                     types.Add(Ps2ControllerType.Dualshock2);
                     types.Add(Ps2ControllerType.FlightStick);
+                }
+
+                if (Taiko.Contains(input.Input) && Model.DeviceControllerType is DeviceControllerType.Taiko)
+                {
+                    types.Add(Ps2ControllerType.Taiko);
                 }
 
                 // Only do this binding on controllers without analog pressures

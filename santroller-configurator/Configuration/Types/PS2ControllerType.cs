@@ -11,6 +11,7 @@ public enum Ps2ControllerType : byte
     GunCon,
     FlightStick,
     Mouse,
+    Taiko,
     None,
     Selected,
     All

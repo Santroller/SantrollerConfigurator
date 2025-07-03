@@ -2685,6 +2685,30 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string Ps2InputTypeTaikoRimLeft {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeTaikoRimLeft", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeTaikoRimRight {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeTaikoRimRight", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeTaikoCenterLeft {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeTaikoCenterLeft", resourceCulture);
+            }
+        }
+        
+        public static string Ps2InputTypeTaikoCenterRight {
+            get {
+                return ResourceManager.GetString("Ps2InputTypeTaikoCenterRight", resourceCulture);
+            }
+        }
+        
         public static string WiiInputTypeGuitarTapBar {
             get {
                 return ResourceManager.GetString("WiiInputTypeGuitarTapBar", resourceCulture);
@@ -4662,6 +4686,12 @@ namespace GuitarConfigurator.NetCore {
         public static string AccelInputTypeAdc2 {
             get {
                 return ResourceManager.GetString("AccelInputTypeAdc2", resourceCulture);
+            }
+        }
+        
+        public static string Ps2ControllerTypeTaiko {
+            get {
+                return ResourceManager.GetString("Ps2ControllerTypeTaiko", resourceCulture);
             }
         }
         

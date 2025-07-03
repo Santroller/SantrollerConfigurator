@@ -1560,6 +1560,22 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="WiiInputTypeTaTaConRightDrumCenter" xml:space="preserve">
         <value>Taiko - Golpe Central Derecho</value>
     </data>
+    <data name="Ps2InputTypeTaikoRimLeft" xml:space="preserve">
+        <value>Taiko - Golpe de Borde Izquierdo</value>
+    </data>
+    <data name="Ps2InputTypeTaikoRimRight" xml:space="preserve">
+        <value>Taiko - Golpe de Borde Derecho</value>
+    </data>
+    <data name="Ps2InputTypeTaikoCenterLeft" xml:space="preserve">
+        <value>Taiko - Golpe Central Izquierdo</value>
+    </data>
+    <data name="Ps2InputTypeTaikoCenterRight" xml:space="preserve">
+        <value>Taiko - Golpe Central Derecho</value>
+    </data>
+    
+    <data name="Ps2ControllerTypeTaiko" xml:space="preserve">
+        <value>Tambor de Taiko no Tatsujin</value>
+    </data>
 
     <data name="WiiInputTypeDjHeroEuphoria" xml:space="preserve">
         <value>Tornamesa - Botón Euphoria</value>

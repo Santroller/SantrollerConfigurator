@@ -67,5 +67,9 @@ public enum Ps2InputType
     Circle,
     Cross,
     Square,
-    JoystickToDpad
+    JoystickToDpad,
+    TaikoRimLeft,
+    TaikoRimRight,
+    TaikoCenterLeft,
+    TaikoCenterRight
 }
