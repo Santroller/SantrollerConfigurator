@@ -2209,9 +2209,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define DJ_NAV_BUTTONS {{WriteBlob(writer, DjNavButtons)}}
                         #define COMBINED_DEBOUNCE {{WriteBlob(writer, CombinedStrumDebounce)}}
                         #define SLEEP_PIN {{WriteBlob(writer, SleepEnabled ? SleepWakeUpPin : -1)}}
-                        #define SLEEP_INACTIVITY_TIMEOUT_MS {{WriteBlob(writer, DeviceSleep * 1000)}}
+                        #define SLEEP_INACTIVITY_TIMEOUT_SEC {{WriteBlob(writer, DeviceSleep)}}
                         #define SLEEP_ACTIVE_HIGH {{WriteBlob(writer, false)}}
-                        #define RGB_INACTIVITY_TIMEOUT_MS {{WriteBlob(writer, LedSleep * 1000)}}
+                        #define RGB_INACTIVITY_TIMEOUT_SEC {{WriteBlob(writer, LedSleep)}}
                         """;
 
             if (IsBluetoothRx)
@@ -2269,9 +2269,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define DJ_NAV_BUTTONS {{DjNavButtons.ToString().ToLower()}}
                         #define COMBINED_DEBOUNCE {{CombinedStrumDebounce.ToString().ToLower()}}
                         #define SLEEP_PIN {{(SleepEnabled ? SleepWakeUpPin : -1)}}
-                        #define SLEEP_INACTIVITY_TIMEOUT_MS {{DeviceSleep * 1000}}
+                        #define SLEEP_INACTIVITY_TIMEOUT_SEC {{DeviceSleep}}
                         #define SLEEP_ACTIVE_HIGH {{false.ToString().ToLower()}}
-                        #define RGB_INACTIVITY_TIMEOUT_MS {{LedSleep * 1000}}
+                        #define RGB_INACTIVITY_TIMEOUT_SEC {{LedSleep}}
                         """;
             if (IsBluetoothRx)
             {
