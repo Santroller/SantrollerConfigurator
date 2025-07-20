@@ -581,16 +581,17 @@ public partial class Led : Output
     {
         return Command;
     }
+    
+    
 
-    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
-        string combinedExtra,
-        List<int> strumIndexes,
-        bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
+    private string _onBlob = "";
+    private string _offBlob = "";
+    private string _betweenBlob = "";
+    private string _starPowerBetweenBlob = "";
+    private string _ps4Blob = "";
+
+    private void AssignLeds(BinaryWriter? writer)
     {
-        if (mode is not (ConfigField.StrobeLed or ConfigField.AuthLed or ConfigField.PlayerLed or ConfigField.RumbleLed
-            or ConfigField.RumbleLedExpanded or ConfigField.DetectionFestival
-            or ConfigField.KeyboardLed or ConfigField.LightBarLed or ConfigField.OffLed
-            or ConfigField.InitLed or ConfigField.BluetoothLed)) return "";
         var on = "";
         var off = "";
         var between = "";
@@ -643,7 +644,7 @@ public partial class Led : Output
 
                 ps4 += $"""
                         ledState[{index - 1}].select = 1;
-                        {Model.LedType.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        {Model.LedType.GetLedAssignment(false, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
                         """;
             }
         }
@@ -681,7 +682,7 @@ public partial class Led : Output
 
                 ps4 += $"""
                         ledStatePeripheral[{index - 1}].select = 1;
-                        {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        {Model.LedTypePeripheral.GetLedAssignment(true, Model.LedBrightnessOn.ToString(), "red", "green", "blue",  index)};
                         """;
             }
         }
@@ -720,7 +721,7 @@ public partial class Led : Output
 
                 ps4 += $"""
                         ledState[{index - 1}].select = 1;
-                        {Model.LedType.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        {Model.LedType.GetLedAssignment(false, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
                         """;
             }
         }
@@ -759,7 +760,7 @@ public partial class Led : Output
 
                 ps4 += $"""
                         ledStatePeripheral[{index - 1}].select = 1;
-                        {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        {Model.LedTypePeripheral.GetLedAssignment(false, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
                         """;
             }
         }
@@ -860,6 +861,42 @@ public partial class Led : Output
                 ps4 += on;
             }
         }
+
+        _onBlob = on;
+        _offBlob = off;
+        _betweenBlob = between;
+        _starPowerBetweenBlob = starPowerBetween;
+        _ps4Blob = ps4;
+    }
+
+    private BinaryWriter? _lastWriter;
+
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
+        string combinedExtra,
+        List<int> strumIndexes,
+        bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
+    {
+        if (mode is not (ConfigField.StrobeLed or ConfigField.AuthLed or ConfigField.PlayerLed or ConfigField.RumbleLed
+            or ConfigField.RumbleLedExpanded or ConfigField.DetectionFestival
+            or ConfigField.KeyboardLed or ConfigField.LightBarLed or ConfigField.OffLed
+            or ConfigField.InitLed or ConfigField.BluetoothLed)) return "";
+        if (writer != null)
+        {
+            if (_lastWriter != writer)
+            {
+                _lastWriter = writer;
+                AssignLeds(writer);
+            }
+        }
+        else
+        {
+            AssignLeds(writer);
+        }
+        var on = _onBlob;
+        var off = _offBlob;
+        var between = _betweenBlob;
+        var starPowerBetween = _starPowerBetweenBlob;
+        var ps4 = _ps4Blob;
 
         switch (Command)
         {

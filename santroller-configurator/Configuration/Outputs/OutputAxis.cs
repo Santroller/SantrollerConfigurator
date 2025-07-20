@@ -348,6 +348,10 @@ public abstract partial class OutputAxis : Output
             : string.Format(Resources.AxisCalibrationStep, (int) CalibrationState, (int) MaxState);
     }
 
+    private string _intBlob = "";
+    private string _uintBlob = "";
+    private BinaryWriter? _lastWriter;
+
     public string GenerateAssignment(string prev, ConfigField mode, bool forceAccel, bool forceTrigger, bool whammy,
         bool drum,
         BinaryWriter? writer)
@@ -534,10 +538,17 @@ public abstract partial class OutputAxis : Output
             return intBased
                 ? $"{function}({prev}, {generated}, {min}, {max}, {center}, {deadzone})"
                 : $"{function}({prev}, {generated}, {min}, {mulInt}, {deadzone})";
-
+        if (writer != _lastWriter)
+        {
+            _lastWriter = writer;
+            _intBlob =
+                $"{WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, deadzone)}";
+            _uintBlob =
+                $"{WriteBlob(writer, (uint)min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint)deadzone)}";
+        }
         return intBased
-            ? $"{function}({prev}, {generated}, {WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, deadzone)})"
-            : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) deadzone)})";
+            ? $"{function}({prev}, {generated}, {_intBlob})"
+            : $"{function}({prev}, {generated}, {_uintBlob})";
     }
 
 
