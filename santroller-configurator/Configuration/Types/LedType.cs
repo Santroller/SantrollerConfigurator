@@ -181,18 +181,17 @@ public static class LedTypeMethods
         var g = $"({var} * {on.G - off.G} / 255) + {off.G}";
         var b = $"({var} * {on.B - off.B} / 255) + {off.B}";
         var brightness = $"({var} * {brightnessOn - brightnessOff} / 255) + {brightnessOff}";
-        if (brightnessOn == brightnessOff)
-        {
-            brightness = brightnessOn.ToString();
-        }
         if (writer != null)
         {
             var rOnBlob = WriteBlob(writer, on.R);
             var gOnBlob = WriteBlob(writer, on.G);
-            var bOnBlob = WriteBlob(writer, on.G);
+            var bOnBlob = WriteBlob(writer, on.B);
+            var brightnessOnBlob = WriteBlob(writer, brightnessOn);
             var rOffBlob = WriteBlob(writer, off.R);
             var gOffBlob = WriteBlob(writer, off.G);
-            var bOffBlob = WriteBlob(writer, off.G);
+            var bOffBlob = WriteBlob(writer, off.B);
+            var brightnessOffBlob = WriteBlob(writer, brightnessOff);
+            brightness = $"({var} * ({brightnessOnBlob} - {brightnessOffBlob}) / 255) + {brightnessOffBlob}";
             r = $"({var} * ({rOnBlob} - {rOffBlob}) / 255) + {rOffBlob}";
             g = $"({var} * ({gOnBlob} - {gOffBlob}) / 255) + {gOffBlob}";
             b = $"({var} * ({bOnBlob} - {bOffBlob}) / 255) + {bOffBlob}";
@@ -214,6 +213,10 @@ public static class LedTypeMethods
             if (on.B == off.B)
             {
                 b = off.B.ToString();
+            }
+            if (brightnessOn == brightnessOff)
+            {
+                brightness = brightnessOff.ToString();
             }
         }
 
