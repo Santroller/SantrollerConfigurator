@@ -407,6 +407,18 @@ public partial class DrumAxis : OutputAxis
                     test2 = "yellowCymbal";
                     break;
             }
+            
+            var debounce = Debounce;
+            if (!Model.LocalDebounceMode)
+            {
+                debounce = Model.Debounce / 10;
+            }
+            var reset = $"debounce[{debounceIndex}]={debounce};";
+            
+            if (writer != null)
+            {
+                reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
+            }
 
             return $$"""
                      if ({{ifStatement}}) {
@@ -414,7 +426,9 @@ public partial class DrumAxis : OutputAxis
                                  {{outputButtons}}
                                  {{GenerateOutput(mode)}} = {{assignedVal}};
                                  {{test2}} = true;
-                             } 
+                             } else {
+                                {{reset}}
+                             }
                      }
                      """;
         }
