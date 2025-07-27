@@ -141,6 +141,8 @@ public partial class Led : Output
     private readonly ObservableAsPropertyHelper<bool> _outputHasColours;
 
     private readonly ObservableAsPropertyHelper<bool> _usesPwm;
+    private static UInt32 _lastId = 10;
+    private readonly UInt32 _currentId;
 
     public Led(ConfigViewModel model, bool enabled, bool outputEnabled, bool outputInverted, int outputPin,
         bool peripheral,
@@ -152,6 +154,7 @@ public partial class Led : Output
         ledOn, ledOff,
         ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, peripheral, outputPin, false)
     {
+        _currentId  = _lastId++;
         Player = 1;
         Combo = 1;
         StageKitLed = 1;
@@ -586,6 +589,7 @@ public partial class Led : Output
 
     private string _onBlob = "";
     private string _offBlob = "";
+    private string _resetBlob = "";
     private string _betweenBlob = "";
     private string _starPowerBetweenBlob = "";
     private string _ps4Blob = "";
@@ -594,6 +598,7 @@ public partial class Led : Output
     {
         var on = "";
         var off = "";
+        var reset = "";
         var between = "";
         var starPowerBetween = "";
         var ps4 = "";
@@ -603,88 +608,12 @@ public partial class Led : Output
                 $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, !OutputInverted, PeripheralOutput, Model.IsBluetooth)};";
             off =
                 $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, OutputInverted, PeripheralOutput, Model.IsBluetooth)};";
+            reset =
+                $"{Model.Microcontroller.GenerateDigitalWrite(OutputPinConfig.Pin, OutputInverted, PeripheralOutput, Model.IsBluetooth)};";
             between =
                 $"{Model.Microcontroller.GenerateAnalogWrite(OutputPinConfig.Pin, $"{(OutputInverted ? "(255-" : "(")}rumble_left)", PeripheralOutput)};";
             starPowerBetween =
                 $"{Model.Microcontroller.GenerateAnalogWrite(OutputPinConfig.Pin, (OutputInverted ? "(255-" : "(") + "last_star_power)", PeripheralOutput)};";
-        }
-
-        if (Model.IsApa102)
-        {
-            foreach (var index in LedIndices)
-            {
-                on += $"""
-
-                       ledState[{index - 1}].select = 1;
-                       {Model.LedType.GetLedAssignment(false, LedOn, index, Model.LedBrightnessOn, writer)}
-                       """;
-
-
-                if (SupportsLedOff)
-                {
-                    off += $"""
-
-                            ledState[{index - 1}].select = 0;
-                            {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
-                            """;
-                }
-
-                between +=
-                    $"""
-
-                     ledState[{index - 1}].select = 1;
-                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "rumble_left", writer)}
-                     """;
-                starPowerBetween +=
-                    $"""
-
-                     ledState[{index - 1}].select = 1;
-                     {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "last_star_power", writer)}
-                     """;
-
-                ps4 += $"""
-                        ledState[{index - 1}].select = 1;
-                        {Model.LedType.GetLedAssignment(false, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
-                        """;
-            }
-        }
-
-        if (Model.IsApa102Peripheral)
-        {
-            foreach (var index in LedIndicesPeripheral)
-            {
-                on += $"""
-
-                       ledStatePeripheral[{index - 1}].select = 1;
-                       {Model.LedTypePeripheral.GetLedAssignment(true, LedOn, index, Model.LedBrightnessOn, writer)}
-                       """;
-                if (SupportsLedOff)
-                {
-                    off += $"""
-
-                            ledStatePeripheral[{index - 1}].select = 0;
-                            {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
-                            """;
-                }
-
-                between +=
-                    $"""
-
-                     ledStatePeripheral[{index - 1}].select = 1;
-                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "rumble_left", writer)}
-                     """;
-                starPowerBetween +=
-                    $"""
-
-                     ledStatePeripheral[{index - 1}].select = 1;
-                     {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "last_star_power", writer)}
-                     """;
-
-                ps4 += $"""
-                        ledStatePeripheral[{index - 1}].select = 1;
-                        {Model.LedTypePeripheral.GetLedAssignment(true, Model.LedBrightnessOn.ToString(), "red", "green", "blue",  index)};
-                        """;
-            }
         }
 
         if (Model.IsApa102 || Model.IsWs2812)
@@ -693,34 +622,43 @@ public partial class Led : Output
             {
                 on += $"""
 
-                       ledState[{index - 1}].select = 1;
+                       ledState[{index - 1}].select = {_currentId};
                        {Model.LedType.GetLedAssignment(false, LedOn, index, Model.LedBrightnessOn, writer)}
                        """;
 
+
                 if (SupportsLedOff)
                 {
-                    off += $"""
+                    off += $$"""
 
-                            ledState[{index - 1}].select = 0;
-                            {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
+                            if (ledState[{{index - 1}}].select == {{_currentId}}) {
+                                ledState[{{index - 1}}].select = 0;
+                                {{Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}}
+                            }
                             """;
                 }
+                
+                reset += $"""
+
+                         ledState[{index - 1}].select = 0;
+                         {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
+                         """;
 
                 between +=
                     $"""
 
-                     ledState[{index - 1}].select = 1;
+                     ledState[{index - 1}].select = {_currentId};
                      {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "rumble_left", writer)}
                      """;
                 starPowerBetween +=
                     $"""
 
-                     ledState[{index - 1}].select = 1;
+                     ledState[{index - 1}].select = {_currentId};
                      {Model.LedType.GetLedAssignment(false, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "last_star_power", writer)}
                      """;
 
                 ps4 += $"""
-                        ledState[{index - 1}].select = 1;
+                        ledState[{index - 1}].select = {_currentId};
                         {Model.LedType.GetLedAssignment(false, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
                         """;
             }
@@ -732,39 +670,42 @@ public partial class Led : Output
             {
                 on += $"""
 
-                       ledStatePeripheral[{index - 1}].select = 1;
+                       ledStatePeripheral[{index - 1}].select = {_currentId};
                        {Model.LedTypePeripheral.GetLedAssignment(true, LedOn, index, Model.LedBrightnessOn, writer)}
                        """;
-
                 if (SupportsLedOff)
                 {
-                    off += $"""
-
-                            ledStatePeripheral[{index - 1}].select = 0;
-                            {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
+                    off += $$"""
+                            if (ledStatePeripheral[{{index - 1}}].select == {{_currentId}}) {
+                                ledStatePeripheral[{{index - 1}}].select = 0;
+                                {{Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}}
+                            }
                             """;
                 }
+                reset += $"""
+                         ledStatePeripheral[{index - 1}].select = 0;
+                         {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
+                         """;
 
                 between +=
                     $"""
 
-                     ledStatePeripheral[{index - 1}].select = 1;
+                     ledStatePeripheral[{index - 1}].select = {_currentId};
                      {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "rumble_left", writer)}
                      """;
                 starPowerBetween +=
                     $"""
 
-                     ledStatePeripheral[{index - 1}].select = 1;
+                     ledStatePeripheral[{index - 1}].select = {_currentId};
                      {Model.LedTypePeripheral.GetLedAssignment(true, index, LedOn, LedOff, Model.LedBrightnessOn, Model.LedBrightnessOff, "last_star_power", writer)}
                      """;
 
                 ps4 += $"""
-                        ledStatePeripheral[{index - 1}].select = 1;
-                        {Model.LedTypePeripheral.GetLedAssignment(false, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
+                        ledStatePeripheral[{index - 1}].select = {_currentId};
+                        {Model.LedTypePeripheral.GetLedAssignment(true, Model.LedBrightnessOn.ToString(), "red", "green", "blue",  index)};
                         """;
             }
         }
-
 
         if (Model.HasMpr121)
         {
@@ -777,6 +718,11 @@ public partial class Led : Output
                        bit_set(ledStateMpr121,{index % 8});
                        """;
                 off += $"""
+
+                        bit_clear(ledStateMpr121Select,{index % 8});
+                        bit_clear(ledStateMpr121,{index % 8});
+                        """;
+                reset += $"""
 
                         bit_clear(ledStateMpr121Select,{index % 8});
                         bit_clear(ledStateMpr121,{index % 8});
@@ -813,6 +759,11 @@ public partial class Led : Output
                         bit_clear(ledStateSelect[{index / 8}],{index % 8});
                         bit_clear(ledState[{index / 8}],{index % 8});
                         """;
+                reset += $"""
+
+                        bit_clear(ledStateSelect[{index / 8}],{index % 8});
+                        bit_clear(ledState[{index / 8}],{index % 8});
+                        """;
                 between +=
                     $"""
 
@@ -845,6 +796,11 @@ public partial class Led : Output
                         bit_clear(ledStatePeripheralSelect[{index / 8}],{index % 8});
                         bit_clear(ledStatePeripheral[{index / 8}],{index % 8});
                         """;
+                reset += $"""
+
+                        bit_clear(ledStatePeripheralSelect[{index / 8}],{index % 8});
+                        bit_clear(ledStatePeripheral[{index / 8}],{index % 8});
+                        """;
                 between +=
                     $"""
 
@@ -864,6 +820,7 @@ public partial class Led : Output
 
         _onBlob = on;
         _offBlob = off;
+        _resetBlob = reset;
         _betweenBlob = between;
         _starPowerBetweenBlob = starPowerBetween;
         _ps4Blob = ps4;
@@ -894,6 +851,7 @@ public partial class Led : Output
         }
         var on = _onBlob;
         var off = _offBlob;
+        var reset = _resetBlob;
         var between = _betweenBlob;
         var starPowerBetween = _starPowerBetweenBlob;
         var ps4 = _ps4Blob;
@@ -950,7 +908,7 @@ public partial class Led : Output
         switch (mode)
         {
             case ConfigField.InitLed:
-                return off;
+                return reset;
             case ConfigField.KeyboardLed when Command is LedCommandType.KeyboardCapsLock
                 or LedCommandType.KeyboardNumLock
                 or LedCommandType.KeyboardScrollLock:

@@ -3284,184 +3284,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         return ret;
     }
 
-    private string ComputeLedsWs2812(ConfigField mode, bool peripheral,
-        Dictionary<byte, List<(Output, int)>> debouncesRelatedToLed,
-        Dictionary<byte, List<OutputAxis>> analogRelatedToLed, BinaryWriter? writer)
-    {
-        var ret = "";
-        var type = peripheral ? LedTypePeripheral : LedType;
-        var variable = peripheral ? "ledStatePeripheral" : "ledState";
-        if (mode != ConfigField.Shared || type is LedType.None) return "";
-
-        // Handle leds, including when multiple leds are assigned to a single output.
-        foreach (var (led, relatedOutputs) in debouncesRelatedToLed)
-        {
-            var analog = "";
-            if (analogRelatedToLed.TryGetValue(led, out var analogLedOutputs))
-            {
-                foreach (var analogLedOutput in analogLedOutputs)
-                {
-                    var ledRead =
-                        analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, null);
-
-                    var ledReadCheck = "led_tmp";
-                    // Turntable velocities are different to most axis, as they don't use standard calibration.
-                    if (analogLedOutput is DjAxis
-                        {
-                            Type: DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
-                        } djAxis)
-                    {
-                        var multiplier = djAxis.LedMultiplier;
-                        var generated = $"({analogLedOutput.Input.Generate()})";
-                        var isI2C = analogLedOutput.Input is DjInput
-                        {
-                            Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
-                        };
-                        ledReadCheck = analogLedOutput.Input.Generate();
-                        if (analogLedOutput.InputIsUint)
-                        {
-                            ledReadCheck = $"({generated} - INT16_MAX)";
-                        }
-                        else
-                        {
-                            generated = $"({generated} + INT16_MAX)";
-                        }
-
-                        ledRead = isI2C
-                            ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
-                            : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
-                    }
-
-                    if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
-                    {
-                        var generated = $"({analogLedOutput.Input.Generate()})";
-                        if (!analogLedOutput.InputIsUint)
-                        {
-                            generated = $"({generated} + INT16_MAX)";
-                        }
-
-                        ledRead = $"(({generated} >> 8))";
-                    }
-
-                    if (analogLedOutput.Input is DigitalToAnalog dta)
-                    {
-                        var on = dta.On >> 8;
-                        if (dta.Type != DigitalToAnalogType.Trigger)
-                        {
-                            on += sbyte.MaxValue;
-                        }
-
-                        ledRead = $"(({ledRead}) ? {on} : 0)";
-                    }
-
-                    // Now we have the value, calibrated as a uint8_t
-                    // Only apply analog colours if non zero when conflicting with digital, so that the digital off states override
-                    analog +=
-                        $$"""
-                          led_tmp = {{ledRead}};
-                          if({{ledReadCheck}}) {
-                              {{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}}
-                          } else {
-                              {{type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff, writer)}}
-                          }
-                          """;
-                }
-            }
-
-            if (analog.Length == 0)
-            {
-                analog = type.GetLedAssignment(peripheral, relatedOutputs.Select(s => s.Item1.LedOff).FirstOrDefault(x => x.R != 0 || x.G != 0 || x.B != 0, Colors.Black), led, LedBrightnessOff,
-                    writer);
-            }
-
-            ret += $$"""
-
-                     if ({{variable}}[{{led - 1}}].select == 0) {
-                     """;
-            ret += string.Join(" else ", relatedOutputs.DistinctBy(tuple => tuple.Item1).Select(tuple =>
-            {
-                var ifStatement = $"ledDebounce[{tuple.Item2}]";
-                return $$"""
-                         
-                             if ({{ifStatement}}) {
-                                 {{type.GetLedAssignment(peripheral, tuple.Item1.LedOn, led, LedBrightnessOn, writer)}}
-                             }
-                         """;
-            }));
-            ret += $$"""
-                         else {
-                             {{analog}}
-                         }
-                     }
-                     """;
-        }
-
-        foreach (var (led, analogLedOutputs) in analogRelatedToLed)
-        {
-            if (debouncesRelatedToLed.ContainsKey(led)) continue;
-            ret += $$"""
-
-                     if ({{variable}}[{{led - 1}}].select == 0) {
-                     """;
-            foreach (var analogLedOutput in analogLedOutputs)
-            {
-                var ledRead =
-                    analogLedOutput.GenerateAssignment("0", ConfigField.Ps3, false, true, false, false, writer);
-                // Turntable velocities are different to most axis, as they don't use standard calibration.
-                if (analogLedOutput is DjAxis
-                    {
-                        Type: DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity
-                    } djAxis)
-                {
-                    var multiplier = djAxis.LedMultiplier;
-                    var generated = $"({analogLedOutput.Input.Generate()})";
-                    var isI2C = analogLedOutput.Input is DjInput
-                    {
-                        Input: DjInputType.LeftTurntable or DjInputType.RightTurntable
-                    };
-                    if (!analogLedOutput.InputIsUint)
-                    {
-                        generated = $"({generated} + INT16_MAX)";
-                    }
-
-                    ledRead = isI2C
-                        ? $"handle_calibration_turntable_ps3_i2c(0, {analogLedOutput.Input.Generate()},{multiplier})"
-                        : $"handle_calibration_turntable_ps3(0, {generated},{multiplier})";
-                }
-
-                if (analogLedOutput is DjAxis {Type: DjAxisType.EffectsKnob})
-                {
-                    var generated = $"({analogLedOutput.Input.Generate()})";
-                    if (!analogLedOutput.InputIsUint)
-                    {
-                        generated = $"({generated} + INT16_MAX)";
-                    }
-
-                    ledRead = $"(({generated} >> 8))";
-                }
-
-                if (analogLedOutput.Input is DigitalToAnalog dta)
-                {
-                    var on = dta.On >> 8;
-                    if (dta.Type != DigitalToAnalogType.Trigger)
-                    {
-                        on += sbyte.MaxValue;
-                    }
-
-                    ledRead = $"(({ledRead}) ? {on} : 0)";
-                }
-
-                // Now we have the value, calibrated as a uint8_t
-                ret +=
-                    $"led_tmp = {ledRead};{type.GetLedAssignment(peripheral, led, analogLedOutput.LedOn, analogLedOutput.LedOff, LedBrightnessOn, LedBrightnessOff, "led_tmp", writer)}";
-            }
-
-            ret += "}";
-        }
-
-        return ret;
-    }
-
     private string ComputeLeds(ConfigField mode, bool peripheral,
         Dictionary<byte, List<(Output, int)>> debouncesRelatedToLed,
         Dictionary<byte, List<OutputAxis>> analogRelatedToLed, BinaryWriter? writer)
@@ -3472,11 +3294,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         if (mode != ConfigField.Shared || type is LedType.None) return "";
         if (type == LedType.Stp16Cpc26)
             return ComputeLedsStp16(peripheral, debouncesRelatedToLed, analogRelatedToLed, writer);
-
-        if (type.IsWs2812())
-        {
-            return ComputeLedsWs2812(mode, peripheral, debouncesRelatedToLed, analogRelatedToLed, writer);
-        }
 
         // Handle leds, including when multiple leds are assigned to a single output.
         foreach (var (led, relatedOutputs) in debouncesRelatedToLed)
@@ -3561,7 +3378,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (analog.Length == 0)
             {
-                analog = type.GetLedAssignment(peripheral, relatedOutputs.Select(s => s.Item1.LedOff).FirstOrDefault(x => x.ToUInt32() != 0, Colors.Black), led, LedBrightnessOff,
+                analog = type.GetLedAssignment(peripheral, relatedOutputs.Select(s => s.Item1.LedOff).FirstOrDefault(x => x.R != 0 || x.G != 0 || x.B != 0, Colors.Black), led, LedBrightnessOff,
                     writer);
             }
 
