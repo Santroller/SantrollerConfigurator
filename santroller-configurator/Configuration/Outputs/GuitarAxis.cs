@@ -177,22 +177,22 @@ public partial class GuitarAxis : OutputAxis
             return Math.Min(val / (ushort.MaxValue / 5) + 1, 5);
         }
 
-        if (val < PickupSelectorNotch2)
+        if (val <= PickupSelectorNotch2)
         {
             return 1;
         }
 
-        if (val < PickupSelectorNotch3)
+        if (val <= PickupSelectorNotch3)
         {
             return 2;
         }
 
-        if (val < PickupSelectorNotch4)
+        if (val <= PickupSelectorNotch4)
         {
             return 3;
         }
 
-        return val < PickupSelectorNotch5 ? 4 : 5;
+        return val <= PickupSelectorNotch5 ? 4 : 5;
     }
 
     private string GetNamedAxisInfo(int val)
@@ -623,13 +623,13 @@ public partial class GuitarAxis : OutputAxis
 
                 return $$"""
                          if ({{gen2}}) {
-                             if ({{gen2}} < {{PickupSelectorNotch2}}) {
+                             if ({{gen2}} <= {{PickupSelectorNotch2}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[1]}};
-                             } else if ({{gen2}} < {{PickupSelectorNotch3}}) {
+                             } else if ({{gen2}} <= {{PickupSelectorNotch3}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[2]}};
-                             } else if ({{gen2}} < {{PickupSelectorNotch4}}) {
+                             } else if ({{gen2}} <= {{PickupSelectorNotch4}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[3]}};
-                             } else if ({{gen2}} < {{PickupSelectorNotch5}}) {
+                             } else if ({{gen2}} <= {{PickupSelectorNotch5}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[4]}};
                              } else {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesPS[5]}};
@@ -656,13 +656,13 @@ public partial class GuitarAxis : OutputAxis
 
                 return $$"""
                          if ({{gen}}) {
-                             if ({{gen}} < {{PickupSelectorNotch2}}) {
+                             if ({{gen}} <= {{PickupSelectorNotch2}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[1]}};
-                             } else if ({{gen}} < {{PickupSelectorNotch3}}) {
+                             } else if ({{gen}} <= {{PickupSelectorNotch3}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[2]}};
-                             } else if ({{gen}} < {{PickupSelectorNotch4}}) {
+                             } else if ({{gen}} <= {{PickupSelectorNotch4}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[3]}};
-                             } else if ({{gen}} < {{PickupSelectorNotch5}}) {
+                             } else if ({{gen}} <= {{PickupSelectorNotch5}}) {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[4]}};
                              } else {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[5]}};
