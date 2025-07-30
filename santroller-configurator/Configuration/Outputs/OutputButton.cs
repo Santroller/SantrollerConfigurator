@@ -44,7 +44,39 @@ public abstract partial class OutputButton : Output
     public override bool IsCombined => false;
     public override string LedOnLabel => Resources.LedColourActiveButtonColour;
     public override string LedOffLabel => Resources.LedColourInactiveButtonColour;
+    private string? debounceBlob;
+    private BinaryWriter? _lastWriter;
 
+    public string GetDebounceBlob(BinaryWriter writer)
+    {
+        var debounce = Debounce;
+        if (!Model.LocalDebounceMode)
+        {
+            if (this is GuitarButton {IsStrum: true} && Model.StrumDebounce > 0)
+            {
+                debounce = Model.StrumDebounce;
+            }
+            else
+            {
+                debounce = Model.Debounce;
+            }
+        }
+
+        if (!Model.Deque)
+        {
+            // If we aren't using queue based inputs, then we want ms based inputs, not ones based on 0.1ms
+            debounce /= 10;
+        }
+
+        debounce += 1;
+        if (writer != _lastWriter)
+        {
+            _lastWriter = writer;
+            debounceBlob = WriteBlob(writer, (byte)debounce);
+        }
+
+        return debounceBlob ?? "";
+    }
 
     /// <summary>
     ///     Generate bindings
@@ -186,10 +218,11 @@ public abstract partial class OutputButton : Output
         }
         if (writer != null)
         {
-            reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
+            var blob = GetDebounceBlob(writer);
+            reset = $"debounce[{debounceIndex}]={blob};";
             if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
             {
-                reset += $"ledDebounce[{debounceIndex}]={WriteBlob(writer, (byte) debounce)};";
+                reset += $"ledDebounce[{debounceIndex}]={blob};";
             }
         }
 

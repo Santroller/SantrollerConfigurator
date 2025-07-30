@@ -24,6 +24,7 @@ using GuitarConfigurator.NetCore.Devices;
 using GuitarConfigurator.NetCore.ViewModels;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
+using static GuitarConfigurator.NetCore.ViewModels.ConfigViewModel;
 
 namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
@@ -85,6 +86,9 @@ public abstract partial class Output : ReactiveObject
 
     public ReactiveCommand<Unit, Unit> MoveUp { get; }
     public ReactiveCommand<Unit, Unit> MoveDown { get; }
+
+    private BinaryWriter? _lastWriter;
+    private string _enabledBlob = "";
 
 
     protected Output(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
@@ -247,6 +251,15 @@ public abstract partial class Output : ReactiveObject
         IsVisible = !Model.Branded || LedIndices.Any() || this is Led || this is Combined.BluetoothCombinedOutput ||
                     this is CombinedOutput || this is OutputAxis ||
                     this is {Input: AnalogToDigital} || this is JoystickToDpad || this is {Input: WiiInput {Input: WiiInputType.GuitarTapAll}} || this is {Input: Ps2Input {Input: Ps2InputType.GuitarTapAll}};
+    }
+
+    public string GetEnabledBlob(BinaryWriter writer)
+    {
+        if (writer == _lastWriter) return _enabledBlob;
+        _lastWriter = writer;
+        _enabledBlob = WriteBlob(writer, Enabled);
+
+        return _enabledBlob;
     }
 
     private bool _outputPeripheral;

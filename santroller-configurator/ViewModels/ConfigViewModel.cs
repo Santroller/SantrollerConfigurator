@@ -3802,8 +3802,6 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                    """;
         }
 
-        var enabled = new Dictionary<Output, string>();
-
         // Handle most mappings
         ret += outputsByType
             .Aggregate("", (current, group) =>
@@ -3926,14 +3924,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                 writer);
                             if (writer != null && generated.Length != 0)
                             {
-                                if (!enabled.TryGetValue(output, out var blob))
-                                {
-                                    blob = WriteBlob(writer, output.Enabled);
-                                    enabled[output] = blob;
-                                }
-
                                 generated = $$"""
-                                              if ({{blob}}) {
+                                              if ({{output.GetEnabledBlob(writer)}}) {
                                                   {{generated}}
                                               }
                                               """;

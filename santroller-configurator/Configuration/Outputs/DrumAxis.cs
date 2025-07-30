@@ -217,6 +217,8 @@ public partial class DrumAxis : OutputAxis
     }
 
     private AnalogToDigital? _drumInput;
+    private ControllerButton? _button;
+    private BinaryWriter? _lastWriter;
 
     public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
@@ -234,12 +236,24 @@ public partial class DrumAxis : OutputAxis
         }
 
         var input = Input;
+        if (input.IsAnalog)
+        {
+            input = _drumInput;
+        }
+
+        if (writer == null || _lastWriter != writer || _button == null)
+        {
+            _lastWriter = writer;
+            _button = new ControllerButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
+                LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
+                Debounce * 10, StandardButtonType.A,
+                false, false, false, -1, false);
+        }
 
         if (mode == ConfigField.Shared)
         {
             if (input.IsAnalog)
             {
-                input = _drumInput;
                 extra +=
                     $"lastDrum[{debounceIndex}] = {GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)};";
             }
@@ -248,12 +262,7 @@ public partial class DrumAxis : OutputAxis
                 extra += $"lastDrum[{debounceIndex}] = 0xFFFF;";
             }
 
-
-            var ret = new ControllerButton(Model, Enabled, input, LedOn, LedOff, LedIndices.ToArray(),
-                    LedIndicesPeripheral.ToArray(), LedIndicesMpr121.ToArray(),
-                    Debounce * 10, StandardButtonType.A,
-                    false, false, false, -1, false)
-                .Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+            var ret = _button.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
                     macros, writer);
             ret += $$"""
                      if (!debounce[{{debounceIndex}}]) {
@@ -417,7 +426,7 @@ public partial class DrumAxis : OutputAxis
             
             if (writer != null)
             {
-                reset = $"debounce[{debounceIndex}]={WriteBlob(writer, (byte)debounce)};";
+                reset = $"debounce[{debounceIndex}]={_button.GetDebounceBlob(writer)};";
             }
 
             return $$"""
