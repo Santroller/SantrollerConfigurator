@@ -395,16 +395,22 @@ public partial class DrumAxis : OutputAxis
         {
             var test = "";
             var test2 = "";
+            
+            var debounce = Debounce;
+            if (!Model.LocalDebounceMode)
+            {
+                debounce = Model.Debounce / 10;
+            }
             switch (Type)
             {
-                // Green Pad + Green Cymbal need to be staggered
+                // Green Pad + Red Cymbal need to be staggered, but it also needs a delay between the stagger
                 case DrumAxisType.Green:
-                    test = "!greenCymbal";
+                    test = $"!greenCymbal && ((millis() - lastGreenOff) > {debounce})";
                     test2 = "greenPad";
                     break;
                 // Any two cymbals need to be staggered
                 case DrumAxisType.GreenCymbal:
-                    test = "!yellowCymbal && !blueCymbal && !greenPad";
+                    test = $"!yellowCymbal && !blueCymbal && !greenPad && ((millis() - lastGreenOff) > {debounce})";
                     test2 = "greenCymbal";
                     break;
                 case DrumAxisType.BlueCymbal:
@@ -415,12 +421,6 @@ public partial class DrumAxis : OutputAxis
                     test = "!greenCymbal && !blueCymbal";
                     test2 = "yellowCymbal";
                     break;
-            }
-            
-            var debounce = Debounce;
-            if (!Model.LocalDebounceMode)
-            {
-                debounce = Model.Debounce / 10;
             }
             var reset = $"debounce[{debounceIndex}]={debounce};";
             
