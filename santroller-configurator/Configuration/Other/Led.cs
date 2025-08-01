@@ -636,13 +636,13 @@ public partial class Led : Output
                                 {{Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}}
                             }
                             """;
-                }
                 
-                reset += $"""
+                    reset += $"""
 
-                         ledState[{index - 1}].select = 0;
-                         {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
-                         """;
+                              ledState[{index - 1}].select = 0;
+                              {Model.LedType.GetLedAssignment(false, LedOff, index, Model.LedBrightnessOn, writer)}
+                              """;
+                }
 
                 between +=
                     $"""
@@ -681,11 +681,11 @@ public partial class Led : Output
                                 {{Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}}
                             }
                             """;
+                    reset += $"""
+                              ledStatePeripheral[{index - 1}].select = 0;
+                              {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
+                              """;
                 }
-                reset += $"""
-                         ledStatePeripheral[{index - 1}].select = 0;
-                         {Model.LedTypePeripheral.GetLedAssignment(true, LedOff, index, Model.LedBrightnessOff, writer)}
-                         """;
 
                 between +=
                     $"""
