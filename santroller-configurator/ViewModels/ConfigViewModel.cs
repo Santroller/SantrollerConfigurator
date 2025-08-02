@@ -1874,7 +1874,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 case DrumAxisType axisType:
                     Bindings.Add(new DrumAxis(this, true,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
-                        Colors.Black, Colors.Black, [], [], [],
+                        null, Colors.Black, Colors.Black, [], [], [],
                         ushort.MinValue,
                         ushort.MaxValue,
                         0, 10, axisType, false, false, false, -1, false) {Expanded = defaults});

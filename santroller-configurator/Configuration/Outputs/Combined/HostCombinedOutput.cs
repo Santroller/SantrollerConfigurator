@@ -176,7 +176,7 @@ public abstract partial class HostCombinedOutput : CombinedOutput
                     Colors.Black, [], [], [], 5,
                     standardButtonType, false, false, false, -1, true),
                 DrumAxisType drumAxisType => new DrumAxis(Model,true,
-                    input, Colors.Black, Colors.Black, [], [], [],
+                    input, null, Colors.Black, Colors.Black, [], [], [],
                     min, max, 0, 10, drumAxisType, false, false, false, -1, true),
                 Ps3AxisType ps3AxisType => new Ps3Axis(Model,true,
                     input, Colors.Black, Colors.Black, [], [], [],

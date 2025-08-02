@@ -18,7 +18,7 @@ public class SerializedDrumAxis : SerializedOutput
         LedIndexPeripheral = [];
         LedIndexMpr121 = [];
     }
-    public SerializedDrumAxis(SerializedInput input, bool enabled, DrumAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
+    public SerializedDrumAxis(SerializedInput input,SerializedInput? sensitivityInput, bool enabled, DrumAxisType type, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
         int min, int max, int deadzone, int debounce, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
         Input = input;
@@ -38,6 +38,7 @@ public class SerializedDrumAxis : SerializedOutput
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
         Enabled = enabled;
+        SensitivityInput = sensitivityInput;
     }
 
     [ProtoMember(1)] public SerializedInput? Input { get; }
@@ -57,6 +58,7 @@ public class SerializedDrumAxis : SerializedOutput
     [ProtoMember(16)] public bool OutputPeripheral { get; }
     [ProtoMember(17)] public byte[] LedIndexMpr121 { get; }
     [ProtoMember(18)] [DefaultValue(true)] private bool Enabled { get; } = true;
+    [ProtoMember(19)] public SerializedInput? SensitivityInput { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
@@ -64,7 +66,7 @@ public class SerializedDrumAxis : SerializedOutput
         {
             throw new NotImplementedException("Null child unexpected!");
         }
-        var combined = new DrumAxis(model, Enabled, Input.Generate(model), Color.FromUInt32(LedOn),
+        var combined = new DrumAxis(model, Enabled, Input.Generate(model), SensitivityInput?.Generate(model), Color.FromUInt32(LedOn),
             Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121, Min, Max, Deadzone,
             Debounce, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(combined);

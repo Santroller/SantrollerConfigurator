@@ -153,14 +153,14 @@ public partial class MacroInput : Input
                 input = new DirectInput(-1, false, false, DevicePinMode.Analog, Model);
                 inputOther = new DirectInput(-1, false, false, DevicePinMode.Analog, Model);
                 inputOther = new AnalogToDigital(inputOther,
-                    inputOther.IsUint ? AnalogToDigitalType.Trigger : AnalogToDigitalType.JoyLow,
+                    new FixedInput(Model, 0, true), inputOther.IsUint ? AnalogToDigitalType.Trigger : AnalogToDigitalType.JoyLow,
                     input.IsUint ? ushort.MaxValue / 2 : short.MaxValue / 2, Model);
                 break;
             case Types.InputType.MultiplexerInput:
                 input = new MultiplexerInput(-1, false, 0, -1, -1, -1, -1, MultiplexerType.EightChannel, Model);
                 inputOther = new MultiplexerInput(-1, false, 0, -1, -1, -1, -1, MultiplexerType.EightChannel, Model);
                 inputOther = new AnalogToDigital(inputOther,
-                    inputOther.IsUint ? AnalogToDigitalType.Trigger : AnalogToDigitalType.JoyLow,
+                    new FixedInput(Model, 0, true), inputOther.IsUint ? AnalogToDigitalType.Trigger : AnalogToDigitalType.JoyLow,
                     input.IsUint ? ushort.MaxValue / 2 : short.MaxValue / 2, Model);
                 break;
             case Types.InputType.DigitalPinInput:
@@ -262,7 +262,7 @@ public partial class MacroInput : Input
 
         if (input.IsAnalog)
         {
-            input = new AnalogToDigital(input, input.IsUint ? AnalogToDigitalType.Trigger : AnalogToDigitalType.JoyLow,
+            input = new AnalogToDigital(input, new FixedInput(Model, 0, true), input.IsUint ? AnalogToDigitalType.Trigger : AnalogToDigitalType.JoyLow,
                 input.IsUint ? ushort.MaxValue / 2 : short.MaxValue / 2, Model);
         }
 

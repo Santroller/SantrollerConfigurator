@@ -3526,6 +3526,15 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="ValueLabel" xml:space="preserve">
         <value>Value</value>
     </data>
+    <data name="AnalogMinimumLabel" xml:space="preserve">
+        <value>Use Analog Pin for Adjustable Threshold</value>
+    </data>
+    <data name="SensitivityLabel" xml:space="preserve">
+        <value>Sensitivity</value>
+    </data>
+    <data name="ThresholdLabel" xml:space="preserve">
+        <value>Threshold</value>
+    </data>
     <data name="TypeLabel" xml:space="preserve">
         <value>Type</value>
     </data>

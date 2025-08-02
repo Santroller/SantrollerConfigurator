@@ -8,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using GuitarConfigurator.NetCore.Configuration.Conversions;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
+using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
@@ -141,13 +142,15 @@ public partial class DrumAxis : OutputAxis
         { DrumAxisType.Kick2, "digitalOnly" }
     };
 
-    public DrumAxis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    public DrumAxis(ConfigViewModel model, bool enabled, Input input, Input? sensitivityInput, Color ledOn,
+        Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min, int max,
         int deadZone, int debounce, DrumAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted,
         int outputPin, bool childOfCombined) : base(model, enabled, input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
         min, max, false, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
+        _sensitivityInput = sensitivityInput ?? new FixedInput(model, 0, true);
         Type = type;
         Debounce = debounce;
         UpdateDetails();
@@ -220,14 +223,39 @@ public partial class DrumAxis : OutputAxis
     private ControllerButton? _button;
     private BinaryWriter? _lastWriter;
 
+    public bool HasSensitivityInput
+    {
+        get => SensitivityInput is not FixedInput;
+        set
+        {
+            switch (value)
+            {
+                case true when SensitivityInput is FixedInput:
+                    SensitivityInput = new DirectInput(-1, false, false, DevicePinMode.Analog, Model);
+                    this.RaisePropertyChanged();
+                    break;
+                case false when SensitivityInput is not FixedInput:
+                    SensitivityInput = new FixedInput(Model, 0, true);
+                    this.RaisePropertyChanged();
+                    break;
+            }
+        }
+    }
+
+    [Reactive] private Input _sensitivityInput;
+    private Input _lastSensitivityInput;
+
     public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
-        if (_drumInput == null || _drumInput.Min != Min)
+        if (_drumInput == null || _drumInput.Min != Min || _lastSensitivityInput != _sensitivityInput)
         {
-            _drumInput = new AnalogToDigital(Input, AnalogToDigitalType.Drum, Min, Model);
+            _lastSensitivityInput = _sensitivityInput;
+            _drumInput = new AnalogToDigital(Input, _sensitivityInput,
+                AnalogToDigitalType.Drum, Min,
+                Model);
         }
 
         if (Model is { Branded: false, Builder: false } && !Enabled)
@@ -252,7 +280,7 @@ public partial class DrumAxis : OutputAxis
 
         if (mode == ConfigField.Shared)
         {
-            if (input.IsAnalog)
+            if (Input.IsAnalog)
             {
                 extra +=
                     $"lastDrum[{debounceIndex}] = {GenerateAssignment($"lastDrum[{debounceIndex}]", ConfigField.XboxOne, false, false, false, true, writer)};";
@@ -262,8 +290,9 @@ public partial class DrumAxis : OutputAxis
                 extra += $"lastDrum[{debounceIndex}] = 0xFFFF;";
             }
 
-            var ret = _button.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
-                    macros, writer);
+            var ret = _button.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes,
+                combinedDebounce,
+                macros, writer);
             ret += $$"""
                      if (!debounce[{{debounceIndex}}]) {
                          lastDrum[{{debounceIndex}}] = 0;
@@ -395,7 +424,7 @@ public partial class DrumAxis : OutputAxis
         {
             var test = "";
             var test2 = "";
-            
+
             var debounce = Debounce;
             if (!Model.LocalDebounceMode)
             {
@@ -407,27 +436,30 @@ public partial class DrumAxis : OutputAxis
             {
                 dbBlob = _button.GetDebounceBlob(writer);
             }
+
             switch (Type)
             {
-                // Green Pad + Red Cymbal need to be staggered, but it also needs a delay between the stagger
+                // Green Pad + Red Cymbal need to be staggered, we also want to insert a gap between the staggers to be safe
                 case DrumAxisType.Green:
                     test = $"!greenCymbal && ((millis() - lastGreenOff) > {dbBlob})";
                     test2 = "greenPad";
                     break;
                 // Any two cymbals need to be staggered
                 case DrumAxisType.GreenCymbal:
-                    test = $"!yellowCymbal && !blueCymbal && !greenPad && ((millis() - lastGreenOff) > {dbBlob})";
+                    test =
+                        $"!yellowCymbal && !blueCymbal && !greenPad && ((millis() - lastGreenOff) > {dbBlob}) && ((millis() - lastCymbalOff) > {dbBlob})";
                     test2 = "greenCymbal";
                     break;
                 case DrumAxisType.BlueCymbal:
-                    test = "!greenCymbal && !yellowCymbal";
+                    test = $"!greenCymbal && !yellowCymbal && ((millis() - lastCymbalOff) > {dbBlob})";
                     test2 = "blueCymbal";
                     break;
                 case DrumAxisType.YellowCymbal:
-                    test = "!greenCymbal && !blueCymbal";
+                    test = $"!greenCymbal && !blueCymbal && ((millis() - lastCymbalOff) > {dbBlob})";
                     test2 = "yellowCymbal";
                     break;
             }
+
             var reset = $"debounce[{debounceIndex}]={dbBlob};";
             return $$"""
                      if ({{ifStatement}}) {
@@ -448,6 +480,16 @@ public partial class DrumAxis : OutputAxis
                      {{GenerateOutput(mode)}} = {{assignedVal}};
                  } 
                  """;
+    }
+
+    protected override IEnumerable<PinConfig> GetOwnPinConfigs()
+    {
+        return base.GetOwnPinConfigs().Concat(SensitivityInput.PinConfigs);
+    }
+
+    protected override IEnumerable<DevicePin> GetOwnPins()
+    {
+        return base.GetOwnPins().Concat(SensitivityInput.Pins);
     }
 
 
@@ -473,7 +515,9 @@ public partial class DrumAxis : OutputAxis
 
     public override SerializedOutput Serialize()
     {
-        return new SerializedDrumAxis(Input.Serialise(), Enabled, Type, LedOn, LedOff, LedIndices.ToArray(),
+        return new SerializedDrumAxis(Input.Serialise(), HasSensitivityInput ? _sensitivityInput.Serialise() : null,
+            Enabled, Type, LedOn, LedOff,
+            LedIndices.ToArray(),
             LedIndicesPeripheral.ToArray(), Min, Max,
             DeadZone, Debounce, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined,
             LedIndicesMpr121.ToArray());

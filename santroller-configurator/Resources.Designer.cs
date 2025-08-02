@@ -6771,6 +6771,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string AnalogMinimumLabel {
+            get {
+                return ResourceManager.GetString("AnalogMinimumLabel", resourceCulture);
+            }
+        }
+        
+        public static string SensitivityLabel {
+            get {
+                return ResourceManager.GetString("SensitivityLabel", resourceCulture);
+            }
+        }
+        
         public static string TypeLabel {
             get {
                 return ResourceManager.GetString("TypeLabel", resourceCulture);

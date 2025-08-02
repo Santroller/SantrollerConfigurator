@@ -273,7 +273,7 @@ public partial class EmptyOutput : Output
                     Colors.Black, [], [], [], 5,
                     standardButtonType, false, false, false, -1, false),
                 DrumAxisType drumAxisType => new DrumAxis(Model, true,
-                    new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
+                    new DirectInput(-1, false, false, DevicePinMode.Analog, Model),null,
                     Colors.Black, Colors.Black, [], [], [],
                     ushort.MaxValue / 2, ushort.MaxValue, 0, 10, drumAxisType, false, false, false, -1, false),
                 Ps3AxisType ps3AxisType => new Ps3Axis(Model, true,

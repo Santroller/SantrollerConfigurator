@@ -823,7 +823,7 @@ public abstract partial class Output : ReactiveObject
 
         if (Input is AnalogToDigital atd)
         {
-            Input = new AnalogToDigital(new MidiInput(MidiType.Note, value, Model), atd.AnalogToDigitalType,
+            Input = new AnalogToDigital(new MidiInput(MidiType.Note, value, Model), new FixedInput(Model, 0, true), atd.AnalogToDigitalType,
                 atd.Threshold, Model);
             return;
         }
@@ -877,7 +877,7 @@ public abstract partial class Output : ReactiveObject
         if (current == value) return;
         if (Input is AnalogToDigital atd)
         {
-            Input = new AnalogToDigital(new UsbHostInput(value, Model), atd.AnalogToDigitalType, atd.Threshold, Model);
+            Input = new AnalogToDigital(new UsbHostInput(value, Model), new FixedInput(Model, 0, true), atd.AnalogToDigitalType, atd.Threshold, Model);
             return;
         }
 
@@ -1006,6 +1006,11 @@ public abstract partial class Output : ReactiveObject
             otherAxis.Min = axis.Min;
             otherAxis.Max = axis.Max;
             otherAxis.DeadZone = axis.DeadZone;
+            if (otherAxis is DrumAxis daxis && this is DrumAxis cdaxis)
+            {
+                daxis.HasSensitivityInput = cdaxis.HasSensitivityInput;
+                daxis.SensitivityInput = cdaxis.SensitivityInput;
+            } 
         }
     }
 
@@ -1261,7 +1266,7 @@ public abstract partial class Output : ReactiveObject
                     oldType = atd.AnalogToDigitalType;
                 }
 
-                Input = new AnalogToDigital(input, oldType, oldThreshold, Model);
+                Input = new AnalogToDigital(input, new FixedInput(Model, 0, true), oldType, oldThreshold, Model);
                 break;
             case false when this is GuitarAxis {Type: GuitarAxisType.Tilt}:
                 Input = new DigitalToAnalog(input, 32767, Model, DigitalToAnalogType.Tilt);

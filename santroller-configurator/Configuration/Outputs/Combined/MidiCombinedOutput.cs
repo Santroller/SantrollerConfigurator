@@ -163,7 +163,7 @@ public partial class MidiCombinedOutput : CombinedOutput
             case DeviceControllerType.GuitarHeroDrums:
                 foreach (var (key, drumAxisType) in MappingsDrumGh)
                 {
-                    Outputs.Add(new DrumAxis(Model, true, new MidiInput(MidiType.Note, key, Model), Colors.Black,
+                    Outputs.Add(new DrumAxis(Model, true, new MidiInput(MidiType.Note, key, Model), null, Colors.Black,
                         Colors.Black, [], [], [], 0, ushort.MaxValue, 0, 0,
                         drumAxisType, false, false, false, -1, true));
                 }
@@ -172,7 +172,7 @@ public partial class MidiCombinedOutput : CombinedOutput
             case DeviceControllerType.RockBandDrums:
                 foreach (var (key, drumAxisType) in MappingsDrumRb)
                 {
-                    Outputs.Add(new DrumAxis(Model, true, new MidiInput(MidiType.Note, key, Model), Colors.Black,
+                    Outputs.Add(new DrumAxis(Model, true, new MidiInput(MidiType.Note, key, Model), null, Colors.Black,
                         Colors.Black, [], [], [], 0, ushort.MaxValue, 0, 0,
                         drumAxisType, false, false, false, -1, true));
                 }

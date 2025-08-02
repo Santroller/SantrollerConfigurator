@@ -1716,12 +1716,23 @@
                                        IsVisible="{Binding CalibrationText, Converter={x:Static ObjectConverters.IsNotNull}}"
                                        HorizontalContentAlignment="Center"
                                        Content="{Binding CalibrationText}" />
+                                
+                                <StackPanel Orientation="Horizontal">
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Width="350" Content="{x:Static netCore:Resources.AnalogMinimumLabel}" />
+                                    <ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding HasSensitivityInput}" OnContent="On"
+                                                  OffContent="Off" />
+                                </StackPanel>
+                                <ContentControl Content="{Binding SensitivityInput}" IsVisible="{Binding HasSensitivityInput}"
+                                                ContentTemplate="{StaticResource OutputTemplates}" />
                             </StackPanel>
 
                         </StackPanel>
+                        <StackPanel IsVisible="{Binding !HasSensitivityInput}">
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
                             <Label VerticalAlignment="Center" Width="350"
-                                   Content="{x:Static netCore:Resources.MinLabel}" />
+                                   Content="{x:Static netCore:Resources.ThresholdLabel}" />
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
@@ -1736,10 +1747,11 @@
                                                Width="200" />
                             </StackPanel>
                         </StackPanel>
+                            </StackPanel>
 
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
                             <Label VerticalAlignment="Center" Width="350"
-                                   Content="{x:Static netCore:Resources.MaxLabel}" />
+                                   Content="{x:Static netCore:Resources.SensitivityLabel}" />
 
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
@@ -1756,23 +1768,6 @@
                             </StackPanel>
                         </StackPanel>
 
-                        <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
-                            <Label VerticalAlignment="Center" Width="350"
-                                   Content="{x:Static netCore:Resources.DeadzoneLabel}" />
-                            <StackPanel Orientation="Vertical">
-                                <Slider Foreground="White" VerticalAlignment="Center"
-                                        Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
-                                        Minimum="0"
-                                        Maximum="{Binding SliderMax}" Value="{Binding DeadZone}" />
-                                <NumericUpDown FormatString="{}{0:#,0}"
-                                               Minimum="0"
-                                               Maximum="{Binding SliderMax}"
-                                               Value="{Binding DeadZone}"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Left"
-                                               Width="200" />
-                            </StackPanel>
-                        </StackPanel>
                         
                         <StackPanel Orientation="Horizontal"
                                     IsVisible="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).LocalDebounceMode}">
