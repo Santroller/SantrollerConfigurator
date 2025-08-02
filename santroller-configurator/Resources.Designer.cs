@@ -6783,6 +6783,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ThresholdLabelDrums {
+            get {
+                return ResourceManager.GetString("ThresholdLabelDrums", resourceCulture);
+            }
+        }
+        
         public static string TypeLabel {
             get {
                 return ResourceManager.GetString("TypeLabel", resourceCulture);

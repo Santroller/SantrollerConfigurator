@@ -1717,7 +1717,7 @@
                                        HorizontalContentAlignment="Center"
                                        Content="{Binding CalibrationText}" />
                                 
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" IsVisible="{Binding !$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Branded}">
                                     <Label VerticalAlignment="Center"
                                            VerticalContentAlignment="Center"
                                            Width="350" Content="{x:Static netCore:Resources.AnalogMinimumLabel}" />
@@ -1732,7 +1732,7 @@
                         <StackPanel IsVisible="{Binding !HasSensitivityInput}">
                         <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
                             <Label VerticalAlignment="Center" Width="350"
-                                   Content="{x:Static netCore:Resources.ThresholdLabel}" />
+                                   Content="{x:Static netCore:Resources.ThresholdLabelDrums}" />
                             <StackPanel Orientation="Vertical">
                                 <Slider Foreground="White" VerticalAlignment="Center"
                                         Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"

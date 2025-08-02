@@ -1006,7 +1006,7 @@ public abstract partial class Output : ReactiveObject
             otherAxis.Min = axis.Min;
             otherAxis.Max = axis.Max;
             otherAxis.DeadZone = axis.DeadZone;
-            if (otherAxis is DrumAxis daxis && this is DrumAxis cdaxis)
+            if (otherAxis is DrumAxis daxis && this is DrumAxis cdaxis && !Model.Branded)
             {
                 daxis.HasSensitivityInput = cdaxis.HasSensitivityInput;
                 daxis.SensitivityInput = cdaxis.SensitivityInput;

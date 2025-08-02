@@ -3341,7 +3341,7 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
     <data name="SensitivityLabel" xml:space="preserve">
         <value>Sensibilidad</value>
     </data>
-    <data name="ThresholdLabel" xml:space="preserve">
+    <data name="ThresholdLabelDrums" xml:space="preserve">
         <value>Umbral</value>
     </data>
     <data name="DeadzoneLabel" xml:space="preserve">
