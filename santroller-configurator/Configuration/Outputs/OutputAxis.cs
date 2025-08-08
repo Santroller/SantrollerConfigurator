@@ -351,6 +351,7 @@ public abstract partial class OutputAxis : Output
     private string _intBlob = "";
     private string _uintBlob = "";
     private BinaryWriter? _lastWriter;
+    private BinaryWriter? _lastWriterUint;
 
     public string GenerateAssignment(string prev, ConfigField mode, bool forceAccel, bool forceTrigger, bool whammy,
         bool drum,
@@ -538,11 +539,15 @@ public abstract partial class OutputAxis : Output
             return intBased
                 ? $"{function}({prev}, {generated}, {min}, {max}, {center}, {deadzone})"
                 : $"{function}({prev}, {generated}, {min}, {mulInt}, {deadzone})";
-        if (writer != _lastWriter)
+        if (writer != _lastWriter && intBased)
         {
             _lastWriter = writer;
             _intBlob =
                 $"{WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, deadzone)}";
+        }
+        if (writer != _lastWriterUint && !intBased)
+        {
+            _lastWriterUint = writer;
             _uintBlob =
                 $"{WriteBlob(writer, (uint)min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint)deadzone)}";
         }
