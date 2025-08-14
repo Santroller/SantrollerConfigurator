@@ -44,7 +44,7 @@ public partial class EmptyOutput : Output
         _combinedTypes = this.WhenAnyValue(vm => vm.Model.DeviceControllerType, vm => vm.Model.HasPeripheral,
                 vm => vm.Model.IsBluetoothTx, vm => vm.Model.HasWiiCombinedOutput, vm => vm.Model.HasPs2CombinedOutput,
                 vm => vm.Model.HasGhwtCombinedOutput, vm => vm.Model.HasCloneCombinedOutput,
-                vm => vm.Model.HasDjCombinedOutput, vm => vm.Model.HasGh5CombinedOutput,
+                vm => vm.Model.HasDjCombinedOutput, vm => vm.Model.HasGh5CombinedOutput, 
                 vm => vm.Model.HasUsbHostCombinedOutput, vm => vm.Model.HasBhDrumInput, vm => vm.Model.HasWtDrumInput,
                 (type, hasPeripheral, isBluetooth, hasWii, hasPs2, hasGhwt, hasClone, hasDj, hasGh5, hasUsbHost, hasBhDrum, hasWtDrum) =>
                     ControllerEnumConverter.GetTypes(type).Where(s2 =>
@@ -227,6 +227,7 @@ public partial class EmptyOutput : Output
                 {
                     SimpleType.WiiInputSimple => new WiiCombinedOutput(Model, false),
                     SimpleType.Gh5NeckSimple => new Gh5CombinedOutput(Model, false),
+                    SimpleType.CrkdNeckSimple => new CrkdCombinedOutput(Model, false),
                     SimpleType.CloneNeckSimple => new CloneCombinedOutput(Model, false),
                     SimpleType.Ps2InputSimple => new Ps2CombinedOutput(Model, false),
                     SimpleType.WtNeckSimple => new GhwtCombinedOutput(Model, false),

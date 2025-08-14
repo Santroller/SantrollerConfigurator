@@ -18,6 +18,7 @@ public abstract class AvrController : Microcontroller
 
     public override bool TwiAssignable => false;
     public override bool SpiAssignable => false;
+    public override bool UartAssignable => false;
 
     protected abstract int PinA0 { get; }
     protected abstract int SpiMiso { get; }
@@ -27,6 +28,8 @@ public abstract class AvrController : Microcontroller
     protected abstract int SpiCSn { get; }
     protected abstract int I2CSda { get; }
     protected abstract int I2CScl { get; }
+    protected abstract int UartTx { get; }
+    protected abstract int UartRx { get; }
 
     public abstract int PinCount { get; }
 
@@ -36,7 +39,9 @@ public abstract class AvrController : Microcontroller
     public override string GenerateDigitalRead(int pin, bool invert, bool peripheral)
     {
         // Invert on pullup
-        return invert ? $"(PIN{GetPort(pin)} & (1 << {GetIndex(pin)})) == 0" : $"PIN{GetPort(pin)} & ({1 << GetIndex(pin)})";
+        return invert
+            ? $"(PIN{GetPort(pin)} & (1 << {GetIndex(pin)})) == 0"
+            : $"PIN{GetPort(pin)} & ({1 << GetIndex(pin)})";
     }
 
     public override string GenerateDigitalWrite(int pin, bool val, bool peripheral, bool picow)
@@ -50,12 +55,20 @@ public abstract class AvrController : Microcontroller
     public abstract AvrPinMode? ForcedMode(int pin);
 
 
-    public override SpiConfig AssignSpiPins(ConfigViewModel model, string type,bool peripheral, bool includesSck, bool includesMiso, int mosi, int miso, int sck, bool cpol,
+    public override SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesSck,
+        bool includesMiso, int mosi, int miso, int sck, bool cpol,
         bool cpha,
         bool msbfirst,
         uint clock, bool output)
     {
-        return new AvrSpiConfig(model, type, peripheral, includesSck, includesMiso, SpiMosi, SpiMiso, SpiSck, SpiCSn, cpol, cpha, msbfirst, clock, output);
+        return new AvrSpiConfig(model, type, peripheral, includesSck, includesMiso, SpiMosi, SpiMiso, SpiSck, SpiCSn,
+            cpol, cpha, msbfirst, clock, output);
+    }
+
+    public override UartConfig AssignUartPins(ConfigViewModel model, string type, bool peripheral, int tx, int rx,
+        uint clock, bool output)
+    {
+        return new AvrUartConfig(model, type, peripheral, UartTx, UartRx, clock, output);
     }
 
     public override string GenerateAnalogWrite(int pin, string val, bool peripheral)
@@ -63,7 +76,8 @@ public abstract class AvrController : Microcontroller
         return $"analogWrite({pin}, {val})";
     }
 
-    public override TwiConfig AssignTwiPins(ConfigViewModel model, string type,bool peripheral,  int sda, int scl, int clock, bool output)
+    public override TwiConfig AssignTwiPins(ConfigViewModel model, string type, bool peripheral, int sda, int scl,
+        int clock, bool output)
     {
         return new AvrTwiConfig(model, type, peripheral, I2CSda, I2CScl, clock, output);
     }
@@ -85,6 +99,15 @@ public abstract class AvrController : Microcontroller
         [
             new(I2CScl, TwiPinType.Scl),
             new(I2CSda, TwiPinType.Sda)
+        ];
+    }
+
+    public override List<KeyValuePair<int, UartPinType>> UartPins(bool output)
+    {
+        return
+        [
+            new(UartRx, UartPinType.Rx),
+            new(UartTx, UartPinType.Tx),
         ];
     }
 
@@ -133,6 +156,7 @@ public abstract class AvrController : Microcontroller
             pins.Add(new DirectPinConfig(configViewModel, "ss", SpiCSn, false, DevicePinMode.Output));
             write = GenerateDigitalWrite(SpiCSn, true, false, configViewModel.IsBluetooth);
         }
+
         foreach (var pin in pins)
         {
             if (pin.PinMode == DevicePinMode.Skip || pin.Peripheral || pin.Type == "led_output") continue;
@@ -172,20 +196,21 @@ public abstract class AvrController : Microcontroller
                     currentDdr |= 1 << idx;
                     break;
             }
+
             portByPort[port] = currentPort;
             ddrByPort[port] = currentDdr;
         }
 
         return $"""
-               uint8_t oldSREG = SREG;
-               cli();
-               {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}
-               {string.Join("\n", portByPort.Select(port => $"PORT{port.Key} = {port.Value};"))}
-               {write};
-               SREG = oldSREG;
-               """;
+                uint8_t oldSREG = SREG;
+                cli();
+                {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}
+                {string.Join("\n", portByPort.Select(port => $"PORT{port.Key} = {port.Value};"))}
+                {write};
+                SREG = oldSREG;
+                """;
     }
-    
+
     public override string GenerateLedInit(ConfigViewModel configViewModel)
     {
         // DDRx 1 = output, 0 = input
@@ -202,12 +227,14 @@ public abstract class AvrController : Microcontroller
             pins.Add(new DirectPinConfig(configViewModel, "ss", SpiCSn, false, DevicePinMode.Output));
             write = GenerateDigitalWrite(SpiCSn, true, false, configViewModel.IsBluetooth);
         }
+
         foreach (var pin in pins)
         {
             if (pin.PinMode == DevicePinMode.Skip || pin.Peripheral)
             {
                 continue;
             }
+
             var port = GetPort(pin.Pin);
             var idx = GetIndex(pin.Pin);
             var currentPort = portByPort.GetValueOrDefault(port, 0);
@@ -250,18 +277,19 @@ public abstract class AvrController : Microcontroller
         }
 
         return $"""
-               uint8_t oldSREG = SREG;
-               cli();
-               {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}
-               {string.Join("\n", portByPort.Select(port => $"PORT{port.Key} = {port.Value};"))}
-               SREG = oldSREG;
-               {write};
-               """;
+                uint8_t oldSREG = SREG;
+                cli();
+                {string.Join("\n", ddrByPort.Select(port => $"DDR{port.Key} = {port.Value};"))}
+                {string.Join("\n", portByPort.Select(port => $"PORT{port.Key} = {port.Value};"))}
+                SREG = oldSREG;
+                {write};
+                """;
     }
 
     public override string GenerateAnalogRead(int pin, ConfigViewModel model, bool peripheral)
     {
-        var pins = model.GetPinConfigs().OfType<DirectPinConfig>().Where(config => config.PinMode is DevicePinMode.Analog)
+        var pins = model.GetPinConfigs().OfType<DirectPinConfig>()
+            .Where(config => config.PinMode is DevicePinMode.Analog)
             .Select(s => s.Pin).Distinct().Order();
         return $"adc({pins.IndexOf(pin)})";
     }
@@ -295,7 +323,11 @@ public abstract class AvrController : Microcontroller
     public override IEnumerable<string> GeneratePs2Defines(int ack, string prefix)
     {
         var interrupt = GetInterruptForPin(ack);
-        return new List<string> {$"{prefix} INT{interrupt}", $"{prefix}_VECT INT{interrupt}_vect", $"{prefix}_EICRA _BV(ISC{interrupt}0) | _BV(ISC{interrupt}1)"};
+        return new List<string>
+        {
+            $"{prefix} INT{interrupt}", $"{prefix}_VECT INT{interrupt}_vect",
+            $"{prefix}_EICRA _BV(ISC{interrupt}0) | _BV(ISC{interrupt}1)"
+        };
     }
 
     protected abstract int GetInterruptForPin(int ack);

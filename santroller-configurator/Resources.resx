@@ -69,6 +69,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="SPIGroup" xml:space="preserve">
         <value>Conflict with {0}: SPI Group {1}</value>
     </data>
+    <data name="UARTGroup" xml:space="preserve">
+        <value>Conflict with {0}: UART Group {1}</value>
+    </data>
     <data name="DifferentI2CGroup" xml:space="preserve">
         <value>Selected pins are not from the same I2C group</value>
     </data>
@@ -132,6 +135,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="Gh5CombinedTitle" xml:space="preserve">
         <value>GH5 Neck Inputs</value>
     </data>
+    <data name="CrkdCombinedTitle" xml:space="preserve">
+        <value>CRKD Neck Inputs</value>
+    </data>
     <data name="CloneCombinedTitle" xml:space="preserve">
         <value>Crazy Guitar Neck Inputs</value>
     </data>
@@ -158,6 +164,12 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="MidiRXPin" xml:space="preserve">
         <value>MIDI Serial RX Pin</value>
+    </data>
+    <data name="TXPin" xml:space="preserve">
+        <value>TX Pin</value>
+    </data>
+    <data name="RXPin" xml:space="preserve">
+        <value>RX Pin</value>
     </data>
     <data name="WiiCombinedTitle" xml:space="preserve">
         <value>Wii Extension Inputs</value>
@@ -2013,6 +2025,33 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="EmulationTypeBluetoothKeyboardMouse" xml:space="preserve">
         <value>Bluetooth Keyboard + Mouse</value>
     </data>
+    <data name="CrkdNeckInputTypeGreen" xml:space="preserve">
+        <value>Green Fret</value>
+    </data>
+    <data name="CrkdNeckInputTypeRed" xml:space="preserve">
+        <value>Red Fret</value>
+    </data>
+    <data name="CrkdNeckInputTypeYellow" xml:space="preserve">
+        <value>Yellow Fret</value>
+    </data>
+    <data name="CrkdNeckInputTypeBlue" xml:space="preserve">
+        <value>Blue Fret</value>
+    </data>
+    <data name="CrkdNeckInputTypeOrange" xml:space="preserve">
+        <value>Orange Fret</value>
+    </data>
+    <data name="CrkdNeckInputTypeDpadLeft" xml:space="preserve">
+        <value>D-Pad Left</value>
+    </data>
+    <data name="CrkdNeckInputTypeDpadRight" xml:space="preserve">
+        <value>D-Pad Right</value>
+    </data>
+    <data name="CrkdNeckInputTypeDpadUp" xml:space="preserve">
+        <value>D-Pad Up</value>
+    </data>
+    <data name="CrkdNeckInputTypeDpadDown" xml:space="preserve">
+        <value>D-Pad Down</value>
+    </data>
     <data name="Gh5NeckInputTypeGreen" xml:space="preserve">
         <value>Green Fret</value>
     </data>
@@ -2770,6 +2809,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="SimpleTypeGh5NeckSimple" xml:space="preserve">
         <value>Guitar Hero 5 Neck Inputs</value>
+    </data>
+    <data name="SimpleTypeCrkdNeckSimple" xml:space="preserve">
+        <value>CRKD Neck Inputs</value>
     </data>
     <data name="SimpleTypeCloneNeckSimple" xml:space="preserve">
         <value>Crazy Guitar Neck Inputs</value>

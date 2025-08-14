@@ -117,6 +117,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string UARTGroup {
+            get {
+                return ResourceManager.GetString("UARTGroup", resourceCulture);
+            }
+        }
+        
         public static string DifferentI2CGroup {
             get {
                 return ResourceManager.GetString("DifferentI2CGroup", resourceCulture);
@@ -243,6 +249,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string CrkdCombinedTitle {
+            get {
+                return ResourceManager.GetString("CrkdCombinedTitle", resourceCulture);
+            }
+        }
+        
         public static string CloneCombinedTitle {
             get {
                 return ResourceManager.GetString("CloneCombinedTitle", resourceCulture);
@@ -294,6 +306,18 @@ namespace GuitarConfigurator.NetCore {
         public static string MidiRXPin {
             get {
                 return ResourceManager.GetString("MidiRXPin", resourceCulture);
+            }
+        }
+        
+        public static string TXPin {
+            get {
+                return ResourceManager.GetString("TXPin", resourceCulture);
+            }
+        }
+        
+        public static string RXPin {
+            get {
+                return ResourceManager.GetString("RXPin", resourceCulture);
             }
         }
         
@@ -3825,6 +3849,60 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string CrkdNeckInputTypeGreen {
+            get {
+                return ResourceManager.GetString("CrkdNeckInputTypeGreen", resourceCulture);
+            }
+        }
+        
+        public static string CrkdNeckInputTypeRed {
+            get {
+                return ResourceManager.GetString("CrkdNeckInputTypeRed", resourceCulture);
+            }
+        }
+        
+        public static string CrkdNeckInputTypeYellow {
+            get {
+                return ResourceManager.GetString("CrkdNeckInputTypeYellow", resourceCulture);
+            }
+        }
+        
+        public static string CrkdNeckInputTypeBlue {
+            get {
+                return ResourceManager.GetString("CrkdNeckInputTypeBlue", resourceCulture);
+            }
+        }
+        
+        public static string CrkdNeckInputTypeOrange {
+            get {
+                return ResourceManager.GetString("CrkdNeckInputTypeOrange", resourceCulture);
+            }
+        }
+        
+        public static string CrkdNeckInputTypeDpadLeft {
+            get {
+                return ResourceManager.GetString("CrkdNeckInputTypeDpadLeft", resourceCulture);
+            }
+        }
+        
+        public static string CrkdNeckInputTypeDpadRight {
+            get {
+                return ResourceManager.GetString("CrkdNeckInputTypeDpadRight", resourceCulture);
+            }
+        }
+        
+        public static string CrkdNeckInputTypeDpadUp {
+            get {
+                return ResourceManager.GetString("CrkdNeckInputTypeDpadUp", resourceCulture);
+            }
+        }
+        
+        public static string CrkdNeckInputTypeDpadDown {
+            get {
+                return ResourceManager.GetString("CrkdNeckInputTypeDpadDown", resourceCulture);
+            }
+        }
+        
         public static string Gh5NeckInputTypeGreen {
             get {
                 return ResourceManager.GetString("Gh5NeckInputTypeGreen", resourceCulture);
@@ -5274,6 +5352,12 @@ namespace GuitarConfigurator.NetCore {
         public static string SimpleTypeGh5NeckSimple {
             get {
                 return ResourceManager.GetString("SimpleTypeGh5NeckSimple", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeCrkdNeckSimple {
+            get {
+                return ResourceManager.GetString("SimpleTypeCrkdNeckSimple", resourceCulture);
             }
         }
         

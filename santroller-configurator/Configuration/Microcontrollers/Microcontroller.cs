@@ -15,6 +15,7 @@ public abstract class Microcontroller
 
     public abstract bool TwiAssignable { get; }
     public abstract bool SpiAssignable { get; }
+    public abstract bool UartAssignable { get; }
     public abstract List<int> PwmPins { get; }
     public abstract string GenerateDigitalRead(int pin, bool invert, bool peripheral);
 
@@ -79,6 +80,7 @@ public abstract class Microcontroller
     public abstract List<int> SupportedAckPins();
 
     public abstract List<KeyValuePair<int, SpiPinType>> SpiPins(bool output);
+    public abstract List<KeyValuePair<int, UartPinType>> UartPins(bool output);
     public abstract List<KeyValuePair<int, TwiPinType>> TwiPins(bool output);
 
     public abstract string GenerateAnalogRead(int pin, ConfigViewModel model, bool peripheral);
@@ -95,4 +97,5 @@ public abstract class Microcontroller
     public abstract int GetAnalogMask(DevicePin devicePin);
 
     public abstract int GetFirstDigitalPin();
+    public abstract UartConfig AssignUartPins(ConfigViewModel model, string type, bool peripheral, int tx, int rx, uint clock, bool output);
 }

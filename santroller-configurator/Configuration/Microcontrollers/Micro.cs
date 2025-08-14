@@ -115,6 +115,8 @@ public class Micro : AvrController
     protected override int I2CSda => 2;
 
     protected override int I2CScl => 3;
+    protected override int UartTx => 1;
+    protected override int UartRx => 0;
 
     public override int PinCount => PinIndex.Length;
 

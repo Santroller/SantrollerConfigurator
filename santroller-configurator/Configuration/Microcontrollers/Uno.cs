@@ -45,6 +45,8 @@ public class Uno : AvrController
     protected override int I2CSda => 18;
 
     protected override int I2CScl => 19;
+    protected override int UartTx => 1;
+    protected override int UartRx => 0;
 
     protected override char[] PortNames { get; } = ['B', 'C', 'D'];
 

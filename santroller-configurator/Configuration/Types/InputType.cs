@@ -20,5 +20,6 @@ public enum InputType
     AccelInput,
     Mpr121Input,
     MidiInput,
-    MatrixInput
+    MatrixInput,
+    CrkdNeckInput
 }

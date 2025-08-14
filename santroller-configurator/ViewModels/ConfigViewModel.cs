@@ -288,6 +288,9 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _hasGh5CombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is Gh5CombinedOutput))
             .ToProperty(this, x => x.HasGh5CombinedOutput);
+        _hasCrkdCombinedOutputHelper = Bindings.Connect()
+            .QueryWhenChanged(s => s.Any(s2 => s2 is CrkdCombinedOutput))
+            .ToProperty(this, x => x.HasCrkdCombinedOutput);
         _hasUsbHostCombinedOutputHelper = Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 => s2 is UsbHostCombinedOutput))
             .ToProperty(this, x => x.HasUsbHostCombinedOutput);
@@ -1625,6 +1628,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] private bool _hasDjCombinedOutput;
 
     [ObservableAsProperty] private bool _hasGh5CombinedOutput;
+    [ObservableAsProperty] private bool _hasCrkdCombinedOutput;
 
     [ObservableAsProperty] private bool _hasUsbHostCombinedOutput;
 
@@ -4353,6 +4357,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     {
         return Bindings.Items.Select(binding => binding.GetPinConfigs())
             .Select(configs => configs.OfType<TwiConfig>()
+                .FirstOrDefault(s => s.Type == twiType && s.Peripheral == peripheral))
+            .FirstOrDefault(found => found != null);
+    }
+
+    public UartConfig? GetUartForType(string twiType, bool peripheral)
+    {
+        return Bindings.Items.Select(binding => binding.GetPinConfigs())
+            .Select(configs => configs.OfType<UartConfig>()
                 .FirstOrDefault(s => s.Type == twiType && s.Peripheral == peripheral))
             .FirstOrDefault(found => found != null);
     }

@@ -178,6 +178,8 @@ public class Mega : AvrController
     protected override int I2CSda => 20;
 
     protected override int I2CScl => 21;
+    protected override int UartTx => 1;
+    protected override int UartRx => 0;
 
     public override int PinCount => PinIndex.Length;
 

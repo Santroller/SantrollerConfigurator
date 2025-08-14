@@ -10,6 +10,37 @@ public class Pico : Microcontroller
 {
     private const int GpioCount = 30;
     public const int PinA0 = 26;
+    public static readonly Dictionary<int, UartPinType> UartTypesByPin = new()
+    {
+        {0, UartPinType.Tx},
+        {1, UartPinType.Rx},
+        {4, UartPinType.Tx},
+        {5, UartPinType.Rx},
+        {8, UartPinType.Tx},
+        {9, UartPinType.Rx},
+        {12, UartPinType.Tx},
+        {13, UartPinType.Rx},
+        {16, UartPinType.Tx},
+        {17, UartPinType.Rx},
+        {20, UartPinType.Tx},
+        {21, UartPinType.Rx},
+    };
+
+    public static readonly Dictionary<int, int> UartIndexByPin = new()
+    {
+        {0, 0},
+        {1, 0},
+        {4, 1},
+        {5, 1},
+        {8, 1},
+        {9, 1},
+        {12, 0},
+        {13, 0},
+        {16, 0},
+        {17, 0},
+        {20, 1},
+        {21, 1}
+    };
 
     public static readonly Dictionary<int, SpiPinType> SpiTypesByPin = new()
     {
@@ -126,6 +157,7 @@ public class Pico : Microcontroller
 
     public override bool TwiAssignable => true;
     public override bool SpiAssignable => true;
+    public override bool UartAssignable => true;
 
     public override Board Board { get; }
 
@@ -198,6 +230,12 @@ public class Pico : Microcontroller
         return new PicoTwiConfig(model, type, peripheral, sda, scl, clock, output);
     }
 
+    public override UartConfig AssignUartPins(ConfigViewModel model, string type, bool peripheral, int tx, int rx,
+        uint clock, bool output)
+    {
+        return new PicoUartConfig(model, type, peripheral, tx, rx, clock, output);
+    }
+
     public override IEnumerable<string> GeneratePs2Defines(int ack, string prefix)
     {
         return Array.Empty<string>();
@@ -227,6 +265,11 @@ public class Pico : Microcontroller
     public override List<KeyValuePair<int, TwiPinType>> TwiPins(bool output)
     {
         return TwiTypeByPin.ToList();
+    }
+
+    public override List<KeyValuePair<int, UartPinType>> UartPins(bool output)
+    {
+        return UartTypesByPin.ToList();
     }
 
     public override string GenerateInit(ConfigViewModel configViewModel)
