@@ -14,7 +14,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 public class CrkdNeckInput : UartInput
 {
     public static readonly string CrkdUartType = "crkd";
-    public static readonly uint CrkdUartFreq = 500000;
+    public static readonly uint CrkdUartFreq = 460800;
 
     public CrkdNeckInput(CrkdNeckInputType input, ConfigViewModel model, bool peripheral, int tx = -1,
         int rx = -1, bool combined = false) : base(
