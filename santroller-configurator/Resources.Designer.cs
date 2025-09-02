@@ -7563,6 +7563,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string NotSupported {
+            get {
+                return ResourceManager.GetString("NotSupported", resourceCulture);
+            }
+        }
+        
         public static string IncorrectTool4 {
             get {
                 return ResourceManager.GetString("IncorrectTool4", resourceCulture);

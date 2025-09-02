@@ -99,15 +99,15 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             _ = CheckForUpdates();
         }
 
-        ConfigureCommand = ReactiveCommand.CreateFromObservable(
-            () => Router.Navigate.Execute(new ConfigViewModel(this, SelectedDevice!, false))
+        ConfigureCommand = ReactiveCommand.CreateFromObservable(() =>
+            Router.Navigate.Execute(new ConfigViewModel(this, SelectedDevice!, false))
         );
-        InitialConfigureCommand = ReactiveCommand.CreateFromObservable(
-            () => Router.Navigate.Execute(new InitialConfigViewModel(this,
+        InitialConfigureCommand = ReactiveCommand.CreateFromObservable(() => Router.Navigate.Execute(
+            new InitialConfigViewModel(this,
                 new ConfigViewModel(this, SelectedDevice!, false)))
         );
-        RevertCommand = ReactiveCommand.CreateFromObservable<Santroller, IRoutableViewModel>(
-            device => Router.Navigate.Execute(new RestoreViewModel(this, device))
+        RevertCommand = ReactiveCommand.CreateFromObservable<Santroller, IRoutableViewModel>(device =>
+            Router.Navigate.Execute(new RestoreViewModel(this, device))
         );
         AvailableDevices.Connect().Bind(out var devices).Subscribe();
         AvailableDevices.Connect().Subscribe(s =>
@@ -125,6 +125,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                     change.Item.Current.Disconnect();
                 }
             }
+
             if (AvailableDevices.Items.Any() && SelectedDevice == null) SelectedDevice = AvailableDevices.Items.First();
         });
         Devices = devices;
@@ -150,10 +151,10 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             .Select(s => s != null)
             .ToProperty(this, s => s.Connected);
         _isPicoHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is {IsPico: true})
+            .Select(s => s is { IsPico: true })
             .ToProperty(this, s => s.IsPico);
         _is32U4Helper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is Arduino {Is32U4: true})
+            .Select(s => s is Arduino { Is32U4: true })
             .ToProperty(this, s => s.Is32U4);
         _supportsFortniteHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(s => s.Is5FretGuitar() || s.IsDrum())
@@ -162,19 +163,19 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             .Select(s => s.IsGuitar())
             .ToProperty(this, s => s.IsGuitar);
         _isUnoMegaHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is Dfu or Arduino {IsUno: true} or Arduino {IsMega: true})
+            .Select(s => s is Dfu or Arduino { IsUno: true } or Arduino { IsMega: true })
             .ToProperty(this, s => s.IsUnoMega);
         _isUnoHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is Arduino {IsUno: true})
+            .Select(s => s is Arduino { IsUno: true })
             .ToProperty(this, s => s.IsUno);
         _isMegaHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is Arduino {IsMega: true})
+            .Select(s => s is Arduino { IsMega: true })
             .ToProperty(this, s => s.IsMega);
         _isDfuHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is Dfu)
             .ToProperty(this, s => s.IsDfu);
         _isGenericHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is {IsGeneric: true})
+            .Select(s => s is { IsGeneric: true })
             .ToProperty(this, s => s.IsGeneric);
         _newDeviceHelper = this.WhenAnyValue(x => x.SelectedDevice)
             .Select(s => s is not (null or Ardwiino or Santroller))
@@ -195,16 +196,22 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             .Select(s => s is DeviceInputType.Feather)
             .ToProperty(this, s => s.IsFeather);
         _readyToConfigureHelper = this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral,
-                x => x.PeripheralErrorText, x => x.AdvancedBranded)
+                x => x.PeripheralErrorText, x => x.AdvancedBranded, x => x.IsPico)
             .Select(s =>
-                s is {Item1: not null, Item2: true} and ({Item1: not Santroller {IsSantroller: false}} or {Item5: true})
-                    and ({Item3: false} or {Item4: null}))
+                s is { Item1: not null, Item6: true })
             .ToProperty(this, s => s.ReadyToConfigure);
+        _notSupportedHelper = this.WhenAnyValue(x => x.SelectedDevice, x => x.Installed, x => x.IsPeripheral,
+                x => x.PeripheralErrorText, x => x.AdvancedBranded, x => x.IsPico)
+            .Select(s =>
+                s is { Item1: not null, Item6: false }
+                    and ({ Item1: not Santroller { IsSantroller: false } } or { Item5: true })
+                    and ({ Item3: false } or { Item4: null }))
+            .ToProperty(this, s => s.NotSupported);
         _isSantrollerHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is not Santroller {IsSantroller: false})
+            .Select(s => s is not Santroller { IsSantroller: false })
             .ToProperty(this, s => s.IsSantroller);
         _isPicoCdcHelper = this.WhenAnyValue(x => x.SelectedDevice)
-            .Select(s => s is Arduino {Board.IsPico: true})
+            .Select(s => s is Arduino { Board.IsPico: true })
             .ToProperty(this, s => s.IsPicoCdc);
         // Make sure that the selected device input type is reset so that we don't end up doing something invalid
         this.WhenAnyValue(s => s.SelectedDevice).Subscribe(_ =>
@@ -375,6 +382,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             _manager?.Register();
             _timer.Start();
         }
+
         await InstallDependenciesAsync(platformIo);
     }
 
@@ -404,6 +412,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     [ObservableAsProperty] private string _accentedButtonTextColor = "";
 
     [ObservableAsProperty] private bool _readyToConfigure;
+    [ObservableAsProperty] private bool _notSupported;
     [ObservableAsProperty] private bool _isSantroller;
     [ObservableAsProperty] private bool _isPicoCdc;
 
@@ -531,7 +540,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         StartWorking();
         var configFile = Path.Join(Pio.FirmwareDir, "include", "config_data.h");
         File.WriteAllText(configFile, extra + config.Generate(extra.Length != 0 ? new MemoryStream() : null));
-        if (config is {IsPico: true, HasPs2Output: true})
+        if (config is { IsPico: true, HasPs2Output: true })
         {
             // Set PS2 Output pins for the pico, they have to live in another file for now
             var text = File.ReadAllLines(Path.Join(Pio.FirmwareDir, "src", "pico", "psxSPI.pio"));
@@ -561,6 +570,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
                 text[i] = line;
             }
+
             File.WriteAllLines(Path.Join(Pio.FirmwareDir, "src", "pico", "psxSPI.pio"), text);
         }
 
@@ -656,7 +666,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            Process.Start(new ProcessStartInfo(url) {UseShellExecute = true});
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {

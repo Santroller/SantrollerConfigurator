@@ -133,7 +133,7 @@ public partial class ConfigurableUsbDeviceManager
     
     public async Task<bool> CheckDrivers()
     {
-        return DriverStore.ExistingDrivers.Any(s => s.Contains("atmel_usb_dfu"));
+        return true;
     }
 
     public async Task InvokeRescan()
@@ -155,21 +155,7 @@ public partial class ConfigurableUsbDeviceManager
     
     public async Task InvokeDriverInstall()
     {   
-        // Start app as admin and then call rescan function and wait for it to exit
-        try 
-        {
-            var info2 = new ProcessStartInfo(Environment.ProcessPath!, "-Drivers")
-            {
-                UseShellExecute = true,
-                Verb = "runas"
-            };
-            var process2 = Process.Start(info2);
-            if (process2 == null) return;
-            await process2.WaitForExitAsync();
-        } catch (Win32Exception e) {
-            Trace.WriteLine(e);
-            Console.WriteLine(e);
-        }
+        
     }
 
     public static void Rescan()
@@ -197,8 +183,5 @@ public partial class ConfigurableUsbDeviceManager
     }
     public static void InstallDrivers()
     {
-        var driverFolder = Path.Combine(PlatformIo.GetAssetDir(), "platformio", "drivers");
-        Devcon.Install(Path.Combine(driverFolder, "atmel_usb_dfu.inf"), out var rebootRequired);
-        Trace.WriteLine(driverFolder);
     }
 }

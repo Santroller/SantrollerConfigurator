@@ -246,6 +246,13 @@
                         </CheckBox>
                     </StackPanel>
                     
+                    <StackPanel Width="600" HorizontalAlignment="Center" IsVisible="{Binding Main.NotSupported}" >
+                        <TextBlock Foreground="#FFFF461C"
+                                   Text="{x:Static netCore:Resources.NotSupported}" TextAlignment="Center"
+                                   VerticalAlignment="Center" Margin="0 20 0 0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    
+                    
                     <Button IsVisible="{Binding !Main.NewDeviceOrArdwiino}"
                             Content="{x:Static netCore:Resources.ConfigureButtonLabel}"
                             Command="{Binding Main.ConfigureCommand}"

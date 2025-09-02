@@ -3698,6 +3698,10 @@ Siéntete libre de remover esta opción si no vas a usar tu instrumento en iOS.
 Se recomienda que obtengas la herramienta correcta para el dispositivo con el vendedor de este.
 El uso de la herramienta estándar en estos dispositivos es sólo para usuarios avanzados, y si lo haces, tendrás que contactar al vendedor de tu dispositivo para recibir soporte en caso de que encuentres algún problema.</value>
     </data>
+    
+    <data name="NotSupported" xml:space="preserve">z
+        <value>El dispositivo que has seleccionado ya no es compatible con esta herramienta. Fue previamente compatible en versiones anteriores de Santroller, pero Santroller estÃ¡ siendo reescrito para aprovechar mÃ¡s funciones del Pi Pico, por ende el soporte a Arduino ha acabado. Puedes revertir tu versiÃ³n a la v10.1.188 si deseas usar este dispositivo, pero si encuentras algÃºn fallo, no serÃ¡ arreglado.</value>
+    </data>
     <data name="NonCommercialUse" xml:space="preserve">
         <value>Este software no debe ser usado comercialmente.
 Al hacer click en el botón de configuración, reconoces que los dispositivos programados con esta herramienta son para uso personal.

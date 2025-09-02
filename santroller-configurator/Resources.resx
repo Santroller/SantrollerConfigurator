@@ -3927,6 +3927,9 @@ If you would like to sell devices using the Santroller platform, click the follo
 It is recommended that you obtain the correct tool for your device from the seller of your device.
 Using the standard tool on one of these devices is for advanced users only, and if you do this, you will need to contact your seller for support if you encounter any issues.</value>
     </data>
+    <data name="NotSupported" xml:space="preserve">z
+        <value>The device you have selected is no longer supported by this tool. It was previously supported on older versions of Santroller, but Santroller is currently being rewritten to leverage more features from the Pi Pico, and thus the Arduino support has been phased out. You can downgrade to v10.1.188 if you wish to use this device, but if you encounter any bugs, they will not be fixed.</value>
+    </data>
     <data name="IncorrectTool4" xml:space="preserve">
         <value>By ticking this box you acknowledge that you are an advanced user and that you know what you are doing.</value>
     </data>
