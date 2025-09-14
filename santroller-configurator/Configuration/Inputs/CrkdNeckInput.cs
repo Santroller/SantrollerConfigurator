@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
@@ -24,6 +25,8 @@ public class CrkdNeckInput : UartInput
         BindableUart = !combined && Model.Microcontroller.UartAssignable && !model.Branded;
         Input = input;
         IsAnalog = false;
+        _lastInputs.dpadLeftRight = 0x80;
+        _lastInputs.dpadUpDown = 0x80;
     }
 
     public override string Title => EnumToStringConverter.Convert(Input);
@@ -43,18 +46,22 @@ public class CrkdNeckInput : UartInput
         {
             return "lastCrkd.dpadUpDown == 0x00";
         }
+
         if (Input is CrkdNeckInputType.DpadUp)
         {
             return "lastCrkd.dpadUpDown == 0xFF";
         }
+
         if (Input is CrkdNeckInputType.DpadLeft)
         {
             return "lastCrkd.dpadLeftRight == 0xFF";
         }
+
         if (Input is CrkdNeckInputType.DpadRight)
         {
             return "lastCrkd.dpadLeftRight == 0x00";
         }
+
         return Output.GetReportField(Input, "lastCrkd", false);
     }
 
@@ -64,6 +71,7 @@ public class CrkdNeckInput : UartInput
         return new SerializedCrkdNeckInput(Peripheral, Tx, Rx, Input);
     }
 
+    private CrkdNeckInputs _lastInputs = new();
     public override void Update(Dictionary<int, int> analogRaw,
         Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw,
         ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw,
@@ -72,8 +80,58 @@ public class CrkdNeckInput : UartInput
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
         ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw,
-        bool peripheralConnected)
+        bool peripheralConnected, byte[] crkdRaw)
     {
+        if (crkdRaw.Length != 0)
+        {
+            _lastInputs = StructTools.RawDeserialize<CrkdNeckInputs>(crkdRaw, 0);
+        }
+
+        switch (Input)
+        {
+            case CrkdNeckInputType.Green:
+                RawValue = (_lastInputs.buttons & 1 << 0) != 0 ? 1 : 0;
+                break;
+            case CrkdNeckInputType.Red:
+                RawValue = (_lastInputs.buttons & 1 << 1) != 0 ? 1 : 0;
+                break;
+            case CrkdNeckInputType.Yellow:
+                RawValue = (_lastInputs.buttons & 1 << 2) != 0 ? 1 : 0;
+                break;
+            case CrkdNeckInputType.Blue:
+                RawValue = (_lastInputs.buttons & 1 << 3) != 0 ? 1 : 0;
+                break;
+            case CrkdNeckInputType.Orange:
+                RawValue = (_lastInputs.buttons & 1 << 4) != 0 ? 1 : 0;
+                break;
+            case CrkdNeckInputType.DpadLeft:
+                RawValue = _lastInputs.dpadLeftRight == 0xFF ? 1 : 0;
+                break;
+            case CrkdNeckInputType.DpadRight:
+                RawValue = _lastInputs.dpadLeftRight == 0x00 ? 1 : 0;
+                break;
+            case CrkdNeckInputType.DpadUp:
+                RawValue = _lastInputs.dpadUpDown == 0x00 ? 1 : 0;
+                break;
+            case CrkdNeckInputType.DpadDown:
+                RawValue = _lastInputs.dpadUpDown == 0xFF ? 1 : 0;
+                break;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct CrkdNeckInputs
+    {
+        public readonly byte header; // {0xA5, 0x01};, though we are eating the first header byte
+        public readonly byte len; // 0x0C;
+        public readonly ushort padding; //{0x00, 0x00};
+        public readonly byte buttons;
+        public byte dpadUpDown; // none: 0x80, up: 0x00, down: 0xFF
+        public byte dpadLeftRight; // none: 0x80, right: 0x00, left: 0xFF
+        public readonly byte footer1; // 0x00
+        public readonly byte footer2; // 0x01
+        public readonly byte footer3; // 0x15
+        public readonly byte crc; // CRC-8/MAXIM-DOW
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings,

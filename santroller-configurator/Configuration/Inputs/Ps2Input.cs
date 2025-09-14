@@ -313,7 +313,7 @@ public class Ps2Input : SpiInput
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
         ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw,
-        bool peripheralConnected)
+        bool peripheralConnected, byte[] crkdRaw)
     {
         if (ps2ControllerType.IsEmpty || ps2Data.IsEmpty) return;
         var type = ps2ControllerType[0];

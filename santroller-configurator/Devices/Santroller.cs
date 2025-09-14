@@ -75,7 +75,8 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadAccelValid,
         CommandReadBluetoothInputs,
         CommandReadWtDrumConnected,
-        CommandReadBhDrumConnected
+        CommandReadBhDrumConnected,
+        CommandReadCrkd
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -242,6 +243,7 @@ public class Santroller : ConfigurableUsbDevice
                 var djLeftRaw = Array.Empty<byte>();
                 var djRightRaw = Array.Empty<byte>();
                 var gh5Raw = Array.Empty<byte>();
+                var crkdRaw = Array.Empty<byte>();
                 var ghWtRaw = Array.Empty<byte>();
                 var ps2ControllerType = Array.Empty<byte>();
                 var wiiControllerType = Array.Empty<byte>();
@@ -286,6 +288,11 @@ public class Santroller : ConfigurableUsbDevice
                 if (_model.GetTwiForType(CloneNeckInput.CloneTwiType, false) != null)
                 {
                     cloneRaw = await ReadDataAsync(0, (byte) Commands.CommandReadClone, 4);
+                }
+
+                if (_model.GetUartForType(CrkdNeckInput.CrkdUartType, false) != null)
+                {
+                    crkdRaw = await ReadDataAsync(0, (byte) Commands.CommandReadCrkd, 11);
                 }
 
                 if (_model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(x => x is GhWtTapInput)))
@@ -359,7 +366,7 @@ public class Santroller : ConfigurableUsbDevice
                         djRightRaw, gh5Raw,
                         ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
                         peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw,
-                        bluetoothInputsRaw, peripheralConnected);
+                        bluetoothInputsRaw, peripheralConnected, crkdRaw);
                 // If nothing is being ticked, then give the UI some time to process data instead of polling at max speed
                 if (analogRaw.Count == 0 && digitalRaw.Count == 0 && digitalRawPeripheral.Count == 0 &&
                     midiRaw.Length == 0)

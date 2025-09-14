@@ -145,4 +145,32 @@ public partial class CrkdCombinedOutput : CombinedUartOutput
             Outputs.RemoveMany(toRemove);
         }
     }
+
+    private int _invalidCount = 0;
+    public override void Update(Dictionary<int, int> analogRaw,
+        Dictionary<int, bool> digitalRaw, ReadOnlySpan<byte> ps2Raw,
+        ReadOnlySpan<byte> wiiRaw, ReadOnlySpan<byte> djLeftRaw,
+        ReadOnlySpan<byte> djRightRaw, ReadOnlySpan<byte> gh5Raw, ReadOnlySpan<byte> ghWtRaw,
+        ReadOnlySpan<byte> ps2ControllerType, ReadOnlySpan<byte> wiiControllerType,
+        ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> bluetoothRaw, ReadOnlySpan<byte> usbHostInputsRaw,
+        ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
+        ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
+        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw, bool peripheralConnected, byte[] crkdRaw)
+    {
+        base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
+            ps2ControllerType,
+            wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw, digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected, crkdRaw);
+        if (crkdRaw.Length == 0)
+        {
+            if (_invalidCount < 1000)
+            {
+                _invalidCount++;
+            }
+        }
+        else
+        {
+            _invalidCount = 0;
+        }
+        Detected = _invalidCount < 500;
+    }
 }
