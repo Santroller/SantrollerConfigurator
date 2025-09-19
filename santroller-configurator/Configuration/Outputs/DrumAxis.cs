@@ -410,7 +410,7 @@ public partial class DrumAxis : OutputAxis
             {
                 // Stuff mapped to the y axis is inverted
                 DrumAxisType.GreenCymbal or DrumAxisType.Green or DrumAxisType.Yellow or DrumAxisType.YellowCymbal =>
-                    $"-(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))",
+                    $"(-0x7fff + ((lastDrum[{debounceIndex}]) >> 1))",
                 DrumAxisType.Red or DrumAxisType.Blue or DrumAxisType.BlueCymbal =>
                     $"(0x7fff - ((lastDrum[{debounceIndex}]) >> 1))",
                 _ => assignedVal
