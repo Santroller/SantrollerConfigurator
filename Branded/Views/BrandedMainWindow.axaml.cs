@@ -1,3 +1,4 @@
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
@@ -14,8 +15,8 @@ public partial class BrandedMainWindow : ReactiveWindow<BrandedMainWindowViewMod
     {
         this.WhenActivated(disposables =>
         {
-            disposables(ViewModel!.ShowInformationDialog.RegisterHandler(DoShowInformationDialogAsync));
-            ViewModel!.Begin(false);
+            ViewModel!.ShowInformationDialog.RegisterHandler(DoShowInformationDialogAsync).DisposeWith(disposables);
+            ViewModel!.Begin(false).DisposeWith(disposables);
         });
         InitializeComponent();
     }
