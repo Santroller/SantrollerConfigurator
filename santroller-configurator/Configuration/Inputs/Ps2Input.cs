@@ -96,7 +96,7 @@ public class Ps2Input : SpiInput
     {
         {Ps2InputType.DpadRight, "(((ps2Data[5] >> 6) == 3) && ps2Data[5] != 255)"},
         {Ps2InputType.DpadDown, "(((ps2Data[5] >> 6) == 2) && ps2Data[5] != 128)"},
-        {Ps2InputType.DpadLeft, "(((ps2Data[5] >> 6) == 1) && ps2Data[5] != 127)"},
+        {Ps2InputType.DpadLeft, "(((ps2Data[5] >> 6) == 1) && ps2Data[5] != 127 && ps2Data[5] != 123)"},
         {Ps2InputType.DpadUp, "(((ps2Data[5] >> 6) == 0) && ps2Data[5] != 0)"},
     };
 
@@ -424,7 +424,7 @@ public class Ps2Input : SpiInput
             Ps2InputType.DpadLeft when digital => ~ps2Data[3] & (1 << 7),
             Ps2InputType.DpadRight when guitar => ps2Data[5] >> 6 == 3 && ps2Data[5] != 255 ? 1 : 0,
             Ps2InputType.DpadDown when guitar => ps2Data[5] >> 6 == 2 && ps2Data[5] != 128 ? 1 : 0,
-            Ps2InputType.DpadLeft when guitar => ps2Data[5] >> 6 == 1 && ps2Data[5] != 127 ? 1 : 0,
+            Ps2InputType.DpadLeft when guitar => ps2Data[5] >> 6 == 1 && ps2Data[5] != 127 && ps2Data[5] != 123 ? 1 : 0,
             Ps2InputType.DpadUp when guitar => ps2Data[5] >> 6 == 0 ? 1 : 0,
             Ps2InputType.L2 when digital => ~ps2Data[4] & (1 << 0),
             Ps2InputType.R2 when digital => ~ps2Data[4] & (1 << 1),
