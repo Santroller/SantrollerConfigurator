@@ -1124,10 +1124,10 @@ public abstract partial class Output : ReactiveObject
                 input = new CrkdNeckInput(CrkdNeckInputType.Green, Model, false);
                 break;
             case InputType.EncoderInput:
-                input = new EncoderInput(0, false, Model);
+                input = new EncoderInput(-1, false, Model);
                 break;
             case InputType.EncoderPeripheralInput:
-                input = new EncoderInput(0, true, Model);
+                input = new EncoderInput(-1, true, Model);
                 break;
             case InputType.ConstantInput:
                 input = Input.InnermostInputs().First();

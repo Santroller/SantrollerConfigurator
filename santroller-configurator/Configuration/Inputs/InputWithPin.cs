@@ -28,7 +28,7 @@ public abstract class InputWithPin : Input
     public DirectPinConfig PinConfig { get; }
 
     public ReadOnlyObservableCollection<int> AvailablePins =>
-        IsAnalog ? Model.AvailablePinsAnalog : Model.AvailablePinsDigital;
+        PinConfig.PinMode == DevicePinMode.Analog ? Model.AvailablePinsAnalog : Model.AvailablePinsDigital;
 
     public override bool Peripheral => PinConfig.Peripheral;
 

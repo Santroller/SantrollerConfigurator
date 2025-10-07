@@ -3292,7 +3292,7 @@ Feel free to remove this option if you do not intend to use your instrument on i
         <value>Off</value>
     </data>
     <data name="EncoderLabel" xml:space="preserve">
-        <value>Incremental Encoder</value>
+        <value>Encoder A Pin</value>
     </data>
     <data name="EnabledLabel" xml:space="preserve">
         <value>Enabled</value>

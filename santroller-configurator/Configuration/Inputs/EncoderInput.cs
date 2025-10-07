@@ -15,7 +15,7 @@ public partial class EncoderInput : InputWithPin
     public EncoderInput(int pin, bool peripheral, ConfigViewModel model) : base(
         model, new DirectPinConfig(model, Guid.NewGuid().ToString(), pin, peripheral, DevicePinMode.Floating))
     {
-        IsAnalog = PinConfig.PinMode == DevicePinMode.Analog;
+        IsAnalog = true;
     }
 
     public override bool IsUint => true;
