@@ -2166,8 +2166,17 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="AccelSensorTypeMainDigital" xml:space="preserve">
         <value>Digital</value>
     </data>
+    <data name="InputTypeCrkdNeckInput" xml:space="preserve">
+        <value>CRKD Neck Input</value>
+    </data>
     <data name="InputTypeAnalogPinInput" xml:space="preserve">
         <value>Analog Pin Input</value>
+    </data>
+    <data name="InputTypeEncoderInput" xml:space="preserve">
+        <value>Incremental Encoder Input</value>
+    </data>
+    <data name="InputTypeEncoderPeripheralInput" xml:space="preserve">
+        <value>Incremental Encoder Input (Peripheral)</value>
     </data>
     <data name="InputTypeAccelInput" xml:space="preserve">
         <value>Accelerometer Input</value>
@@ -3281,6 +3290,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="OffLabel" xml:space="preserve">
         <value>Off</value>
+    </data>
+    <data name="EncoderLabel" xml:space="preserve">
+        <value>Incremental Encoder</value>
     </data>
     <data name="EnabledLabel" xml:space="preserve">
         <value>Enabled</value>

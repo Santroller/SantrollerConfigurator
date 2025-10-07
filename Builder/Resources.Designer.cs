@@ -189,6 +189,12 @@ namespace SantrollerConfiguratorBuilder.NetCore.ViewModels {
             }
         }
         
+        public static string SelectedDevicePico2 {
+            get {
+                return ResourceManager.GetString("SelectedDevicePico2", resourceCulture);
+            }
+        }
+        
         public static string MoveSelectedDevice {
             get {
                 return ResourceManager.GetString("MoveSelectedDevice", resourceCulture);

@@ -839,6 +839,23 @@
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type inputs:EncoderInput}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="350" Content="{x:Static netCore:Resources.EncoderLabel}" />
+                            <ComboBox VerticalAlignment="Center"
+                                      SelectedItem="{Binding Pin}"
+                                      ItemsSource="{Binding AvailablePins}"
+                                      DropDownOpened="ReloadPinTemplates"
+                                      ItemTemplate="{StaticResource PinToStringTemplate}"
+                                      Width="200" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
 
             <DataTemplate DataType="{x:Type inputs:UsbHostInput}">
                 <StackPanel Orientation="Vertical" IsVisible="{Binding !Combined}">

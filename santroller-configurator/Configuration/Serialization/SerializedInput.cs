@@ -32,6 +32,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoInclude(125, typeof(SerializedMatrixInput))]
 [ProtoInclude(126, typeof(SerializedCrkdNeckInput))]
 [ProtoInclude(127, typeof(SerializedCrkdNeckInputCombined))]
+[ProtoInclude(128, typeof(SerializedEncoderInput))]
 public abstract class SerializedInput
 {
     public abstract Input Generate(ConfigViewModel model);

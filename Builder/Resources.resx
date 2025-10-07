@@ -95,6 +95,9 @@
     <data name="SelectedDeviceVendorLabel" xml:space="preserve">
         <value>Variant Device Vendor</value>
     </data>
+    <data name="SelectedDevicePico2" xml:space="preserve">
+        <value>Variant based on Pico 2 / RP2350 / RP2354</value>
+    </data>
     <data name="MoveSelectedDevice" xml:space="preserve">
         <value>Move Variant to another type</value>
     </data>

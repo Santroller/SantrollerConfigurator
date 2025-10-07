@@ -150,7 +150,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public void AddDevice()
     {
         if (SelectedSection == null) return;
-        var item = new BrandedConfiguration("Vendor Name", "Product Name", this);
+        var item = new BrandedConfiguration("Vendor Name", "Product Name", false, this);
         SelectedSection.Configurations.Add(item);
         Selected = item;
     }

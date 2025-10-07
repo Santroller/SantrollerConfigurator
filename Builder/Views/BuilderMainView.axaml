@@ -259,6 +259,16 @@
                                     <Label VerticalAlignment="Center"
                                            VerticalContentAlignment="Center"
                                            Width="300"
+                                           Content="{x:Static viewModels:Resources.SelectedDevicePico2}">
+                                    </Label>
+                                    <ToggleSwitch IsChecked="{Binding BuilderMain.Selected.Pico2}"
+                                                  OnContent="Pico 2 / RP2350 / RP2354"
+                                                  OffContent="Pico 1 / RP2040" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Width="300"
                                            Content="{x:Static viewModels:Resources.ConfigureSelectedDevice}">
                                     </Label>
                                     <Button Width="300"

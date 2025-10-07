@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -5,9 +6,10 @@ using GuitarConfigurator.NetCore.ViewModels;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
-public class EmptyDevice: IConfigurableDevice
+public class EmptyDevice(bool pico2) : IConfigurableDevice
 {
     public bool MigrationSupported => false;
+
     public bool IsSameDevice(IDevice device)
     {
         return false;
@@ -23,7 +25,9 @@ public class EmptyDevice: IConfigurableDevice
 
     public Microcontroller GetMicrocontroller(ConfigViewModel model)
     {
-        return new Pico(Board.PicoBoards.First());
+        return pico2
+            ? new Pico(Board.PicoBoards.First(x => x.Environment == "pico2"))
+            : new Pico(Board.PicoBoards.First(x => x.Environment == "pico"));
     }
 
     public bool LoadConfiguration(ConfigViewModel model, bool merge)

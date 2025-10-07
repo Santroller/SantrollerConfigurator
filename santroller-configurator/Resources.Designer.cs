@@ -4131,9 +4131,27 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string InputTypeCrkdNeckInput {
+            get {
+                return ResourceManager.GetString("InputTypeCrkdNeckInput", resourceCulture);
+            }
+        }
+        
         public static string InputTypeAnalogPinInput {
             get {
                 return ResourceManager.GetString("InputTypeAnalogPinInput", resourceCulture);
+            }
+        }
+        
+        public static string InputTypeEncoderInput {
+            get {
+                return ResourceManager.GetString("InputTypeEncoderInput", resourceCulture);
+            }
+        }
+        
+        public static string InputTypeEncoderPeripheralInput {
+            get {
+                return ResourceManager.GetString("InputTypeEncoderPeripheralInput", resourceCulture);
             }
         }
         
@@ -6282,6 +6300,12 @@ namespace GuitarConfigurator.NetCore {
         public static string OffLabel {
             get {
                 return ResourceManager.GetString("OffLabel", resourceCulture);
+            }
+        }
+        
+        public static string EncoderLabel {
+            get {
+                return ResourceManager.GetString("EncoderLabel", resourceCulture);
             }
         }
         

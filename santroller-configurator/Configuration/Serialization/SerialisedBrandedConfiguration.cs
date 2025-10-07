@@ -17,11 +17,13 @@ public class SerialisedBrandedConfiguration
     [ProtoMember(2)] public string ProductName;
     [ProtoMember(3)] public SerializedConfiguration Configuration;
     [ProtoMember(4)] public Uf2Block[] Uf2 { get; private set; }
+    [ProtoMember(5)] public bool Pico2 { get; private set; }
     public SerialisedBrandedConfiguration(BrandedConfiguration.BrandedConfiguration configuration)
     {
         Configuration = new SerializedConfiguration(configuration.Model);
         Uf2 = configuration.Uf2;
         VendorName = configuration.VendorName;
         ProductName = configuration.ProductName;
+        Pico2 = configuration.Pico2;
     }
 }

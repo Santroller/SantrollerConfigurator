@@ -591,6 +591,7 @@ public abstract partial class Output : ReactiveObject
                  or InputType.WtNeckPeripheralInput or InputType.CloneNeckInput ||
              (s is InputType.Mpr121Input && Model.HasMpr121)) &&
             (s is not InputType.WtNeckPeripheralInput || Model.HasPeripheral) &&
+            (s is not InputType.EncoderPeripheralInput || Model.HasPeripheral) &&
             (s is not InputType.MultiplexerInput || Model.IsPico) &&
             (s is not InputType.MatrixInput || Model.IsPico) &&
             (s is not InputType.DigitalPeripheralInput || Model.HasPeripheral) &&
@@ -1118,6 +1119,15 @@ public abstract partial class Output : ReactiveObject
                 break;
             case InputType.ConstantInput when Input.InnermostInputs().First() is not FixedInput:
                 input = new ConstantInput(Model, 0, false, 0, 1, false, false);
+                break;
+            case InputType.CrkdNeckInput:
+                input = new CrkdNeckInput(CrkdNeckInputType.Green, Model, false);
+                break;
+            case InputType.EncoderInput:
+                input = new EncoderInput(0, false, Model);
+                break;
+            case InputType.EncoderPeripheralInput:
+                input = new EncoderInput(0, true, Model);
                 break;
             case InputType.ConstantInput:
                 input = Input.InnermostInputs().First();

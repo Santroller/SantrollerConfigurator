@@ -20,25 +20,38 @@ public partial class BrandedConfiguration : ReactiveObject
     private const uint ConfigOffset = 0x100A3000;
     [Reactive] private string _vendorName;
     [Reactive] private string _productName;
+    private bool _pico2;
+    public bool Pico2
+    {
+        get => _pico2;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _pico2, value);
+            Model.Device = new EmptyDevice(value);
+            Model.UpdateMicrocontroller();
+        }
+    }
     public Uf2Block[] Uf2 { get; private set; }
     public ConfigViewModel Model { get; }
 
     public BrandedConfiguration(SerialisedBrandedConfiguration configuration, bool branded, MainWindowViewModel screen)
     {
-        Model = new ConfigViewModel(screen, new EmptyDevice(), branded, !branded);
+        Model = new ConfigViewModel(screen, new EmptyDevice(configuration.Pico2), branded, !branded);
         configuration.Configuration.LoadConfiguration(Model);
         _vendorName = configuration.VendorName;
         _productName = configuration.ProductName;
         Uf2 = configuration.Uf2;
+        Pico2 = configuration.Pico2;
     }
 
-    public BrandedConfiguration(string vendorName, string productName, MainWindowViewModel screen)
+    public BrandedConfiguration(string vendorName, string productName, bool pico2, MainWindowViewModel screen)
     {
-        Model = new ConfigViewModel(screen, new EmptyDevice(), false, true);
+        Model = new ConfigViewModel(screen, new EmptyDevice(pico2), false, true);
         Model.SetDefaults();
         VendorName = vendorName;
         ProductName = productName;
         Uf2 = [];
+        Pico2 = false;
     }
 
     public string ExtraConfig()
@@ -77,16 +90,18 @@ public partial class BrandedConfiguration : ReactiveObject
             };
             while (true)
             {
-                if (await streamBlob.ReadAsync(block.data.AsMemory(0, (int) block.payloadSize)) == 0)
+                if (await streamBlob.ReadAsync(block.data.AsMemory(0, (int)block.payloadSize)) == 0)
                 {
                     break;
                 }
+
                 block.blockNo++;
                 blocks.Add(block);
                 block = new Uf2Block(block);
                 block.targetAddr += block.payloadSize;
             }
         }
+
         // UF2s on the pico need to be continuous, so we have to pad between the defined sections
         for (var i = block.targetAddr; i < ConfigOffset; i += block.payloadSize)
         {
@@ -112,7 +127,7 @@ public partial class BrandedConfiguration : ReactiveObject
                 while (true)
                 {
                     block.blockNo++;
-                    if (await outputStream.ReadAsync(block.data.AsMemory(0, (int) block.payloadSize)) == 0)
+                    if (await outputStream.ReadAsync(block.data.AsMemory(0, (int)block.payloadSize)) == 0)
                     {
                         break;
                     }
@@ -131,11 +146,12 @@ public partial class BrandedConfiguration : ReactiveObject
             {
                 foreach (var uf2Block in blocks)
                 {
-                    uf2Block.numBlocks = (uint) blocks.Count;
+                    uf2Block.numBlocks = (uint)blocks.Count;
                     await StructTools.RawSerialiseAsync(uf2Block, stream);
                 }
             }
-            File.Copy(tempFile, outputFile, overwrite:true);
+
+            File.Copy(tempFile, outputFile, overwrite: true);
         }
         finally
         {
@@ -146,10 +162,19 @@ public partial class BrandedConfiguration : ReactiveObject
     public string GetUf2Name()
     {
         var env = "pico";
-        if (Model.IsBluetooth)
+        if (Pico2)
+        {
+            env = "pico2";
+            if (Model.IsBluetooth)
+            {
+                env = "pico2w";
+            }
+        }
+        else if (Model.IsBluetooth)
         {
             env = "picow";
         }
+
         return Path.Join(AssetUtils.GetAppDataFolder(), "Santroller", ".pio", "build", env,
             "firmware.uf2");
     }
@@ -161,6 +186,7 @@ public partial class BrandedConfiguration : ReactiveObject
         {
             return false;
         }
+
         var bytes = File.ReadAllBytes(uf2File);
         var blocks = new List<Uf2Block>();
         for (var i = 0; i < bytes.Length; i += 512)

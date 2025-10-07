@@ -21,5 +21,7 @@ public enum InputType
     Mpr121Input,
     MidiInput,
     MatrixInput,
-    CrkdNeckInput
+    CrkdNeckInput,
+    EncoderInput,
+    EncoderPeripheralInput
 }

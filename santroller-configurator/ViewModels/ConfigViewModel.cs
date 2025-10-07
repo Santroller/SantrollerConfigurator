@@ -361,6 +361,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _unoTx = new DirectPinConfig(this, UnoPinTypeTx, UnoPinTypeTxPin, false, DevicePinMode.Output);
     }
 
+    public void UpdateMicrocontroller()
+    {
+        Microcontroller = Device.GetMicrocontroller(this);
+    }
+
     public void UpdateBluetoothAddress()
     {
         if (Device is Santroller santroller)

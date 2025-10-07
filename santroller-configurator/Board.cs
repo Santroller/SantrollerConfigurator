@@ -132,6 +132,8 @@ public readonly record struct Board
             [], false),
         new("pico2", "Raspberry PI Pico 2", 125000000, "pico2",
             [], false),
+        new("pico2w", "Raspberry PI Pico 2 W", 125000000, "pico2w",
+            [], false),
     ];
 
     public static readonly Board[] MegaBoards =
