@@ -18,7 +18,7 @@ public partial class EncoderInput : InputWithPin
         IsAnalog = true;
     }
 
-    public override bool IsUint => true;
+    public override bool IsUint => false;
 
     [Reactive] private bool _inverted;
 
