@@ -109,6 +109,7 @@ public partial class AnalogToDigital : Input
             if (!Child.IsUint)
             {
                 Threshold = value;
+                return;
             }
 
             Threshold = AnalogToDigitalType switch
