@@ -370,6 +370,7 @@ public abstract partial class OutputAxis : Output
         var intBased = false;
         var singleByte = false;
         var center = Center;
+        var sections = false;
 
         switch (mode)
         {
@@ -388,6 +389,7 @@ public abstract partial class OutputAxis : Output
                 break;
             case ConfigField.XboxOne:
                 intBased = true;
+                sections = true;
                 function = "handle_calibration_xbox";
                 break;
             case ConfigField.Xbox360 or ConfigField.Xbox when whammy:
@@ -399,6 +401,7 @@ public abstract partial class OutputAxis : Output
                 break;
             case ConfigField.Xbox360 or ConfigField.Xbox:
                 intBased = true;
+                sections = true;
                 function = "handle_calibration_xbox";
                 break;
             case ConfigField.Mouse:
@@ -431,6 +434,7 @@ public abstract partial class OutputAxis : Output
                 or ConfigField.Universal or ConfigField.Wii or ConfigField.Ps2:
                 singleByte = true;
                 intBased = true;
+                sections = true;
                 function = "handle_calibration_ps3";
                 break;
             default:
@@ -533,27 +537,29 @@ public abstract partial class OutputAxis : Output
         {
             return singleByte ? $"({generated}) >> 8" : generated;
         }
+        
+        var extra = sections?",0":"";
 
         var mulInt = (short) (multiplier * 512);
         if (writer == null)
             return intBased
-                ? $"{function}({prev}, {generated}, {min}, {max}, {center}, {deadzone})"
-                : $"{function}({prev}, {generated}, {min}, {mulInt}, {deadzone})";
+                ? $"{function}({prev}, {generated}, {min}, {max}, {center}, {deadzone}{extra})"
+                : $"{function}({prev}, {generated}, {min}, {mulInt}, {deadzone}{extra})";
         if (writer != _lastWriter && intBased)
         {
             _lastWriter = writer;
             _intBlob =
-                $"{WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, deadzone)}";
+                $"{WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, deadzone)}{extra}";
         }
         if (writer != _lastWriterUint && !intBased)
         {
             _lastWriterUint = writer;
             _uintBlob =
-                $"{WriteBlob(writer, (uint)min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint)deadzone)}";
+                $"{WriteBlob(writer, (uint)min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint)deadzone)}{extra}";
         }
         return intBased
-            ? $"{function}({prev}, {generated}, {_intBlob})"
-            : $"{function}({prev}, {generated}, {_uintBlob})";
+            ? $"{function}({prev}, {generated}, {_intBlob}{extra})"
+            : $"{function}({prev}, {generated}, {_uintBlob}{extra})";
     }
 
 

@@ -379,6 +379,13 @@ public partial class GuitarAxis : OutputAxis
                         {GenerateOutput(mode)} = {PickupSelectorRangesXb1[constantInput.PickupSelectorType]};
                         """;
             }
+            if (mode == ConfigField.Xbox360)
+            {
+                
+                return $"""
+                        {GenerateOutput(mode)} = {-((sbyte) (PickupSelectorRangesPS[constantInput.PickupSelectorType] ^ 0x80) * -257)};
+                        """;
+            }
             return $"""
                     {GenerateOutput(mode)} = {PickupSelectorRangesPS[constantInput.PickupSelectorType]};
                     """;
