@@ -117,6 +117,7 @@ public class SerializedConfiguration
         HasAccel = model.HasAccel;
         ClassicMode = model.Classic;
         IsBluetoothTx = model.IsBluetoothTx;
+        InvertHidYAxis = model.InvertHidYAxis;
     }
 
     [ProtoMember(1)] public LedType LedType { get; private set; }
@@ -203,6 +204,7 @@ public class SerializedConfiguration
     [ProtoMember(100)] public bool HasBhDrumInput { get; private set; }
     [ProtoMember(101)] public int BhDrumSda { get; private set; }
     [ProtoMember(102)] public int BhDrumScl { get; private set; }
+    [ProtoMember(103)] public bool InvertHidYAxis { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -224,6 +226,7 @@ public class SerializedConfiguration
         model.SetDeviceTypeWithoutUpdating(DeviceType);
         model.XInputOnWindows = XInputOnWindows;
         model.Ps3OnRpcs3 = Ps3OnRpcs3;
+        model.InvertHidYAxis = InvertHidYAxis;
         model.Bindings.Clear();
         model.LocalDebounceMode = LocalDebounceMode;
         model.PollRate = PollRate;
@@ -375,6 +378,7 @@ public class SerializedConfiguration
         model.XInputOnWindows = XInputOnWindows;
         model.PollRate = PollRate;
         model.Debounce = Debounce;
+        model.InvertHidYAxis = InvertHidYAxis;
         model.StrumDebounce = StrumDebounce;
         model.Deque = QueueBasedInputs;
         model.DjPollRate = DjPollRate;

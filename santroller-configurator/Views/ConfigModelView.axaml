@@ -1951,6 +1951,16 @@
                                             Maximum="{Binding Max, Mode=OneTime}" Value="{Binding Threshold}" />
                                 </Grid>
                             </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.SectionLabel}" />
+                                <ComboBox HorizontalAlignment="Stretch" ItemTemplate="{StaticResource EnumToStringTemplate}"
+                                          SelectedItem="{Binding Section}"
+                                          ItemsSource="{Binding SectionTypes}" />
+                            </StackPanel>
                         </StackPanel>
 
                     </StackPanel>
@@ -3232,6 +3242,17 @@
                                 <ComboBoxItem Content="{x:Static netCore:Resources.HIDGameControllerLabel}" />
                                 <ComboBoxItem Content="{x:Static netCore:Resources.XInputLabel}" />
                             </ComboBox>
+
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" IsVisible="{Binding IsStandardController}">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="350" Content="{x:Static netCore:Resources.InvertHidYAxis}" />
+                            <ToggleSwitch HorizontalAlignment="Center" Width="200"
+                                          HorizontalContentAlignment="Center"
+                                          IsChecked="{Binding InvertHidYAxis}"
+                                          OnContent="{x:Static netCore:Resources.InvertLabel}"
+                                          OffContent="{x:Static netCore:Resources.SectionTypeNormal}" />
 
                         </StackPanel>
 

@@ -18,7 +18,7 @@ public partial class DjAxis : OutputAxis
         int deadZone, DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
         ledIndicesMpr121,
-        min, max, false,
+        min, max, SectionType.Normal,false,
         deadZone,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
@@ -32,7 +32,7 @@ public partial class DjAxis : OutputAxis
         DjAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted, int outputPin,
         bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices, ledIndicesPeripheral,
         ledIndicesMpr121, 0,
-        0, false,
+        0, SectionType.Normal,false,
         0,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {

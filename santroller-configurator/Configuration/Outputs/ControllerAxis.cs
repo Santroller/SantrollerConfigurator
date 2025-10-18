@@ -15,11 +15,11 @@ public partial class ControllerAxis : OutputAxis
 {
     public ControllerAxis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int min,
-        int max, int center,
+        int max, SectionType section, int center,
         int deadZone, int threshold, StandardAxisType type, bool outputEnabled, bool outputPeripheral,
         bool outputInverted, int outputPin, bool childOfCombined) : base(model, enabled, input, ledOn, ledOff, ledIndices,
         ledIndicesPeripheral, ledIndicesMpr121, min,
-        max,
+        max, section,
         true, deadZone, IsTrigger(type), outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         Center = center;
@@ -152,6 +152,10 @@ public partial class ControllerAxis : OutputAxis
 
     public override bool ShouldFlip(ConfigField mode)
     {
+        if (Model.InvertHidYAxis && mode is ConfigField.Universal)
+        {
+            return false;
+        }
         // Need to flip y axis on PS3/4
         return mode is ConfigField.Ps4 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal &&
                Type is StandardAxisType.LeftStickY or StandardAxisType.RightStickY;
@@ -165,7 +169,7 @@ public partial class ControllerAxis : OutputAxis
     public override SerializedOutput Serialize()
     {
         return new SerializedControllerAxis(Input.Serialise(), Enabled, Type, LedOn, LedOff, LedIndices.ToArray(),
-            LedIndicesPeripheral.ToArray(), Min, Max, Center,
+            LedIndicesPeripheral.ToArray(), Min, Max, Section, Center,
             DeadZone, Threshold, OutputEnabled, OutputPin, OutputInverted, PeripheralOutput, ChildOfCombined,
             LedIndicesMpr121.ToArray());
     }

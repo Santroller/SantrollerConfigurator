@@ -6309,6 +6309,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string InvertHidYAxis {
+            get {
+                return ResourceManager.GetString("InvertHidYAxis", resourceCulture);
+            }
+        }
+        
         public static string EnabledLabel {
             get {
                 return ResourceManager.GetString("EnabledLabel", resourceCulture);
@@ -6900,6 +6906,36 @@ namespace GuitarConfigurator.NetCore {
         public static string TypeLabel {
             get {
                 return ResourceManager.GetString("TypeLabel", resourceCulture);
+            }
+        }
+        
+        public static string SectionLabel {
+            get {
+                return ResourceManager.GetString("SectionLabel", resourceCulture);
+            }
+        }
+        
+        public static string SectionTypeNormal {
+            get {
+                return ResourceManager.GetString("SectionTypeNormal", resourceCulture);
+            }
+        }
+        
+        public static string SectionTypeTopHalf {
+            get {
+                return ResourceManager.GetString("SectionTypeTopHalf", resourceCulture);
+            }
+        }
+        
+        public static string SectionTypeBottomHalf {
+            get {
+                return ResourceManager.GetString("SectionTypeBottomHalf", resourceCulture);
+            }
+        }
+        
+        public static string MappingModeLabel {
+            get {
+                return ResourceManager.GetString("MappingModeLabel", resourceCulture);
             }
         }
         

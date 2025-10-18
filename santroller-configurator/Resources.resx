@@ -3294,6 +3294,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="EncoderLabel" xml:space="preserve">
         <value>Encoder A Pin</value>
     </data>
+    <data name="InvertHidYAxis" xml:space="preserve">
+        <value>Invert Stick Y Axis in HID mode</value>
+    </data>
     <data name="EnabledLabel" xml:space="preserve">
         <value>Enabled</value>
     </data>
@@ -3591,6 +3594,21 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="TypeLabel" xml:space="preserve">
         <value>Type</value>
+    </data>
+    <data name="SectionLabel" xml:space="preserve">
+        <value>Mapping Mode</value>
+    </data>
+    <data name="SectionTypeNormal" xml:space="preserve">
+        <value>Normal</value>
+    </data>
+    <data name="SectionTypeTopHalf" xml:space="preserve">
+        <value>Top Half</value>
+    </data>
+    <data name="SectionTypeBottomHalf" xml:space="preserve">
+        <value>Bottom Half</value>
+    </data>
+    <data name="MappingModeLabel" xml:space="preserve">
+        <value>Mapping Mode</value>
     </data>
     <data name="Input1InputLabel" xml:space="preserve">
         <value>Input 1 Input</value>

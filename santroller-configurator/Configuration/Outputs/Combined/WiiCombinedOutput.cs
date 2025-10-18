@@ -272,14 +272,14 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                 Outputs.Add(new ControllerAxis(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
                     Colors.Black, [], [], [], 0, ushort.MaxValue,
-                    ushort.MaxValue/2,8000, 0,
+                    0, ushort.MaxValue/2,8000, 0,
                     pair.Value, false, false, false, -1, true));
             }
             else
             {
                 Outputs.Add(new ControllerAxis(Model, true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                     Colors.Black,
-                    Colors.Black, [], [], [], -30000, 30000, 0,4000,
+                    Colors.Black, [], [], [], -30000, 30000, 0, 0,4000,
                     ushort.MaxValue,
                     pair.Value, false, false, false, -1, true));
             }
@@ -289,13 +289,13 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
             new WiiInput(WiiInputType.GuitarTapBar, Model, Peripheral, Sda, Scl, true),
             Colors.Black,
             Colors.Black, [], [], [], short.MinValue, short.MaxValue,
-            0,0,
+            0, 0,0,
             ushort.MaxValue, StandardAxisType.RightStickY, false, false, false, -1, true));
         foreach (var pair in AxisAcceleration)
             Outputs.Add(new ControllerAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                 Colors.Black,
                 Colors.Black, [], [], [], short.MinValue,
-                short.MaxValue, 0,0,
+                short.MaxValue, 0, 0,0,
                 ushort.MaxValue, pair.Value, false, false, false, -1,
                 true));
         var dpad = new JoystickToDpad(Model, true,Peripheral, short.MaxValue / 2, true)
@@ -405,7 +405,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                         Outputs.Add(new ControllerAxis(Model, true,new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                             Colors.Black,
                             Colors.Black, [], [], [], 0,
-                            ushort.MaxValue, 0,8000,
+                            ushort.MaxValue, 0, 0,8000,
                             ushort.MaxValue, pair.Value, false, false, false, -1, true));
                     }
                     else
@@ -413,7 +413,7 @@ public partial class WiiCombinedOutput : CombinedTwiOutput
                         Outputs.Add(new ControllerAxis(Model,true, new WiiInput(pair.Key, Model, Peripheral, Sda, Scl, true),
                             Colors.Black,
                             Colors.Black, [], [], [], -30000, 30000,
-                            0,4000,
+                            0, 0,4000,
                             ushort.MaxValue, pair.Value, false, false, false, -1, true));
                     }
                 }

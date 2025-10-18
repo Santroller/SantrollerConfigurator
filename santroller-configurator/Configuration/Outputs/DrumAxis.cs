@@ -148,7 +148,7 @@ public partial class DrumAxis : OutputAxis
         int deadZone, int debounce, DrumAxisType type, bool outputEnabled, bool outputPeripheral, bool outputInverted,
         int outputPin, bool childOfCombined) : base(model, enabled, input, ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121,
-        min, max, false, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
+        min, max, SectionType.Normal,false, deadZone, true, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
         _sensitivityInput = sensitivityInput ?? new FixedInput(model, 0, true);
         Type = type;

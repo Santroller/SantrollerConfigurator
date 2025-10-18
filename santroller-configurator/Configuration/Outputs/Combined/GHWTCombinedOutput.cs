@@ -249,7 +249,7 @@ public partial class GhwtCombinedOutput : CombinedOutput
                     true),
                 Colors.Black,
                 Colors.Black, [], [], [], short.MinValue,
-                short.MaxValue, 0, 0,
+                short.MaxValue, 0,0, 0,
                 ushort.MaxValue, StandardAxisType.LeftStickX, false, false, false, -1, true));
         }
         else

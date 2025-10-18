@@ -33,12 +33,13 @@ public abstract partial class OutputAxis : Output
     protected OutputAxis(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
         byte[] ledIndicesPeripheral,
         byte[] ledIndicesMpr121,
-        int min, int max, bool overrideCenter,
+        int min, int max, SectionType section, bool overrideCenter,
         int deadZone, bool trigger, bool outputEnabled, bool outputInverted, bool outputPeripheral, int outputPin,
         bool childOfCombined) : base(model, enabled, input, ledOn, ledOff,
         ledIndices, ledIndicesPeripheral, ledIndicesMpr121, outputEnabled, outputInverted, outputPeripheral, outputPin,
         childOfCombined)
     {
+        Section = section;
         Trigger = trigger;
         LedOn = ledOn;
         LedOff = ledOff;
@@ -113,8 +114,11 @@ public abstract partial class OutputAxis : Output
     [Reactive] private int _min;
 
     [Reactive] private int _max;
+    [Reactive] private SectionType _section;
 
     [Reactive] private int _deadZone;
+
+    public SectionType[] SectionTypes => Enum.GetValues<SectionType>();
 
 
     public bool Trigger { get; }
@@ -538,7 +542,7 @@ public abstract partial class OutputAxis : Output
             return singleByte ? $"({generated}) >> 8" : generated;
         }
         
-        var extra = sections?",0":"";
+        var extra = sections?$",{(int)Section}":"";
 
         var mulInt = (short) (multiplier * 512);
         if (writer == null)

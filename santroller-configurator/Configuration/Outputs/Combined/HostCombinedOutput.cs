@@ -163,10 +163,10 @@ public abstract partial class HostCombinedOutput : CombinedOutput
             {
                 StandardAxisType.RightTrigger or StandardAxisType.LeftTrigger => new ControllerAxis(Model,true,
                     input, Colors.Black, Colors.Black, [], [], [],
-                    min, max, (max + min) / 2, 0, 0, (StandardAxisType) key, false, false, false, -1, true),
+                    min, max, 0,(max + min) / 2, 0, 0, (StandardAxisType) key, false, false, false, -1, true),
                 StandardAxisType standardAxisType => new ControllerAxis(Model,true,
                     input, Colors.Black, Colors.Black, [], [], [],
-                    min, max, (max + min) / 2, 0, ushort.MaxValue, standardAxisType, false, false, false, -1, true),
+                    min, max, 0,(max + min) / 2, 0, ushort.MaxValue, standardAxisType, false, false, false, -1, true),
                 StandardButtonType standardButtonType => new ControllerButton(Model,true,
                     input, Colors.Black,
                     Colors.Black, [], [], [], 5,

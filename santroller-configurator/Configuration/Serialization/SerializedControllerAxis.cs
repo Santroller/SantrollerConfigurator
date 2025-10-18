@@ -21,7 +21,7 @@ public class SerializedControllerAxis : SerializedOutput
 
     public SerializedControllerAxis(SerializedInput input, bool enabled, StandardAxisType type, Color ledOn,
         Color ledOff,
-        byte[] ledIndex, byte[] ledIndexPeripheral, int min, int max, int offset, int deadzone, int threshold,
+        byte[] ledIndex, byte[] ledIndexPeripheral, int min, int max, SectionType section, int offset, int deadzone, int threshold,
         bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined,
         byte[] ledIndexMpr121)
     {
@@ -30,6 +30,7 @@ public class SerializedControllerAxis : SerializedOutput
         LedOff = ledOff.ToUInt32();
         Min = min;
         Max = max;
+        Section = section;
         Offset = offset;
         Deadzone = deadzone;
         Type = type;
@@ -63,6 +64,7 @@ public class SerializedControllerAxis : SerializedOutput
     [ProtoMember(16)] public byte[] LedIndexMpr121 { get; }
     [ProtoMember(17)] public int Offset { get; }
     [ProtoMember(18)] [DefaultValue(true)] private bool Enabled { get; } = true;
+    [ProtoMember(19)] public SectionType Section { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
@@ -74,6 +76,7 @@ public class SerializedControllerAxis : SerializedOutput
         var output = new ControllerAxis(model, Enabled, input, Color.FromUInt32(LedOn), Color.FromUInt32(LedOff),
             LedIndex, LedIndexPeripheral, LedIndexMpr121, Min,
             Max,
+            Section,
             Offset,
             Deadzone,
             Threshold,

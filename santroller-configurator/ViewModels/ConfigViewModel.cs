@@ -1611,6 +1611,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [ObservableAsProperty] private bool _isStp16Peripheral;
 
     [Reactive] private bool _isBluetoothTx;
+    [Reactive] private bool _invertHidYAxis;
 
     [ObservableAsProperty] private bool _supportsDeque;
 
@@ -1845,7 +1846,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             Colors.Black, Colors.Black, [], [], [],
                             ushort.MinValue,
                             ushort.MaxValue,
-                            ushort.MaxValue / 2, 0, ushort.MaxValue, axisType, false, false, false, -1, false)
+                            0, ushort.MaxValue / 2, 0, ushort.MaxValue, axisType, false, false, false, -1, false)
                         {Expanded = defaults});
                     break;
                 case GuitarAxisType.Slider:
@@ -2018,7 +2019,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     Bindings.Add(new ControllerAxis(this, true,
                         new DirectInput(-1, false, false, DevicePinMode.Analog, this),
                         Colors.Black, Colors.Black, [], [], [],
-                        min, max, (max + min) / 2, 0,
+                        min, max, 0, (max + min) / 2, 0,
                         ushort.MaxValue, type, false, false, false, -1, false) {Expanded = true});
                 }
 
