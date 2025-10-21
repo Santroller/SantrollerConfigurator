@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Media;
-using Avalonia.Threading;
 using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
@@ -17,7 +16,6 @@ using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 using ProtoBuf;
-using ReactiveUI;
 
 namespace GuitarConfigurator.NetCore.Devices;
 
@@ -359,6 +357,8 @@ public class Santroller : ConfigurableUsbDevice
                 }
 
                 var midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
+                await WriteDataAsync(0, (byte) Commands.CommandDisableMultiplexer,
+                    [1]);
                 _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw,
                     accelConnected, wtDrumConnected, bhDrumConnected);
                 foreach (var output in _bindings)
@@ -367,6 +367,8 @@ public class Santroller : ConfigurableUsbDevice
                         ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
                         peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw,
                         bluetoothInputsRaw, peripheralConnected, crkdRaw);
+                await WriteDataAsync(0, (byte) Commands.CommandDisableMultiplexer,
+                    [0]);
                 // If nothing is being ticked, then give the UI some time to process data instead of polling at max speed
                 if (analogRaw.Count == 0 && digitalRaw.Count == 0 && digitalRawPeripheral.Count == 0 &&
                     midiRaw.Length == 0)
@@ -759,27 +761,25 @@ public class Santroller : ConfigurableUsbDevice
     public bool MatrixRead(int pin, int outPin)
     {
         if (_model == null) return false;
-        WriteData(0, (byte) Commands.CommandDisableMultiplexer,
-            [1]);
 
-        DigitalWrite(outPin, false);
         var ports2 = _model.Microcontroller.GetPortsForTicking([
             new DevicePin(pin, DevicePinMode.PullUp)
         ]);
         Dictionary<int, bool> mRaw = new();
         foreach (var (port, mask) in ports2)
         {
+            
+            DigitalWrite(outPin, true);
             var wValue = (ushort) (port | (mask << 8));
             var data = ReadData(wValue, (byte) Commands.CommandReadDigital, sizeof(byte));
             if (data.Length == 0) return false;
             var pins = data[0];
+            
             _model.Microcontroller.PinsFromPortMask(port, mask, pins, mRaw);
+            DigitalWrite(outPin, false);
         }
 
         var ret = mRaw[pin];
-        DigitalWrite(outPin, true);
-        WriteData(0, (byte) Commands.CommandDisableMultiplexer,
-            [0]);
         return ret;
     }
 }
