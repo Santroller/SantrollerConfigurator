@@ -562,8 +562,8 @@ public abstract partial class OutputAxis : Output
                 $"{WriteBlob(writer, (uint)min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint)deadzone)}{extra}";
         }
         return intBased
-            ? $"{function}({prev}, {generated}, {_intBlob}{extra})"
-            : $"{function}({prev}, {generated}, {_uintBlob}{extra})";
+            ? $"{function}({prev}, {generated}, {_intBlob})"
+            : $"{function}({prev}, {generated}, {_uintBlob})";
     }
 
 
