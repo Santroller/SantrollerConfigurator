@@ -553,17 +553,17 @@ public abstract partial class OutputAxis : Output
         {
             _lastWriter = writer;
             _intBlob =
-                $"{WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, deadzone)}{extra}";
+                $"{WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, deadzone)}";
         }
         if (writer != _lastWriterUint && !intBased)
         {
             _lastWriterUint = writer;
             _uintBlob =
-                $"{WriteBlob(writer, (uint)min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint)deadzone)}{extra}";
+                $"{WriteBlob(writer, (uint)min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint)deadzone)}";
         }
         return intBased
-            ? $"{function}({prev}, {generated}, {_intBlob})"
-            : $"{function}({prev}, {generated}, {_uintBlob})";
+            ? $"{function}({prev}, {generated}, {_intBlob}{extra})"
+            : $"{function}({prev}, {generated}, {_uintBlob}{extra})";
     }
 
 
