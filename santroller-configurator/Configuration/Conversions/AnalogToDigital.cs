@@ -146,7 +146,7 @@ public partial class AnalogToDigital : Input
         if (Child.IsUint && AnalogToDigitalType is not (AnalogToDigitalType.Drum or AnalogToDigitalType.Trigger
                 or AnalogToDigitalType.TriggerInverted))
         {
-            threshold = Math.Abs(threshold);
+            // threshold = Math.Abs(threshold);
         }
 
         if (Model.Writer != null)
