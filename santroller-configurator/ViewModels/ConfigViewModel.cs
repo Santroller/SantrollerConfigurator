@@ -3742,6 +3742,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 var generatedInput = output.Input.Generate();
                 var generatedOutput = output.GenerateOutput(generatedMode);
+                if (output is KeyboardButton {IsMediaKey: true})
+                {
+                    generatedOutput = output.GenerateOutput(ConfigField.Consumer);
+                }
                 var pro = IsFortniteFestivalPro && output is GuitarAxis
                 {
                     Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy
@@ -3819,7 +3823,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                             var input = s.Input;
                             var output = s;
                             var generatedInput = input.Generate();
+                            
                             var generatedOutput = output.GenerateOutput(generatedMode);
+                            if (output is KeyboardButton {IsMediaKey: true})
+                            {
+                                generatedOutput = output.GenerateOutput(ConfigField.Consumer);
+                            }
                             var index = 0;
                             var ledIndex = 0;
 
@@ -3975,6 +3984,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 var generatedInput = output.Input.Generate();
                 var generatedOutput = output.GenerateOutput(generatedMode);
+                
+                if (output is KeyboardButton {IsMediaKey: true})
+                {
+                    generatedOutput = output.GenerateOutput(ConfigField.Consumer);
+                }
+                
                 var pro = IsFortniteFestivalPro && output is GuitarAxis
                 {
                     Type: GuitarAxisType.Tilt or GuitarAxisType.Whammy

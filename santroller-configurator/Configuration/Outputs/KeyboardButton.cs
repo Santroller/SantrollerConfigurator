@@ -270,7 +270,7 @@ public class KeyboardButton : OutputButton
         UpdateDetails();
     }
 
-    public bool IsMediaKey => Key is Key.MediaStop or Key.MediaNextTrack or Key.MediaPlayPause or Key.VolumeDown
+    public bool IsMediaKey => Key is Key.MediaStop or Key.MediaNextTrack or Key.MediaPreviousTrack or Key.MediaPlayPause or Key.VolumeDown
         or Key.VolumeMute or Key.VolumeUp;
 
     public override bool IsKeyboard => true;
