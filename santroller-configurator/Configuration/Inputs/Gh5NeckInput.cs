@@ -13,7 +13,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 public class Gh5NeckInput : TwiInput
 {
     public static readonly string Gh5TwiType = "gh5";
-    public static readonly int Gh5TwiFreq = 100000;
+    public static readonly int Gh5TwiFreq = 150000;
 
     public static readonly Dictionary<int, BarButton> Gh5Mappings = new()
     {
