@@ -88,6 +88,34 @@
                 </TextBlock.Text>
             </TextBlock>
         </DataTemplate>
+        <DataTemplate x:Key="PinToStringTemplateSpiOutput" DataType="system:Object">
+            <TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource PinToStringConverter }">
+                        <Binding />
+                        <Binding Path="$parent[UserControl].DataContext" />
+                        <Binding Path="$parent[ComboBox].SelectedItem" />
+                        <Binding Path="$parent[ComboBox].DataContext" />
+                        <Binding Path="$parent[ComboBoxItem]" />
+                        <Binding>
+                            <Binding.Source>
+                                <system:Boolean>False</system:Boolean>
+                            </Binding.Source>
+                        </Binding>
+                        <Binding>
+                            <Binding.Source>
+                                <system:Boolean>True</system:Boolean>
+                            </Binding.Source>
+                        </Binding>
+                        <Binding>
+                            <Binding.Source>
+                                <system:Boolean>True</system:Boolean>
+                            </Binding.Source>
+                        </Binding>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </DataTemplate>
         <DataTemplate x:Key="PinToStringTemplateTwi" DataType="system:Object">
             <TextBlock>
                 <TextBlock.Text>
@@ -4037,7 +4065,7 @@
                                           SelectedItem="{Binding Ps2OutputMosi}"
                                           ItemsSource="{Binding AvailableMosiPinsPs2Output}"
                                           DropDownOpened="ReloadPinTemplates"
-                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpiOutput}"
                                           Width="200" />
                             </StackPanel>
 
@@ -4049,7 +4077,7 @@
                                           SelectedItem="{Binding Ps2OutputMiso}"
                                           ItemsSource="{Binding AvailableMisoPinsPs2Output}"
                                           DropDownOpened="ReloadPinTemplates"
-                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpiOutput}"
                                           Width="200" />
                             </StackPanel>
 
@@ -4061,7 +4089,7 @@
                                           SelectedItem="{Binding Ps2OutputSck}"
                                           ItemsSource="{Binding AvailableSckPinsPs2Output}"
                                           DropDownOpened="ReloadPinTemplates"
-                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpiOutput}"
                                           Width="200" />
                             </StackPanel>
 

@@ -157,7 +157,7 @@ public partial class ControllerAxis : OutputAxis
             return false;
         }
         // Need to flip y axis on PS3/4
-        return mode is ConfigField.Ps4 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal &&
+        return mode is ConfigField.Ps4 or ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Universal or ConfigField.Ps2 &&
                Type is StandardAxisType.LeftStickY or StandardAxisType.RightStickY;
     }
 

@@ -352,8 +352,7 @@ public class Pico : Microcontroller
         var ret = $"GP{pin}";
         if (twi && TwiIndexByPin.TryGetValue(pin, out var value))
             ret += $" / TWI{value} {TwiTypeByPin[pin].ToString().ToUpper()}";
-
-        if (spi && SpiIndexByPin.TryGetValue(pin, out var value1))
+        if (spi && SpiIndexByPin.TryGetValue(pin, out var value1) && !outputMode)
         {
             // MOSI and MISO are swapped for output mode
             var type = SpiTypesByPin[pin];
