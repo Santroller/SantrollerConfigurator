@@ -25,6 +25,11 @@ public partial class EmulationMode : Output
         false, false, -1, false)
     {
         Type = type;
+        // This mode is no longer necessary, instead we have xbox one mode now
+        if (type == EmulationModeType.FnfHid)
+        {
+            Type = EmulationModeType.XboxOne;
+        }
         _emulationModes.AddRange(Enum.GetValues<EmulationModeType>());
         _emulationModes.Connect()
             .Filter(this.WhenAnyValue(x => x.Model.DeviceControllerType, x => x.Model.IsPico).Select(CreateFilter))
@@ -93,10 +98,11 @@ public partial class EmulationMode : Output
     {
         return mode => (mode != EmulationModeType.Wii || data.deviceControllerType is DeviceControllerType.RockBandDrums
                            or DeviceControllerType.RockBandGuitar) &&
+                       (mode is not EmulationModeType.FnfHid) &&
                        (mode != EmulationModeType.Ps2OnPs3 || data.deviceControllerType is DeviceControllerType.GuitarHeroGuitar) &&
                        (mode != EmulationModeType.Arcade || data.deviceControllerType is DeviceControllerType.GuitarHeroGuitar) &&
                        (mode != EmulationModeType.XboxOne || data.isPico) &&
-                       (mode is not (EmulationModeType.Fnf or EmulationModeType.FnfHid or EmulationModeType.FnfIos
+                       (mode is not (EmulationModeType.Fnf or EmulationModeType.FnfIos
                             or EmulationModeType.FnfLayer) || data.deviceControllerType.Is5FretGuitar() ||
                         data.deviceControllerType.IsDrum());
     }

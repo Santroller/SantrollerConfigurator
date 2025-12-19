@@ -50,12 +50,13 @@ public partial class EmptyOutput : Output
                     ControllerEnumConverter.GetTypes(type).Where(s2 =>
                         (type.IsProGuitar() || s2 is not SimpleType.ProGuitar) &&
                         (type.IsDrum() || type.IsGuitar() ||
-                         s2 is not (SimpleType.FestivalGamepad or SimpleType.FestivalIos or SimpleType.FestivalKeyboard
+                         s2 is not (SimpleType.FestivalIos or SimpleType.FestivalKeyboard
                              or SimpleType.FestivalLayer)) &&
                         (model.IsPico ||
                          s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.BluetoothTx
                              or SimpleType.UsbHost
                              or SimpleType.Peripheral)) &&
+                        s2 is not SimpleType.FestivalGamepad &&
                         (hasPeripheral || s2 is not SimpleType.WtNeckPeripheralSimple) &&
                         (!isBluetooth || s2 is not SimpleType.Bluetooth) &&
                         (isBluetooth || s2 is not SimpleType.Max1704X) &&
@@ -180,12 +181,6 @@ public partial class EmptyOutput : Output
                 Model.Bindings.Remove(this);
                 Model.Bindings.Add(new EmulationMode(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), EmulationModeType.Fnf));
-                Model.UpdateErrors();
-                return;
-            case SimpleType.FestivalGamepad:
-                Model.Bindings.Remove(this);
-                Model.Bindings.Add(new EmulationMode(Model, true,
-                    new DirectInput(-1, false, false, DevicePinMode.PullUp, Model), EmulationModeType.FnfHid));
                 Model.UpdateErrors();
                 return;
             case SimpleType.FestivalLayer:
