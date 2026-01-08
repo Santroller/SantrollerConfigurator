@@ -252,7 +252,7 @@ public class ControllerEnumConverter : IMultiValueConverter
                     .Cast<object>()
                     .Concat(InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>()),
             DeviceControllerType.ProGuitarMustang
-                or DeviceControllerType.ProGuitarSquire => InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>(),
+                or DeviceControllerType.ProGuitarSquire => InstrumentButtonTypeExtensions.GetButtons(deviceType).Cast<object>().Concat(Enum.GetValues<ProGuitarType>().Cast<object>()),
             DeviceControllerType.DancePad => Array.Empty<object>(),
             DeviceControllerType.ProKeys => Enum.GetValues<ProKeyType>().Cast<object>(),
             DeviceControllerType.KeyboardMouse => Array.Empty<object>(),

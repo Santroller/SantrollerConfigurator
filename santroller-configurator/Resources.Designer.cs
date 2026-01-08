@@ -1869,6 +1869,78 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string ProGuitarTypeLowEFret {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeLowEFret", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeAFret {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeAFret", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeDFret {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeDFret", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeGFret {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeGFret", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeBFret {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeBFret", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeHighEFret {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeHighEFret", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeLowEFretVelocity {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeLowEFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeAFretVelocity {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeAFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeDFretVelocity {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeDFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeGFretVelocity {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeGFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeBFretVelocity {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeBFretVelocity", resourceCulture);
+            }
+        }
+        
+        public static string ProGuitarTypeHighEFretVelocity {
+            get {
+                return ResourceManager.GetString("ProGuitarTypeHighEFretVelocity", resourceCulture);
+            }
+        }
+        
         public static string UsbHostInputTypeX {
             get {
                 return ResourceManager.GetString("UsbHostInputTypeX", resourceCulture);
@@ -5310,6 +5382,18 @@ namespace GuitarConfigurator.NetCore {
         public static string SimpleTypeWtDrumInput {
             get {
                 return ResourceManager.GetString("SimpleTypeWtDrumInput", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeMustangNeckSimple {
+            get {
+                return ResourceManager.GetString("SimpleTypeMustangNeckSimple", resourceCulture);
+            }
+        }
+        
+        public static string MustangNeckSettingsLabel {
+            get {
+                return ResourceManager.GetString("MustangNeckSettingsLabel", resourceCulture);
             }
         }
         

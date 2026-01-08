@@ -75,7 +75,8 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadWtDrumConnected,
         CommandReadBhDrumConnected,
         CommandReadCrkd,
-        CommandReadMatrix
+        CommandReadMatrix,
+        CommandMustangNeckValid
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -258,6 +259,7 @@ public class Santroller : ConfigurableUsbDevice
                 var accelConnected = false;
                 var wtDrumConnected = false;
                 var bhDrumConnected = false;
+                var mustangNeckConnected = false;
                 var max1270XRaw = Array.Empty<byte>();
                 var max1270XConnected = false;
 
@@ -349,6 +351,11 @@ public class Santroller : ConfigurableUsbDevice
                     bhDrumConnected =
                         (await ReadDataAsync(0, (byte) Commands.CommandReadBhDrumConnected, 1)).Any(x => x != 0);
                 }
+                if (_model.HasMustangNeckInput)
+                {
+                    mustangNeckConnected =
+                        (await ReadDataAsync(0, (byte) Commands.CommandMustangNeckValid, 1)).Any(x => x != 0);
+                }
 
                 var bluetoothRaw = Array.Empty<byte>();
                 if (IsPico) bluetoothRaw = await ReadDataAsync(0, (byte) Commands.CommandGetBtState, 1);
@@ -359,7 +366,7 @@ public class Santroller : ConfigurableUsbDevice
 
                 var midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
                 _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw,
-                    accelConnected, wtDrumConnected, bhDrumConnected);
+                    accelConnected, wtDrumConnected, bhDrumConnected, mustangNeckConnected);
                 foreach (var output in _bindings)
                     output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw,
                         djRightRaw, gh5Raw,

@@ -37,6 +37,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoInclude(129, typeof(SerializedProGuitarCombinedOutput))]
 [ProtoInclude(130, typeof(SerializedWakeup360))]
 [ProtoInclude(131, typeof(SerializedCrkdCombinedOutput))]
+[ProtoInclude(132, typeof(SerializedProGuitarAxis))]
 [ProtoContract]
 public abstract class SerializedOutput
 {

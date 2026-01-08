@@ -76,12 +76,6 @@ public class ControllerButton : OutputButton
         {
             return "";
         }
-        
-        // RB / Festival can use dpad left for star power activation, which works better in some cases
-        if (Model.SelectDpadLeftXb1 && mode is ConfigField.XboxOne or ConfigField.Ps4 && Type is StandardButtonType.Back && Model.DeviceControllerType.Is5FretGuitar())
-        {
-            return GetReportField(StandardButtonType.DpadLeft);
-        }
 
         if (Model.IsFortniteFestivalPro && mode is ConfigField.Keyboard)
         {

@@ -4213,6 +4213,99 @@
                     </StackPanel>
                 </Expander>
                 <Expander HorizontalAlignment="Stretch" Header="{Binding}"
+                          IsExpanded="{Binding MustangNeckInputExpanded}">
+                    <Expander.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="!Branded" />
+                            <Binding Path="HasMustangNeckInput" />
+                        </MultiBinding>
+                    </Expander.IsVisible>
+                    <Expander.HeaderTemplate>
+                        <DataTemplate DataType="viewModels:ConfigViewModel">
+                            <Panel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="75"
+                                           Source="avares://SantrollerConfigurator/Assets/Icons/Generic.png">
+                                    </Image>
+                                    <Label VerticalAlignment="Center"
+                                           VerticalContentAlignment="Center"
+                                           Content="{x:Static netCore:Resources.MustangNeckSettingsLabel}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="45 0 0 0" HorizontalAlignment="Center"
+                                            IsVisible="{Binding HasMustangNeckInput}">
+                                    <CheckBox IsChecked="{Binding MustangNeckConnected}" VerticalAlignment="Center"
+                                              IsEnabled="False"
+                                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                                </StackPanel>
+                                <Label Foreground="Red" Margin="45 0 0 0"
+                                       Content="{Binding WtDrumErrorText}"
+                                       VerticalAlignment="Bottom"
+                                       HorizontalAlignment="Center"
+                                       HorizontalContentAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       IsVisible="{Binding WtDrumErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal"
+                                            IsVisible="{Binding !$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded}">
+                                    <Button
+                                        Command="{Binding RemoveMustangNeckInputCommand}"
+                                        Content="{x:Static netCore:Resources.RemoveLabel}" />
+                                </StackPanel>
+                            </Panel>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    <StackPanel>
+                        <StackPanel IsVisible="{Binding HasMustangNeckInput}">
+                            <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.MosiWtLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding MustangNeckMosi}"
+                                          ItemsSource="{Binding AvailableMosiPinsInput}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}"
+                                          Width="200" />
+                            </StackPanel>
+
+                            <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.MisoWtLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding MustangNeckMiso}"
+                                          ItemsSource="{Binding AvailableMisoPinsInput}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}"
+                                          Width="200" />
+                            </StackPanel>
+
+                            <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.SckWtLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding MustangNeckSck}"
+                                          ItemsSource="{Binding AvailableSckPins}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplateSpi}"
+                                          Width="200" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.CsWtLabel}" />
+                                <ComboBox VerticalAlignment="Center"
+                                          SelectedItem="{Binding MustangNeckCs}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}"
+                                          Width="200" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
+                <Expander HorizontalAlignment="Stretch" Header="{Binding}"
                           IsExpanded="{Binding BhDrumInputExpanded}">
                     <Expander.IsVisible>
                         <MultiBinding Converter="{x:Static BoolConverters.And}">

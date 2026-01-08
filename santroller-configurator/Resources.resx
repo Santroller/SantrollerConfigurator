@@ -946,6 +946,43 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="UsbHostInputTypeHighEFretVelocity" xml:space="preserve">
         <value>High E String Velocity</value>
     </data>
+
+    <data name="ProGuitarTypeLowEFret" xml:space="preserve">
+        <value>Low E String Fret</value>
+    </data>
+    <data name="ProGuitarTypeAFret" xml:space="preserve">
+        <value>A String Fret</value>
+    </data>
+    <data name="ProGuitarTypeDFret" xml:space="preserve">
+        <value>D String Fret</value>
+    </data>
+    <data name="ProGuitarTypeGFret" xml:space="preserve">
+        <value>G String Fret</value>
+    </data>
+    <data name="ProGuitarTypeBFret" xml:space="preserve">
+        <value>B String Fret</value>
+    </data>
+    <data name="ProGuitarTypeHighEFret" xml:space="preserve">
+        <value>High E String Fret</value>
+    </data>
+    <data name="ProGuitarTypeLowEFretVelocity" xml:space="preserve">
+        <value>Low E String Velocity</value>
+    </data>
+    <data name="ProGuitarTypeAFretVelocity" xml:space="preserve">
+        <value>A String Velocity</value>
+    </data>
+    <data name="ProGuitarTypeDFretVelocity" xml:space="preserve">
+        <value>D String Velocity</value>
+    </data>
+    <data name="ProGuitarTypeGFretVelocity" xml:space="preserve">
+        <value>G String Velocity</value>
+    </data>
+    <data name="ProGuitarTypeBFretVelocity" xml:space="preserve">
+        <value>B String Velocity</value>
+    </data>
+    <data name="ProGuitarTypeHighEFretVelocity" xml:space="preserve">
+        <value>High E String Velocity</value>
+    </data>
     <data name="UsbHostInputTypeX" xml:space="preserve">
         <value>X Button</value>
     </data>
@@ -2787,6 +2824,13 @@ Feel free to remove this option if you do not intend to use your instrument on i
     </data>
     <data name="SimpleTypeWtDrumInput" xml:space="preserve">
         <value>Guitar Hero WT Drum Kit</value>
+    </data>
+
+    <data name="SimpleTypeMustangNeckSimple" xml:space="preserve">
+        <value>Mustang Pro Guitar Neck</value>
+    </data>
+    <data name="MustangNeckSettingsLabel" xml:space="preserve">
+        <value>Mustang Pro Guitar Neck Settings</value>
     </data>
     <data name="WtDrumInputSettingsLabel" xml:space="preserve">
         <value>Guitar Hero WT Drum Kit Settings</value>

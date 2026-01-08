@@ -10,6 +10,7 @@ public enum SimpleType
     CrkdNeckSimple,
     CloneNeckSimple,
     DjTurntableSimple,
+    MustangNeckSimple,
     UsbHost,
     Bluetooth,
     BluetoothTx,

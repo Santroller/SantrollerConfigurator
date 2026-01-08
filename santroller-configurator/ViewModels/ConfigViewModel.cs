@@ -76,7 +76,12 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly bool WtDrumSpiCpol = false;
     public static readonly bool WtDrumSpiCpha = true;
     public static readonly bool WtDrumSpiMsbFirst = true;
-    public static readonly string WtDrumSpiCsType = "wt_drum_cs";
+    public static readonly string MustangNeckSpiType = "mustang_neck";
+    public static readonly uint MustangNeckSpiFreq = 500000;
+    public static readonly bool MustangNeckSpiCpol = false;
+    public static readonly bool MustangNeckSpiCpha = false;
+    public static readonly bool MustangNeckSpiMsbFirst = true;
+    public static readonly string MustangNeckSpiCsType = "mustang_neck_cs";
     public static readonly string BhDrumTwiType = "bh_drum";
     public static readonly int BhDrumTwiFreq = 100000;
 
@@ -87,6 +92,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private SpiConfig? _ledSpiConfigPeripheral;
     private SpiConfig? _ps2OutputSpiConfig;
     private SpiConfig? _wtDrumSpiConfig;
+    private SpiConfig? _mustangNeckSpiConfig;
     private TwiConfig? _peripheralTwiConfig;
     private TwiConfig? _mpr121TwiConfig;
     private TwiConfig? _max170XTwiConfig;
@@ -98,6 +104,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private DirectPinConfig? _ps2OutputAtt;
     private DirectPinConfig? _ps2OutputAck;
     private DirectPinConfig? _wtDrumCsConfig;
+    private DirectPinConfig? _mustangNeckCsConfig;
     private DirectPinConfig? _stp16Oe;
     private DirectPinConfig? _stp16Le;
     private DirectPinConfig? _stp16OePeripheral;
@@ -564,6 +571,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] private bool _mpr121Expanded;
     [Reactive] private bool _wtDrumInputExpanded;
     [Reactive] private bool _bhDrumInputExpanded;
+    [Reactive] private bool _mustangNeckInputExpanded;
 
     [Reactive] private bool _max170XExpanded;
 
@@ -933,13 +941,57 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
 
-    public int WtDrumSck
+    public int MustangNeckSck
     {
-        get => _wtDrumSpiConfig?.Sck ?? 0;
+        get => _mustangNeckSpiConfig?.Sck ?? 0;
         set
         {
             if (_wtDrumSpiConfig == null) return;
             _wtDrumSpiConfig.Sck = value;
+            this.RaisePropertyChanged();
+        }
+    }
+    
+    public int MustangNeckCs
+    {
+        get => _mustangNeckCsConfig?.Pin ?? 0;
+        set
+        {
+            if (_mustangNeckCsConfig == null) return;
+            _mustangNeckCsConfig.Pin = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int MustangNeckMosi
+    {
+        get => _mustangNeckSpiConfig?.Mosi ?? 0;
+        set
+        {
+            if (_mustangNeckSpiConfig == null) return;
+            _mustangNeckSpiConfig.Mosi = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int MustangNeckMiso
+    {
+        get => _mustangNeckSpiConfig?.Miso ?? 0;
+        set
+        {
+            if (_mustangNeckSpiConfig == null) return;
+            _mustangNeckSpiConfig.Miso = value;
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public int WtDrumSck
+    {
+        get => _mustangNeckSpiConfig?.Sck ?? 0;
+        set
+        {
+            if (_mustangNeckSpiConfig == null) return;
+            _mustangNeckSpiConfig.Sck = value;
             this.RaisePropertyChanged();
         }
     }
@@ -1075,6 +1127,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public bool _mpr121Connected;
 
     [Reactive] public bool _wtDrumConnected;
+    
+    [Reactive] public bool _mustangNeckConnected;
 
     [Reactive] public bool _bhDrumConnected;
 
@@ -1281,6 +1335,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private bool _hasWiiOutput;
     private bool _hasPs2Output;
     private bool _hasWtDrumInput;
+    private bool _hasMustangNeckInput;
     private bool _hasBhDrumInput;
     private bool _hasMpr121;
 
@@ -1431,7 +1486,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 _wtDrumSpiConfig = Microcontroller.AssignSpiPins(this, WtDrumSpiType, false, true, true, -1, -1,
                     -1, WtDrumSpiCpol, WtDrumSpiCpha,
                     WtDrumSpiMsbFirst, WtDrumSpiFreq, false);
-                _wtDrumCsConfig = GetPinForType(WtDrumSpiCsType, false, -1, DevicePinMode.Output);
+                _wtDrumCsConfig = GetPinForType(MustangNeckSpiCsType, false, -1, DevicePinMode.Output);
             }
             else
             {
@@ -1444,6 +1499,33 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             this.RaisePropertyChanged(nameof(WtDrumMosi));
             this.RaisePropertyChanged(nameof(WtDrumSck));
             this.RaiseAndSetIfChanged(ref _hasWtDrumInput, value);
+            UpdateErrors();
+        }
+    }
+    
+    public bool HasMustangNeckInput
+    {
+        get => _hasMustangNeckInput;
+        set
+        {
+            if (value)
+            {
+                _mustangNeckSpiConfig = Microcontroller.AssignSpiPins(this, MustangNeckSpiType, false, true, true, -1, -1,
+                    -1, MustangNeckSpiCpol, MustangNeckSpiCpha,
+                    MustangNeckSpiMsbFirst, MustangNeckSpiFreq, false);
+                _mustangNeckCsConfig = GetPinForType(MustangNeckSpiCsType, false, -1, DevicePinMode.Output);
+            }
+            else
+            {
+                _mustangNeckSpiConfig = null;
+                _mustangNeckCsConfig = null;
+            }
+
+            this.RaisePropertyChanged(nameof(MustangNeckCs));
+            this.RaisePropertyChanged(nameof(MustangNeckMiso));
+            this.RaisePropertyChanged(nameof(MustangNeckMosi));
+            this.RaisePropertyChanged(nameof(MustangNeckSck));
+            this.RaiseAndSetIfChanged(ref _hasMustangNeckInput, value);
             UpdateErrors();
         }
     }
@@ -1705,7 +1787,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 _ledSpiConfig, _ws2812Config, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
                 _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
                 _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt,
-                _adaFruitHostPin, _accelTwiConfig, _wtDrumCsConfig, _wtDrumSpiConfig, _bhDrumTwiConfig
+                _adaFruitHostPin, _accelTwiConfig, _wtDrumCsConfig, _wtDrumSpiConfig, _bhDrumTwiConfig, _mustangNeckSpiConfig, _mustangNeckCsConfig
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -2487,6 +2569,16 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                            """;
             }
 
+            if (_mustangNeckSpiConfig != null)
+            {
+                config += $"""
+
+                           #define MUSTANG_NECK_SPI_PORT {_mustangNeckSpiConfig.Definition}
+                           #define MUSTANG_NECK_CS_SET() {Microcontroller.GenerateDigitalWrite(MustangNeckCs, true, false, IsBluetooth)}
+                           #define MUSTANG_NECK_CS_CLEAR() {Microcontroller.GenerateDigitalWrite(MustangNeckCs, false, false, IsBluetooth)}
+                           """;
+            }
+
             if (_bhDrumTwiConfig != null)
             {
                 config += $"""
@@ -2889,6 +2981,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         HasWtDrumInput = false;
     }
     [RelayCommand]
+    public void RemoveMustangNeckInput()
+    {
+        HasMustangNeckInput = false;
+    }
+    [RelayCommand]
     public void RemoveBhDrumInput()
     {
         HasBhDrumInput = false;
@@ -2949,6 +3046,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         BluetoothConfigExpanded = true;
         WtDrumInputExpanded = true;
         BhDrumInputExpanded = true;
+        MustangNeckInputExpanded = true;
         Ps2OutputExpanded = true;
         Mpr121Expanded = true;
         WiiOutputExpanded = true;
@@ -2968,6 +3066,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         LedConfigExpanded = false;
         ControllerConfigExpanded = false;
         BluetoothConfigExpanded = false;
+        MustangNeckInputExpanded = false;
         WtDrumInputExpanded = false;
         BhDrumInputExpanded = false;
         Ps2OutputExpanded = false;
@@ -4119,7 +4218,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         {
             pins["WT Drum"] = _wtDrumSpiConfig.Pins.ToList();
         }
-        if (HasWtDrumInput && type != WtDrumSpiCsType && _wtDrumCsConfig != null)
+        if (HasWtDrumInput && type != MustangNeckSpiCsType && _wtDrumCsConfig != null)
         {
             pins["WT Drum CS"] = [WtDrumCs];
         }
@@ -4344,7 +4443,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     }
 
     public void Update(byte[] btRaw, bool peripheralConnected, bool mpr121Connected, bool max1270XConnected,
-        byte[] max1270XRaw, bool accelConnected, bool wtDrumConnected, bool bhDrumConnected)
+        byte[] max1270XRaw, bool accelConnected, bool wtDrumConnected, bool bhDrumConnected, bool mustangNeckConnected)
     {
         if (IsBluetoothTx && btRaw.Length != 0)
         {
@@ -4363,6 +4462,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
         WtDrumConnected = wtDrumConnected;
         BhDrumConnected = bhDrumConnected;
+        MustangNeckConnected = mustangNeckConnected;
     }
 
     public TwiConfig? GetTwiForType(string twiType, bool peripheral)

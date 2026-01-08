@@ -48,7 +48,7 @@ public partial class EmptyOutput : Output
                 vm => vm.Model.HasUsbHostCombinedOutput, vm => vm.Model.HasBhDrumInput, vm => vm.Model.HasWtDrumInput,
                 (type, hasPeripheral, isBluetooth, hasWii, hasPs2, hasGhwt, hasClone, hasDj, hasGh5, hasUsbHost, hasBhDrum, hasWtDrum) =>
                     ControllerEnumConverter.GetTypes(type).Where(s2 =>
-                        (type.IsProGuitar() || s2 is not SimpleType.ProGuitar) &&
+                        (type.IsProGuitar() || s2 is not (SimpleType.ProGuitar or SimpleType.MustangNeckSimple)) &&
                         (type.IsDrum() || type.IsGuitar() ||
                          s2 is not (SimpleType.FestivalIos or SimpleType.FestivalKeyboard
                              or SimpleType.FestivalLayer)) &&
@@ -159,6 +159,11 @@ public partial class EmptyOutput : Output
                 return;
             case SimpleType.WtDrumInput:
                 Model.HasWtDrumInput = true;
+                Model.Bindings.Remove(this);
+                Model.UpdateErrors();
+                return;
+            case SimpleType.MustangNeckSimple:
+                Model.HasMustangNeckInput = true;
                 Model.Bindings.Remove(this);
                 Model.UpdateErrors();
                 return;
@@ -326,6 +331,10 @@ public partial class EmptyOutput : Output
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
                     proKeyType, false, false, false, -1, false),
+                ProGuitarType proGuitarType => new ProGuitarAxis(Model, true,
+                    new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
+                    Colors.Black, Colors.Black, [], [], [],
+                    proGuitarType, false, false, false, -1, false),
                 _ => null
             }
         };
