@@ -946,8 +946,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         get => _mustangNeckSpiConfig?.Sck ?? 0;
         set
         {
-            if (_wtDrumSpiConfig == null) return;
-            _wtDrumSpiConfig.Sck = value;
+            if (_mustangNeckSpiConfig == null) return;
+            _mustangNeckSpiConfig.Sck = value;
             this.RaisePropertyChanged();
         }
     }
