@@ -95,6 +95,7 @@ public class SerializedConfiguration
         WiiOutputScl = model.WiiOutputScl;
         WiiOutputSda = model.WiiOutputSda;
         HasPs2Output = model.HasPs2Output;
+        
         Ps2OutputMiso = model.Ps2OutputMiso;
         Ps2OutputMosi = model.Ps2OutputMosi;
         Ps2OutputSck = model.Ps2OutputSck;
@@ -106,6 +107,11 @@ public class SerializedConfiguration
         WtDrumMosi = model.WtDrumMosi;
         WtDrumSck = model.WtDrumSck;
         WtDrumCs = model.WtDrumCs;
+        HasMustangNeckInput = model.HasMustangNeckInput;
+        MustangNeckMiso = model.MustangNeckMiso;
+        MustangNeckMosi = model.MustangNeckMosi;
+        MustangNeckSck = model.MustangNeckSck;
+        MustangNeckCs = model.MustangNeckCs;
         BhDrumScl = model.BhDrumScl;
         BhDrumSda = model.BhDrumSda;
         DjFullRange = model.DjFullRange;
@@ -205,6 +211,11 @@ public class SerializedConfiguration
     [ProtoMember(101)] public int BhDrumSda { get; private set; }
     [ProtoMember(102)] public int BhDrumScl { get; private set; }
     [ProtoMember(103)] public bool InvertHidYAxis { get; private set; }
+    [ProtoMember(104)] public bool HasMustangNeckInput { get; private set; }
+    [ProtoMember(105)] public int MustangNeckMosi { get; private set; }
+    [ProtoMember(106)] public int MustangNeckMiso { get; private set; }
+    [ProtoMember(107)] public int MustangNeckSck { get; private set; }
+    [ProtoMember(108)] public int MustangNeckCs { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -242,6 +253,7 @@ public class SerializedConfiguration
         model.HasWiiOutput = HasWiiOutput;
         model.HasPs2Output = HasPs2Output;
         model.HasWtDrumInput = HasWtDrumInput;
+        model.HasMustangNeckInput = HasMustangNeckInput;
         model.HasBhDrumInput = HasBhDrumInput;
         model.HasMpr121 = HasMpr121;
         model.HasMax1704X = HasMax1704X;
@@ -281,6 +293,14 @@ public class SerializedConfiguration
             model.WtDrumSck =  WtDrumSck;
             model.WtDrumCs =  WtDrumCs;
         }
+        if (HasMustangNeckInput)
+        {
+            model.MustangNeckMiso = MustangNeckMiso;
+            model.MustangNeckMosi = MustangNeckMosi;
+            model.MustangNeckSck =  MustangNeckSck;
+            model.MustangNeckCs =  MustangNeckCs;
+        }
+
 
         if (HasBhDrumInput)
         {
