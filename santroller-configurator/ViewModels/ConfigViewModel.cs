@@ -77,10 +77,10 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly bool WtDrumSpiCpha = true;
     public static readonly bool WtDrumSpiMsbFirst = true;
     public static readonly string MustangNeckSpiType = "mustang_neck";
-    public static readonly uint MustangNeckSpiFreq = 500000;
+    public static readonly uint MustangNeckSpiFreq = 100000;
     public static readonly bool MustangNeckSpiCpol = false;
-    public static readonly bool MustangNeckSpiCpha = false;
-    public static readonly bool MustangNeckSpiMsbFirst = true;
+    public static readonly bool MustangNeckSpiCpha = true;
+    public static readonly bool MustangNeckSpiMsbFirst = false;
     public static readonly string MustangNeckSpiCsType = "mustang_neck_cs";
     public static readonly string BhDrumTwiType = "bh_drum";
     public static readonly int BhDrumTwiFreq = 100000;
