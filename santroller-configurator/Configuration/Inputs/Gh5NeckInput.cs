@@ -115,7 +115,7 @@ public class Gh5NeckInput : TwiInput
         if (Input is Gh5NeckInputType.TapBar or Gh5NeckInputType.TapAll) return "(fivetar_buttons[1] ^ 0x80)";
 
         var mappings = MappingByInput[Input];
-        return "(gh5Valid && (" +
+        return "(lastGH5WasSuccessful && (" +
                string.Join(" || ", mappings.Select(mapping => $"(fivetar_buttons[1] == {mapping ^ 0x80})")) + "))";
     }
 
