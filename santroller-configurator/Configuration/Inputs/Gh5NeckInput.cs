@@ -118,7 +118,7 @@ public class Gh5NeckInput : TwiInput
             default:
             {
                 var mappings = MappingByInput[Input];
-                return "(gh5Valid && (" +
+                return "(lastGH5WasSuccessful && (" +
                        string.Join(" || ", mappings.Select(mapping => $"(fivetar_buttons[1] == {mapping ^ 0x80})")) + "))";
             }
         }
