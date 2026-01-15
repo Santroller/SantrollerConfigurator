@@ -334,7 +334,7 @@ public partial class EmptyOutput : Output
                 ProGuitarType proGuitarType => new ProGuitarAxis(Model, true,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, [], [], [],
-                    proGuitarType, false, false, false, -1, false),
+                    0, ushort.MaxValue, 0, proGuitarType, false, false, false, -1, false),
                 _ => null
             }
         };

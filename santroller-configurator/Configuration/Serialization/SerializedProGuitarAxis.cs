@@ -18,7 +18,7 @@ public class SerializedProGuitarAxis : SerializedOutput
         LedIndexMpr121 = [];
         LedIndexPeripheral = [];
     }
-    public SerializedProGuitarAxis(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral,
+    public SerializedProGuitarAxis(SerializedInput input, Color ledOn, Color ledOff, byte[] ledIndex, byte[] ledIndexPeripheral, int min, int max, int deadzone,
         ProGuitarType type, bool outputEnabled, int outputPin, bool outputInverted, bool outputPeripheral, bool childOfCombined, byte[] ledIndexMpr121)
     {
         Input = input;
@@ -33,6 +33,9 @@ public class SerializedProGuitarAxis : SerializedOutput
         OutputPin = outputPin;
         OutputInverted = outputInverted;
         OutputPeripheral = outputPeripheral;
+        Min = min;
+        Max = max;
+        Deadzone = deadzone;
     }
 
     [ProtoMember(1)] public SerializedInput? Input { get; }
@@ -49,6 +52,9 @@ public class SerializedProGuitarAxis : SerializedOutput
     
     [ProtoMember(14)] public byte[] LedIndexMpr121 { get; }
     [ProtoMember(15)] [DefaultValue(true)] private bool Enabled { get; } = true;
+    [ProtoMember(16)] public int Min { get; }
+    [ProtoMember(17)] public int Max { get; }
+    [ProtoMember(18)] public int Deadzone { get; }
 
     public override Output Generate(ConfigViewModel model)
     {
@@ -57,7 +63,7 @@ public class SerializedProGuitarAxis : SerializedOutput
             throw new NotImplementedException("Null child unexpected!");
         }
         var combined = new ProGuitarAxis(model, Enabled,Input.Generate(model), Color.FromUInt32(LedOn),
-            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121,  Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
+            Color.FromUInt32(LedOff), LedIndex, LedIndexPeripheral, LedIndexMpr121,  Min, Max, Deadzone, Type, OutputEnabled, OutputPeripheral, OutputInverted, OutputPin, ChildOfCombined);
         model.Bindings.Add(combined);
         return combined;
     }

@@ -2077,6 +2077,132 @@
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type output:ProGuitarAxis}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center" Width="350"
+                                       Content="{x:Static netCore:Resources.CalibratedValueLabel}" />
+                                <Grid>
+                                    <ProgressBar Value="{Binding Value}"
+                                                 IsIndeterminate="False" Minimum="0" Maximum="32767"
+                                                 Height="30"
+                                                 Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                                    <Label VerticalAlignment="Center" HorizontalContentAlignment="Center"
+                                           Content="{Binding Value}" Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center" Width="350"
+                                       Content="{x:Static netCore:Resources.OriginalValueLabel}" />
+                                <Grid>
+                                    <Rectangle Margin="{Binding CalibrationMinMaxMargin}"
+                                               HorizontalAlignment="Stretch"
+                                               Fill="Green" Height="30" />
+                                    <Rectangle Margin="{Binding ComputedDeadZoneMargin}" Fill="Red"
+                                               HorizontalAlignment="Stretch" Height="30" />
+                                    <StackPanel Orientation="Horizontal" IsVisible="{Binding InputIsUint}">
+                                        <ProgressBar Opacity="0.6"
+                                                     Value="{Binding ValueRaw}"
+                                                     IsIndeterminate="False" Minimum="0" Maximum="65536"
+                                                     Height="30"
+                                                     Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" IsVisible="{Binding !InputIsUint}"
+                                                Width="{Binding FullProgressWidth, Mode=OneTime}">
+                                        <ProgressBar Opacity="0.6" CornerRadius="0 3 3 0"
+                                                     Value="{Binding ValueRawLower}"
+                                                     IsIndeterminate="False" Minimum="0" Maximum="32768"
+                                                     Height="30"
+                                                     Width="{Binding HalfProgressWidth, Mode=OneTime}">
+                                            <ProgressBar.RenderTransform>
+                                                <ScaleTransform ScaleX="-1" />
+                                            </ProgressBar.RenderTransform>
+                                        </ProgressBar>
+                                        <ProgressBar Opacity="0.6" CornerRadius="0 3 3 0"
+                                                     Value="{Binding ValueRawUpper}"
+                                                     IsIndeterminate="False" Minimum="0" Maximum="32768"
+                                                     Height="30"
+                                                     Width="{Binding HalfProgressWidth, Mode=OneTime}" />
+                                    </StackPanel>
+                                    <Label VerticalAlignment="Center" HorizontalAlignment="Center"
+                                           HorizontalContentAlignment="Center"
+                                           Content="{Binding ValueRaw}"
+                                           Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                                </Grid>
+                            </StackPanel>
+                            <Label Margin="300 0 0 0"
+                                   Width="{Binding FullProgressWidth, Mode=OneTime}"
+                                   IsVisible="{Binding CalibrationText, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                   HorizontalContentAlignment="Center"
+                                   Content="{Binding CalibrationText}" />
+                        </StackPanel>
+
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="50">
+                        <Label VerticalAlignment="Center" Width="350"
+                               Content="{x:Static netCore:Resources.CalibrateLabel}" />
+                        <Button Command="{Binding CalibrateCommand}"
+                                HorizontalContentAlignment="Center" VerticalAlignment="Center" Width="100"
+                                Content="{Binding CalibrationButtonText}" />
+                        <Label VerticalAlignment="Center" Content="{Binding CalibrationStatus}" />
+                    </StackPanel>
+
+                    <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
+                        <Label VerticalAlignment="Center" Width="350" Content="{x:Static netCore:Resources.MinLabel}" />
+                        <StackPanel Orientation="Vertical">
+                            <Slider Foreground="White" VerticalAlignment="Center"
+                                    Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding Min}" />
+                            <NumericUpDown FormatString="{}{0:#,0}"
+                                           Minimum="{Binding SliderMin}"
+                                           Maximum="{Binding SliderMax}"
+                                           Value="{Binding Min}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Width="200" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
+                        <Label VerticalAlignment="Center" Width="350" Content="{x:Static netCore:Resources.MaxLabel}" />
+                        <StackPanel Orientation="Vertical">
+                            <Slider Foreground="White" VerticalAlignment="Center"
+                                    Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
+                                    Minimum="{Binding SliderMin}"
+                                    Maximum="{Binding SliderMax}" Value="{Binding Max}" />
+                            <NumericUpDown FormatString="{}{0:#,0}"
+                                           Minimum="{Binding SliderMin}"
+                                           Maximum="{Binding SliderMax}"
+                                           Value="{Binding Max}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Width="200" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel IsVisible="{Binding !IsDigitalToAnalog}" Orientation="Horizontal" Height="100">
+                        <Label VerticalAlignment="Center" Width="350"
+                               Content="{x:Static netCore:Resources.DeadzoneLabel}" />
+                        <StackPanel Orientation="Vertical">
+                            <Slider Foreground="White" VerticalAlignment="Center"
+                                    Width="{Binding FullProgressWidth, Mode=OneTime}" Height="50"
+                                    Minimum="0"
+                                    Maximum="{Binding SliderMax}" Value="{Binding DeadZone}" />
+                            <NumericUpDown FormatString="{}{0:#,0}"
+                                           Minimum="0"
+                                           Maximum="{Binding SliderMax}"
+                                           Value="{Binding DeadZone}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Width="200" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type output:OutputAxis}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
