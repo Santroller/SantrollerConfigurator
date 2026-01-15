@@ -413,6 +413,22 @@
                                Text="{Binding NamedAxisInfo}" />
                 </StackPanel>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type output:ProGuitarAxis}">
+                <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal">
+                                <ProgressBar Value="{Binding Value}"
+                                             IsIndeterminate="False" Minimum="0" Maximum="32767"
+                                             Height="30"
+                                             Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                            </StackPanel>
+                            <Label VerticalAlignment="Center" HorizontalContentAlignment="Center"
+                                   Content="{Binding Value}" Width="{Binding FullProgressWidth, Mode=OneTime}" />
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type output:OutputAxis}">
                 <StackPanel Orientation="Horizontal" IsVisible="{Binding !IsDigitalToAnalog}">
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
