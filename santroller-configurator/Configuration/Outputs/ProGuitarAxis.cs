@@ -78,26 +78,6 @@ public partial class ProGuitarAxis : OutputAxis
     {
         return Type;
     }
-
-    protected override int Calculate(bool enabled, int value, int min, int max, int center, int deadZone, bool trigger,
-        DeviceControllerType
-            deviceControllerType)
-    {
-        if (!enabled) return 0;
-        var val = base.Calculate(enabled, value, min, max, center, deadZone, trigger, deviceControllerType);
-
-        if (VelocityBased)
-        {
-            val = Math.Abs(val - short.MaxValue);
-        }
-        else
-        {
-            val >>= 1;
-        }
-
-        return val;
-    }
-
     public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
         string combinedExtra,
         List<int> strumIndexes,
@@ -115,15 +95,7 @@ public partial class ProGuitarAxis : OutputAxis
 
         var output = GenerateOutput(mode);
         if (output.Length == 0) return "";
-        if (mode is ConfigField.Xbox360 or ConfigField.Xbox or ConfigField.Ps3 or ConfigField.Universal && VelocityBased)
-        {
-            if (Input is DigitalToAnalog)
-                return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
-                    macros, writer);
-            return
-                $"{GenerateOutput(mode)} = abs({GenerateAssignment(GenerateOutput(mode), mode, false, true, false, false, writer)} - INT16_MAX);\n";
-        }
-
+        
         if (Input is DigitalToAnalog)
             return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
                 macros, writer);
