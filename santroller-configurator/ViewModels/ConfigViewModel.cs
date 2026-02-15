@@ -2304,6 +2304,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define SLEEP_INACTIVITY_TIMEOUT_SEC {{WriteBlob(writer, DeviceSleep)}}
                         #define SLEEP_ACTIVE_HIGH {{WriteBlob(writer, false)}}
                         #define RGB_INACTIVITY_TIMEOUT_SEC {{WriteBlob(writer, LedSleep)}}
+                        #define MAP_XBOX_ONE_SELECT_DPAD_LEFT {{WriteBlob(writer, SelectDpadLeftXb1)}}
                         """;
 
             if (IsBluetoothRx)
@@ -2364,6 +2365,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define SLEEP_INACTIVITY_TIMEOUT_SEC {{DeviceSleep}}
                         #define SLEEP_ACTIVE_HIGH {{false.ToString().ToLower()}}
                         #define RGB_INACTIVITY_TIMEOUT_SEC {{LedSleep}}
+                        #define MAP_XBOX_ONE_SELECT_DPAD_LEFT {{(!SelectDpadLeftXb1).ToString().ToLower()}}
                         """;
             if (IsBluetoothRx)
             {

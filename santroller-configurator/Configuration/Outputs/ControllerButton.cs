@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -12,9 +13,11 @@ namespace GuitarConfigurator.NetCore.Configuration.Outputs;
 
 public class ControllerButton : OutputButton
 {
-    public ControllerButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff, byte[] ledIndices,
+    public ControllerButton(ConfigViewModel model, bool enabled, Input input, Color ledOn, Color ledOff,
+        byte[] ledIndices,
         byte[] ledIndicesPeripheral, byte[] ledIndicesMpr121, int debounce, StandardButtonType type, bool outputEnabled,
-        bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined) : base(model, enabled, input, ledOn,
+        bool outputPeripheral, bool outputInverted, int outputPin, bool childOfCombined) : base(model, enabled, input,
+        ledOn,
         ledOff, ledIndices, ledIndicesPeripheral, ledIndicesMpr121, debounce, outputEnabled, outputInverted,
         outputPeripheral, outputPin, childOfCombined)
     {
@@ -34,9 +37,9 @@ public class ControllerButton : OutputButton
 
     private readonly Dictionary<StandardButtonType, Key> _fortniteKeys = new()
     {
-        {StandardButtonType.Back, Key.Space},
-        {StandardButtonType.DpadUp, Key.Up},
-        {StandardButtonType.DpadDown, Key.Down},
+        { StandardButtonType.Back, Key.Space },
+        { StandardButtonType.DpadUp, Key.Up },
+        { StandardButtonType.DpadDown, Key.Down },
     };
 
     public override string GetName(DeviceControllerType deviceControllerType, LegendType legendType,
@@ -50,13 +53,40 @@ public class ControllerButton : OutputButton
         return Type;
     }
 
+    public override string Generate(ConfigField mode, int debounceIndex, int ledIndex, string extra,
+        string combinedExtra,
+        List<int> strumIndexes, bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros,
+        BinaryWriter? writer)
+    {
+        // RB / Festival can use dpad left for star power activation, which works better in some cases
+        if (mode is ConfigField.XboxOne or ConfigField.Ps4 && Type is StandardButtonType.Back &&
+            Model.DeviceControllerType.Is5FretGuitar())
+        {
+            return $$"""
+                          if (MAP_XBOX_ONE_SELECT_DPAD_LEFT) {
+                              {{base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer)}}    
+                          } else {
+                              {{base.Generate(ConfigField.Xbox360, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce, macros, writer)}}
+                          }
+                     """;
+        }
+
+        return base.Generate(mode, debounceIndex, ledIndex, extra, combinedExtra, strumIndexes, combinedDebounce,
+            macros, writer);
+    }
+
     public override string GenerateOutput(ConfigField mode)
     {
-
         // No guide button on og xbox or PS2
         if (mode is ConfigField.Xbox or ConfigField.Ps2 && Type is StandardButtonType.Guide)
         {
             return "";
+        }
+
+        if (mode is ConfigField.XboxOne or ConfigField.Ps4 && Type is StandardButtonType.Back &&
+            Model.DeviceControllerType.Is5FretGuitar())
+        {
+            return GetReportField(StandardButtonType.DpadLeft);
         }
 
         // No dpad left or right on ps2 guitars
@@ -65,6 +95,7 @@ public class ControllerButton : OutputButton
         {
             return "";
         }
+
         // No thumb click on wii
         if (mode is ConfigField.Wii && Type is StandardButtonType.LeftThumbClick or StandardButtonType.RightThumbClick)
         {
