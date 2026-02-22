@@ -987,11 +987,11 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public int WtDrumSck
     {
-        get => _mustangNeckSpiConfig?.Sck ?? 0;
+        get => _wtDrumSpiConfig?.Sck ?? 0;
         set
         {
-            if (_mustangNeckSpiConfig == null) return;
-            _mustangNeckSpiConfig.Sck = value;
+            if (_wtDrumSpiConfig == null) return;
+            _wtDrumSpiConfig.Sck = value;
             this.RaisePropertyChanged();
         }
     }
