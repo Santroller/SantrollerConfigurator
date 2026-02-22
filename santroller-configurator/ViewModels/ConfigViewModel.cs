@@ -1748,6 +1748,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public bool BindableAtt => Microcontroller is not (Uno or Mega);
     public List<int> AvailableMosiPinsInput => GetMosiPins(false);
     public List<int> AvailableMisoPinsInput => GetMisoPins(false);
+    public List<int> AvailableSckPinsInput => GetSckPins();
 
     public List<int> AvailableMosiPinsPs2Output =>
         Microcontroller is Pico ? AvailablePinsDigital.ToList() : GetMosiPins(true);
