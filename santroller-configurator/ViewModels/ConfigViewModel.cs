@@ -232,7 +232,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         _isRpcs3CompatibleControllerHelper = this.WhenAnyValue(x => x.DeviceControllerType)
             .Select(x =>
                 x is DeviceControllerType.Gamepad or DeviceControllerType.Turntable or DeviceControllerType.RockBandDrums
-                    or DeviceControllerType.RockBandGuitar or DeviceControllerType.LiveGuitar
+                    or DeviceControllerType.RockBandGuitar or DeviceControllerType.GuitarHeroGuitar or DeviceControllerType.LiveGuitar
                     or DeviceControllerType.StageKit or DeviceControllerType.ProKeys
                     or DeviceControllerType.ProGuitarMustang or DeviceControllerType.ProGuitarSquire)
             .ToProperty(this, x => x.IsRpcs3CompatibleController);
