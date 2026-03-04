@@ -2366,7 +2366,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define SLEEP_INACTIVITY_TIMEOUT_SEC {{DeviceSleep}}
                         #define SLEEP_ACTIVE_HIGH {{false.ToString().ToLower()}}
                         #define RGB_INACTIVITY_TIMEOUT_SEC {{LedSleep}}
-                        #define MAP_XBOX_ONE_SELECT_DPAD_LEFT {{(!SelectDpadLeftXb1).ToString().ToLower()}}
+                        #define MAP_XBOX_ONE_SELECT_DPAD_LEFT {{SelectDpadLeftXb1.ToString().ToLower()}}
                         """;
             if (IsBluetoothRx)
             {
