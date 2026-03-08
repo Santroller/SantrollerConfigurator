@@ -456,7 +456,7 @@ public partial class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = 255;
                          }
                          """;
-            case ConfigField.XboxOne or ConfigField.Universal when Type is GuitarAxisType.Tilt:
+            case ConfigField.XboxOne or ConfigField.Universal or ConfigField.Ps4 when Type is GuitarAxisType.Tilt:
                 return
                     $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};";
             case ConfigField.Xbox360 or ConfigField.Xbox when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
@@ -652,6 +652,15 @@ public partial class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[GetPickupSelectorValue(analogOn)]}};
                          }
                          """;
+            // PS4 pickup selector ranges from 0 - 4, so we need to map it correctly.
+            case ConfigField.Ps4
+                when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
+                     Type == GuitarAxisType.Pickup && Input is DigitalToAnalog:
+                return $$"""
+                         if ({{Input.Generate()}}) {
+                             {{GenerateOutput(mode)}} = {{GetPickupSelectorValue(analogOn) - 1}};
+                         }
+                         """;
             case ConfigField.XboxOne
                 when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
                      Type == GuitarAxisType.Pickup:
@@ -673,6 +682,30 @@ public partial class GuitarAxis : OutputAxis
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[4]}};
                              } else {
                                 {{GenerateOutput(mode)}} = {{PickupSelectorRangesXb1[5]}};
+                             }
+                         }
+                         """;
+            case ConfigField.Ps4
+                when Model is {DeviceControllerType: DeviceControllerType.RockBandGuitar} &&
+                     Type == GuitarAxisType.Pickup:
+                var gen3 = $"({Input.Generate()})";
+                if (Inverted)
+                {
+                    gen3 = $"({ushort.MaxValue} - {gen3})";
+                }
+
+                return $$"""
+                         if ({{gen3}}) {
+                             if ({{gen3}} <= {{PickupSelectorNotch2}}) {
+                                {{GenerateOutput(mode)}} = 0;
+                             } else if ({{gen3}} <= {{PickupSelectorNotch3}}) {
+                                {{GenerateOutput(mode)}} = 1;
+                             } else if ({{gen3}} <= {{PickupSelectorNotch4}}) {
+                                {{GenerateOutput(mode)}} = 2;
+                             } else if ({{gen3}} <= {{PickupSelectorNotch5}}) {
+                                {{GenerateOutput(mode)}} = 3;
+                             } else {
+                                {{GenerateOutput(mode)}} = 4;
                              }
                          }
                          """;
