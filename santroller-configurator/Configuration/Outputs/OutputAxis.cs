@@ -509,21 +509,9 @@ public abstract partial class OutputAxis : Output
         var multiplier = 1f / (max - min) * ushort.MaxValue;
 
         var generated = "(" + Input.Generate();
-        if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && mode is ConfigField.XboxOne)
+        if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && mode is ConfigField.Ps4 or ConfigField.XboxOne)
         {
-            // XB1 tilt is special. it centers at 0 but is a uint, so we need to strip away negative values
-            generated += ")";
-            // Convert to int
-            if (InputIsUint)
-            {
-                generated = $"({generated} - INT16_MAX)";
-            }
-            // instead of the value going negative and positive it centers at zero and both directions map to the same range
-            generated = $"(abs({generated}))";
-            
-        } else if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && mode is ConfigField.Ps4)
-        {
-            // ps4 tilt is special. it centers at 0 but is a uint, so we need to strip away negative values
+            // xb1/ps4 tilt is special. it centers at 0 but is a uint, so we need to strip away negative values
             generated += ")";
             // Convert to int
             if (InputIsUint)
@@ -547,25 +535,26 @@ public abstract partial class OutputAxis : Output
         var extra = sections?$",{(int)Section}":"";
         if (ShouldFlip(mode))
         {
+            // flipping min and max will flip the input
+            (min, max) = (max, min);
+            // of course, if we are only using half the range, we also need to swap ranges
             switch (Section)
             {
-                case SectionType.Normal:
-                    generated = intBased ? $"(-({generated}))" : $"(UINT16_MAX-({generated}))";
-                    break;
-                // flipping sections means swapping min and max and using the other half
                 case SectionType.BottomHalf:
                     extra = $",{(int)SectionType.TopHalf}";
-                    (min, max) = (max, min);
                     break;
                 case SectionType.TopHalf:
                     extra = $",{(int)SectionType.BottomHalf}";
-                    (min, max) = (max, min);
                     break;
             }
         }
 
         if (Input is FixedInput)
         {
+            if (ShouldFlip(mode))
+            {
+                generated = intBased ? $"(-({generated}))" : $"(UINT16_MAX-({generated}))";
+            }
             return singleByte ? $"({generated}) >> 8" : generated;
         }
         
