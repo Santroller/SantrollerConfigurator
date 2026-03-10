@@ -544,9 +544,24 @@ public abstract partial class OutputAxis : Output
             };
         }
 
+        var extra = sections?$",{(int)Section}":"";
         if (ShouldFlip(mode))
         {
-            generated = intBased ? $"(-({generated}))" : $"(UINT16_MAX-({generated}))";
+            switch (Section)
+            {
+                case SectionType.Normal:
+                    generated = intBased ? $"(-({generated}))" : $"(UINT16_MAX-({generated}))";
+                    break;
+                // flipping sections means swapping min and max and using the other half
+                case SectionType.BottomHalf:
+                    extra = $",{(int)SectionType.TopHalf}";
+                    (min, max) = (max, min);
+                    break;
+                case SectionType.TopHalf:
+                    extra = $",{(int)SectionType.BottomHalf}";
+                    (min, max) = (max, min);
+                    break;
+            }
         }
 
         if (Input is FixedInput)
@@ -554,7 +569,6 @@ public abstract partial class OutputAxis : Output
             return singleByte ? $"({generated}) >> 8" : generated;
         }
         
-        var extra = sections?$",{(int)Section}":"";
 
         var mulInt = (short) (multiplier * 512);
         if (writer == null)
