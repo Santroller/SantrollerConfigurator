@@ -116,6 +116,8 @@ public class ControllerButton : OutputButton
                     return GetReportField(Key.PageDown);
                 case StandardButtonType.Start:
                     return GetReportField(Key.Escape);
+                case StandardButtonType.Guide:
+                    return GetReportField(Key.Space);
                 case StandardButtonType.DpadLeft:
                     return GetReportField(Key.Left);
                 case StandardButtonType.DpadRight:
