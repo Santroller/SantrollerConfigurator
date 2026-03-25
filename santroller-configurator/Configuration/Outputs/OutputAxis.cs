@@ -46,7 +46,7 @@ public abstract partial class OutputAxis : Output
         Max = max;
         Min = min;
         DeadZone = deadZone;
-        _inputIsUintHelper = this.WhenAnyValue(x => x.Input).Select(i => i is {IsUint: true})
+        _inputIsUintHelper = this.WhenAnyValue(x => x.Input).Select(i => i is { IsUint: true })
             .ToProperty(this, x => x.InputIsUint);
         var calibrationWatcher = this.WhenAnyValue(x => x.Input.RawValue);
         calibrationWatcher.Subscribe(ApplyCalibration);
@@ -55,9 +55,9 @@ public abstract partial class OutputAxis : Output
         _valueRawUpperHelper = this.WhenAnyValue(x => x.ValueRaw).Select(s => s > 0 ? s : 0)
             .ToProperty(this, x => x.ValueRawUpper);
 
-        _sliderMaxHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int) ushort.MaxValue : short.MaxValue)
+        _sliderMaxHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MaxValue : short.MaxValue)
             .ToProperty(this, x => x.SliderMax);
-        _sliderMinHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int) ushort.MinValue : short.MinValue)
+        _sliderMinHelper = this.WhenAnyValue(x => x.InputIsUint).Select(s => s ? (int)ushort.MinValue : short.MinValue)
             .ToProperty(this, x => x.SliderMin);
         // Most things don't require manual centering, so for most things we just set center to the center of max and min.
         if (!overrideCenter)
@@ -191,7 +191,7 @@ public abstract partial class OutputAxis : Output
                 break;
             case OutputAxisCalibrationState.Max:
                 Max = rawValue;
-                if (this is GuitarAxis {Type: GuitarAxisType.Tilt})
+                if (this is GuitarAxis { Type: GuitarAxisType.Tilt })
                 {
                     Min = Math.Max(SliderMin, _tempMin - Max);
                 }
@@ -227,7 +227,9 @@ public abstract partial class OutputAxis : Output
         if (CalibrationState == MaxState)
         {
             CalibrationState = OutputAxisCalibrationState.None;
-        } else {
+        }
+        else
+        {
             CalibrationState++;
         }
 
@@ -316,7 +318,7 @@ public abstract partial class OutputAxis : Output
         }
 
 
-        return (int) val;
+        return (int)val;
     }
 
     public abstract bool ShouldFlip(ConfigField mode);
@@ -349,7 +351,7 @@ public abstract partial class OutputAxis : Output
     {
         return CalibrationState == OutputAxisCalibrationState.None
             ? null
-            : string.Format(Resources.AxisCalibrationStep, (int) CalibrationState, (int) MaxState);
+            : string.Format(Resources.AxisCalibrationStep, (int)CalibrationState, (int)MaxState);
     }
 
     private string _intBlob = "";
@@ -366,7 +368,7 @@ public abstract partial class OutputAxis : Output
         {
             case DigitalToAnalog:
                 return Input.Generate();
-            case FixedInput when this is GuitarAxis {Type: GuitarAxisType.Pickup}:
+            case FixedInput when this is GuitarAxis { Type: GuitarAxisType.Pickup }:
                 return $"({Input.Generate()} >> 8) & 0xff";
         }
 
@@ -389,7 +391,9 @@ public abstract partial class OutputAxis : Output
                 break;
             case ConfigField.XboxOne or ConfigField.Ps4 when forceAccel:
                 singleByte = true;
-                function = "handle_calibration_ps3_360_trigger";
+                intBased = true;
+                sections = true;
+                function = "handle_calibration_ps3";
                 break;
             case ConfigField.XboxOne:
                 intBased = true;
@@ -486,7 +490,7 @@ public abstract partial class OutputAxis : Output
                 max += short.MaxValue;
                 min += short.MaxValue;
             }
-            
+
 
             // There is no difference between a deadzone and a minimum in this scenario.
             deadzone = 0;
@@ -509,30 +513,15 @@ public abstract partial class OutputAxis : Output
         var multiplier = 1f / (max - min) * ushort.MaxValue;
 
         var generated = "(" + Input.Generate();
-        if (this is GuitarAxis {Type: GuitarAxisType.Tilt} && mode is ConfigField.Ps4 or ConfigField.XboxOne)
-        {
-            // xb1/ps4 tilt is special. it centers at 0 but is a uint, so we need to strip away negative values
-            generated += ")";
-            // Convert to int
-            if (InputIsUint)
-            {
-                generated = $"({generated} - INT16_MAX)";
-            }
-            // instead of the value going negative and positive it centers at zero and both directions map to the same range
-            generated = $"(abs({generated}) << 1)";
-            
-        }
-        else
-        {
-            generated += intBased switch
-            {
-                false when !InputIsUint => ") + INT16_MAX",
-                true when InputIsUint => ") - INT16_MAX",
-                _ => ")"
-            };
-        }
 
-        var extra = sections?$",{(int)Section}":"";
+        generated += intBased switch
+        {
+            false when !InputIsUint => ") + INT16_MAX",
+            true when InputIsUint => ") - INT16_MAX",
+            _ => ")"
+        };
+
+        var extra = sections ? $",{(int)Section}" : "";
         if (ShouldFlip(mode))
         {
             // flipping min and max will flip the input
@@ -555,11 +544,11 @@ public abstract partial class OutputAxis : Output
             {
                 generated = intBased ? $"(-({generated}))" : $"(UINT16_MAX-({generated}))";
             }
+
             return singleByte ? $"({generated}) >> 8" : generated;
         }
-        
 
-        var mulInt = (short) (multiplier * 512);
+        var mulInt = (short)(multiplier * 512);
         if (writer == null)
             return intBased
                 ? $"{function}({prev}, {generated}, {min}, {max}, {center}, {deadzone}{extra})"
@@ -570,12 +559,14 @@ public abstract partial class OutputAxis : Output
             _intBlob =
                 $"{WriteBlob(writer, min)}, {WriteBlob(writer, max)}, {WriteBlob(writer, center)}, {WriteBlob(writer, deadzone)}";
         }
+
         if (writer != _lastWriterUint && !intBased)
         {
             _lastWriterUint = writer;
             _uintBlob =
                 $"{WriteBlob(writer, (uint)min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint)deadzone)}";
         }
+
         return intBased
             ? $"{function}({prev}, {generated}, {_intBlob}{extra})"
             : $"{function}({prev}, {generated}, {_uintBlob}{extra})";
@@ -587,7 +578,7 @@ public abstract partial class OutputAxis : Output
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
-        if (Model is {Branded: false, Builder: false} && !Enabled)
+        if (Model is { Branded: false, Builder: false } && !Enabled)
         {
             return "";
         }
@@ -603,7 +594,7 @@ public abstract partial class OutputAxis : Output
         if (Input is not DigitalToAnalog dta)
         {
             var extraTrigger = "";
-            if (this is ControllerAxis {Type: StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger} axis)
+            if (this is ControllerAxis { Type: StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger } axis)
             {
                 switch (mode)
                 {
@@ -644,7 +635,8 @@ public abstract partial class OutputAxis : Output
         if (ShouldFlip(mode) && !Trigger)
         {
             val = (-val) - 1;
-        } else if (ShouldFlip(mode))
+        }
+        else if (ShouldFlip(mode))
         {
             val = ushort.MaxValue - val;
         }
@@ -683,7 +675,7 @@ public abstract partial class OutputAxis : Output
                 Type: StandardAxisType.LeftTrigger or StandardAxisType.RightTrigger
             })
         {
-            var trigger = this is ControllerAxis {Type: StandardAxisType.LeftTrigger} ? "l2" : "r2";
+            var trigger = this is ControllerAxis { Type: StandardAxisType.LeftTrigger } ? "l2" : "r2";
             return $$"""
                      if ({{Input.Generate()}}) {
                          {{output}} = {{val}};
