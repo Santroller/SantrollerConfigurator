@@ -456,12 +456,9 @@ public partial class GuitarAxis : OutputAxis
                              {{GenerateOutput(mode)}} = 255;
                          }
                          """;
-            case ConfigField.Universal when Type is GuitarAxisType.Tilt:
+            case ConfigField.Universal or ConfigField.XboxOne or ConfigField.Ps4 when Type is GuitarAxisType.Tilt:
                 return
                     $"{GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};";
-            case ConfigField.XboxOne or ConfigField.Ps4 when Type is GuitarAxisType.Tilt:
-                return
-                    $"{GenerateOutput(mode)} = abs({GenerateAssignment($"{GenerateOutput(mode)} >> 1", mode, true, false, false, false, writer)}) << 1;";
             case ConfigField.Xbox360 or ConfigField.Xbox when Type == GuitarAxisType.Slider && Input is DigitalToAnalog:
                 // x360 slider is actually a int16_t BUT there is a mechanism to convert the uint8 value to its uint16_t version
                 analogOn = -((sbyte) (analogOn ^ 0x80) * -257);

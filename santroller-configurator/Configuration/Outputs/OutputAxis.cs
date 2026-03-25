@@ -392,8 +392,7 @@ public abstract partial class OutputAxis : Output
             case ConfigField.XboxOne or ConfigField.Ps4 when forceAccel:
                 singleByte = true;
                 intBased = true;
-                sections = true;
-                function = "handle_calibration_ps3";
+                function = "handle_calibration_ps4_xb1_tilt";
                 break;
             case ConfigField.XboxOne:
                 intBased = true;
