@@ -79,6 +79,8 @@ public partial class DrumAxis : OutputAxis
     {
         { DrumAxisType.Green, StandardButtonType.A },
         { DrumAxisType.Red, StandardButtonType.B },
+        { DrumAxisType.Blue, StandardButtonType.X },
+        { DrumAxisType.Yellow, StandardButtonType.Y },
         { DrumAxisType.Kick, StandardButtonType.LeftShoulder },
         { DrumAxisType.Kick2, StandardButtonType.RightShoulder }
     };
