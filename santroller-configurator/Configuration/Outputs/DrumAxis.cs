@@ -68,11 +68,15 @@ public partial class DrumAxis : OutputAxis
 
     private static readonly Dictionary<DrumAxisType, Key> _fortniteProKeysRb = new()
     {
-        { DrumAxisType.Red, Key.F },
-        { DrumAxisType.Yellow, Key.G },
-        { DrumAxisType.Blue, Key.H },
-        { DrumAxisType.Green, Key.J },
-        { DrumAxisType.Kick, Key.K },
+        { DrumAxisType.Red, Key.D },
+        { DrumAxisType.Yellow, Key.F },
+        { DrumAxisType.Blue, Key.J },
+        { DrumAxisType.Green, Key.K },
+        { DrumAxisType.Kick, Key.Space },
+        { DrumAxisType.Kick2, Key.LeftAlt },
+        { DrumAxisType.YellowCymbal, Key.R },
+        { DrumAxisType.BlueCymbal, Key.U },
+        { DrumAxisType.GreenCymbal, Key.I },
     };
 
     private static readonly Dictionary<DrumAxisType, StandardButtonType> ButtonsXboxOne = new()
