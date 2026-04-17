@@ -108,12 +108,10 @@ public class ControllerButton : OutputButton
             return "";
         }
 
-        if (Model.IsFortniteFestivalPro && mode is ConfigField.Keyboard)
+        if (Model.IsFortniteFestivalPro && mode is ConfigField.Keyboard && !Model.IsDrum)
         {
             switch (Type)
             {
-                case StandardButtonType.Back:
-                    return GetReportField(Key.PageDown);
                 case StandardButtonType.Start:
                     return GetReportField(Key.Escape);
                 case StandardButtonType.Guide:
@@ -122,6 +120,34 @@ public class ControllerButton : OutputButton
                     return GetReportField(Key.Left);
                 case StandardButtonType.DpadRight:
                     return GetReportField(Key.Right);
+            }
+        }
+        if (Model.IsFortniteFestivalPro && mode is ConfigField.Keyboard && Model.IsDrum)
+        {
+            switch (Type)
+            {
+                case StandardButtonType.A:
+                    return GetReportField("Enter");
+                case StandardButtonType.B:
+                    return GetReportField(Key.Escape);
+                case StandardButtonType.X:
+                    return GetReportField(Key.E);
+                case StandardButtonType.Y:
+                    return GetReportField(Key.R);
+                case StandardButtonType.Back:
+                    return GetReportField(Key.C);
+                case StandardButtonType.Start:
+                    return GetReportField(Key.L);
+                case StandardButtonType.Guide:
+                    return GetReportField(Key.Space);
+                case StandardButtonType.DpadLeft:
+                    return GetReportField(Key.Left);
+                case StandardButtonType.DpadRight:
+                    return GetReportField(Key.Right);
+                case StandardButtonType.DpadUp:
+                    return GetReportField(Key.Up);
+                case StandardButtonType.DpadDown:
+                    return GetReportField(Key.Down);
             }
         }
 
