@@ -404,8 +404,8 @@ public partial class DrumAxis : OutputAxis
         {
             // Xbox one uses 4 bit velocities
             ConfigField.XboxOne => $"(lastDrum[{debounceIndex}]) >> 13",
-            // PC HID uses 8 bit velocities
-            ConfigField.Universal => $"(lastDrum[{debounceIndex}]) >> 8",
+            // PC HID and PS4 uses 8 bit velocities
+            ConfigField.Universal or ConfigField.Ps4 => $"(lastDrum[{debounceIndex}]) >> 8",
             // PS3 + Xbox360 GH uses 7 bit velocities (because midi)
             ConfigField.Ps3 or ConfigField.Ps3WithoutCapture or ConfigField.Xbox360 when
                 Model.DeviceControllerType.IsGh() => $"(lastDrum[{debounceIndex}]) >> 9",
