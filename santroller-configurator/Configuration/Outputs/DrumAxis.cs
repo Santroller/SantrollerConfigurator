@@ -308,7 +308,7 @@ public partial class DrumAxis : OutputAxis
         }
 
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps4
-            or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
+            or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360 or ConfigField.Festival
             or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii or ConfigField.Keyboard)) return "";
         if (string.IsNullOrEmpty(GenerateOutput(mode))) return "";
 
@@ -361,6 +361,9 @@ public partial class DrumAxis : OutputAxis
                 if (ButtonsPs3.TryGetValue(Type, out var value3))
                     outputButtons += $"\n{GetReportField(value3)} = true;";
                 break;
+            case ConfigField.Festival:
+                outputButtons += $"\n{GetReportField(Type)} = true;";
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
         }
@@ -368,6 +371,15 @@ public partial class DrumAxis : OutputAxis
         // XB1 and PS4 are RB by definition
         if (((Model.DeviceControllerType.IsRb() || mode == ConfigField.XboxOne || mode == ConfigField.Ps4) &&
              Type is DrumAxisType.Kick or DrumAxisType.Kick2))
+        {
+            return $$"""
+                     if ({{ifStatement}}) {
+                         {{outputButtons}}
+                     }
+                     """;
+        }
+
+        if (mode == ConfigField.Festival)
         {
             return $$"""
                      if ({{ifStatement}}) {
