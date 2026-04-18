@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Reactive.Linq;
 using Avalonia.Media;
 using DynamicData;
@@ -24,11 +25,11 @@ public partial class EmulationMode : Output
         model, enabled, input, Colors.Black, Colors.Black, [], [], [], false,
         false, false, -1, false)
     {
-        Type = type;
+        _emulationModeType = type;
         // This mode is no longer necessary, instead we have xbox one mode now
         if (type == EmulationModeType.FnfHid)
         {
-            Type = EmulationModeType.XboxOne;
+            _emulationModeType = EmulationModeType.XboxOne;
         }
         _emulationModes.AddRange(Enum.GetValues<EmulationModeType>());
         _emulationModes.Connect()
@@ -36,6 +37,7 @@ public partial class EmulationMode : Output
             .Bind(out var modes)
             .Subscribe();
         EmulationModes = modes;
+        UpdateDetails();
         UpdateExplanation();
     }
 
@@ -161,11 +163,56 @@ public partial class EmulationMode : Output
         List<int> strumIndexes,
         bool combinedDebounce, Dictionary<string, List<(int, Input)>> macros, BinaryWriter? writer)
     {
+        var extraStatement = "";
+        if (mode == ConfigField.Shared && combinedExtra.Length != 0) extraStatement = $" && ({combinedExtra})";
+        var debounce = 30;
+
+        if (mode == ConfigField.Reset)
+        {
+            return "";
+        }
+        debounce += 1;
+        if (mode == ConfigField.Shared)
+        {
+            var gen = Input.Generate();
+            var reset = $"debounce[{debounceIndex}]={debounce};";
+
+            if (Model.LedType != LedType.None || Model.LedTypePeripheral != LedType.None || OutputEnabled || Model.HasMpr121)
+            {
+                reset += $"ledDebounce[{ledIndex}]={debounce};";
+            }
+
+            if (Input is MacroInput)
+            {
+                foreach (var input in Input.Inputs())
+                {
+                    var gen2 = input.Generate();
+                    if (!macros.TryGetValue(gen2, out var inputs2)) continue;
+                    extra += string.Join("\n    ", inputs2.Select(s => $"debounce[{s.Item1}]=0;"));
+                }
+            }
+            foreach (var input in Input.InnermostInputs())
+            {
+                if (input is MidiInput midiInput && Model.IsDrum)
+                {
+                    extra += $"midiData.midiVelocitiesTemp[{midiInput.Key}] = 0;";
+                }
+            }
+        
+            var ret = $$"""
+                        if (({{gen}} {{extraStatement}})) {
+                            {{reset}} {{extra}}
+                        }
+                        """;
+            return ret;
+        }
+        var ifStatement = $"debounce[{debounceIndex}]";
         if (Type is EmulationModeType.FnfLayer)
         {
             return mode == ConfigField.DetectionFestival
                 ? $$"""
-                    if ((millis() - last_festival_toggle) > 1000 && {{Input.Generate()}}) {
+                    if ((millis() - last_festival_toggle) > 1000 && {{ifStatement}}) {
+                        {{extra}}
                         last_festival_toggle = millis();
                         festival_gameplay_mode = !festival_gameplay_mode;
                     }
@@ -175,7 +222,8 @@ public partial class EmulationMode : Output
 
         return mode == ConfigField.Detection
             ? $$"""
-                if ({{Input.Generate()}} && output_console_type != {{GetDefinition()}}) {
+                if ({{ifStatement}} && output_console_type != {{GetDefinition()}}) {
+                    {{extra}}
                     set_console_type({{GetDefinition()}});
                 }
                 """
@@ -188,6 +236,6 @@ public partial class EmulationMode : Output
 
     public override string GenerateOutput(ConfigField mode)
     {
-        return "";
+        return GetReportField(Type);
     }
 }
