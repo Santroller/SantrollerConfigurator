@@ -17,7 +17,7 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.Start,
         StandardButtonType.Back,
         StandardButtonType.Guide,
-        StandardButtonType.Capture // Used on PS4/5 for some of the menus even if the guitars never exposed it
+        StandardButtonType.Capture // Used on PS4/5 for some of the menus
     ];
 
     private static readonly List<StandardButtonType> SupportedButtonsNonGamepad =
@@ -32,7 +32,8 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.DpadRight,
         StandardButtonType.Start,
         StandardButtonType.Back,
-        StandardButtonType.Guide
+        StandardButtonType.Guide,
+        StandardButtonType.Capture // Used on PS4/5 for some of the menus
     ];
     private static readonly List<StandardButtonType> SupportedButtonsTaiko =
     [
