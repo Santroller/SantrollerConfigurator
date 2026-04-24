@@ -93,7 +93,20 @@ public abstract partial class HostInput : Input
     {
         var ret = (Input switch
         {
-            UsbHostInputType.KeyboardInput => Output.GetReportField(Key, $"{Field}.keyboard", false),
+            UsbHostInputType.KeyboardInput => Key switch
+            {
+                Key.Return => Output.GetReportField("Enter", $"{Field}.keyboard", false),
+                Key.Next => Output.GetReportField("PageDown", $"{Field}.keyboard", false),
+                Key.Prior => Output.GetReportField("PageUp", $"{Field}.keyboard", false),
+                Key.Oem1 => Output.GetReportField("OemSemicolon", $"{Field}.keyboard", false),
+                Key.Oem2 => Output.GetReportField("OemQuestion", $"{Field}.keyboard", false),
+                Key.Oem3 => Output.GetReportField("OemTilde", $"{Field}.keyboard", false),
+                Key.Oem4 => Output.GetReportField("OemOpenBrackets", $"{Field}.keyboard", false),
+                Key.Oem5 => Output.GetReportField("OemPipe", $"{Field}.keyboard", false),
+                Key.Oem6 => Output.GetReportField("OemCloseBrackets", $"{Field}.keyboard", false),
+                Key.Delete => Output.GetReportField("Del", $"{Field}.keyboard", false),
+                _ => Output.GetReportField(Key, $"{Field}.keyboard", false)
+            },
             UsbHostInputType.MouseAxis => Output.GetReportField(MouseAxisType, $"{Field}.mouse", false),
             UsbHostInputType.MouseButton => Output.GetReportField(MouseButtonType, $"{Field}.mouse", false),
             _ => Output.GetReportField(Input, Field, false)
@@ -132,7 +145,7 @@ public abstract partial class HostInput : Input
             bool seen360W = false;
             for (var i = 0; i < usbHostRaw.Length; i += 2)
             {
-                var consoleType = (ConsoleType) usbHostRaw[i];
+                var consoleType = (ConsoleType)usbHostRaw[i];
                 string subType;
 
                 if (consoleType == ConsoleType.Xbox360W && !seen360W)
@@ -148,13 +161,13 @@ public abstract partial class HostInput : Input
                         continue;
                     case ConsoleType.Xbox360 or ConsoleType.Xbox360W:
                     {
-                        var xInputSubType = (XInputSubType) usbHostRaw[i + 1];
+                        var xInputSubType = (XInputSubType)usbHostRaw[i + 1];
                         subType = EnumToStringConverter.Convert(xInputSubType);
                         break;
                     }
                     case ConsoleType.StreamDeck:
                     {
-                        var streamDeckType = (StreamDeckType) usbHostRaw[i + 1];
+                        var streamDeckType = (StreamDeckType)usbHostRaw[i + 1];
                         subType = EnumToStringConverter.Convert(streamDeckType);
                         break;
                     }
@@ -166,7 +179,7 @@ public abstract partial class HostInput : Input
                         }
                         else
                         {
-                            var deviceType = (DeviceControllerType) usbHostRaw[i + 1];
+                            var deviceType = (DeviceControllerType)usbHostRaw[i + 1];
                             subType = EnumToStringConverter.Convert(deviceType);
                         }
 
@@ -228,14 +241,14 @@ public abstract partial class HostInput : Input
                     return false;
                 default:
                 {
-                    var val = (uint) inputType;
+                    var val = (uint)inputType;
                     switch (val)
                     {
-                        case >= (uint) UsbHostInputTypeReal.GenericButton1:
-                            val -= (uint) UsbHostInputTypeReal.GenericButton1;
-                            return (genericButtons & (1 << (int) val)) != 0;
+                        case >= (uint)UsbHostInputTypeReal.GenericButton1:
+                            val -= (uint)UsbHostInputTypeReal.GenericButton1;
+                            return (genericButtons & (1 << (int)val)) != 0;
                         default:
-                            return (buttons & (1 << (int) val)) != 0;
+                            return (buttons & (1 << (int)val)) != 0;
                     }
                 }
             }
@@ -341,12 +354,12 @@ public abstract partial class HostInput : Input
                     or Key.RightAlt
                     or Key.RightCtrl
                     or Key.RightShift => (keys &
-                                          ((UInt128) 1 <<
+                                          ((UInt128)1 <<
                                            KeyboardButton.Keys.IndexOf(key))) != 0
                     ? 1
                     : 0,
                 UsbHostInputTypeReal.KeyboardInput => (keys &
-                                                       ((UInt128) 1 <<
+                                                       ((UInt128)1 <<
                                                         (KeyboardButton.KeyCodes.IndexOf(
                                                              Output.GetReportField(key)) +
                                                          8))) != 0
@@ -375,7 +388,6 @@ public abstract partial class HostInput : Input
             }
 
             return val;
-
         }
     }
 }
