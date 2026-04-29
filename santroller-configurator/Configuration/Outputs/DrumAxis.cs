@@ -415,7 +415,7 @@ public partial class DrumAxis : OutputAxis
         assignedVal = mode switch
         {
             // Xbox one uses 4 bit velocities
-            ConfigField.XboxOne => $"(lastDrum[{debounceIndex}]) >> 13",
+            ConfigField.XboxOne => $"(lastDrum[{debounceIndex}]) >> 12",
             // PC HID and PS4 uses 8 bit velocities
             ConfigField.Universal or ConfigField.Ps4 => $"(lastDrum[{debounceIndex}]) >> 8",
             // PS3 + Xbox360 GH uses 7 bit velocities (because midi)
