@@ -361,6 +361,12 @@ public partial class DrumAxis : OutputAxis
                 if (ButtonsPs3.TryGetValue(Type, out var value3))
                     outputButtons += $"\n{GetReportField(value3)} = true;";
                 break;
+            case ConfigField.Festival when Type is DrumAxisType.Orange:
+                outputButtons += $"\n{GetReportField(DrumAxisType.Green)} = true;";
+                break;
+            case ConfigField.Festival when Type is DrumAxisType.Kick2:
+                outputButtons += $"\n{GetReportField(DrumAxisType.Kick)} = true;";
+                break;
             case ConfigField.Festival:
                 outputButtons += $"\n{GetReportField(Type)} = true;";
                 break;
