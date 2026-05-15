@@ -135,6 +135,8 @@ public partial class Ps2CombinedOutput : CombinedSpiOutput
         _attConfig = Model.GetPinForType(Ps2Input.Ps2AttType, peripheral, att, DevicePinMode.Output);
         this.WhenAnyValue(x => x._attConfig.Pin).Subscribe(_ => this.RaisePropertyChanged(nameof(Att)));
         this.WhenAnyValue(x => x._ackConfig.Pin).Subscribe(_ => this.RaisePropertyChanged(nameof(Ack)));
+        this.WhenAnyValue(x => x._attConfig.Pin).Subscribe(_ => this.RaisePropertyChanged(nameof(ErrorText)));
+        this.WhenAnyValue(x => x._ackConfig.Pin).Subscribe(_ => this.RaisePropertyChanged(nameof(ErrorText)));
 
         Outputs.Connect().Filter(x => x is OutputAxis)
             .Filter(s => s.IsVisible)

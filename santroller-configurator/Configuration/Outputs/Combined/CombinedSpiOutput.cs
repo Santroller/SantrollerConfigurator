@@ -27,6 +27,9 @@ public abstract class CombinedSpiOutput : CombinedOutput, ISpi
         this.WhenAnyValue(x => x.SpiConfig.Miso).Subscribe(_ => this.RaisePropertyChanged(nameof(Miso)));
         this.WhenAnyValue(x => x.SpiConfig.Mosi).Subscribe(_ => this.RaisePropertyChanged(nameof(Mosi)));
         this.WhenAnyValue(x => x.SpiConfig.Sck).Subscribe(_ => this.RaisePropertyChanged(nameof(Sck)));
+        this.WhenAnyValue(x => x.SpiConfig.Miso).Subscribe(_ => this.RaisePropertyChanged(nameof(ErrorText)));
+        this.WhenAnyValue(x => x.SpiConfig.Mosi).Subscribe(_ => this.RaisePropertyChanged(nameof(ErrorText)));
+        this.WhenAnyValue(x => x.SpiConfig.Sck).Subscribe(_ => this.RaisePropertyChanged(nameof(ErrorText)));
     }
 
     public bool BindableSpi { get; }

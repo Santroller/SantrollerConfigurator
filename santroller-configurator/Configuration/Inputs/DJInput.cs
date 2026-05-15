@@ -18,10 +18,9 @@ public partial class DjInput : TwiInput
 
     public DjInput(DjInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
         int scl = -1, bool combined = false) : base(
-        DjTwiType, DjTwiFreq, peripheral, sda, scl, model)
+        DjTwiType, DjTwiFreq, peripheral, sda, scl, combined, model)
     {
         Smoothing = model.DjSmoothing;
-        Combined = combined;
         BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
         Input = input;
         IsAnalog = Input <= DjInputType.RightTurntable;
@@ -34,8 +33,6 @@ public partial class DjInput : TwiInput
         get => Model.DjPollRate;
         set => Model.DjPollRate = value;
     }
-
-    public bool Combined { get; }
 
     public bool Smoothing
     {

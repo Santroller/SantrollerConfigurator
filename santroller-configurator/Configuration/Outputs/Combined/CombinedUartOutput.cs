@@ -23,6 +23,8 @@ public abstract class CombinedUartOutput : CombinedOutput, IUart
 
         this.WhenAnyValue(x => x.UartConfig.Tx).Subscribe(_ => this.RaisePropertyChanged(nameof(Tx)));
         this.WhenAnyValue(x => x.UartConfig.Rx).Subscribe(_ => this.RaisePropertyChanged(nameof(Rx)));
+        this.WhenAnyValue(x => x.UartConfig.Tx).Subscribe(_ => this.RaisePropertyChanged(nameof(ErrorText)));
+        this.WhenAnyValue(x => x.UartConfig.Rx).Subscribe(_ => this.RaisePropertyChanged(nameof(ErrorText)));
     }
 
     public bool BindableUart { get; }

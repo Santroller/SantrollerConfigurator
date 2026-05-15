@@ -234,9 +234,8 @@ public class Ps2Input : SpiInput
         int sck = -1, int att = -1, int ack = -1, bool combined = false) : base(
         Ps2SpiType, peripheral,
         Ps2SpiFreq, Ps2SpiCpol,
-        Ps2SpiCpha, Ps2SpiMsbFirst, miso: miso, mosi: mosi, sck: sck, model: model)
+        Ps2SpiCpha, Ps2SpiMsbFirst, combined, miso: miso, mosi: mosi, sck: sck, model: model)
     {
-        Combined = combined;
         BindableSpi = !Combined && !model.Branded && Model.Microcontroller.SpiAssignable;
         BindableAtt = !Combined && !model.Branded && Model.Microcontroller is not (Uno or Mega);
         Input = input;
@@ -264,8 +263,6 @@ public class Ps2Input : SpiInput
     }
 
     public Ps2InputType Input { get; }
-
-    public bool Combined { get; }
     public bool ShouldShowPins => !Combined && !Model.Branded;
 
     public bool BindableSpi { get; }

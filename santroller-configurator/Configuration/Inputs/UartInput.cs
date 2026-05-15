@@ -13,9 +13,11 @@ public abstract class UartInput : Input, IUart
     private readonly UartConfig _uartConfig;
 
     private readonly string _uartType;
+    public bool Combined { get; }
 
-    protected UartInput(string spiType, bool peripheral, int tx, int rx, uint clock, ConfigViewModel model) : base(model)
+    protected UartInput(string spiType, bool peripheral, int tx, int rx, uint clock, bool combined, ConfigViewModel model) : base(model)
     {
+        Combined = combined;
         _uartType = spiType;
         var config = Model.GetUartForType(_uartType, peripheral);
         _uartConfig = config ?? Model.Microcontroller.AssignUartPins(model, _uartType, peripheral, tx, rx, clock, false);

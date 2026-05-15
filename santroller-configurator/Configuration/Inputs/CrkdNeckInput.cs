@@ -19,9 +19,8 @@ public class CrkdNeckInput : UartInput
 
     public CrkdNeckInput(CrkdNeckInputType input, ConfigViewModel model, bool peripheral, int tx = -1,
         int rx = -1, bool combined = false) : base(
-        CrkdUartType, peripheral, tx, rx, CrkdUartFreq, model)
+        CrkdUartType, peripheral, tx, rx, CrkdUartFreq, combined, model)
     {
-        Combined = combined;
         BindableUart = !combined && Model.Microcontroller.UartAssignable && !model.Branded;
         Input = input;
         IsAnalog = false;
@@ -30,7 +29,6 @@ public class CrkdNeckInput : UartInput
     }
 
     public override string Title => EnumToStringConverter.Convert(Input);
-    public bool Combined { get; }
     public bool ShouldShowPins => !Combined && !Model.Branded;
     public bool BindableUart { get; }
 

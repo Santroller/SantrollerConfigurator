@@ -13,11 +13,13 @@ public abstract class SpiInput : Input, ISpi
     private readonly SpiConfig _spiConfig;
 
     private readonly string _spiType;
+    public bool Combined { get; }
 
     protected SpiInput(string spiType, bool peripheral,  uint spiFreq, bool cpol,
-        bool cpha, bool msbFirst, ConfigViewModel model, int miso = -1, int mosi = -1,
+        bool cpha, bool msbFirst, bool combined, ConfigViewModel model, int miso = -1, int mosi = -1,
         int sck = -1) : base(model)
     {
+        Combined = combined;
         _spiType = spiType;
         var config = Model.GetSpiForType(_spiType, peripheral);
         _spiConfig = config ?? Model.Microcontroller.AssignSpiPins(model, _spiType, peripheral, true, true, mosi, miso, sck, cpol, cpha,

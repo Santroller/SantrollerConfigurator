@@ -13,13 +13,16 @@ public abstract class TwiInput : Input, ITwi
     private readonly TwiConfig _twiConfig;
 
     private readonly string _twiType;
+    public bool Combined { get; }
 
-    protected TwiInput(string twiType, int twiFreq, bool peripheral, int sda, int scl,
+    protected TwiInput(string twiType, int twiFreq, bool peripheral, int sda, int scl, bool combined,
         ConfigViewModel model) : base(model)
     {
+        Combined = combined;
         _twiType = twiType;
         var config = Model.GetTwiForType(_twiType, peripheral);
-        _twiConfig = config ?? Model.Microcontroller.AssignTwiPins(model, _twiType, peripheral, sda, scl, twiFreq, false);
+        _twiConfig = config ??
+                     Model.Microcontroller.AssignTwiPins(model, _twiType, peripheral, sda, scl, twiFreq, false);
 
 
         this.WhenAnyValue(x => x._twiConfig.Scl).Subscribe(_ => this.RaisePropertyChanged(nameof(Scl)));
@@ -43,7 +46,9 @@ public abstract class TwiInput : Input, ITwi
 
     public List<int> AvailableSdaPins => GetSdaPins();
     public List<int> AvailableSclPins => GetSclPins();
-    public override IList<PinConfig> PinConfigs => new List<PinConfig> {_twiConfig};
+
+    public override IList<PinConfig> PinConfigs =>
+        Combined ? new List<PinConfig>() : new List<PinConfig> { _twiConfig };
 
     public List<int> TwiPins()
     {

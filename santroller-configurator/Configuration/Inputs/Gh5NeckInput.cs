@@ -88,16 +88,14 @@ public class Gh5NeckInput : TwiInput
 
     public Gh5NeckInput(Gh5NeckInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
         int scl = -1, bool combined = false) : base(
-        Gh5TwiType, Gh5TwiFreq, peripheral, sda, scl, model)
+        Gh5TwiType, Gh5TwiFreq, peripheral, sda, scl, combined, model)
     {
-        Combined = combined;
         BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
         Input = input;
         IsAnalog = Input == Gh5NeckInputType.TapBar;
     }
 
     public override string Title => EnumToStringConverter.Convert(Input);
-    public bool Combined { get; }
     public bool ShouldShowPins => !Combined && !Model.Branded;
     public bool BindableTwi { get; }
 

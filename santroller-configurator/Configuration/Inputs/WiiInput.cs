@@ -229,10 +229,9 @@ public class WiiInput : TwiInput
     public WiiInput(WiiInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
         int scl = -1,
         bool combined = false) : base(
-        WiiTwiType, WiiTwiFreq, peripheral, sda, scl, model)
+        WiiTwiType, WiiTwiFreq, peripheral, sda, scl, combined, model)
     {
         Input = input;
-        Combined = combined;
         BindableTwi = !combined && Model.Microcontroller.TwiAssignable && !model.Branded;
         IsAnalog = Input <= WiiInputType.DrawsomePenPressure;
     }
@@ -240,8 +239,6 @@ public class WiiInput : TwiInput
     public WiiInputType Input { get; }
 
     public WiiControllerType WiiControllerType => AxisToType[Input];
-
-    public bool Combined { get; }
 
     public bool BindableTwi { get; }
 
