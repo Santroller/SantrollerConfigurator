@@ -67,7 +67,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     {
         obj.SetOutput(new Unit());
         var extension = "." + obj.Input.Microcontroller.Board.ArdwiinoName + "config";
-        var file = await ((Window) VisualRoot!).StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        var file = await TopLevel.GetTopLevel(this)!.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             ShowOverwritePrompt = true, DefaultExtension = extension, SuggestedFileName = "controller" + extension,
             FileTypeChoices = [new FilePickerFileType(extension) {Patterns = ["*" + extension]}]
@@ -81,7 +81,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
     {
         obj.SetOutput(new Unit());
         var extension = "." + obj.Input.Microcontroller.Board.ArdwiinoName + "config";
-        var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        var file = await TopLevel.GetTopLevel(this).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             AllowMultiple = false,
             FileTypeFilter = [new FilePickerFileType(extension) {Patterns = ["*" + extension]}]
@@ -109,7 +109,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         {
             DataContext = model
         };
-        await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window) VisualRoot!);
+        await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window)TopLevel.GetTopLevel(this)!);
         interaction.SetOutput(model);
     }
 
@@ -123,7 +123,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         {
             DataContext = model
         };
-        await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window) VisualRoot!);
+        await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window)TopLevel.GetTopLevel(this));
         interaction.SetOutput(model);
     }
 
@@ -163,7 +163,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         {
             DataContext = model
         };
-        await dialog.ShowDialog<ResetWindowViewModel?>((Window) VisualRoot!);
+        await dialog.ShowDialog<ResetWindowViewModel?>((Window)TopLevel.GetTopLevel(this));
         interaction.SetOutput(model);
     }
 
@@ -177,7 +177,7 @@ public partial class ConfigModelView : ReactiveUserControl<ConfigViewModel>
         {
             DataContext = model
         };
-        await dialog.ShowDialog<BindAllWindowViewModel?>((Window) VisualRoot!);
+        await dialog.ShowDialog<BindAllWindowViewModel?>((Window)TopLevel.GetTopLevel(this));
         interaction.SetOutput(model);
     }
 

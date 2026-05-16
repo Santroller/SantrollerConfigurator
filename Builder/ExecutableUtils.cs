@@ -30,13 +30,13 @@ public static class ExecutableUtils
         var image = new SerializedPEImage(peFile, new PEReaderParameters());
         if (image.Resources != null)
         {
-            var icons = IconResource.FromDirectory(image.Resources);
+            var icons = IconResource.FromDirectory(image.Resources, IconType.Icon);
             if (icons != null)
             {
-                var group = icons.GetIconGroups().First();
-                var iconEntry = group.GetIconEntries().First();
+                var group = icons.Groups.First();
+                var iconEntry = group.Icons.First();
                 UpdateIconEntryIcon(img, iconEntry);
-                icons.WriteToDirectory(image.Resources);
+                icons.InsertIntoDirectory(image.Resources);
                 var resources = new ResourceDirectoryBuffer();
                 resources.AddDirectory(image.Resources);
                 var section = peFile.Sections.First(s => s.Name == ".rsrc");
@@ -48,21 +48,19 @@ public static class ExecutableUtils
         peFile.Write(writer);
     }
 
-    private static void UpdateIconEntryIcon(Bitmap img, (IconGroupDirectoryEntry, IconEntry) valueTuple)
+    private static void UpdateIconEntryIcon(Bitmap img, IconEntry icon)
     {
         img = img.CreateScaledBitmap(new PixelSize(128, 128));
         using var msImg = new MemoryStream();
         img.Save(msImg);
-        Array.Copy(msImg.ToArray(), valueTuple.Item2.RawIcon, msImg.Length);
-        valueTuple.Item1.Height = 128;
-        valueTuple.Item1.Width = 128;
-        valueTuple.Item1.ColorCount = 0;
-        valueTuple.Item1.Reserved = 0;
-        valueTuple.Item1.BytesInRes = (uint) msImg.Length;
-        valueTuple.Item1.ColorPlanes = 0;
-        valueTuple.Item1.PixelBitCount = 32;
-        valueTuple.Item2.UpdateOffsets(new RelocationParameters());
-        valueTuple.Item1.UpdateOffsets(new RelocationParameters());
+        icon.PixelData = new DataSegment(msImg.ToArray());
+        icon.Height = 128;
+        icon.Width = 128;
+        icon.ColorCount = 0;
+        icon.Reserved = 0;
+        icon.Planes = 0;
+        icon.BitsPerPixel = 32;
+        icon.PixelData.UpdateOffsets(new RelocationParameters());
     }
 
     private static byte[] GetIcnsIconType(int width, bool isScale2X)

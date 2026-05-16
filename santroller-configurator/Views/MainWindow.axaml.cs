@@ -31,7 +31,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         {
             DataContext = model
         };
-        var result = await dialog.ShowDialog<RaiseIssueWindowViewModel?>((Window) VisualRoot!);
+        var result = await dialog.ShowDialog<RaiseIssueWindowViewModel?>(this);
         interaction.SetOutput(result);
     }
 
@@ -45,7 +45,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         {
             DataContext = model
         };
-        await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window)VisualRoot!);
+        await dialog.ShowDialog<AreYouSureWindowViewModel?>(this);
         interaction.SetOutput(model);
     }
     private async Task DoShowInformationDialogAsync(
@@ -56,7 +56,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         {
             DataContext = model
         };
-        await dialog.ShowDialog<InformationWindowViewModel?>((Window) VisualRoot!);
+        await dialog.ShowDialog<InformationWindowViewModel?>(this);
         interaction.SetOutput(model);
     }
 }

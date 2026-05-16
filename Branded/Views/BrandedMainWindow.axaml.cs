@@ -29,7 +29,7 @@ public partial class BrandedMainWindow : ReactiveWindow<BrandedMainWindowViewMod
         {
             DataContext = model
         };
-        await dialog.ShowDialog<InformationWindowViewModel?>((Window) VisualRoot!);
+        await dialog.ShowDialog<InformationWindowViewModel?>(this);
         interaction.SetOutput(model);
     }
 

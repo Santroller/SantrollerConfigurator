@@ -38,13 +38,13 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
         {
             DataContext = model
         };
-        await dialog.ShowDialog<InformationWindowViewModel?>((Window) VisualRoot!);
+        await dialog.ShowDialog<InformationWindowViewModel?>(this);
         interaction.SetOutput(model);
     }
     
     private async Task LoadImageAsync(IInteractionContext<BuilderMainWindowViewModel, IStorageFile?> obj)
     {
-        var file = await ((Window) VisualRoot!).StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        var file = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             AllowMultiple = false,
             FileTypeFilter = [new FilePickerFileType("Image File") {Patterns = ["*.png"]}]
@@ -58,7 +58,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
     }
     private async Task SaveUf2Async(IInteractionContext<BuilderMainWindowViewModel, IStorageFile?> obj)
     {
-        var file = await ((Window) VisualRoot!).StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             FileTypeChoices = [new FilePickerFileType("UF2 File") {Patterns = ["*.uf2"]}],
             SuggestedFileName = "firmware.uf2"
@@ -67,7 +67,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
     }
     private async Task SaveBinaryAsync(IInteractionContext<BuilderMainWindowViewModel, IStorageFolder?> obj)
     {
-        var dir = await ((Window) VisualRoot!).StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
+        var dir = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
         {
             Title="Customer tool output location"
         });
@@ -81,7 +81,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
         {
             DataContext = model
         };
-        var result = await dialog.ShowDialog<RaiseIssueWindowViewModel?>((Window) VisualRoot!);
+        var result = await dialog.ShowDialog<RaiseIssueWindowViewModel?>(this);
         interaction.SetOutput(result);
     }
 
@@ -94,7 +94,7 @@ public partial class BuilderMainWindow : ReactiveWindow<BuilderMainWindowViewMod
         {
             DataContext = model
         };
-        await dialog.ShowDialog<AreYouSureWindowViewModel?>((Window) VisualRoot!);
+        await dialog.ShowDialog<AreYouSureWindowViewModel?>(this);
         interaction.SetOutput(model);
     }
 }
