@@ -19,6 +19,17 @@ public class ControllerEnumConverter : IMultiValueConverter
         StandardButtonType.Guide,
         StandardButtonType.Capture // Used on PS4/5 for some of the menus
     ];
+    private static readonly List<StandardButtonType> SupportedButtonsLiveGuitar =
+    [
+        StandardButtonType.DpadUp,
+        StandardButtonType.DpadDown,
+        StandardButtonType.DpadLeft,
+        StandardButtonType.DpadRight,
+        StandardButtonType.Start,
+        StandardButtonType.Back,
+        StandardButtonType.Guide,
+        StandardButtonType.Capture // Used on PS4/5 for some of the menus
+    ];
 
     private static readonly List<StandardButtonType> SupportedButtonsNonGamepad =
     [
@@ -226,8 +237,9 @@ public class ControllerEnumConverter : IMultiValueConverter
                 return SupportedButtonsNonGamepad.Contains(button);
             case DeviceControllerType.Taiko:
                 return SupportedButtonsTaiko.Contains(button);
-            case DeviceControllerType.RockBandGuitar:
             case DeviceControllerType.LiveGuitar:
+                return SupportedButtonsLiveGuitar.Contains(button);
+            case DeviceControllerType.RockBandGuitar:
             case DeviceControllerType.GuitarHeroGuitar:
                 return SupportedButtonsGuitar.Contains(button);
             default:
