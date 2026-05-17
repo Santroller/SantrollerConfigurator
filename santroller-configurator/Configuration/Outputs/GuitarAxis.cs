@@ -345,16 +345,14 @@ public partial class GuitarAxis : OutputAxis
                          """;
             }
             
-            return $$"""
-                     if ({{Input.Generate()}}) {
-                         {{GenerateOutput(mode)}} = {{GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)}};
-                     }
+            return $"""
+                         {GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};
                      """;
         }
         
         if (mode is not (ConfigField.Ps3 or ConfigField.Ps2 or ConfigField.Ps3WithoutCapture or ConfigField.Ps4 or ConfigField.Xbox360
             or ConfigField.XboxOne
-            or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii or ConfigField.Arcade)) return "";
+            or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";
         // The below is a mess... but essentially we have to handle converting the input to its respective output depending on console
         // We have to do some hyper specific stuff for digital to analog here too so its easiest to capture its value once
         var analogOn = 0;
