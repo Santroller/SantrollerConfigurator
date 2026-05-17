@@ -345,8 +345,10 @@ public partial class GuitarAxis : OutputAxis
                          """;
             }
             
-            return $"""
-                         {GenerateOutput(mode)} = {GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)};
+            return $$"""
+                     if ({{Input.Generate()}}) {
+                         {{GenerateOutput(mode)}} = {{GenerateAssignment(GenerateOutput(mode), mode, true, false, false, false, writer)}};
+                     }
                      """;
         }
         
