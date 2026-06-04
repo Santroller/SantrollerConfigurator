@@ -62,14 +62,14 @@ jobs:
       - name: Build Branded
         run: |
           cd Branded
-          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal
           mkdir out
           cp bin/Release/net10.0/linux-x64/publish/SantrollerConfiguratorBranded out/SantrollerConfiguratorBranded-linux-64
           mv out ..
       - name: Build Standard
         run: |
           cd santroller-configurator
-          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal
       - name: Get Version from Project File
         id: get-version
         shell: bash
@@ -101,14 +101,14 @@ jobs:
       - name: Build Branded
         run: |
           cd Branded
-          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal 
+          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal 
           mkdir out
           cp bin/Release/net10.0/win-x64/publish/SantrollerConfiguratorBranded.exe out/SantrollerConfiguratorBranded-win-64.exe
           mv out ..
       - name: Build Standard
         run: |
           cd santroller-configurator
-          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal
       - name: Get Version from Project File
         id: get-version
         run: |
@@ -142,7 +142,7 @@ jobs:
       - name: Build
         run: |
           cd Builder
-          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal
       - name: Get Version from Project File
         id: get-version
         shell: bash
@@ -179,7 +179,7 @@ jobs:
       - name: Build
         run: |
           cd Builder
-          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal
       - name: Get Version from Project File
         id: get-version
         run: |
