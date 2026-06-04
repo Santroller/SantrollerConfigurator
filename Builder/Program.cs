@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
@@ -11,6 +12,7 @@ namespace SantrollerConfiguratorBuilder.NetCore;
 
 public static class Program
 {
+    [STAThread]
     public static void Main(string[] args)
     {
         if (args.FirstOrDefault() == "-Rescan")
