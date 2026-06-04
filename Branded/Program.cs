@@ -8,6 +8,7 @@ namespace SantrollerConfiguratorBranded.NetCore;
 
 public static class Program
 {
+    [STAThread]
     public static void Main(string[] args)
     {
         if (args.FirstOrDefault() == "-Rescan")
