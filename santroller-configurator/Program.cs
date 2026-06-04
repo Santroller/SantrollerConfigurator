@@ -16,6 +16,7 @@ public static class Program
 #if Windows && False
     [System.Runtime.InteropServices.DllImport("kernel32.dll")]
     private static extern bool AllocConsole();
+    [STAThread]
     public static void Main(string[] args)
     {
         AllocConsole();
@@ -25,6 +26,7 @@ public static class Program
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnMainWindowClose);
     }
 #else
+    [STAThread]
     public static void Main(string[] args)
     {
         switch (args.FirstOrDefault())
