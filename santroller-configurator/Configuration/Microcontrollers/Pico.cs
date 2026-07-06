@@ -118,6 +118,10 @@ public class Pico : Microcontroller
         {19, 1},
         {20, 0},
         {21, 0},
+        {22, 1},
+        {23, 1},
+        {24, 0},
+        {25, 0},
         {26, 1},
         {27, 1}
     };
@@ -146,6 +150,10 @@ public class Pico : Microcontroller
         {19, TwiPinType.Scl},
         {20, TwiPinType.Sda},
         {21, TwiPinType.Scl},
+        {22, TwiPinType.Sda},
+        {23, TwiPinType.Scl},
+        {24, TwiPinType.Sda},
+        {25, TwiPinType.Scl},
         {26, TwiPinType.Sda},
         {27, TwiPinType.Scl}
     };

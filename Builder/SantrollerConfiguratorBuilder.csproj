@@ -70,6 +70,7 @@
         <TrimmableAssembly Include="Avalonia.DesignerSupport"/>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="AsmResolver.DotNet" Version="6.0.0" />
         <PackageReference Include="AsmResolver.PE" Version="6.0.0" />
         <PackageReference Include="AsmResolver.PE.File" Version="6.0.0" />
         <PackageReference Include="AsmResolver.PE.Win32Resources" Version="6.0.0" />
@@ -100,13 +101,10 @@
         </PackageReference>
         <PackageReference Include="System.IO.Ports" Version="11.0.0-preview.5.26302.115" />
         <PackageReference Include="SemanticVersioning" Version="3.0.0" />
-        <PackageReference Include="System.Net.Http" Version="4.3.4" />
-        <PackageReference Include="System.Private.Uri" Version="4.3.2" />
         <PackageReference Include="System.Text.Json" Version="11.0.0-preview.5.26302.115" />
         <PackageReference Include="GitVersion.MsBuild" Version="6.8.1">
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
         <PackageReference Include="Velopack" Version="1.2.0" />
     </ItemGroup>
     <ItemGroup>

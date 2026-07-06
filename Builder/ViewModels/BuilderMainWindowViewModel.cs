@@ -8,11 +8,13 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
+using AsmResolver.DotNet.Bundles;
 using CommunityToolkit.Mvvm.Input;
 using GuitarConfigurator.NetCore;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
@@ -427,7 +429,30 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
                 FileMode.Create,
                 FileAccess.ReadWrite);
         await ExecutableUtils.UpdatePeFileIcon(SelectedTool.Icon, windowsInput, windowsOutput);
-        await ExecutableUtils.AppendConfig(windowsOutput, SelectedTool);
+        // await ExecutableUtils.AppendConfig(windowsOutput, SelectedTool);
+        windowsOutput.Close();
+        using (var memoryStream = new MemoryStream())
+        {
+            await AssetLoader.Open(uri).CopyToAsync(memoryStream);
+            var manifest = BundleManifest.FromBytes(memoryStream.ToArray());
+            var p = BundlerParameters.FromExistingBundle(
+                originalFile: memoryStream.ToArray(), 
+                appBinaryPath: "Branded.dll");
+
+            using (var memoryStream2 = new MemoryStream())
+            {
+                await using var windowsWriter = new BinaryWriter(memoryStream2);
+                Serializer.SerializeWithLengthPrefix(memoryStream2, new SerialisedBrandedConfigurationStore(SelectedTool),
+                    PrefixStyle.Base128);
+                manifest.Files.Add(new BundleFile("branding.bin", BundleFileType.Unknown,memoryStream2.ToArray()));
+            }
+
+            p.ApplicationBinaryPath = "SantrollerConfiguratorBranded.dll";
+            p.PathPlaceholder = Encoding.UTF8.GetBytes("SantrollerConfiguratorBranded.dll");
+            manifest.WriteUsingTemplate(
+                Path.Join(workingDir, $"{toolName}-win-64.exe"), 
+                p);
+        }
 
         Message = "Building macOS package";
         start += steps;
