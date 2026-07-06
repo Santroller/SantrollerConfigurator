@@ -27,7 +27,8 @@ public partial class BrandedConfigurationStore : ReactiveObject
         ErrorColor = errorColor;
         Logo = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/Icons/logo.png")));
         Icon = new Bitmap(AssetLoader.Open(new Uri("avares://SantrollerConfigurator/Assets/icon.png")));
-        _toolNameVersionedHelper = this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
+        _toolNameVersionedHelper = this.WhenAnyValue(x => x.ToolName)
+            .Select(s => s + " - v" + GitVersionInformation.SemVer)
             .ToProperty(this, x => x.ToolNameVersioned);
     }
 
@@ -53,7 +54,8 @@ public partial class BrandedConfigurationStore : ReactiveObject
 
         if (store.OldConfigurations.Count != 0)
         {
-            Configurations.Add(new BrandedConfigurationSection("Type Name", store.OldConfigurations.Select(s => new BrandedConfiguration(s, branded, screen))));   
+            Configurations.Add(new BrandedConfigurationSection("Type Name",
+                store.OldConfigurations.Select(s => new BrandedConfiguration(s, branded, screen))));
         }
         else
         {
@@ -61,7 +63,8 @@ public partial class BrandedConfigurationStore : ReactiveObject
                 store.Configurations.Select(s => new BrandedConfigurationSection(s, branded, screen)));
         }
 
-        _toolNameVersionedHelper = this.WhenAnyValue(x => x.ToolName).Select(s => s + " - v" + GitVersionInformation.SemVer)
+        _toolNameVersionedHelper = this.WhenAnyValue(x => x.ToolName)
+            .Select(s => s + " - v" + GitVersionInformation.SemVer)
             .ToProperty(this, x => x.ToolNameVersioned);
     }
 
@@ -86,17 +89,20 @@ public partial class BrandedConfigurationStore : ReactiveObject
 #if Windows && SINGLE_FILE
         var assembly = typeof(Program).GetTypeInfo().Assembly;
         var stream = assembly.GetManifestResourceStream("config.bin");
-        // var stream = File.OpenRead(Environment.ProcessPath!);
-        // var reader = new BinaryReader(stream);
-        // stream.Seek(-sizeof(int), SeekOrigin.End);
-        // var offset = reader.ReadInt32();
-        // stream.Seek(offset, SeekOrigin.Begin);
+#elif !OSX && SINGLE_FILE
+        var stream = File.OpenRead(Environment.ProcessPath!);
+        var reader = new BinaryReader(stream);
+        stream.Seek(-sizeof(int), SeekOrigin.End);
+        var offset = reader.ReadInt32();
+        stream.Seek(offset, SeekOrigin.Begin);
 #else
         var path = Path.Join(Path.GetDirectoryName(Environment.ProcessPath)!, "branding.bin");
         if (!File.Exists(path))
         {
-            path = Path.Join(Path.GetDirectoryName(Path.GetDirectoryName(Environment.ProcessPath)!)!, "Resources", "branding.bin");
+            path = Path.Join(Path.GetDirectoryName(Path.GetDirectoryName(Environment.ProcessPath)!)!, "Resources",
+                "branding.bin");
         }
+
         var stream = File.OpenRead(path);
 #endif
         return new BrandedConfigurationStore(
