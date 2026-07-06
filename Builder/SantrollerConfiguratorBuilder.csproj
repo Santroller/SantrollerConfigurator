@@ -20,6 +20,7 @@
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
         <PublishReadyToRun>true</PublishReadyToRun>
+        <SelfContained>true</SelfContained>
         <StartupObject>SantrollerConfiguratorBuilder.NetCore.Program</StartupObject>
 
         <!--        <PublishTrimmed>true</PublishTrimmed>-->
@@ -69,6 +70,46 @@
         <TrimmableAssembly Include="Avalonia.DesignerSupport"/>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="AsmResolver.PE" Version="6.0.0" />
+        <PackageReference Include="AsmResolver.PE.File" Version="6.0.0" />
+        <PackageReference Include="AsmResolver.PE.Win32Resources" Version="6.0.0" />
+        <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+        <PackageReference Include="Microsoft.Net.ILLink.Tasks" Version="11.0.0-preview.5.26302.115" />
+        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.5" />
+        <PackageReference Include="Avalonia.Desktop" Version="12.0.5" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.18" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.8" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.5" />
+        <PackageReference Include="LibUsbDotNet" Version="3.0.224" Condition="'$(OS)' != 'Windows_NT'" />
+        <PackageReference Include="Microsoft.Build.Framework" Version="18.7.1">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="18.6.3">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview" />
+        <PackageReference Include="Nefarius.Drivers.WinUSB" Version="5.1.0" Condition="'$(OS)' == 'Windows_NT'" />
+        <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.23.0" Condition="'$(OS)' == 'Windows_NT'" />
+        <PackageReference Include="Octokit" Version="14.0.0" />
+        <PackageReference Include="protobuf-net" Version="3.2.56" />
+        <PackageReference Include="ReactiveUI.SourceGenerators" Version="3.1.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="System.IO.Ports" Version="11.0.0-preview.5.26302.115" />
+        <PackageReference Include="SemanticVersioning" Version="3.0.0" />
+        <PackageReference Include="System.Net.Http" Version="4.3.4" />
+        <PackageReference Include="System.Private.Uri" Version="4.3.2" />
+        <PackageReference Include="System.Text.Json" Version="11.0.0-preview.5.26302.115" />
+        <PackageReference Include="GitVersion.MsBuild" Version="6.8.1">
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+        <PackageReference Include="Velopack" Version="1.2.0" />
+    </ItemGroup>
+    <ItemGroup>
         <AvaloniaResource Include="Assets\logo.png" />
         <AvaloniaResource Include="Assets\icon.png" />
         <AvaloniaResource Include="Assets\SantrollerConfiguratorBranded-macOS.zip" />
@@ -83,48 +124,6 @@
     </ItemGroup>
     <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">
         <AvaloniaResource Include="Assets\rcodesign\macos\rcodesign" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="AsmResolver.PE" Version="6.0.0" />
-        <PackageReference Include="AsmResolver.PE.File" Version="6.0.0" />
-        <PackageReference Include="AsmResolver.PE.Win32Resources" Version="6.0.0" />
-        <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-        <PackageReference Include="IdentityModel.OidcClient" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Net.ILLink.Tasks" Version="11.0.0-preview.4.26230.115" />
-        <PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.3" />
-        <PackageReference Include="Avalonia.Desktop" Version="12.0.3" />
-        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.15" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.8" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.3" />
-        <PackageReference Include="LibUsbDotNet" Version="3.0.167-alpha" Condition="'$(OS)' != 'Windows_NT'" />
-        <PackageReference Include="Microsoft.Build.Framework" Version="18.6.3">
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Build.Utilities.Core" Version="18.6.3">
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview" />
-        <PackageReference Include="Nefarius.Drivers.WinUSB" Version="5.1.0" Condition="'$(OS)' == 'Windows_NT'" />
-        <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.23.0" Condition="'$(OS)' == 'Windows_NT'" />
-        <PackageReference Include="Octokit" Version="14.0.0" />
-        <PackageReference Include="Octokit.GraphQL" Version="0.4.0-beta" />
-        <PackageReference Include="protobuf-net" Version="3.2.56" />
-        <PackageReference Include="System.IO.Ports" Version="11.0.0-preview.4.26230.115" />
-        <PackageReference Include="SemanticVersioning" Version="3.0.0" />
-        <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.6.30">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="System.Net.Http" Version="4.3.4" />
-        <PackageReference Include="System.Private.Uri" Version="4.3.2" />
-        <PackageReference Include="System.Text.Json" Version="11.0.0-preview.4.26230.115" />
-        <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
-            <PrivateAssets>All</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-        <PackageReference Include="Velopack" Version="0.0.1589-ga2c5a97" />
     </ItemGroup>
     <ItemGroup>
         <Compile Update="Views\BuilderMainView.axaml.cs">
