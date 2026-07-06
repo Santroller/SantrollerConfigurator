@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Resources;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -87,8 +88,8 @@ public partial class BrandedConfigurationStore : ReactiveObject
     public static BrandedConfigurationStore LoadBranding(MainWindowViewModel model)
     {
 #if Windows && SINGLE_FILE
-        var assembly = Assembly.GetExecutingAssembly();
-        var stream = assembly.GetManifestResourceStream("branding.bin");
+        ResourceManager rm = new ResourceManager("AppResources", typeof(Program).Assembly);
+        var stream = rm.GetStream("branding.bin");
 #elif !OSX && SINGLE_FILE
         var stream = File.OpenRead(Environment.ProcessPath!);
         var reader = new BinaryReader(stream);
