@@ -88,7 +88,7 @@ public partial class BrandedConfigurationStore : ReactiveObject
     public static BrandedConfigurationStore LoadBranding(MainWindowViewModel model)
     {
 #if Windows && SINGLE_FILE
-        var path = Path.Join(AppContext.BaseDirectory, "branding.bin");
+        var path = Path.Join(AppContext.GetData("NATIVE_DLL_SEARCH_DIRECTORIES").ToString().Split(";")[0], "branding.bin");
         var stream = File.OpenRead(path);
 #elif !OSX && SINGLE_FILE
         var stream = File.OpenRead(Environment.ProcessPath!);
