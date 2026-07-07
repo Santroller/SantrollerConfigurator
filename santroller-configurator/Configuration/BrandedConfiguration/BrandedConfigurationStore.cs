@@ -88,8 +88,8 @@ public partial class BrandedConfigurationStore : ReactiveObject
     public static BrandedConfigurationStore LoadBranding(MainWindowViewModel model)
     {
 #if Windows && SINGLE_FILE
-        ResourceManager rm = new ResourceManager("AppResources", typeof(Program).Assembly);
-        var stream = rm.GetStream("branding.bin");
+        var assembly = Assembly.GetExecutingAssembly();
+        var stream = assembly.GetManifestResourceStream("branding.bin");
 #elif !OSX && SINGLE_FILE
         var stream = File.OpenRead(Environment.ProcessPath!);
         var reader = new BinaryReader(stream);
