@@ -15,6 +15,9 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using AsmResolver.DotNet.Bundles;
+using AsmResolver.PE;
+using AsmResolver.PE.Win32Resources.Builder;
+using AsmResolver.PE.Win32Resources.Icon;
 using CommunityToolkit.Mvvm.Input;
 using GuitarConfigurator.NetCore;
 using GuitarConfigurator.NetCore.Configuration.BrandedConfiguration;
@@ -423,14 +426,6 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
         Progress = start;
         // Extract windows executable and append branded config into executable.
         uri = new Uri($"avares://{assemblyName}/Assets/SantrollerConfiguratorBranded-win-64.exe");
-        await using var windowsInput = AssetLoader.Open(uri);
-        await using var windowsOutput =
-            File.Open(Path.Join(workingDir, $"{toolName}-win-64.exe"),
-                FileMode.Create,
-                FileAccess.ReadWrite);
-        await ExecutableUtils.UpdatePeFileIcon(SelectedTool.Icon, windowsInput, windowsOutput);
-        // await ExecutableUtils.AppendConfig(windowsOutput, SelectedTool);
-        windowsOutput.Close();
         using (var memoryStream = new MemoryStream())
         {
             await AssetLoader.Open(uri).CopyToAsync(memoryStream);
@@ -438,6 +433,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             var p = BundlerParameters.FromExistingBundle(
                 originalFile: memoryStream.ToArray(), 
                 appBinaryPath: "Branded.dll");
+            
 
             using (var memoryStream2 = new MemoryStream())
             {
@@ -445,6 +441,17 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
                 Serializer.SerializeWithLengthPrefix(memoryStream2, new SerialisedBrandedConfigurationStore(SelectedTool),
                     PrefixStyle.Base128);
                 manifest.Files.Add(new BundleFile("branding.bin", BundleFileType.Unknown,memoryStream2.ToArray()));
+            }
+            
+            var icons = IconResource.FromDirectory(p.Resources, IconType.Icon);
+            if (icons != null)
+            {
+                var group = icons.Groups.First();
+                var iconEntry = group.Icons.First();
+                ExecutableUtils.UpdateIconEntryIcon(SelectedTool.Icon, iconEntry);
+                icons.InsertIntoDirectory(p.Resources);
+                var resources = new ResourceDirectoryBuffer();
+                resources.AddDirectory(p.Resources);
             }
 
             p.ApplicationBinaryPath = "SantrollerConfiguratorBranded.dll";

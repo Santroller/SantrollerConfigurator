@@ -48,7 +48,7 @@ public static class ExecutableUtils
         peFile.Write(writer);
     }
 
-    private static void UpdateIconEntryIcon(Bitmap img, IconEntry icon)
+    public static void UpdateIconEntryIcon(Bitmap img, IconEntry icon)
     {
         img = img.CreateScaledBitmap(new PixelSize(128, 128));
         using var msImg = new MemoryStream();
