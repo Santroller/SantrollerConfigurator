@@ -346,9 +346,9 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
     public string SanitiseFile(string path)
     {
         var invalids = System.IO.Path.GetInvalidFileNameChars();
-        return String.Join("_", path.Split(invalids, StringSplitOptions.RemoveEmptyEntries) ).TrimEnd('.');
+        return String.Join("_", path.Split(invalids, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
     }
-    
+
     [RelayCommand]
     public async Task Package()
     {
@@ -362,7 +362,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             Message = Resources.UniqueName;
             return;
         }
-        
+
         var folder = await SaveBinaryHandler.Handle(this);
         if (folder == null)
         {
@@ -401,7 +401,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
                     return;
                 }
 
-                await config.BuildUf2(config.Model, Path.Join(sectionDir, SanitiseFile(config.ProductName)+".uf2"));
+                await config.BuildUf2(config.Model, Path.Join(sectionDir, SanitiseFile(config.ProductName) + ".uf2"));
                 start += steps;
                 Progress = start;
             }
@@ -431,18 +431,18 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             await AssetLoader.Open(uri).CopyToAsync(memoryStream);
             var manifest = BundleManifest.FromBytes(memoryStream.ToArray());
             var p = BundlerParameters.FromExistingBundle(
-                originalFile: memoryStream.ToArray(), 
+                originalFile: memoryStream.ToArray(),
                 appBinaryPath: "Branded.dll");
-            
 
             using (var memoryStream2 = new MemoryStream())
             {
                 await using var windowsWriter = new BinaryWriter(memoryStream2);
-                Serializer.SerializeWithLengthPrefix(memoryStream2, new SerialisedBrandedConfigurationStore(SelectedTool),
+                Serializer.SerializeWithLengthPrefix(memoryStream2,
+                    new SerialisedBrandedConfigurationStore(SelectedTool),
                     PrefixStyle.Base128);
-                manifest.Files.Add(new BundleFile("branding.bin", BundleFileType.Unknown,memoryStream2.ToArray()));
+                manifest.Files.Add(new BundleFile("branding.bin", BundleFileType.Unknown, memoryStream2.ToArray()));
             }
-            
+
             var icons = IconResource.FromDirectory(p.Resources, IconType.Icon);
             if (icons != null)
             {
@@ -455,9 +455,9 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             }
 
             p.ApplicationBinaryPath = "SantrollerConfiguratorBranded.dll";
-            p.PathPlaceholder = Encoding.UTF8.GetBytes("SantrollerConfiguratorBranded.dll");
+            p.PathPlaceholder = "SantrollerConfiguratorBranded.dll"u8.ToArray();
             manifest.WriteUsingTemplate(
-                Path.Join(workingDir, $"{toolName}-win-64.exe"), 
+                Path.Join(workingDir, $"{toolName}-win-64.exe"),
                 p);
         }
 
@@ -572,6 +572,7 @@ public partial class BuilderMainWindowViewModel : MainWindowViewModel
             ProgressbarColor = ProgressBarError;
             return;
         }
+
         if (ShowError)
         {
             Message = "There is an error with your configuration";
