@@ -364,7 +364,7 @@ public class Santroller : ConfigurableUsbDevice
                     return;
                 }
 
-                var midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 132);
+                var midiRaw = await ReadDataAsync(0, (byte) Commands.CommandReadMidi, 409-128);
                 _model.Update(bluetoothRaw, peripheralConnected, mpr121Connected, max1270XConnected, max1270XRaw,
                     accelConnected, wtDrumConnected, bhDrumConnected, mustangNeckConnected);
                 foreach (var output in _bindings)

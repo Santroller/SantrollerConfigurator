@@ -174,7 +174,13 @@ public partial class MidiInput : Input
         public readonly short pitchWheel;
         public readonly byte modWheel;
         public readonly byte sustainPedal;
-
+        public readonly bool seenProGuitar;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=6)] public readonly byte[] midiFrets;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=6)] public readonly byte[] midiStringVelocities;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst=5)] public readonly byte[] header;
+        public readonly byte buttons1;
+        public readonly byte buttons2;
+        public readonly byte buttons3;
     }
 
     public override string GenerateAll(List<Tuple<Input, string>> bindings, ConfigField mode)
