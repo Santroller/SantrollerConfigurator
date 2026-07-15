@@ -274,7 +274,7 @@ public class WiiInput : TwiInput
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
         ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw,
-        bool peripheralConnected, byte[] crkdRaw)
+        bool peripheralConnected, byte[] crkdRaw, ReadOnlySpan<byte> peripheralQuadRaw)
     {
         if (wiiControllerType.IsEmpty) return;
         var type = BitConverter.ToUInt16(wiiControllerType);

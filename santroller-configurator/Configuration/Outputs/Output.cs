@@ -1377,21 +1377,22 @@ public abstract partial class Output : ReactiveObject
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
         ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
-        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw, bool peripheralConnected, byte[] crkdRaw)
+        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw, bool peripheralConnected, byte[] crkdRaw,
+        ReadOnlySpan<byte> peripheralQuadRaw)
     {
         _midiNotes = midiRaw.ToArray();
         if (Enabled)
             Input.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                 ghWtRaw,
                 ps2ControllerType, wiiControllerType, usbHostInputsRaw, usbHostRaw, peripheralWtRaw, digitalPeripheral,
-                cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected, crkdRaw);
+                cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected, crkdRaw, peripheralQuadRaw);
 
         foreach (var output in AllOutputs)
             if (output != this)
                 output.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw,
                     ghWtRaw,
                     ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-                    digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected, crkdRaw);
+                    digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected, crkdRaw, peripheralQuadRaw);
     }
 
     public void UpdateErrors()

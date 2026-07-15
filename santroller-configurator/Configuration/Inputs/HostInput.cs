@@ -135,7 +135,7 @@ public abstract partial class HostInput : Input
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
         ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw,
-        bool peripheralConnected, byte[] crkdRaw)
+        bool peripheralConnected, byte[] crkdRaw, ReadOnlySpan<byte> peripheralQuadRaw)
     {
         var buffer = "";
         // When combined, the combined output renders this, so we don't need to calculate it

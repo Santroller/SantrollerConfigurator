@@ -153,7 +153,7 @@ public partial class MidiInput : Input
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral, ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw,
         ReadOnlySpan<byte> mpr121Raw, ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw,
-        bool peripheralConnected, byte[] crkdRaw)
+        bool peripheralConnected, byte[] crkdRaw, ReadOnlySpan<byte> peripheralQuadRaw)
     {
         if (Combined || midiRaw.IsEmpty) return;
         var inputs = StructTools.RawDeserialize<MidiInputs>(midiRaw, 0);

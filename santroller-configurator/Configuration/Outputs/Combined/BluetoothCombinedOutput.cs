@@ -85,11 +85,12 @@ public partial class BluetoothCombinedOutput : HostCombinedOutput
         ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> peripheralWtRaw,
         Dictionary<int, bool> digitalPeripheral,
         ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
-        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw, bool peripheralConnected, byte[] crkdRaw)
+        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw, bool peripheralConnected, byte[] crkdRaw,
+        ReadOnlySpan<byte> peripheralQuadRaw)
     {
         base.Update(analogRaw, digitalRaw, ps2Raw, wiiRaw, djLeftRaw, djRightRaw, gh5Raw, ghWtRaw,
             ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw, peripheralWtRaw,
-            digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected, crkdRaw);
+            digitalPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw, bluetoothInputsRaw, peripheralConnected, crkdRaw, peripheralQuadRaw);
         if (LocalAddress == Resources.BluetoothWriteConfigMessage && Model.Device is Santroller santroller)
             LocalAddress = santroller.GetBluetoothAddress();
         if (bluetoothRaw.IsEmpty) return;

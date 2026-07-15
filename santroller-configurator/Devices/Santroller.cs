@@ -76,7 +76,8 @@ public class Santroller : ConfigurableUsbDevice
         CommandReadBhDrumConnected,
         CommandReadCrkd,
         CommandReadMatrix,
-        CommandMustangNeckValid
+        CommandMustangNeckValid,
+        CommandReadPeripheralEncoder
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -262,6 +263,7 @@ public class Santroller : ConfigurableUsbDevice
                 var mustangNeckConnected = false;
                 var max1270XRaw = Array.Empty<byte>();
                 var max1270XConnected = false;
+                var peripheralQuadRaw = Array.Empty<byte>();
 
                 if (_model.GetTwiForType(WiiInput.WiiTwiType, false) != null)
                 {
@@ -304,6 +306,7 @@ public class Santroller : ConfigurableUsbDevice
                 if (_model.HasPeripheral)
                 {
                     peripheralWtRaw = await ReadDataAsync(0, (byte) Commands.CommandReadPeripheralWt, 5 * sizeof(int));
+                    peripheralQuadRaw = await ReadDataAsync(0, (byte) Commands.CommandReadPeripheralEncoder, sizeof(int));
                     peripheralConnected =
                         (await ReadDataAsync(0, (byte) Commands.CommandReadPeripheralValid, 1)).Any(x => x != 0);
                 }
@@ -372,7 +375,7 @@ public class Santroller : ConfigurableUsbDevice
                         djRightRaw, gh5Raw,
                         ghWtRaw, ps2ControllerType, wiiControllerType, usbHostRaw, bluetoothRaw, usbHostInputsRaw,
                         peripheralWtRaw, digitalRawPeripheral, cloneRaw, adxlRaw, mpr121Raw, midiRaw,
-                        bluetoothInputsRaw, peripheralConnected, crkdRaw);
+                        bluetoothInputsRaw, peripheralConnected, crkdRaw, peripheralQuadRaw);
                 // If nothing is being ticked, then give the UI some time to process data instead of polling at max speed
                 if (analogRaw.Count == 0 && digitalRaw.Count == 0 && digitalRawPeripheral.Count == 0 &&
                     midiRaw.Length == 0)

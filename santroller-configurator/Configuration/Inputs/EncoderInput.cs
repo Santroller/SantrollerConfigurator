@@ -72,34 +72,9 @@ public partial class EncoderInput : InputWithPin
         ReadOnlySpan<byte> wiiControllerType, ReadOnlySpan<byte> usbHostInputsRaw, ReadOnlySpan<byte> usbHostRaw,
         ReadOnlySpan<byte> peripheralWtRaw, Dictionary<int, bool> digitalPeripheral,
         ReadOnlySpan<byte> cloneRaw, ReadOnlySpan<byte> adxlRaw, ReadOnlySpan<byte> mpr121Raw,
-        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw, bool peripheralConnected, byte[] crkdRaw)
+        ReadOnlySpan<byte> midiRaw, ReadOnlySpan<byte> bluetoothInputsRaw, bool peripheralConnected, byte[] crkdRaw,
+        ReadOnlySpan<byte> peripheralQuadRaw)
     {
-        var dRaw = digitalRaw;
-        if (Peripheral)
-        {
-            if (!peripheralConnected)
-            {
-                RawValue = 0;
-                return;
-            }
-            dRaw = digitalPeripheral;
-        }
-        if (IsAnalog)
-        {
-            RawValue = analogRaw.GetValueOrDefault(Pin, 0);
-        }
-        else
-        {
-            // Pullups mean low is a logical high, which is inherently an invert
-            var invert = PinMode == DevicePinMode.PullUp;
-            if (Inverted) invert = !invert;
-            RawValue = dRaw.GetValueOrDefault(Pin, invert) switch
-            {
-                true when invert => 0,
-                false when invert => 1,
-                true => 1,
-                false => 0
-            };
-        }
+        RawValue = BitConverter.ToInt32(peripheralQuadRaw);
     }
 }
