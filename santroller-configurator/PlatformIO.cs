@@ -45,8 +45,6 @@ public class PlatformIo
 
             var assetDir = GetAssetDir();
             AssetUtils.CopyDirectory(Path.Join(assetDir, "Santroller"), FirmwareDir, true);
-            AssetUtils.CopyDirectory(Path.Join(assetDir, "platformio", ".cache"),
-                Path.Join(AssetUtils.GetAppDataFolder(), "platformio", ".cache"), true);
             platformIoOutput.OnCompleted();
         });
     }
