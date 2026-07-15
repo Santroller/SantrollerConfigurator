@@ -46,7 +46,6 @@
         <RepositoryUrl>https://github.com/Santroller/Santroller</RepositoryUrl>
         <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
         <RepositoryType>git</RepositoryType>
-        <SelfContained>true</SelfContained>
     </PropertyGroup>
     <PropertyGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' ">
         <Optimize>true</Optimize>

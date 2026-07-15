@@ -20,8 +20,6 @@
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
         <PublishReadyToRun>true</PublishReadyToRun>
-        <PublishSingleFile>true</PublishSingleFile>
-        <SelfContained>true</SelfContained>
         <StartupObject>SantrollerConfiguratorBranded.NetCore.Program</StartupObject>
 
         <!--        <PublishTrimmed>true</PublishTrimmed>-->
