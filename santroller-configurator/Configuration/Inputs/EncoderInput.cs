@@ -22,13 +22,14 @@ public partial class EncoderInput : InputWithPin
 
     [Reactive] private bool _inverted;
 
-    public override InputType? InputType => Types.InputType.EncoderInput;
+    public override InputType? InputType =>
+        Peripheral ? Types.InputType.EncoderPeripheralInput : Types.InputType.EncoderInput;
 
     protected override string DetectionText => Resources.DetectAxis;
 
     public override IList<DevicePin> Pins => new List<DevicePin>
     {
-        new(Pin, PinMode), new(Pin+1, PinMode)
+        new(Pin, PinMode), new(Pin + 1, PinMode)
     };
 
     public override string Title => "Encoder";
@@ -59,10 +60,10 @@ public partial class EncoderInput : InputWithPin
     {
         if (Peripheral)
         {
-            
-            return ["INPUT_QUAD_SLAVE "+Pin];
+            return ["INPUT_QUAD_SLAVE " + Pin];
         }
-        return ["INPUT_QUAD "+Pin];
+
+        return ["INPUT_QUAD " + Pin];
     }
 
     public override void Update(Dictionary<int, int> analogRaw,
