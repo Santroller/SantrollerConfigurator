@@ -12,7 +12,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
 public partial class EncoderInput : InputWithPin
 {
-    public EncoderInput(int pin, bool peripheral, ConfigViewModel model) : base(
+    public EncoderInput(int pin, int pollrate, bool peripheral, ConfigViewModel model) : base(
         model, new DirectPinConfig(model, Guid.NewGuid().ToString(), pin, peripheral, DevicePinMode.Floating))
     {
         IsAnalog = true;
@@ -21,6 +21,7 @@ public partial class EncoderInput : InputWithPin
     public override bool IsUint => false;
 
     [Reactive] private bool _inverted;
+    [Reactive] private int _pollRate;
 
     public override InputType? InputType =>
         Peripheral ? Types.InputType.EncoderPeripheralInput : Types.InputType.EncoderInput;
@@ -36,7 +37,7 @@ public partial class EncoderInput : InputWithPin
 
     public override SerializedInput Serialise()
     {
-        return new SerializedEncoderInput(PinConfig.Peripheral, PinConfig.Pin);
+        return new SerializedEncoderInput(PinConfig.Peripheral, PinConfig.Pin, _pollRate);
     }
 
     public override string Generate()
@@ -60,10 +61,10 @@ public partial class EncoderInput : InputWithPin
     {
         if (Peripheral)
         {
-            return ["INPUT_QUAD_SLAVE " + Pin];
+            return ["INPUT_QUAD_SLAVE " + Pin, "INPUT_QUAD_RATE " + PollRate];
         }
 
-        return ["INPUT_QUAD " + Pin];
+        return ["INPUT_QUAD " + Pin, "INPUT_QUAD_RATE " + PollRate];
     }
 
     public override void Update(Dictionary<int, int> analogRaw,

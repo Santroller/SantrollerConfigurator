@@ -6807,6 +6807,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string EncoderPollRateLabel {
+            get {
+                return ResourceManager.GetString("EncoderPollRateLabel", resourceCulture);
+            }
+        }
+        
         public static string ThresholdLabel {
             get {
                 return ResourceManager.GetString("ThresholdLabel", resourceCulture);
