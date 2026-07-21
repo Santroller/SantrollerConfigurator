@@ -50,20 +50,34 @@ public abstract class Microcontroller
                 (s.Type == ConfigViewModel.AdafruitHostType) &&
                 s.Pins.Contains(possiblePin))
             .Select(s => s.Type);
+        var outputPins = model.PinConfigs.Where(s =>
+                s.Peripheral == peripheral &&
+                (s.Type == ConfigViewModel.WiiOutputTwiType || s.Type == ConfigViewModel.WiiOutputEnType ||
+                 s.Type == ConfigViewModel.Ps2OutputTwiType || s.Type == ConfigViewModel.Ps2OutputAckType ||
+                 s.Type == ConfigViewModel.Ps2OutputAttType || s.Type == ConfigViewModel.Mpr121TwiType ||
+                 s.Type == ConfigViewModel.Max170XTwiType || s.Type == ConfigViewModel.AccelTwiType ||
+                 s.Type == ConfigViewModel.MidiSerialPinType ||
+                 s.Type == ConfigViewModel.WtDrumSpiType ||
+                 s.Type == ConfigViewModel.MustangNeckSpiType ||
+                 s.Type == ConfigViewModel.MustangNeckSpiCsType ||
+                 s.Type == ConfigViewModel.BhDrumTwiType) &&
+                s.Pins.Contains(possiblePin))
+            .Select(s => s.Type);
 
         var output = string.Join(" - ",
             outputs.Where(o =>
                     o.GetPinConfigs().Except(selectedConfig)
                         .Any(s => s.Peripheral == peripheral && s.Pins.Contains(possiblePin)))
                 .Select(s => s.GetName(model.DeviceControllerType, model.LegendType, model.SwapSwitchFaceButtons))
-                .Concat(apa102).Concat(unoMega).Concat(featherPin));
+                .Concat(apa102).Concat(unoMega).Concat(featherPin).Concat(outputPins));
         var ret = GetPinForMicrocontroller(possiblePin, twi, spi, outputMode);
         if (!string.IsNullOrEmpty(output) && addText) return "* " + ret + " - " + output;
 
         return ret;
     }
 
-    public abstract SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesSck, bool includesMiso,
+    public abstract SpiConfig AssignSpiPins(ConfigViewModel model, string type, bool peripheral, bool includesSck,
+        bool includesMiso,
         int mosi, int miso,
         int sck, bool cpol,
         bool cpha,
@@ -97,5 +111,7 @@ public abstract class Microcontroller
     public abstract int GetAnalogMask(DevicePin devicePin);
 
     public abstract int GetFirstDigitalPin();
-    public abstract UartConfig AssignUartPins(ConfigViewModel model, string type, bool peripheral, int tx, int rx, uint clock, bool output);
+
+    public abstract UartConfig AssignUartPins(ConfigViewModel model, string type, bool peripheral, int tx, int rx,
+        uint clock, bool output);
 }

@@ -4025,6 +4025,16 @@
                                           ItemTemplate="{StaticResource PinToStringTemplateTwi}"
                                           Width="200" />
                             </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center"
+                                       VerticalContentAlignment="Center"
+                                       Width="350" Content="{x:Static netCore:Resources.EnLabel}" />
+                                <ComboBox Width="200"
+                                          SelectedItem="{Binding WiiOutputEn}"
+                                          ItemsSource="{Binding AvailablePinsDigital}"
+                                          DropDownOpened="ReloadPinTemplates"
+                                          ItemTemplate="{StaticResource PinToStringTemplate}" />
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
                 </Expander>

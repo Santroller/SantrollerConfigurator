@@ -6777,6 +6777,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string EnLabel {
+            get {
+                return ResourceManager.GetString("EnLabel", resourceCulture);
+            }
+        }
+        
         public static string LowPassFilterLabel {
             get {
                 return ResourceManager.GetString("LowPassFilterLabel", resourceCulture);

@@ -357,6 +357,10 @@ public partial class DrumAxis : OutputAxis
                 if (ButtonsPs3.TryGetValue(Type, out var value2))
                     outputButtons += $"\n{GetReportField(value2)} = true;";
                 break;
+            case ConfigField.Wii:
+                if (ButtonsPs3.TryGetValue(Type, out var valuew))
+                    outputButtons += $"\n{GetReportField(valuew)} = true;";
+                break;
             case ConfigField.Universal:
                 if (ButtonsPs3.TryGetValue(Type, out var value3))
                     outputButtons += $"\n{GetReportField(value3)} = true;";
@@ -385,7 +389,7 @@ public partial class DrumAxis : OutputAxis
                      """;
         }
 
-        if (mode == ConfigField.Festival)
+        if (mode is ConfigField.Festival or ConfigField.Wii)
         {
             return $$"""
                      if ({{ifStatement}}) {

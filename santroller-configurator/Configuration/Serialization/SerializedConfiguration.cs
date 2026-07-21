@@ -94,6 +94,7 @@ public class SerializedConfiguration
         HasWiiOutput = model.HasWiiOutput;
         WiiOutputScl = model.WiiOutputScl;
         WiiOutputSda = model.WiiOutputSda;
+        WiiOutputEn = model.WiiOutputEn;
         HasPs2Output = model.HasPs2Output;
         
         Ps2OutputMiso = model.Ps2OutputMiso;
@@ -216,6 +217,7 @@ public class SerializedConfiguration
     [ProtoMember(106)] public int MustangNeckMiso { get; private set; }
     [ProtoMember(107)] public int MustangNeckSck { get; private set; }
     [ProtoMember(108)] public int MustangNeckCs { get; private set; }
+    [ProtoMember(109)] public int WiiOutputEn { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -312,6 +314,7 @@ public class SerializedConfiguration
         {
             model.WiiOutputScl = WiiOutputScl;
             model.WiiOutputSda = WiiOutputSda;
+            model.WiiOutputEn = WiiOutputEn;
         }
 
         if (HasMpr121)

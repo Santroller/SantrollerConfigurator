@@ -45,6 +45,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly string Stp16SpiType = "STP16CPC26";
     public static readonly string WS2812SpiType = "WS2812";
     public static readonly string WiiOutputTwiType = "Wii Output";
+    public static readonly string WiiOutputEnType = "Wii Output Enable";
     public static readonly string Ps2OutputTwiType = "Ps2 Output";
     public static readonly string Ps2OutputAckType = "Ps2 Output Acknowledge";
     public static readonly string Ps2OutputAttType = "Ps2 Output Attention";
@@ -62,7 +63,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly int Mpr121TwiFreq = 400000;
     public static readonly string Max170XTwiType = "MAX170x";
     public static readonly int Max170XTwiFreq = 400000;
-    public static readonly string AccelTwiType = "adxl";
+    public static readonly string AccelTwiType = "Accelerometer";
     public static readonly int AccelTwiFreq = 400000;
     public static readonly string MidiSerialPinType = "MIDI RX";
     public static readonly string UsbHostPinTypeDm = "USB D-";
@@ -71,18 +72,18 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public static readonly string UnoPinTypeRx = "Uno Serial Rx Pin";
     public static readonly int UnoPinTypeRxPin = 0;
     public static readonly int UnoPinTypeTxPin = 1;
-    public static readonly string WtDrumSpiType = "wt_drum";
+    public static readonly string WtDrumSpiType = "World Tour Drum";
     public static readonly uint WtDrumSpiFreq = 500000;
     public static readonly bool WtDrumSpiCpol = false;
     public static readonly bool WtDrumSpiCpha = true;
     public static readonly bool WtDrumSpiMsbFirst = true;
-    public static readonly string MustangNeckSpiType = "mustang_neck";
+    public static readonly string MustangNeckSpiType = "Mustang Guitar Neck";
     public static readonly uint MustangNeckSpiFreq = 100000;
     public static readonly bool MustangNeckSpiCpol = false;
     public static readonly bool MustangNeckSpiCpha = true;
     public static readonly bool MustangNeckSpiMsbFirst = false;
-    public static readonly string MustangNeckSpiCsType = "mustang_neck_cs";
-    public static readonly string BhDrumTwiType = "bh_drum";
+    public static readonly string MustangNeckSpiCsType = "Mustang Guitar Neck CS";
+    public static readonly string BhDrumTwiType = "Band Hero Drum";
     public static readonly int BhDrumTwiFreq = 100000;
 
     private bool _allExpanded;
@@ -99,6 +100,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     private TwiConfig? _accelTwiConfig;
     private TwiConfig? _bhDrumTwiConfig;
     private TwiConfig? _wiiOutputTwiConfig;
+    private DirectPinConfig? _wiiOutputEnConfig;
     private DirectPinConfig? _ws2812Config;
     private DirectPinConfig? _ws2812ConfigPeripheral;
     private DirectPinConfig? _ps2OutputAtt;
@@ -995,6 +997,17 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         }
     }
     
+    public int WiiOutputEn
+    {
+        get => _wiiOutputEnConfig?.Pin ?? 0;
+        set
+        {
+            if (_wiiOutputEnConfig == null) return;
+            _wiiOutputEnConfig.Pin = value;
+            this.RaisePropertyChanged();
+        }
+    }
+    
     public int WiiOutputSda
     {
         get => _wiiOutputTwiConfig?.Sda ?? 0;
@@ -1437,9 +1450,14 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 value
                     ? Microcontroller.AssignTwiPins(this, WiiOutputTwiType, false, -1, -1, WiiInput.WiiTwiFreq, true)
                     : null;
+            _wiiOutputEnConfig =
+                value
+                    ? GetPinForType(WiiOutputEnType, false, -1, DevicePinMode.Output)
+                    : null;
 
             this.RaisePropertyChanged(nameof(WiiOutputSda));
             this.RaisePropertyChanged(nameof(WiiOutputScl));
+            this.RaisePropertyChanged(nameof(WiiOutputEn));
             this.RaiseAndSetIfChanged(ref _hasWiiOutput, value);
             UpdateErrors();
         }
@@ -1786,8 +1804,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 _ledSpiConfig, _ws2812Config, _usbHostDm, _usbHostDp, _unoRx, _unoTx, _peripheralTwiConfig,
                 _ledSpiConfigPeripheral, _stp16Le, _stp16Oe, _stp16LePeripheral, _stp16OePeripheral, _mpr121TwiConfig,
-                _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt,
-                _adaFruitHostPin, _accelTwiConfig, _wtDrumCsConfig, _wtDrumSpiConfig, _bhDrumTwiConfig, _mustangNeckSpiConfig, _mustangNeckCsConfig
+                _max170XTwiConfig, _wiiOutputTwiConfig, _ps2OutputSpiConfig, _ps2OutputAck, _ps2OutputAtt, _midiSerialPin,
+                _adaFruitHostPin, _accelTwiConfig, _wtDrumCsConfig, _wtDrumSpiConfig, _bhDrumTwiConfig, _mustangNeckSpiConfig, _mustangNeckCsConfig, _wiiOutputEnConfig
             }.Where(s => s != null)
             .Cast<PinConfig>();
 
@@ -2558,6 +2576,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 config += $"""
 
                            #define WII_OUTPUT_TWI_PORT {_wiiOutputTwiConfig.Definition}
+                           """;
+            }
+            if (_wiiOutputEnConfig != null)
+            {
+                config += $"""
+                           
+                           #define WII_OUTPUT_EN_READ() {Microcontroller.GenerateDigitalRead(WiiOutputEn, false, false)}
                            """;
             }
 

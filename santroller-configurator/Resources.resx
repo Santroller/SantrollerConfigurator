@@ -3530,6 +3530,9 @@ Feel free to remove this option if you do not intend to use your instrument on i
     <data name="SdaLabel" xml:space="preserve">
         <value>SDA Pin</value>
     </data>
+    <data name="EnLabel" xml:space="preserve">
+        <value>Enable Pin</value>
+    </data>
     <data name="LowPassFilterLabel" xml:space="preserve">
         <value>Low Pass Filter</value>
     </data>
