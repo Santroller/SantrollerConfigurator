@@ -1452,7 +1452,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                     : null;
             _wiiOutputEnConfig =
                 value
-                    ? GetPinForType(WiiOutputEnType, false, -1, DevicePinMode.Output)
+                    ? GetPinForType(WiiOutputEnType, false, -1, DevicePinMode.PullDown)
                     : null;
 
             this.RaisePropertyChanged(nameof(WiiOutputSda));
