@@ -6783,6 +6783,12 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string WiiOutputEnableLabel {
+            get {
+                return ResourceManager.GetString("WiiOutputEnableLabel", resourceCulture);
+            }
+        }
+        
         public static string LowPassFilterLabel {
             get {
                 return ResourceManager.GetString("LowPassFilterLabel", resourceCulture);

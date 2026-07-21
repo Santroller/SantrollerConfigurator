@@ -1345,6 +1345,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] private bool _ps4Instruments;
     private bool _hasPeripheral;
     private bool _hasWiiOutput;
+    private bool _hasWiiOutputEnable;
     private bool _hasPs2Output;
     private bool _hasWtDrumInput;
     private bool _hasMustangNeckInput;
@@ -1450,15 +1451,25 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                 value
                     ? Microcontroller.AssignTwiPins(this, WiiOutputTwiType, false, -1, -1, WiiInput.WiiTwiFreq, true)
                     : null;
+
+            this.RaisePropertyChanged(nameof(WiiOutputSda));
+            this.RaisePropertyChanged(nameof(WiiOutputScl));
+            this.RaiseAndSetIfChanged(ref _hasWiiOutput, value);
+            UpdateErrors();
+        }
+    }
+    public bool HasWiiOutputEn
+    {
+        get => _hasWiiOutputEnable;
+        set
+        {
             _wiiOutputEnConfig =
                 value
                     ? GetPinForType(WiiOutputEnType, false, -1, DevicePinMode.PullDown)
                     : null;
 
-            this.RaisePropertyChanged(nameof(WiiOutputSda));
-            this.RaisePropertyChanged(nameof(WiiOutputScl));
             this.RaisePropertyChanged(nameof(WiiOutputEn));
-            this.RaiseAndSetIfChanged(ref _hasWiiOutput, value);
+            this.RaiseAndSetIfChanged(ref _hasWiiOutputEnable, value);
             UpdateErrors();
         }
     }

@@ -92,6 +92,8 @@ public class SerializedConfiguration
         Ps4Instruments = model.Ps4Instruments;
         AdxlFilter = model.AccelFilter;
         HasWiiOutput = model.HasWiiOutput;
+        HasWiiOutputEn = model.HasWiiOutputEn;
+        
         WiiOutputScl = model.WiiOutputScl;
         WiiOutputSda = model.WiiOutputSda;
         WiiOutputEn = model.WiiOutputEn;
@@ -218,6 +220,7 @@ public class SerializedConfiguration
     [ProtoMember(107)] public int MustangNeckSck { get; private set; }
     [ProtoMember(108)] public int MustangNeckCs { get; private set; }
     [ProtoMember(109)] public int WiiOutputEn { get; private set; }
+    [ProtoMember(110)] public bool HasWiiOutputEn { get; private set; }
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -254,6 +257,7 @@ public class SerializedConfiguration
         model.HasPeripheral = HasPeripheral;
         model.HasWiiOutput = HasWiiOutput;
         model.HasPs2Output = HasPs2Output;
+        model.HasWiiOutputEn = HasWiiOutputEn;
         model.HasWtDrumInput = HasWtDrumInput;
         model.HasMustangNeckInput = HasMustangNeckInput;
         model.HasBhDrumInput = HasBhDrumInput;
@@ -314,6 +318,9 @@ public class SerializedConfiguration
         {
             model.WiiOutputScl = WiiOutputScl;
             model.WiiOutputSda = WiiOutputSda;
+        }
+        if (HasWiiOutputEn)
+        {
             model.WiiOutputEn = WiiOutputEn;
         }
 
