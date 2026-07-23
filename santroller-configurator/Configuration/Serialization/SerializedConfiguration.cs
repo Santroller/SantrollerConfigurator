@@ -92,7 +92,7 @@ public class SerializedConfiguration
         Ps4Instruments = model.Ps4Instruments;
         AdxlFilter = model.AccelFilter;
         HasWiiOutput = model.HasWiiOutput;
-        HasWiiOutputEn = model.HasWiiOutputEn;
+        HasWiiOutputEn = model is { HasWiiOutputEn: true, HasWiiOutput: true };
         
         WiiOutputScl = model.WiiOutputScl;
         WiiOutputSda = model.WiiOutputSda;
@@ -257,7 +257,7 @@ public class SerializedConfiguration
         model.HasPeripheral = HasPeripheral;
         model.HasWiiOutput = HasWiiOutput;
         model.HasPs2Output = HasPs2Output;
-        model.HasWiiOutputEn = HasWiiOutputEn;
+        model.HasWiiOutputEn = HasWiiOutputEn && HasWiiOutput;
         model.HasWtDrumInput = HasWtDrumInput;
         model.HasMustangNeckInput = HasMustangNeckInput;
         model.HasBhDrumInput = HasBhDrumInput;
