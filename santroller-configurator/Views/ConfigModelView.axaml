@@ -2862,9 +2862,9 @@
                             <Binding Path="AreLedsEnabled" />
                             <Binding Path="SupportsLeds" />
                             <Binding Path="!IsCombined" />
+                            <Binding
+                                Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                             <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding
-                                    Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                                 <Binding Path="AreLedsSet" />
                                 <Binding Path="AreLedsSetPeripheral" />
                             </MultiBinding>
@@ -2899,6 +2899,8 @@
                             <Binding Path="AreLedsEnabledPeripheral" />
                             <Binding Path="SupportsLeds" />
                             <Binding Path="!IsCombined" />
+                            <Binding
+                                Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
