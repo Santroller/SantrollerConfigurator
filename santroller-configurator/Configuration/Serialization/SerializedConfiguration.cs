@@ -226,7 +226,9 @@ public class SerializedConfiguration
     {
         model.CymbalGlitchFix = Rb3CymbalGlitchFix;
         model.MidiSerialEnabled = MidiSerialEnabled;
-        model.MidiSerialPin = MidiSerialPin;
+        if (MidiSerialEnabled) {
+            model.MidiSerialPin = MidiSerialPin;
+        }
         model.SleepEnabled = SleepEnabled;
         model.SleepWakeUpPin = SleepPin;
         model.DeviceSleep = SleepTimer;
