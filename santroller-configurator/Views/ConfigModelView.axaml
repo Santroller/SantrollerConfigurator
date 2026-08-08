@@ -2864,10 +2864,6 @@
                             <Binding Path="!IsCombined" />
                             <Binding
                                 Path="!$parent[views:ConfigView].((viewModels:ConfigViewModel)DataContext).Branded" />
-                            <MultiBinding Converter="{x:Static BoolConverters.Or}">
-                                <Binding Path="AreLedsSet" />
-                                <Binding Path="AreLedsSetPeripheral" />
-                            </MultiBinding>
                         </MultiBinding>
                     </WrapPanel.IsVisible>
                     <Label VerticalAlignment="Center"
