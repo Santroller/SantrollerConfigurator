@@ -351,7 +351,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         AvailablePinsAnalog = analogPins;
         AvailablePinsDigital = digitalPins;
         AvailablePinsInterrupt = interruptPins;
-        _midiSerialPin = new DirectPinConfig(this, MidiSerialPinType, 1, false, DevicePinMode.Skip);
+        _midiSerialPin = new DirectPinConfig(this, MidiSerialPinType, -1, false, DevicePinMode.Skip);
         _usbHostDm = new DirectPinConfig(this, UsbHostPinTypeDm, -1, false, DevicePinMode.Skip);
         _usbHostDp = new DirectPinConfig(this, UsbHostPinTypeDp, -1, false, DevicePinMode.Skip);
         if (!device.LoadConfiguration(this, false))
