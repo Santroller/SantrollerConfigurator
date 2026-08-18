@@ -443,7 +443,7 @@ public partial class Led : Output
     };
 
     public override bool SupportsLedOff =>
-        Command is not (LedCommandType.Auth or LedCommandType.Mode or LedCommandType.AlwaysOn or LedCommandType.Player);
+        Command is not (LedCommandType.Auth or LedCommandType.Mode or LedCommandType.AlwaysOn); // removed LedCommandType.Player
 
     public override bool IsKeyboard => false;
     public virtual bool IsController => false;
