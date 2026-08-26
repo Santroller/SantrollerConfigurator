@@ -15,6 +15,7 @@ public partial class EncoderInput : InputWithPin
     public EncoderInput(int pin, int pollrate, bool peripheral, ConfigViewModel model) : base(
         model, new DirectPinConfig(model, Guid.NewGuid().ToString(), pin, peripheral, DevicePinMode.Floating))
     {
+        PollRate = pollrate;
         IsAnalog = true;
     }
 
