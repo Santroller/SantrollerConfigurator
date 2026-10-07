@@ -2238,10 +2238,12 @@
                            Width="350" Content="{x:Static netCore:Resources.DebounceLabel}" />
                     <NumericUpDown FormatString="{}{0:#,0}" Value="{Binding DebounceDisplay}"
                                    IsVisible="{Binding !$parent[UserControl].((viewModels:ConfigViewModel)DataContext).Deque}"
+                                   Minimum="0" Maximum="250"
                                    VerticalAlignment="Center"
                                    Width="200" />
                     <NumericUpDown Increment="0.1" Value="{Binding DebounceDisplay}"
                                    IsVisible="{Binding $parent[UserControl].((viewModels:ConfigViewModel)DataContext).Deque}"
+                                   Minimum="0" Maximum="25"
                                    VerticalAlignment="Center"
                                    Width="200" />
                 </StackPanel>
@@ -3468,7 +3470,15 @@
                                    Width="350" Content="{x:Static netCore:Resources.StrumDebounceLabel}" />
                             <NumericUpDown Width="200" FormatString="{}{0:#,0}"
                                            Value="{Binding StrumDebounceDisplay}"
+                                           IsVisible="{Binding !Deque}"
                                            Minimum="0"
+                                           Increment="1"
+                                           Maximum="25" HorizontalAlignment="Stretch" />
+                            <NumericUpDown Width="200"
+                                           Value="{Binding StrumDebounceDisplay}"
+                                           IsVisible="{Binding Deque}"
+                                           Minimum="0"
+                                           Increment="0.1"
                                            Maximum="25" HorizontalAlignment="Stretch" />
                         </StackPanel>
                         <StackPanel IsVisible="{Binding IsGuitar}" Orientation="Horizontal">

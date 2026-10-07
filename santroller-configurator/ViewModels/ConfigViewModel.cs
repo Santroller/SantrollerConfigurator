@@ -454,13 +454,13 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     public float DebounceDisplay
     {
         get => _debounceDisplay.Value;
-        set => Debounce = (int) (value * 10);
+        set => Debounce = (int) Math.Round(value * 10);
     }
 
     public float StrumDebounceDisplay
     {
         get => _strumDebounceDisplay.Value;
-        set => StrumDebounce = (int) (value * 10);
+        set => StrumDebounce = (int) Math.Round(value * 10);
     }
 
     [Reactive] private string _variant = "";
@@ -603,6 +603,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             {
                 // If we have disabled deque, then round to the nearest whole debounce
                 Debounce = (int) (Math.Round(Debounce / 10.0f) * 10);
+                StrumDebounce = (int) (Math.Round(StrumDebounce / 10.0f) * 10);
             }
         }
     }
