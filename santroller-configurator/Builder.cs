@@ -37,7 +37,7 @@ public class Builder : Task
         Directory.CreateDirectory(Path.Combine(Parameter1, "Binaries"));
 
         Console.WriteLine("Copying firmware");
-        CopyIfNew(Parameter1, ["firmware", "firmware.version"], ["firmware", "firmware.zip"]);
+        CopyIfNew(Parameter1, ["legacy", "firmware", "firmware.version"], ["legacy", "firmware", "firmware.zip"]);
         Console.WriteLine("Copying platformio");
         CopyIfNew(Parameter1, ["libs", platform, "platformio.version"], ["libs", platform, "platformio.zip"]);
         return true;

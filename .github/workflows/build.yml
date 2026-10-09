@@ -2,6 +2,9 @@ permissions:
   contents: write
 name: Build
 on: [push]
+# Legacy AVR release: only the standard configurator is built, and releases are
+# published to their own velopack channels so that legacy and main installs never
+# update into each other.
 jobs:
   build-mac:
     if: contains(github.ref, 'tags/v')
@@ -15,19 +18,6 @@ jobs:
         env:
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: security unlock-keychain -p $KEYCHAIN_PASSWORD login.keychain
-      - name: Build Branded
-        run: |
-          cd Branded
-          dotnet publish -c Release -r osx-x64 -t:BundleApp -p:PublishSingleFile=true -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
-          mkdir out_stage
-          mkdir out
-          cp -r bin/Release/net8.0/osx-x64/publish/SantrollerConfiguratorBranded.app out_stage
-          cp Resources/* out_stage
-          cd out_stage
-          codesign --entitlements entitlements.xml -s "guitar-configurator" "SantrollerConfiguratorBranded.app" --force --deep
-          ditto -c -k --keepParent SantrollerConfiguratorBranded.app ../out/SantrollerConfiguratorBranded-macOS.zip
-          cd ..
-          mv out ..
       - name: Build Standard
         run: |
           cd santroller-configurator
@@ -41,15 +31,13 @@ jobs:
       - name: Create Velopack Release
         run: |
           cd santroller-configurator
-          # ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/Santroller no point in doing deltas until we do packages
-          ~/.dotnet/tools/vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish/SantrollerConfigurator.app --signAppIdentity "guitar-configurator" --signInstallIdentity "guitar-configurator" --noInst --icon Resources/icon.icns
+          ~/.dotnet/tools/vpk pack -u SantrollerConfigurator -c legacy-osx -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish/SantrollerConfigurator.app --signAppIdentity "guitar-configurator" --signInstallIdentity "guitar-configurator" --noInst --icon Resources/icon.icns
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir $RUN_ID
           cp -rf santroller-configurator/Releases $RUN_ID
-          mv out $RUN_ID/macos 
           rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
   build-linux:
     if: contains(github.ref, 'tags/v')
@@ -59,13 +47,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Build Branded
-        run: |
-          cd Branded
-          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
-          mkdir out
-          cp bin/Release/net8.0/linux-x64/publish/SantrollerConfiguratorBranded out/SantrollerConfiguratorBranded-linux-64
-          mv out ..
       - name: Build Standard
         run: |
           cd santroller-configurator
@@ -79,15 +60,14 @@ jobs:
       - name: Create Velopack Release
         run: |
           cd santroller-configurator
-          vpk download github --repoUrl https://github.com/Santroller/Santroller
-          vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/linux-x64/publish --icon Resources/icon.png
+          vpk download github --repoUrl https://github.com/Santroller/Santroller -c legacy-linux
+          vpk pack -u SantrollerConfigurator -c legacy-linux -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/linux-x64/publish --icon Resources/icon.png
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir -p ~/artifacts/$RUN_ID/Releases
           cp -rf santroller-configurator/Releases/* ~/artifacts/$RUN_ID/Releases
-          cp -rf out ~/artifacts/$RUN_ID/linux 
   build-windows:
     if: contains(github.ref, 'tags/v')
     name: Build (Windows)
@@ -98,13 +78,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Build Branded
-        run: |
-          cd Branded
-          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal 
-          mkdir out
-          cp bin/Release/net8.0/win-x64/publish/SantrollerConfiguratorBranded.exe out/SantrollerConfiguratorBranded-win-64.exe
-          mv out ..
       - name: Build Standard
         run: |
           cd santroller-configurator
@@ -116,162 +89,45 @@ jobs:
       - name: Create Velopack Release
         run: |
           cd santroller-configurator
-          vpk download github --repoUrl https://github.com/Santroller/Santroller
-          vpk pack -u SantrollerConfigurator -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/win-x64/publish --icon Resources/icon.ico
+          vpk download github --repoUrl https://github.com/Santroller/Santroller -c legacy-win
+          vpk pack -u SantrollerConfigurator -c legacy-win -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/win-x64/publish --icon Resources/icon.ico
       - name: Copy artifacts
         env:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir $Env:RUN_ID
-          mv out $Env:RUN_ID/windows 
           cp -force -recurse santroller-configurator/Releases $Env:RUN_ID/Releases
           scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
-  build-linux-builder:
-    if: contains(github.ref, 'tags/v')
-    name: Build Builder (Linux)
-    needs: [build-linux, build-mac, build-windows]
-    runs-on: [self-hosted, linux]
-    steps:
-      - name: Copy artifacts
-        env:
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          cp ~/artifacts/$RUN_ID/windows/*.exe Builder/Assets
-          cp ~/artifacts/$RUN_ID/linux/* Builder/Assets
-          cp ~/artifacts/$RUN_ID/macos/*.zip Builder/Assets
-      - name: Build
-        run: |
-          cd Builder
-          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
-      - name: Get Version from Project File
-        id: get-version
-        shell: bash
-        run: |
-          cd Builder
-          echo "version=$(dotnet-gitversion /output json /showvariable SemVer)" >> $GITHUB_OUTPUT
-      - name: Create Velopack Release
-        run: |
-          cd Builder
-          vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.BINARY_GITHUB_TOKEN }}
-          vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/linux-x64/publish --icon Resources/icon.png
-      - name: Copy artifacts
-        env:
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          mkdir -p ~/artifacts/$RUN_ID/BuilderReleases
-          cp -rf Builder/Releases/* ~/artifacts/$RUN_ID/BuilderReleases
-  build-windows-builder:
-    if: contains(github.ref, 'tags/v')
-    name: Build Builder (Windows)
-    needs: [build-linux, build-mac, build-windows]
-    runs-on: [self-hosted, windows]
-    steps:
-      - name: git configure long path
-        run: git config --global core.longpaths true
-      - name: Copy artifacts
-        env:
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          scp -r sanjay@192.168.0.79:./artifacts/$Env:RUN_ID .
-          cp $Env:RUN_ID/windows/*.exe Builder/Assets
-          cp $Env:RUN_ID/linux/* Builder/Assets
-          cp $Env:RUN_ID/macos/*.zip Builder/Assets
-      - name: Build
-        run: |
-          cd Builder
-          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
-      - name: Get Version from Project File
-        id: get-version
-        run: |
-          "version=$(dotnet-gitversion /output json /showvariable SemVer)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-      - name: Create Velopack Release
-        run: |
-          cd Builder
-          vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.BINARY_GITHUB_TOKEN }}
-          vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/win-x64/publish --icon Resources/icon.ico
-      - name: Copy artifacts
-        env:
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          mkdir -Force $Env:RUN_ID
-          cp -force -recurse Builder/Releases $Env:RUN_ID/BuilderReleases
-          scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts  
-  build-mac-builder:
-    if: contains(github.ref, 'tags/v')
-    name: Build Builder (macOS)
-    needs: [ build-linux, build-mac, build-windows ]
-    runs-on: [self-hosted, macos]
-    steps:
-      - name: Unlock Keychain
-        env:
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: security unlock-keychain -p $KEYCHAIN_PASSWORD login.keychain
-      - name: Copy artifacts
-        env:
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          scp -r sanjay@192.168.0.79:./artifacts/$RUN_ID .
-          cp $RUN_ID/windows/*.exe Builder/Assets
-          cp $RUN_ID/linux/* Builder/Assets
-          cp $RUN_ID/macos/*.zip Builder/Assets
-      - name: Build
-        run: |
-          cd Builder
-          dotnet publish -c Release -r osx-x64 -t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
-      - name: Get Version from Project File
-        id: get-version
-        shell: bash
-        run: |
-          cd Builder
-          echo "version=$(~/.dotnet/tools/dotnet-gitversion /output json /showvariable SemVer)" >> $GITHUB_OUTPUT
-      - name: Create Velopack Release
-        run: |
-          cd Builder
-          # ~/.dotnet/tools/vpk download github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --token ${{ secrets.BINARY_GITHUB_TOKEN }} no point in doing deltas until we build packages
-          ~/.dotnet/tools/vpk pack -u SantrollerConfiguratorBuilder -v ${{ steps.get-version.outputs.version }} -p bin/Release/net8.0/osx-x64/publish/SantrollerConfiguratorBuilder.app --signAppIdentity "guitar-configurator" --signInstallIdentity "guitar-configurator" --noInst --icon Resources/icon.icns
-      - name: Copy artifacts
-        env:
-          RUN_ID: ${{ github.run_id }}
-        run: |
-          mkdir -p $RUN_ID
-          cp -rf Builder/Releases $RUN_ID/BuilderReleases
-          rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
   release:
     if: contains(github.ref, 'tags/v')
     name: Release Linux Build
     runs-on: [self-hosted, linux]
-    needs: [build-linux, build-linux-builder, release-mac]
+    needs: [build-linux, release-mac]
     steps:
       - name: Release
         run: |
           cd santroller-configurator
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
-          cd ../Builder
-          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller -c legacy-linux --publish --releaseName "SantrollerConfigurator Legacy ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
   release-mac:
     if: contains(github.ref, 'tags/v')
     name: Release macOS Build
     runs-on: [self-hosted, macos]
-    needs: [build-mac, build-mac-builder]
+    needs: [build-mac]
     steps:
       - name: Release
         run: |
           cd santroller-configurator
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
-          cd ../Builder
-          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller -c legacy-osx --publish --releaseName "SantrollerConfigurator Legacy ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
   release-win:
     if: contains(github.ref, 'tags/v')
     name: Release windows Build
     runs-on: [self-hosted, windows]
-    needs: [build-windows, build-windows-builder, release-mac]
+    needs: [build-windows, release-mac]
     steps:
       - name: Release
         run: |
           cd santroller-configurator
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller --publish --releaseName "SantrollerConfigurator ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
-          cd ../Builder
-          vpk upload github --repoUrl https://github.com/Santroller/SantrollerConfiguratorBinaries --publish --releaseName "Builder ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller -c legacy-win --publish --releaseName "SantrollerConfigurator Legacy ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
   cleanup:
     name: Remove temp files
     runs-on: [self-hosted, linux]
@@ -282,5 +138,5 @@ jobs:
         env:
           RUN_ID: ${{ github.run_id }}
         run: |
-          rm -rf ~/artifacts/latest_release
-          mv ~/artifacts/$RUN_ID ~/artifacts/latest_release
+          rm -rf ~/artifacts/legacy_release
+          mv ~/artifacts/$RUN_ID ~/artifacts/legacy_release

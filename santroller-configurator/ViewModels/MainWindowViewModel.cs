@@ -40,8 +40,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     private const string UdevFile = "68-santroller.rules";
     private const string UdevPath = $"/usr/lib/udev/rules.d/{UdevFile}";
     private static readonly Regex VersionRegex = new("v\\d+\\.\\d+\\.\\d+$");
-    private readonly HashSet<string> _currentDrives = [];
-    private readonly HashSet<string> _currentDrivesTemp = [];
     private readonly HashSet<string> _currentPorts = [];
     public string ProgressBarError;
     public string ProgressBarPrimary;
@@ -218,7 +216,12 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             source = new GithubSource("https://github.com/Santroller/Santroller", null, false);
         }
 
-        _mgr = new(source);
+        // Legacy releases are published to their own channels, so that legacy installs never update to a
+        // release without AVR support, and main installs never update to a legacy release
+        var channel = "legacy-linux";
+        if (OperatingSystem.IsWindows()) channel = "legacy-win";
+        if (OperatingSystem.IsMacOS()) channel = "legacy-osx";
+        _mgr = new(source, new UpdateOptions {ExplicitChannel = channel});
         if (!_mgr.IsInstalled) return;
         try
         {
@@ -307,7 +310,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     }
     public void AddDevice(IConfigurableDevice device)
     {
-        if (_picoOnly && !device.IsPico()) return;
+        // The legacy release only supports the old AVR based boards
+        if (device.IsPico()) return;
         AvailableDevices.Add(device);
     }
 
@@ -651,31 +655,6 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 
     private async void DevicePoller_Tick(object? sender, ElapsedEventArgs e)
     {
-        var drives = DriveInfo.GetDrives();
-        _currentDrivesTemp.UnionWith(_currentDrives);
-        foreach (var drive in drives)
-        {
-            if (_currentDrivesTemp.Remove(drive.RootDirectory.FullName)) continue;
-
-            try
-            {
-                var uf2 = Path.Combine(drive.RootDirectory.FullName, "INFO_UF2.txt");
-                if (drive.IsReady)
-                    if (File.Exists(uf2) && (await File.ReadAllTextAsync(uf2)).Contains("RPI-RP2"))
-                        AvailableDevices.Add(new PicoDevice(drive.RootDirectory.FullName));
-            }
-            catch (IOException)
-            {
-                // Expected if the pico is unplugged   
-            }
-
-            _currentDrives.Add(drive.RootDirectory.FullName);
-        }
-
-        // We removed all valid devices above, so anything left in currentDrivesSet is no longer valid
-        AvailableDevices.RemoveMany(AvailableDevices.Items.Where(x =>
-            x is PicoDevice pico && _currentDrivesTemp.Contains(pico.GetPath())));
-        _currentDrives.ExceptWith(_currentDrivesTemp);
         if (!_picoOnly)
         {
             var existingPorts = _currentPorts.ToHashSet();
@@ -689,7 +668,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
                     _currentPorts.Add(port.Port);
                     var arduino = new Arduino(port);
                     await Task.Delay(1000);
-                    AvailableDevices.Add(arduino);
+                    AddDevice(arduino);
                 }
 
                 var currentSerialPorts = ports.Select(port => port.Port).ToHashSet();
