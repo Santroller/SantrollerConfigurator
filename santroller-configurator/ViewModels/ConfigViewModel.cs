@@ -1854,6 +1854,21 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
     public string Generate(MemoryStream? blobStream)
     {
+        // Make sure numbers are always formatted the same way in the generated config, regardless of locale
+        var prevCulture = CultureInfo.CurrentCulture;
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+        try
+        {
+            return GenerateInternal(blobStream);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = prevCulture;
+        }
+    }
+
+    private string GenerateInternal(MemoryStream? blobStream)
+    {
         if (Device is Santroller santroller)
         {
             santroller.StopTicking();
