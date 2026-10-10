@@ -38,26 +38,43 @@ public class PlatformIo
         platformIoOutput.OnNext(new PlatformIoState(0, Resources.CopyingFirmwareMessage, false, ""));
         await Task.Run(() =>
         {
-            if (Directory.Exists(FirmwareDir))
+            try
             {
-                Directory.Delete(FirmwareDir, true);
+                CopyFirmware();
+                platformIoOutput.OnCompleted();
             }
-
-            var assetDir = GetAssetDir();
-            AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
-            AssetUtils.CopyDirectory(Path.Combine(assetDir, "platformio", ".cache"),
-                Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", ".cache"), true);
-            // Swap programming command from avrdude to dfu-programmer on windows
-#if Windows
-            File.Copy(Path.Combine(assetDir, "platformio", "dfu-programmer.exe"),
-                Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "dfu-programmer.exe"), true);
-            File.Copy(Path.Combine(assetDir, "platformio", "libusb0.dll"),
-                Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "libusb0.dll"), true);
-            var iniFile = Path.Combine(FirmwareDir, "platformio.ini");
-            File.WriteAllText(iniFile, File.ReadAllText(iniFile).Replace("\"${platformio.packages_dir}/tool-avrdude/avrdude\" $UPLOAD_FLAGS -U flash:w:$SOURCE:i", "\"${platformio.core_dir}/dfu-programmer\" ${BOARD_MCU} flash $SOURCE"));
-#endif
-            platformIoOutput.OnCompleted();
+            catch (Exception ex)
+            {
+                // Report the failure instead of leaving the tool stuck on the copying firmware message
+                platformIoOutput.OnError(ex);
+            }
         });
+    }
+
+    private void CopyFirmware()
+    {
+        if (Directory.Exists(FirmwareDir))
+        {
+            Directory.Delete(FirmwareDir, true);
+        }
+
+        var assetDir = GetAssetDir();
+        AssetUtils.CopyDirectory(Path.Combine(assetDir, "Santroller"), FirmwareDir, true);
+        var cacheDir = Path.Combine(assetDir, "platformio", ".cache");
+        if (Directory.Exists(cacheDir))
+        {
+            AssetUtils.CopyDirectory(cacheDir, Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", ".cache"),
+                true);
+        }
+        // Swap programming command from avrdude to dfu-programmer on windows
+#if Windows
+        File.Copy(Path.Combine(assetDir, "platformio", "dfu-programmer.exe"),
+            Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "dfu-programmer.exe"), true);
+        File.Copy(Path.Combine(assetDir, "platformio", "libusb0.dll"),
+            Path.Combine(AssetUtils.GetAppDataFolder(), "platformio", "libusb0.dll"), true);
+        var iniFile = Path.Combine(FirmwareDir, "platformio.ini");
+        File.WriteAllText(iniFile, File.ReadAllText(iniFile).Replace("\"${platformio.packages_dir}/tool-avrdude/avrdude\" $UPLOAD_FLAGS -U flash:w:$SOURCE:i", "\"${platformio.core_dir}/dfu-programmer\" ${BOARD_MCU} flash $SOURCE"));
+#endif
     }
 
     public IObservable<PlatformIoState> InitialisePlatformIo()
