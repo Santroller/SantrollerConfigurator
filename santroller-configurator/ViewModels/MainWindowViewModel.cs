@@ -211,7 +211,8 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         }
         else
         {
-            source = new GithubSource("https://github.com/Santroller/Santroller", null, false);
+            // Legacy releases are published as prereleases so they never become the latest release on GitHub
+            source = new GithubSource("https://github.com/Santroller/Santroller", null, true);
         }
 
         // Legacy releases are published to their own channels, so that legacy installs never update to a
