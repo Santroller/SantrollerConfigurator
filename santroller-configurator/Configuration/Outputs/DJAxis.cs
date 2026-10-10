@@ -33,7 +33,7 @@ public partial class DjAxis : OutputAxis
         0,
         false, outputEnabled, outputInverted, outputPeripheral, outputPin, childOfCombined)
     {
-        if (type == DjAxisType.Crossfader)
+        if (type == DjAxisType.EffectsKnob)
         {
             Invert = multiplier == -1;
         }
@@ -171,9 +171,6 @@ public partial class DjAxis : OutputAxis
         var generated = $"({Input.Generate(writer)})";
         var generatedPs3 = generated;
 
-        var tableCommand = "handle_calibration_turntable_ps3";
-        var tableCommand360 = "handle_calibration_turntable_360";
-
         if (InputIsUint)
         {
             // xinput needs int, uint -> int
@@ -187,14 +184,24 @@ public partial class DjAxis : OutputAxis
 
         // Table just applies a multiplier to the value
         // This is the one instance where even PS3 uses int values, because it makes the math easier
-        var generatedTable = $"{tableCommand360}({GenerateOutput(mode)},{generated}, {Multiplier})";
-        var generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generated}, {Multiplier})";
+        var generatedTable = $"handle_calibration_turntable_360({GenerateOutput(mode)},{generated}, {Multiplier})";
+        var generatedTablePs3 = $"handle_calibration_turntable_ps3({GenerateOutput(mode)},{generated}, {Multiplier})";
+        if (Type is DjAxisType.EffectsKnob)
+        {
+            var invert = (Invert ? -1 : 1).ToString();
+            if (writer != null)
+            {
+                invert = ConfigViewModel.WriteBlob(writer, Invert);
+            }
+            generated = $"(({generated}) * ({invert}))";
+        }
 
         if (writer != null && Type is DjAxisType.LeftTableVelocity or DjAxisType.RightTableVelocity)
         {
             var multiplierBlob = ConfigViewModel.WriteBlob(writer, Multiplier);
-            generatedTable = $"{tableCommand360}({GenerateOutput(mode)},{generated}, {multiplierBlob})";
-            generatedTablePs3 = $"{tableCommand}({GenerateOutput(mode)},{generated}, {multiplierBlob})";
+            generatedTable = $"handle_calibration_turntable_360({GenerateOutput(mode)},{generated}, {multiplierBlob})";
+            generatedTablePs3 =
+                $"handle_calibration_turntable_ps3({GenerateOutput(mode)},{generated}, {multiplierBlob})";
         }
 
         var gen = Type switch
