@@ -581,6 +581,15 @@ public abstract partial class OutputAxis : Output
 
         // Digital to Analog stores values based on uint16_t for trigger, and int16_t for sticks
         var val = dta.On;
+        // Deal with flipped axis
+        if (ShouldFlip(mode) && !Trigger)
+        {
+            val = (-val) - 1;
+        }
+        else if (ShouldFlip(mode))
+        {
+            val = ushort.MaxValue - val;
+        }
 
         switch (mode)
         {
