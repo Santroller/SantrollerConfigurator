@@ -28,7 +28,8 @@ public class SerializedConfiguration
     {
         if (!allowErrors && model.HasError) return;
         RolloverMode = model.RolloverMode;
-        Bindings = bindings.Select(s => s.Serialize()).ToList();
+        // do NOT serialise empty outputs!
+        Bindings = bindings.Where(s => s is not EmptyOutput).Select(s => s.Serialize()).ToList();
         DeviceType = model.DeviceControllerType;
         EmulationType = model.EmulationType;
         XInputOnWindows = model.XInputOnWindows;
