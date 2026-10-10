@@ -29,9 +29,9 @@
         <DefineConstants Condition="'$(PublishSingleFile)' == 'true'">$(DefineConstants);SINGLE_FILE</DefineConstants>
         <LangVersion>latestmajor</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <CFBundleName>SantrollerConfigurator</CFBundleName> <!-- Also defines .app file name -->
-        <CFBundleDisplayName>SantrollerConfigurator</CFBundleDisplayName>
-        <CFBundleIdentifier>net.tangentmc</CFBundleIdentifier>
+        <CFBundleName>SantrollerConfiguratorLegacy</CFBundleName> <!-- Also defines .app file name -->
+        <CFBundleDisplayName>SantrollerConfiguratorLegacy</CFBundleDisplayName>
+        <CFBundleIdentifier>net.tangentmc.legacy</CFBundleIdentifier>
         <CFBundleVersion>1.0.0</CFBundleVersion>
         <CFBundleShortVersionString>1.0.0</CFBundleShortVersionString>
         <CFBundlePackageType>APPL</CFBundlePackageType>
@@ -188,7 +188,7 @@
             <MySourceFiles Include="$(TargetDir)\Binaries\**\*.*"/>
         </ItemGroup>
         <Copy SourceFiles="@(MySourceFiles)"
-              DestinationFolder="$(PublishDir)\SantrollerConfigurator.app\Contents\Resources\Binaries\%(RecursiveDir)"/>
+              DestinationFolder="$(PublishDir)\SantrollerConfiguratorLegacy.app\Contents\Resources\Binaries\%(RecursiveDir)"/>
     </Target>
     <!--  Everything else is handled here  -->
     <Target Name="ZipOutputPath3" AfterTargets="ZipOutputPath" Condition="'$(SkipAssets)' != 'Skip' And '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'false'">

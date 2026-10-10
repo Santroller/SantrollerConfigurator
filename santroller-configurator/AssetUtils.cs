@@ -41,7 +41,8 @@ public class AssetUtils
             folder = "/Users/Shared/Library/Application Support";
         }
 
-        var path = Path.Combine(folder, "SantrollerConfigurator");
+        // The legacy release keeps its own app data so it never shares firmware or platformio files with the main tool
+        var path = Path.Combine(folder, "SantrollerConfiguratorLegacy");
 
         return path;
     }

@@ -39,7 +39,7 @@ public class Builder : Task
         Console.WriteLine("Copying firmware");
         CopyIfNew(Parameter1, ["legacy", "firmware", "firmware.version"], ["legacy", "firmware", "firmware.zip"]);
         Console.WriteLine("Copying platformio");
-        CopyIfNew(Parameter1, ["libs", platform, "platformio.version"], ["libs", platform, "platformio.zip"]);
+        CopyIfNew(Parameter1, ["legacy", "libs", platform, "platformio.version"], ["legacy", "libs", platform, "platformio.zip"]);
         return true;
     }
 
@@ -116,7 +116,8 @@ public class Builder : Task
             folder = "/Users/Shared/Library/Application Support";
         }
 
-        var path = Path.Combine(folder, "SantrollerConfigurator");
+        // The legacy release keeps its own app data so it never shares firmware or platformio files with the main tool
+        var path = Path.Combine(folder, "SantrollerConfiguratorLegacy");
 
         return path;
     }
