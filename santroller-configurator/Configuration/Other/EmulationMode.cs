@@ -130,7 +130,7 @@ public class EmulationMode : Output
 
         return mode == ConfigField.Detection
             ? $$"""
-                if ({{Input.Generate(writer)}}) {
+                if ({{Input.Generate(writer)}} && output_console_type != {{GetDefinition()}}) {
                     set_console_type({{GetDefinition()}});
                 }
                 """
