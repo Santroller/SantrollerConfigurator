@@ -1,7 +1,8 @@
-# Legacy AVR releases are tagged as v10.1.189-legacy.N, so give this branch the matching label
+# Legacy AVR releases are tagged as v10.1.189-legacy.N. CI builds the tag as a detached head named after the tag ref,
+# so match both that and the legacy-avr branch, give them the matching label, and don't take versions from main's tags.
 branches:
   legacy:
-    regex: ^legacy-avr$
+    regex: ^(refs/)?(heads/)?legacy-avr$|^(refs/)?tags/v
     label: legacy
     increment: Patch
     source-branches: []
