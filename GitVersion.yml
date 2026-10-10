@@ -1,0 +1,8 @@
+# Legacy AVR releases are tagged as v10.1.189-legacy.N, so give this branch the matching label
+branches:
+  legacy:
+    regex: ^legacy-avr$
+    label: legacy
+    increment: Patch
+    source-branches: []
+    is-release-branch: true
