@@ -2970,7 +2970,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (analog.Length == 0)
             {
-                analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff,
+                analog = type.GetLedAssignment(peripheral, relatedOutputs.Select(s => s.Item1.LedOff).FirstOrDefault(x => x.R != 0 || x.G != 0 || x.B != 0, Colors.Black), led, LedBrightnessOff,
                     writer);
             }
 
@@ -3163,7 +3163,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
 
             if (analog.Length == 0)
             {
-                analog = type.GetLedAssignment(peripheral, relatedOutputs.First().Item1.LedOff, led, LedBrightnessOff,
+                analog = type.GetLedAssignment(peripheral, relatedOutputs.Select(s => s.Item1.LedOff).FirstOrDefault(x => x.R != 0 || x.G != 0 || x.B != 0, Colors.Black), led, LedBrightnessOff,
                     writer);
             }
 
@@ -3661,8 +3661,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                                     debouncesRelatedToLedPeripheral[led].Add((output, ledIndex));
                                 }
                             }
-
-                            if (output is OutputAxis axis)
+                            else if (output is OutputAxis axis)
                             {
                                 foreach (var led in output.LedIndices)
                                 {
