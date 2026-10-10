@@ -607,7 +607,7 @@ public class Led : Output
 
                 ps4 += $"""
                         ledState[{index - 1}].select = 1;
-                        {Model.LedType.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        {Model.LedType.GetLedAssignment(false, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
                         """;
             }
         }
@@ -641,7 +641,7 @@ public class Led : Output
 
                 ps4 += $"""
                         ledStatePeripheral[{index - 1}].select = 1;
-                        {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        {Model.LedTypePeripheral.GetLedAssignment(true, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
                         """;
             }
         }
@@ -675,7 +675,7 @@ public class Led : Output
 
                 ps4 += $"""
                         ledState[{index - 1}].select = 1;
-                        {Model.LedType.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        {Model.LedType.GetLedAssignment(false, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
                         """;
             }
         }
@@ -709,7 +709,7 @@ public class Led : Output
 
                 ps4 += $"""
                         ledStatePeripheral[{index - 1}].select = 1;
-                        {Model.LedTypePeripheral.GetLedAssignment(false, "red", "green", "blue", Model.LedBrightnessOn.ToString(), index)};
+                        {Model.LedTypePeripheral.GetLedAssignment(true, Model.LedBrightnessOn.ToString(), "red", "green", "blue", index)};
                         """;
             }
         }
