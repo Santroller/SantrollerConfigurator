@@ -398,7 +398,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                             Colors.Black,
                             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(),
                             ushort.MinValue, ushort.MaxValue, 0,
-                            ushort.MaxValue,
+                            0,
                             pair.Value, false, false, false, -1, true));
                     else
                         Outputs.Add(new ControllerAxis(Model,
@@ -406,7 +406,7 @@ public class Ps2CombinedOutput : CombinedSpiOutput
                             Colors.Black,
                             Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), short.MinValue,
                             short.MaxValue, 0,
-                            ushort.MaxValue,
+                            0,
                             pair.Value, false, false, false, -1, true));
             }
         }

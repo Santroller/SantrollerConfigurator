@@ -207,7 +207,7 @@ public class EmptyOutput : Output
             new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
             Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
             ushort.MinValue, ushort.MaxValue, 0,
-            50000, (StandardAxisType)value, false, false, false, -1, false),
+            0, (StandardAxisType)value, false, false, false, -1, false),
                 StandardAxisType standardAxisType => new ControllerAxis(Model,
                     new DirectInput(-1, false, false, DevicePinMode.Analog, Model),
                     Colors.Black, Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(),Array.Empty<byte>(),
