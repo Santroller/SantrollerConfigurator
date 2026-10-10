@@ -423,6 +423,7 @@ public abstract partial class OutputAxis : Output
         var min = Min;
         var max = Max;
         var inverted = Min > Max;
+        var deadzone = DeadZone;
         float multiplier;
         if (intBased)
         {
@@ -463,6 +464,9 @@ public abstract partial class OutputAxis : Output
                 min += short.MaxValue;
             }
 
+            // There is no difference between a deadzone and a minimum in this scenario.
+            // The deadzone is applied to min, so don't make the firmware apply it a second time.
+            deadzone = 0;
             if (inverted)
                 min -= DeadZone;
             else
@@ -514,12 +518,12 @@ public abstract partial class OutputAxis : Output
         var mulInt = (short) (multiplier * 512);
         if (writer == null)
             return intBased
-                ? $"{function}({prev}, {generated}, {(max + min) / 2}, {min}, {mulInt}, {DeadZone})"
-                : $"{function}({prev}, {generated}, {min}, {mulInt}, {DeadZone})";
+                ? $"{function}({prev}, {generated}, {(max + min) / 2}, {min}, {mulInt}, {deadzone})"
+                : $"{function}({prev}, {generated}, {min}, {mulInt}, {deadzone})";
 
         return intBased
-            ? $"{function}({prev}, {generated}, {WriteBlob(writer, (max + min) / 2)}, {WriteBlob(writer, min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, DeadZone)})"
-            : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) DeadZone)})";
+            ? $"{function}({prev}, {generated}, {WriteBlob(writer, (max + min) / 2)}, {WriteBlob(writer, min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, deadzone)})"
+            : $"{function}({prev}, {generated}, {WriteBlob(writer, (uint) min)}, {WriteBlob(writer, mulInt)}, {WriteBlob(writer, (uint) deadzone)})";
     }
 
 
