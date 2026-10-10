@@ -177,6 +177,17 @@ public class WiiCombinedOutput : CombinedTwiOutput
         // {WiiInputType.DrumHiHatPedal, DrumAxisType.Kick2},
     };
 
+    private static readonly Dictionary<DrumAxisType, WiiInputType> DrumToWii = new()
+    {
+        {DrumAxisType.Green, WiiInputType.DrumGreen},
+        {DrumAxisType.Red, WiiInputType.DrumRed},
+        {DrumAxisType.Yellow, WiiInputType.DrumYellow},
+        {DrumAxisType.Blue, WiiInputType.DrumBlue},
+        {DrumAxisType.Orange, WiiInputType.DrumOrange},
+        {DrumAxisType.Kick, WiiInputType.DrumKickPedal}
+        // {DrumAxisType.Kick2, WiiInputType.DrumHiHatPedal},
+    };
+
     private static readonly Dictionary<WiiInputType, DrumAxisType> DrumAxisRb = new()
     {
         {WiiInputType.DrumGreen, DrumAxisType.Green},
@@ -470,6 +481,7 @@ public class WiiCombinedOutput : CombinedTwiOutput
                         Colors.Black, Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>(), -30000, 30000, 10,
                         10, pair.Value, false, false, false, -1,
                         true));
+                Outputs.RemoveMany(Outputs.Items.Where(s => s is ControllerButton cb && cb.Input.InnermostInputs().Any(s2 => s2 is WiiInput w && (DrumAxisGh.ContainsKey(w.Input) || DrumAxisRb.ContainsKey(w.Input)))));
             }
             else
             {
@@ -500,6 +512,19 @@ public class WiiCombinedOutput : CombinedTwiOutput
         }
         else
         {
+            var currentDrums = Outputs.Items.OfType<DrumAxis>().ToList();
+            foreach (var drumAxis in currentDrums)
+            {
+                // Map back based on the actual wii input, as RB maps orange to green
+                var wiiType = drumAxis.Input.InnermostInputs().OfType<WiiInput>().Select(s => (WiiInputType?) s.Input)
+                    .FirstOrDefault() ?? (DrumToWii.TryGetValue(drumAxis.Type, out var t) ? t : null);
+                if (wiiType == null || !Buttons.TryGetValue(wiiType.Value, out var button)) continue;
+                Outputs.Add(new ControllerButton(Model, drumAxis.Input,
+                    drumAxis.LedOn, drumAxis.LedOff, drumAxis.LedIndices.ToArray(),
+                    drumAxis.LedIndicesPeripheral.ToArray(), drumAxis.LedIndicesMpr121.ToArray(), drumAxis.Debounce,
+                    button, false, false, false, -1, true));
+            }
+
             // Remove all drum inputs if we aren't in Drum emulation mode
             Outputs.RemoveMany(Outputs.Items.Where(s => s is DrumAxis));
         }
