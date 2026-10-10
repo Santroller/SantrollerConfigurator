@@ -123,42 +123,76 @@ public class AnalogToDigital : Input
 
     public override string Generate(BinaryWriter? writer)
     {
-        var threshold = Threshold;
-        if (Child.IsUint)
-        {
-            threshold = Math.Abs(threshold);
-        }
-        var thresholdVal = $"{threshold}";
+        // Threshold is stored relative to the center for uint joystick / trigger types (see DisplayThreshold), and
+        // can be negative there, so it must not be abs'd.
         if (writer != null)
         {
+            // Blobs store the raw threshold, so keep the arithmetic on the device side
             if (_writer != writer)
             {
                 _writer = writer;
-                _tresholdBlob = WriteBlob(writer, threshold);
+                _tresholdBlob = WriteBlob(writer, Threshold);
             }
 
-            thresholdVal = _tresholdBlob;
+            var thresholdBlob = _tresholdBlob;
+            if (Child.IsUint)
+                switch (AnalogToDigitalType)
+                {
+                    case AnalogToDigitalType.Drum:
+                        return $"({Child.Generate(writer)}) > ({thresholdBlob})";
+                    case AnalogToDigitalType.Trigger:
+                    case AnalogToDigitalType.JoyHigh:
+                        return $"({Child.Generate(writer)}) > ({short.MaxValue} + ({thresholdBlob}))";
+                    case AnalogToDigitalType.JoyLow:
+                        return $"({Child.Generate(writer)}) < ({short.MaxValue} - ({thresholdBlob}))";
+                }
+            else
+                switch (AnalogToDigitalType)
+                {
+                    case AnalogToDigitalType.Drum:
+                    case AnalogToDigitalType.Trigger:
+                    case AnalogToDigitalType.JoyHigh:
+                        return $"({Child.Generate(writer)}) > ({thresholdBlob})";
+                    case AnalogToDigitalType.JoyLow:
+                        return $"({Child.Generate(writer)}) < (-({thresholdBlob}))";
+                }
+
+            return "";
         }
+
+        // Work out the actual value to compare against here, so that the generated code matches the live preview in
+        // Calculate, and so that no arithmetic that could overflow a 16 bit int (AVR) ends up in the generated code.
         if (Child.IsUint)
+        {
+            var threshold = AnalogToDigitalType switch
+            {
+                AnalogToDigitalType.Trigger or AnalogToDigitalType.JoyHigh => short.MaxValue + Threshold,
+                AnalogToDigitalType.JoyLow => short.MaxValue - Threshold,
+                _ => Threshold
+            };
+            threshold = Math.Clamp(threshold, ushort.MinValue, ushort.MaxValue);
+            // Cast, as on AVR int is 16 bits, so something like (x << 8) can end up negative
             switch (AnalogToDigitalType)
             {
                 case AnalogToDigitalType.Drum:
-                    return $"({Child.Generate(writer)}) > ({thresholdVal})";
                 case AnalogToDigitalType.Trigger:
                 case AnalogToDigitalType.JoyHigh:
-                    return $"({Child.Generate(writer)}) > ({short.MaxValue} + ({thresholdVal}))";
+                    return $"((uint16_t)({Child.Generate(writer)})) > ({threshold})";
                 case AnalogToDigitalType.JoyLow:
-                    return $"({Child.Generate(writer)}) < ({short.MaxValue} - ({thresholdVal}))";
+                    return $"((uint16_t)({Child.Generate(writer)})) < ({threshold})";
             }
+        }
         else
             switch (AnalogToDigitalType)
             {
                 case AnalogToDigitalType.Drum:
+                    return $"({Child.Generate(writer)}) > ({Threshold})";
+                // The live preview compares against the absolute threshold for int types
                 case AnalogToDigitalType.Trigger:
                 case AnalogToDigitalType.JoyHigh:
-                    return $"({Child.Generate(writer)}) > ({thresholdVal})";
+                    return $"({Child.Generate(writer)}) > ({Math.Abs(Threshold)})";
                 case AnalogToDigitalType.JoyLow:
-                    return $"({Child.Generate(writer)}) < (-({thresholdVal}))";
+                    return $"({Child.Generate(writer)}) < (-({Math.Abs(Threshold)}))";
             }
 
         return "";
