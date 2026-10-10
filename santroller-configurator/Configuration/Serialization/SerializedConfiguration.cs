@@ -191,8 +191,9 @@ public class SerializedConfiguration
         model.Variant = Variant;
         model.BtRxAddr = BtRxMacAddress;
         model.HasPeripheral = HasPeripheral;
-        model.HasWiiOutput = HasWiiOutput;
-        model.HasPs2Output = HasPs2Output;
+        // Wii and PS2 output aren't supported in the legacy release, so configs that used them load without them
+        model.HasWiiOutput = false;
+        model.HasPs2Output = false;
         model.HasMpr121 = HasMpr121;
         model.HasMax1704X = HasMax1704X;
         model.RolloverMode = RolloverMode;
@@ -206,21 +207,6 @@ public class SerializedConfiguration
         {
             model.PeripheralScl = PeripheralScl;
             model.PeripheralSda = PeripheralSda;
-        }
-
-        if (HasPs2Output)
-        {
-            model.Ps2OutputMiso = Ps2OutputMiso;
-            model.Ps2OutputMosi = Ps2OutputMosi;
-            model.Ps2OutputSck = Ps2OutputSck;
-            model.Ps2OutputAck = Ps2OutputAck;
-            model.Ps2OutputAtt = Ps2OutputAtt;
-        }
-
-        if (HasWiiOutput)
-        {
-            model.WiiOutputScl = WiiOutputScl;
-            model.WiiOutputSda = WiiOutputSda;
         }
 
         if (HasMpr121)

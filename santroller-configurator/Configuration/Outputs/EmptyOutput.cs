@@ -49,6 +49,8 @@ public class EmptyOutput : Output
                 vm => vm.Model.HasUsbHostCombinedOutput))
             .Select(type => ControllerEnumConverter.GetTypes(type.Item1.Item1).Where(s2 =>
                 ((!type.First.Item1.IsFortnite()) || s2 is not SimpleType.Led) &&
+                // Wii and PS2 output emulation need more headroom than the AVRs have, so the legacy release doesn't support them
+                s2 is not (SimpleType.WiiOutputs or SimpleType.Ps2Outputs) &&
                 (model.IsPico ||
                  s2 is not (SimpleType.WtNeckSimple or SimpleType.Bluetooth or SimpleType.UsbHost or SimpleType.Peripheral)) &&
                 (type.Item1.Item2 || s2 is not SimpleType.WtNeckPeripheralSimple) &&
