@@ -45,7 +45,7 @@ public class GuitarButton : OutputButton
         {InstrumentButtonType.Blue, Key.D4},
         {InstrumentButtonType.Orange, Key.D5},
         {InstrumentButtonType.StrumUp, Key.RightShift},
-        {InstrumentButtonType.StrumDown, "enter"},
+        {InstrumentButtonType.StrumDown, Key.RightCtrl},
     };
 
     public override string LedOnLabel => Resources.LedColourActiveButtonColour;
