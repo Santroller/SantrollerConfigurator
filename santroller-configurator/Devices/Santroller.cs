@@ -513,7 +513,7 @@ public class Santroller : ConfigurableUsbDevice
 
     public void ClearLed(byte led)
     {
-        WriteData(0, (byte) Commands.CommandSetLeds, [led, 0, 0, 0]);
+        WriteData(0, (byte) Commands.CommandSetLeds, [led, 0, 0, 0, 0]);
     }
     
     public void ClearLedMpr121(byte led)
@@ -523,7 +523,7 @@ public class Santroller : ConfigurableUsbDevice
 
     public void ClearLedPeripheral(byte led)
     {
-        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, [led, 0, 0, 0]);
+        WriteData(0, (byte) Commands.CommandSetLedsPeripheral, [led, 0, 0, 0, 0]);
     }
 
     public void AnalogWrite(int pin, int value)
