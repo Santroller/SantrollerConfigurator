@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir $RUN_ID
           cp -rf santroller-configurator/Releases $RUN_ID
-          rsync -avPr $RUN_ID sanjay@192.168.0.79:./artifacts
+          rsync -avPr $RUN_ID actions-runner@192.168.0.79:./artifacts
   build-linux:
     if: contains(github.ref, 'tags/v')
     name: Build (Linux)
@@ -50,7 +50,7 @@ jobs:
       - name: Build Standard
         run: |
           cd santroller-configurator
-          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal
       - name: Get Version from Project File
         id: get-version
         shell: bash
@@ -81,7 +81,7 @@ jobs:
       - name: Build Standard
         run: |
           cd santroller-configurator
-          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained true --verbosity normal
+          dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal
       - name: Get Version from Project File
         id: get-version
         run: |
@@ -97,7 +97,7 @@ jobs:
         run: |
           mkdir $Env:RUN_ID
           cp -force -recurse santroller-configurator/Releases $Env:RUN_ID/Releases
-          scp -r $Env:RUN_ID sanjay@192.168.0.79:./artifacts
+          scp -r $Env:RUN_ID actions-runner@192.168.0.79:./artifacts
   release:
     if: contains(github.ref, 'tags/v')
     name: Release Linux Build
@@ -107,7 +107,7 @@ jobs:
       - name: Release
         run: |
           cd santroller-configurator
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller -c legacy-linux --publish --pre --releaseName "SantrollerConfigurator Legacy ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller -c legacy-linux --publish --pre --releaseName "SantrollerConfigurator Legacy ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge --timeout 30
   release-mac:
     if: contains(github.ref, 'tags/v')
     name: Release macOS Build
@@ -117,7 +117,7 @@ jobs:
       - name: Release
         run: |
           cd santroller-configurator
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller -c legacy-osx --publish --pre --releaseName "SantrollerConfigurator Legacy ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller -c legacy-osx --publish --pre --releaseName "SantrollerConfigurator Legacy ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge --timeout 30
   release-win:
     if: contains(github.ref, 'tags/v')
     name: Release windows Build
@@ -127,7 +127,7 @@ jobs:
       - name: Release
         run: |
           cd santroller-configurator
-          vpk upload github --repoUrl https://github.com/Santroller/Santroller -c legacy-win --publish --pre --releaseName "SantrollerConfigurator Legacy ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge
+          vpk upload github --repoUrl https://github.com/Santroller/Santroller -c legacy-win --publish --pre --releaseName "SantrollerConfigurator Legacy ${{ github.ref_name }}" --tag ${{ github.ref_name }} --token ${{ secrets.BINARY_GITHUB_TOKEN }} --merge --timeout 30
   cleanup:
     name: Remove temp files
     runs-on: [self-hosted, linux]
