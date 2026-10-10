@@ -414,7 +414,7 @@ public class Led : Output
         _ => Resources.LedColourInactive
     };
 
-    public override bool SupportsLedOff => Command is not (LedCommandType.Auth or LedCommandType.Player);
+    public override bool SupportsLedOff => Command is not LedCommandType.Auth;
 
     public override bool IsKeyboard => false;
     public virtual bool IsController => false;
