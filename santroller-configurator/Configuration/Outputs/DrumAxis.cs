@@ -262,6 +262,10 @@ public partial class DrumAxis : OutputAxis
                 if (ButtonsPs3.TryGetValue(Type, out var value2))
                     outputButtons += $"\n{GetReportField(value2)} = true;";
                 break;
+            case ConfigField.Wii:
+                if (ButtonsPs3.TryGetValue(Type, out var valueWii))
+                    outputButtons += $"\n{GetReportField(valueWii)} = true;";
+                break;
             case ConfigField.Universal:
                 if (ButtonsPs3.TryGetValue(Type, out var value3))
                     outputButtons += $"\n{GetReportField(value3)} = true;";
@@ -279,6 +283,21 @@ public partial class DrumAxis : OutputAxis
              Type is DrumAxisType.Kick or DrumAxisType.Kick2) || mode is ConfigField.Keyboard)
         {
             return $$"""
+                     if ({{ifStatement}}) {
+                         {{outputButtons}}
+                     }
+                     """;
+        }
+
+        // The wii drum report has no velocities or pad / cymbal flags, so just handle the hit and map the buttons
+        if (mode is ConfigField.Wii)
+        {
+            var wiiCheck = input is DigitalToAnalog ? input.Generate(writer) :
+                Min > Max ? $"({Input.Generate(writer)} - {Min}) < {DeadZone}" : $"{Input.Generate(writer)} > {Min}";
+            return $$"""
+                     if ({{wiiCheck}}) {
+                         {{reset}}
+                     }
                      if ({{ifStatement}}) {
                          {{outputButtons}}
                      }
