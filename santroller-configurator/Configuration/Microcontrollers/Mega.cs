@@ -187,7 +187,7 @@ public class Mega : AvrController
 
     public override Board Board { get; }
 
-    public override List<int> AnalogPins => Enumerable.Range(PinA0, 5).ToList();
+    public override List<int> AnalogPins => Enumerable.Range(PinA0, 16).ToList();
 
     protected override Dictionary<(char, int), int> PinByMask { get; } = Ports.Zip(PinIndex)
         .Select((tuple, i) => (tuple.First, tuple.Second, i))
@@ -237,7 +237,7 @@ public class Mega : AvrController
 
     public override int GetChannel(int pin, bool reconfigurePin)
     {
-        var chan = PinA0 - pin;
+        var chan = pin - PinA0;
         if (reconfigurePin) chan |= 1 << 7;
         return chan;
     }
