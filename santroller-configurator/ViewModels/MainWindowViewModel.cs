@@ -39,6 +39,7 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
 {
     private const string UdevFile = "68-santroller.rules";
     private const string UdevPath = $"/usr/lib/udev/rules.d/{UdevFile}";
+    private const string UdevPath2 = $"/etc/udev/rules.d/{UdevFile}";
     private static readonly Regex VersionRegex = new("v\\d+\\.\\d+\\.\\d+$");
     private readonly HashSet<string> _currentPorts = [];
     public string ProgressBarError;
@@ -685,7 +686,9 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             return DriverStore.ExistingDrivers.Any(s => s.Contains("atmel_usb_dfu"));
 
-        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || File.Exists(UdevPath) && await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile) ;
+        return !RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
+               (File.Exists(UdevPath) && await File.ReadAllTextAsync(UdevPath) == await AssetUtils.ReadFileAsync(UdevFile)) ||
+               (File.Exists(UdevPath2) && await File.ReadAllTextAsync(UdevPath2) == await AssetUtils.ReadFileAsync(UdevFile));
     }
 
     [RelayCommand]
@@ -736,6 +739,16 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
             var process = Process.Start(info);
             if (process == null) return;
             await process.WaitForExitAsync();
+            if (!await CheckDependencies())
+            {
+                // usr lib udev didnt work, try etc udev
+                info = new ProcessStartInfo("pkexec");
+                info.ArgumentList.AddRange(new[] {"cp", rules, UdevPath2});
+                info.UseShellExecute = true;
+                process = Process.Start(info);
+                if (process == null) return;
+                await process.WaitForExitAsync();
+            }
             // And then reload rules and trigger
             info = new ProcessStartInfo("pkexec");
             info.ArgumentList.AddRange(new[] {"udevadm", "control", "--reload-rules"});
