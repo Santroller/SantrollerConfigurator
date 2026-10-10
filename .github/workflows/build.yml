@@ -22,12 +22,12 @@ jobs:
         run: |
           cd santroller-configurator
           dotnet publish -c Release -r osx-x64 -t:BundleApp -p:PublishSingleFile=true -p:RuntimeIdentifier=osx-x64 -p:UseAppHost=true --self-contained --verbosity normal
-      - name: Get Version from Project File
+      # Legacy releases are tagged with their version, so use the tag instead of each runner's own gitversion
+      - name: Get Version from Tag
         id: get-version
         shell: bash
         run: |
-          cd santroller-configurator
-          echo "version=$(~/.dotnet/tools/dotnet-gitversion /output json /showvariable SemVer)" >> $GITHUB_OUTPUT
+          echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
       - name: Create Velopack Release
         run: |
           cd santroller-configurator
@@ -51,12 +51,12 @@ jobs:
         run: |
           cd santroller-configurator
           dotnet publish -c Release -r linux-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal
-      - name: Get Version from Project File
+      # Legacy releases are tagged with their version, so use the tag instead of each runner's own gitversion
+      - name: Get Version from Tag
         id: get-version
         shell: bash
         run: |
-          cd santroller-configurator
-          echo "version=$(dotnet-gitversion /output json /showvariable SemVer)" >> $GITHUB_OUTPUT
+          echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
       - name: Create Velopack Release
         run: |
           cd santroller-configurator
@@ -82,10 +82,11 @@ jobs:
         run: |
           cd santroller-configurator
           dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true --self-contained --verbosity normal
-      - name: Get Version from Project File
+      # Legacy releases are tagged with their version, so use the tag instead of each runner's own gitversion
+      - name: Get Version from Tag
         id: get-version
         run: |
-          "version=$(dotnet-gitversion /output json /showvariable SemVer)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "version=$($env:GITHUB_REF_NAME.Substring(1))" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
       - name: Create Velopack Release
         run: |
           cd santroller-configurator
