@@ -40,7 +40,9 @@ public abstract class OutputButton : Output
     public float DebounceDisplay
     {
         get => _debounceDisplay.Value;
-        set => Debounce = (byte) (value * 10);
+        // Debounce is stored in 0.1ms units, and has to fit in a uint8_t debounce timer on the device
+        // (0.1ms ticks when queued, 1ms ticks otherwise)
+        set => Debounce = (int) Math.Round(Math.Clamp(value, 0, Model.Deque ? 25 : 250) * 10);
     }
 
     public override bool IsCombined => false;
@@ -98,7 +100,7 @@ public abstract class OutputButton : Output
         
         if (mode != ConfigField.Shared)
         {
-            if (Model.Deque && this is GuitarButton {IsStrum: false})
+            if (Model.Deque && this is GuitarButton)
             {
                 ifStatement = $"{GenerateOutput(ConfigField.Ps3).Replace("report->", "current_queue_report.")}";
             }
@@ -219,7 +221,7 @@ public abstract class OutputButton : Output
                      {{reset}} {{extra}}
                  }
                  """;
-        if (Model.Deque && this is GuitarButton {IsStrum: false}) {
+        if (Model.Deque && this is GuitarButton) {
             ret += $$"""
 
                       if ({{ifStatement}}) {
