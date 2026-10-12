@@ -66,8 +66,12 @@ public class EmulationMode : Output
     private static Func<EmulationModeType, bool> CreateFilter(
         (DeviceControllerType deviceControllerType, bool isPico) data)
     {
+        // PS4/5 and Xbox One consoles only accept controllers that pass auth, which needs a real controller over
+        // USB host, so the AVRs can't emulate them
         return mode => (mode != EmulationModeType.Wii || data.deviceControllerType is DeviceControllerType.RockBandDrums
-            or DeviceControllerType.RockBandGuitar) && (mode != EmulationModeType.XboxOne || data.isPico);
+            or DeviceControllerType.RockBandGuitar) && mode is not (EmulationModeType.XboxOne or EmulationModeType.Ps4Or5) &&
+                       (mode != EmulationModeType.Ps2OnPs3 ||
+                        data.deviceControllerType is DeviceControllerType.GuitarHeroGuitar);
     }
 
     private string GetDefinition()
@@ -85,6 +89,7 @@ public class EmulationMode : Output
             EmulationModeType.FnfHid => "FNF",
             EmulationModeType.FnfLayer => "",
             EmulationModeType.FnfIos => "IOS_FESTIVAL",
+            EmulationModeType.Ps2OnPs3 => "PS2_ON_PS3",
             _ => throw new ArgumentOutOfRangeException()
         };
     }

@@ -28,6 +28,9 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoInclude(121, typeof(SerializedMpr121Input))]
 [ProtoInclude(122, typeof(SerializedMpr121SliderInput))]
 [ProtoInclude(123, typeof(SerializedMidiInput))]
+[ProtoInclude(125, typeof(SerializedMatrixInput))]
+[ProtoInclude(140, typeof(SerializedWtDrumInput))]
+[ProtoInclude(141, typeof(SerializedBhDrumInput))]
 public abstract class SerializedInput
 {
     public abstract Input Generate(ConfigViewModel model);

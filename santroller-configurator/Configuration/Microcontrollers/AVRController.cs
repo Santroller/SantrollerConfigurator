@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DynamicData;
+using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
 
@@ -144,6 +145,8 @@ public abstract class AvrController : Microcontroller
             {
                 case DevicePinMode.Output:
                     currentDdr |= 1 << idx;
+                    // Matrix rows idle high
+                    if (pin.Type.StartsWith(MatrixInput.MatrixOutputType)) currentPort |= 1 << idx;
                     break;
                 case DevicePinMode.PullUp:
                     currentPort |= 1 << idx;
@@ -216,6 +219,8 @@ public abstract class AvrController : Microcontroller
             {
                 case DevicePinMode.Output:
                     currentDdr |= 1 << idx;
+                    // Matrix rows idle high
+                    if (pin.Type.StartsWith(MatrixInput.MatrixOutputType)) currentPort |= 1 << idx;
                     break;
                 case DevicePinMode.PullUp:
                     currentPort |= 1 << idx;

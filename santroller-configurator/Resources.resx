@@ -1960,7 +1960,7 @@
         <value>Analog Pin Input</value>
     </data>
     <data name="InputTypeAdxlInput" xml:space="preserve">
-        <value>ADXL345 Input</value>
+        <value>Accelerometer Input</value>
     </data>
     <data name="InputTypeMpr121Input" xml:space="preserve">
         <value>MPR121 Input</value>
@@ -3803,5 +3803,68 @@
     </data>
     <data name="ProKeyTypeTouchPad" xml:space="preserve">
         <value>Effects Touchpad</value>
+    </data>
+    <data name="AdxlInputTypeAdc0" xml:space="preserve">
+        <value>LIS3DH ADC 1</value>
+    </data>
+    <data name="AdxlInputTypeAdc1" xml:space="preserve">
+        <value>LIS3DH ADC 2</value>
+    </data>
+    <data name="AdxlInputTypeAdc2" xml:space="preserve">
+        <value>LIS3DH ADC 3</value>
+    </data>
+    <data name="EmulationModeTypePs2OnPs3" xml:space="preserve">
+        <value>Guitar Hero via PS2 emulator on PS3</value>
+    </data>
+    <data name="InputTypeMatrixInput" xml:space="preserve">
+        <value>Matrix Input</value>
+    </data>
+    <data name="MatrixInputPinLabel" xml:space="preserve">
+        <value>Matrix Input Pin (Column)</value>
+    </data>
+    <data name="MatrixOutputPinLabel" xml:space="preserve">
+        <value>Matrix Output Pin (Row)</value>
+    </data>
+    <data name="LEDSleepLabel" xml:space="preserve">
+        <value>Turn off LEDs after inactivity (seconds, 0 to disable)</value>
+    </data>
+    <data name="ChipSelectLabel" xml:space="preserve">
+        <value>Chip Select Pin</value>
+    </data>
+    <data name="WtDrumCombinedTitle" xml:space="preserve">
+        <value>World Tour Drum Brain Inputs</value>
+    </data>
+    <data name="BhDrumCombinedTitle" xml:space="preserve">
+        <value>Band Hero Drum Brain Inputs</value>
+    </data>
+    <data name="SimpleTypeWtDrumSimple" xml:space="preserve">
+        <value>Guitar Hero World Tour Drum Brain</value>
+    </data>
+    <data name="SimpleTypeBhDrumSimple" xml:space="preserve">
+        <value>Band Hero Drum Brain</value>
+    </data>
+    <data name="InputTypeWtDrumInput" xml:space="preserve">
+        <value>World Tour Drum Brain Input</value>
+    </data>
+    <data name="InputTypeBhDrumInput" xml:space="preserve">
+        <value>Band Hero Drum Brain Input</value>
+    </data>
+    <data name="DrumBrainInputTypeKick" xml:space="preserve">
+        <value>Kick Pad</value>
+    </data>
+    <data name="DrumBrainInputTypeRed" xml:space="preserve">
+        <value>Red Pad</value>
+    </data>
+    <data name="DrumBrainInputTypeYellow" xml:space="preserve">
+        <value>Yellow Pad</value>
+    </data>
+    <data name="DrumBrainInputTypeBlue" xml:space="preserve">
+        <value>Blue Pad</value>
+    </data>
+    <data name="DrumBrainInputTypeOrange" xml:space="preserve">
+        <value>Orange Pad</value>
+    </data>
+    <data name="DrumBrainInputTypeGreen" xml:space="preserve">
+        <value>Green Pad</value>
     </data>
 </root>

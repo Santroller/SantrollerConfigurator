@@ -292,7 +292,8 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
             .ToPropertyEx(this, x => x.UsbHostEnabled);
         Bindings.Connect()
             .QueryWhenChanged(s => s.Any(s2 =>
-                s2 is MidiCombinedOutput || s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
+                s2 is MidiCombinedOutput or WtDrumCombinedOutput or BhDrumCombinedOutput ||
+                s2.Input.InnermostInputs().First().InputType is InputType.MidiInput))
             .ToPropertyEx(this, x => x.HasMidi);
         Bindings.Connect().TransformMany(s => s.AllDigitalOutputs).Bind(out _digitalOutputs).Subscribe();
         if (Branded)
@@ -588,6 +589,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
     [Reactive] public int StrumDebounce { get; set; }
 
     [Reactive] public int PollRate { get; set; }
+    [Reactive] public int LedSleep { get; set; }
     [Reactive] public int DjPollRate { get; set; }
 
     [Reactive] public bool DjFullRange { get; set; }
@@ -1627,6 +1629,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
         DjNavButtons = false;
         DjFullRange = true;
         LedBrightnessOn = 31;
+        LedSleep = 0;
         Apa102IsFullSize = false;
         DjSmoothing = false;
         SwapSwitchFaceButtons = false;
@@ -1951,6 +1954,7 @@ public partial class ConfigViewModel : ReactiveObject, IRoutableViewModel
                         #define INPUT_DJ_TURNTABLE_SMOOTHING {{DjSmoothing.ToString().ToLower()}}
                         #define LED_BRIGHTNESS {{LedBrightnessOn}}
                         #define LOW_PASS_ALPHA {{AdxlFilter.ToString(CultureInfo.GetCultureInfo("en"))}}
+                        #define RGB_INACTIVITY_TIMEOUT_SEC {{LedSleep}}
                         #define DJ_NAV_BUTTONS {{DjNavButtons.ToString().ToLower()}}
                         #define COMBINED_DEBOUNCE {{CombinedStrumDebounce.ToString().ToLower()}}
                         """;

@@ -33,6 +33,8 @@ namespace GuitarConfigurator.NetCore.Configuration.Serialization;
 [ProtoInclude(125, typeof(SerializedStartSelectHome))]
 [ProtoInclude(126, typeof(SerializedPianoKey))]
 [ProtoInclude(127, typeof(SerializedCombinedMidiOutput))]
+[ProtoInclude(140, typeof(SerializedWtDrumCombinedOutput))]
+[ProtoInclude(141, typeof(SerializedBhDrumCombinedOutput))]
 [ProtoContract]
 public abstract class SerializedOutput
 {

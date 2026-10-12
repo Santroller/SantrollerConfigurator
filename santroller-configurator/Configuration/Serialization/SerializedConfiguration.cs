@@ -38,6 +38,7 @@ public class SerializedConfiguration
         LedSck = model.LedSck;
         LedCount = model.LedCount;
         LedBrightnessOn = model.LedBrightnessOn;
+        LedTimer = model.LedSleep;
         LedBrightnessOff = model.LedBrightnessOff;
         MouseMovementType = model.MouseMovementType;
         WtSensitivity = model.WtSensitivity;
@@ -163,6 +164,7 @@ public class SerializedConfiguration
     [ProtoMember(77)] public bool AdafruitHost { get; private set; } = false;
     [ProtoMember(78)] public bool MidiDrumAutoOff { get; private set; } = false;
     [ProtoMember(79)] public bool JoystickToDpadDisabled { get; private set; } = false;
+    [ProtoMember(90)] public int LedTimer { get; private set; } = 0;
 
     public void LoadConfiguration(ConfigViewModel model)
     {
@@ -199,6 +201,7 @@ public class SerializedConfiguration
         model.RolloverMode = RolloverMode;
         model.LedBrightnessOn = (byte) (LedBrightnessOn == 0 ? 32 : LedBrightnessOn);
         model.LedBrightnessOff = (byte) (LedBrightnessOff == 0 ? 32 : LedBrightnessOff);
+        model.LedSleep = LedTimer;
         model.Apa102IsFullSize = Apa102IsFullSize;
         model.Mpr121CapacitiveCount = Mpr121CapacitiveCount;
         model.AdafruitHost = AdafruitHost;
@@ -226,7 +229,10 @@ public class SerializedConfiguration
             model.DjPollRate = 1;
         }
 
-        var generated = Bindings.Select(s => s.Generate(model)).ToList();
+        // Drop console mode bindings for consoles the legacy release can't emulate
+        var generated = Bindings.Select(s => s.Generate(model))
+            .Where(s => s is not EmulationMode {Type: EmulationModeType.Ps4Or5 or EmulationModeType.XboxOne})
+            .ToList();
         if (generated.Count != 0)
         {
             model.Bindings.Clear();
@@ -288,6 +294,7 @@ public class SerializedConfiguration
         model.BtRxAddr = BtRxMacAddress;
         model.LedBrightnessOn = (byte) LedBrightnessOn;
         model.LedBrightnessOff = (byte) LedBrightnessOff;
+        model.LedSleep = LedTimer;
         model.DjFullRange = DjFullRange;
         model.DjNavButtons = DjNavButtons;
         model.SelectDpadLeftXb1 = SelectDpadLeftXb1;

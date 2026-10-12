@@ -13,6 +13,7 @@ using DynamicData;
 using GuitarConfigurator.NetCore.Configuration.Inputs;
 using GuitarConfigurator.NetCore.Configuration.Microcontrollers;
 using GuitarConfigurator.NetCore.Configuration.Outputs;
+using GuitarConfigurator.NetCore.Configuration.Outputs.Combined;
 using GuitarConfigurator.NetCore.Configuration.Serialization;
 using GuitarConfigurator.NetCore.Configuration.Types;
 using GuitarConfigurator.NetCore.ViewModels;
@@ -64,14 +65,17 @@ public class Santroller : ConfigurableUsbDevice
         CommandWriteAnalog,
         CommandWriteDigital,
         CommandSetBrightness,
-        CommandReadAdxl,
+        CommandReadAccel,
         CommandReadMpr121,
         CommandReadMpr121Valid,
         CommandSetLedsMpr121,
         CommandReadMax1270X,
         CommandReadMax1270XValid,
         CommandReadMidi,
-        CommandSetAdxlFilter
+        CommandSetAccelFilter,
+        CommandAccelValid,
+        CommandReadMatrix,
+        CommandReadDrumBrain
     }
 
     private readonly Dictionary<byte, TimeSpan> _ledTimers = new();
@@ -273,8 +277,13 @@ public class Santroller : ConfigurableUsbDevice
 
             if (_model.Bindings.Items.Any(s => s.Input.InnermostInputs().Any(s2 => s2 is AdxlInput)))
             {
-                adxlRaw = ReadData(0, (byte) Commands.CommandReadAdxl, 3 * sizeof(short));
+                adxlRaw = ReadData(0, (byte) Commands.CommandReadAccel, 6 * sizeof(short));
             }
+
+            // Drum brain inputs read this directly, as it is shared between all of their pads
+            DrumBrainRaw = _model.Bindings.Items.Any(s => s is WtDrumCombinedOutput or BhDrumCombinedOutput)
+                ? ReadData(0, (byte) Commands.CommandReadDrumBrain, 7)
+                : Array.Empty<byte>();
 
             if (_model.HasMpr121)
             {
@@ -584,9 +593,19 @@ public class Santroller : ConfigurableUsbDevice
         WriteData(0, (byte) Commands.CommandSetLedsPeripheral, new[] {led}.Concat(bytes).ToArray());
     }
 
+    public byte[] DrumBrainRaw { get; private set; } = Array.Empty<byte>();
+
+    public bool MatrixRead(int pin, int outPin)
+    {
+        var data = ReadData((ushort) (outPin | (pin << 8)), (byte) Commands.CommandReadMatrix, 1);
+        return data.Length == 0 || data[0] != 0;
+    }
+
     public void SetAdxlFilter(double filter)
     {
-        WriteData(0, (byte) Commands.CommandSetAdxlFilter, BitConverter.GetBytes(filter));
+        // double is only 4 bytes on the AVRs
+        WriteData(0, (byte) Commands.CommandSetAccelFilter,
+            IsPico() ? BitConverter.GetBytes(filter) : BitConverter.GetBytes((float) filter));
     }
 
     public void SetLedStp(byte led, bool state)

@@ -200,6 +200,12 @@ public partial class DrumAxis : OutputAxis
             return $"midiData.midiVelocities[{midiInput.Key}] = 0;";
         }
 
+        if (Model.MidiDrumAutoOff && mode is ConfigField.Reset && Input is WtDrumInput or BhDrumInput)
+        {
+            var pad = Input is WtDrumInput wt ? wt.Input : ((BhDrumInput) Input).Input;
+            return $"drum_brain_velocities[{(int) pad}] = 0;";
+        }
+
         if (mode is not (ConfigField.Ps3
                 or ConfigField.Ps3WithoutCapture or ConfigField.XboxOne or ConfigField.Xbox360
                 or ConfigField.Universal or ConfigField.Xbox or ConfigField.Wii)) return "";

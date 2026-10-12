@@ -15,7 +15,7 @@ namespace GuitarConfigurator.NetCore.Configuration.Inputs;
 
 public class AdxlInput : TwiInput
 {
-    public static readonly string AdxlTwiType = "adxl";
+    public static readonly string AdxlTwiType = "accel";
     public static readonly int AdxlTwiFreq = 400000;
 
     public AdxlInput(AdxlInputType input, ConfigViewModel model, bool peripheral, int sda = -1,
@@ -37,7 +37,7 @@ public class AdxlInput : TwiInput
 
     public override InputType? InputType => Types.InputType.AdxlInput;
 
-    public override bool IsUint => false;
+    public override bool IsUint => Input is AdxlInputType.Adc0 or AdxlInputType.Adc1 or AdxlInputType.Adc2;
     public override IList<DevicePin> Pins => Array.Empty<DevicePin>();
 
     public override string Title => EnumToStringConverter.Convert(Input);
@@ -49,6 +49,9 @@ public class AdxlInput : TwiInput
             AdxlInputType.AccelX => "filtered[0]",
             AdxlInputType.AccelY => "filtered[1]",
             AdxlInputType.AccelZ => "filtered[2]",
+            AdxlInputType.Adc0 => "accel_adc[0]",
+            AdxlInputType.Adc1 => "accel_adc[1]",
+            AdxlInputType.Adc2 => "accel_adc[2]",
             _ => "filtered[0]"
         };
     }
@@ -73,6 +76,9 @@ public class AdxlInput : TwiInput
             AdxlInputType.AccelX => BitConverter.ToInt16(adxlRaw.ToArray(), 0),
             AdxlInputType.AccelY => BitConverter.ToInt16(adxlRaw.ToArray(), 2),
             AdxlInputType.AccelZ => BitConverter.ToInt16(adxlRaw.ToArray(), 4),
+            AdxlInputType.Adc0 when adxlRaw.Length >= 12 => BitConverter.ToUInt16(adxlRaw.ToArray(), 6),
+            AdxlInputType.Adc1 when adxlRaw.Length >= 12 => BitConverter.ToUInt16(adxlRaw.ToArray(), 8),
+            AdxlInputType.Adc2 when adxlRaw.Length >= 12 => BitConverter.ToUInt16(adxlRaw.ToArray(), 10),
             _ => RawValue
         };
     }
@@ -83,8 +89,4 @@ public class AdxlInput : TwiInput
         return string.Join("\n", bindings.Select(binding => binding.Item2));
     }
 
-    public override IReadOnlyList<string> RequiredDefines()
-    {
-        return base.RequiredDefines().Concat(["INPUT_ADXL"]).ToList();
-    }
 }

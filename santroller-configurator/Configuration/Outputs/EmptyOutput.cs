@@ -62,7 +62,11 @@ public class EmptyOutput : Output
                 (!type.Item2.Item1 || s2 is not SimpleType.CloneNeckSimple) &&
                 (!type.Item2.Item2 || s2 is not SimpleType.DjTurntableSimple) &&
                 (!type.Item2.Item3 || s2 is not SimpleType.Gh5NeckSimple) &&
-                (!type.Item2.Item4 || s2 is not SimpleType.UsbHost)
+                (!type.Item2.Item4 || s2 is not SimpleType.UsbHost) &&
+                (type.Item1.Item1 is DeviceControllerType.GuitarHeroDrums or DeviceControllerType.RockBandDrums ||
+                 s2 is not (SimpleType.WtDrumSimple or SimpleType.BhDrumSimple)) &&
+                (!model.Bindings.Items.Any(b => b is WtDrumCombinedOutput or BhDrumCombinedOutput) ||
+                 s2 is not (SimpleType.WtDrumSimple or SimpleType.BhDrumSimple))
             ))
             .ToProperty(this, x => x.CombinedTypes);
     }
@@ -197,12 +201,14 @@ public class EmptyOutput : Output
                         false, RumbleMotorType.Left),
                     SimpleType.ConsoleMode => new EmulationMode(Model,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, Model),
-                        EmulationModeType.XboxOne),
+                        EmulationModeType.Xbox360),
                     SimpleType.Reset => new Reset(Model,
                         new DirectInput(-1, false, false, DevicePinMode.PullUp, Model)),
                     SimpleType.UsbHost => new UsbHostCombinedOutput(Model),
                     SimpleType.Bluetooth => new BluetoothOutput(Model),
                     SimpleType.Midi => new MidiCombinedOutput(Model, 0),
+                    SimpleType.WtDrumSimple => new WtDrumCombinedOutput(Model),
+                    SimpleType.BhDrumSimple => new BhDrumCombinedOutput(Model),
                     _ => null
                 },
                 StandardAxisType.RightTrigger or StandardAxisType.LeftTrigger => new ControllerAxis(Model,

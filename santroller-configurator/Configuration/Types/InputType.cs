@@ -20,4 +20,7 @@ public enum InputType
     AdxlInput,
     Mpr121Input,
     MidiInput,
+    MatrixInput,
+    WtDrumInput,
+    BhDrumInput,
 }

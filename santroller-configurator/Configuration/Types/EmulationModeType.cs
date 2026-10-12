@@ -12,5 +12,6 @@ public enum EmulationModeType
     Fnf,
     FnfHid,
     FnfLayer,
-    FnfIos
+    FnfIos,
+    Ps2OnPs3
 }

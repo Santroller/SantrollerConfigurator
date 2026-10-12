@@ -7352,5 +7352,131 @@ namespace GuitarConfigurator.NetCore {
                 return ResourceManager.GetString("ProKeyTypeTouchPad", resourceCulture);
             }
         }
+        
+        public static string AdxlInputTypeAdc0 {
+            get {
+                return ResourceManager.GetString("AdxlInputTypeAdc0", resourceCulture);
+            }
+        }
+        
+        public static string AdxlInputTypeAdc1 {
+            get {
+                return ResourceManager.GetString("AdxlInputTypeAdc1", resourceCulture);
+            }
+        }
+        
+        public static string AdxlInputTypeAdc2 {
+            get {
+                return ResourceManager.GetString("AdxlInputTypeAdc2", resourceCulture);
+            }
+        }
+        
+        public static string EmulationModeTypePs2OnPs3 {
+            get {
+                return ResourceManager.GetString("EmulationModeTypePs2OnPs3", resourceCulture);
+            }
+        }
+        
+        public static string InputTypeMatrixInput {
+            get {
+                return ResourceManager.GetString("InputTypeMatrixInput", resourceCulture);
+            }
+        }
+        
+        public static string MatrixInputPinLabel {
+            get {
+                return ResourceManager.GetString("MatrixInputPinLabel", resourceCulture);
+            }
+        }
+        
+        public static string MatrixOutputPinLabel {
+            get {
+                return ResourceManager.GetString("MatrixOutputPinLabel", resourceCulture);
+            }
+        }
+        
+        public static string LEDSleepLabel {
+            get {
+                return ResourceManager.GetString("LEDSleepLabel", resourceCulture);
+            }
+        }
+        
+        public static string ChipSelectLabel {
+            get {
+                return ResourceManager.GetString("ChipSelectLabel", resourceCulture);
+            }
+        }
+        
+        public static string WtDrumCombinedTitle {
+            get {
+                return ResourceManager.GetString("WtDrumCombinedTitle", resourceCulture);
+            }
+        }
+        
+        public static string BhDrumCombinedTitle {
+            get {
+                return ResourceManager.GetString("BhDrumCombinedTitle", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeWtDrumSimple {
+            get {
+                return ResourceManager.GetString("SimpleTypeWtDrumSimple", resourceCulture);
+            }
+        }
+        
+        public static string SimpleTypeBhDrumSimple {
+            get {
+                return ResourceManager.GetString("SimpleTypeBhDrumSimple", resourceCulture);
+            }
+        }
+        
+        public static string InputTypeWtDrumInput {
+            get {
+                return ResourceManager.GetString("InputTypeWtDrumInput", resourceCulture);
+            }
+        }
+        
+        public static string InputTypeBhDrumInput {
+            get {
+                return ResourceManager.GetString("InputTypeBhDrumInput", resourceCulture);
+            }
+        }
+        
+        public static string DrumBrainInputTypeKick {
+            get {
+                return ResourceManager.GetString("DrumBrainInputTypeKick", resourceCulture);
+            }
+        }
+        
+        public static string DrumBrainInputTypeRed {
+            get {
+                return ResourceManager.GetString("DrumBrainInputTypeRed", resourceCulture);
+            }
+        }
+        
+        public static string DrumBrainInputTypeYellow {
+            get {
+                return ResourceManager.GetString("DrumBrainInputTypeYellow", resourceCulture);
+            }
+        }
+        
+        public static string DrumBrainInputTypeBlue {
+            get {
+                return ResourceManager.GetString("DrumBrainInputTypeBlue", resourceCulture);
+            }
+        }
+        
+        public static string DrumBrainInputTypeOrange {
+            get {
+                return ResourceManager.GetString("DrumBrainInputTypeOrange", resourceCulture);
+            }
+        }
+        
+        public static string DrumBrainInputTypeGreen {
+            get {
+                return ResourceManager.GetString("DrumBrainInputTypeGreen", resourceCulture);
+            }
+        }
     }
 }

@@ -4,5 +4,8 @@ public enum AdxlInputType
 {
     AccelX,
     AccelY,
-    AccelZ
+    AccelZ,
+    Adc0,
+    Adc1,
+    Adc2
 }

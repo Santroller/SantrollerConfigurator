@@ -262,6 +262,18 @@
                               Content="{x:Static netCore:Resources.DetectedLabel}" />
                 </StackPanel>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type combined:WtDrumCombinedOutput}">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Detected}" VerticalAlignment="Center" IsEnabled="False"
+                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type combined:BhDrumCombinedOutput}">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Detected}" VerticalAlignment="Center" IsEnabled="False"
+                              Content="{x:Static netCore:Resources.DetectedLabel}" />
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type output:BluetoothOutput}">
                 <StackPanel Orientation="Horizontal">
                     <CheckBox IsChecked="{Binding Connected}" VerticalAlignment="Center" IsEnabled="False"
@@ -1095,6 +1107,32 @@
                                   DropDownOpened="ReloadPinTemplates"
                                   ItemTemplate="{StaticResource PinToStringTemplate}"
                                   Width="200" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type inputs:MatrixInput}">
+                <StackPanel Orientation="Vertical" IsVisible="{Binding !Model.Branded}">
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center" Width="300"
+                               Content="{x:Static netCore:Resources.MatrixInputPinLabel}" />
+                        <ComboBox VerticalAlignment="Center" SelectedItem="{Binding Pin}"
+                                  ItemsSource="{Binding AvailablePins}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center" Width="300"
+                               Content="{x:Static netCore:Resources.MatrixOutputPinLabel}" />
+                        <ComboBox VerticalAlignment="Center" SelectedItem="{Binding OutPin}"
+                                  ItemsSource="{Binding AvailablePins}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.InvertLabel}" />
+                        <ToggleSwitch IsChecked="{Binding Inverted}" />
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
@@ -2570,6 +2608,54 @@
                             Content="{Binding ButtonTextMidiNote}" />
                 </StackPanel>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type combined:WtDrumCombinedOutput}">
+                <StackPanel>
+                    <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.MosiLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding Mosi}"
+                                  ItemsSource="{Binding AvailableMosiPins}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  Width="200" />
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.MisoLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding Miso}"
+                                  ItemsSource="{Binding AvailableMisoPins}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  Width="200" />
+                    </StackPanel>
+                    <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.SckLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding Sck}"
+                                  ItemsSource="{Binding AvailableSckPins}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  Width="200" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label VerticalAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Width="300" Content="{x:Static netCore:Resources.ChipSelectLabel}" />
+                        <ComboBox VerticalAlignment="Center"
+                                  SelectedItem="{Binding Cs}"
+                                  ItemsSource="{Binding AvailablePins}"
+                                  ItemTemplate="{StaticResource PinToStringTemplate}"
+                                  DropDownOpened="ReloadPinTemplates"
+                                  Width="200" />
+                    </StackPanel>
+                </StackPanel>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type combined:Ps2CombinedOutput}">
                 <StackPanel>
                     <StackPanel IsVisible="{Binding BindableSpi}" Orientation="Horizontal">
@@ -3580,6 +3666,17 @@
                                    IsVisible="{Binding !Apa102IsFullSize}" />
                             <Label Foreground="Red" Content="{x:Static netCore:Resources.BrightnessNote3}"
                                    IsVisible="{Binding !Apa102IsFullSize}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label VerticalAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   Width="350" Content="{x:Static netCore:Resources.LEDSleepLabel}" />
+                            <NumericUpDown FormatString="{}{0:#,0}"
+                                           Value="{Binding LedSleep}"
+                                           Minimum="0"
+                                           Increment="1"
+                                           Width="200"
+                                           Maximum="65535" HorizontalAlignment="Stretch" />
                         </StackPanel>
                     </StackPanel>
                 </Expander>
