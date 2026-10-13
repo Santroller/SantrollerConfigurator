@@ -696,6 +696,12 @@ public partial class MainWindowViewModel : ReactiveObject, IScreen, IDisposable
     }
 
     [RelayCommand]
+    public void OpenSantroller2()
+    {
+        NavigateToUrl("https://santroller.com");
+    }
+
+    [RelayCommand]
     public void OpenDiscord()
     {
         NavigateToUrl("https://discord.gg/CmdYpXKcEU");

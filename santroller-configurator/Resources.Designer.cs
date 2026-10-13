@@ -7695,6 +7695,18 @@ namespace GuitarConfigurator.NetCore {
             }
         }
         
+        public static string Santroller2Notice {
+            get {
+                return ResourceManager.GetString("Santroller2Notice", resourceCulture);
+            }
+        }
+        
+        public static string Santroller2Button {
+            get {
+                return ResourceManager.GetString("Santroller2Button", resourceCulture);
+            }
+        }
+        
         public static string NonCommercialUse {
             get {
                 return ResourceManager.GetString("NonCommercialUse", resourceCulture);

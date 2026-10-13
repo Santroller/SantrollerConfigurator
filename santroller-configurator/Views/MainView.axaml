@@ -46,6 +46,11 @@
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Image Source="{Binding Main.Logo}" Width="200" Margin="0 0 0 10" />
+                <TextBlock Foreground="#FFFF461C" FontWeight="Bold"
+                           Text="{x:Static netCore:Resources.Santroller2Notice}" HorizontalAlignment="Center"
+                           TextAlignment="Center" TextWrapping="Wrap" MaxWidth="600" Margin="0 0 0 10" />
+                <Button HorizontalAlignment="Center" Command="{Binding Main.OpenSantroller2}"
+                        Content="{x:Static netCore:Resources.Santroller2Button}" Margin="0 0 0 20" />
                 <Button HorizontalAlignment="Center" Command="{Binding Main.OpenDiscord}"
                         Content="{x:Static netCore:Resources.DiscordButton}" Margin="0 0 0 40" />
                 <TextBlock Text="{x:Static netCore:Resources.NonCommercialUse}" HorizontalAlignment="Center" TextAlignment="Center"
