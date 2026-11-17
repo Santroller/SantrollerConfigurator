@@ -71,7 +71,7 @@ public class Ardwiino : ConfigurableUsbDevice
     private const ushort JumpBootloaderCommandUno = 50;
     private const ushort ReadConfigCommand = 62;
     private const ushort ReadConfigPre807Command = 60;
-    private const ushort ReadConfigPre703Command = 59;
+    private const ushort ReadConfigPre702Command = 59;
     private const byte RequestHidGetReport = 0x01;
     private const byte RequestHidSetReport = 0x09;
 
@@ -173,13 +173,14 @@ public class Ardwiino : ConfigurableUsbDevice
     {
         if (!MigrationSupported) return false;
         var readConfig = ReadConfigCommand;
-        if (Version < new Version(8, 0, 7))
+        // READ_CONFIG moved as commands were added: 59 before 7.0.2, 60 before 8.0.7
+        if (Version < new Version(7, 0, 2))
+        {
+            readConfig = ReadConfigPre702Command;
+        }
+        else if (Version < new Version(8, 0, 7))
         {
             readConfig = ReadConfigPre807Command;
-        }
-        else if (Version < new Version(7, 0, 3))
-        {
-            readConfig = ReadConfigPre703Command;
         }
 
         var data = new byte[Marshal.SizeOf<ArdwiinoConfiguration>()];
@@ -239,7 +240,7 @@ public class Ardwiino : ConfigurableUsbDevice
         }
 
         // Read in the rest of the data, in the format that it is in
-        if (version is 16 or 17)
+        if (version >= 16)
         {
             config = StructTools.RawDeserialize<ArdwiinoConfiguration>(data, 0);
         }
